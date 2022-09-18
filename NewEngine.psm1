@@ -631,4 +631,49 @@ Function Write-GfmSceneWindow {
     End {}
 }
 
+Function Write-GfmMessageWindow {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Switch ($(Test-GfmOs)) {
+            {($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac)} {
+                For($i = 0; $i -LT $Script:UiMessageWindowWidth; $i++) {
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, $Script:UiMessageWindowDrawY)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+                For($i = 0; $i -LE $Script:UiMessageWindowHeight; $i++) {
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth), ($Script:UiMessageWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+            }
+
+            $Script:OsCheckWindows {
+                For($i = 0; $i -LT $Script:UiMessageWindowWidth; $i++) {
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, $Script:UiMessageWindowDrawY)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+                For($i = 0; $i -LE $Script:UiMessageWindowHeight; $i++) {
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth), ($Script:UiMessageWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+            }
+
+            Default {}
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
 #endregion
