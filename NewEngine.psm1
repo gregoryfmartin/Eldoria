@@ -17,28 +17,28 @@
     Danger
 }
 
-[String]$Script:PlayerName = ''
-[Int]$Script:PlayerCurrentHitPoints = 0
-[Int]$Script:PlayerMaximumHitPoints = 0
-[Int]$Script:PlayerCurrentMagicPoints = 0
-[Int]$Script:PlayerMaximumMagicPoints = 0
-[Int]$Script:PlayerCurrentGold = 0
-[Single]$Script:PlayerStatNumThresholdCaution = 0.6D
-[Single]$Script:PlayerStatNumThresholdDanger = 0.2D
-[PlayerHpState]$Script:PlayerHitPointsState = [PlayerHpState]::Normal
-[PlayerMpState]$Script:PlayerMagicPointsState = [PlayerMpState]::Normal
-[System.ConsoleColor]$Script:PlayerStatNameDrawColor = 'Blue'
-[System.ConsoleColor]$Script:PlayerStatNumberDrawColorSafe = 'Green'
+[String]             $Script:PlayerName                       = ''
+[Int]                $Script:PlayerCurrentHitPoints           = 0
+[Int]                $Script:PlayerMaximumHitPoints           = 0
+[Int]                $Script:PlayerCurrentMagicPoints         = 0
+[Int]                $Script:PlayerMaximumMagicPoints         = 0
+[Int]                $Script:PlayerCurrentGold                = 0
+[Single]             $Script:PlayerStatNumThresholdCaution    = 0.6D
+[Single]             $Script:PlayerStatNumThresholdDanger     = 0.2D
+[PlayerHpState]      $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
+[PlayerMpState]      $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
+[System.ConsoleColor]$Script:PlayerStatNameDrawColor          = 'Blue'
+[System.ConsoleColor]$Script:PlayerStatNumberDrawColorSafe    = 'Green'
 [System.ConsoleColor]$Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[System.ConsoleColor]$Script:PlayerStatNumberDrawColorDanger = 'Red'
-[System.ConsoleColor]$Script:PlayerStatGoldDrawColor = 'DarkYellow'
+[System.ConsoleColor]$Script:PlayerStatNumberDrawColorDanger  = 'Red'
+[System.ConsoleColor]$Script:PlayerStatGoldDrawColor          = 'DarkYellow'
 
 #endregion
 
 #region Scene Image Variables
 
-[Int]$Script:SceneImageWidth = 46
-[Int]$Script:SceneImageHeight = 17
+[Int]$Script:SceneImageWidth       = 46
+[Int]$Script:SceneImageHeight      = 17
 [Int]$Script:SceneImageDrawOriginX = 32
 [Int]$Script:SceneImageDrawOriginY = 1
 
@@ -46,49 +46,49 @@
 
 #region Status Window Variables
 
-[System.ConsoleColor]$Script:UiStatusWindowBorderColor = 'White'
-[String]$Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]$Script:UiStatusWindowBorderVertical = '|'
-[Int]$Script:UiStatusWindowDrawX = 0
-[Int]$Script:UiStatusWindowDrawY = 0
-[Int]$Script:UiStatusWindowWidth = 19
-[Int]$Script:UiStatusWindowHeight = 14
-[Int]$Script:UiStatusWindowPlayerNameDrawX = 2
-[Int]$Script:UiStatusWindowPlayerNameDrawY = 2
-[Int]$Script:UiStatusWindowPlayerHpDrawX = 2
-[Int]$Script:UiStatusWindowPlayerHpDrawY = 4
-[Int]$Script:UiStatusWindowPlayerMpDrawX = 2
-[Int]$Script:UiStatusWindowPlayerMpDrawY = 6
-[Int]$Script:UiStatusWindowPlayerGoldDrawX = 2
-[Int]$Script:UiStatusWindowPlayerGoldDrawY = 9
-[Int]$Script:UiStatusWindowPlayerAilDrawX = 2
-[Int]$Script:UiStatusWindowPlayerAilDrawY = 11
+[System.ConsoleColor]$Script:UiStatusWindowBorderColor      = 'White'
+[String]             $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
+[String]             $Script:UiStatusWindowBorderVertical   = '|'
+[Int]                $Script:UiStatusWindowDrawX            = 0
+[Int]                $Script:UiStatusWindowDrawY            = 0
+[Int]                $Script:UiStatusWindowWidth            = 19
+[Int]                $Script:UiStatusWindowHeight           = 14
+[Int]                $Script:UiStatusWindowPlayerNameDrawX  = 2
+[Int]                $Script:UiStatusWindowPlayerNameDrawY  = 2
+[Int]                $Script:UiStatusWindowPlayerHpDrawX    = 2
+[Int]                $Script:UiStatusWindowPlayerHpDrawY    = 4
+[Int]                $Script:UiStatusWindowPlayerMpDrawX    = 2
+[Int]                $Script:UiStatusWindowPlayerMpDrawY    = 6
+[Int]                $Script:UiStatusWindowPlayerGoldDrawX  = 2
+[Int]                $Script:UiStatusWindowPlayerGoldDrawY  = 9
+[Int]                $Script:UiStatusWindowPlayerAilDrawX   = 2
+[Int]                $Script:UiStatusWindowPlayerAilDrawY   = 11
 
 #endregion
 
 #region Scene Window Variables
 
-[System.ConsoleColor]$Script:UiSceneWindowBorderColor = 'White'
-[String]$Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
-[String]$Script:UiSceneWindowBorderVertical = '|'
-[Int]$Script:UiSceneWindowDrawX = 30
-[Int]$Script:UiSceneWindowDrawY = 0
-[Int]$Script:UiSceneWindowWidth = 50
-[Int]$Script:UiSceneWindowHeight = 19
-[Int]$Script:UiSceneWindowSceneDrawX = 32
-[Int]$Script:UiSceneWindowSceneDrawY = 1
+[System.ConsoleColor]$Script:UiSceneWindowBorderColor      = 'White'
+[String]             $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
+[String]             $Script:UiSceneWindowBorderVertical   = '|'
+[Int]                $Script:UiSceneWindowDrawX            = 30
+[Int]                $Script:UiSceneWindowDrawY            = 0
+[Int]                $Script:UiSceneWindowWidth            = 50
+[Int]                $Script:UiSceneWindowHeight           = 19
+[Int]                $Script:UiSceneWindowSceneDrawX       = 32
+[Int]                $Script:UiSceneWindowSceneDrawY       = 1
 
 #endregion
 
 #region Message Window Variables
 
-[System.ConsoleColor]$Script:UiMessageWindowBorderColor = 'White'
-[String]$Script:UiMessageWindowBorderHorizontal = '-'
-[String]$Script:UiMessageWindowBorderVertical = '|'
-[Int]$Script:UiMessageWindowDrawX = 0
-[Int]$Script:UiMessageWindowDrawY = 20
-[Int]$Script:UiMessageWindowWidth = 80
-[Int]$Script:UiMessageWindowHeight = 3
+[System.ConsoleColor]$Script:UiMessageWindowBorderColor      = 'White'
+[String]             $Script:UiMessageWindowBorderHorizontal = '-'
+[String]             $Script:UiMessageWindowBorderVertical   = '|'
+[Int]                $Script:UiMessageWindowDrawX            = 0
+[Int]                $Script:UiMessageWindowDrawY            = 20
+[Int]                $Script:UiMessageWindowWidth            = 80
+[Int]                $Script:UiMessageWindowHeight           = 3
 
 #endregion
 
@@ -96,10 +96,10 @@
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
-[Int]$Script:DefaultCursorX = 0
-[Int]$Script:DefaultCursorY = 0
-[String]$Script:OsCheckLinux = 'OsLinux'
-[String]$Script:OsCheckMac = 'OsMac'
+[Int]   $Script:DefaultCursorX = 0
+[Int]   $Script:DefaultCursorY = 0
+[String]$Script:OsCheckLinux   = 'OsLinux'
+[String]$Script:OsCheckMac     = 'OsMac'
 [String]$Script:OsCheckWindows = 'OsWindows'
 [String]$Script:OsCheckUnknown = 'OsUnknown'
 
@@ -115,11 +115,11 @@ $Script:SceneImageSample = New-Object System.Management.Automation.Host.BufferCe
 
 [Flags()] Enum TtySpeed {
     SuperSlow = 1000000
-    Slow = 750000
-    Normal = 100000
-    Moderate = 75000
-    Quick = 65000
-    Fast = 50000
+    Slow      = 750000
+    Normal    = 100000
+    Moderate  = 75000
+    Quick     = 65000
+    Fast      = 50000
     SuperFast = 25000
 }
 
@@ -283,8 +283,8 @@ Function Write-GfmTtyString {
 
     Process {
         [Char[]]$msgCharArray = $Message.ToCharArray()
-        [Int]$typeCounter = 0
-        [Int]$msgcaProbe = 0
+        [Int]   $typeCounter  = 0
+        [Int]   $msgcaProbe   = 0
 
         While ($msgcaProbe -LE ($msgCharArray.Count - 1)) {
             $typeCounter++
