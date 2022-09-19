@@ -124,7 +124,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 #region Scene Image Definitions
 
-$Script:SceneImageSample = New-Object 'System.Management.Automation.Host.BufferCell[,]' $Script:SceneImageWidth, $Script:SceneImageHeight
+$Script:SceneImageSample = New-Object 'System.Management.Automation.Host.BufferCell[,]' $Script:SceneImageHeight, $Script:SceneImageWidth
 
 #endregion
 
@@ -185,7 +185,7 @@ Function New-GfmSceneImageSample {
         For($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
             For($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
                 [Int]$randBgColor = Get-Random -Minimum 1 -Maximum 15
-                $Script:SceneImageSample[$w, $h] = [System.Management.Automation.Host.BufferCell]::new(' ', 0, $randBgColor, 'Complete')
+                $Script:SceneImageSample[$h, $w] = [System.Management.Automation.Host.BufferCell]::new(' ', 0, $randBgColor, 'Complete')
             }
         }
     }
@@ -194,16 +194,23 @@ Function New-GfmSceneImageSample {
 Function Write-GfmSceneImage {
     [CmdletBinding()]
     Param (
+        [Switch]$NonWindowsMethod,
         [Parameter(Mandatory = $true)]
         [System.Management.Automation.Host.BufferCell[,]]$CellArray
     )
 
     Process {
-        For($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
-            For($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:SceneImageDrawOriginX + $w, $Script:SceneImageDrawOriginY + $h)
-                Write-Host ' ' -BackgroundColor $CellArray[$w, $h].BackgroundColor -NoNewline
+        If ($NonWindowsMethod) {
+            For($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
+                For($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:SceneImageDrawOriginX + $w, $Script:SceneImageDrawOriginY + $h)
+                    Write-Host ' ' -BackgroundColor $CellArray[$h, $w].BackgroundColor -NoNewline
+                }
             }
+        } Else {
+            # This is what I've been trying to accomplish on the Mac and Linux and it doesn't work on those two platforms.
+            # This actually appears to be faster too
+            $Script:Rui.SetBufferContents($([System.Management.Automation.Host.Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
         }
     }
 }
