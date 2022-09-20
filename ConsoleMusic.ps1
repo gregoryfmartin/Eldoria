@@ -3,8 +3,11 @@ using namespace System
 # After some testing, it would seem that frequencies below 250Hz are inaudible. This means that many songs will need to be shifted up at least two octaves
 # since most fourth or lower octaves express notes in frequencies less than 250Hz.
 #
-# Something else that's becoming apparent through testing is that firing a large sequence of sixteenth notes (defined as 100 ms) at the speaker can cause some hiccups
+# Something else that's becoming apparent through testing is that firing a large sequence of sixteenth notes (defined as 200 ms) at the speaker can cause some hiccups
 # even if attempting to delay the command to the console by an additional ms. It's almost as if the notes get clobbered together at some point causing an audible mess.
+# After some testing on this, it would seem that there can be race condition occurring where notes issued to the speaker with the Beep function aren't queued, and aren't
+# aware if a note is currently playing. Currently the method I've employed for controlling this is to send a rest of equal duration along with the note to the speaker.
+# The result is a highly monotone piece in terms of texture, but the integrity of the sample is maintained.
 
 Enum Notes {
     C = 0
@@ -148,79 +151,32 @@ $noteTable[[Notes]::B, 8]             = [Int]7902.13D
 # }
 
 # $note = $noteTable[[Notes]::ASharpOrBFlat, 4] # note = 233
-#[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 3]), 200)
+# [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 3]), 200)
 # [Console]::Beep(260, 200)
 
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::F, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::F, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::F, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::F, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::F, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::F, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 1
-[Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 1
-
+For($a = 0; $a -LT 5; $a++) {
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::F, 5]), 200);             Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::F, 5]), 200);             Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 200); Start-Sleep -Milliseconds 200
+    [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 200); Start-Sleep -Milliseconds 200
+}
