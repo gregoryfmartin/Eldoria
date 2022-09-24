@@ -45,17 +45,14 @@ Enum NoteDuration {
 }
 
 Class Note {
-    [Notes]$ActualNote
-    [Octaves]$ActualOctave
+    [Int]$ActualNote
     [NoteDuration]$ActualDuration
 
     Note(
-        [Notes]$an,
-        [Octaves]$ao,
+        [Int]$an,
         [NoteDuration]$nd
     ) {
         $this.ActualNote = $an
-        $this.ActualOctave = $ao
         $this.ActualDuration = $nd
     }
 }
@@ -220,4 +217,26 @@ $noteTable[[Notes]::B, [Octaves]::Ninth]               = [Int]7902.13D
 #     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
 # }
 
-$dragonWarriorTheme.Add([Note]::new())
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::F, [Octaves]::Seventh]), [NoteDuration]::Half))
+$dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Half))
+
+foreach($note in $dragonWarriorTheme) {
+    [Console]::Beep($note.ActualNote, $note.ActualDuration)
+}
+
