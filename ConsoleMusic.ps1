@@ -9,6 +9,9 @@ using namespace System
 # aware if a note is currently playing. Currently the method I've employed for controlling this is to send a rest of equal duration along with the note to the speaker.
 # The result is a highly monotone piece in terms of texture, but the integrity of the sample is maintained.
 
+# This enumeration defines the notes. These are keys in a lookup table, nothing more. The exception here is the Rest, which is explicitly defined as being 37.
+# 37 is the technical lower limit required for the frequency value in Beep; lower values will throw an exception. Notes with this frequency will not yield a sound.
+# Earlier tests yielded that anything lower than 250hz won't play anything other than an audible electrical knocking on the speaker.
 Enum Notes {
     C = 0
     CSharpOrDFlat
@@ -25,6 +28,8 @@ Enum Notes {
     Rest = 37
 }
 
+# This enumeration defines the unofficial names of the octaves. These are keys in a lookup table, nothing more. Note that most notes in the lowest octaves,
+# First to some in the Fourth, won't play on the PC Speaker.
 Enum Octaves {
     First = 0
     Second
@@ -37,6 +42,7 @@ Enum Octaves {
     Ninth
 }
 
+# This enumeration defines common durations for notes, defined in milliseconds.
 Enum NoteDuration {
     Whole     = 1600
     Half      = 800
@@ -45,6 +51,7 @@ Enum NoteDuration {
     Sixteenth = 100
 }
 
+# An aggregate ADT that combines a frequency (note) with a duration. The frequency can be found by performing a lookup in the Note Table.
 Class Note {
     [Int]$ActualNote
     [NoteDuration]$ActualDuration
@@ -53,20 +60,23 @@ Class Note {
         [Int]$an,
         [NoteDuration]$nd
     ) {
-        $this.ActualNote = $an
+        $this.ActualNote     = $an
         $this.ActualDuration = $nd
     }
 }
 
+# Define the Note Table. Rests are not included in the Note Table.
 $numOctaves = 9
-$numNotes = 12
-$noteTable = New-Object 'Int[,]' $numNotes, $numOctaves
+$numNotes   = 12
+$noteTable  = New-Object 'Int[,]' $numNotes, $numOctaves
 
+# Declare some songs. Songs are defined as arrangements of Notes polled from the Note Table.
 [Collections.ArrayList]$dragonWarriorTheme = New-Object 'Collections.ArrayList'
-[Collections.ArrayList]$battleTheme = New-Object 'Collections.ArrayList'
-[Collections.ArrayList]$duckTalesTheme = New-Object 'Collections.ArrayList'
-[Collections.ArrayList]$ghostbustersTheme = New-Object 'Collections.ArrayList'
+[Collections.ArrayList]$battleTheme        = New-Object 'Collections.ArrayList'
+[Collections.ArrayList]$duckTalesTheme     = New-Object 'Collections.ArrayList'
+[Collections.ArrayList]$ghostbustersTheme  = New-Object 'Collections.ArrayList'
 
+#region Note Table Definition
 # Create the frequency table for each note in each octave
 # This site has a table where the values are derived from: https://mixbutton.com/mixing-articles/music-note-to-frequency-chart/#:~:text=Music%20Note%20To%20Frequency%20Chart%20%20%20,%20155.56%20Hz%20%208%20more%20rows%20
 $noteTable[[Notes]::C, [Octaves]::First]               = 0
@@ -177,49 +187,7 @@ $noteTable[[Notes]::B, [Octaves]::Sixth]               = [Int]987.77D
 $noteTable[[Notes]::B, [Octaves]::Seventh]             = [Int]1975.53D
 $noteTable[[Notes]::B, [Octaves]::Eighth]              = [Int]3951.07D
 $noteTable[[Notes]::B, [Octaves]::Ninth]               = [Int]7902.13D
-
-
-# For ($nn = 0; $nn -LT $numNotes; $nn++) {
-#     For ($no = 0; $no -LT $numOctaves; $no++) {
-#         # For some reason, I can't use the array notation within the Beep function call
-#         # So the note variable here has to be leveraged
-#         $note = $noteTable[$nn, $no]
-#         If ($note -GE 37 -AND $note -LE 32767) {
-#             [System.Console]::Beep($note, 100)
-#         }
-#     }
-# }
-
-# $note = $noteTable[[Notes]::ASharpOrBFlat, 4] # note = 233
-# [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 3]), 100)
-# [Console]::Beep(260, 100)
-
-# For($a = 0; $a -LT 1; $a++) {
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::F, 5]), 100);             Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::F, 5]), 100);             Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::FSharpOrGFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::GSharpOrAFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::DSharpOrEFlat, 5]), 100); Start-Sleep -Milliseconds 100
-#     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
-# }
+#endregion
 
 #region Dragon Warrior Theme Jingle (Incomplete)
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
@@ -288,6 +256,7 @@ $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::S
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 #endregion
 
+#region Ghostbusters Theme Jingle
 #region Ghostbuster Song Phrase 1
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
@@ -349,7 +318,10 @@ $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 #endregion
+#endregion
 
+# Test play some of the songs
+# To change the song to test, change the variable in the conditional
 foreach($n in $dragonWarriorTheme) {
     [Console]::Beep($n.ActualNote, $n.ActualDuration)
 }
