@@ -221,6 +221,7 @@ $noteTable[[Notes]::B, [Octaves]::Ninth]               = [Int]7902.13D
 #     [Console]::Beep($($noteTable[[Notes]::ASharpOrBFlat, 4]), 100); Start-Sleep -Milliseconds 100
 # }
 
+#region Dragon Warrior Theme Jingle (Incomplete)
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
@@ -251,7 +252,9 @@ $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), 
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $dragonWarriorTheme.Add([Note]::new(($noteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+#endregion
 
+#region Dragon Warrior 2 Battle Jingle Intro
 $battleTheme.Add([Note]::new(($noteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)) | Out-Null
 $battleTheme.Add([Note]::new(($noteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
 $battleTheme.Add([Note]::new(($noteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
@@ -259,23 +262,31 @@ $battleTheme.Add([Note]::new(($noteTable[[Notes]::E, [Octaves]::Seventh]), [Note
 $battleTheme.Add([Note]::new(($noteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
 $battleTheme.Add([Note]::new(($noteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
 $battleTheme.Add([Note]::new(($noteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
+#endregion
 
+#region Duck Tales Theme (Portion)
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
-$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
-# $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-# $duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-# TODO: Complete the remainder of this theme
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$duckTalesTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+#endregion
 
 #region Ghostbuster Song Phrase 1
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
@@ -315,8 +326,30 @@ $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::DSharpOrEFlat, [Octaves]
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
 $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 #endregion
 
-foreach($n in $ghostbustersTheme) {
+foreach($n in $dragonWarriorTheme) {
     [Console]::Beep($n.ActualNote, $n.ActualDuration)
 }
