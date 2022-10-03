@@ -322,6 +322,6 @@ $ghostbustersTheme.Add([Note]::new(($noteTable[[Notes]::B, [Octaves]::Sixth]), [
 
 # Test play some of the songs
 # To change the song to test, change the variable in the conditional
-foreach($n in $dragonWarriorTheme) {
+foreach($n in $ghostbustersTheme) {
     [Console]::Beep($n.ActualNote, $n.ActualDuration)
 }

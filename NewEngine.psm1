@@ -142,6 +142,223 @@ $Script:SceneImageSample = New-Object 'System.Management.Automation.Host.BufferC
 
 #endregion
 
+#region Audio Variables
+
+# This enumeration defines the notes. These are keys in a lookup table, nothing more. The exception here is the Rest, which is explicitly defined as being 37.
+# 37 is the technical lower limit required for the frequency value in Beep; lower values will throw an exception. Notes with this frequency will not yield a sound.
+# Earlier tests yielded that anything lower than 250hz won't play anything other than an audible electrical knocking on the speaker.
+Enum Notes {
+    C = 0
+    CSharpOrDFlat
+    D
+    DSharpOrEFlat
+    E
+    F
+    FSharpOrGFlat
+    G
+    GSharpOrAFlat
+    A
+    ASharpOrBFlat
+    B
+    Rest = 37
+}
+
+# This enumeration defines the unofficial names of the octaves. These are keys in a lookup table, nothing more. Note that most notes in the lowest octaves,
+# First to some in the Fourth, won't play on the PC Speaker.
+Enum Octaves {
+    First = 0
+    Second
+    Third
+    Fourth
+    Fifth
+    Sixth
+    Seventh
+    Eighth
+    Ninth
+}
+
+# This enumeration defines common durations for notes, defined in milliseconds.
+Enum NoteDuration {
+    Whole     = 1600
+    Half      = 800
+    Quarter   = 400
+    Eighth    = 200
+    Sixteenth = 100
+}
+
+# Define the Note Table. Rests are not included in the Note Table.
+$Script:NumOctaves = 9
+$Script:NumNotes   = 12
+$Script:NoteTable  = New-Object 'Int[,]' $Script:NumNotes, $Script:NumOctaves
+
+# Define the Note Table
+# This site has a table where the values are derived from: https://mixbutton.com/mixing-articles/music-note-to-frequency-chart/#:~:text=Music%20Note%20To%20Frequency%20Chart%20%20%20,%20155.56%20Hz%20%208%20more%20rows%20
+$Script:NoteTable[[Notes]::C, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::C, [Octaves]::Second]              = 0
+$Script:NoteTable[[Notes]::C, [Octaves]::Third]               = [Int]65.41D
+$Script:NoteTable[[Notes]::C, [Octaves]::Fourth]              = [Int]130.81D
+$Script:NoteTable[[Notes]::C, [Octaves]::Fifth]               = [Int]261.63D
+$Script:NoteTable[[Notes]::C, [Octaves]::Sixth]               = [Int]523.25D
+$Script:NoteTable[[Notes]::C, [Octaves]::Seventh]             = [Int]1046.5D
+$Script:NoteTable[[Notes]::C, [Octaves]::Eighth]              = [Int]2093.0D
+$Script:NoteTable[[Notes]::C, [Octaves]::Ninth]               = [Int]4186.01D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Second]  = 0
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Third]   = [Int]69.3D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Fourth]  = [Int]138.59D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Fifth]   = [Int]277.18D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Sixth]   = [Int]554.37D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh] = [Int]1108.73D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Eighth]  = [Int]2217.46D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Ninth]   = [Int]4434.92D
+$Script:NoteTable[[Notes]::D, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::D, [Octaves]::Second]              = [Int]36.71D
+$Script:NoteTable[[Notes]::D, [Octaves]::Third]               = [Int]73.42D
+$Script:NoteTable[[Notes]::D, [Octaves]::Fourth]              = [Int]146.83D
+$Script:NoteTable[[Notes]::D, [Octaves]::Fifth]               = [Int]293.66D
+$Script:NoteTable[[Notes]::D, [Octaves]::Sixth]               = [Int]587.33D
+$Script:NoteTable[[Notes]::D, [Octaves]::Seventh]             = [Int]1174.66D
+$Script:NoteTable[[Notes]::D, [Octaves]::Eighth]              = [Int]2349.32D
+$Script:NoteTable[[Notes]::D, [Octaves]::Ninth]               = [Int]4698.63D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Second]  = [Int]38.89D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Third]   = [Int]77.78D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Fourth]  = [Int]155.56D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Fifth]   = [Int]311.13D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Sixth]   = [Int]622.25D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh] = [Int]1244.51D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Eighth]  = [Int]2489.02D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Ninth]   = [Int]4978.03D
+$Script:NoteTable[[Notes]::E, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::E, [Octaves]::Second]              = [Int]41.2D
+$Script:NoteTable[[Notes]::E, [Octaves]::Third]               = [Int]82.41D
+$Script:NoteTable[[Notes]::E, [Octaves]::Fourth]              = [Int]164.81D
+$Script:NoteTable[[Notes]::E, [Octaves]::Fifth]               = [Int]329.63D
+$Script:NoteTable[[Notes]::E, [Octaves]::Sixth]               = [Int]659.25D
+$Script:NoteTable[[Notes]::E, [Octaves]::Seventh]             = [Int]1318.51D
+$Script:NoteTable[[Notes]::E, [Octaves]::Eighth]              = [Int]2637.02D
+$Script:NoteTable[[Notes]::E, [Octaves]::Ninth]               = [Int]5274.04D
+$Script:NoteTable[[Notes]::F, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::F, [Octaves]::Second]              = [Int]43.65D
+$Script:NoteTable[[Notes]::F, [Octaves]::Third]               = [Int]87.31D
+$Script:NoteTable[[Notes]::F, [Octaves]::Fourth]              = [Int]174.61D
+$Script:NoteTable[[Notes]::F, [Octaves]::Fifth]               = [Int]349.23D
+$Script:NoteTable[[Notes]::F, [Octaves]::Sixth]               = [Int]689.46D
+$Script:NoteTable[[Notes]::F, [Octaves]::Seventh]             = [Int]1396.91D
+$Script:NoteTable[[Notes]::F, [Octaves]::Eighth]              = [Int]2793.83D
+$Script:NoteTable[[Notes]::F, [Octaves]::Ninth]               = [Int]5587.65D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Second]  = [Int]46.25D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Third]   = [Int]92.5D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Fourth]  = [Int]185D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Fifth]   = [Int]369.99D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]   = [Int]739.99D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh] = [Int]1479.98D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Eighth]  = [Int]2959.96D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Ninth]   = [Int]5919.91D
+$Script:NoteTable[[Notes]::G, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::G, [Octaves]::Second]              = [Int]49D
+$Script:NoteTable[[Notes]::G, [Octaves]::Third]               = [Int]98D
+$Script:NoteTable[[Notes]::G, [Octaves]::Fourth]              = [Int]196D
+$Script:NoteTable[[Notes]::G, [Octaves]::Fifth]               = [Int]392D
+$Script:NoteTable[[Notes]::G, [Octaves]::Sixth]               = [Int]783.99D
+$Script:NoteTable[[Notes]::G, [Octaves]::Seventh]             = [Int]1567.98D
+$Script:NoteTable[[Notes]::G, [Octaves]::Eighth]              = [Int]3135.96D
+$Script:NoteTable[[Notes]::G, [Octaves]::Ninth]               = [Int]6271.93D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Second]  = [Int]51.91D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Third]   = [Int]103.83D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Fourth]  = [Int]207.65D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Fifth]   = [Int]415.3D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]   = [Int]830.61D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Seventh] = [Int]1661.22D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Eighth]  = [Int]3322.44D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Ninth]   = [Int]6644.88D
+$Script:NoteTable[[Notes]::A, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::A, [Octaves]::Second]              = [Int]55D
+$Script:NoteTable[[Notes]::A, [Octaves]::Third]               = [Int]110D
+$Script:NoteTable[[Notes]::A, [Octaves]::Fourth]              = [Int]220D
+$Script:NoteTable[[Notes]::A, [Octaves]::Fifth]               = [Int]440D
+$Script:NoteTable[[Notes]::A, [Octaves]::Sixth]               = [Int]880D
+$Script:NoteTable[[Notes]::A, [Octaves]::Seventh]             = [Int]1760D
+$Script:NoteTable[[Notes]::A, [Octaves]::Eighth]              = [Int]3520D
+$Script:NoteTable[[Notes]::A, [Octaves]::Ninth]               = [Int]7040D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Second]  = [Int]58.27D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Third]   = [Int]116.54D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Fourth]  = [Int]233.08D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Fifth]   = [Int]466.16D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]   = [Int]932.33D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh] = [Int]1864.66D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Eighth]  = [Int]3729.31D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Ninth]   = [Int]7458.62D
+$Script:NoteTable[[Notes]::B, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::B, [Octaves]::Second]              = [Int]61.74D
+$Script:NoteTable[[Notes]::B, [Octaves]::Third]               = [Int]123.47D
+$Script:NoteTable[[Notes]::B, [Octaves]::Fourth]              = [Int]246.94D
+$Script:NoteTable[[Notes]::B, [Octaves]::Fifth]               = [Int]493.88D
+$Script:NoteTable[[Notes]::B, [Octaves]::Sixth]               = [Int]987.77D
+$Script:NoteTable[[Notes]::B, [Octaves]::Seventh]             = [Int]1975.53D
+$Script:NoteTable[[Notes]::B, [Octaves]::Eighth]              = [Int]3951.07D
+$Script:NoteTable[[Notes]::B, [Octaves]::Ninth]               = [Int]7902.13D
+
+# Declare some songs. Songs are defined as arrangements of Notes polled from the Note Table.
+[System.Tuple[]]$Script:DragonWarriorThemeSong = @()
+[System.Tuple[]]$Script:BattleTheme            = @()
+[System.Tuple[]]$Script:DuckTalesTheme         = @()
+[System.Tuple[]]$Script:GhostbustersTheme      = @()
+
+# Define the Songs
+
+#region Dragon Warrior Theme Jingle (Incomplete)
+
+$Script:DragonWarriorThemeSong[0]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[1]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[2]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[3]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[4]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[5]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[6]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[7]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[8]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[9]  = [System.Tuple]::Create(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[10] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[11] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[12] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[13] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[14] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[15] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[16] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::F, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[17] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[18] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[19] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[20] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[21] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[22] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[23] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[24] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[25] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[26] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[27] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[28] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DragonWarriorThemeSong[29] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+
+#endregion
+
+#region Battle Theme Jingle
+
+$Script:BattleTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)
+$Script:BattleTheme[1] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)
+$Script:BattleTheme[2] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)
+$Script:BattleTheme[3] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::E, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)
+$Script:BattleTheme[4] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)
+$Script:BattleTheme[5] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)
+$Script:BattleTheme[6] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)
+
+#endregion
+
+#endregion
+
 #endregion
 
 #region Text Formatting Functions
