@@ -357,6 +357,17 @@ $Script:BattleTheme[6] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::FSha
 
 #endregion
 
+#region Duck Tales Theme Jingle
+
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)
+
+#endregion
+
 #endregion
 
 #endregion
