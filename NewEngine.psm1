@@ -365,6 +365,21 @@ $Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::B
 $Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)
 $Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)
 $Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)
+$Script:DuckTalesTheme[0] = [System.Tuple]::Create(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)
 
 #endregion
 
