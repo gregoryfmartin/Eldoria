@@ -449,6 +449,10 @@ $Script:GhostbustersTheme[54] = [System.Tuple]::Create(($Script:NoteTable[[Notes
 
 #region Text Formatting Functions
 
+<#
+.SYNOPSIS
+Returns a string preformatted to display the player's hit point information.
+#>
 Function Format-GfmPlayerHitPoints {
     [CmdletBinding()]
     Param ()
@@ -458,6 +462,10 @@ Function Format-GfmPlayerHitPoints {
     }
 }
 
+<#
+.SYNOPSIS
+Returns a string preformatted to display the player's magic point information.
+#>
 Function Format-GfmPlayerMagicPoints {
     [CmdletBinding()]
     Param ()
@@ -467,6 +475,10 @@ Function Format-GfmPlayerMagicPoints {
     }
 }
 
+<#
+.SYNOPSIS
+Returns a string preformatted to display the player's gold information.
+#>
 Function Format-GfmPlayerGold {
     [CmdletBinding()]
     Param ()
@@ -480,6 +492,10 @@ Function Format-GfmPlayerGold {
 
 #region Scene Image Functions
 
+<#
+.SYNOPSIS
+Creates a new Sample Scene Image. This Scene Image is used for testing purposes only. All Scene Images would be created using this patten, however note that with this image in particular, it's randomly generated.
+#>
 Function New-GfmSceneImageSample {
     [CmdletBinding()]
     Param ()
@@ -494,6 +510,23 @@ Function New-GfmSceneImageSample {
     }
 }
 
+<#
+.SYNOPSIS
+Writes a Scene Image to the Scene Image "Window".
+
+.DESCRIPTION
+This function takes a two-dimensional array of BufferCell objects and writes them to the console buffer in the position where the Scene Image "Window" exists at.
+
+Originally, this function was tested on MacOS and Linux, where most of the functions in the RawUI instance are crippled. So a manual method of writing the cells was devised.
+After coming back to testing this function on Windows - where all of the functionality of the RawUI instance is available - a multi-platform algorithm was devised.
+The function now takes a switch that controls which algorithm is used. It should be noted that of the two, the Windows-specific algorithm is substantially faster and works as expected.
+
+.PARAMETER NonWindowsMethod
+A switch that determines if the function is going to use a cross-platform supported algorithm for drawing Scene Images or not.
+
+.PARAMETER CellArray
+The two-dimensional array of BufferCell objects that represent the Scene Image that are going to be written to the console buffer. The drawing origin coordinates are predefined.
+#>
 Function Write-GfmSceneImage {
     [CmdletBinding()]
     Param (
@@ -522,6 +555,10 @@ Function Write-GfmSceneImage {
 
 #region Utility Functions
 
+<#
+.SYNOPSIS
+Checks to see what OS the module is running on and returns a module-specific string identifier to be used elsewhere.
+#>
 Function Test-GfmOs {
     [CmdletBinding()]
     Param ()
@@ -555,6 +592,10 @@ Function Test-GfmOs {
     }
 }
 
+<#
+.SYNOPSIS
+A wrapper for Write-Host that utilizes the NoNewline switch, which is a common requirement for a lot of console write calls in this module.
+#>
 Function Write-GfmHostNnl {
     [CmdletBinding()]
     Param (
@@ -571,6 +612,10 @@ Function Write-GfmHostNnl {
     }
 }
 
+<#
+.SYNOPSIS
+Sets the console cursor position to the predefined "default" location. This is mostly to get it out of the way for visual aesthetic.
+#>
 Function Set-GfmDefaultCursorPosition {
     [CmdletBinding()]
     Param ()
@@ -580,6 +625,19 @@ Function Set-GfmDefaultCursorPosition {
     }
 }
 
+<#
+.SYNOPSIS
+Writes a string to the console buffer at a caller-specified cell coordinate location. This function will leverate Write-GfmHostNnl to perform the write operation.
+
+.PARAMETER Coordinates
+The Coordinates (in console cells) where the string will start to be written to.
+
+.PARAMETER Message
+The string to write to the console.
+
+.PARAMETER ForegroundColor
+The color to give to the string when it's being written.
+#>
 Function Write-GfmPositionalString {
     [CmdletBinding()]
     Param (
@@ -597,6 +655,19 @@ Function Write-GfmPositionalString {
     }
 }
 
+<#
+.SYNOPSIS
+Writes a string to the console in a teletype fashion. This function will leverage Write-GfmHostNnl.
+
+.PARAMETER Message
+The string that will be written to the console.
+
+.PARAMETER ForegroundColor
+The color to give to the string when it's being written.
+
+.PARAMETER TypeSpeed
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]::Normal.
+#>
 Function Write-GfmTtyString {
     [CmdletBinding()]
     Param (
@@ -624,6 +695,22 @@ Function Write-GfmTtyString {
     }
 }
 
+<#
+.SYNOPSIS
+Combines the positional string and teletype functions.
+
+.PARAMETER Coordinates
+The Coordinates (in console cells) where the string will start to be written to.
+
+.PARAMETER Message
+The string that will be written to the console.
+
+.PARAMETER ForegroundColor
+The color to give to the string when it's being written.
+
+.PARAMETER TypeSpeed
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]::Normal.
+#>
 Function Write-GfmPositionalTtyString {
     [CmdletBinding()]
     Param (
@@ -643,6 +730,10 @@ Function Write-GfmPositionalTtyString {
     }
 }
 
+<#
+.SYNOPSIS
+Writes the player's name to the console window at the predefined cell coordinates.
+#>
 Function Write-GfmPlayerName {
     [CmdletBinding()]
     Param ()
@@ -659,6 +750,10 @@ Function Write-GfmPlayerName {
     }
 }
 
+<#
+.SYNOPSIS
+Writes the player's hit points to the console window at the predefined cell coordinates. This function also performs logic against the current hit points to color the text based on state.
+#>
 Function Write-GfmPlayerHp {
     [CmdletBinding()]
     Param ()
@@ -701,6 +796,10 @@ Function Write-GfmPlayerHp {
     }
 }
 
+<#
+.SYNOPSIS
+Writes the player's magic points to the console window at the predefined cell coordinates. This function also performs logic against the current magic points to color the text based on state.
+#>
 Function Write-GfmPlayerMp {
     [CmdletBinding()]
     Param ()
@@ -743,6 +842,10 @@ Function Write-GfmPlayerMp {
     }
 }
 
+<#
+.SYNOPSIS
+Writes the player's gold points to the console window at the predefined cell coordinates.
+#>
 Function Write-GfmPlayerGold {
     [CmdletBinding()]
     Param ()
@@ -759,6 +862,10 @@ Function Write-GfmPlayerGold {
     }
 }
 
+<#
+.SYNOPSIS
+Tests the player's current hit points against a fraction of the maximum and determines their state accordingly.
+#>
 Function Test-GfmPlayerHpForState {
     [CmdletBinding()]
     Param ()
@@ -774,6 +881,10 @@ Function Test-GfmPlayerHpForState {
     }
 }
 
+<#
+.SYNOPSIS
+Tests the player's current magic points against a fraction of the maximum and determines their state accordingly.
+#>
 Function Test-GfmPlayerMpForState {
     [CmdletBinding()]
     Param ()
@@ -789,6 +900,16 @@ Function Test-GfmPlayerMpForState {
     }
 }
 
+<#
+.SYNOPSIS
+Changes the player's name and writes it to the console window if applicable.
+
+.PARAMETER NewName
+The new name to assign to the player.
+
+.PARAMETER WriteToConsole
+Writes the name to the console at the predefined cell coordinates if necessary.
+#>
 Function Update-GfmPlayerName {
     [CmdletBinding()]
     Param (
@@ -811,6 +932,16 @@ Function Update-GfmPlayerName {
     }
 }
 
+<#
+.SYNOPSIS
+Updates the player's current hit points and writes it to the console window if applicable.
+
+.PARAMETER HpDelta
+The additive to the current hit points value. To subtract from the current hit points, assign this a negative value.
+
+.PARAMETER WriteToConsole
+Writes the HP String to the console at the predefined cell coordinates if necessary.
+#>
 Function Update-GfmPlayerHp {
     [CmdletBinding()]
     Param (
@@ -836,6 +967,16 @@ Function Update-GfmPlayerHp {
     }
 }
 
+<#
+.SYNOPSIS
+Updates the player's current magic points and writes it to the console window if applicable.
+
+.PARAMETER MpDelta
+The additive to the current magic points value. To subtract from the current magic points, assign this a negative value.
+
+.PARAMETER WriteToConsole
+Writes the MP String to the console at the predefined cell coordinates if necessary.
+#>
 Function Update-GfmPlayerMp {
     [CmdletBinding()]
     Param (
@@ -861,6 +1002,16 @@ Function Update-GfmPlayerMp {
     }
 }
 
+<#
+.SYNOPSIS
+Updates the player's current gold points and writes it to the console window if applicable.
+
+.PARAMETER GDelta
+The additive to the current gold points value. To subtract from the current gold points, assign this a negative value.
+
+.PARAMETER WriteToConsole
+Writes the Gold String to the console at the predefined cell coordinates if necessary.
+#>
 Function Update-GfmPlayerGold {
     [CmdletBinding()]
     Param (
@@ -889,6 +1040,13 @@ Function Update-GfmPlayerGold {
 
 #region Window Drawing Functions
 
+<#
+.SYNOPSIS
+Writes Status "Window" to the console buffer at the predefined cell coordinates.
+
+.DESCRIPTION
+This function uses two different algorithms for writing the "window" to the console buffer. One algorithm is utilized when running on MacOS or Linux. The other is used when running on Windows.
+#>
 Function Write-GfmStatusWindow {
     [CmdletBinding()]
     Param ()

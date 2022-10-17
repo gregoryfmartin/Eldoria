@@ -1,4 +1,4 @@
- This is meant as a test for the NewEngine module
+ # This is meant as a test for the NewEngine module
 
 Import-Module '.\NewEngine.psm1'
 
