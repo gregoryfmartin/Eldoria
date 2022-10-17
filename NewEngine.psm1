@@ -1,3 +1,20 @@
+#region Script Notes
+#endregion
+
+#region PSDrive Configuration
+
+[String]$Script:FantaseeStarPSDDescription = 'Variable and Configuration Storage for Fantasee Star'
+[String]$Script:FantaseeStarPSDName = 'FantaseeStar'
+[String]$Script:FantaseeStarPSDProvider = 'Variable'
+[String]$Script:FantaseeStarPSDScope = 'Global'
+
+New-PSDrive -Description $Script:FantaseeStarPSDDescription `
+            -Name $Script:FantaseeStarPSDName `
+            -PSProvider $Script:FantaseeStarPSDProvider `
+            -Scope $Script:FantaseeStarPSDScope
+
+#endregion
+
 #region Global Variables
 
 #region Game State Definitions
