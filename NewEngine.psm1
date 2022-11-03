@@ -1282,6 +1282,22 @@ Function Invoke-GfmCmdParser {
                 Return
             } Else {
                 # The first phrase of the command found a match
+                # Although it's possible at this point that the command phrase is incomplete,
+                # for the purposes of testing, we're going to assume that it is and start building 
+                # the functional mechanics of it in terms of rendering.
+                Update-GfmCmdHistory -CmdActualValid
+
+                Write-GfmMessageWindowMessage `
+                    -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+                    -ForegroundColor $Script:UiCommandWindowCmdHistValid `
+                    -Teletype
+
+                # Clear the cmdactual string
+                $Script:UiCommandWindowCmdActual = ''
+
+                # Reset the command window
+                Set-GfmDefaultCursorPosition
+                Return
             }
         }
     }
@@ -1296,7 +1312,7 @@ Function Update-GfmCmdHistory {
     Process {
         # This algorithm is similar to what's used in the Message Window.
         # Shift all of the strings up, and promote the new command into the bottom.
-        # For some reason, object assignments here wasn't doing what I wanted it to do in terms of rendering.
+        # For some reason, object assignments here weren't doing what I wanted it to do in terms of rendering.
         # There was some goofy bullshit where D would render twice, meaning that it was copied into C despite the fact
         # that there shouldn't have been anything in it, and I don't quite understand how that happened. However, it was
         # visible in the buffer cells, so this manual moving seems to be the best way to mitigate this. I'll want to look
