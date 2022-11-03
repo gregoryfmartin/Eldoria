@@ -88,23 +88,43 @@
 
 #region Command Window Variables
 
-[System.ConsoleColor]$Script:UiCommandWindowBorderColor = 'White'
-[System.ConsoleColor]$Script:UiCommandWindowCmdHistValid = 'Green'
-[System.ConsoleColor]$Script:UiCommandWindowCmdHistErr = 'Red'
-[String]             $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
-[String]             $Script:UiCommandWindowBorderVertical = '|'
-[String]             $Script:UiCommandWindowCmdDiv = '``````````````````'
-[String]             $Script:UiCommandWindowHistA = ''
-[String]             $Script:UiCommandWindowHistB = ''
-[String]             $Script:UiCommandWindowHistC = ''
-[String]             $Script:UiCommandWindowHistD = ''
-[String]             $Script:UiCommandWindowCmdActual = ''
-[Int]                $Script:UiCommandWindowDrawX = 0
-[Int]                $Script:UiCommandWindowDrawY = 12
-[Int]                $Script:UiCommandWindowWidth = 19
-[Int]                $Script:UiCommandWindowHeight = 7
-[Int]                $Script:UiCommandWindowCmdDivDrawX = $Script:UiCommandWindowDrawX + 1
-[Int]                $Script:UiCommandWindowCmdDivDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
+Class CmdWindowHistoryMessage {
+    [String]$Message
+    [System.ConsoleColor]$ForegroundColor
+
+    CmdWindowHistoryMessage (
+        [String]$msg,
+        [System.ConsoleColor]$fgc
+    ) {
+        $this.Message = $msg
+        $this.ForegroundColor = $fgc
+    }
+}
+
+[System.ConsoleColor]    $Script:UiCommandWindowBorderColor = 'White'
+[System.ConsoleColor]    $Script:UiCommandWindowCmdHistValid = 'Green'
+[System.ConsoleColor]    $Script:UiCommandWindowCmdHistErr = 'Red'
+[System.ConsoleColor]    $Script:UiCommandWindowCmdBlankColor = 'Black'
+[String]                 $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
+[String]                 $Script:UiCommandWindowBorderVertical = '|'
+[String]                 $Script:UiCommandWindowCmdDiv = '``````````````````'
+[String]                 $Script:UiCommandWindowCmdActual = ''
+[String]                 $Script:UiCommandWindowCmdBlank = '                  '
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD = [CmdWindowHistoryMessage]::new('', 'White')
+[Int]                    $Script:UiCommandWindowDrawX = 0
+[Int]                    $Script:UiCommandWindowDrawY = 12
+[Int]                    $Script:UiCommandWindowWidth = 19
+[Int]                    $Script:UiCommandWindowHeight = 7
+[Int]                    $Script:UiCommandWindowCmdDivDrawX = $Script:UiCommandWindowDrawX + 1
+[Int]                    $Script:UiCommandWindowCmdDivDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
+[Int]                    $Script:UiCommandWindowHistDrawX = $Script:UiCommandWindowDrawX + 1
+[Int]                    $Script:UiCommandWindowHistDDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
+[Int]                    $Script:UiCommandWindowHistCDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
+[Int]                    $Script:UiCommandWindowHistBDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
+[Int]                    $Script:UiCommandWindowHistADrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
 
 #endregion
 
@@ -170,7 +190,7 @@ $Script:SceneImageSample = New-Object 'System.Management.Automation.Host.BufferC
     Quick = 65000
     Fast = 50000
     SuperFast = 25000
-    LineClear = 10
+    LineClear = 1
 }
 
 #endregion
@@ -1218,8 +1238,14 @@ Function Invoke-GfmCmdParser {
     Param ()
 
     Process {
+        # The first thing to do is to clear the user input portion of the command window
+        # The cursor will not be in the default position, so we need to reset it and then clear the row
+        Set-GfmDefaultCursorPosition
+        Write-GfmHostNnl `
+            -Message $Script:UiCommandWindowCmdBlank `
+            -ForegroundColor 'Black'
+
         # TODO: When a valid command is entered, nothing is done
-        # TODO: When a command is entered period, the ReadLine call isn't clearing the input, so this needs done manually
 
         [Boolean]$foundCmdFirstTierMatch = $false
 
@@ -1241,6 +1267,8 @@ Function Invoke-GfmCmdParser {
             }
             If(-NOT($foundCmdFirstTierMatch)) {
                 # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
+                Update-GfmCmdHistory
+
                 Write-GfmMessageWindowMessage `
                     -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
                     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
@@ -1256,6 +1284,74 @@ Function Invoke-GfmCmdParser {
                 # The first phrase of the command found a match
             }
         }
+    }
+}
+
+Function Update-GfmCmdHistory {
+    [CmdletBinding()]
+    Param (
+        [Switch]$CmdActualValid
+    )
+
+    Process {
+        # This algorithm is similar to what's used in the Message Window.
+        # Shift all of the strings up, and promote the new command into the bottom.
+        # For some reason, object assignments here wasn't doing what I wanted it to do in terms of rendering.
+        # There was some goofy bullshit where D would render twice, meaning that it was copied into C despite the fact
+        # that there shouldn't have been anything in it, and I don't quite understand how that happened. However, it was
+        # visible in the buffer cells, so this manual moving seems to be the best way to mitigate this. I'll want to look
+        # into this a bit more once the code is more stable.
+        $Script:UiCommandWindowHistA.Message = $Script:UiCommandWindowHistB.Message; $Script:UiCommandWindowHistA.ForegroundColor = $Script:UiCommandWindowHistB.ForegroundColor
+        $Script:UiCommandWindowHistB.Message = $Script:UiCommandWindowHistC.Message; $Script:UiCommandWindowHistB.ForegroundColor = $Script:UiCommandWindowHistC.ForegroundColor
+        $Script:UiCommandWindowHistC.Message = $Script:UiCommandWindowHistD.Message; $Script:UiCommandWindowHistC.ForegroundColor = $Script:UiCommandWindowHistD.ForegroundColor
+        $Script:UiCommandWindowHistD.Message = $Script:UiCommandWindowCmdActual
+        If ($CmdActualValid) {
+            $Script:UiCommandWindowHistD.ForegroundColor = $Script:UiCommandWindowCmdHistValid
+        } Else {
+            $Script:UiCommandWindowHistD.ForegroundColor = $Script:UiCommandWindowCmdHistErr
+        }
+
+        # Clear the positions and write the histories
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistDDrawY)) `
+            -Message $($Script:UiCommandWindowCmdBlank) `
+            -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistDDrawY)) `
+            -Message $($Script:UiCommandWindowHistD.Message) `
+            -ForegroundColor $($Script:UiCommandWindowHistD.ForegroundColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistCDrawY)) `
+            -Message $($Script:UiCommandWindowCmdBlank) `
+            -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistCDrawY)) `
+            -Message $($Script:UiCommandWindowHistC.Message) `
+            -ForegroundColor $($Script:UiCommandWindowHistC.ForegroundColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistBDrawY)) `
+            -Message $($Script:UiCommandWindowCmdBlank) `
+            -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistBDrawY)) `
+            -Message $($Script:UiCommandWindowHistB.Message) `
+            -ForegroundColor $($Script:UiCommandWindowHistB.ForegroundColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistADrawY)) `
+            -Message $($Script:UiCommandWindowCmdBlank) `
+            -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistADrawY)) `
+            -Message $($Script:UiCommandWindowHistA.Message) `
+            -ForegroundColor $($Script:UiCommandWindowHistA.ForegroundColor) `
+            -TypeSpeed LineClear
     }
 }
 
