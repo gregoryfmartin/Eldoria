@@ -15,6 +15,9 @@ Write-GfmSceneWindow
 # 9.18.2022:2220 PASS
 Write-GfmMessageWindow
 
+# 10.31.2022:2053
+Write-GfmCommandWindow
+
 # 9.18.2022:0905 PASS
 #Write-GfmPositionalString -Coordinates $([System.Management.Automation.Host.Coordinates]::new(10, 10)) `
 #    -Message "Hello, world!" -ForegroundColor 'Red'
@@ -31,4 +34,12 @@ Write-GfmMessageWindow
 # 9.18.2022:2256 PASS
 Test-GfmPlayScreen
 
-While(1) {}
+While(1) {
+    Write-GfmUserCommandInput
+    # $PressedKey = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    # If ($PressedKey.VirtualKeyCode -EQ 65) {
+    #     Write-GfmMessageWindowMessage `
+    #         -Message "$(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500)" `
+    #         -Teletype
+    # }
+}
