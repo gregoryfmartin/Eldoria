@@ -1137,6 +1137,11 @@ Function Write-GfmMessageWindowMessage {
     )
 
     Process {
+        # BUG
+        # The color provided in the parameters is propagated to all of the strings in this window when it's updated
+        # which kind of defeats the purpose of having the color argument there at all. I'll need to rethink this.
+        # There's a model for the intended behavior in the Update-GmfCmdHistory function. As of now, this will stay borken.
+
         # FIXED
         # I've discovered a new issue with this. If the length of one of the strings is too small in comparison to
         # any adjacent one in the queue, there are artifacts remaining. The messages should be fixed length,
@@ -1228,6 +1233,7 @@ Function Write-GfmUserCommandInput {
     Param ()
 
     Process {
+        # TODO: I need to restrict ReadLine from printing characters beyond the width of the command window
         $Script:UiCommandWindowCmdActual = $(Get-Host).UI.ReadLine()
         Invoke-GfmCmdParser
     }
