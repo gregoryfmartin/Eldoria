@@ -1233,15 +1233,76 @@ Function Read-GfmUserCommandInput {
     Param ()
 
     Process {
-        # TODO: I need to restrict ReadLine from printing characters beyond the width of the command window
-        $Script:UiCommandWindowCmdActual = $(Get-Host).UI.ReadLine()
+        <#
+        We're going to try and take a different approach to reading this information in the parser cell row.
+        First of all, a complete list of virtual key codes in hex can be found here: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+        The next thing we're going to want to do is see if we can loop using the return value of RawUI.ReadKey.
+        If the return value of RawUI.ReadKey is 0x0D (DEC 13) (Enter Key), then we know that the user command has been completed.
+        Each result of the call will have its Character property value concatenated to the cmdactual string. Because the console
+        is accepting input in the current Cursor Position, this should render the character typed to the console window.
+        While the typing is progressing, it should be possible to check the current Cursor Position against the maximum length
+        of the command parser row and prohibit the user from typing any further. When Enter is pressed, we should have the
+        cmdactual string populated with the characters that were typed into the command row and the parser can be invoked
+        using this data.
 
-        # Poll the cursor position
-        # This doesn't work
-        $cpos = $Script:Rui.CursorPosition
-        If ($cpos.X -GE 19) {
-            $Script:Rui.CursorPosition.X = 19
+        BUG
+        While this seems to work for typing shit in and getting it into cmdactual, the damn backspace functionality is borken.
+        After checking the Cursor Position for max limit, a check should be made to see if the VirtualKeyCode is 0x08 (DEC 8) (Backspace).
+        If this is the case, we check to see what the current Cursor Position is. If we can subtract 1 from its X property value, we
+        first clear the Buffer Cell in the prior and then reposition the Cursor Position to X-1.
+        #>
+
+        $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
+        While ($keyCap.VirtualKeyCode -NE 13) {
+            # Check to see what the current Cursor Position is to ensure that we're not violating length
+            # when attempting to append the Character property value to the cmdactual string
+            If ($Script:Rui.CursorPosition.X -GE 19) {
+                # As of now, it's unclear what the hell to do in response to a length violation
+                # other than to not do anything. I just don't have any idea if this is going to
+                # do what I think it's going to do, so I'm just going with this for now.
+                Invoke-GfmCmdParser
+            }
+
+            # Check to see if the key pressed is the Backspace Key
+            If ($keyCap.VirtualKeyCode -EQ 8) {
+                # Check to see if the current Cursor Position X-1 would violate the left limit (this would be the Default Cursor Position X)
+                $fx = $Script:Rui.CursorPosition.X
+                If ($fx -GT $Script:DefaultCursorX) {
+                    # We can perform the backspace
+
+                    Write-GfmHostNnl `
+                        -Message ' ' `
+                        -ForegroundColor 'Black' `
+                        -BackgroundColor 'Black'
+
+                    # Clear the buffer cell using the positional write function
+                    # Write-GfmPositionalString `
+                    #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
+                    #     -Message ' ' `
+                    #     -ForegroundColor 'Black'
+                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X - 1, $Script:DefaultCursorY)
+                } Else {
+                    Set-GfmDefaultCursorPosition
+                }
+            }
+
+            # Append the Character property value to the cmdactual string
+            $Script:UiCommandWindowCmdActual += $keyCap.Character
+
+            # Call ReadKey again
+            $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         }
+
+
+        # # TODO: I need to restrict ReadLine from printing characters beyond the width of the command window
+        # $Script:UiCommandWindowCmdActual = $(Get-Host).UI.ReadLine()
+
+        # # Poll the cursor position
+        # # This doesn't work
+        # $cpos = $Script:Rui.CursorPosition
+        # If ($cpos.X -GE 19) {
+        #     $Script:Rui.CursorPosition.X = 19
+        # }
 
         Invoke-GfmCmdParser
     }
