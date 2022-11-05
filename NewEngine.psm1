@@ -1267,21 +1267,19 @@ Function Read-GfmUserCommandInput {
             If ($keyCap.VirtualKeyCode -EQ 8) {
                 # Check to see if the current Cursor Position X-1 would violate the left limit (this would be the Default Cursor Position X)
                 $fx = $Script:Rui.CursorPosition.X
-                If ($fx -GT $Script:DefaultCursorX) {
+                If ($fx -GE $Script:DefaultCursorX) {
                     # We can perform the backspace
-
                     Write-GfmHostNnl `
                         -Message ' ' `
                         -ForegroundColor 'Black' `
                         -BackgroundColor 'Black'
 
-                    # Clear the buffer cell using the positional write function
-                    # Write-GfmPositionalString `
-                    #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
-                    #     -Message ' ' `
-                    #     -ForegroundColor 'Black'
                     $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X - 1, $Script:DefaultCursorY)
                 } Else {
+                    Write-GfmPositionalString `
+                        -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
+                        -Message ' ' `
+                        -ForegroundColor 'Black'
                     Set-GfmDefaultCursorPosition
                 }
             }
