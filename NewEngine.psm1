@@ -1228,13 +1228,21 @@ Function Write-GfmMessageWindowMessage {
     }
 }
 
-Function Write-GfmUserCommandInput {
+Function Read-GfmUserCommandInput {
     [CmdletBinding()]
     Param ()
 
     Process {
         # TODO: I need to restrict ReadLine from printing characters beyond the width of the command window
         $Script:UiCommandWindowCmdActual = $(Get-Host).UI.ReadLine()
+
+        # Poll the cursor position
+        # This doesn't work
+        $cpos = $Script:Rui.CursorPosition
+        If ($cpos.X -GE 19) {
+            $Script:Rui.CursorPosition.X = 19
+        }
+
         Invoke-GfmCmdParser
     }
 }

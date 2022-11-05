@@ -35,7 +35,7 @@ Write-GfmCommandWindow
 Test-GfmPlayScreen
 
 While(1) {
-    Write-GfmUserCommandInput
+    Read-GfmUserCommandInput
     # $PressedKey = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     # If ($PressedKey.VirtualKeyCode -EQ 65) {
     #     Write-GfmMessageWindowMessage `
