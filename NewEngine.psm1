@@ -1275,17 +1275,27 @@ Function Read-GfmUserCommandInput {
                         -BackgroundColor 'Black'
 
                     $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X - 1, $Script:DefaultCursorY)
+
+                    # Remove the character from the cmdactual string
+                    # Since I'm not going to go through the trouble of capturing what character was in the cell that just got
+                    # clobbered, I'm going to just drop the last index from the cmdactual string.
+                    $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
                 } Else {
                     Write-GfmPositionalString `
                         -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
                         -Message ' ' `
                         -ForegroundColor 'Black'
                     Set-GfmDefaultCursorPosition
-                }
-            }
 
-            # Append the Character property value to the cmdactual string
-            $Script:UiCommandWindowCmdActual += $keyCap.Character
+                    # Remove the character from the cmdactual string
+                    # Since I'm not going to go through the trouble of capturing what character was in the cell that just got
+                    # clobbered, I'm going to just drop the last index from the cmdactual string.
+                    $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                }
+            } Else {
+                # Append the Character property value to the cmdactual string
+                $Script:UiCommandWindowCmdActual += $keyCap.Character
+            }
 
             # Call ReadKey again
             $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
