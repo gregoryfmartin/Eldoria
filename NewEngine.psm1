@@ -144,20 +144,36 @@ Class CmdWindowHistoryMessage {
 
 #region Message Window Variables
 
-[System.ConsoleColor]$Script:UiMessageWindowBorderColor = 'White'
-[String]             $Script:UiMessageWindowBorderHorizontal = '-'
-[String]             $Script:UiMessageWindowBorderVertical = '|'
-[Int]                $Script:UiMessageWindowDrawX = 0
-[Int]                $Script:UiMessageWindowDrawY = 20
-[Int]                $Script:UiMessageWindowWidth = 80
-[Int]                $Script:UiMessageWindowHeight = 4
-[String]             $Script:UiMessageWindowMessageBottom = ''
-[String]             $Script:UiMessageWindowMessageMiddle = ''
-[String]             $Script:UiMessageWindowMessageTop = ''
-[Int]                $Script:UiMessageWindowMessageBottomDrawY = 23
-[Int]                $Script:UiMessageWindowMessageMiddleDrawY = 22
-[Int]                $Script:UiMessageWindowMessageTopDrawY = 21
-[String]             $Script:UiMessageWindowMessageBlank = '                                                                             '
+Class MsgWindowHistoryMessage {
+    [String]$Message
+    [System.ConsoleColor]$ForegroundColor
+
+    MsgWindowHistoryMessage (
+        [String]$msg,
+        [System.ConsoleColor]$fgc
+    ) {
+        $this.Message = $msg
+        $this.ForegroundColor = $fgc
+    }
+}
+
+[System.ConsoleColor]    $Script:UiMessageWindowBorderColor = 'White'
+[String]                 $Script:UiMessageWindowBorderHorizontal = '-'
+[String]                 $Script:UiMessageWindowBorderVertical = '|'
+[Int]                    $Script:UiMessageWindowDrawX = 0
+[Int]                    $Script:UiMessageWindowDrawY = 20
+[Int]                    $Script:UiMessageWindowWidth = 80
+[Int]                    $Script:UiMessageWindowHeight = 4
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC = [MsgWindowHistoryMessage]::new('', 'Black')
+[String]                 $Script:UiMessageWindowMessageBottom = ''
+[String]                 $Script:UiMessageWindowMessageMiddle = ''
+[String]                 $Script:UiMessageWindowMessageTop = ''
+[Int]                    $Script:UiMessageWindowMessageBottomDrawY = 23
+[Int]                    $Script:UiMessageWindowMessageMiddleDrawY = 22
+[Int]                    $Script:UiMessageWindowMessageTopDrawY = 21
+[String]                 $Script:UiMessageWindowMessageBlank = '                                                                             '
 
 #endregion
 
@@ -1153,14 +1169,18 @@ Function Write-GfmMessageWindowMessage {
         # the top being discarded/overwritten. Even if there's nothing currently in the string containers,
         # the shift needs to occur.
 
+        $Script:UiMessageWindowMessageA.Message = $Script:UiMessageWindowMessageB.Message; $Script:UiMessageWindowMessageA.ForegroundColor = $Script:UiMessageWindowMessageB.ForegroundColor
+        $Script:UiMessageWindowMessageB.Message = $Script:UiMessageWindowMessageC.Message; $Script:UiMessageWindowMessageB.ForegroundColor = $Script:UiMessageWindowMessageC.ForegroundColor
+        $Script:UiMessageWindowMessageC.Message = $Message; $Script:UiMessageWindowMessageC.ForegroundColor = $ForegroundColor
+
         # First, move from middle to top
-        $Script:UiMessageWindowMessageTop = $Script:UiMessageWindowMessageMiddle
+        # $Script:UiMessageWindowMessageTop = $Script:UiMessageWindowMessageMiddle
 
         # Next, move from bottom to middle
-        $Script:UiMessageWindowMessageMiddle = $Script:UiMessageWindowMessageBottom
+        # $Script:UiMessageWindowMessageMiddle = $Script:UiMessageWindowMessageBottom
 
         # Assign the bottom message the user-specified message
-        $Script:UiMessageWindowMessageBottom = $Message
+        # $Script:UiMessageWindowMessageBottom = $Message
 
         # Print the messages back to their appropraite positions in the buffer, optionally using the teletype method
         If ($Teletype) {
@@ -1175,8 +1195,8 @@ Function Write-GfmMessageWindowMessage {
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
-                -Message $($Script:UiMessageWindowMessageBottom) `
-                -ForegroundColor $ForegroundColor
+                -Message $($Script:UiMessageWindowMessageC.Message) `
+                -ForegroundColor $($Script:UiMessageWindowMessageC.ForegroundColor)
             
             # Write-GfmPositionalTtyString `
             #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
@@ -1189,8 +1209,8 @@ Function Write-GfmMessageWindowMessage {
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
-                -Message $($Script:UiMessageWindowMessageMiddle) `
-                -ForegroundColor $ForegroundColor
+                -Message $($Script:UiMessageWindowMessageB.Message) `
+                -ForegroundColor $($Script:UiMessageWindowMessageB.ForegroundColor)
 
             # Write-GfmPositionalTtyString `
             #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
@@ -1203,8 +1223,8 @@ Function Write-GfmMessageWindowMessage {
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
-                -Message $($Script:UiMessageWindowMessageTop) `
-                -ForegroundColor $ForegroundColor
+                -Message $($Script:UiMessageWindowMessageA.Message) `
+                -ForegroundColor $($Script:UiMessageWindowMessageA.ForegroundColor)
         } Else {
             Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
@@ -1212,8 +1232,8 @@ Function Write-GfmMessageWindowMessage {
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
-                -Message $($Script:UiMessageWindowMessageBottom) `
-                -ForegroundColor $ForegroundColor
+                -Message $($Script:UiMessageWindowMessageC.Message) `
+                -ForegroundColor $($Script:UiMessageWindowMessageC.ForegroundColor)
 
             Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
@@ -1221,8 +1241,8 @@ Function Write-GfmMessageWindowMessage {
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
-                -Message $($Script:UiMessageWindowMessageMiddle) `
-                -ForegroundColor $ForegroundColor
+                -Message $($Script:UiMessageWindowMessageB.Message) `
+                -ForegroundColor $($Script:UiMessageWindowMessageB.ForegroundColor)
 
             Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
@@ -1230,8 +1250,8 @@ Function Write-GfmMessageWindowMessage {
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
-                -Message $($Script:UiMessageWindowMessageTop) `
-                -ForegroundColor $ForegroundColor
+                -Message $($Script:UiMessageWindowMessageA.Message) `
+                -ForegroundColor $($Script:UiMessageWindowMessageA.ForegroundColor)
         }
     }
 
