@@ -1164,31 +1164,43 @@ Function Write-GfmMessageWindowMessage {
 
         # Print the messages back to their appropraite positions in the buffer, optionally using the teletype method
         If ($Teletype) {
-            Write-GfmPositionalTtyString `
+            # Write-GfmPositionalTtyString `
+            #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
+            #     -Message $($Script:UiMessageWindowMessageBlank) `
+            #     -ForegroundColor $ForegroundColor `
+            #     -TypeSpeed LineClear
+            Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
-                -ForegroundColor $ForegroundColor `
-                -TypeSpeed LineClear
+                -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBottom) `
                 -ForegroundColor $ForegroundColor
             
-            Write-GfmPositionalTtyString `
+            # Write-GfmPositionalTtyString `
+            #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
+            #     -Message $($Script:UiMessageWindowMessageBlank) `
+            #     -ForegroundColor $ForegroundColor `
+            #     -TypeSpeed LineClear
+            Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
-                -ForegroundColor $ForegroundColor `
-                -TypeSpeed LineClear
+                -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageMiddle) `
                 -ForegroundColor $ForegroundColor
 
-            Write-GfmPositionalTtyString `
+            # Write-GfmPositionalTtyString `
+            #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
+            #     -Message $($Script:UiMessageWindowMessageBlank) `
+            #     -ForegroundColor $ForegroundColor `
+            #     -TypeSpeed LineClear
+            Write-GfmPositionalString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
-                -ForegroundColor $ForegroundColor `
-                -TypeSpeed LineClear
+                -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
                 -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageTop) `
