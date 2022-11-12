@@ -167,9 +167,9 @@ Class MsgWindowHistoryMessage {
 [MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA = [MsgWindowHistoryMessage]::new('', 'Black')
 [MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB = [MsgWindowHistoryMessage]::new('', 'Black')
 [MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC = [MsgWindowHistoryMessage]::new('', 'Black')
-[String]                 $Script:UiMessageWindowMessageBottom = ''
-[String]                 $Script:UiMessageWindowMessageMiddle = ''
-[String]                 $Script:UiMessageWindowMessageTop = ''
+# [String]                 $Script:UiMessageWindowMessageBottom = ''
+# [String]                 $Script:UiMessageWindowMessageMiddle = ''
+# [String]                 $Script:UiMessageWindowMessageTop = ''
 [Int]                    $Script:UiMessageWindowMessageBottomDrawY = 23
 [Int]                    $Script:UiMessageWindowMessageMiddleDrawY = 22
 [Int]                    $Script:UiMessageWindowMessageTopDrawY = 21
@@ -1153,7 +1153,7 @@ Function Write-GfmMessageWindowMessage {
     )
 
     Process {
-        # BUG
+        # FIXED
         # The color provided in the parameters is propagated to all of the strings in this window when it's updated
         # which kind of defeats the purpose of having the color argument there at all. I'll need to rethink this.
         # There's a model for the intended behavior in the Update-GmfCmdHistory function. As of now, this will stay borken.
@@ -1277,7 +1277,7 @@ Function Read-GfmUserCommandInput {
         cmdactual string populated with the characters that were typed into the command row and the parser can be invoked
         using this data.
 
-        BUG
+        FIXED
         While this seems to work for typing shit in and getting it into cmdactual, the damn backspace functionality is borken.
         After checking the Cursor Position for max limit, a check should be made to see if the VirtualKeyCode is 0x08 (DEC 8) (Backspace).
         If this is the case, we check to see what the current Cursor Position is. If we can subtract 1 from its X property value, we
