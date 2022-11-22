@@ -1,3 +1,7 @@
+using namespace System
+using namespace System.Collections
+using namespace System.Management.Automation.Host
+
 #region Script Notes
 #endregion
 
@@ -37,21 +41,21 @@
     Danger
 }
 
-[String]             $Script:PlayerName = ''
-[Int]                $Script:PlayerCurrentHitPoints = 0
-[Int]                $Script:PlayerMaximumHitPoints = 0
-[Int]                $Script:PlayerCurrentMagicPoints = 0
-[Int]                $Script:PlayerMaximumMagicPoints = 0
-[Int]                $Script:PlayerCurrentGold = 0
-[Single]             $Script:PlayerStatNumThresholdCaution = 0.6D
-[Single]             $Script:PlayerStatNumThresholdDanger = 0.2D
-[PlayerHpState]      $Script:PlayerHitPointsState = [PlayerHpState]::Normal
-[PlayerMpState]      $Script:PlayerMagicPointsState = [PlayerMpState]::Normal
-[System.ConsoleColor]$Script:PlayerStatNameDrawColor = 'Blue'
-[System.ConsoleColor]$Script:PlayerStatNumberDrawColorSafe = 'Green'
-[System.ConsoleColor]$Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[System.ConsoleColor]$Script:PlayerStatNumberDrawColorDanger = 'Red'
-[System.ConsoleColor]$Script:PlayerStatGoldDrawColor = 'DarkYellow'
+[String]       $Script:PlayerName = ''
+[Int]          $Script:PlayerCurrentHitPoints = 0
+[Int]          $Script:PlayerMaximumHitPoints = 0
+[Int]          $Script:PlayerCurrentMagicPoints = 0
+[Int]          $Script:PlayerMaximumMagicPoints = 0
+[Int]          $Script:PlayerCurrentGold = 0
+[Single]       $Script:PlayerStatNumThresholdCaution = 0.6D
+[Single]       $Script:PlayerStatNumThresholdDanger = 0.2D
+[PlayerHpState]$Script:PlayerHitPointsState = [PlayerHpState]::Normal
+[PlayerMpState]$Script:PlayerMagicPointsState = [PlayerMpState]::Normal
+[ConsoleColor] $Script:PlayerStatNameDrawColor = 'Blue'
+[ConsoleColor] $Script:PlayerStatNumberDrawColorSafe = 'Green'
+[ConsoleColor] $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
+[ConsoleColor] $Script:PlayerStatNumberDrawColorDanger = 'Red'
+[ConsoleColor] $Script:PlayerStatGoldDrawColor = 'DarkYellow'
 
 #endregion
 
@@ -66,23 +70,23 @@
 
 #region Status Window Variables
 
-[System.ConsoleColor]$Script:UiStatusWindowBorderColor = 'White'
-[String]             $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]             $Script:UiStatusWindowBorderVertical = '|'
-[Int]                $Script:UiStatusWindowDrawX = 0
-[Int]                $Script:UiStatusWindowDrawY = 0
-[Int]                $Script:UiStatusWindowWidth = 19
-[Int]                $Script:UiStatusWindowHeight = 11
-[Int]                $Script:UiStatusWindowPlayerNameDrawX = 2
-[Int]                $Script:UiStatusWindowPlayerNameDrawY = 2
-[Int]                $Script:UiStatusWindowPlayerHpDrawX = 2
-[Int]                $Script:UiStatusWindowPlayerHpDrawY = 4
-[Int]                $Script:UiStatusWindowPlayerMpDrawX = 2
-[Int]                $Script:UiStatusWindowPlayerMpDrawY = 6
-[Int]                $Script:UiStatusWindowPlayerGoldDrawX = 2
-[Int]                $Script:UiStatusWindowPlayerGoldDrawY = 9
-[Int]                $Script:UiStatusWindowPlayerAilDrawX = 2
-[Int]                $Script:UiStatusWindowPlayerAilDrawY = 11
+[ConsoleColor]$Script:UiStatusWindowBorderColor = 'White'
+[String]      $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
+[String]      $Script:UiStatusWindowBorderVertical = '|'
+[Int]         $Script:UiStatusWindowDrawX = 0
+[Int]         $Script:UiStatusWindowDrawY = 0
+[Int]         $Script:UiStatusWindowWidth = 19
+[Int]         $Script:UiStatusWindowHeight = 11
+[Int]         $Script:UiStatusWindowPlayerNameDrawX = 2
+[Int]         $Script:UiStatusWindowPlayerNameDrawY = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawX = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawY = 4
+[Int]         $Script:UiStatusWindowPlayerMpDrawX = 2
+[Int]         $Script:UiStatusWindowPlayerMpDrawY = 6
+[Int]         $Script:UiStatusWindowPlayerGoldDrawX = 2
+[Int]         $Script:UiStatusWindowPlayerGoldDrawY = 9
+[Int]         $Script:UiStatusWindowPlayerAilDrawX = 2
+[Int]         $Script:UiStatusWindowPlayerAilDrawY = 11
 
 #endregion
 
@@ -90,21 +94,21 @@
 
 Class CmdWindowHistoryMessage {
     [String]$Message
-    [System.ConsoleColor]$ForegroundColor
+    [ConsoleColor]$ForegroundColor
 
     CmdWindowHistoryMessage (
         [String]$msg,
-        [System.ConsoleColor]$fgc
+        [ConsoleColor]$fgc
     ) {
         $this.Message = $msg
         $this.ForegroundColor = $fgc
     }
 }
 
-[System.ConsoleColor]    $Script:UiCommandWindowBorderColor = 'White'
-[System.ConsoleColor]    $Script:UiCommandWindowCmdHistValid = 'Green'
-[System.ConsoleColor]    $Script:UiCommandWindowCmdHistErr = 'Red'
-[System.ConsoleColor]    $Script:UiCommandWindowCmdBlankColor = 'Black'
+[ConsoleColor]    $Script:UiCommandWindowBorderColor = 'White'
+[ConsoleColor]    $Script:UiCommandWindowCmdHistValid = 'Green'
+[ConsoleColor]    $Script:UiCommandWindowCmdHistErr = 'Red'
+[ConsoleColor]    $Script:UiCommandWindowCmdBlankColor = 'Black'
 [String]                 $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
 [String]                 $Script:UiCommandWindowBorderVertical = '|'
 [String]                 $Script:UiCommandWindowCmdDiv = '``````````````````'
@@ -130,7 +134,7 @@ Class CmdWindowHistoryMessage {
 
 #region Scene Window Variables
 
-[System.ConsoleColor]$Script:UiSceneWindowBorderColor = 'White'
+[ConsoleColor]$Script:UiSceneWindowBorderColor = 'White'
 [String]             $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
 [String]             $Script:UiSceneWindowBorderVertical = '|'
 [Int]                $Script:UiSceneWindowDrawX = 30
@@ -146,18 +150,18 @@ Class CmdWindowHistoryMessage {
 
 Class MsgWindowHistoryMessage {
     [String]$Message
-    [System.ConsoleColor]$ForegroundColor
+    [ConsoleColor]$ForegroundColor
 
     MsgWindowHistoryMessage (
         [String]$msg,
-        [System.ConsoleColor]$fgc
+        [ConsoleColor]$fgc
     ) {
         $this.Message = $msg
         $this.ForegroundColor = $fgc
     }
 }
 
-[System.ConsoleColor]    $Script:UiMessageWindowBorderColor = 'White'
+[ConsoleColor]    $Script:UiMessageWindowBorderColor = 'White'
 [String]                 $Script:UiMessageWindowBorderHorizontal = '-'
 [String]                 $Script:UiMessageWindowBorderVertical = '|'
 [Int]                    $Script:UiMessageWindowDrawX = 0
@@ -192,7 +196,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 #region Scene Image Definitions
 
-$Script:SceneImageSample = New-Object 'System.Management.Automation.Host.BufferCell[,]' $Script:SceneImageHeight, $Script:SceneImageWidth
+$Script:SceneImageSample = New-Object 'BufferCell[,]' $Script:SceneImageHeight, $Script:SceneImageWidth
 
 #endregion
 
@@ -385,10 +389,10 @@ $Script:NoteTable[[Notes]::B, [Octaves]::Eighth] = [Int]3951.07D
 $Script:NoteTable[[Notes]::B, [Octaves]::Ninth] = [Int]7902.13D
 
 # Declare some songs. Songs are defined as arrangements of Notes polled from the Note Table.
-[Collections.ArrayList]$Script:DragonWarriorTheme = New-Object 'Collections.ArrayList'
-[Collections.ArrayList]$Script:BattleTheme = New-Object 'Collections.ArrayList'
-[Collections.ArrayList]$Script:DuckTalesTheme = New-Object 'Collections.ArrayList'
-[Collections.ArrayList]$Script:GhostbustersTheme = New-Object 'Collections.ArrayList'
+[Collections.ArrayList]$Script:DragonWarriorTheme = New-Object 'ArrayList'
+[Collections.ArrayList]$Script:BattleTheme = New-Object 'ArrayList'
+[Collections.ArrayList]$Script:DuckTalesTheme = New-Object 'ArrayList'
+[Collections.ArrayList]$Script:GhostbustersTheme = New-Object 'ArrayList'
 
 # Define the Songs
 
@@ -596,7 +600,7 @@ Function New-GfmSceneImageSample {
         For ($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
             For ($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
                 [Int]$randBgColor = Get-Random -Minimum 1 -Maximum 15
-                $Script:SceneImageSample[$h, $w] = [System.Management.Automation.Host.BufferCell]::new(' ', 0, $randBgColor, 'Complete')
+                $Script:SceneImageSample[$h, $w] = [BufferCell]::new(' ', 0, $randBgColor, 'Complete')
             }
         }
     }
@@ -624,21 +628,21 @@ Function Write-GfmSceneImage {
     Param (
         [Switch]$NonWindowsMethod,
         [Parameter(Mandatory = $true)]
-        [System.Management.Automation.Host.BufferCell[, ]]$CellArray
+        [BufferCell[, ]]$CellArray
     )
 
     Process {
         If ($NonWindowsMethod) {
             For ($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
                 For ($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:SceneImageDrawOriginX + $w, $Script:SceneImageDrawOriginY + $h)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:SceneImageDrawOriginX + $w, $Script:SceneImageDrawOriginY + $h)
                     Write-Host ' ' -BackgroundColor $CellArray[$h, $w].BackgroundColor -NoNewline
                 }
             }
         } Else {
             # This is what I've been trying to accomplish on the Mac and Linux and it doesn't work on those two platforms.
             # This actually appears to be faster too
-            $Script:Rui.SetBufferContents($([System.Management.Automation.Host.Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
+            $Script:Rui.SetBufferContents($([Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
         }
     }
 }
@@ -695,9 +699,9 @@ Function Write-GfmHostNnl {
         [AllowEmptyString()]
         [String]$Message,
         [Parameter(Mandatory = $true)]
-        [System.ConsoleColor]$ForegroundColor,
+        [ConsoleColor]$ForegroundColor,
         [Parameter(Mandatory = $false)]
-        [System.ConsoleColor]$BackgroundColor = 'Black'
+        [ConsoleColor]$BackgroundColor = 'Black'
     )
 
     Process {
@@ -714,7 +718,7 @@ Function Set-GfmDefaultCursorPosition {
     Param ()
 
     Process {
-        $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:DefaultCursorX, $Script:DefaultCursorY)
+        $Script:Rui.CursorPosition = [Coordinates]::new($Script:DefaultCursorX, $Script:DefaultCursorY)
     }
 }
 
@@ -735,12 +739,12 @@ Function Write-GfmPositionalString {
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory = $true)]
-        [System.Management.Automation.Host.Coordinates]$Coordinates,
+        [Coordinates]$Coordinates,
         [Parameter(Mandatory = $true)]
         [AllowEmptyString()]
         [String]$Message,
         [Parameter(Mandatory = $true)]
-        [System.ConsoleColor]$ForegroundColor
+        [ConsoleColor]$ForegroundColor
     )
 
     Process {
@@ -769,7 +773,7 @@ Function Write-GfmTtyString {
         [AllowEmptyString()]
         [String]$Message,
         [Parameter(Mandatory = $true)]
-        [System.ConsoleColor]$ForegroundColor,
+        [ConsoleColor]$ForegroundColor,
         [Parameter(Mandatory = $false)]
         [TtySpeed]$TypeSpeed = [TtySpeed]::Normal
     )
@@ -810,7 +814,7 @@ Function Write-GfmPositionalTtyString {
     [CmdletBinding()]
     Param (
         [Parameter(Mandatory = $true)]
-        [System.Management.Automation.Host.Coordinates]$Coordinates,
+        [Coordinates]$Coordinates,
         [Parameter(Mandatory = $true)]
         [AllowEmptyString()]
         [String]$Message,
@@ -836,7 +840,7 @@ Function Write-GfmPlayerName {
 
     Process {
         Write-GfmPositionalString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerNameDrawX, $Script:UiStatusWindowPlayerNameDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerNameDrawX, $Script:UiStatusWindowPlayerNameDrawY)) `
             -Message $Script:PlayerName `
             -ForegroundColor $Script:PlayerStatNameDrawColor
     }
@@ -859,28 +863,28 @@ Function Write-GfmPlayerHp {
             # The fix for properly strong-typing the scoping is found here:https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-switch?view=powershell-7.2#enum
             ([PlayerHpState]::Normal) {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorSafe
             }
 
             ([PlayerHpState]::Caution) {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorCaution
             }
 
             ([PlayerHpState]::Danger) {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
 
             Default {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
@@ -905,28 +909,28 @@ Function Write-GfmPlayerMp {
             # The fix for properly strong-typing the scoping is found here:https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-switch?view=powershell-7.2#enum
             ([PlayerMpState]::Normal) {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorSafe
             }
 
             ([PlayerMpState]::Caution) {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorCaution
             }
 
             ([PlayerMpState]::Danger) {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
 
             Default {
                 Write-GfmPositionalString `
-                    -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
+                    -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
                     -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
@@ -948,7 +952,7 @@ Function Write-GfmPlayerGold {
 
     Process {
         Write-GfmPositionalString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowPlayerGoldDrawX, $Script:UiStatusWindowPlayerGoldDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerGoldDrawX, $Script:UiStatusWindowPlayerGoldDrawY)) `
             -Message $(Format-GfmPlayerGold) `
             -ForegroundColor $Script:PlayerStatGoldDrawColor
     }
@@ -1048,7 +1052,7 @@ Function Update-GfmPlayerHp {
 
     Process {
         $t = $Script:PlayerCurrentHitPoints + $HpDelta
-        $t = [System.Math]::Clamp($t, 0, $Script:PlayerMaximumHitPoints)
+        $t = [Math]::Clamp($t, 0, $Script:PlayerMaximumHitPoints)
         $Script:PlayerCurrentHitPoints = $t
         Test-GfmPlayerHpForState
         If ($WriteToConsole) {
@@ -1083,7 +1087,7 @@ Function Update-GfmPlayerMp {
 
     Process {
         $t = $Script:PlayerCurrentMagicPoints + $MpDelta
-        $t = [System.Math]::Clamp($t, 0, $Script:PlayerMaximumMagicPoints)
+        $t = [Math]::Clamp($t, 0, $Script:PlayerMaximumMagicPoints)
         $Script:PlayerCurrentMagicPoints = $t
         Test-GfmPlayerMpForState
         If ($WriteToConsole) {
@@ -1118,7 +1122,7 @@ Function Update-GfmPlayerGold {
 
     Process {
         $t = $Script:PlayerCurrentGold + $GDelta
-        $t = [System.Math]::Clamp($t, 0, [Int]::MaxValue)
+        $t = [Math]::Clamp($t, 0, [Int]::MaxValue)
         $Script:PlayerCurrentGold = $t
         If ($WriteToConsole) {
             Write-GfmPlayerGold
@@ -1148,7 +1152,7 @@ Function Write-GfmMessageWindowMessage {
         [Parameter(Mandatory = $true)]
         [String]$Message,
         [Parameter(Mandatory = $false)]
-        [System.ConsoleColor]$ForegroundColor = 'White',
+        [ConsoleColor]$ForegroundColor = 'White',
         [Switch]$Teletype
     )
 
@@ -1190,11 +1194,11 @@ Function Write-GfmMessageWindowMessage {
             #     -ForegroundColor $ForegroundColor `
             #     -TypeSpeed LineClear
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageC.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageC.ForegroundColor)
             
@@ -1204,11 +1208,11 @@ Function Write-GfmMessageWindowMessage {
             #     -ForegroundColor $ForegroundColor `
             #     -TypeSpeed LineClear
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageB.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageB.ForegroundColor)
 
@@ -1218,38 +1222,38 @@ Function Write-GfmMessageWindowMessage {
             #     -ForegroundColor $ForegroundColor `
             #     -TypeSpeed LineClear
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalTtyString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageA.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageA.ForegroundColor)
         } Else {
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageC.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageC.ForegroundColor)
 
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageB.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageB.ForegroundColor)
 
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
                 -ForegroundColor $ForegroundColor
             Write-GfmPositionalString `
-                -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
+                -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageA.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageA.ForegroundColor)
         }
@@ -1306,7 +1310,7 @@ Function Read-GfmUserCommandInput {
                         -ForegroundColor 'Black' `
                         -BackgroundColor 'Black'
 
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X - 1, $Script:DefaultCursorY)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:Rui.CursorPosition.X - 1, $Script:DefaultCursorY)
 
                     # Remove the character from the cmdactual string
                     # Since I'm not going to go through the trouble of capturing what character was in the cell that just got
@@ -1314,7 +1318,7 @@ Function Read-GfmUserCommandInput {
                     $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
                 } Else {
                     Write-GfmPositionalString `
-                        -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
+                        -Coordinates $([Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
                         -Message ' ' `
                         -ForegroundColor 'Black'
                     Set-GfmDefaultCursorPosition
@@ -1375,12 +1379,12 @@ Function Invoke-GfmCmdParser {
             # The first step is to see what the command string starts with. This will be accomplished with the String::StartsWith
             # function. We'll simply loop through the valid command first tier entries to see if it matches anything. If there are
             # no matches, the command history gets the addition in red, and a message is printed to the Message Window.
-            Foreach($cmdFirstTier in $Script:CommandTableFirstTier) {
-                If($Script:UiCommandWindowCmdActual -LIKE "$cmdFirstTier*") {
+            Foreach ($cmdFirstTier in $Script:CommandTableFirstTier) {
+                If ($Script:UiCommandWindowCmdActual -LIKE "$cmdFirstTier*") {
                     $foundCmdFirstTierMatch = $true
                 }
             }
-            If(-NOT($foundCmdFirstTierMatch)) {
+            If (-NOT($foundCmdFirstTierMatch)) {
                 # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
                 Update-GfmCmdHistory
 
@@ -1444,42 +1448,42 @@ Function Update-GfmCmdHistory {
 
         # Clear the positions and write the histories
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistDDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistDDrawY)) `
             -Message $($Script:UiCommandWindowCmdBlank) `
             -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistDDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistDDrawY)) `
             -Message $($Script:UiCommandWindowHistD.Message) `
             -ForegroundColor $($Script:UiCommandWindowHistD.ForegroundColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistCDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistCDrawY)) `
             -Message $($Script:UiCommandWindowCmdBlank) `
             -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistCDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistCDrawY)) `
             -Message $($Script:UiCommandWindowHistC.Message) `
             -ForegroundColor $($Script:UiCommandWindowHistC.ForegroundColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistBDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistBDrawY)) `
             -Message $($Script:UiCommandWindowCmdBlank) `
             -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistBDrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistBDrawY)) `
             -Message $($Script:UiCommandWindowHistB.Message) `
             -ForegroundColor $($Script:UiCommandWindowHistB.ForegroundColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistADrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistADrawY)) `
             -Message $($Script:UiCommandWindowCmdBlank) `
             -ForegroundColor $($Script:UiCommandWindowCmdBlankColor) `
             -TypeSpeed LineClear
         Write-GfmPositionalTtyString `
-            -Coordinates $([System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistADrawY)) `
+            -Coordinates $([Coordinates]::new($Script:UiCommandWindowHistDrawX, $Script:UiCommandWindowHistADrawY)) `
             -Message $($Script:UiCommandWindowHistA.Message) `
             -ForegroundColor $($Script:UiCommandWindowHistA.ForegroundColor) `
             -TypeSpeed LineClear
@@ -1504,28 +1508,28 @@ Function Write-GfmStatusWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
                 Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
                 Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiStatusWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowDrawX, $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $i)
                     Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
                     Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 # For the time being, I'm simply going to copypaste the code from the previous case
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
                 Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
                 Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiStatusWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiStatusWindowDrawX, $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $i)
                     Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
                     Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
                 }
             }
@@ -1547,27 +1551,27 @@ Function Write-GfmSceneWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
                 Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY + $Script:UiSceneWindowWidth)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY + $Script:UiSceneWindowWidth)
                 Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiSceneWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiSceneWindowDrawX, $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $i)
                     Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth), $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth), $i)
                     Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
                 Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
                 Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiSceneWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiSceneWindowDrawX, $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $i)
                     Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
                     Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
                 }
             }
@@ -1589,30 +1593,30 @@ Function Write-GfmMessageWindow {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 For ($i = 0; $i -LT $Script:UiMessageWindowWidth; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, $Script:UiMessageWindowDrawY)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, $Script:UiMessageWindowDrawY)
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
                 For ($i = 0; $i -LE $Script:UiMessageWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i))
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i))
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth), ($Script:UiMessageWindowDrawY + $i))
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth), ($Script:UiMessageWindowDrawY + $i))
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 For ($i = 0; $i -LE $Script:UiMessageWindowWidth - 1; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, $Script:UiMessageWindowDrawY)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, $Script:UiMessageWindowDrawY)
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
                 For ($i = 0; $i -LT $Script:UiMessageWindowHeight - 1; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
                     Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
             }
@@ -1638,21 +1642,21 @@ Function Write-GfmCommandWindow {
 
             $Script:OsCheckWindows {
                 # Draw the horizontal borders
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
                 Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
 
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
                 Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
 
                 # Draw the command input div
-                $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
                 Write-GfmHostNnl -Message $Script:UiCommandWindowCmdDiv -ForegroundColor $Script:UiCommandWindowBorderColor
 
                 # Draw the vertical borders
                 For ($i = 1; $i -LT $Script:UiCommandWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
                     Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
-                    $Script:Rui.CursorPosition = [System.Management.Automation.Host.Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
                     Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
                 }
             }
