@@ -15,6 +15,7 @@ Ladder
 Rope
 Wall
 Stairs
+Pole
 
 Door
 Chest
@@ -24,3 +25,8 @@ Desk
 Drawer
 Mirror
 Table
+
+Lamp
+Curtain
+Blinds
+Window
