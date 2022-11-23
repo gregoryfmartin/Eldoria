@@ -1,3 +1,25 @@
+Proposed Verb Specifiers
+
+Move (m)
+    North (n)
+    South (s)
+    East (e)
+    West (w)
+Climb (cl)
+    Up (u) [Object] (Environment Object on Tile)
+    Down (d) [Object] (Environment Object on Tile)
+Enter (en) [Object] (Environment Object on Tile)
+Exit (ex)
+Look (l)
+Examine (exa) [Object] (Inventory Item in Inventory)
+Get (g) [Object] (Inventory Item on Tile)
+Take (t) [Object] (Inventory Item on Tile)
+Drop (d) [Object] (Inventory Item in Inventory)
+Inventory (i) (Changes Game Mode to Inventory)
+Use (u) [Object] (Inventory Item in Inventory)
+Equip (eq) [Object] (Inventory Item in Inventory)
+Open (o) [Object] (Environment Object on Tile)
+
 Proposed Object Specifiers
 
 North
