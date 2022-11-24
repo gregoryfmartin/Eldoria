@@ -41,28 +41,28 @@ using namespace System.Management.Automation.Host
     Danger
 }
 
-[String]       $Script:PlayerName = ''
-[Int]          $Script:PlayerCurrentHitPoints = 0
-[Int]          $Script:PlayerMaximumHitPoints = 0
-[Int]          $Script:PlayerCurrentMagicPoints = 0
-[Int]          $Script:PlayerMaximumMagicPoints = 0
-[Int]          $Script:PlayerCurrentGold = 0
-[Single]       $Script:PlayerStatNumThresholdCaution = 0.6D
-[Single]       $Script:PlayerStatNumThresholdDanger = 0.2D
-[PlayerHpState]$Script:PlayerHitPointsState = [PlayerHpState]::Normal
-[PlayerMpState]$Script:PlayerMagicPointsState = [PlayerMpState]::Normal
-[ConsoleColor] $Script:PlayerStatNameDrawColor = 'Blue'
-[ConsoleColor] $Script:PlayerStatNumberDrawColorSafe = 'Green'
+[String]       $Script:PlayerName                       = ''
+[Int]          $Script:PlayerCurrentHitPoints           = 0
+[Int]          $Script:PlayerMaximumHitPoints           = 0
+[Int]          $Script:PlayerCurrentMagicPoints         = 0
+[Int]          $Script:PlayerMaximumMagicPoints         = 0
+[Int]          $Script:PlayerCurrentGold                = 0
+[Single]       $Script:PlayerStatNumThresholdCaution    = 0.6D
+[Single]       $Script:PlayerStatNumThresholdDanger     = 0.2D
+[PlayerHpState]$Script:PlayerHitPointsState             = [PlayerHpState]::Normal
+[PlayerMpState]$Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
+[ConsoleColor] $Script:PlayerStatNameDrawColor          = 'Blue'
+[ConsoleColor] $Script:PlayerStatNumberDrawColorSafe    = 'Green'
 [ConsoleColor] $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[ConsoleColor] $Script:PlayerStatNumberDrawColorDanger = 'Red'
-[ConsoleColor] $Script:PlayerStatGoldDrawColor = 'DarkYellow'
+[ConsoleColor] $Script:PlayerStatNumberDrawColorDanger  = 'Red'
+[ConsoleColor] $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
 
 #endregion
 
 #region Scene Image Variables
 
-[Int]$Script:SceneImageWidth = 46
-[Int]$Script:SceneImageHeight = 18
+[Int]$Script:SceneImageWidth       = 46
+[Int]$Script:SceneImageHeight      = 18
 [Int]$Script:SceneImageDrawOriginX = 32
 [Int]$Script:SceneImageDrawOriginY = 1
 
@@ -70,23 +70,23 @@ using namespace System.Management.Automation.Host
 
 #region Status Window Variables
 
-[ConsoleColor]$Script:UiStatusWindowBorderColor = 'White'
+[ConsoleColor]$Script:UiStatusWindowBorderColor      = 'White'
 [String]      $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]      $Script:UiStatusWindowBorderVertical = '|'
-[Int]         $Script:UiStatusWindowDrawX = 0
-[Int]         $Script:UiStatusWindowDrawY = 0
-[Int]         $Script:UiStatusWindowWidth = 19
-[Int]         $Script:UiStatusWindowHeight = 11
-[Int]         $Script:UiStatusWindowPlayerNameDrawX = 2
-[Int]         $Script:UiStatusWindowPlayerNameDrawY = 2
-[Int]         $Script:UiStatusWindowPlayerHpDrawX = 2
-[Int]         $Script:UiStatusWindowPlayerHpDrawY = 4
-[Int]         $Script:UiStatusWindowPlayerMpDrawX = 2
-[Int]         $Script:UiStatusWindowPlayerMpDrawY = 6
-[Int]         $Script:UiStatusWindowPlayerGoldDrawX = 2
-[Int]         $Script:UiStatusWindowPlayerGoldDrawY = 9
-[Int]         $Script:UiStatusWindowPlayerAilDrawX = 2
-[Int]         $Script:UiStatusWindowPlayerAilDrawY = 11
+[String]      $Script:UiStatusWindowBorderVertical   = '|'
+[Int]         $Script:UiStatusWindowDrawX            = 0
+[Int]         $Script:UiStatusWindowDrawY            = 0
+[Int]         $Script:UiStatusWindowWidth            = 19
+[Int]         $Script:UiStatusWindowHeight           = 11
+[Int]         $Script:UiStatusWindowPlayerNameDrawX  = 2
+[Int]         $Script:UiStatusWindowPlayerNameDrawY  = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawX    = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawY    = 4
+[Int]         $Script:UiStatusWindowPlayerMpDrawX    = 2
+[Int]         $Script:UiStatusWindowPlayerMpDrawY    = 6
+[Int]         $Script:UiStatusWindowPlayerGoldDrawX  = 2
+[Int]         $Script:UiStatusWindowPlayerGoldDrawY  = 9
+[Int]         $Script:UiStatusWindowPlayerAilDrawX   = 2
+[Int]         $Script:UiStatusWindowPlayerAilDrawY   = 11
 
 #endregion
 
@@ -100,35 +100,36 @@ Class CmdWindowHistoryMessage {
         [String]$msg,
         [ConsoleColor]$fgc
     ) {
-        $this.Message = $msg
+        $this.Message         = $msg
         $this.ForegroundColor = $fgc
     }
 }
 
-[ConsoleColor]    $Script:UiCommandWindowBorderColor = 'White'
-[ConsoleColor]    $Script:UiCommandWindowCmdHistValid = 'Green'
-[ConsoleColor]    $Script:UiCommandWindowCmdHistErr = 'Red'
-[ConsoleColor]    $Script:UiCommandWindowCmdBlankColor = 'Black'
+[ConsoleColor]           $Script:UiCommandWindowBorderColor      = 'White'
+[ConsoleColor]           $Script:UiCommandWindowCmdHistValid     = 'Green'
+[ConsoleColor]           $Script:UiCommandWindowCmdHistErr       = 'Red'
+[ConsoleColor]           $Script:UiCommandWindowCmdBlankColor    = 'Black'
 [String]                 $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
-[String]                 $Script:UiCommandWindowBorderVertical = '|'
-[String]                 $Script:UiCommandWindowCmdDiv = '``````````````````'
-[String]                 $Script:UiCommandWindowCmdActual = ''
-[String]                 $Script:UiCommandWindowCmdBlank = '                  '
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD = [CmdWindowHistoryMessage]::new('', 'White')
-[Int]                    $Script:UiCommandWindowDrawX = 0
-[Int]                    $Script:UiCommandWindowDrawY = 12
-[Int]                    $Script:UiCommandWindowWidth = 19
-[Int]                    $Script:UiCommandWindowHeight = 7
-[Int]                    $Script:UiCommandWindowCmdDivDrawX = $Script:UiCommandWindowDrawX + 1
-[Int]                    $Script:UiCommandWindowCmdDivDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
-[Int]                    $Script:UiCommandWindowHistDrawX = $Script:UiCommandWindowDrawX + 1
-[Int]                    $Script:UiCommandWindowHistDDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
-[Int]                    $Script:UiCommandWindowHistCDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
-[Int]                    $Script:UiCommandWindowHistBDrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
-[Int]                    $Script:UiCommandWindowHistADrawY = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
+[String]                 $Script:UiCommandWindowBorderVertical   = '|'
+[String]                 $Script:UiCommandWindowCmdDiv           = '``````````````````'
+[String]                 $Script:UiCommandWindowCmdActual        = ''
+[String]                 $Script:UiCommandWindowCmdBlank         = '                  '
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA            = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB            = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC            = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD            = [CmdWindowHistoryMessage]::new('', 'White')
+[Int]                    $Script:UiCommandWindowDrawX            = 0
+[Int]                    $Script:UiCommandWindowDrawY            = 12
+[Int]                    $Script:UiCommandWindowWidth            = 19
+[Int]                    $Script:UiCommandWindowHeight           = 7
+[Int]                    $Script:UiCommandWindowCmdDivDrawX      = $Script:UiCommandWindowDrawX + 1
+[Int]                    $Script:UiCommandWindowCmdDivDrawY      = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
+[Int]                    $Script:UiCommandWindowHistDrawX        = $Script:UiCommandWindowDrawX + 1
+[Int]                    $Script:UiCommandWindowHistDDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
+[Int]                    $Script:UiCommandWindowHistCDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
+[Int]                    $Script:UiCommandWindowHistBDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
+[Int]                    $Script:UiCommandWindowHistADrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
+
 
 #endregion
 
@@ -156,25 +157,26 @@ Class MsgWindowHistoryMessage {
         [String]$msg,
         [ConsoleColor]$fgc
     ) {
-        $this.Message = $msg
+        $this.Message         = $msg
         $this.ForegroundColor = $fgc
     }
 }
 
-[ConsoleColor]    $Script:UiMessageWindowBorderColor = 'White'
-[String]                 $Script:UiMessageWindowBorderHorizontal = '-'
-[String]                 $Script:UiMessageWindowBorderVertical = '|'
-[Int]                    $Script:UiMessageWindowDrawX = 0
-[Int]                    $Script:UiMessageWindowDrawY = 20
-[Int]                    $Script:UiMessageWindowWidth = 80
-[Int]                    $Script:UiMessageWindowHeight = 4
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA = [MsgWindowHistoryMessage]::new('', 'Black')
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB = [MsgWindowHistoryMessage]::new('', 'Black')
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC = [MsgWindowHistoryMessage]::new('', 'Black')
+[ConsoleColor]           $Script:UiMessageWindowBorderColor        = 'White'
+[String]                 $Script:UiMessageWindowBorderHorizontal   = '-'
+[String]                 $Script:UiMessageWindowBorderVertical     = '|'
+[Int]                    $Script:UiMessageWindowDrawX              = 0
+[Int]                    $Script:UiMessageWindowDrawY              = 20
+[Int]                    $Script:UiMessageWindowWidth              = 80
+[Int]                    $Script:UiMessageWindowHeight             = 4
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA           = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB           = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC           = [MsgWindowHistoryMessage]::new('', 'Black')
 [Int]                    $Script:UiMessageWindowMessageBottomDrawY = 23
 [Int]                    $Script:UiMessageWindowMessageMiddleDrawY = 22
-[Int]                    $Script:UiMessageWindowMessageTopDrawY = 21
-[String]                 $Script:UiMessageWindowMessageBlank = '                                                                             '
+[Int]                    $Script:UiMessageWindowMessageTopDrawY    = 21
+[String]                 $Script:UiMessageWindowMessageBlank       = '                                                                             '
+
 
 #endregion
 
@@ -200,18 +202,17 @@ $Script:SiFieldNWRoad    = New-Object 'BufferCell[,]' $Script:SceneImageHeight, 
 $Script:SiFieldSRoad     = New-Object 'BufferCell[,]' $Script:SceneImageHeight, $Script:SceneImageWidth
 $Script:SiFieldSERoad    = New-Object 'BufferCell[,]' $Script:SceneImageHeight, $Script:SceneImageWidth
 
-
 #endregion
 
 #region Text Rendering Variables
 
 [Flags()] Enum TtySpeed {
     SuperSlow = 1000000
-    Slow = 750000
-    Normal = 100000
-    Moderate = 75000
-    Quick = 65000
-    Fast = 50000
+    Slow      = 750000
+    Normal    = 100000
+    Moderate  = 75000
+    Quick     = 65000
+    Fast      = 50000
     SuperFast = 25000
     LineClear = 1
 }
@@ -255,10 +256,10 @@ Enum Octaves {
 
 # This enumeration defines common durations for notes, defined in milliseconds.
 Enum NoteDuration {
-    Whole = 1600
-    Half = 800
-    Quarter = 400
-    Eighth = 200
+    Whole     = 1600
+    Half      = 800
+    Quarter   = 400
+    Eighth    = 200
     Sixteenth = 100
 }
 
@@ -270,137 +271,141 @@ Class Note {
         [Int]$an,
         [NoteDuration]$ad
     ) {
-        $this.ActualNote = $an
+        $this.ActualNote     = $an
         $this.ActualDuration = $ad
     }
 }
 
 # Define the Note Table. Rests are not included in the Note Table.
 $Script:NumOctaves = 9
-$Script:NumNotes = 12
-$Script:NoteTable = New-Object 'Int[,]' $Script:NumNotes, $Script:NumOctaves
+$Script:NumNotes   = 12
+$Script:NoteTable  = New-Object 'Int[,]' $Script:NumNotes, $Script:NumOctaves
 
 # Define the Note Table
-# This site has a table where the values are derived from: https://mixbutton.com/mixing-articles/music-note-to-frequency-chart/#:~:text=Music%20Note%20To%20Frequency%20Chart%20%20%20,%20155.56%20Hz%20%208%20more%20rows%20
-$Script:NoteTable[[Notes]::C, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::C, [Octaves]::Second] = 0
-$Script:NoteTable[[Notes]::C, [Octaves]::Third] = [Int]65.41D
-$Script:NoteTable[[Notes]::C, [Octaves]::Fourth] = [Int]130.81D
-$Script:NoteTable[[Notes]::C, [Octaves]::Fifth] = [Int]261.63D
-$Script:NoteTable[[Notes]::C, [Octaves]::Sixth] = [Int]523.25D
-$Script:NoteTable[[Notes]::C, [Octaves]::Seventh] = [Int]1046.5D
-$Script:NoteTable[[Notes]::C, [Octaves]::Eighth] = [Int]2093.0D
-$Script:NoteTable[[Notes]::C, [Octaves]::Ninth] = [Int]4186.01D
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Second] = 0
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Third] = [Int]69.3D
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Fourth] = [Int]138.59D
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Fifth] = [Int]277.18D
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Sixth] = [Int]554.37D
+# This site has a table where the values are derived from: https: //mixbutton.com/mixing-articles/music-note-to-frequency-chart/#:~:text=Music%20Note%20To%20Frequency%20Chart%20%20%20,%20155.56%20Hz%20%208%20more%20rows%20
+Write-Progress -Activity 'Creating Music Note Table' -Id 1 -PercentComplete -1
+$Script:NoteTable[[Notes]::C, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::C, [Octaves]::Second]              = 0
+$Script:NoteTable[[Notes]::C, [Octaves]::Third]               = [Int]65.41D
+$Script:NoteTable[[Notes]::C, [Octaves]::Fourth]              = [Int]130.81D
+$Script:NoteTable[[Notes]::C, [Octaves]::Fifth]               = [Int]261.63D
+$Script:NoteTable[[Notes]::C, [Octaves]::Sixth]               = [Int]523.25D
+$Script:NoteTable[[Notes]::C, [Octaves]::Seventh]             = [Int]1046.5D
+$Script:NoteTable[[Notes]::C, [Octaves]::Eighth]              = [Int]2093.0D
+$Script:NoteTable[[Notes]::C, [Octaves]::Ninth]               = [Int]4186.01D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Second]  = 0
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Third]   = [Int]69.3D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Fourth]  = [Int]138.59D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Fifth]   = [Int]277.18D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Sixth]   = [Int]554.37D
 $Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh] = [Int]1108.73D
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Eighth] = [Int]2217.46D
-$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Ninth] = [Int]4434.92D
-$Script:NoteTable[[Notes]::D, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::D, [Octaves]::Second] = [Int]36.71D
-$Script:NoteTable[[Notes]::D, [Octaves]::Third] = [Int]73.42D
-$Script:NoteTable[[Notes]::D, [Octaves]::Fourth] = [Int]146.83D
-$Script:NoteTable[[Notes]::D, [Octaves]::Fifth] = [Int]293.66D
-$Script:NoteTable[[Notes]::D, [Octaves]::Sixth] = [Int]587.33D
-$Script:NoteTable[[Notes]::D, [Octaves]::Seventh] = [Int]1174.66D
-$Script:NoteTable[[Notes]::D, [Octaves]::Eighth] = [Int]2349.32D
-$Script:NoteTable[[Notes]::D, [Octaves]::Ninth] = [Int]4698.63D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Second] = [Int]38.89D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Third] = [Int]77.78D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Fourth] = [Int]155.56D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Fifth] = [Int]311.13D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Sixth] = [Int]622.25D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Eighth]  = [Int]2217.46D
+$Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Ninth]   = [Int]4434.92D
+$Script:NoteTable[[Notes]::D, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::D, [Octaves]::Second]              = [Int]36.71D
+$Script:NoteTable[[Notes]::D, [Octaves]::Third]               = [Int]73.42D
+$Script:NoteTable[[Notes]::D, [Octaves]::Fourth]              = [Int]146.83D
+$Script:NoteTable[[Notes]::D, [Octaves]::Fifth]               = [Int]293.66D
+$Script:NoteTable[[Notes]::D, [Octaves]::Sixth]               = [Int]587.33D
+$Script:NoteTable[[Notes]::D, [Octaves]::Seventh]             = [Int]1174.66D
+$Script:NoteTable[[Notes]::D, [Octaves]::Eighth]              = [Int]2349.32D
+$Script:NoteTable[[Notes]::D, [Octaves]::Ninth]               = [Int]4698.63D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Second]  = [Int]38.89D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Third]   = [Int]77.78D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Fourth]  = [Int]155.56D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Fifth]   = [Int]311.13D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Sixth]   = [Int]622.25D
 $Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh] = [Int]1244.51D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Eighth] = [Int]2489.02D
-$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Ninth] = [Int]4978.03D
-$Script:NoteTable[[Notes]::E, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::E, [Octaves]::Second] = [Int]41.2D
-$Script:NoteTable[[Notes]::E, [Octaves]::Third] = [Int]82.41D
-$Script:NoteTable[[Notes]::E, [Octaves]::Fourth] = [Int]164.81D
-$Script:NoteTable[[Notes]::E, [Octaves]::Fifth] = [Int]329.63D
-$Script:NoteTable[[Notes]::E, [Octaves]::Sixth] = [Int]659.25D
-$Script:NoteTable[[Notes]::E, [Octaves]::Seventh] = [Int]1318.51D
-$Script:NoteTable[[Notes]::E, [Octaves]::Eighth] = [Int]2637.02D
-$Script:NoteTable[[Notes]::E, [Octaves]::Ninth] = [Int]5274.04D
-$Script:NoteTable[[Notes]::F, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::F, [Octaves]::Second] = [Int]43.65D
-$Script:NoteTable[[Notes]::F, [Octaves]::Third] = [Int]87.31D
-$Script:NoteTable[[Notes]::F, [Octaves]::Fourth] = [Int]174.61D
-$Script:NoteTable[[Notes]::F, [Octaves]::Fifth] = [Int]349.23D
-$Script:NoteTable[[Notes]::F, [Octaves]::Sixth] = [Int]689.46D
-$Script:NoteTable[[Notes]::F, [Octaves]::Seventh] = [Int]1396.91D
-$Script:NoteTable[[Notes]::F, [Octaves]::Eighth] = [Int]2793.83D
-$Script:NoteTable[[Notes]::F, [Octaves]::Ninth] = [Int]5587.65D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Second] = [Int]46.25D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Third] = [Int]92.5D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Fourth] = [Int]185D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Fifth] = [Int]369.99D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth] = [Int]739.99D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Eighth]  = [Int]2489.02D
+$Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Ninth]   = [Int]4978.03D
+$Script:NoteTable[[Notes]::E, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::E, [Octaves]::Second]              = [Int]41.2D
+$Script:NoteTable[[Notes]::E, [Octaves]::Third]               = [Int]82.41D
+$Script:NoteTable[[Notes]::E, [Octaves]::Fourth]              = [Int]164.81D
+$Script:NoteTable[[Notes]::E, [Octaves]::Fifth]               = [Int]329.63D
+$Script:NoteTable[[Notes]::E, [Octaves]::Sixth]               = [Int]659.25D
+$Script:NoteTable[[Notes]::E, [Octaves]::Seventh]             = [Int]1318.51D
+$Script:NoteTable[[Notes]::E, [Octaves]::Eighth]              = [Int]2637.02D
+$Script:NoteTable[[Notes]::E, [Octaves]::Ninth]               = [Int]5274.04D
+$Script:NoteTable[[Notes]::F, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::F, [Octaves]::Second]              = [Int]43.65D
+$Script:NoteTable[[Notes]::F, [Octaves]::Third]               = [Int]87.31D
+$Script:NoteTable[[Notes]::F, [Octaves]::Fourth]              = [Int]174.61D
+$Script:NoteTable[[Notes]::F, [Octaves]::Fifth]               = [Int]349.23D
+$Script:NoteTable[[Notes]::F, [Octaves]::Sixth]               = [Int]689.46D
+$Script:NoteTable[[Notes]::F, [Octaves]::Seventh]             = [Int]1396.91D
+$Script:NoteTable[[Notes]::F, [Octaves]::Eighth]              = [Int]2793.83D
+$Script:NoteTable[[Notes]::F, [Octaves]::Ninth]               = [Int]5587.65D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Second]  = [Int]46.25D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Third]   = [Int]92.5D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Fourth]  = [Int]185D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Fifth]   = [Int]369.99D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]   = [Int]739.99D
 $Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh] = [Int]1479.98D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Eighth] = [Int]2959.96D
-$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Ninth] = [Int]5919.91D
-$Script:NoteTable[[Notes]::G, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::G, [Octaves]::Second] = [Int]49D
-$Script:NoteTable[[Notes]::G, [Octaves]::Third] = [Int]98D
-$Script:NoteTable[[Notes]::G, [Octaves]::Fourth] = [Int]196D
-$Script:NoteTable[[Notes]::G, [Octaves]::Fifth] = [Int]392D
-$Script:NoteTable[[Notes]::G, [Octaves]::Sixth] = [Int]783.99D
-$Script:NoteTable[[Notes]::G, [Octaves]::Seventh] = [Int]1567.98D
-$Script:NoteTable[[Notes]::G, [Octaves]::Eighth] = [Int]3135.96D
-$Script:NoteTable[[Notes]::G, [Octaves]::Ninth] = [Int]6271.93D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Second] = [Int]51.91D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Third] = [Int]103.83D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Fourth] = [Int]207.65D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Fifth] = [Int]415.3D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth] = [Int]830.61D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Eighth]  = [Int]2959.96D
+$Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Ninth]   = [Int]5919.91D
+$Script:NoteTable[[Notes]::G, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::G, [Octaves]::Second]              = [Int]49D
+$Script:NoteTable[[Notes]::G, [Octaves]::Third]               = [Int]98D
+$Script:NoteTable[[Notes]::G, [Octaves]::Fourth]              = [Int]196D
+$Script:NoteTable[[Notes]::G, [Octaves]::Fifth]               = [Int]392D
+$Script:NoteTable[[Notes]::G, [Octaves]::Sixth]               = [Int]783.99D
+$Script:NoteTable[[Notes]::G, [Octaves]::Seventh]             = [Int]1567.98D
+$Script:NoteTable[[Notes]::G, [Octaves]::Eighth]              = [Int]3135.96D
+$Script:NoteTable[[Notes]::G, [Octaves]::Ninth]               = [Int]6271.93D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Second]  = [Int]51.91D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Third]   = [Int]103.83D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Fourth]  = [Int]207.65D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Fifth]   = [Int]415.3D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]   = [Int]830.61D
 $Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Seventh] = [Int]1661.22D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Eighth] = [Int]3322.44D
-$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Ninth] = [Int]6644.88D
-$Script:NoteTable[[Notes]::A, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::A, [Octaves]::Second] = [Int]55D
-$Script:NoteTable[[Notes]::A, [Octaves]::Third] = [Int]110D
-$Script:NoteTable[[Notes]::A, [Octaves]::Fourth] = [Int]220D
-$Script:NoteTable[[Notes]::A, [Octaves]::Fifth] = [Int]440D
-$Script:NoteTable[[Notes]::A, [Octaves]::Sixth] = [Int]880D
-$Script:NoteTable[[Notes]::A, [Octaves]::Seventh] = [Int]1760D
-$Script:NoteTable[[Notes]::A, [Octaves]::Eighth] = [Int]3520D
-$Script:NoteTable[[Notes]::A, [Octaves]::Ninth] = [Int]7040D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Second] = [Int]58.27D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Third] = [Int]116.54D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Fourth] = [Int]233.08D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Fifth] = [Int]466.16D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth] = [Int]932.33D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Eighth]  = [Int]3322.44D
+$Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Ninth]   = [Int]6644.88D
+$Script:NoteTable[[Notes]::A, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::A, [Octaves]::Second]              = [Int]55D
+$Script:NoteTable[[Notes]::A, [Octaves]::Third]               = [Int]110D
+$Script:NoteTable[[Notes]::A, [Octaves]::Fourth]              = [Int]220D
+$Script:NoteTable[[Notes]::A, [Octaves]::Fifth]               = [Int]440D
+$Script:NoteTable[[Notes]::A, [Octaves]::Sixth]               = [Int]880D
+$Script:NoteTable[[Notes]::A, [Octaves]::Seventh]             = [Int]1760D
+$Script:NoteTable[[Notes]::A, [Octaves]::Eighth]              = [Int]3520D
+$Script:NoteTable[[Notes]::A, [Octaves]::Ninth]               = [Int]7040D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::First]   = 0
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Second]  = [Int]58.27D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Third]   = [Int]116.54D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Fourth]  = [Int]233.08D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Fifth]   = [Int]466.16D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]   = [Int]932.33D
 $Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh] = [Int]1864.66D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Eighth] = [Int]3729.31D
-$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Ninth] = [Int]7458.62D
-$Script:NoteTable[[Notes]::B, [Octaves]::First] = 0
-$Script:NoteTable[[Notes]::B, [Octaves]::Second] = [Int]61.74D
-$Script:NoteTable[[Notes]::B, [Octaves]::Third] = [Int]123.47D
-$Script:NoteTable[[Notes]::B, [Octaves]::Fourth] = [Int]246.94D
-$Script:NoteTable[[Notes]::B, [Octaves]::Fifth] = [Int]493.88D
-$Script:NoteTable[[Notes]::B, [Octaves]::Sixth] = [Int]987.77D
-$Script:NoteTable[[Notes]::B, [Octaves]::Seventh] = [Int]1975.53D
-$Script:NoteTable[[Notes]::B, [Octaves]::Eighth] = [Int]3951.07D
-$Script:NoteTable[[Notes]::B, [Octaves]::Ninth] = [Int]7902.13D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Eighth]  = [Int]3729.31D
+$Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Ninth]   = [Int]7458.62D
+$Script:NoteTable[[Notes]::B, [Octaves]::First]               = 0
+$Script:NoteTable[[Notes]::B, [Octaves]::Second]              = [Int]61.74D
+$Script:NoteTable[[Notes]::B, [Octaves]::Third]               = [Int]123.47D
+$Script:NoteTable[[Notes]::B, [Octaves]::Fourth]              = [Int]246.94D
+$Script:NoteTable[[Notes]::B, [Octaves]::Fifth]               = [Int]493.88D
+$Script:NoteTable[[Notes]::B, [Octaves]::Sixth]               = [Int]987.77D
+$Script:NoteTable[[Notes]::B, [Octaves]::Seventh]             = [Int]1975.53D
+$Script:NoteTable[[Notes]::B, [Octaves]::Eighth]              = [Int]3951.07D
+$Script:NoteTable[[Notes]::B, [Octaves]::Ninth]               = [Int]7902.13D
+#Write-Progress -Activity 'Creating Music Note Table' -Completed
+Write-Progress -Activity 'Creating Music Note Table' -Status 'Complete' -Id 1 -PercentComplete -1
 
 # Declare some songs. Songs are defined as arrangements of Notes polled from the Note Table.
 [ArrayList]$Script:DragonWarriorTheme = New-Object 'ArrayList'
-[ArrayList]$Script:BattleTheme = New-Object 'ArrayList'
-[ArrayList]$Script:DuckTalesTheme = New-Object 'ArrayList'
-[ArrayList]$Script:GhostbustersTheme = New-Object 'ArrayList'
+[ArrayList]$Script:BattleTheme        = New-Object 'ArrayList'
+[ArrayList]$Script:DuckTalesTheme     = New-Object 'ArrayList'
+[ArrayList]$Script:GhostbustersTheme  = New-Object 'ArrayList'
 
 # Define the Songs
 
 #region Dragon Warrior Theme Jingle (Incomplete)
 
+Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Dragon Warrior Theme' -Id 2 -PercentComplete -1
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
@@ -432,10 +437,12 @@ $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octav
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
+
 #endregion
 
 #region Battle Theme Jingle
 
+Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Battle Theme' -Id 2 -PercentComplete -1
 $Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)) | Out-Null
 $Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
 $Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
@@ -448,6 +455,7 @@ $Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [
 
 #region Duck Tales Theme Jingle
 
+Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Duck Tales Theme' -Id 2 -PercentComplete -1
 $Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
@@ -474,6 +482,7 @@ $Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]:
 
 #region Ghostbusters Theme
 
+Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Ghostbusters Theme' -Id 2 -PercentComplete -1
 $Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
@@ -529,6 +538,8 @@ $Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octave
 $Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
 $Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
 $Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+#Write-Progress -Activity 'Creating Song Note Tables' -Id 2 -Completed
+Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -PercentComplete -1
 
 #endregion
 
@@ -1714,7 +1725,7 @@ Function Test-GfmPlayScreen {
 
 #region SiFieldNRoad
 
-Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNRoad' -CurrentOperation 'Creating SiFieldNRoad' -PercentComplete -1
+Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNRoad' -CurrentOperation 'Creating SiFieldNRoad' -Id 3 -PercentComplete -1
 $Script:SiFieldNRoad[0, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldNRoad[0, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldNRoad[0, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
@@ -2547,7 +2558,7 @@ $Script:SiFieldNRoad[17, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 
 #region SiFieldNERoad
 
-Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNERoad' -CurrentOperation 'Creating SiFieldNERoad' -PercentComplete -1
+Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNERoad' -CurrentOperation 'Creating SiFieldNERoad' -Id 3 -PercentComplete -1
 $Script:SiFieldNERoad[0, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldNERoad[0, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldNERoad[0, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
@@ -3398,7 +3409,7 @@ $Script:SiFieldNERoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complet
 
 #region SiFieldNWRoad
 
-Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNWRoad' -CurrentOperation 'Creating SiFieldNWRoad' -PercentComplete -1
+Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNWRoad' -CurrentOperation 'Creating SiFieldNWRoad' -Id 3 -PercentComplete -1
 $Script:SiFieldNWRoad[0, 0]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldNWRoad[0, 1]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldNWRoad[0, 2]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
@@ -4249,7 +4260,7 @@ $Script:SiFieldNWRoad[17, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 
 #region SiFieldSRoad
 
-Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldSRoad' -CurrentOperation 'Creating SiFieldSRoad' -PercentComplete -1
+Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldSRoad' -CurrentOperation 'Creating SiFieldSRoad' -Id 3 -PercentComplete -1
 $Script:SiFieldSRoad[0, 0]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldSRoad[0, 1]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldSRoad[0, 2]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
@@ -5100,7 +5111,7 @@ $Script:SiFieldSRoad[17, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 
 #region SiFieldSERoad
 
-Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldSERoad' -CurrentOperation 'Creating SiFieldSERoad' -PercentComplete -1
+Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldSERoad' -CurrentOperation 'Creating SiFieldSERoad' -Id 3 -PercentComplete -1
 $Script:SiFieldSERoad[0, 0]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldSERoad[0, 1]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
 $Script:SiFieldSERoad[0, 2]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
@@ -5946,7 +5957,10 @@ $Script:SiFieldSERoad[17, 42] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complet
 $Script:SiFieldSERoad[17, 43] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSERoad[17, 44] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSERoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Completed
+
+Write-Progress -Activity 'Creating Music Note Table' -Id 1 -Completed
+Write-Progress -Activity 'Creating Song Note Tables' -Id 2 -Completed
+Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Id 3 -Completed
 
 #endregion
 
