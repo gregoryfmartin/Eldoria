@@ -1470,7 +1470,7 @@ Function Invoke-GfmCmdParser {
 
         # TODO: When a valid command is entered, nothing is done
 
-        [Boolean]$foundCmdFirstTierMatch = $false
+        #[Boolean]$foundCmdFirstTierMatch = $false
         [Boolean]$foundCmdPhraseMatch    = $false
 
         # Perform sanity checks on the cmdactual string
