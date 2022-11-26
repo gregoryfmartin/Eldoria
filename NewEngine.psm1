@@ -554,6 +554,82 @@ Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -P
     'take'
 )
 [String[]]$Script:CommandTableSecondTier = @()
+$Script:CommandTable = @{
+    'SingleWord' = @{
+        'exit'      = '';
+        'ex'        = '';
+        'look'      = '';
+        'l'         = '';
+        'inventory' = '';
+        'i'         = '';
+    };
+    'DoubleWord' = @{
+        'move north' = '';
+        'm n'        = '';
+        'move south' = '';
+        'm s'        = '';
+        'move east'  = '';
+        'm e'        = '';
+        'move west'  = '';
+        'm w'        = '';
+        'enter'      = @();
+        'en'         = @();
+        'examine'    = @();
+        'exa'        = @();
+        'get'        = @();
+        'g'          = @();
+        'take'       = @();
+        't'          = @();
+        'drop'       = @();
+        'd'          = @();
+        'use'        = @();
+        'u'          = @();
+        'equip'      = @();
+        'eq'         = @();
+        'open'       = @();
+        'o'          = @();
+    };
+    'TripleWord' = @{
+        'climb up'   = @();
+        'cl u'       = @();
+        'climb down' = @();
+        'cl d'       = @();
+    };
+    ## 'move north' = '';
+    ## 'm n'        = '';
+    ## 'move south' = '';
+    ## 'm s'        = '';
+    ## 'move east'  = '';
+    ## 'm e'        = '';
+    ## 'move west'  = '';
+    ## 'm w'        = '';
+    ## 'climb up'   = @();
+    ## 'cl u'       = @();
+    ## 'climb down' = @();
+    ## 'cl d'       = @();
+    ## 'enter'      = @();
+    ## 'en'         = @();
+    ## 'exit'       = '';
+    ## 'ex'         = '';
+    ## 'look'       = '';
+    ## 'l'          = '';
+    ## 'examine'    = @();
+    ## 'exa'        = @();
+    ## 'get'        = @();
+    ## 'g'          = @();
+    ## 'take'       = @();
+    ## 't'          = @();
+    ## 'drop'       = @();
+    ## 'd'          = @();
+    ## 'inventory'  = '';
+    ## 'i'          = '';
+    ## 'use'        = @();
+    ## 'u'          = @();
+    ## 'equip'      = @();
+    ## 'eq'         = @();
+    ## 'open'       = @();
+    ## 'o'          = @();
+}
 
 #endregion
 
@@ -1395,6 +1471,7 @@ Function Invoke-GfmCmdParser {
         # TODO: When a valid command is entered, nothing is done
 
         [Boolean]$foundCmdFirstTierMatch = $false
+        [Boolean]$foundCmdPhraseMatch    = $false
 
         # Perform sanity checks on the cmdactual string
         If ([String]::IsNullOrEmpty($Script:UiCommandWindowCmdActual)) {
@@ -1403,49 +1480,75 @@ Function Invoke-GfmCmdParser {
             Set-GfmDefaultCursorPosition
             Return
         } Else {
-            # The command string isn't empty, so go ahead and start the parsing algorithm
-            # The first step is to see what the command string starts with. This will be accomplished with the String::StartsWith
-            # function. We'll simply loop through the valid command first tier entries to see if it matches anything. If there are
-            # no matches, the command history gets the addition in red, and a message is printed to the Message Window.
-            Foreach ($cmdFirstTier in $Script:CommandTableFirstTier) {
-                If ($Script:UiCommandWindowCmdActual -LIKE "$cmdFirstTier*") {
-                    $foundCmdFirstTierMatch = $true
+            
+            
+            
+            
+            # NEWER VERSION
+            # Split the cmdactual string into several parts
+            $cmdactSplit = -Split $Script:UiCommandWindowCmdActual
+            
+            # 0 = first word, 1 = second word (if applicable), 2 = third word (if applicable)
+            # This distinction is important because at a minimum, the first word is going to be required, and there are some commands that don't require an Object Specifier.
+            Switch ($cmdactSplit.Length) {
+                1 {
+                    Foreach ($subkey in $Script:CommandTable['SingleWord'].Keys) {
+                        # Check to see if the string entered matches any of the keys
+                        If ($cmdactSplit[0] -EQ $subkey) {
+                            $foundCmdPhraseMatch = $true
+                        }
+                    }
                 }
+                2 {}
+                3 {}
             }
-            If (-NOT($foundCmdFirstTierMatch)) {
-                # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
-                Update-GfmCmdHistory
+            
+            
+            
+            
+            # # The command string isn't empty, so go ahead and start the parsing algorithm
+            # # The first step is to see what the command string starts with. This will be accomplished with the String::StartsWith
+            # # function. We'll simply loop through the valid command first tier entries to see if it matches anything. If there are
+            # # no matches, the command history gets the addition in red, and a message is printed to the Message Window.
+            # Foreach ($cmdFirstTier in $Script:CommandTableFirstTier) {
+            #     If ($Script:UiCommandWindowCmdActual -LIKE "$cmdFirstTier*") {
+            #         $foundCmdFirstTierMatch = $true
+            #     }
+            # }
+            # If (-NOT($foundCmdFirstTierMatch)) {
+            #     # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
+            #     Update-GfmCmdHistory
 
-                Write-GfmMessageWindowMessage `
-                    -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-                    -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-                    -Teletype
+            #     Write-GfmMessageWindowMessage `
+            #         -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+            #         -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+            #         -Teletype
 
-                # Clear the cmdactual string
-                $Script:UiCommandWindowCmdActual = ''
+            #     # Clear the cmdactual string
+            #     $Script:UiCommandWindowCmdActual = ''
 
-                # Reset the command window
-                Set-GfmDefaultCursorPosition
-                Return
-            } Else {
-                # The first phrase of the command found a match
-                # Although it's possible at this point that the command phrase is incomplete,
-                # for the purposes of testing, we're going to assume that it is and start building 
-                # the functional mechanics of it in terms of rendering.
-                Update-GfmCmdHistory -CmdActualValid
+            #     # Reset the command window
+            #     Set-GfmDefaultCursorPosition
+            #     Return
+            # } Else {
+            #     # The first phrase of the command found a match
+            #     # Although it's possible at this point that the command phrase is incomplete,
+            #     # for the purposes of testing, we're going to assume that it is and start building 
+            #     # the functional mechanics of it in terms of rendering.
+            #     Update-GfmCmdHistory -CmdActualValid
 
-                Write-GfmMessageWindowMessage `
-                    -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-                    -ForegroundColor $Script:UiCommandWindowCmdHistValid `
-                    -Teletype
+            #     Write-GfmMessageWindowMessage `
+            #         -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+            #         -ForegroundColor $Script:UiCommandWindowCmdHistValid `
+            #         -Teletype
 
-                # Clear the cmdactual string
-                $Script:UiCommandWindowCmdActual = ''
+            #     # Clear the cmdactual string
+            #     $Script:UiCommandWindowCmdActual = ''
 
-                # Reset the command window
-                Set-GfmDefaultCursorPosition
-                Return
-            }
+            #     # Reset the command window
+            #     Set-GfmDefaultCursorPosition
+            #     Return
+            # }
         }
     }
 }
