@@ -554,82 +554,97 @@ Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -P
     'take'
 )
 [String[]]$Script:CommandTableSecondTier = @()
-$Script:CommandTable = @{
-    'SingleWord' = @{
-        'exit'      = '';
-        'ex'        = '';
-        'look'      = '';
-        'l'         = '';
-        'inventory' = '';
-        'i'         = '';
-    };
-    'DoubleWord' = @{
-        'move north' = '';
-        'm n'        = '';
-        'move south' = '';
-        'm s'        = '';
-        'move east'  = '';
-        'm e'        = '';
-        'move west'  = '';
-        'm w'        = '';
-        'enter'      = @();
-        'en'         = @();
-        'examine'    = @();
-        'exa'        = @();
-        'get'        = @();
-        'g'          = @();
-        'take'       = @();
-        't'          = @();
-        'drop'       = @();
-        'd'          = @();
-        'use'        = @();
-        'u'          = @();
-        'equip'      = @();
-        'eq'         = @();
-        'open'       = @();
-        'o'          = @();
-    };
-    'TripleWord' = @{
-        'climb up'   = @();
-        'cl u'       = @();
-        'climb down' = @();
-        'cl d'       = @();
-    };
-    ## 'move north' = '';
-    ## 'm n'        = '';
-    ## 'move south' = '';
-    ## 'm s'        = '';
-    ## 'move east'  = '';
-    ## 'm e'        = '';
-    ## 'move west'  = '';
-    ## 'm w'        = '';
-    ## 'climb up'   = @();
-    ## 'cl u'       = @();
-    ## 'climb down' = @();
-    ## 'cl d'       = @();
-    ## 'enter'      = @();
-    ## 'en'         = @();
-    ## 'exit'       = '';
-    ## 'ex'         = '';
-    ## 'look'       = '';
-    ## 'l'          = '';
-    ## 'examine'    = @();
-    ## 'exa'        = @();
-    ## 'get'        = @();
-    ## 'g'          = @();
-    ## 'take'       = @();
-    ## 't'          = @();
-    ## 'drop'       = @();
-    ## 'd'          = @();
-    ## 'inventory'  = '';
-    ## 'i'          = '';
-    ## 'use'        = @();
-    ## 'u'          = @();
-    ## 'equip'      = @();
-    ## 'eq'         = @();
-    ## 'open'       = @();
-    ## 'o'          = @();
+$Script:CommandOpcodeTable = @{
+    'move'      = 439;
+    'climb'     = 519;
+    'enter'     = 542;
+    'exit'      = 442;
+    'survey'    = 686;
+    'examine'   = 743;
+    'get'       = 320;
+    'take'      = 421;
+    'drop'      = 437;
+    'inventory' = 1006;
+    'use'       = 333;
+    'equip'     = 548;
+    'open'      = 434;
 }
+# $Script:CommandTable = @{
+#     'SingleWord' = @{
+#         'exit'      = '';
+#         'ex'        = '';
+#         'look'      = '';
+#         'l'         = '';
+#         'inventory' = '';
+#         'i'         = '';
+#     };
+#     'DoubleWord' = @{
+#         'move north' = '';
+#         'm n'        = '';
+#         'move south' = '';
+#         'm s'        = '';
+#         'move east'  = '';
+#         'm e'        = '';
+#         'move west'  = '';
+#         'm w'        = '';
+#         'enter'      = @();
+#         'en'         = @();
+#         'examine'    = @();
+#         'exa'        = @();
+#         'get'        = @();
+#         'g'          = @();
+#         'take'       = @();
+#         't'          = @();
+#         'drop'       = @();
+#         'd'          = @();
+#         'use'        = @();
+#         'u'          = @();
+#         'equip'      = @();
+#         'eq'         = @();
+#         'open'       = @();
+#         'o'          = @();
+#     };
+#     'TripleWord' = @{
+#         'climb up'   = @();
+#         'cl u'       = @();
+#         'climb down' = @();
+#         'cl d'       = @();
+#     };
+#     ## 'move north' = '';
+#     ## 'm n'        = '';
+#     ## 'move south' = '';
+#     ## 'm s'        = '';
+#     ## 'move east'  = '';
+#     ## 'm e'        = '';
+#     ## 'move west'  = '';
+#     ## 'm w'        = '';
+#     ## 'climb up'   = @();
+#     ## 'cl u'       = @();
+#     ## 'climb down' = @();
+#     ## 'cl d'       = @();
+#     ## 'enter'      = @();
+#     ## 'en'         = @();
+#     ## 'exit'       = '';
+#     ## 'ex'         = '';
+#     ## 'look'       = '';
+#     ## 'l'          = '';
+#     ## 'examine'    = @();
+#     ## 'exa'        = @();
+#     ## 'get'        = @();
+#     ## 'g'          = @();
+#     ## 'take'       = @();
+#     ## 't'          = @();
+#     ## 'drop'       = @();
+#     ## 'd'          = @();
+#     ## 'inventory'  = '';
+#     ## 'i'          = '';
+#     ## 'use'        = @();
+#     ## 'u'          = @();
+#     ## 'equip'      = @();
+#     ## 'eq'         = @();
+#     ## 'open'       = @();
+#     ## 'o'          = @();
+# }
 
 #endregion
 
@@ -1507,7 +1522,10 @@ Function Invoke-GfmCmdParser {
                         }
                     }
                 }
-                2 {}
+                2 {
+                    # The logic here is a little different
+                    # First, we check to see 
+                }
                 3 {}
             }
             
