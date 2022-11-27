@@ -1390,6 +1390,9 @@ Function Read-GfmUserCommandInput {
         After checking the Cursor Position for max limit, a check should be made to see if the VirtualKeyCode is 0x08 (DEC 8) (Backspace).
         If this is the case, we check to see what the current Cursor Position is. If we can subtract 1 from its X property value, we
         first clear the Buffer Cell in the prior and then reposition the Cursor Position to X-1.
+
+        BUG
+        There's an issue where if the Backspace key is pressed when the Command Buffer is empty, it throws an exception (referenced in this bug: https://github.com/gregoryfmartin/Playground/issues/20).
         #>
 
         $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
@@ -1419,7 +1422,10 @@ Function Read-GfmUserCommandInput {
                     # Remove the character from the cmdactual string
                     # Since I'm not going to go through the trouble of capturing what character was in the cell that just got
                     # clobbered, I'm going to just drop the last index from the cmdactual string.
-                    $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                    # The conditional here is a sanity check. In this branch, there shouldn't be any reason why a LT 0 condition would occur, but it's present for parity.
+                    If ($Script:UiCommandWindowCmdActual.Length -GT 0) {
+                        $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                    }
                 } Else {
                     Write-GfmPositionalString `
                         -Coordinates $([Coordinates]::new($Script:Rui.CursorPosition.X + 1, $Script:DefaultCursorY)) `
@@ -1430,7 +1436,9 @@ Function Read-GfmUserCommandInput {
                     # Remove the character from the cmdactual string
                     # Since I'm not going to go through the trouble of capturing what character was in the cell that just got
                     # clobbered, I'm going to just drop the last index from the cmdactual string.
-                    $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                    If ($Script:UiCommandWindowCmdActual.Length -GT 0) {
+                        $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                    }
                 }
             } Else {
                 # Append the Character property value to the cmdactual string
