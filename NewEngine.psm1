@@ -569,82 +569,14 @@ $Script:CommandOpcodeTable = @{
     'equip'     = 548;
     'open'      = 434;
 }
-# $Script:CommandTable = @{
-#     'SingleWord' = @{
-#         'exit'      = '';
-#         'ex'        = '';
-#         'look'      = '';
-#         'l'         = '';
-#         'inventory' = '';
-#         'i'         = '';
-#     };
-#     'DoubleWord' = @{
-#         'move north' = '';
-#         'm n'        = '';
-#         'move south' = '';
-#         'm s'        = '';
-#         'move east'  = '';
-#         'm e'        = '';
-#         'move west'  = '';
-#         'm w'        = '';
-#         'enter'      = @();
-#         'en'         = @();
-#         'examine'    = @();
-#         'exa'        = @();
-#         'get'        = @();
-#         'g'          = @();
-#         'take'       = @();
-#         't'          = @();
-#         'drop'       = @();
-#         'd'          = @();
-#         'use'        = @();
-#         'u'          = @();
-#         'equip'      = @();
-#         'eq'         = @();
-#         'open'       = @();
-#         'o'          = @();
-#     };
-#     'TripleWord' = @{
-#         'climb up'   = @();
-#         'cl u'       = @();
-#         'climb down' = @();
-#         'cl d'       = @();
-#     };
-#     ## 'move north' = '';
-#     ## 'm n'        = '';
-#     ## 'move south' = '';
-#     ## 'm s'        = '';
-#     ## 'move east'  = '';
-#     ## 'm e'        = '';
-#     ## 'move west'  = '';
-#     ## 'm w'        = '';
-#     ## 'climb up'   = @();
-#     ## 'cl u'       = @();
-#     ## 'climb down' = @();
-#     ## 'cl d'       = @();
-#     ## 'enter'      = @();
-#     ## 'en'         = @();
-#     ## 'exit'       = '';
-#     ## 'ex'         = '';
-#     ## 'look'       = '';
-#     ## 'l'          = '';
-#     ## 'examine'    = @();
-#     ## 'exa'        = @();
-#     ## 'get'        = @();
-#     ## 'g'          = @();
-#     ## 'take'       = @();
-#     ## 't'          = @();
-#     ## 'drop'       = @();
-#     ## 'd'          = @();
-#     ## 'inventory'  = '';
-#     ## 'i'          = '';
-#     ## 'use'        = @();
-#     ## 'u'          = @();
-#     ## 'equip'      = @();
-#     ## 'eq'         = @();
-#     ## 'open'       = @();
-#     ## 'o'          = @();
-# }
+$Script:CommandOperandTable = @{
+    'north' = 555;
+    'south' = 563;
+    'east'  = 429;
+    'west'  = 451;
+    'up'    = 229;
+    'down'  = 440;
+}
 
 #endregion
 
@@ -1493,8 +1425,11 @@ Function Invoke-GfmCmdParser {
 
         # TODO: When a valid command is entered, nothing is done
 
-        #[Boolean]$foundCmdFirstTierMatch = $false
-        [Boolean]$foundCmdPhraseMatch    = $false
+        #                           [Boolean]$foundCmdFirstTierMatch = $false
+        [Boolean]                  $foundCmdPhraseMatch              = $false
+        [System.Text.ASCIIEncoding]$asciiEncoder                     = [System.Text.ASCIIEncoding]::new()
+        
+        
 
         # Perform sanity checks on the cmdactual string
         If ([String]::IsNullOrEmpty($Script:UiCommandWindowCmdActual)) {
@@ -1509,22 +1444,54 @@ Function Invoke-GfmCmdParser {
             
             # NEWER VERSION
             # Split the cmdactual string into several parts
+            # This eliminates the whitespace from consideration as it's the delimiter for separation
             $cmdactSplit = -Split $Script:UiCommandWindowCmdActual
             
             # 0 = first word, 1 = second word (if applicable), 2 = third word (if applicable)
             # This distinction is important because at a minimum, the first word is going to be required, and there are some commands that don't require an Object Specifier.
+            
+            # IMPROVEMENT
+            # I need to devise a way to generate a more complex and structured result of the command parser to provider better responses
+            # The boolean flag method is primitive and works to an extent, but can't cover all of the desired response permutations necessary for the
+            # complexity of the command parser.
             Switch ($cmdactSplit.Length) {
                 1 {
-                    Foreach ($subkey in $Script:CommandTable['SingleWord'].Keys) {
+                    Foreach ($subkey in $Script:CommandOpcodeTable.Keys) {
                         # Check to see if the string entered matches any of the keys
                         If ($cmdactSplit[0] -EQ $subkey) {
-                            $foundCmdPhraseMatch = $true
+                            # Check to see if the bytes match valid single phrase sums
+                            $cmdbytesAct = 0
+                            $asciiEncoder.GetBytes($cmdactSplit[0]) | ForEach-Object {$cmdbytesAct += $_}
+                            #Write-Host $cmdbytesAct
+                            Switch($cmdbytesAct) {
+                                442 {
+                                    #Write-Host '442 matched'
+                                    $foundCmdPhraseMatch = $true
+                                }
+                                686 {
+                                    #Write-Host '686 encountered'
+                                    $foundCmdPhraseMatch = $true
+                                }
+                                1006 {
+                                    #Write-Host '1006 encountered'
+                                    $foundCmdPhraseMatch = $true
+                                }
+                                Default {
+                                    $foundCmdPhraseMatch = $false
+                                }
+                            }
                         }
                     }
                 }
                 2 {
-                    # The logic here is a little different
-                    # First, we check to see 
+                    # Check to see if there's a match in the operand case before proceeding
+                    # Three cases can emerge here: 
+                    # 1. Primary opcode matches and is expected in the no-operand context
+                    # 2. Primary opcode matches and is excepted in the single-operand context
+                    # 3. Primary opcode doesn't match any known codes and is in default
+                    Foreach ($key in $Script:CommandOpcodeTable.Keys) {
+                        # Check to see 
+                    }
                 }
                 3 {}
             }
@@ -1541,40 +1508,40 @@ Function Invoke-GfmCmdParser {
             #         $foundCmdFirstTierMatch = $true
             #     }
             # }
-            # If (-NOT($foundCmdFirstTierMatch)) {
-            #     # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
-            #     Update-GfmCmdHistory
+            If (-NOT($foundCmdPhraseMatch)) {
+                # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
+                Update-GfmCmdHistory
 
-            #     Write-GfmMessageWindowMessage `
-            #         -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-            #         -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-            #         -Teletype
+                Write-GfmMessageWindowMessage `
+                    -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+                    -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+                    -Teletype
 
-            #     # Clear the cmdactual string
-            #     $Script:UiCommandWindowCmdActual = ''
+                # Clear the cmdactual string
+                $Script:UiCommandWindowCmdActual = ''
 
-            #     # Reset the command window
-            #     Set-GfmDefaultCursorPosition
-            #     Return
-            # } Else {
-            #     # The first phrase of the command found a match
-            #     # Although it's possible at this point that the command phrase is incomplete,
-            #     # for the purposes of testing, we're going to assume that it is and start building 
-            #     # the functional mechanics of it in terms of rendering.
-            #     Update-GfmCmdHistory -CmdActualValid
+                # Reset the command window
+                Set-GfmDefaultCursorPosition
+                Return
+            } Else {
+                # The first phrase of the command found a match
+                # Although it's possible at this point that the command phrase is incomplete,
+                # for the purposes of testing, we're going to assume that it is and start building 
+                # the functional mechanics of it in terms of rendering.
+                Update-GfmCmdHistory -CmdActualValid
 
-            #     Write-GfmMessageWindowMessage `
-            #         -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-            #         -ForegroundColor $Script:UiCommandWindowCmdHistValid `
-            #         -Teletype
+                Write-GfmMessageWindowMessage `
+                    -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+                    -ForegroundColor $Script:UiCommandWindowCmdHistValid `
+                    -Teletype
 
-            #     # Clear the cmdactual string
-            #     $Script:UiCommandWindowCmdActual = ''
+                # Clear the cmdactual string
+                $Script:UiCommandWindowCmdActual = ''
 
-            #     # Reset the command window
-            #     Set-GfmDefaultCursorPosition
-            #     Return
-            # }
+                # Reset the command window
+                Set-GfmDefaultCursorPosition
+                Return
+            }
         }
     }
 }
