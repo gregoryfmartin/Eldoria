@@ -826,20 +826,18 @@ $Script:CommandTable = @{
     };
     
     'enter' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'en' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
@@ -849,74 +847,66 @@ $Script:CommandTable = @{
     'l'    = {};
     
     'examine' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'exa' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'get' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'g' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'take' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     't' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'drop' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'd' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
@@ -924,56 +914,50 @@ $Script:CommandTable = @{
     'i'         = {};
     
     'use' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'u' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'equip' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'eq' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'open' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
     'op' = {
-        Param([String]$a0) {
-            Switch($a0) {
-                # TODO: Add valid Object Identifiers
-                Default {}
-            }
+        Param([String]$a0)
+        Switch($a0) {
+            # TODO: Add valid Object Identifiers
+            Default {}
         }
     };
     
