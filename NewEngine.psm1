@@ -612,60 +612,32 @@ $Script:CommandTable = @{
                 Return
             }
         }
-        
-        # If([String]::IsNullOrEmpty($a0)) {
-        #     Write-GfmBadCommandArg0Exception
-        #     Return
-        # }
-        
-        # Something weird is going on here. When a0 is empty or null, it's matching the first case, and I have no idea
-        # why it's doing that.
-        # Switch($a0) {
-        #     {'north' -OR 'n'} {
-        #         Write-Host 'Matched north/n'
-        #         Write-GfmGoodCommandAlert
-        #         Return
-        #     }
-        #     {'south' -OR 's'} {
-        #         Write-Host 'Matched south/s'
-        #         Write-GfmGoodCommandAlert
-        #         Return
-        #     }
-        #     {'east' -OR 'e'} {
-        #         Write-Host 'Matched east/e'
-        #         Write-GfmGoodCommandAlert
-        #         Return
-        #     }
-        #     {'west' -OR 'w'} {
-        #         Write-Host 'Matched west/w'
-        #         Write-GfmGoodCommandAlert
-        #         Return
-        #     }
-        #     { [String]::IsNullOrEmpty($_) } {
-        #         Write-Host 'Matched null/empty'
-        #         Write-GfmBadCommandArg0Exception
-        #         Return
-        #     }
-            # Default {
-            #     # There was likely an invalid parameter passed to this function
-            #     # WEIRD
-            #     #
-            #     # Strangely, this branch is never reached if $a0 is null or empty, despite the fact that it doesn't match
-            #     # any of the other cases. I have to explicitly craft a final case to catch the possibility.
-            #     Write-Host 'Default case reached'
-            #     Write-GfmBadCommandArg0Exception
-            #     Return
-            # }
     };
     
     'm' = {
         Param([String] $a0)
+        
         Switch($a0) {
-            {'north' -OR 'n'} {}
-            {'south' -OR 's'} {}
-            {'east' -OR 'e'} {}
-            {'west' -OR 'w'} {}
-            Default {}
+            {$_ -EQ 'north' -OR $_ -EQ 'n'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            {$_ -EQ 'south' -OR $_ -EQ 's'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            {$_ -EQ 'east' -OR $_ -EQ 'e'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            {$_ -EQ 'west' -OR $_ -EQ 'w'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -856,6 +828,55 @@ $Script:CommandTable = @{
                 # TODO: Add valid Object Identifiers
                 Default {}
             }
+        }
+    };
+    
+    'bg' = {
+        Param([String]$a0)
+        Switch($a0) {
+            'a' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldNRoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            'b' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldNERoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            'c' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldNWRoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            'd' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldNEWRoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            'e' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldSRoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            'f' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldSERoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            'g' {
+                Write-GfmSceneImage -CellArray $Script:SiFieldSEWRoad
+                Update-GfmCmdHistory -CmdActualValid
+                $Script:UiCommandWindowCmdActual = ''
+                Set-GfmDefaultCursorPosition  
+            }
+            Default {}
         }
     };
 }
