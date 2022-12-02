@@ -592,22 +592,22 @@ $Script:CommandTable = @{
 
         Switch($a0) {
             { $_ -EQ 'north' -OR $_ -EQ 'n' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
             { $_ -EQ 'south' -OR $_ -EQ 's' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
             { $_ -EQ 'east' -OR $_ -EQ 'e' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
             { $_ -EQ 'west' -OR $_ -EQ 'w' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
@@ -623,22 +623,22 @@ $Script:CommandTable = @{
         
         Switch($a0) {
             { $_ -EQ 'north' -OR $_ -EQ 'n' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
             { $_ -EQ 'south' -OR $_ -EQ 's' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
             { $_ -EQ 'east' -OR $_ -EQ 'e' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
             { $_ -EQ 'west' -OR $_ -EQ 'w' } {
-                Write-GfmGoodCommandAlert
+                Update-GfmCmdHistory -CmdActualValid
                 Return
             }
             
@@ -655,32 +655,32 @@ $Script:CommandTable = @{
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
                     'tree' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'ladder' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'rope' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'wall' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'stairs' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'pole' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
@@ -691,35 +691,35 @@ $Script:CommandTable = @{
                 }
             }
             
-            { $_ -EQ 'down' -OR $_ -EQ 'd'} {
+            { $_ -EQ 'down' -OR $_ -EQ 'd' } {
                 Switch($a1) {
                     'tree' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'ladder' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'rope' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'wall' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'stairs' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'pole' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
@@ -743,32 +743,32 @@ $Script:CommandTable = @{
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
                     'tree' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'ladder' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'rope' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'wall' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'stairs' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'pole' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
@@ -779,35 +779,35 @@ $Script:CommandTable = @{
                 }
             }
             
-            { $_ -EQ 'down' -OR $_ -EQ 'd'} {
+            { $_ -EQ 'down' -OR $_ -EQ 'd' } {
                 Switch($a1) {
                     'tree' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'ladder' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'rope' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'wall' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'stairs' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
                     'pole' {
-                        Write-GfmGoodCommandAlert
+                        Update-GfmCmdHistory -CmdActualValid
                         Return
                     }
                     
@@ -828,29 +828,71 @@ $Script:CommandTable = @{
     'enter' = {
         Param([String]$a0)
         Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {}
+            'door' {
+                Update-GfmCmdHistory -CmdActualValid
+                Return
+            }
+            
+            'cave' {
+                Update-GfmCmdHistory -CmdActualValid
+                Return
+            }
+            
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
     'en' = {
         Param([String]$a0)
         Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {}
+            'door' {
+                Update-GfmCmdHistory -CmdActualValid
+                Return
+            }
+            
+            'cave' {
+                Update-GfmCmdHistory -CmdActualValid
+                Return
+            }
+            
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
-    'exit' = {};
-    'ex'   = {};
-    'look' = {};
-    'l'    = {};
+    'exit' = {
+        Update-GfmCmdHistory -CmdActualValid
+        Return
+    };
+    
+    'ex' = {
+        Update-GfmCmdHistory -CmdActualValid
+        Return
+    };
+    
+    'look' = {
+        Update-GfmCmdHistory -CmdActualValid
+        Return
+    };
+    
+    'l' = {
+        Update-GfmCmdHistory -CmdActualValid
+        Return
+    };
     
     'examine' = {
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -858,7 +900,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -866,7 +911,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -874,7 +922,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -882,7 +933,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -890,7 +944,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -898,7 +955,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -906,12 +966,22 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
-    'inventory' = {};
-    'i'         = {};
+    'inventory' = {
+        Update-GfmCmdHistory -CmdActualValid
+        Return
+    };
+    
+    'i' = {
+        Update-GfmCmdHistory -CmdActualValid
+        Return
+    };
     
     'use' = {
         Param([String]$a0)
@@ -925,7 +995,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -933,7 +1006,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -941,7 +1017,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -949,7 +1028,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -957,7 +1039,10 @@ $Script:CommandTable = @{
         Param([String]$a0)
         Switch($a0) {
             # TODO: Add valid Object Identifiers
-            Default {}
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -2011,18 +2096,19 @@ Function Write-GfmGoodCommandAlert {
     Param ()
     
     Process {
-        Update-GfmCmdHistory -CmdActualValid
+        Write-Error 'Write-GfmGoodCommandAlert Function is Deprecated'
+        # Update-GfmCmdHistory -CmdActualValid
 
-        Write-GfmMessageWindowMessage `
-            -Message "VALID COMMAND: $Script:UiCommandWindowCmdActual" `
-            -ForegroundColor $Script:UiCommandWindowCmdHistValid `
-            -Teletype
+        # Write-GfmMessageWindowMessage `
+        #     -Message "VALID COMMAND: $Script:UiCommandWindowCmdActual" `
+        #     -ForegroundColor $Script:UiCommandWindowCmdHistValid `
+        #     -Teletype
 
-        # Clear the cmdactual string
-        $Script:UiCommandWindowCmdActual = ''
+        # # Clear the cmdactual string
+        # $Script:UiCommandWindowCmdActual = ''
 
-        # Reset the command window
-        Set-GfmDefaultCursorPosition
+        # # Reset the command window
+        # Set-GfmDefaultCursorPosition
     }
 }
 
@@ -2031,18 +2117,15 @@ Function Write-GfmBadCommandException {
     Param ()
     
     Process {
-        Update-GfmCmdHistory
-
-        Write-GfmMessageWindowMessage `
-            -Message "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
-            -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-            -Teletype
-
-        # Clear the cmdactual string
-        $Script:UiCommandWindowCmdActual = ''
-
-        # Reset the command window
-        Set-GfmDefaultCursorPosition
+        # Write-GfmMessageWindowMessage `
+        #     -Message "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
+        #     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+        #     -Teletype
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
@@ -2051,18 +2134,15 @@ Function Write-GfmBadCommandArg0Exception {
     Param ()
     
     Process {
-        Update-GfmCmdHistory
-
-        Write-GfmMessageWindowMessage `
-            -Message "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
-            -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-            -Teletype
-
-        # Clear the cmdactual string
-        $Script:UiCommandWindowCmdActual = ''
-
-        # Reset the command window
-        Set-GfmDefaultCursorPosition
+        # Write-GfmMessageWindowMessage `
+        #     -Message "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
+        #     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+        #     -Teletype
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
@@ -2071,25 +2151,26 @@ Function Write-GfmBadCommandArg1Exception {
     Param ()
     
     Process {
-        Update-GfmCmdHistory
-
-        Write-GfmMessageWindowMessage `
-            -Message "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
-            -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-            -Teletype
-
-        # Clear the cmdactual string
-        $Script:UiCommandWindowCmdActual = ''
-
-        # Reset the command window
-        Set-GfmDefaultCursorPosition
+        # Write-GfmMessageWindowMessage `
+        #     -Message "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
+        #     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+        #     -Teletype
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
 Function Update-GfmCmdHistory {
     [CmdletBinding()]
     Param (
-        [Switch]$CmdActualValid
+        [Switch]$CmdActualValid,
+        [Switch]$UpdateMessageWindow,
+        [String]$MsgWindowMessage = '',
+        [ConsoleColor]$MsgColor = 'White',
+        [Switch]$MsgTeletype
     )
 
     Process {
@@ -2151,6 +2232,22 @@ Function Update-GfmCmdHistory {
             -Message $($Script:UiCommandWindowHistA.Message) `
             -ForegroundColor $($Script:UiCommandWindowHistA.ForegroundColor) `
             -TypeSpeed LineClear
+        
+        If($UpdateMessageWindow) {
+            If($MsgTeletype) {
+                Write-GfmMessageWindowMessage `
+                    -Message $MsgWindowMessage `
+                    -ForegroundColor $MsgColor `
+                    -Teletype
+            } Else {
+                Write-GfmMessageWindowMessage `
+                    -Message $MsgWindowMessage `
+                    -ForegroundColor $MsgColor
+            }
+        }
+            
+        $Script:UiCommandWindowCmdActual = ''
+        Set-GfmDefaultCursorPosition
     }
 }
 
