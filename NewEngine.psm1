@@ -591,22 +591,26 @@ $Script:CommandTable = @{
         Param([String] $a0)
 
         Switch($a0) {
-            {$_ -EQ 'north' -OR $_ -EQ 'n'} {
+            { $_ -EQ 'north' -OR $_ -EQ 'n' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
-            {$_ -EQ 'south' -OR $_ -EQ 's'} {
+            
+            { $_ -EQ 'south' -OR $_ -EQ 's' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
-            {$_ -EQ 'east' -OR $_ -EQ 'e'} {
+            
+            { $_ -EQ 'east' -OR $_ -EQ 'e' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
-            {$_ -EQ 'west' -OR $_ -EQ 'w'} {
+            
+            { $_ -EQ 'west' -OR $_ -EQ 'w' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
+            
             Default {
                 Write-GfmBadCommandArg0Exception
                 Return
@@ -618,22 +622,26 @@ $Script:CommandTable = @{
         Param([String] $a0)
         
         Switch($a0) {
-            {$_ -EQ 'north' -OR $_ -EQ 'n'} {
+            { $_ -EQ 'north' -OR $_ -EQ 'n' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
-            {$_ -EQ 'south' -OR $_ -EQ 's'} {
+            
+            { $_ -EQ 'south' -OR $_ -EQ 's' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
-            {$_ -EQ 'east' -OR $_ -EQ 'e'} {
+            
+            { $_ -EQ 'east' -OR $_ -EQ 'e' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
-            {$_ -EQ 'west' -OR $_ -EQ 'w'} {
+            
+            { $_ -EQ 'west' -OR $_ -EQ 'w' } {
                 Write-GfmGoodCommandAlert
                 Return
             }
+            
             Default {
                 Write-GfmBadCommandArg0Exception
                 Return
@@ -644,38 +652,176 @@ $Script:CommandTable = @{
     'climb' = {
         Param([String]$a0, [String]$a1)
         Switch($a0) {
-            {'up' -OR 'u'} {
+            { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
-                    # TODO: Add valid Object Identifiers
-                    Default {}
+                    'tree' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'ladder' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'rope' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'wall' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'stairs' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'pole' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    Default {
+                        Write-GfmBadCommandArg1Exception
+                        Return
+                    }
                 }
             }
-            {'down' -OR 'd'} {
+            
+            { $_ -EQ 'down' -OR $_ -EQ 'd'} {
                 Switch($a1) {
-                    # TODO: Add valid Object Identifiers
-                    Default {}
+                    'tree' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'ladder' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'rope' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'wall' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'stairs' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'pole' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    Default {
+                        Write-GfmBadCommandArg1Exception
+                        Return
+                    }
                 }
             }
-            Default {}
+            
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
     'cl' = {
         Param([String]$a0, [String]$a1)
         Switch($a0) {
-            {'up' -OR 'u'} {
+            { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
-                    # TODO: Add valid Object Identifiers
-                    Default {}
+                    'tree' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'ladder' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'rope' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'wall' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'stairs' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'pole' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    Default {
+                        Write-GfmBadCommandArg1Exception
+                        Return
+                    }
                 }
             }
-            {'down' -OR 'd'} {
+            
+            { $_ -EQ 'down' -OR $_ -EQ 'd'} {
                 Switch($a1) {
-                    # TODO: Add valid Object Identifiers
-                    Default {}
+                    'tree' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'ladder' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'rope' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'wall' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'stairs' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    'pole' {
+                        Write-GfmGoodCommandAlert
+                        Return
+                    }
+                    
+                    Default {
+                        Write-GfmBadCommandArg1Exception
+                        Return
+                    }
                 }
             }
-            Default {}
+            
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
         }
     };
     
@@ -1924,7 +2070,27 @@ Function Write-GfmBadCommandArg0Exception {
         Update-GfmCmdHistory
 
         Write-GfmMessageWindowMessage `
-            -Message "MISSING ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
+            -Message "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
+            -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+            -Teletype
+
+        # Clear the cmdactual string
+        $Script:UiCommandWindowCmdActual = ''
+
+        # Reset the command window
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+Function Write-GfmBadCommandArg1Exception {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Update-GfmCmdHistory
+
+        Write-GfmMessageWindowMessage `
+            -Message "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
             -ForegroundColor $Script:UiCommandWindowCmdHistErr `
             -Teletype
 
