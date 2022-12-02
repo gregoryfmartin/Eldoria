@@ -1708,7 +1708,7 @@ Function Invoke-GfmCmdParser {
         # TODO: When a valid command is entered, nothing is done
 
         #                           [Boolean]$foundCmdFirstTierMatch = $false
-        [Boolean]$foundCmdPhraseMatch = $false
+        #[Boolean]$foundCmdPhraseMatch = $false
         # [System.Text.ASCIIEncoding]$asciiEncoder                     = [System.Text.ASCIIEncoding]::new()
         
         
@@ -1743,7 +1743,7 @@ Function Invoke-GfmCmdParser {
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
                     }                    
                 }
-                $foundCmdPhraseMatch = $true
+                #$foundCmdPhraseMatch = $true
             } Else {
                 # Failed to find the root
                 Write-GfmBadCommandException
@@ -1860,7 +1860,7 @@ Function Write-GfmGoodCommandAlert {
     Param ()
     
     Process {
-        Update-GfmCmdHistory
+        Update-GfmCmdHistory -CmdActualValid
 
         Write-GfmMessageWindowMessage `
             -Message "VALID COMMAND: $Script:UiCommandWindowCmdActual" `
