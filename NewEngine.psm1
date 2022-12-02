@@ -578,6 +578,288 @@ $Script:CommandOperandTable = @{
     'down'  = 440;
 }
 
+# ATTEMPT FIVE MILLION
+# After ruminating over this for a few days, and despite this potentially being the most inelegant method to do this,
+# I think this is going to be the best way to do this until someone else kicks me in the balls and says otherwise.
+# Rather than trying to dynamically determine where the failure is at in the parser, the Command String permutations
+# are going to be hardcoded in this dictionary, and each permutation is assoicated with a ScriptBlock that gets executed
+# from the Command Parser when the Response is successful. Half-baked permutations (incomplete commands) are hardcoded
+# here, partially as a way to torture myself, partially as a way to provide "sane" user feedback, and partially as a way
+# to have an outlet for Easter Eggs.
+$Script:CommandTable = @{
+    'move' = {
+        Param([String] $a0)
+
+        Switch($a0) {
+            {$_ -EQ 'north' -OR $_ -EQ 'n'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            {$_ -EQ 'south' -OR $_ -EQ 's'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            {$_ -EQ 'east' -OR $_ -EQ 'e'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            {$_ -EQ 'west' -OR $_ -EQ 'w'} {
+                Write-GfmGoodCommandAlert
+                Return
+            }
+            Default {
+                Write-GfmBadCommandArg0Exception
+                Return
+            }
+        }
+        
+        # If([String]::IsNullOrEmpty($a0)) {
+        #     Write-GfmBadCommandArg0Exception
+        #     Return
+        # }
+        
+        # Something weird is going on here. When a0 is empty or null, it's matching the first case, and I have no idea
+        # why it's doing that.
+        # Switch($a0) {
+        #     {'north' -OR 'n'} {
+        #         Write-Host 'Matched north/n'
+        #         Write-GfmGoodCommandAlert
+        #         Return
+        #     }
+        #     {'south' -OR 's'} {
+        #         Write-Host 'Matched south/s'
+        #         Write-GfmGoodCommandAlert
+        #         Return
+        #     }
+        #     {'east' -OR 'e'} {
+        #         Write-Host 'Matched east/e'
+        #         Write-GfmGoodCommandAlert
+        #         Return
+        #     }
+        #     {'west' -OR 'w'} {
+        #         Write-Host 'Matched west/w'
+        #         Write-GfmGoodCommandAlert
+        #         Return
+        #     }
+        #     { [String]::IsNullOrEmpty($_) } {
+        #         Write-Host 'Matched null/empty'
+        #         Write-GfmBadCommandArg0Exception
+        #         Return
+        #     }
+            # Default {
+            #     # There was likely an invalid parameter passed to this function
+            #     # WEIRD
+            #     #
+            #     # Strangely, this branch is never reached if $a0 is null or empty, despite the fact that it doesn't match
+            #     # any of the other cases. I have to explicitly craft a final case to catch the possibility.
+            #     Write-Host 'Default case reached'
+            #     Write-GfmBadCommandArg0Exception
+            #     Return
+            # }
+    };
+    
+    'm' = {
+        Param([String] $a0)
+        Switch($a0) {
+            {'north' -OR 'n'} {}
+            {'south' -OR 's'} {}
+            {'east' -OR 'e'} {}
+            {'west' -OR 'w'} {}
+            Default {}
+        }
+    };
+    
+    'climb' = {
+        Param([String]$a0, [String]$a1)
+        Switch($a0) {
+            {'up' -OR 'u'} {
+                Switch($a1) {
+                    # TODO: Add valid Object Identifiers
+                    Default {}
+                }
+            }
+            {'down' -OR 'd'} {
+                Switch($a1) {
+                    # TODO: Add valid Object Identifiers
+                    Default {}
+                }
+            }
+            Default {}
+        }
+    };
+    
+    'cl' = {
+        Param([String]$a0, [String]$a1)
+        Switch($a0) {
+            {'up' -OR 'u'} {
+                Switch($a1) {
+                    # TODO: Add valid Object Identifiers
+                    Default {}
+                }
+            }
+            {'down' -OR 'd'} {
+                Switch($a1) {
+                    # TODO: Add valid Object Identifiers
+                    Default {}
+                }
+            }
+            Default {}
+        }
+    };
+    
+    'enter' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'en' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'exit' = {};
+    'ex'   = {};
+    'look' = {};
+    'l'    = {};
+    
+    'examine' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'exa' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'get' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'g' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'take' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    't' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'drop' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'd' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'inventory' = {};
+    'i'         = {};
+    
+    'use' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'u' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'equip' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'eq' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'open' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+    
+    'op' = {
+        Param([String]$a0) {
+            Switch($a0) {
+                # TODO: Add valid Object Identifiers
+                Default {}
+            }
+        }
+    };
+}
+
 #endregion
 
 #endregion
@@ -679,7 +961,7 @@ Function Write-GfmSceneImage {
     Param (
         [Switch]$NonWindowsMethod,
         [Parameter(Mandatory = $true)]
-        [BufferCell[, ]]$CellArray
+        [BufferCell[,]]$CellArray
     )
 
     Process {
@@ -831,8 +1113,8 @@ Function Write-GfmTtyString {
 
     Process {
         [Char[]]$msgCharArray = $Message.ToCharArray()
-        [Int]   $typeCounter = 0
-        [Int]   $msgcaProbe = 0
+        [Int]    $typeCounter = 0
+        [Int]    $msgcaProbe  = 0
 
         While ($msgcaProbe -LE ($msgCharArray.Count - 1)) {
             $typeCounter++
@@ -1338,7 +1620,7 @@ Function Read-GfmUserCommandInput {
         If this is the case, we check to see what the current Cursor Position is. If we can subtract 1 from its X property value, we
         first clear the Buffer Cell in the prior and then reposition the Cursor Position to X-1.
 
-        BUG
+        FIXED
         There's an issue where if the Backspace key is pressed when the Command Buffer is empty, it throws an exception (referenced in this bug: https://github.com/gregoryfmartin/Playground/issues/20).
         #>
 
@@ -1426,8 +1708,8 @@ Function Invoke-GfmCmdParser {
         # TODO: When a valid command is entered, nothing is done
 
         #                           [Boolean]$foundCmdFirstTierMatch = $false
-        [Boolean]                  $foundCmdPhraseMatch              = $false
-        [System.Text.ASCIIEncoding]$asciiEncoder                     = [System.Text.ASCIIEncoding]::new()
+        [Boolean]$foundCmdPhraseMatch = $false
+        # [System.Text.ASCIIEncoding]$asciiEncoder                     = [System.Text.ASCIIEncoding]::new()
         
         
 
@@ -1439,62 +1721,89 @@ Function Invoke-GfmCmdParser {
             Return
         } Else {
             
-            
-            
-            
-            # NEWER VERSION
-            # Split the cmdactual string into several parts
-            # This eliminates the whitespace from consideration as it's the delimiter for separation
+            # Break the cmdactual apart
             $cmdactSplit = -Split $Script:UiCommandWindowCmdActual
             
-            # 0 = first word, 1 = second word (if applicable), 2 = third word (if applicable)
-            # This distinction is important because at a minimum, the first word is going to be required, and there are some commands that don't require an Object Specifier.
-            
-            # IMPROVEMENT
-            # I need to devise a way to generate a more complex and structured result of the command parser to provider better responses
-            # The boolean flag method is primitive and works to an extent, but can't cover all of the desired response permutations necessary for the
-            # complexity of the command parser.
-            Switch ($cmdactSplit.Length) {
-                1 {
-                    Foreach ($subkey in $Script:CommandOpcodeTable.Keys) {
-                        # Check to see if the string entered matches any of the keys
-                        If ($cmdactSplit[0] -EQ $subkey) {
-                            # Check to see if the bytes match valid single phrase sums
-                            $cmdbytesAct = 0
-                            $asciiEncoder.GetBytes($cmdactSplit[0]) | ForEach-Object {$cmdbytesAct += $_}
-                            #Write-Host $cmdbytesAct
-                            Switch($cmdbytesAct) {
-                                442 {
-                                    #Write-Host '442 matched'
-                                    $foundCmdPhraseMatch = $true
-                                }
-                                686 {
-                                    #Write-Host '686 encountered'
-                                    $foundCmdPhraseMatch = $true
-                                }
-                                1006 {
-                                    #Write-Host '1006 encountered'
-                                    $foundCmdPhraseMatch = $true
-                                }
-                                Default {
-                                    $foundCmdPhraseMatch = $false
-                                }
-                            }
-                        }
+            # Check the command table for the root
+            $rootFound = $Script:CommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
+            If($null -NE $rootFound) {
+                # Found the root
+                # Check the length of the split to determine how many arguments to pass to the invocation
+                Switch($cmdactSplit.Length) {
+                    1 {
+                        #Write-Host 'Invoking no arg command'
+                        Invoke-Command $rootFound.Value
                     }
-                }
-                2 {
-                    # Check to see if there's a match in the operand case before proceeding
-                    # Three cases can emerge here: 
-                    # 1. Primary opcode matches and is expected in the no-operand context
-                    # 2. Primary opcode matches and is excepted in the single-operand context
-                    # 3. Primary opcode doesn't match any known codes and is in default
-                    Foreach ($key in $Script:CommandOpcodeTable.Keys) {
-                        # Check to see 
+                    2 {
+                        #Write-Host 'Invoking 1 arg command'
+                        Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1]
                     }
+                    3 {
+                        #Write-Host 'Invoking 2 arg command'
+                        Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
+                    }                    
                 }
-                3 {}
+                $foundCmdPhraseMatch = $true
+            } Else {
+                # Failed to find the root
+                Write-GfmBadCommandException
+                Return
             }
+            
+            
+            # # NEWER VERSION
+            # # Split the cmdactual string into several parts
+            # # This eliminates the whitespace from consideration as it's the delimiter for separation
+            # $cmdactSplit = -Split $Script:UiCommandWindowCmdActual
+            
+            # # 0 = first word, 1 = second word (if applicable), 2 = third word (if applicable)
+            # # This distinction is important because at a minimum, the first word is going to be required, and there are some commands that don't require an Object Specifier.
+            
+            # # IMPROVEMENT
+            # # I need to devise a way to generate a more complex and structured result of the command parser to provider better responses
+            # # The boolean flag method is primitive and works to an extent, but can't cover all of the desired response permutations necessary for the
+            # # complexity of the command parser.
+            # Switch ($cmdactSplit.Length) {
+            #     1 {
+            #         Foreach ($subkey in $Script:CommandOpcodeTable.Keys) {
+            #             # Check to see if the string entered matches any of the keys
+            #             If ($cmdactSplit[0] -EQ $subkey) {
+            #                 # Check to see if the bytes match valid single phrase sums
+            #                 $cmdbytesAct = 0
+            #                 $asciiEncoder.GetBytes($cmdactSplit[0]) | ForEach-Object {$cmdbytesAct += $_}
+            #                 #Write-Host $cmdbytesAct
+            #                 Switch($cmdbytesAct) {
+            #                     442 {
+            #                         #Write-Host '442 matched'
+            #                         $foundCmdPhraseMatch = $true
+            #                     }
+            #                     686 {
+            #                         #Write-Host '686 encountered'
+            #                         $foundCmdPhraseMatch = $true
+            #                     }
+            #                     1006 {
+            #                         #Write-Host '1006 encountered'
+            #                         $foundCmdPhraseMatch = $true
+            #                     }
+            #                     Default {
+            #                         $foundCmdPhraseMatch = $false
+            #                     }
+            #                 }
+            #             }
+            #         }
+            #     }
+            #     2 {
+            #         # Check to see if there's a match in the operand case before proceeding
+            #         # Three cases can emerge here: 
+            #         # 1. Primary opcode matches and is expected in the no-operand context
+            #         # 2. Primary opcode matches and is excepted in the single-operand context
+            #         # 3. Primary opcode doesn't match any known codes and is in default
+            #         Foreach ($key in $Script:CommandOpcodeTable.Keys) {
+            #             # Check to see 
+            #         }
+            #     }
+            #     3 {}
+            # }
             
             
             
@@ -1508,41 +1817,101 @@ Function Invoke-GfmCmdParser {
             #         $foundCmdFirstTierMatch = $true
             #     }
             # }
-            If (-NOT($foundCmdPhraseMatch)) {
-                # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
-                Update-GfmCmdHistory
+            # If (-NOT($foundCmdPhraseMatch)) {
+            #     # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
+            #     Update-GfmCmdHistory
 
-                Write-GfmMessageWindowMessage `
-                    -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-                    -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-                    -Teletype
+            #     Write-GfmMessageWindowMessage `
+            #         -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+            #         -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+            #         -Teletype
 
-                # Clear the cmdactual string
-                $Script:UiCommandWindowCmdActual = ''
+            #     # Clear the cmdactual string
+            #     $Script:UiCommandWindowCmdActual = ''
 
-                # Reset the command window
-                Set-GfmDefaultCursorPosition
-                Return
-            } Else {
-                # The first phrase of the command found a match
-                # Although it's possible at this point that the command phrase is incomplete,
-                # for the purposes of testing, we're going to assume that it is and start building 
-                # the functional mechanics of it in terms of rendering.
-                Update-GfmCmdHistory -CmdActualValid
+            #     # Reset the command window
+            #     Set-GfmDefaultCursorPosition
+            #     Return
+            # } Else {
+            #     # The first phrase of the command found a match
+            #     # Although it's possible at this point that the command phrase is incomplete,
+            #     # for the purposes of testing, we're going to assume that it is and start building 
+            #     # the functional mechanics of it in terms of rendering.
+            #     Update-GfmCmdHistory -CmdActualValid
 
-                Write-GfmMessageWindowMessage `
-                    -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-                    -ForegroundColor $Script:UiCommandWindowCmdHistValid `
-                    -Teletype
+            #     Write-GfmMessageWindowMessage `
+            #         -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
+            #         -ForegroundColor $Script:UiCommandWindowCmdHistValid `
+            #         -Teletype
 
-                # Clear the cmdactual string
-                $Script:UiCommandWindowCmdActual = ''
+            #     # Clear the cmdactual string
+            #     $Script:UiCommandWindowCmdActual = ''
 
-                # Reset the command window
-                Set-GfmDefaultCursorPosition
-                Return
-            }
+            #     # Reset the command window
+            #     Set-GfmDefaultCursorPosition
+            #     Return
+            # }
         }
+    }
+}
+
+Function Write-GfmGoodCommandAlert {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Update-GfmCmdHistory
+
+        Write-GfmMessageWindowMessage `
+            -Message "VALID COMMAND: $Script:UiCommandWindowCmdActual" `
+            -ForegroundColor $Script:UiCommandWindowCmdHistValid `
+            -Teletype
+
+        # Clear the cmdactual string
+        $Script:UiCommandWindowCmdActual = ''
+
+        # Reset the command window
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+Function Write-GfmBadCommandException {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Update-GfmCmdHistory
+
+        Write-GfmMessageWindowMessage `
+            -Message "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
+            -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+            -Teletype
+
+        # Clear the cmdactual string
+        $Script:UiCommandWindowCmdActual = ''
+
+        # Reset the command window
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+Function Write-GfmBadCommandArg0Exception {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Update-GfmCmdHistory
+
+        Write-GfmMessageWindowMessage `
+            -Message "MISSING ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
+            -ForegroundColor $Script:UiCommandWindowCmdHistErr `
+            -Teletype
+
+        # Clear the cmdactual string
+        $Script:UiCommandWindowCmdActual = ''
+
+        # Reset the command window
+        Set-GfmDefaultCursorPosition
     }
 }
 

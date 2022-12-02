@@ -18,3 +18,24 @@ foreach($a in $sampleQueue) {
     Write-Host $a
 }
 
+$sampleDict = @{
+    'wee' = {Write-Host 'Wee function called'};
+    'oof' = {Write-Host 'Oof function called'};
+}
+
+# $sampleDict['Wee'] = {Write-Host 'Wee function'}
+# $sampleDict['Oof'] = {Write-Host 'Oof function'}
+
+foreach($a in $sampleDict.GetEnumerator()) {
+    Invoke-Command $a.Value
+}
+
+$found    = $sampleDict.GetEnumerator() | Where-Object {$_.Name -IEQ 'oof'}
+$notFound = $sampleDict.GetEnumerator() | Where-Object {$_.Name -IEQ 'wee'}
+
+If($null -EQ $notFound) {
+    Write-Error -Message 'Failed to find key in dictionary'
+} Else {
+    #$sampleDict[$notFound]
+    Invoke-Command $notFound.Value
+}
