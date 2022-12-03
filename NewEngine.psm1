@@ -651,6 +651,7 @@ $Script:CommandTable = @{
     
     'climb' = {
         Param([String]$a0, [String]$a1)
+        
         Switch($a0) {
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
@@ -739,6 +740,7 @@ $Script:CommandTable = @{
     
     'cl' = {
         Param([String]$a0, [String]$a1)
+        
         Switch($a0) {
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
@@ -827,6 +829,7 @@ $Script:CommandTable = @{
     
     'enter' = {
         Param([String]$a0)
+        
         Switch($a0) {
             'door' {
                 Update-GfmCmdHistory -CmdActualValid
@@ -847,6 +850,7 @@ $Script:CommandTable = @{
     
     'en' = {
         Param([String]$a0)
+        
         Switch($a0) {
             'door' {
                 Update-GfmCmdHistory -CmdActualValid
@@ -887,6 +891,7 @@ $Script:CommandTable = @{
     
     'examine' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -898,6 +903,7 @@ $Script:CommandTable = @{
     
     'exa' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -909,6 +915,7 @@ $Script:CommandTable = @{
     
     'get' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -920,6 +927,7 @@ $Script:CommandTable = @{
     
     'g' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -931,6 +939,7 @@ $Script:CommandTable = @{
     
     'take' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -942,6 +951,7 @@ $Script:CommandTable = @{
     
     't' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -953,6 +963,7 @@ $Script:CommandTable = @{
     
     'drop' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -964,6 +975,7 @@ $Script:CommandTable = @{
     
     'd' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -985,6 +997,7 @@ $Script:CommandTable = @{
     
     'use' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {}
@@ -993,6 +1006,7 @@ $Script:CommandTable = @{
     
     'u' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -1004,6 +1018,7 @@ $Script:CommandTable = @{
     
     'equip' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -1015,6 +1030,7 @@ $Script:CommandTable = @{
     
     'eq' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -1026,6 +1042,7 @@ $Script:CommandTable = @{
     
     'open' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -1037,6 +1054,7 @@ $Script:CommandTable = @{
     
     'op' = {
         Param([String]$a0)
+        
         Switch($a0) {
             # TODO: Add valid Object Identifiers
             Default {
@@ -1048,6 +1066,7 @@ $Script:CommandTable = @{
     
     'bg' = {
         Param([String]$a0)
+        
         Switch($a0) {
             'a' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldNRoad
@@ -1055,42 +1074,49 @@ $Script:CommandTable = @{
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             'b' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldNERoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             'c' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldNWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             'd' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldNEWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             'e' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldSRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             'f' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldSERoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             'g' {
                 Write-GfmSceneImage -CellArray $Script:SiFieldSEWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
+            
             Default {}
         }
     };
@@ -1914,17 +1940,6 @@ Function Read-GfmUserCommandInput {
             $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         }
 
-
-        # # TODO: I need to restrict ReadLine from printing characters beyond the width of the command window
-        # $Script:UiCommandWindowCmdActual = $(Get-Host).UI.ReadLine()
-
-        # # Poll the cursor position
-        # # This doesn't work
-        # $cpos = $Script:Rui.CursorPosition
-        # If ($cpos.X -GE 19) {
-        #     $Script:Rui.CursorPosition.X = 19
-        # }
-
         Invoke-GfmCmdParser
     }
 }
@@ -1939,15 +1954,7 @@ Function Invoke-GfmCmdParser {
         Set-GfmDefaultCursorPosition
         Write-GfmHostNnl `
             -Message $Script:UiCommandWindowCmdBlank `
-            -ForegroundColor 'Black'
-
-        # TODO: When a valid command is entered, nothing is done
-
-        #                           [Boolean]$foundCmdFirstTierMatch = $false
-        #[Boolean]$foundCmdPhraseMatch = $false
-        # [System.Text.ASCIIEncoding]$asciiEncoder                     = [System.Text.ASCIIEncoding]::new()
-        
-        
+            -ForegroundColor 'Black'     
 
         # Perform sanity checks on the cmdactual string
         If ([String]::IsNullOrEmpty($Script:UiCommandWindowCmdActual)) {
@@ -1985,108 +1992,6 @@ Function Invoke-GfmCmdParser {
                 Write-GfmBadCommandException
                 Return
             }
-            
-            
-            # # NEWER VERSION
-            # # Split the cmdactual string into several parts
-            # # This eliminates the whitespace from consideration as it's the delimiter for separation
-            # $cmdactSplit = -Split $Script:UiCommandWindowCmdActual
-            
-            # # 0 = first word, 1 = second word (if applicable), 2 = third word (if applicable)
-            # # This distinction is important because at a minimum, the first word is going to be required, and there are some commands that don't require an Object Specifier.
-            
-            # # IMPROVEMENT
-            # # I need to devise a way to generate a more complex and structured result of the command parser to provider better responses
-            # # The boolean flag method is primitive and works to an extent, but can't cover all of the desired response permutations necessary for the
-            # # complexity of the command parser.
-            # Switch ($cmdactSplit.Length) {
-            #     1 {
-            #         Foreach ($subkey in $Script:CommandOpcodeTable.Keys) {
-            #             # Check to see if the string entered matches any of the keys
-            #             If ($cmdactSplit[0] -EQ $subkey) {
-            #                 # Check to see if the bytes match valid single phrase sums
-            #                 $cmdbytesAct = 0
-            #                 $asciiEncoder.GetBytes($cmdactSplit[0]) | ForEach-Object {$cmdbytesAct += $_}
-            #                 #Write-Host $cmdbytesAct
-            #                 Switch($cmdbytesAct) {
-            #                     442 {
-            #                         #Write-Host '442 matched'
-            #                         $foundCmdPhraseMatch = $true
-            #                     }
-            #                     686 {
-            #                         #Write-Host '686 encountered'
-            #                         $foundCmdPhraseMatch = $true
-            #                     }
-            #                     1006 {
-            #                         #Write-Host '1006 encountered'
-            #                         $foundCmdPhraseMatch = $true
-            #                     }
-            #                     Default {
-            #                         $foundCmdPhraseMatch = $false
-            #                     }
-            #                 }
-            #             }
-            #         }
-            #     }
-            #     2 {
-            #         # Check to see if there's a match in the operand case before proceeding
-            #         # Three cases can emerge here: 
-            #         # 1. Primary opcode matches and is expected in the no-operand context
-            #         # 2. Primary opcode matches and is excepted in the single-operand context
-            #         # 3. Primary opcode doesn't match any known codes and is in default
-            #         Foreach ($key in $Script:CommandOpcodeTable.Keys) {
-            #             # Check to see 
-            #         }
-            #     }
-            #     3 {}
-            # }
-            
-            
-            
-            
-            # # The command string isn't empty, so go ahead and start the parsing algorithm
-            # # The first step is to see what the command string starts with. This will be accomplished with the String::StartsWith
-            # # function. We'll simply loop through the valid command first tier entries to see if it matches anything. If there are
-            # # no matches, the command history gets the addition in red, and a message is printed to the Message Window.
-            # Foreach ($cmdFirstTier in $Script:CommandTableFirstTier) {
-            #     If ($Script:UiCommandWindowCmdActual -LIKE "$cmdFirstTier*") {
-            #         $foundCmdFirstTierMatch = $true
-            #     }
-            # }
-            # If (-NOT($foundCmdPhraseMatch)) {
-            #     # We couldn't find a match in the first tier, so the command string is likely entirely invalid.
-            #     Update-GfmCmdHistory
-
-            #     Write-GfmMessageWindowMessage `
-            #         -Message "INVALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-            #         -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-            #         -Teletype
-
-            #     # Clear the cmdactual string
-            #     $Script:UiCommandWindowCmdActual = ''
-
-            #     # Reset the command window
-            #     Set-GfmDefaultCursorPosition
-            #     Return
-            # } Else {
-            #     # The first phrase of the command found a match
-            #     # Although it's possible at this point that the command phrase is incomplete,
-            #     # for the purposes of testing, we're going to assume that it is and start building 
-            #     # the functional mechanics of it in terms of rendering.
-            #     Update-GfmCmdHistory -CmdActualValid
-
-            #     Write-GfmMessageWindowMessage `
-            #         -Message "VALID COMMAND ENTERED: $Script:UiCommandWindowCmdActual" `
-            #         -ForegroundColor $Script:UiCommandWindowCmdHistValid `
-            #         -Teletype
-
-            #     # Clear the cmdactual string
-            #     $Script:UiCommandWindowCmdActual = ''
-
-            #     # Reset the command window
-            #     Set-GfmDefaultCursorPosition
-            #     Return
-            # }
         }
     }
 }
@@ -2097,18 +2002,6 @@ Function Write-GfmGoodCommandAlert {
     
     Process {
         Write-Error 'Write-GfmGoodCommandAlert Function is Deprecated'
-        # Update-GfmCmdHistory -CmdActualValid
-
-        # Write-GfmMessageWindowMessage `
-        #     -Message "VALID COMMAND: $Script:UiCommandWindowCmdActual" `
-        #     -ForegroundColor $Script:UiCommandWindowCmdHistValid `
-        #     -Teletype
-
-        # # Clear the cmdactual string
-        # $Script:UiCommandWindowCmdActual = ''
-
-        # # Reset the command window
-        # Set-GfmDefaultCursorPosition
     }
 }
 
@@ -2117,10 +2010,6 @@ Function Write-GfmBadCommandException {
     Param ()
     
     Process {
-        # Write-GfmMessageWindowMessage `
-        #     -Message "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
-        #     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-        #     -Teletype
         Update-GfmCmdHistory `
             -UpdateMessageWindow `
             -MsgTeletype `
@@ -2134,10 +2023,6 @@ Function Write-GfmBadCommandArg0Exception {
     Param ()
     
     Process {
-        # Write-GfmMessageWindowMessage `
-        #     -Message "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
-        #     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-        #     -Teletype
         Update-GfmCmdHistory `
             -UpdateMessageWindow `
             -MsgTeletype `
@@ -2151,10 +2036,6 @@ Function Write-GfmBadCommandArg1Exception {
     Param ()
     
     Process {
-        # Write-GfmMessageWindowMessage `
-        #     -Message "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
-        #     -ForegroundColor $Script:UiCommandWindowCmdHistErr `
-        #     -Teletype
         Update-GfmCmdHistory `
             -UpdateMessageWindow `
             -MsgTeletype `
@@ -2163,6 +2044,10 @@ Function Write-GfmBadCommandArg1Exception {
     }
 }
 
+<#
+.SYNOPSIS
+Updates the Command Window History, optionally printing information to the Message Window.
+#>
 Function Update-GfmCmdHistory {
     [CmdletBinding()]
     Param (
