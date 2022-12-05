@@ -593,6 +593,16 @@ $Script:CommandTable = @{
 
         Switch($a0) {
             { $_ -EQ 'north' -OR $_ -EQ 'n' } {
+                # PROTOTYPE
+                # Check to see if the player is capable of exiting the current tile to the north
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[0] -EQ $true) {
+                    # Increment the Column value (Y) by 1
+                    $Script:PlayerMapCoordinates.Y += 1
+                    
+                    # Update the Scene
+                    Update-GfmSceneImageFromCoords
+                }
+                
                 Update-GfmCmdHistory -CmdActualValid
                 Return
             }
@@ -2184,6 +2194,15 @@ Function Update-GfmCmdHistory {
             
         $Script:UiCommandWindowCmdActual = ''
         Set-GfmDefaultCursorPosition
+    }
+}
+
+Function Update-GfmSceneImageFromCoords {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
     }
 }
 
@@ -8238,8 +8257,8 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 #region Sample Map Definition
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, @(), @($true, $false, $true, $false))
-$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
-$Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldSERoad, @(), @($false, $true, $true, $false))
+$Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
+$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($false, $true, $true, $false))
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($false, $true, $false, $true))
 
 #endregion
