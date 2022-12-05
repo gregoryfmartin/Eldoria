@@ -56,6 +56,7 @@ using namespace System.Management.Automation.Host
 [ConsoleColor] $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
 [ConsoleColor] $Script:PlayerStatNumberDrawColorDanger  = 'Red'
 [ConsoleColor] $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
+[Coordinates]  $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
 
 #endregion
 
@@ -1121,6 +1122,56 @@ $Script:CommandTable = @{
         }
     };
 }
+
+#endregion
+
+#region Map Variable Definitions
+
+Class MapTile {
+    [BufferCell[,]]$BackgroundImage
+    [Object[]]$ObjectListing
+    [Boolean[]]$Exits
+    
+    MapTile(
+        [BufferCell[,]]$bi,
+        [Object[]]$ol,
+        [Boolean[]]$ex
+    ) {
+        $this.BackgroundImage = $bi
+        $this.ObjectListing   = $ol
+        $this.Exits           = $ex
+    }
+}
+
+Class Map {
+    [String]$Name
+    [Coordinates]$Dimensions
+    [Boolean]$BoundaryWrap
+    [MapTile[,]]$Tiles
+    
+    Map(
+        [String]$n,
+        [Coordinates]$d,
+        [Boolean]$bw
+    ) {
+        $this.Name         = $n
+        $this.Dimensions   = $d
+        $this.BoundaryWrap = $bw
+        $this.Tiles        = New-Object 'MapTile[,]' $this.Dimensions.Y, $this.Dimensions.X
+    }
+    
+    [MapTile]GetTileAtPlayerCoordinates() {
+        Return $this.Tiles[$Script:PlayerMapCoordinates.Y, $Script:PlayerMapCoordinates.X]
+    }
+}
+
+#region Map Declarations
+
+[Map]$Script:SampleMap   = [Map]::new('Sample Map', [Coordinates]::new(2, 2), $false)
+[Map]$Script:CurrentMap  = $Script:SampleMap
+[Map]$Script:PreviousMap = $null
+
+#endregion
 
 #endregion
 
@@ -2323,7 +2374,7 @@ Function Test-GfmPlayScreen {
 
     Process {
         #New-GfmSceneImageSample
-        Write-GfmSceneImage -CellArray $Script:SiFieldSEWRoad
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
 
         $Script:PlayerName = 'Steve'
         $Script:PlayerCurrentHitPoints = 100
@@ -8177,6 +8228,19 @@ $Script:SiFieldSEWRoad[17, 42] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 $Script:SiFieldSEWRoad[17, 43] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSEWRoad[17, 44] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+
+#endregion
+
+#endregion
+
+#region Map Definitions
+
+#region Sample Map Definition
+
+$Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, @(), @($true, $false, $true, $false))
+$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
+$Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldSERoad, @(), @($false, $true, $true, $false))
+$Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($false, $true, $false, $true))
 
 #endregion
 
