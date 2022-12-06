@@ -2354,6 +2354,24 @@ Function Write-GfmCommandWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                # Draw the horizontal borders
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
+
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
+                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
+
+                # Draw the command input div
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
+                Write-GfmHostNnl -Message $Script:UiCommandWindowCmdDiv -ForegroundColor $Script:UiCommandWindowBorderColor
+
+                # Draw the vertical borders
+                For ($i = 1; $i -LT $Script:UiCommandWindowHeight; $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
+                }
             }
 
             $Script:OsCheckWindows {
