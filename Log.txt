@@ -1,0 +1,24 @@
+Map Boundary Wrapping is disabled
+Map Dimensions Y: 1
+Player CoordsY + 1: 1
+0
+Overflow would NOT occur from move - permitting move
+New Player Coords Y: 0,1
+Map Boundary Wrapping is disabled
+Map Dimensions Y: 1
+Player CoordsY + 1: 1
+0
+Overflow would NOT occur from move - permitting move
+New Player Coords Y: 0,1
+Map Boundary Wrapping is disabled
+Map Dimensions Y: 1
+Player CoordsY + 1: 1
+0
+Overflow would NOT occur from move - permitting move
+New Player Coords Y: 0,1
+Map Boundary Wrapping is disabled
+Map Dimensions Y: 1
+Player CoordsY + 1: 1
+0
+Overflow would NOT occur from move - permitting move
+New Player Coords Y: 0,1

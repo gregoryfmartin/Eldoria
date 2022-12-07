@@ -550,34 +550,34 @@ Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -P
 
 #region Command Definition Variables
 
-[String[]]$Script:CommandTableFirstTier = @(
-    'move',
-    'take'
-)
-[String[]]$Script:CommandTableSecondTier = @()
-$Script:CommandOpcodeTable = @{
-    'move'      = 439;
-    'climb'     = 519;
-    'enter'     = 542;
-    'exit'      = 442;
-    'survey'    = 686;
-    'examine'   = 743;
-    'get'       = 320;
-    'take'      = 421;
-    'drop'      = 437;
-    'inventory' = 1006;
-    'use'       = 333;
-    'equip'     = 548;
-    'open'      = 434;
-}
-$Script:CommandOperandTable = @{
-    'north' = 555;
-    'south' = 563;
-    'east'  = 429;
-    'west'  = 451;
-    'up'    = 229;
-    'down'  = 440;
-}
+# [String[]]$Script:CommandTableFirstTier = @(
+#     'move',
+#     'take'
+# )
+# [String[]]$Script:CommandTableSecondTier = @()
+# $Script:CommandOpcodeTable = @{
+#     'move'      = 439;
+#     'climb'     = 519;
+#     'enter'     = 542;
+#     'exit'      = 442;
+#     'survey'    = 686;
+#     'examine'   = 743;
+#     'get'       = 320;
+#     'take'      = 421;
+#     'drop'      = 437;
+#     'inventory' = 1006;
+#     'use'       = 333;
+#     'equip'     = 548;
+#     'open'      = 434;
+# }
+# $Script:CommandOperandTable = @{
+#     'north' = 555;
+#     'south' = 563;
+#     'east'  = 429;
+#     'west'  = 451;
+#     'up'    = 229;
+#     'down'  = 440;
+# }
 
 # ATTEMPT FIVE MILLION
 # After ruminating over this for a few days, and despite this potentially being the most inelegant method to do this,
@@ -595,16 +595,59 @@ $Script:CommandTable = @{
             { $_ -EQ 'north' -OR $_ -EQ 'n' } {
                 # PROTOTYPE
                 # Check to see if the player is capable of exiting the current tile to the north
-                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[0] -EQ $true) {
-                    # Increment the Column value (Y) by 1
-                    $Script:PlayerMapCoordinates.Y += 1
-                    
-                    # Update the Scene
-                    Update-GfmSceneImageFromCoords
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
+                    # Check to see if map wrapping is turned on
+                    If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                        # We can modulo to see if there's going to be overflow from the arithmetic
+                        $a = $Script:CurrentMap.Dimensions.Y - 1
+                        $b = $Script:PlayerMapCoordinates.Y + 1
+                        $c = $a % $b
+                        
+                        If($c -EQ $a) {
+                            # Overflow is going to occur, reset the coordinate to zero
+                            $Script:PlayerMapCoordinates.Y = 0
+                        } Else {
+                            # Overflow is not going to occur, increment
+                            $Script:PlayerMapCoordinates.Y += 1
+                        }
+                        
+                        Update-GfmSceneImageFromCoords
+                        Update-GfmCmdHistory -CmdActualValid
+                        Return
+                    } Else {
+                        # Wrapping is disabled
+                        Add-Content '.\Log.txt' 'Map Boundary Wrapping is disabled'
+                        
+                        # We can modulo to see if there's going to be overflow from the arithmetic
+                        $a = $Script:CurrentMap.Dimensions.Y - 1; Add-Content '.\Log.txt' "Map Dimensions Y: $a"
+                        $b = $Script:PlayerMapCoordinates.Y + 1; Add-Content '.\Log.txt' "Player CoordsY + 1: $b"
+                        $c = $a % $b; Add-Content '.\Log.txt' "$c"
+                        
+                        If($c -EQ $a) {
+                            # Overflow is going to occur, invoke the invisible wall
+                            Add-Content '.\Log.txt' 'Overflow would occur from move - enforcing invisible wall'
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapInvisibleWallException
+                            Return
+                        } Else {
+                            # Overflow is not going to occur, increment
+                            Add-Content '.\Log.txt' 'Overflow would NOT occur from move - permitting move'
+                            $Script:PlayerMapCoordinates.Y += 1; Add-Content '.\Log.txt' "New Player Coords Y: $Script:PlayerMapCoordinates"
+                            Update-GfmSceneImageFromCoords
+                            Update-GfmCmdHistory -CmdActualValid
+                            Return
+                        }
+                    }
+                } Else {
+                    # The player requested to move in this direction, but it's not possible because the exit flag
+                    # for this direction isn't set.
+                    Update-GfmCmdHistory -CmdActualValid
+                    Write-GfmMapYouShallNotPassException
+                    Return
                 }
                 
-                Update-GfmCmdHistory -CmdActualValid
-                Return
+                # Update-GfmCmdHistory -CmdActualValid
+                # Return
             }
             
             { $_ -EQ 'south' -OR $_ -EQ 's' } {
@@ -1142,6 +1185,11 @@ Class MapTile {
     [Object[]]$ObjectListing
     [Boolean[]]$Exits
     
+    Static [Int]$TileExitNorth = 0
+    Static [Int]$TileExitSouth = 1
+    Static [Int]$TileExitEast  = 2
+    Static [Int]$TileExitWest  = 3
+    
     MapTile(
         [BufferCell[,]]$bi,
         [Object[]]$ol,
@@ -1177,7 +1225,7 @@ Class Map {
 
 #region Map Declarations
 
-[Map]$Script:SampleMap   = [Map]::new('Sample Map', [Coordinates]::new(2, 2), $false)
+[Map]$Script:SampleMap   = [Map]::new('Sample Map', [Coordinates]::new(2, 2), $true)
 [Map]$Script:CurrentMap  = $Script:SampleMap
 [Map]$Script:PreviousMap = $null
 
@@ -1272,9 +1320,6 @@ This function takes a two-dimensional array of BufferCell objects and writes the
 Originally, this function was tested on MacOS and Linux, where most of the functions in the RawUI instance are crippled. So a manual method of writing the cells was devised.
 After coming back to testing this function on Windows - where all of the functionality of the RawUI instance is available - a multi-platform algorithm was devised.
 The function now takes a switch that controls which algorithm is used. It should be noted that of the two, the Windows-specific algorithm is substantially faster and works as expected.
-
-.PARAMETER NonWindowsMethod
-A switch that determines if the function is going to use a cross-platform supported algorithm for drawing Scene Images or not.
 
 .PARAMETER CellArray
 The two-dimensional array of BufferCell objects that represent the Scene Image that are going to be written to the console buffer. The drawing origin coordinates are predefined.
@@ -2119,6 +2164,30 @@ Function Write-GfmBadCommandArg1Exception {
             -MsgTeletype `
             -MsgWindowMessage "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
             -MsgColor $Script:UiCommandWindowCmdHistErr
+    }
+}
+
+Function Write-GfmMapInvisibleWallException {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message 'The invisible wall blocks your path...' `
+            -ForegroundColor 'DarkMagenta' `
+            -Teletype
+    }
+}
+
+Function Write-GfmMapYouShallNotPassException {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message 'The path you asked for is impossible...' `
+            -ForegroundColor 'Magenta' `
+            -Teletype
     }
 }
 
@@ -8293,7 +8362,7 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, @(), @($true, $false, $true, $false))
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
-$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($false, $true, $true, $false))
+$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($true, $true, $true, $false))
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($false, $true, $false, $true))
 
 #endregion
