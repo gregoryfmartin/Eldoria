@@ -783,23 +783,211 @@ $Script:CommandTable = @{
         
         Switch($a0) {
             { $_ -EQ 'north' -OR $_ -EQ 'n' } {
-                Update-GfmCmdHistory -CmdActualValid
-                Return
+                # PROTOTYPE
+                # Check to see if the player is capable of exiting the current tile to the north
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
+                    # Check to see if map wrapping is turned on
+                    If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                        # We can modulo to see if there's going to be overflow from the arithmetic
+                        $a = $Script:CurrentMap.Dimensions.Y - 1 # Subtract 1 since the array is zero-indexed
+                        $b = $Script:PlayerMapCoordinates.Y + 1
+                        $c = $a % $b
+                        
+                        If($c -EQ $a) {
+                            # Overflow is going to occur, reset the coordinate to zero
+                            $Script:PlayerMapCoordinates.Y = 0
+                        } Else {
+                            # Overflow is not going to occur, increment
+                            $Script:PlayerMapCoordinates.Y += 1
+                        }
+                        
+                        Update-GfmSceneImageFromCoords
+                        Update-GfmCmdHistory -CmdActualValid
+                        Return
+                    } Else {
+                        # Wrapping is disabled
+                       
+                        # We can modulo to see if there's going to be overflow from the arithmetic
+                        $a = $Script:CurrentMap.Dimensions.Y - 1 # Subtract 1 since the array is zero-indexed
+                        $b = $Script:PlayerMapCoordinates.Y + 1
+                        $c = $a % $b
+                        
+                        If($c -EQ $a) {
+                            # Overflow is going to occur, invoke the invisible wall
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapInvisibleWallException
+                            Return
+                        } Else {
+                            # Overflow is not going to occur, increment
+                            $Script:PlayerMapCoordinates.Y += 1
+                            Update-GfmSceneImageFromCoords
+                            Update-GfmCmdHistory -CmdActualValid
+                            Return
+                        }
+                    }
+                } Else {
+                    # The player requested to move in this direction, but it's not possible because the exit flag
+                    # for this direction isn't set.
+                    Update-GfmCmdHistory -CmdActualValid
+                    Write-GfmMapYouShallNotPassException
+                    Return
+                }
             }
             
             { $_ -EQ 'south' -OR $_ -EQ 's' } {
-                Update-GfmCmdHistory -CmdActualValid
-                Return
+                # PROTOTYPE
+                # Check to see if the player is capable of exiting the current tile to the north
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
+                    # Check to see if map wrapping is turned on
+                    If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                        # The north algorithm can use modulo since the number isn't zero. However, this isn't the case
+                        # with south bound directions.
+                        $a = 0
+                        $b = $Script:PlayerMapCoordinates.Y - 1
+                        
+                        If($b -LT $a) {
+                            # Overflow is going to occur, reset the coordinate to the max -1
+                            $Script:PlayerMapCoordinates.Y = $Script:CurrentMap.Dimensions.Y - 1
+                        } Else {
+                            # Overflow is not going to occur, decrement
+                            $Script:PlayerMapCoordinates.Y -= 1
+                        }
+                        
+                        Update-GfmSceneImageFromCoords
+                        Update-GfmCmdHistory -CmdActualValid
+                        Return
+                    } Else {
+                        # Wrapping is disabled
+                        
+                        # The north algorithm can use modulo since the number isn't zero. However, this isn't the case
+                        # with south bound directions.
+                        $a = 0
+                        $b = $Script:PlayerMapCoordinates.Y - 1
+                        
+                        If($b -LT $a) {
+                            # Overflow is going to occur, invoke the invisible wall
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapInvisibleWallException
+                            Return
+                        } Else {
+                            # Overflow is not going to occur, decrement
+                            $Script:PlayerMapCoordinates.Y -= 1
+                            Update-GfmCmdHistory -CmdActualValid
+                            Update-GfmSceneImageFromCoords
+                            Return
+                        }
+                    }
+                } Else {
+                    # The player requested to move in this direction, but it's not possible because the exit flag
+                    # for this direction isn't set.
+                    Update-GfmCmdHistory -CmdActualValid
+                    Write-GfmMapYouShallNotPassException
+                    Return
+                }
             }
             
             { $_ -EQ 'east' -OR $_ -EQ 'e' } {
-                Update-GfmCmdHistory -CmdActualValid
-                Return
+                # PROTOTYPE
+                # Check to see if the player is capable of exiting the current tile to the north
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitEast] -EQ $true) {
+                    # Check to see if map wrapping is turned on
+                    If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                        # We can use modulo here too to see if the wrap can occur
+                        $a = $Script:CurrentMap.Dimensions.X - 1
+                        $b = $Script:PlayerMapCoordinates.X + 1
+                        $c = $a % $b
+                        
+                        If($c -EQ $a) {
+                            # Overflow is going to occur, reset the coordinate to zero
+                            $Script:PlayerMapCoordinates.X = 0
+                        } Else {
+                            # Overflow is not going to occur, increment
+                            $Script:PlayerMapCoordinates.X += 1
+                        }
+                        
+                        Update-GfmSceneImageFromCoords
+                        Update-GfmCmdHistory -CmdActualValid
+                        Return
+                    } Else {
+                        # Wrapping is disabled
+                        
+                        # We can modulo to see if there's going to be overflow from the arithmetic
+                        $a = $Script:CurrentMap.Dimensions.X - 1 # Subtract 1 since the array is zero-indexed
+                        $b = $Script:PlayerMapCoordinates.X + 1
+                        $c = $a % $b
+                        
+                        If($c -EQ $a) {
+                            # Overflow is going to occur, invoke the invisible wall
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapInvisibleWallException
+                            Return
+                        } Else {
+                            # Overflow is not going to occur, increment
+                            $Script:PlayerMapCoordinates.X += 1
+                            Update-GfmSceneImageFromCoords
+                            Update-GfmCmdHistory -CmdActualValid
+                            Return
+                        }
+                    }
+                } Else {
+                    # The player requested to move in this direction, but it's not possible because the exit flag
+                    # for this direction isn't set.
+                    Update-GfmCmdHistory -CmdActualValid
+                    Write-GfmMapYouShallNotPassException
+                    Return
+                }
             }
             
             { $_ -EQ 'west' -OR $_ -EQ 'w' } {
-                Update-GfmCmdHistory -CmdActualValid
-                Return
+                # PROTOTYPE
+                # Check to see if the player is capable of exiting the current tile to the north
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitWest] -EQ $true) {
+                    # Check to see if map wrapping is turned on
+                    If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                        # The north algorithm can use modulo since the number isn't zero. However, this isn't the case
+                        # with west bound directions.
+                        $a = 0
+                        $b = $Script:PlayerMapCoordinates.X - 1
+                        
+                        If($b -LT $a) {
+                            # Overflow is going to occur, reset the coordinate to the max -1
+                            $Script:PlayerMapCoordinates.X = $Script:CurrentMap.Dimensions.X - 1
+                        } Else {
+                            # Overflow is not going to occur, decrement
+                            $Script:PlayerMapCoordinates.X -= 1
+                        }
+                        
+                        Update-GfmSceneImageFromCoords
+                        Update-GfmCmdHistory -CmdActualValid
+                        Return
+                    } Else {
+                        # Wrapping is disabled
+                        
+                        # The north algorithm can use modulo since the number isn't zero. However, this isn't the case
+                        # with west bound directions.
+                        $a = 0
+                        $b = $Script:PlayerMapCoordinates.X - 1
+                        
+                        If($b -LT $a) {
+                            # Overflow is going to occur, invoke the invisible wall
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapInvisibleWallException
+                            Return
+                        } Else {
+                            # Overflow is not going to occur, decrement
+                            $Script:PlayerMapCoordinates.X -= 1
+                            Update-GfmCmdHistory -CmdActualValid
+                            Update-GfmSceneImageFromCoords
+                            Return
+                        }
+                    }
+                } Else {
+                    # The player requested to move in this direction, but it's not possible because the exit flag
+                    # for this direction isn't set.
+                    Update-GfmCmdHistory -CmdActualValid
+                    Write-GfmMapYouShallNotPassException
+                    Return
+                }
             }
             
             Default {
