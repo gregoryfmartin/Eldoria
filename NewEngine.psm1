@@ -550,35 +550,6 @@ Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -P
 
 #region Command Definition Variables
 
-# [String[]]$Script:CommandTableFirstTier = @(
-#     'move',
-#     'take'
-# )
-# [String[]]$Script:CommandTableSecondTier = @()
-# $Script:CommandOpcodeTable = @{
-#     'move'      = 439;
-#     'climb'     = 519;
-#     'enter'     = 542;
-#     'exit'      = 442;
-#     'survey'    = 686;
-#     'examine'   = 743;
-#     'get'       = 320;
-#     'take'      = 421;
-#     'drop'      = 437;
-#     'inventory' = 1006;
-#     'use'       = 333;
-#     'equip'     = 548;
-#     'open'      = 434;
-# }
-# $Script:CommandOperandTable = @{
-#     'north' = 555;
-#     'south' = 563;
-#     'east'  = 429;
-#     'west'  = 451;
-#     'up'    = 229;
-#     'down'  = 440;
-# }
-
 # ATTEMPT FIVE MILLION
 # After ruminating over this for a few days, and despite this potentially being the most inelegant method to do this,
 # I think this is going to be the best way to do this until someone else kicks me in the balls and says otherwise.
@@ -599,7 +570,7 @@ $Script:CommandTable = @{
                     # Check to see if map wrapping is turned on
                     If($Script:CurrentMap.BoundaryWrap -EQ $true) {
                         # We can modulo to see if there's going to be overflow from the arithmetic
-                        $a = $Script:CurrentMap.Dimensions.Y - 1
+                        $a = $Script:CurrentMap.Dimensions.Y - 1 # Subtract 1 since the array is zero-indexed
                         $b = $Script:PlayerMapCoordinates.Y + 1
                         $c = $a % $b
                         
@@ -616,23 +587,20 @@ $Script:CommandTable = @{
                         Return
                     } Else {
                         # Wrapping is disabled
-                        Add-Content '.\Log.txt' 'Map Boundary Wrapping is disabled'
-                        
+                       
                         # We can modulo to see if there's going to be overflow from the arithmetic
-                        $a = $Script:CurrentMap.Dimensions.Y - 1; Add-Content '.\Log.txt' "Map Dimensions Y: $a"
-                        $b = $Script:PlayerMapCoordinates.Y + 1; Add-Content '.\Log.txt' "Player CoordsY + 1: $b"
-                        $c = $a % $b; Add-Content '.\Log.txt' "$c"
+                        $a = $Script:CurrentMap.Dimensions.Y - 1 # Subtract 1 since the array is zero-indexed
+                        $b = $Script:PlayerMapCoordinates.Y + 1
+                        $c = $a % $b
                         
                         If($c -EQ $a) {
                             # Overflow is going to occur, invoke the invisible wall
-                            Add-Content '.\Log.txt' 'Overflow would occur from move - enforcing invisible wall'
                             Update-GfmCmdHistory -CmdActualValid
                             Write-GfmMapInvisibleWallException
                             Return
                         } Else {
                             # Overflow is not going to occur, increment
-                            Add-Content '.\Log.txt' 'Overflow would NOT occur from move - permitting move'
-                            $Script:PlayerMapCoordinates.Y += 1; Add-Content '.\Log.txt' "New Player Coords Y: $Script:PlayerMapCoordinates"
+                            $Script:PlayerMapCoordinates.Y += 1
                             Update-GfmSceneImageFromCoords
                             Update-GfmCmdHistory -CmdActualValid
                             Return
@@ -645,14 +613,58 @@ $Script:CommandTable = @{
                     Write-GfmMapYouShallNotPassException
                     Return
                 }
-                
-                # Update-GfmCmdHistory -CmdActualValid
-                # Return
             }
             
             { $_ -EQ 'south' -OR $_ -EQ 's' } {
-                Update-GfmCmdHistory -CmdActualValid
-                Return
+                # PROTOTYPE
+                # Check to see if the player is capable of exiting the current tile to the north
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
+                    # Check to see if map wrapping is turned on
+                    If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                        # The north algorithm can use modulo since the number isn't zero. However, this isn't the case
+                        # with south bound directions.
+                        $a = 0
+                        $b = $Script:PlayerMapCoordinates.Y - 1
+                        
+                        If($b -LT $a) {
+                            # Overflow is going to occur, reset the coordinate to the max -1
+                            $Script:PlayerMapCoordinates.Y = $Script:CurrentMap.Dimensions.Y - 1
+                        } Else {
+                            # Overflow is not going to occur, decrement
+                            $Script:PlayerMapCoordinates.Y -= 1
+                        }
+                        
+                        Update-GfmSceneImageFromCoords
+                        Update-GfmCmdHistory -CmdActualValid
+                        Return
+                    } Else {
+                        # Wrapping is disabled
+                        
+                        # The north algorithm can use modulo since the number isn't zero. However, this isn't the case
+                        # with south bound directions.
+                        $a = 0
+                        $b = $Script:PlayerMapCoordinates.Y - 1
+                        
+                        If($b -LT $a) {
+                            # Overflow is going to occur, invoke the invisible wall
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapInvisibleWallException
+                            Return
+                        } Else {
+                            # Overflow is not going to occur, decrement
+                            $Script:PlayerMapCoordinates.Y -= 1
+                            Update-GfmCmdHistory -CmdActualValid
+                            Update-GfmSceneImageFromCoords
+                            Return
+                        }
+                    }
+                } Else {
+                    # The player requested to move in this direction, but it's not possible because the exit flag
+                    # for this direction isn't set.
+                    Update-GfmCmdHistory -CmdActualValid
+                    Write-GfmMapYouShallNotPassException
+                    Return
+                }
             }
             
             { $_ -EQ 'east' -OR $_ -EQ 'e' } {
@@ -8362,7 +8374,7 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, @(), @($true, $false, $true, $false))
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
-$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($true, $true, $true, $false))
+$Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($false, $true, $true, $false))
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($false, $true, $false, $true))
 
 #endregion
