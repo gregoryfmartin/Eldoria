@@ -1004,8 +1004,35 @@ $Script:CommandTable = @{
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
                     'tree' {
-                        Update-GfmCmdHistory -CmdActualValid
-                        Return
+                        # First we need to check the contents of the object collection on the current tile
+                        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+                        $b = $_
+                        
+                        # Check to see if it's empty
+                        If($a.Length -EQ 0) {
+                            # There are no objects on the map tile
+                            Update-GfmCmdHistory -CmdActualValid
+                            Write-GfmMapNoItemsFoundException
+                            Return
+                        } Elseif ($a.Length -GT 0) {
+                            # There's something on this tile
+                            # Check to see if there's an object whose name matches the case
+                            Foreach($c in $a) {
+                                If($c.MapObjName -EQ $b) {
+                                    # We've found a match
+                                    # TODO: Change this to execute based on the object's Effect property
+                                    # $c.Effect
+                                    Update-GfmCmdHistory -CmdActualValid
+                                    Return
+                                }
+                            }
+                            
+                            # This would be reached if the item requested doesn't exist in the tile's collection
+                        } Else {
+                            # Something goofy happened that shouldn't have
+                            Write-GfmBadSomethingException
+                            Return
+                        }
                     }
                     
                     'ladder' {
@@ -1474,9 +1501,25 @@ $Script:CommandTable = @{
 
 #region Map Variable Definitions
 
+Class MapTileObject {
+    [String]$Name
+    [String]$MapObjName
+    [ScriptBlock]$Effect
+    
+    MapTileObject(
+        [String]$n,
+        [String]$mon,
+        [ScriptBlock]$e = {}
+    ) {
+        $this.Name       = $n
+        $this.MapObjName = $mon
+        $this.Effect     = $e
+    }
+}
+
 Class MapTile {
     [BufferCell[,]]$BackgroundImage
-    [Object[]]$ObjectListing
+    [MapTileObject[]]$ObjectListing
     [Boolean[]]$Exits
     
     Static [Int]$TileExitNorth = 0
@@ -1486,7 +1529,7 @@ Class MapTile {
     
     MapTile(
         [BufferCell[,]]$bi,
-        [Object[]]$ol,
+        [MapTileObject[]]$ol,
         [Boolean[]]$ex
     ) {
         $this.BackgroundImage = $bi
@@ -2461,6 +2504,19 @@ Function Write-GfmBadCommandArg1Exception {
     }
 }
 
+Function Write-GfmBadSomethingException {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage 'I''m God, and I don''t know what just happened...' `
+            -MsgColor $Script:UiCommandWindowCmdHistErr
+    }
+}
+
 Function Write-GfmMapInvisibleWallException {
     [CmdletBinding()]
     Param ()
@@ -2480,6 +2536,18 @@ Function Write-GfmMapYouShallNotPassException {
     Process {
         Write-GfmMessageWindowMessage `
             -Message 'The path you asked for is impossible...' `
+            -ForegroundColor 'Magenta' `
+            -Teletype
+    }
+}
+
+Function Write-GfmMapNoItemsFoundException {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message 'There''s nothing of interest here...' `
             -ForegroundColor 'Magenta' `
             -Teletype
     }
