@@ -1004,59 +1004,63 @@ $Script:CommandTable = @{
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
                     'tree' {
-                        # First we need to check the contents of the object collection on the current tile
-                        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
-                        $b = $_
+                        Invoke-GfmItemReactor -ItemName $_
+                        Return
+                        # # First we need to check the contents of the object collection on the current tile
+                        # $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+                        # $b = $_
                         
-                        # Check to see if it's empty
-                        If($a.Length -EQ 0) {
-                            # There are no objects on the map tile
-                            Update-GfmCmdHistory -CmdActualValid
-                            Write-GfmMapNoItemsFoundException
-                            Return
-                        } Elseif ($a.Length -GT 0) {
-                            # There's something on this tile
-                            # Check to see if there's an object whose name matches the case
-                            Foreach($c in $a) {
-                                If($c.MapObjName -EQ $b) {
-                                    # We've found a match
-                                    # TODO: Change this to execute based on the object's Effect property
-                                    # $c.Effect
-                                    Update-GfmCmdHistory -CmdActualValid
-                                    Return
-                                }
-                            }
+                        # # Check to see if it's empty
+                        # If($a.Length -EQ 0) {
+                        #     # There are no objects on the map tile
+                        #     Update-GfmCmdHistory -CmdActualValid
+                        #     Write-GfmMapNoItemsFoundException
+                        #     Return
+                        # } Elseif ($a.Length -GT 0) {
+                        #     # There's something on this tile
+                        #     # Check to see if there's an object whose name matches the case
+                        #     Foreach($c in $a) {
+                        #         If($c.MapObjName -EQ $b) {
+                        #             # We've found a match
+                        #             Update-GfmCmdHistory -CmdActualValid
+                        #             Invoke-Command $c.Effect
+                        #             Return
+                        #         }
+                        #     }
                             
-                            # This would be reached if the item requested doesn't exist in the tile's collection
-                        } Else {
-                            # Something goofy happened that shouldn't have
-                            Write-GfmBadSomethingException
-                            Return
-                        }
+                        #     # Couldn't find a match for this item on the map
+                        #     Update-GfmCmdHistory -CmdActualValid
+                        #     Write-GfmMapInvalidItemException -ItemName $b
+                        #     Return
+                        # } Else {
+                        #     # Something goofy happened that shouldn't have
+                        #     Write-GfmBadSomethingException
+                        #     Return
+                        # }
                     }
                     
                     'ladder' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'rope' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'wall' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'stairs' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'pole' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
@@ -1070,32 +1074,32 @@ $Script:CommandTable = @{
             { $_ -EQ 'down' -OR $_ -EQ 'd' } {
                 Switch($a1) {
                     'tree' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'ladder' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'rope' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'wall' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'stairs' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'pole' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
@@ -1120,32 +1124,32 @@ $Script:CommandTable = @{
             { $_ -EQ 'up' -OR $_ -EQ 'u' } {
                 Switch($a1) {
                     'tree' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'ladder' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'rope' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'wall' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'stairs' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'pole' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
@@ -1159,32 +1163,32 @@ $Script:CommandTable = @{
             { $_ -EQ 'down' -OR $_ -EQ 'd' } {
                 Switch($a1) {
                     'tree' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'ladder' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'rope' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'wall' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'stairs' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
                     'pole' {
-                        Update-GfmCmdHistory -CmdActualValid
+                        Invoke-GfmItemReactor -ItemName $_
                         Return
                     }
                     
@@ -1207,12 +1211,12 @@ $Script:CommandTable = @{
         
         Switch($a0) {
             'door' {
-                Update-GfmCmdHistory -CmdActualValid
+                Invoke-GfmItemReactor -ItemName $_
                 Return
             }
             
             'cave' {
-                Update-GfmCmdHistory -CmdActualValid
+                Invoke-GfmItemReactor -ItemName $_
                 Return
             }
             
@@ -1228,12 +1232,12 @@ $Script:CommandTable = @{
         
         Switch($a0) {
             'door' {
-                Update-GfmCmdHistory -CmdActualValid
+                Invoke-GfmItemReactor -ItemName $_
                 Return
             }
             
             'cave' {
-                Update-GfmCmdHistory -CmdActualValid
+                Invoke-GfmItemReactor -ItemName $_
                 Return
             }
             
@@ -2456,6 +2460,47 @@ Function Invoke-GfmCmdParser {
     }
 }
 
+Function Invoke-GfmItemReactor {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+    
+    Process {
+        # First we need to check the contents of the object collection on the current tile
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        
+        # Check to see if it's empty
+        If($a.Length -EQ 0) {
+            # There are no objects on the map tile
+            Update-GfmCmdHistory -CmdActualValid
+            Write-GfmMapNoItemsFoundException
+            Return
+        } Elseif ($a.Length -GT 0) {
+            # There's something on this tile
+            # Check to see if there's an object whose name matches the case
+            Foreach($c in $a) {
+                If($c.MapObjName -EQ $ItemName) {
+                    # We've found a match
+                    Update-GfmCmdHistory -CmdActualValid
+                    Invoke-Command $c.Effect
+                    Return
+                }
+            }
+            
+            # Couldn't find a match for this item on the map
+            Update-GfmCmdHistory -CmdActualValid
+            Write-GfmMapInvalidItemException -ItemName $ItemName
+            Return
+        } Else {
+            # Something goofy happened that shouldn't have
+            Write-GfmBadSomethingException
+            Return
+        }
+    }
+}
+
 Function Write-GfmGoodCommandAlert {
     [CmdletBinding()]
     Param ()
@@ -2548,6 +2593,21 @@ Function Write-GfmMapNoItemsFoundException {
     Process {
         Write-GfmMessageWindowMessage `
             -Message 'There''s nothing of interest here...' `
+            -ForegroundColor 'Magenta' `
+            -Teletype
+    }
+}
+
+Function Write-GfmMapInvalidItemException {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+    
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message "There's no $ItemName here" `
             -ForegroundColor 'Magenta' `
             -Teletype
     }
@@ -8722,7 +8782,12 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 #region Sample Map Definition
 
-$Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, @(), @($true, $false, $true, $false))
+$Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, 
+    @(
+        [MapTileObject]::new('Apple', 'apple', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
+        [MapTileObject]::new('Tree', 'tree', {Write-GfmMessageWindowMessage -Message 'I climbed a tree!' -Teletype})
+    ),
+    @($true, $false, $true, $false))
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
 $Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($false, $true, $true, $false))
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($false, $true, $false, $true))
