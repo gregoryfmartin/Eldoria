@@ -1006,37 +1006,6 @@ $Script:CommandTable = @{
                     'tree' {
                         Invoke-GfmItemReactor -ItemName $_
                         Return
-                        # # First we need to check the contents of the object collection on the current tile
-                        # $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
-                        # $b = $_
-                        
-                        # # Check to see if it's empty
-                        # If($a.Length -EQ 0) {
-                        #     # There are no objects on the map tile
-                        #     Update-GfmCmdHistory -CmdActualValid
-                        #     Write-GfmMapNoItemsFoundException
-                        #     Return
-                        # } Elseif ($a.Length -GT 0) {
-                        #     # There's something on this tile
-                        #     # Check to see if there's an object whose name matches the case
-                        #     Foreach($c in $a) {
-                        #         If($c.MapObjName -EQ $b) {
-                        #             # We've found a match
-                        #             Update-GfmCmdHistory -CmdActualValid
-                        #             Invoke-Command $c.Effect
-                        #             Return
-                        #         }
-                        #     }
-                            
-                        #     # Couldn't find a match for this item on the map
-                        #     Update-GfmCmdHistory -CmdActualValid
-                        #     Write-GfmMapInvalidItemException -ItemName $b
-                        #     Return
-                        # } Else {
-                        #     # Something goofy happened that shouldn't have
-                        #     Write-GfmBadSomethingException
-                        #     Return
-                        # }
                     }
                     
                     'ladder' {
@@ -1720,19 +1689,6 @@ Function Write-GfmSceneImage {
             
             Default {}
         }
-        
-        # If ($NonWindowsMethod) {
-        #     For ($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
-        #         For ($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
-        #             $Script:Rui.CursorPosition = [Coordinates]::new($Script:SceneImageDrawOriginX + $w, $Script:SceneImageDrawOriginY + $h)
-        #             Write-Host ' ' -BackgroundColor $CellArray[$h, $w].BackgroundColor -NoNewline
-        #         }
-        #     }
-        # } Else {
-        #     # This is what I've been trying to accomplish on the Mac and Linux and it doesn't work on those two platforms.
-        #     # This actually appears to be faster too
-        #     $Script:Rui.SetBufferContents($([Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
-        # }
     }
 }
 
@@ -2266,22 +2222,8 @@ Function Write-GfmMessageWindowMessage {
         $Script:UiMessageWindowMessageB.Message = $Script:UiMessageWindowMessageC.Message; $Script:UiMessageWindowMessageB.ForegroundColor = $Script:UiMessageWindowMessageC.ForegroundColor
         $Script:UiMessageWindowMessageC.Message = $Message; $Script:UiMessageWindowMessageC.ForegroundColor = $ForegroundColor
 
-        # First, move from middle to top
-        # $Script:UiMessageWindowMessageTop = $Script:UiMessageWindowMessageMiddle
-
-        # Next, move from bottom to middle
-        # $Script:UiMessageWindowMessageMiddle = $Script:UiMessageWindowMessageBottom
-
-        # Assign the bottom message the user-specified message
-        # $Script:UiMessageWindowMessageBottom = $Message
-
         # Print the messages back to their appropraite positions in the buffer, optionally using the teletype method
         If ($Teletype) {
-            # Write-GfmPositionalTtyString `
-            #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
-            #     -Message $($Script:UiMessageWindowMessageBlank) `
-            #     -ForegroundColor $ForegroundColor `
-            #     -TypeSpeed LineClear
             Write-GfmPositionalString `
                 -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageBottomDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
@@ -2291,11 +2233,6 @@ Function Write-GfmMessageWindowMessage {
                 -Message $($Script:UiMessageWindowMessageC.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageC.ForegroundColor)
             
-            # Write-GfmPositionalTtyString `
-            #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
-            #     -Message $($Script:UiMessageWindowMessageBlank) `
-            #     -ForegroundColor $ForegroundColor `
-            #     -TypeSpeed LineClear
             Write-GfmPositionalString `
                 -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageMiddleDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
@@ -2305,11 +2242,6 @@ Function Write-GfmMessageWindowMessage {
                 -Message $($Script:UiMessageWindowMessageB.Message) `
                 -ForegroundColor $($Script:UiMessageWindowMessageB.ForegroundColor)
 
-            # Write-GfmPositionalTtyString `
-            #     -Coordinates $([System.Management.Automation.Host.Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
-            #     -Message $($Script:UiMessageWindowMessageBlank) `
-            #     -ForegroundColor $ForegroundColor `
-            #     -TypeSpeed LineClear
             Write-GfmPositionalString `
                 -Coordinates $([Coordinates]::new(2, $Script:UiMessageWindowMessageTopDrawY)) `
                 -Message $($Script:UiMessageWindowMessageBlank) `
@@ -2468,19 +2400,15 @@ Function Invoke-GfmCmdParser {
                 # Check the length of the split to determine how many arguments to pass to the invocation
                 Switch($cmdactSplit.Length) {
                     1 {
-                        #Write-Host 'Invoking no arg command'
                         Invoke-Command $rootFound.Value
                     }
                     2 {
-                        #Write-Host 'Invoking 1 arg command'
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1]
                     }
                     3 {
-                        #Write-Host 'Invoking 2 arg command'
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
                     }                    
                 }
-                #$foundCmdPhraseMatch = $true
             } Else {
                 # Failed to find the root
                 Write-GfmBadCommandException
@@ -8821,7 +8749,8 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad,
         [MTOStairs]::new(),
         [MTOPole]::new()
     ),
-    @($true, $false, $true, $false))
+    @($true, $false, $true, $false)
+)
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
 $Script:SampleMap.Tiles[1, 0] = [MapTile]::new($Script:SiFieldSEWRoad, @(), @($false, $true, $true, $false))
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($false, $true, $false, $true))
