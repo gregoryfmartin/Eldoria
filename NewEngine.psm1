@@ -1248,13 +1248,13 @@ $Script:CommandTable = @{
         }
         $e = $c.Length # This is the length of the String that has all of the availabale items on the current tile
         
-        # Space Saver Method 1 - Remove the last three entries and place them into a third line.
+        # Space Saver Method 1 - Remove the last five entries and place them into a third line.
         If($e -GT $b) {
             $y = $true
             $c -MATCH '([\s,]+\w+){5}$' | Out-Null
             If($_ -EQ $true) {
-                $c -REPLACE '([\s,]+\w+){5}$', ''
-                $f = $matches[0].Remove(0, 1)   
+                $c = $c -REPLACE '([\s,]+\w+){5}$', ''
+                $f = $matches[0].Remove(0, 2)   
             }
         }
         
@@ -8793,13 +8793,6 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad,
         [MTOLadder]::new(),
         [MTORope]::new(),
         [MTOStairs]::new(),
-        [MTOPole]::new(),
-        [MTOPole]::new(),
-        [MTOPole]::new(),
-        [MTOPole]::new(),
-        [MTOPole]::new(),
-        [MTOPole]::new(),
-        [MTOPole]::new(),
         [MTOPole]::new()
     ),
     @($true, $false, $true, $false)
