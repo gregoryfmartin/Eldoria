@@ -1521,6 +1521,12 @@ Class MapTileObject {
     }
 }
 
+Class MTOTree : MapTileObject {
+    MTOTree() : base('Tree', 'tree', {
+        Write-GfmMessageWindowMessage -Message 'I climbed a tree!' -Teletype
+    }) {}
+}
+
 Class MapTile {
     [BufferCell[,]]$BackgroundImage
     [MapTileObject[]]$ObjectListing
@@ -8784,8 +8790,8 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, 
     @(
-        [MapTileObject]::new('Apple', 'apple', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
-        [MapTileObject]::new('Tree', 'tree', {Write-GfmMessageWindowMessage -Message 'I climbed a tree!' -Teletype})
+        [MapTileObject]:: new('Apple', 'apple', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
+        [MTOTree]::new()
     ),
     @($true, $false, $true, $false))
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
