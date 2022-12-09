@@ -1527,6 +1527,30 @@ Class MTOTree : MapTileObject {
     }) {}
 }
 
+Class MTOLadder : MapTileObject {
+    MTOLadder() : base('Ladder', 'ladder', {
+        Write-GfmMessageWindowMessage -Message 'I climbed a ladder!' -Teletype
+    }) {}
+}
+
+Class MTORope : MapTileObject {
+    MTORope() : base('Rope', 'rope', {
+        Write-GfmMessageWindowMessage -Message 'I climbed a rope!' -Teletype
+    }) {}
+}
+
+Class MTOStairs : MapTileObject {
+    MTOStairs() : base('Stairs', 'stairs', {
+        Write-GfmMessageWindowMessage -Message 'I climbed some stairs!' -Teletype
+    }) {}
+}
+
+Class MTOPole : MapTileObject {
+    MTOPole() : base('Pole', 'pole', {
+        Write-GfmMessageWindowMessage -Message 'I climbed a pole!' -Teletype
+    }) {}
+}
+
 Class MapTile {
     [BufferCell[,]]$BackgroundImage
     [MapTileObject[]]$ObjectListing
@@ -8790,8 +8814,12 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, 
     @(
-        [MapTileObject]:: new('Apple', 'apple', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
-        [MTOTree]::new()
+        [MapTileObject]::new('Apple', 'apple', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
+        [MTOTree]::new(),
+        [MTOLadder]::new(),
+        [MTORope]::new(),
+        [MTOStairs]::new(),
+        [MTOPole]::new()
     ),
     @($true, $false, $true, $false))
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new($Script:SiFieldNWRoad, @(), @($true, $false, $false, $true))
