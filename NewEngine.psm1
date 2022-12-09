@@ -71,23 +71,23 @@ using namespace System.Management.Automation.Host
 
 #region Status Window Variables
 
-[ConsoleColor]$Script:UiStatusWindowBorderColor      = 'White'
-[String]      $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]      $Script:UiStatusWindowBorderVertical   = '|'
-[Int]         $Script:UiStatusWindowDrawX            = 0
-[Int]         $Script:UiStatusWindowDrawY            = 0
-[Int]         $Script:UiStatusWindowWidth            = 19
-[Int]         $Script:UiStatusWindowHeight           = 11
-[Int]         $Script:UiStatusWindowPlayerNameDrawX  = 2
-[Int]         $Script:UiStatusWindowPlayerNameDrawY  = 2
-[Int]         $Script:UiStatusWindowPlayerHpDrawX    = 2
-[Int]         $Script:UiStatusWindowPlayerHpDrawY    = 4
-[Int]         $Script:UiStatusWindowPlayerMpDrawX    = 2
-[Int]         $Script:UiStatusWindowPlayerMpDrawY    = 6
-[Int]         $Script:UiStatusWindowPlayerGoldDrawX  = 2
-[Int]         $Script:UiStatusWindowPlayerGoldDrawY  = 9
-[Int]         $Script:UiStatusWindowPlayerAilDrawX   = 2
-[Int]         $Script:UiStatusWindowPlayerAilDrawY   = 11
+[ConsoleColor]$Script:UiStatusWindowBorderColor       = 'White'
+[String]       $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
+[String]       $Script:UiStatusWindowBorderVertical   = '|'
+[Int]          $Script:UiStatusWindowDrawX            = 0
+[Int]          $Script:UiStatusWindowDrawY            = 0
+[Int]          $Script:UiStatusWindowWidth            = 19
+[Int]          $Script:UiStatusWindowHeight           = 11
+[Int]          $Script:UiStatusWindowPlayerNameDrawX  = 2
+[Int]          $Script:UiStatusWindowPlayerNameDrawY  = 2
+[Int]          $Script:UiStatusWindowPlayerHpDrawX    = 2
+[Int]          $Script:UiStatusWindowPlayerHpDrawY    = 4
+[Int]          $Script:UiStatusWindowPlayerMpDrawX    = 2
+[Int]          $Script:UiStatusWindowPlayerMpDrawY    = 6
+[Int]          $Script:UiStatusWindowPlayerGoldDrawX  = 2
+[Int]          $Script:UiStatusWindowPlayerGoldDrawY  = 9
+[Int]          $Script:UiStatusWindowPlayerAilDrawX   = 2
+[Int]          $Script:UiStatusWindowPlayerAilDrawY   = 11
 
 #endregion
 
@@ -1229,6 +1229,34 @@ $Script:CommandTable = @{
     
     'look' = {
         Update-GfmCmdHistory -CmdActualValid
+
+        # Get the Object Listing from the Current Map Tile
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        $b = 78 # The maximum length of the String. This doesn't necessarily mean that this is where the String get's broken up at.
+        $c = ''
+        $z = 0
+        
+        Foreach($d in $a) {
+            If($z -EQ $a.Length - 1) {
+                $c += $d.Name
+            } Else {
+                $c += $d.Name + ', '   
+            }
+            $z += 1
+        }
+        $e = $c.Length # This is the length of the String that has all of the availabale items on the current tile
+        
+        # Method 1
+        # Brute force write two strings
+        Write-GfmMessageWindowMessage `
+            -Message 'I can see the following things here:' `
+            -ForegroundColor 'Magenta' `
+            -Teletype
+        Write-GfmMessageWindowMessage `
+            -Message $c `
+            -ForegroundColor 'Magenta' `
+            -Teletype
+
         Return
     };
     
