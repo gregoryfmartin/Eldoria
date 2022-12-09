@@ -1234,7 +1234,9 @@ $Script:CommandTable = @{
         $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
         $b = 78 # The maximum length of the String. This doesn't necessarily mean that this is where the String get's broken up at.
         $c = ''
+        $f = ''
         $z = 0
+        $y = $false
         
         Foreach($d in $a) {
             If($z -EQ $a.Length - 1) {
@@ -1246,16 +1248,32 @@ $Script:CommandTable = @{
         }
         $e = $c.Length # This is the length of the String that has all of the availabale items on the current tile
         
+        # Space Saver Method 1 - Remove the last three entries and place them into a third line.
+        If($e -GT $b) {
+            $y = $true
+            $c -MATCH '([\s,]+\w+){5}$' | Out-Null
+            If($_ -EQ $true) {
+                $c -REPLACE '([\s,]+\w+){5}$', ''
+                $f = $matches[0].Remove(0, 1)   
+            }
+        }
+        
         # Method 1
         # Brute force write two strings
         Write-GfmMessageWindowMessage `
             -Message 'I can see the following things here:' `
-            -ForegroundColor 'Magenta' `
+            -ForegroundColor 'White' `
             -Teletype
         Write-GfmMessageWindowMessage `
             -Message $c `
             -ForegroundColor 'Magenta' `
             -Teletype
+        If($y -EQ $true) {
+            Write-GfmMessageWindowMessage `
+                -Message $f `
+                -ForegroundColor 'Magenta' `
+                -Teletype
+        }
 
         Return
     };
@@ -8775,6 +8793,13 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad,
         [MTOLadder]::new(),
         [MTORope]::new(),
         [MTOStairs]::new(),
+        [MTOPole]::new(),
+        [MTOPole]::new(),
+        [MTOPole]::new(),
+        [MTOPole]::new(),
+        [MTOPole]::new(),
+        [MTOPole]::new(),
+        [MTOPole]::new(),
         [MTOPole]::new()
     ),
     @($true, $false, $true, $false)
