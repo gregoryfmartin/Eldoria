@@ -440,7 +440,6 @@ $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octav
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 $Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
-
 #endregion
 
 #region Battle Theme Jingle
@@ -1228,58 +1227,12 @@ $Script:CommandTable = @{
     };
     
     'look' = {
-        Update-GfmCmdHistory -CmdActualValid
-
-        # Get the Object Listing from the Current Map Tile
-        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
-        $b = 78 # The maximum length of the String. This doesn't necessarily mean that this is where the String get's broken up at.
-        $c = ''
-        $f = ''
-        $z = 0
-        $y = $false
-        
-        Foreach($d in $a) {
-            If($z -EQ $a.Length - 1) {
-                $c += $d.Name
-            } Else {
-                $c += $d.Name + ', '   
-            }
-            $z += 1
-        }
-        $e = $c.Length # This is the length of the String that has all of the availabale items on the current tile
-        
-        # Space Saver Method 1 - Remove the last five entries and place them into a third line.
-        If($e -GT $b) {
-            $y = $true
-            $c -MATCH '([\s,]+\w+){5}$' | Out-Null
-            If($_ -EQ $true) {
-                $c = $c -REPLACE '([\s,]+\w+){5}$', ''
-                $f = $matches[0].Remove(0, 2)   
-            }
-        }
-        
-        # Method 1
-        # Brute force write two strings
-        Write-GfmMessageWindowMessage `
-            -Message 'I can see the following things here:' `
-            -ForegroundColor 'White' `
-            -Teletype
-        Write-GfmMessageWindowMessage `
-            -Message $c `
-            -ForegroundColor 'Magenta' `
-            -Teletype
-        If($y -EQ $true) {
-            Write-GfmMessageWindowMessage `
-                -Message $f `
-                -ForegroundColor 'Magenta' `
-                -Teletype
-        }
-
+        Invoke-GfmLookAction
         Return
     };
     
     'l' = {
-        Update-GfmCmdHistory -CmdActualValid
+        Invoke-GfmLookAction
         Return
     };
     
@@ -2501,6 +2454,65 @@ Function Invoke-GfmItemReactor {
             # Something goofy happened that shouldn't have
             Write-GfmBadSomethingException
             Return
+        }
+    }
+}
+
+Function Invoke-GfmLookAction {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Update-GfmCmdHistory -CmdActualValid
+
+        # Get the Object Listing from the Current Map Tile
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        $b = 78 # The maximum length of the String. This doesn't necessarily mean that this is where the String get's broken up at.
+        $c = '' # The first String that would be printed to the Message Window
+        $f = '' # The second String that would be printed to the Message Window (if needed)
+        $z = 0 # Probe counter to determine if a comma should be removed from the last addition to $a
+        $y = $false # Flag specifying if there's been overflow in $c or not ($c length exceeds $b)
+        
+        Foreach($d in $a) {
+            If($z -EQ $a.Length - 1) {
+                # If the iteration is on the last addition, just add it without the ending comma
+                $c += $d.Name
+            } Else {
+                # If the iteration isn't on the last addition, add it with an ending comma
+                $c += $d.Name + ', '   
+            }
+            
+            # Increment the probe counter
+            $z += 1
+        }
+        $e = $c.Length # This is the length of the String that has all of the availabale items on the current tile
+        
+        # Space Saver Method 1 - Remove the last five entries and place them into a third line.
+        If($e -GT $b) {
+            $y = $true # $c overflow has occurred
+            $c -MATCH '([\s,]+\w+){5}$' | Out-Null # Match the last five comma-whitespace-word sequences in $c
+            If($_ -EQ $true) {
+                # This should always be true in this case, but check anyway to be kind :)
+                $c = $c -REPLACE '([\s,]+\w+){5}$', '' # Remove the match from the root
+                $f = $matches[0].Remove(0, 2) # Get rid of garbage characters from the head of the secondary String
+            }
+        }
+        
+        # Method 1
+        # Brute force write two strings
+        Write-GfmMessageWindowMessage `
+            -Message 'I can see the following things here:' `
+            -ForegroundColor 'White' `
+            -Teletype
+        Write-GfmMessageWindowMessage `
+            -Message $c `
+            -ForegroundColor 'Magenta' `
+            -Teletype
+        If($y -EQ $true) {
+            Write-GfmMessageWindowMessage `
+                -Message $f `
+                -ForegroundColor 'Magenta' `
+                -Teletype
         }
     }
 }
