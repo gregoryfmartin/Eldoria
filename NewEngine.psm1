@@ -56,7 +56,9 @@ using namespace System.Management.Automation.Host
 [ConsoleColor] $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
 [ConsoleColor] $Script:PlayerStatNumberDrawColorDanger  = 'Red'
 [ConsoleColor] $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
+[ConsoleColor] $Script:PlayerAsideColor                 = 'DarkCyan'
 [Coordinates]  $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
+
 
 #endregion
 
@@ -71,23 +73,23 @@ using namespace System.Management.Automation.Host
 
 #region Status Window Variables
 
-[ConsoleColor]$Script:UiStatusWindowBorderColor       = 'White'
-[String]       $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]       $Script:UiStatusWindowBorderVertical   = '|'
-[Int]          $Script:UiStatusWindowDrawX            = 0
-[Int]          $Script:UiStatusWindowDrawY            = 0
-[Int]          $Script:UiStatusWindowWidth            = 19
-[Int]          $Script:UiStatusWindowHeight           = 11
-[Int]          $Script:UiStatusWindowPlayerNameDrawX  = 2
-[Int]          $Script:UiStatusWindowPlayerNameDrawY  = 2
-[Int]          $Script:UiStatusWindowPlayerHpDrawX    = 2
-[Int]          $Script:UiStatusWindowPlayerHpDrawY    = 4
-[Int]          $Script:UiStatusWindowPlayerMpDrawX    = 2
-[Int]          $Script:UiStatusWindowPlayerMpDrawY    = 6
-[Int]          $Script:UiStatusWindowPlayerGoldDrawX  = 2
-[Int]          $Script:UiStatusWindowPlayerGoldDrawY  = 9
-[Int]          $Script:UiStatusWindowPlayerAilDrawX   = 2
-[Int]          $Script:UiStatusWindowPlayerAilDrawY   = 11
+[ConsoleColor]$Script:UiStatusWindowBorderColor      = 'White'
+[String]      $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
+[String]      $Script:UiStatusWindowBorderVertical   = '|'
+[Int]         $Script:UiStatusWindowDrawX            = 0
+[Int]         $Script:UiStatusWindowDrawY            = 0
+[Int]         $Script:UiStatusWindowWidth            = 19
+[Int]         $Script:UiStatusWindowHeight           = 11
+[Int]         $Script:UiStatusWindowPlayerNameDrawX  = 2
+[Int]         $Script:UiStatusWindowPlayerNameDrawY  = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawX    = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawY    = 4
+[Int]         $Script:UiStatusWindowPlayerMpDrawX    = 2
+[Int]         $Script:UiStatusWindowPlayerMpDrawY    = 6
+[Int]         $Script:UiStatusWindowPlayerGoldDrawX  = 2
+[Int]         $Script:UiStatusWindowPlayerGoldDrawY  = 9
+[Int]         $Script:UiStatusWindowPlayerAilDrawX   = 2
+[Int]         $Script:UiStatusWindowPlayerAilDrawY   = 11
 
 #endregion
 
@@ -1529,6 +1531,7 @@ Class MapTile {
     Static [Int]$TileExitEast  = 2
     Static [Int]$TileExitWest  = 3
     
+    
     MapTile(
         [BufferCell[,]]$bi,
         [MapTileObject[]]$ol,
@@ -1539,6 +1542,8 @@ Class MapTile {
         $this.Exits           = $ex
     }
 }
+
+[ConsoleColor]$Script:MapTileItemsDiscoveredColor = 'Magenta'
 
 Class Map {
     [String]$Name
@@ -2472,6 +2477,14 @@ Function Invoke-GfmLookAction {
         $f = '' # The second String that would be printed to the Message Window (if needed)
         $z = 0 # Probe counter to determine if a comma should be removed from the last addition to $a
         $y = $false # Flag specifying if there's been overflow in $c or not ($c length exceeds $b)
+
+        If($a.Length -LE 0) {
+            Write-GfmMessageWindowMessage `
+                -Message 'It doesn''t look like there''s anything of interest here.' `
+                -ForegroundColor $Script:PlayerAsideColor `
+                -Teletype
+            Return
+        }
         
         Foreach($d in $a) {
             If($z -EQ $a.Length - 1) {
@@ -2502,16 +2515,16 @@ Function Invoke-GfmLookAction {
         # Brute force write two strings
         Write-GfmMessageWindowMessage `
             -Message 'I can see the following things here:' `
-            -ForegroundColor 'White' `
+            -ForegroundColor $Script:PlayerAsideColor `
             -Teletype
         Write-GfmMessageWindowMessage `
             -Message $c `
-            -ForegroundColor 'Magenta' `
+            -ForegroundColor $Script:MapTileItemsDiscoveredColor `
             -Teletype
         If($y -EQ $true) {
             Write-GfmMessageWindowMessage `
                 -Message $f `
-                -ForegroundColor 'Magenta' `
+                -ForegroundColor $Script:MapTileItemsDiscoveredColor `
                 -Teletype
         }
     }
@@ -2609,7 +2622,7 @@ Function Write-GfmMapNoItemsFoundException {
     Process {
         Write-GfmMessageWindowMessage `
             -Message 'There''s nothing of interest here...' `
-            -ForegroundColor 'Magenta' `
+            -ForegroundColor $Script:PlayerAsideColor `
             -Teletype
     }
 }
