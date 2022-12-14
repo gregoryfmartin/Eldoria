@@ -1445,6 +1445,7 @@ $Script:CommandTable = @{
 [String]      $Script:MTODescPole                 = 'Not the north or the south one. Just a pole. For climbing.'
 
 Class MapTileObject {
+    # TODO: Perhaps create a collection of Examine Strings and randomly select one when printing it to the console
     [String]$Name
     [String]$MapObjName
     [ScriptBlock]$Effect
@@ -1498,7 +1499,6 @@ Class MTOPole : MapTileObject {
 
 Class MapTile {
     [BufferCell[,]]$BackgroundImage
-    #[MapTileObject[]]$ObjectListing
     [List[MapTileObject]]$ObjectListing
     [Boolean[]]$Exits
     
