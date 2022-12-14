@@ -1460,11 +1460,12 @@ $Script:CommandTable = @{
 
 #region Map Variable Definitions
 
-[String]$Script:MTODescTree    = 'It''s a tree. Looks like all the other ones.'
-[String]$Script:MTODescLadder  = 'Maybe I can climb this ladder?'
-[String]$Script:MTODescRope    = 'A tightly braided and durable rope.'
-[String]$Script:MTODescStairs  = 'Stairs. A faithful ally for elevating one''s position.'
-[String]$Script:MTODescPole    = 'Not the north or the south one. Just a pole. For climbing.'
+[ConsoleColor]$Script:MapTileItemsDiscoveredColor = 'Magenta'
+[String]      $Script:MTODescTree                 = 'It''s a tree. Looks like all the other ones.'
+[String]      $Script:MTODescLadder               = 'Maybe I can climb this ladder?'
+[String]      $Script:MTODescRope                 = 'A tightly braided and durable rope.'
+[String]      $Script:MTODescStairs               = 'Stairs. A faithful ally for elevating one''s position.'
+[String]      $Script:MTODescPole                 = 'Not the north or the south one. Just a pole. For climbing.'
 
 Class MapTileObject {
     [String]$Name
@@ -1539,8 +1540,6 @@ Class MapTile {
         $this.Exits           = $ex
     }
 }
-
-[ConsoleColor]$Script:MapTileItemsDiscoveredColor = 'Magenta'
 
 Class Map {
     [String]$Name
