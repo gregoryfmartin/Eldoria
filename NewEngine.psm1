@@ -1,5 +1,6 @@
 using namespace System
 using namespace System.Collections
+using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
 #region Global Variables
@@ -38,24 +39,24 @@ using namespace System.Management.Automation.Host
     Danger
 }
 
-[String]         $Script:PlayerName                       = ''
-[Int]            $Script:PlayerCurrentHitPoints           = 0
-[Int]            $Script:PlayerMaximumHitPoints           = 0
-[Int]            $Script:PlayerCurrentMagicPoints         = 0
-[Int]            $Script:PlayerMaximumMagicPoints         = 0
-[Int]            $Script:PlayerCurrentGold                = 0
-[Single]         $Script:PlayerStatNumThresholdCaution    = 0.6D
-[Single]         $Script:PlayerStatNumThresholdDanger     = 0.2D
-[PlayerHpState]  $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
-[PlayerMpState]  $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
-[ConsoleColor]   $Script:PlayerStatNameDrawColor          = 'Blue'
-[ConsoleColor]   $Script:PlayerStatNumberDrawColorSafe    = 'Green'
-[ConsoleColor]   $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[ConsoleColor]   $Script:PlayerStatNumberDrawColorDanger  = 'Red'
-[ConsoleColor]   $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
-[ConsoleColor]   $Script:PlayerAsideColor                 = 'DarkCyan'
-[Coordinates]    $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
-[MapTileObject[]]$Script:PlayerInventory                  = @()
+[String]             $Script:PlayerName                       = ''
+[Int]                $Script:PlayerCurrentHitPoints           = 0
+[Int]                $Script:PlayerMaximumHitPoints           = 0
+[Int]                $Script:PlayerCurrentMagicPoints         = 0
+[Int]                $Script:PlayerMaximumMagicPoints         = 0
+[Int]                $Script:PlayerCurrentGold                = 0
+[Single]             $Script:PlayerStatNumThresholdCaution    = 0.6D
+[Single]             $Script:PlayerStatNumThresholdDanger     = 0.2D
+[PlayerHpState]      $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
+[PlayerMpState]      $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
+[ConsoleColor]       $Script:PlayerStatNameDrawColor          = 'Blue'
+[ConsoleColor]       $Script:PlayerStatNumberDrawColorSafe    = 'Green'
+[ConsoleColor]       $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
+[ConsoleColor]       $Script:PlayerStatNumberDrawColorDanger  = 'Red'
+[ConsoleColor]       $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
+[ConsoleColor]       $Script:PlayerAsideColor                 = 'DarkCyan'
+[Coordinates]        $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
+[List[MapTileObject]]$Script:PlayerInventory                  = [List[MapTileObject]]::new()
 
 #endregion
 
@@ -1521,7 +1522,8 @@ Class MTOPole : MapTileObject {
 
 Class MapTile {
     [BufferCell[,]]$BackgroundImage
-    [MapTileObject[]]$ObjectListing
+    #[MapTileObject[]]$ObjectListing
+    [List[MapTileObject]]$ObjectListing
     [Boolean[]]$Exits
     
     Static [Int]$TileExitNorth = 0
@@ -1536,8 +1538,12 @@ Class MapTile {
         [Boolean[]]$ex
     ) {
         $this.BackgroundImage = $bi
-        $this.ObjectListing   = $ol
         $this.Exits           = $ex
+        $this.ObjectListing   = [List[MapTileObject]]::new()
+        
+        Foreach($a in $ol) {
+            $this.ObjectListing.Add($a) | Out-Null
+        }
     }
 }
 
