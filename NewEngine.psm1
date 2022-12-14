@@ -1241,35 +1241,13 @@ $Script:CommandTable = @{
     'examine' = {
         Param([String]$a0)
         
-        Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
-            If($a.Name -EQ $a0) {
-                Update-GfmCmdHistory -CmdActualValid
-                Write-GfmMessageWindowMessage `
-                    -Message $a.ExamineString `
-                    -ForegroundColor $Script:PlayerAsideColor `
-                    -Teletype
-                Return
-            }
-        }
-        
-        Update-GfmCmdHistory
-        Write-GfmMessageWindowMessage `
-            -Message "There's no $a0 to be found here..." `
-            -ForegroundColor $Script:PlayerAsideColor `
-            -Teletype
-        Return
+        Invoke-GfmExamineAction -ItemName $a0
     };
     
     'exa' = {
         Param([String]$a0)
         
-        Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {
-                Write-GfmBadCommandArg0Exception
-                Return
-            }
-        }
+        Invoke-GfmExamineAction -ItemName $a0
     };
     
     'get' = {
@@ -2552,26 +2530,33 @@ Function Invoke-GfmLookAction {
     }
 }
 
-# Function Invoke-GfmExamineAction {
-#     [CmdletBinding()]
-#     Param (
-#         [Parameter(Mandatory = $true)]
-#         [String]$ItemExamineDesc
-#     )
+Function Invoke-GfmExamineAction {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
     
-#     Process {
-#         Switch($ItemName) {
-#             'apple' {
-#                 ''
-#             }
-            
-#             Default {
-#                 Write-GfmBadCommandArg0Exception
-#                 Return
-#             }
-#         }
-#     }
-# }
+    Process {
+        Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
+            If($a.Name -EQ $ItemName) {
+                Update-GfmCmdHistory -CmdActualValid
+                Write-GfmMessageWindowMessage `
+                    -Message $a.ExamineString `
+                    -ForegroundColor $Script:PlayerAsideColor `
+                    -Teletype
+                Return
+            }
+        }
+        
+        Update-GfmCmdHistory
+        Write-GfmMessageWindowMessage `
+            -Message "There's no $ItemName to be found here..." `
+            -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+        Return
+    }
+}
 
 Function Write-GfmGoodCommandAlert {
     [CmdletBinding()]
