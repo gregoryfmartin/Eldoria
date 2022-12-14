@@ -2,9 +2,6 @@ using namespace System
 using namespace System.Collections
 using namespace System.Management.Automation.Host
 
-#region Script Notes
-#endregion
-
 #region Global Variables
 
 #region Game State Definitions
@@ -41,23 +38,23 @@ using namespace System.Management.Automation.Host
     Danger
 }
 
-[String]       $Script:PlayerName                       = ''
-[Int]          $Script:PlayerCurrentHitPoints           = 0
-[Int]          $Script:PlayerMaximumHitPoints           = 0
-[Int]          $Script:PlayerCurrentMagicPoints         = 0
-[Int]          $Script:PlayerMaximumMagicPoints         = 0
-[Int]          $Script:PlayerCurrentGold                = 0
-[Single]       $Script:PlayerStatNumThresholdCaution    = 0.6D
-[Single]       $Script:PlayerStatNumThresholdDanger     = 0.2D
-[PlayerHpState]$Script:PlayerHitPointsState             = [PlayerHpState]::Normal
-[PlayerMpState]$Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
-[ConsoleColor] $Script:PlayerStatNameDrawColor          = 'Blue'
-[ConsoleColor] $Script:PlayerStatNumberDrawColorSafe    = 'Green'
-[ConsoleColor] $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[ConsoleColor] $Script:PlayerStatNumberDrawColorDanger  = 'Red'
-[ConsoleColor] $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
-[ConsoleColor] $Script:PlayerAsideColor                 = 'DarkCyan'
-[Coordinates]  $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
+[String]         $Script:PlayerName                       = ''
+[Int]            $Script:PlayerCurrentHitPoints           = 0
+[Int]            $Script:PlayerMaximumHitPoints           = 0
+[Int]            $Script:PlayerCurrentMagicPoints         = 0
+[Int]            $Script:PlayerMaximumMagicPoints         = 0
+[Int]            $Script:PlayerCurrentGold                = 0
+[Single]         $Script:PlayerStatNumThresholdCaution    = 0.6D
+[Single]         $Script:PlayerStatNumThresholdDanger     = 0.2D
+[PlayerHpState]  $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
+[PlayerMpState]  $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
+[ConsoleColor]   $Script:PlayerStatNameDrawColor          = 'Blue'
+[ConsoleColor]   $Script:PlayerStatNumberDrawColorSafe    = 'Green'
+[ConsoleColor]   $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
+[ConsoleColor]   $Script:PlayerStatNumberDrawColorDanger  = 'Red'
+[ConsoleColor]   $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
+[ConsoleColor]   $Script:PlayerAsideColor                 = 'DarkCyan'
+[Coordinates]    $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
 [MapTileObject[]]$Script:PlayerInventory                  = @()
 
 #endregion
