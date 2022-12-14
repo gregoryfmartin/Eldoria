@@ -58,7 +58,7 @@ using namespace System.Management.Automation.Host
 [ConsoleColor] $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
 [ConsoleColor] $Script:PlayerAsideColor                 = 'DarkCyan'
 [Coordinates]  $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
-
+[MapTileObject[]]$Script:PlayerInventory                  = @()
 
 #endregion
 
@@ -1241,13 +1241,23 @@ $Script:CommandTable = @{
     'examine' = {
         Param([String]$a0)
         
-        Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {
-                Write-GfmBadCommandArg0Exception
+        Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
+            If($a.Name -EQ $a0) {
+                Update-GfmCmdHistory -CmdActualValid
+                Write-GfmMessageWindowMessage `
+                    -Message $a.ExamineString `
+                    -ForegroundColor $Script:PlayerAsideColor `
+                    -Teletype
                 Return
             }
         }
+        
+        Update-GfmCmdHistory
+        Write-GfmMessageWindowMessage `
+            -Message "There's no $a0 to be found here..." `
+            -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+        Return
     };
     
     'exa' = {
@@ -1475,48 +1485,60 @@ $Script:CommandTable = @{
 
 #region Map Variable Definitions
 
+[String]$Script:MTODescTree    = 'It''s a tree. Looks like all the other ones.'
+[String]$Script:MTODescLadder  = 'Maybe I can climb this ladder?'
+[String]$Script:MTODescRope    = 'A tightly braided and durable rope.'
+[String]$Script:MTODescStairs  = 'Stairs. A faithful ally for elevating one''s position.'
+[String]$Script:MTODescPole    = 'Not the north or the south one. Just a pole. For climbing.'
+
 Class MapTileObject {
     [String]$Name
     [String]$MapObjName
     [ScriptBlock]$Effect
+    [Boolean]$CanAddToInventory
+    [String]$ExamineString
     
     MapTileObject(
         [String]$n,
         [String]$mon,
+        [Boolean]$cati,
+        [String]$exastr,
         [ScriptBlock]$e = {}
     ) {
-        $this.Name       = $n
-        $this.MapObjName = $mon
-        $this.Effect     = $e
+        $this.Name              = $n
+        $this.MapObjName        = $mon
+        $this.CanAddToInventory = $cati
+        $this.ExamineString     = $exastr
+        $this.Effect            = $e
     }
 }
 
 Class MTOTree : MapTileObject {
-    MTOTree() : base('Tree', 'tree', {
+    MTOTree() : base('Tree', 'tree', $false, $Script:MTODescTree, {
         Write-GfmMessageWindowMessage -Message 'I climbed a tree!' -Teletype
     }) {}
 }
 
 Class MTOLadder : MapTileObject {
-    MTOLadder() : base('Ladder', 'ladder', {
+    MTOLadder() : base('Ladder', 'ladder', $false, $Script:MTODescLadder, {
         Write-GfmMessageWindowMessage -Message 'I climbed a ladder!' -Teletype
     }) {}
 }
 
 Class MTORope : MapTileObject {
-    MTORope() : base('Rope', 'rope', {
+    MTORope() : base('Rope', 'rope', $false, $Script:MTODescRope, {
         Write-GfmMessageWindowMessage -Message 'I climbed a rope!' -Teletype
     }) {}
 }
 
 Class MTOStairs : MapTileObject {
-    MTOStairs() : base('Stairs', 'stairs', {
+    MTOStairs() : base('Stairs', 'stairs', $false, $Script:MTODescStairs, {
         Write-GfmMessageWindowMessage -Message 'I climbed some stairs!' -Teletype
     }) {}
 }
 
 Class MTOPole : MapTileObject {
-    MTOPole() : base('Pole', 'pole', {
+    MTOPole() : base('Pole', 'pole', $false, $Script:MTODescPole, {
         Write-GfmMessageWindowMessage -Message 'I climbed a pole!' -Teletype
     }) {}
 }
@@ -2529,6 +2551,27 @@ Function Invoke-GfmLookAction {
         }
     }
 }
+
+# Function Invoke-GfmExamineAction {
+#     [CmdletBinding()]
+#     Param (
+#         [Parameter(Mandatory = $true)]
+#         [String]$ItemExamineDesc
+#     )
+    
+#     Process {
+#         Switch($ItemName) {
+#             'apple' {
+#                 ''
+#             }
+            
+#             Default {
+#                 Write-GfmBadCommandArg0Exception
+#                 Return
+#             }
+#         }
+#     }
+# }
 
 Function Write-GfmGoodCommandAlert {
     [CmdletBinding()]
@@ -8813,7 +8856,7 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, 
     @(
-        [MapTileObject]::new('Apple', 'apple', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
+        [MapTileObject]::new('Apple', 'apple', $true, 'A big, fat, juicy apple. Worm not included.', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
         [MTOTree]::new(),
         [MTOLadder]::new(),
         [MTORope]::new(),
