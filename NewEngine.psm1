@@ -2436,12 +2436,12 @@ Function Invoke-GfmItemReactor {
         $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
         
         # Check to see if it's empty
-        If($a.Length -EQ 0) {
+        If($a.Count -EQ 0) {
             # There are no objects on the map tile
             Update-GfmCmdHistory -CmdActualValid
             Write-GfmMapNoItemsFoundException
             Return
-        } Elseif ($a.Length -GT 0) {
+        } Elseif ($a.Count -GT 0) {
             # There's something on this tile
             # Check to see if there's an object whose name matches the case
             Foreach($c in $a) {
@@ -2480,7 +2480,7 @@ Function Invoke-GfmLookAction {
         $z = 0 # Probe counter to determine if a comma should be removed from the last addition to $a
         $y = $false # Flag specifying if there's been overflow in $c or not ($c length exceeds $b)
 
-        If($a.Length -LE 0) {
+        If($a.Count -LE 0) {
             Write-GfmMessageWindowMessage `
                 -Message 'It doesn''t look like there''s anything of interest here.' `
                 -ForegroundColor $Script:PlayerAsideColor `
@@ -2489,7 +2489,7 @@ Function Invoke-GfmLookAction {
         }
         
         Foreach($d in $a) {
-            If($z -EQ $a.Length - 1) {
+            If($z -EQ $a.Count - 1) {
                 # If the iteration is on the last addition, just add it without the ending comma
                 $c += $d.Name
             } Else {
