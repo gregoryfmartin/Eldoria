@@ -1251,104 +1251,25 @@ $Script:CommandTable = @{
     'get' = {
         Param([String]$a0)
         
-        # The argument passed here is the lowercase name of the item
-        # There are two sanity checks that need made from the start: are there any items on this tile, and does the requested item exist?
-        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing # Remember, this is now a List<MapTileObject> instance
-        
-        If($a.Count -LE 0) {
-            # There aren't any items on this map tile
-            Update-GfmCmdHistory
-            Write-GfmMessageWindowMessage `
-                -Message 'There doesn''t appear to be anything to collect here...' `
-                -ForegroundColor 'Magenta' `
-                -Teletype
-            Return
-        }
-        Foreach($b in $a) {
-            If($b.Name -EQ $a0) {
-                # We've found a match; copy the item from the Map Tile OL into the Player's Inventory, then remove the instance
-                # from the Map Tile OL. However, not every item found on a Map Tile can be taken into the Player's Inventory.
-                # So now we need to check and see if the item can be added before attempting to do so.
-                If($b.CanAddToInventory -EQ $true) {
-                    # We can add the item to the Player's Inventory; attempt to do so.
-                    $Script:PlayerInventory.Add($b) | Out-Null
-                    $c = $a.Remove($b) | Out-Null
-                    If($c -EQ $false) {
-                        # Failed to remove the item from the Map Tile OL: This is a critical failure
-                        Write-Error 'Failed to remove item from Map Tile OL!'
-                        Exit
-                    } Else {
-                        # Addition and removal of the item was successful
-                        Update-GfmCmdHistory -CmdActualValid
-                        Write-GfmMessageWindowMessage `
-                            -Message "I've taken the $($b.MapObjName) and put it in my pocket." `
-                            -ForegroundColor $Script:PlayerAsideColor `
-                            -Teletype
-                        Return
-                    }
-                } Else {
-                    # This item can't be added into the Player's Inventory because the flag that allows this op has been toggled off.
-                    Update-GfmCmdHistory
-                    Write-GfmMessageWindowMessage `
-                        -Message "It's not possbile to take the $($b.MapObjName)." `
-                        -ForegroundColor 'Magenta' `
-                        -Teletype
-                    Return
-                }
-            }
-        }
-        
-        # Although there were items found in the Map Tile, the one the user requested wasn't found here.
-        Update-GfmCmdHistory
-        Write-GfmMessageWindowMessage `
-            -Message "There's no $a0 to be found here..." `
-            -ForegroundColor 'Magenta' `
-            -Teletype
-        Return
-        
-        # Switch($a0) {
-        #     # TODO: Add valid Object Identifiers
-        #     Default {
-        #         Write-GfmBadCommandArg0Exception
-        #         Return
-        #     }
-        # }
+        Invoke-GfmGetAction -ItemName $a0
     };
     
     'g' = {
         Param([String]$a0)
         
-        Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {
-                Write-GfmBadCommandArg0Exception
-                Return
-            }
-        }
+        Invoke-GfmGetAction -ItemName $a0
     };
     
     'take' = {
         Param([String]$a0)
         
-        Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {
-                Write-GfmBadCommandArg0Exception
-                Return
-            }
-        }
+        Invoke-GfmGetAction -ItemName $a0
     };
     
     't' = {
         Param([String]$a0)
         
-        Switch($a0) {
-            # TODO: Add valid Object Identifiers
-            Default {
-                Write-GfmBadCommandArg0Exception
-                Return
-            }
-        }
+        Invoke-GfmGetAction -ItemName $a0
     };
     
     'drop' = {
@@ -2610,6 +2531,71 @@ Function Invoke-GfmExamineAction {
         Write-GfmMessageWindowMessage `
             -Message "There's no $ItemName to be found here..." `
             -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+        Return
+    }
+}
+
+Function Invoke-GfmGetAction {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+    
+    Process {
+        # The argument passed here is the lowercase name of the item
+        # There are two sanity checks that need made from the start: are there any items on this tile, and does the requested item exist?
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing # Remember, this is now a List<MapTileObject> instance
+        
+        If($a.Count -LE 0) {
+            # There aren't any items on this map tile
+            Update-GfmCmdHistory
+            Write-GfmMessageWindowMessage `
+                -Message 'There doesn''t appear to be anything to collect here...' `
+                -ForegroundColor 'Magenta' `
+                -Teletype
+            Return
+        }
+        Foreach($b in $a) {
+            If($b.Name -EQ $ItemName) {
+                # We've found a match; copy the item from the Map Tile OL into the Player's Inventory, then remove the instance
+                # from the Map Tile OL. However, not every item found on a Map Tile can be taken into the Player's Inventory.
+                # So now we need to check and see if the item can be added before attempting to do so.
+                If($b.CanAddToInventory -EQ $true) {
+                    # We can add the item to the Player's Inventory; attempt to do so.
+                    $Script:PlayerInventory.Add($b) | Out-Null
+                    $c = $a.Remove($b) | Out-Null
+                    If($c -EQ $false) {
+                        # Failed to remove the item from the Map Tile OL: This is a critical failure
+                        Write-Error 'Failed to remove item from Map Tile OL!'
+                        Exit
+                    } Else {
+                        # Addition and removal of the item was successful
+                        Update-GfmCmdHistory -CmdActualValid
+                        Write-GfmMessageWindowMessage `
+                            -Message "I've taken the $($b.MapObjName) and put it in my pocket." `
+                            -ForegroundColor $Script:PlayerAsideColor `
+                            -Teletype
+                        Return
+                    }
+                } Else {
+                    # This item can't be added into the Player's Inventory because the flag that allows this op has been toggled off.
+                    Update-GfmCmdHistory
+                    Write-GfmMessageWindowMessage `
+                        -Message "It's not possbile to take the $($b.MapObjName)." `
+                        -ForegroundColor 'Magenta' `
+                        -Teletype
+                    Return
+                }
+            }
+        }
+        
+        # Although there were items found in the Map Tile, the one the user requested wasn't found here.
+        Update-GfmCmdHistory
+        Write-GfmMessageWindowMessage `
+            -Message "There's no $ItemName to be found here..." `
+            -ForegroundColor 'Magenta' `
             -Teletype
         Return
     }
