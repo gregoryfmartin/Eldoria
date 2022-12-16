@@ -13,6 +13,7 @@ using namespace System.Management.Automation.Host
     TitleScreen
     PlayerSetupScreen
     GamePlayScreen
+    InventoryScreen
     Cleanup
 }
 
@@ -21,6 +22,12 @@ using namespace System.Management.Automation.Host
     Battle
     Shop
     Inn
+}
+
+[Flags()] Enum GameStateFlags {
+    Starting
+    Running
+    Ending
 }
 
 #endregion
@@ -191,6 +198,15 @@ $Script:Rui = $(Get-Host).UI.RawUI
 [String]$Script:OsCheckMac     = 'OsMac'
 [String]$Script:OsCheckWindows = 'OsWindows'
 [String]$Script:OsCheckUnknown = 'OsUnknown'
+
+#endregion
+
+#region Game State Machine Variables
+
+[GlobalGameState]$Script:GameState     = [GlobalGameState]::GamePlayScreen
+[Boolean]        $Script:StateStarting = $false
+[Boolean]        $Script:StateRunning  = $false
+[Boolean]        $Script:StateEnding   = $false
 
 #endregion
 
@@ -1439,6 +1455,7 @@ $Script:CommandTable = @{
         }
     };
 
+    # THIS IS TOTAL TEST CODE AT THIS AREA!!!
     'scap' = {
         Update-GfmCmdHistory -CmdActualValid
         $Script:UiCommandWindowCmdActual = ''
@@ -3024,6 +3041,109 @@ Function Write-GfmCommandWindow {
             Default {
             }
         }
+    }
+}
+
+#endregion
+
+#region State Machine Functions
+
+Function Switch-GfmGameStateFlags {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [GameStateFlags]$DesiredState
+    )
+    
+    Process {
+        Switch($DesiredState) {
+            [GameStateFlags]::Starting {
+                $Script:StateStarting = $true
+                $Script:StateRunning  = $false
+                $Script:StateEnding   = $false
+                Return
+            }
+            
+            [GameStateFlags]::Running {
+                $Script:StateStarting = $false
+                $Script:StateRunning  = $true
+                $Script:StateEnding   = $false
+                Return
+            }
+            
+            [GameStateFlags]::Ending {
+                $Script:StateStarting = $false
+                $Script:StateRunning  = $false
+                $Script:StateEnding   = $true
+                Return
+            }
+            
+            Default {
+                # This is an error state - die
+                # I need to make this a bit more verbose in the long run
+                Exit
+            }
+        }
+    }
+}
+
+Function Invoke-GfmGameStateMachine {
+    [CmdletBinding()]
+    Param ()
+    
+    Begin {
+        If($Script:StateStarting -EQ $true) {
+            Switch($Script:GameState) {
+                Default {}
+            }
+        }
+    }
+    
+    Process {
+        If($Script:StateRunning -EQ $true) {
+            Switch($Script:GameState) {
+                Default {}
+            }
+        }
+    }
+    
+    End {
+        If($Script:StateEnding -EQ $true) {
+            Switch($Script:GameState) {
+                Default {}
+            }
+        }
+    }
+}
+
+Function Invoke-GfmGamePlayScreenStarting {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        Clear-Host
+        Write-GfmStatusWindow
+        Write-GfmSceneWindow
+        Write-GfmMessageWindow
+        Write-GfmCommandWindow
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmPlayerName
+        Write-GfmPlayerHp
+        Write-GfmPlayerMp
+        Write-GfmPlayerGold
+    }
+    
+    End {
+        Switch-GfmGameStateFlags -DesiredState [GameStateFlags]::Running
+    }
+}
+
+Function Invoke-GfmGamePlayScreenEnding {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        
     }
 }
 
