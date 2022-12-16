@@ -547,6 +547,13 @@ Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -P
 
 #endregion
 
+#region Screen Capture Test Variables
+
+[BufferCell[,]]$Script:ScreenStateA = New-Object 'BufferCell[,]' 80, 80
+[BufferCell[,]]$Script:ScreenStateB = New-Object 'BufferCell[,]' 80, 80
+
+#endregion
+
 #region Command Definition Variables
 
 # ATTEMPT FIVE MILLION
@@ -1430,6 +1437,17 @@ $Script:CommandTable = @{
             
             Default {}
         }
+    };
+
+    'scap' = {
+        Update-GfmCmdHistory -CmdActualValid
+        $Script:UiCommandWindowCmdActual = ''
+        $Script:ScreenStateA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        Clear-Host
+        Read-Host -Prompt 'Press any key to restore the previous state'
+        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $Script:ScreenStateA)
+        Set-GfmDefaultCursorPosition
+        Return
     };
 }
 
