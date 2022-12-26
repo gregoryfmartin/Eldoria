@@ -3,6 +3,8 @@ using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
+# Wee
+
 #region Global Variables
 
 #region Game State Definitions
@@ -46,24 +48,24 @@ using namespace System.Management.Automation.Host
     Danger
 }
 
-[String]             $Script:PlayerName                       = ''
-[Int]                $Script:PlayerCurrentHitPoints           = 0
-[Int]                $Script:PlayerMaximumHitPoints           = 0
-[Int]                $Script:PlayerCurrentMagicPoints         = 0
-[Int]                $Script:PlayerMaximumMagicPoints         = 0
-[Int]                $Script:PlayerCurrentGold                = 0
-[Single]             $Script:PlayerStatNumThresholdCaution    = 0.6D
-[Single]             $Script:PlayerStatNumThresholdDanger     = 0.2D
-[PlayerHpState]      $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
-[PlayerMpState]      $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
-[ConsoleColor]       $Script:PlayerStatNameDrawColor          = 'Blue'
-[ConsoleColor]       $Script:PlayerStatNumberDrawColorSafe    = 'Green'
-[ConsoleColor]       $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[ConsoleColor]       $Script:PlayerStatNumberDrawColorDanger  = 'Red'
-[ConsoleColor]       $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
-[ConsoleColor]       $Script:PlayerAsideColor                 = 'DarkCyan'
-[Coordinates]        $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
-[List[MapTileObject]]$Script:PlayerInventory                  = [List[MapTileObject]]::new()
+[String]              $Script:PlayerName                       = ''
+[Int]                 $Script:PlayerCurrentHitPoints           = 0
+[Int]                 $Script:PlayerMaximumHitPoints           = 0
+[Int]                 $Script:PlayerCurrentMagicPoints         = 0
+[Int]                 $Script:PlayerMaximumMagicPoints         = 0
+[Int]                 $Script:PlayerCurrentGold                = 0
+[Single]              $Script:PlayerStatNumThresholdCaution    = 0.6D
+[Single]              $Script:PlayerStatNumThresholdDanger     = 0.2D
+[PlayerHpState]       $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
+[PlayerMpState]       $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
+[ConsoleColor]        $Script:PlayerStatNameDrawColor          = 'Blue'
+[ConsoleColor]        $Script:PlayerStatNumberDrawColorSafe    = 'Green'
+[ConsoleColor]        $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
+[ConsoleColor]        $Script:PlayerStatNumberDrawColorDanger  = 'Red'
+[ConsoleColor]        $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
+[ConsoleColor]        $Script:PlayerAsideColor                 = 'DarkCyan'
+[Coordinates]         $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
+[List[MapTileObject]]$Script:PlayerInventory                   = [List[MapTileObject]]::new()
 
 #endregion
 
@@ -78,23 +80,23 @@ using namespace System.Management.Automation.Host
 
 #region Status Window Variables
 
-[ConsoleColor]$Script:UiStatusWindowBorderColor      = 'White'
-[String]      $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]      $Script:UiStatusWindowBorderVertical   = '|'
-[Int]         $Script:UiStatusWindowDrawX            = 0
-[Int]         $Script:UiStatusWindowDrawY            = 0
-[Int]         $Script:UiStatusWindowWidth            = 19
-[Int]         $Script:UiStatusWindowHeight           = 11
-[Int]         $Script:UiStatusWindowPlayerNameDrawX  = 2
-[Int]         $Script:UiStatusWindowPlayerNameDrawY  = 2
-[Int]         $Script:UiStatusWindowPlayerHpDrawX    = 2
-[Int]         $Script:UiStatusWindowPlayerHpDrawY    = 4
-[Int]         $Script:UiStatusWindowPlayerMpDrawX    = 2
-[Int]         $Script:UiStatusWindowPlayerMpDrawY    = 6
-[Int]         $Script:UiStatusWindowPlayerGoldDrawX  = 2
-[Int]         $Script:UiStatusWindowPlayerGoldDrawY  = 9
-[Int]         $Script:UiStatusWindowPlayerAilDrawX   = 2
-[Int]         $Script:UiStatusWindowPlayerAilDrawY   = 11
+[ConsoleColor]$Script:UiStatusWindowBorderColor       = 'White'
+[String]       $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
+[String]       $Script:UiStatusWindowBorderVertical   = '|'
+[Int]          $Script:UiStatusWindowDrawX            = 0
+[Int]          $Script:UiStatusWindowDrawY            = 0
+[Int]          $Script:UiStatusWindowWidth            = 19
+[Int]          $Script:UiStatusWindowHeight           = 11
+[Int]          $Script:UiStatusWindowPlayerNameDrawX  = 2
+[Int]          $Script:UiStatusWindowPlayerNameDrawY  = 2
+[Int]          $Script:UiStatusWindowPlayerHpDrawX    = 2
+[Int]          $Script:UiStatusWindowPlayerHpDrawY    = 4
+[Int]          $Script:UiStatusWindowPlayerMpDrawX    = 2
+[Int]          $Script:UiStatusWindowPlayerMpDrawY    = 6
+[Int]          $Script:UiStatusWindowPlayerGoldDrawX  = 2
+[Int]          $Script:UiStatusWindowPlayerGoldDrawY  = 9
+[Int]          $Script:UiStatusWindowPlayerAilDrawX   = 2
+[Int]          $Script:UiStatusWindowPlayerAilDrawY   = 11
 
 #endregion
 
@@ -113,45 +115,45 @@ Class CmdWindowHistoryMessage {
     }
 }
 
-[ConsoleColor]           $Script:UiCommandWindowBorderColor      = 'White'
-[ConsoleColor]           $Script:UiCommandWindowCmdHistValid     = 'Green'
-[ConsoleColor]           $Script:UiCommandWindowCmdHistErr       = 'Red'
-[ConsoleColor]           $Script:UiCommandWindowCmdBlankColor    = 'Black'
-[String]                 $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
-[String]                 $Script:UiCommandWindowBorderVertical   = '|'
-[String]                 $Script:UiCommandWindowCmdDiv           = '``````````````````'
-[String]                 $Script:UiCommandWindowCmdActual        = ''
-[String]                 $Script:UiCommandWindowCmdBlank         = '                  '
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA            = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB            = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC            = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD            = [CmdWindowHistoryMessage]::new('', 'White')
-[Int]                    $Script:UiCommandWindowDrawX            = 0
-[Int]                    $Script:UiCommandWindowDrawY            = 12
-[Int]                    $Script:UiCommandWindowWidth            = 19
-[Int]                    $Script:UiCommandWindowHeight           = 7
-[Int]                    $Script:UiCommandWindowCmdDivDrawX      = $Script:UiCommandWindowDrawX + 1
-[Int]                    $Script:UiCommandWindowCmdDivDrawY      = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
-[Int]                    $Script:UiCommandWindowHistDrawX        = $Script:UiCommandWindowDrawX + 1
-[Int]                    $Script:UiCommandWindowHistDDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
-[Int]                    $Script:UiCommandWindowHistCDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
-[Int]                    $Script:UiCommandWindowHistBDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
-[Int]                    $Script:UiCommandWindowHistADrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
+[ConsoleColor]            $Script:UiCommandWindowBorderColor      = 'White'
+[ConsoleColor]            $Script:UiCommandWindowCmdHistValid     = 'Green'
+[ConsoleColor]            $Script:UiCommandWindowCmdHistErr       = 'Red'
+[ConsoleColor]            $Script:UiCommandWindowCmdBlankColor    = 'Black'
+[String]                  $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
+[String]                  $Script:UiCommandWindowBorderVertical   = '|'
+[String]                  $Script:UiCommandWindowCmdDiv           = '``````````````````'
+[String]                  $Script:UiCommandWindowCmdActual        = ''
+[String]                  $Script:UiCommandWindowCmdBlank         = '                  '
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA             = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB             = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC             = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD             = [CmdWindowHistoryMessage]::new('', 'White')
+[Int]                     $Script:UiCommandWindowDrawX            = 0
+[Int]                     $Script:UiCommandWindowDrawY            = 12
+[Int]                     $Script:UiCommandWindowWidth            = 19
+[Int]                     $Script:UiCommandWindowHeight           = 7
+[Int]                     $Script:UiCommandWindowCmdDivDrawX      = $Script:UiCommandWindowDrawX + 1
+[Int]                     $Script:UiCommandWindowCmdDivDrawY      = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
+[Int]                     $Script:UiCommandWindowHistDrawX        = $Script:UiCommandWindowDrawX + 1
+[Int]                     $Script:UiCommandWindowHistDDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
+[Int]                     $Script:UiCommandWindowHistCDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
+[Int]                     $Script:UiCommandWindowHistBDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
+[Int]                     $Script:UiCommandWindowHistADrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
 
 
 #endregion
 
 #region Scene Window Variables
 
-[ConsoleColor]$Script:UiSceneWindowBorderColor      = 'White'
-[String]      $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
-[String]      $Script:UiSceneWindowBorderVertical   = '|'
-[Int]         $Script:UiSceneWindowDrawX            = 30
-[Int]         $Script:UiSceneWindowDrawY            = 0
-[Int]         $Script:UiSceneWindowWidth            = 50
-[Int]         $Script:UiSceneWindowHeight           = 19
-[Int]         $Script:UiSceneWindowSceneDrawX       = 32
-[Int]         $Script:UiSceneWindowSceneDrawY       = 1
+[ConsoleColor]$Script:UiSceneWindowBorderColor       = 'White'
+[String]       $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
+[String]       $Script:UiSceneWindowBorderVertical   = '|'
+[Int]          $Script:UiSceneWindowDrawX            = 30
+[Int]          $Script:UiSceneWindowDrawY            = 0
+[Int]          $Script:UiSceneWindowWidth            = 50
+[Int]          $Script:UiSceneWindowHeight           = 19
+[Int]          $Script:UiSceneWindowSceneDrawX       = 32
+[Int]          $Script:UiSceneWindowSceneDrawY       = 1
 
 #endregion
 
@@ -170,20 +172,20 @@ Class MsgWindowHistoryMessage {
     }
 }
 
-[ConsoleColor]           $Script:UiMessageWindowBorderColor        = 'White'
-[String]                 $Script:UiMessageWindowBorderHorizontal   = '-'
-[String]                 $Script:UiMessageWindowBorderVertical     = '|'
-[Int]                    $Script:UiMessageWindowDrawX              = 0
-[Int]                    $Script:UiMessageWindowDrawY              = 20
-[Int]                    $Script:UiMessageWindowWidth              = 80
-[Int]                    $Script:UiMessageWindowHeight             = 4
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA           = [MsgWindowHistoryMessage]::new('', 'Black')
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB           = [MsgWindowHistoryMessage]::new('', 'Black')
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC           = [MsgWindowHistoryMessage]::new('', 'Black')
-[Int]                    $Script:UiMessageWindowMessageBottomDrawY = 23
-[Int]                    $Script:UiMessageWindowMessageMiddleDrawY = 22
-[Int]                    $Script:UiMessageWindowMessageTopDrawY    = 21
-[String]                 $Script:UiMessageWindowMessageBlank       = '                                                                             '
+[ConsoleColor]            $Script:UiMessageWindowBorderColor        = 'White'
+[String]                  $Script:UiMessageWindowBorderHorizontal   = '-'
+[String]                  $Script:UiMessageWindowBorderVertical     = '|'
+[Int]                     $Script:UiMessageWindowDrawX              = 0
+[Int]                     $Script:UiMessageWindowDrawY              = 20
+[Int]                     $Script:UiMessageWindowWidth              = 80
+[Int]                     $Script:UiMessageWindowHeight             = 4
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA            = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB            = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC            = [MsgWindowHistoryMessage]::new('', 'Black')
+[Int]                     $Script:UiMessageWindowMessageBottomDrawY = 23
+[Int]                     $Script:UiMessageWindowMessageMiddleDrawY = 22
+[Int]                     $Script:UiMessageWindowMessageTopDrawY    = 21
+[String]                  $Script:UiMessageWindowMessageBlank       = '                                                                             '
 
 
 #endregion
@@ -192,21 +194,21 @@ Class MsgWindowHistoryMessage {
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
-[Int]   $Script:DefaultCursorX = $Script:UiCommandWindowDrawX + 1
-[Int]   $Script:DefaultCursorY = $Script:UiCommandWindowCmdDivDrawY + 1
-[String]$Script:OsCheckLinux   = 'OsLinux'
-[String]$Script:OsCheckMac     = 'OsMac'
-[String]$Script:OsCheckWindows = 'OsWindows'
-[String]$Script:OsCheckUnknown = 'OsUnknown'
+[Int]    $Script:DefaultCursorX = $Script:UiCommandWindowDrawX + 1
+[Int]    $Script:DefaultCursorY = $Script:UiCommandWindowCmdDivDrawY + 1
+[String]$Script:OsCheckLinux    = 'OsLinux'
+[String]$Script:OsCheckMac      = 'OsMac'
+[String]$Script:OsCheckWindows  = 'OsWindows'
+[String]$Script:OsCheckUnknown  = 'OsUnknown'
 
 #endregion
 
 #region Game State Machine Variables
 
-[GlobalGameState]$Script:GameState     = [GlobalGameState]::GamePlayScreen
-[Boolean]        $Script:StateStarting = $false
-[Boolean]        $Script:StateRunning  = $false
-[Boolean]        $Script:StateEnding   = $false
+[GlobalGameState]$Script:GameState      = [GlobalGameState]::GamePlayScreen
+[Boolean]         $Script:StateStarting = $false
+[Boolean]         $Script:StateRunning  = $false
+[Boolean]         $Script:StateEnding   = $false
 
 #endregion
 
@@ -301,7 +303,7 @@ $Script:NumNotes   = 12
 $Script:NoteTable  = New-Object 'Int[,]' $Script:NumNotes, $Script:NumOctaves
 
 # Define the Note Table
-# This site has a table where the values are derived from: https: //mixbutton.com/mixing-articles/music-note-to-frequency-chart/#:~:text=Music%20Note%20To%20Frequency%20Chart%20%20%20,%20155.56%20Hz%20%208%20more%20rows%20
+# This site has a table where the values are derived from: https:   //mixbutton.com/mixing-articles/music-note-to-frequency-chart/#:~:text=Music%20Note%20To%20Frequency%20Chart%20%20%20,%20155.56%20Hz%20%208%20more%20rows%20
 Write-Progress -Activity 'Creating Music Note Table' -Id 1 -PercentComplete -1
 $Script:NoteTable[[Notes]::C, [Octaves]::First]               = 0
 $Script:NoteTable[[Notes]::C, [Octaves]::Second]              = 0
@@ -425,137 +427,137 @@ Write-Progress -Activity 'Creating Music Note Table' -Status 'Complete' -Id 1 -P
 #region Dragon Warrior Theme Jingle (Incomplete)
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Dragon Warrior Theme' -Id 2 -PercentComplete -1
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
 #endregion
 
 #region Battle Theme Jingle
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Battle Theme' -Id 2 -PercentComplete -1
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
 
 #endregion
 
 #region Duck Tales Theme Jingle
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Duck Tales Theme' -Id 2 -PercentComplete -1
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
 #endregion
 
 #region Ghostbusters Theme
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Ghostbusters Theme' -Id 2 -PercentComplete -1
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 #Write-Progress -Activity 'Creating Song Note Tables' -Id 2 -Completed
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -PercentComplete -1
 
@@ -1403,49 +1405,49 @@ $Script:CommandTable = @{
         
         Switch($a0) {
             'a' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldNRoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldNRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'b' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldNERoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldNERoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'c' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldNWRoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldNWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'd' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldNEWRoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldNEWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'e' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldSRoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldSRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'f' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldSERoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldSERoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'g' {
-                Write-GfmSceneImage -CellArray $Script:SiFieldSEWRoad
+                Write-GfmSceneImage -CellArray $Script: SiFieldSEWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
@@ -1459,10 +1461,10 @@ $Script:CommandTable = @{
     'scap' = {
         Update-GfmCmdHistory -CmdActualValid
         $Script:UiCommandWindowCmdActual = ''
-        $Script:ScreenStateA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        $Script:ScreenStateA             = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
         Clear-Host
         Read-Host -Prompt 'Press any key to restore the previous state'
-        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $Script:ScreenStateA)
+        $Script: Rui.SetBufferContents([Coordinates]::new(0, 0), $Script:ScreenStateA)
         Set-GfmDefaultCursorPosition
         Return
     };
@@ -1473,11 +1475,11 @@ $Script:CommandTable = @{
 #region Map Variable Definitions
 
 [ConsoleColor]$Script:MapTileItemsDiscoveredColor = 'Magenta'
-[String]      $Script:MTODescTree                 = 'It''s a tree. Looks like all the other ones.'
-[String]      $Script:MTODescLadder               = 'Maybe I can climb this ladder?'
-[String]      $Script:MTODescRope                 = 'A tightly braided and durable rope.'
-[String]      $Script:MTODescStairs               = 'Stairs. A faithful ally for elevating one''s position.'
-[String]      $Script:MTODescPole                 = 'Not the north or the south one. Just a pole. For climbing.'
+[String]       $Script:MTODescTree                = 'It''s a tree. Looks like all the other ones.'
+[String]       $Script:MTODescLadder              = 'Maybe I can climb this ladder?'
+[String]       $Script:MTODescRope                = 'A tightly braided and durable rope.'
+[String]       $Script:MTODescStairs              = 'Stairs. A faithful ally for elevating one''s position.'
+[String]       $Script:MTODescPole                = 'Not the north or the south one. Just a pole. For climbing.'
 
 Class MapTileObject {
     # TODO: Perhaps create a collection of Examine Strings and randomly select one when printing it to the console
@@ -1648,7 +1650,7 @@ Function New-GfmSceneImageSample {
     Process {
         For ($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
             For ($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
-                [Int]$randBgColor = Get-Random -Minimum 1 -Maximum 15
+                [Int]  $randBgColor              = Get-Random -Minimum 1 -Maximum 15
                 $Script:SceneImageSample[$h, $w] = [BufferCell]::new(' ', 0, $randBgColor, 'Complete')
             }
         }
@@ -1663,7 +1665,7 @@ Function New-GfmSiBc {
     )
     
     Process {
-        Return [BufferCell]::new(' ', 0, $Bgc, 'Complete')
+        Return [BufferCell]:: new(' ', 0, $Bgc, 'Complete')
     }
 }
 
@@ -1701,7 +1703,7 @@ Function Write-GfmSceneImage {
             }
             
             { $_ -EQ $Script:OsCheckWindows }  {
-                $Script:Rui.SetBufferContents($([Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
+                $Script: Rui.SetBufferContents($([Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
             }
             
             Default {}
@@ -1724,29 +1726,29 @@ Function Test-GfmOs {
     Process {
         Get-PSDrive -Name Variable | Out-Null
         If ($?) {
-            Get-ChildItem Variable:/IsLinux | Out-Null
+            Get-ChildItem Variable: /IsLinux | Out-Null
             If ($?) {
                 If ($(Get-ChildItem Variable:/IsLinux).Value -EQ $true) {
-                    Return $Script:OsCheckLinux
+                    Return $Script: OsCheckLinux
                 }
             }
 
-            Get-ChildItem Variable:/IsMacOS | Out-Null
+            Get-ChildItem Variable: /IsMacOS | Out-Null
             If ($?) {
                 If ($(Get-ChildItem Variable:/IsMacOS).Value -EQ $true) {
-                    Return $Script:OsCheckMac
+                    Return $Script: OsCheckMac
                 }
             }
 
-            Get-ChildItem Variable:/IsWindows | Out-Null
+            Get-ChildItem Variable: /IsWindows | Out-Null
             If ($?) {
                 If ($(Get-ChildItem Variable:/IsWindows).Value -EQ $true) {
-                    Return $Script:OsCheckWindows
+                    Return $Script: OsCheckWindows
                 }
             }
         }
 
-        Return $Script:OsCheckUnknown
+        Return $Script: OsCheckUnknown
     }
 }
 
@@ -1826,7 +1828,7 @@ The string that will be written to the console.
 The color to give to the string when it's being written.
 
 .PARAMETER TypeSpeed
-The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]::Normal.
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]:: Normal.
 #>
 Function Write-GfmTtyString {
     [CmdletBinding()]
@@ -1870,7 +1872,7 @@ The string that will be written to the console.
 The color to give to the string when it's being written.
 
 .PARAMETER TypeSpeed
-The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]::Normal.
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]:: Normal.
 #>
 Function Write-GfmPositionalTtyString {
     [CmdletBinding()]
@@ -1904,7 +1906,7 @@ Function Write-GfmPlayerName {
         Write-GfmPositionalString `
             -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerNameDrawX, $Script:UiStatusWindowPlayerNameDrawY)) `
             -Message $Script:PlayerName `
-            -ForegroundColor $Script:PlayerStatNameDrawColor
+            -ForegroundColor $Script: PlayerStatNameDrawColor
     }
 
     End {
@@ -1922,33 +1924,33 @@ Function Write-GfmPlayerHp {
 
     Process {
         Switch ($Script:PlayerHitPointsState) {
-            # The fix for properly strong-typing the scoping is found here:https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-switch?view=powershell-7.2#enum
+            # The fix for properly strong-typing the scoping is found here: https: //learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-switch?view=powershell-7.2#enum
             ([PlayerHpState]::Normal) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorSafe
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorSafe
             }
 
             ([PlayerHpState]::Caution) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorCaution
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorCaution
             }
 
             ([PlayerHpState]::Danger) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
             }
 
             Default {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
             }
         }
     }
@@ -1968,33 +1970,33 @@ Function Write-GfmPlayerMp {
 
     Process {
         Switch ($Script:PlayerMagicPointsState) {
-            # The fix for properly strong-typing the scoping is found here:https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-switch?view=powershell-7.2#enum
+            # The fix for properly strong-typing the scoping is found here: https: //learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-switch?view=powershell-7.2#enum
             ([PlayerMpState]::Normal) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorSafe
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorSafe
             }
 
             ([PlayerMpState]::Caution) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorCaution
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorCaution
             }
 
             ([PlayerMpState]::Danger) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
             }
 
             Default {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
             }
         }
     }
@@ -2016,7 +2018,7 @@ Function Write-GfmPlayerGold {
         Write-GfmPositionalString `
             -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerGoldDrawX, $Script:UiStatusWindowPlayerGoldDrawY)) `
             -Message $(Format-GfmPlayerGold) `
-            -ForegroundColor $Script:PlayerStatGoldDrawColor
+            -ForegroundColor $Script: PlayerStatGoldDrawColor
     }
 
     End {
@@ -2113,8 +2115,8 @@ Function Update-GfmPlayerHp {
     )
 
     Process {
-        $t = $Script:PlayerCurrentHitPoints + $HpDelta
-        $t = [Math]::Clamp($t, 0, $Script:PlayerMaximumHitPoints)
+                $t                     = $Script:PlayerCurrentHitPoints + $HpDelta
+                $t                     = [Math]::Clamp($t, 0, $Script:PlayerMaximumHitPoints)
         $Script:PlayerCurrentHitPoints = $t
         Test-GfmPlayerHpForState
         If ($WriteToConsole) {
@@ -2148,8 +2150,8 @@ Function Update-GfmPlayerMp {
     )
 
     Process {
-        $t = $Script:PlayerCurrentMagicPoints + $MpDelta
-        $t = [Math]::Clamp($t, 0, $Script:PlayerMaximumMagicPoints)
+                $t                       = $Script:PlayerCurrentMagicPoints + $MpDelta
+                $t                       = [Math]::Clamp($t, 0, $Script:PlayerMaximumMagicPoints)
         $Script:PlayerCurrentMagicPoints = $t
         Test-GfmPlayerMpForState
         If ($WriteToConsole) {
@@ -2183,8 +2185,8 @@ Function Update-GfmPlayerGold {
     )
 
     Process {
-        $t = $Script:PlayerCurrentGold + $GDelta
-        $t = [Math]::Clamp($t, 0, [Int]::MaxValue)
+                $t                = $Script:PlayerCurrentGold + $GDelta
+                $t                = [Math]::Clamp($t, 0, [Int]::MaxValue)
         $Script:PlayerCurrentGold = $t
         If ($WriteToConsole) {
             Write-GfmPlayerGold
@@ -2237,7 +2239,7 @@ Function Write-GfmMessageWindowMessage {
 
         $Script:UiMessageWindowMessageA.Message = $Script:UiMessageWindowMessageB.Message; $Script:UiMessageWindowMessageA.ForegroundColor = $Script:UiMessageWindowMessageB.ForegroundColor
         $Script:UiMessageWindowMessageB.Message = $Script:UiMessageWindowMessageC.Message; $Script:UiMessageWindowMessageB.ForegroundColor = $Script:UiMessageWindowMessageC.ForegroundColor
-        $Script:UiMessageWindowMessageC.Message = $Message; $Script:UiMessageWindowMessageC.ForegroundColor = $ForegroundColor
+        $Script:UiMessageWindowMessageC.Message = $Message; $Script:UiMessageWindowMessageC.ForegroundColor                                = $ForegroundColor
 
         # Print the messages back to their appropraite positions in the buffer, optionally using the teletype method
         If ($Teletype) {
@@ -2309,7 +2311,7 @@ Function Read-GfmUserCommandInput {
     Process {
         <#
         We're going to try and take a different approach to reading this information in the parser cell row.
-        First of all, a complete list of virtual key codes in hex can be found here: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+        First of all, a complete list of virtual key codes in hex can be found here: https: //learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
         The next thing we're going to want to do is see if we can loop using the return value of RawUI.ReadKey.
         If the return value of RawUI.ReadKey is 0x0D (DEC 13) (Enter Key), then we know that the user command has been completed.
         Each result of the call will have its Character property value concatenated to the cmdactual string. Because the console
@@ -2505,7 +2507,7 @@ Function Invoke-GfmLookAction {
                 $c += $d.Name
             } Else {
                 # If the iteration isn't on the last addition, add it with an ending comma
-                $c += $d.Name + ', '   
+                $c += $d.Name + ', '
             }
             
             # Increment the probe counter
@@ -2580,8 +2582,8 @@ Function Invoke-GfmGetAction {
     
     Process {
         # The argument passed here is the lowercase name of the item
-        # There are two sanity checks that need made from the start: are there any items on this tile, and does the requested item exist?
-        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing # Remember, this is now a List<MapTileObject> instance
+        #  There are two sanity checks that need made from the start: are there any items on this tile,                                 and does the requested item exist?
+        $a = $Script                                                : CurrentMap.GetTileAtPlayerCoordinates().ObjectListing # Remember, this is now a List<MapTileObject> instance
         
         If($a.Count -LE 0) {
             # There aren't any items on this map tile
@@ -2599,7 +2601,7 @@ Function Invoke-GfmGetAction {
                 # So now we need to check and see if the item can be added before attempting to do so.
                 If($b.CanAddToInventory -EQ $true) {
                     # We can add the item to the Player's Inventory; attempt to do so.
-                    $Script:PlayerInventory.Add($b) | Out-Null
+                    $Script: PlayerInventory.Add($b) | Out-Null
                     $c = $a.Remove($b) | Out-Null
                     If($c -EQ $false) {
                         # Failed to remove the item from the Map Tile OL: This is a critical failure
@@ -2654,7 +2656,7 @@ Function Write-GfmBadCommandException {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
-            -MsgColor $Script:UiCommandWindowCmdHistErr
+            -MsgColor $Script: UiCommandWindowCmdHistErr
     }
 }
 
@@ -2667,7 +2669,7 @@ Function Write-GfmBadCommandArg0Exception {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
-            -MsgColor $Script:UiCommandWindowCmdHistErr
+            -MsgColor $Script: UiCommandWindowCmdHistErr
     }
 }
 
@@ -2680,7 +2682,7 @@ Function Write-GfmBadCommandArg1Exception {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
-            -MsgColor $Script:UiCommandWindowCmdHistErr
+            -MsgColor $Script: UiCommandWindowCmdHistErr
     }
 }
 
@@ -2693,7 +2695,7 @@ Function Write-GfmBadSomethingException {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage 'I''m God, and I don''t know what just happened...' `
-            -MsgColor $Script:UiCommandWindowCmdHistErr
+            -MsgColor $Script: UiCommandWindowCmdHistErr
     }
 }
 
@@ -2757,8 +2759,8 @@ Function Update-GfmCmdHistory {
     Param (
         [Switch]$CmdActualValid,
         [Switch]$UpdateMessageWindow,
-        [String]$MsgWindowMessage = '',
-        [ConsoleColor]$MsgColor = 'White',
+        [String]      $MsgWindowMessage = '',
+        [ConsoleColor]$MsgColor         = 'White',
         [Switch]$MsgTeletype
     )
 
@@ -2845,7 +2847,7 @@ Function Update-GfmSceneImageFromCoords {
     Param ()
     
     Process {
-        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmSceneImage -CellArray $Script: CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
     }
 }
 
@@ -2867,29 +2869,29 @@ Function Write-GfmStatusWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
-                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
-                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
+                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
+                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiStatusWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
-                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new($Script:UiStatusWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
+                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 # For the time being, I'm simply going to copypaste the code from the previous case
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
-                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
-                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal -ForegroundColor $Script:UiStatusWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
+                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
+                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiStatusWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
-                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical -ForegroundColor $Script:UiStatusWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new($Script:UiStatusWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
+                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
                 }
             }
 
@@ -2910,28 +2912,28 @@ Function Write-GfmSceneWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
-                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
-                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
+                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
+                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiSceneWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
-                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new($Script:UiSceneWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
+                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
-                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
-                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal -ForegroundColor $Script:UiSceneWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
+                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
+                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiSceneWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
-                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical -ForegroundColor $Script:UiSceneWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new($Script:UiSceneWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
+                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
                 }
             }
 
@@ -2952,31 +2954,31 @@ Function Write-GfmMessageWindow {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 For ($i = 0; $i -LE $Script:UiMessageWindowWidth - 1; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($i, $Script:UiMessageWindowDrawY)
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, $Script:UiMessageWindowDrawY)
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
                 }
                 For ($i = 0; $i -LT $Script:UiMessageWindowHeight - 1; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 For ($i = 0; $i -LE $Script:UiMessageWindowWidth - 1; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($i, $Script:UiMessageWindowDrawY)
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal -ForegroundColor $Script:UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, $Script:UiMessageWindowDrawY)
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
                 }
                 For ($i = 0; $i -LT $Script:UiMessageWindowHeight - 1; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical -ForegroundColor $Script:UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
                 }
             }
 
@@ -2998,43 +3000,43 @@ Function Write-GfmCommandWindow {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 # Draw the horizontal borders
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
-                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
+                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
 
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
-                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
+                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
 
                 # Draw the command input div
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
-                Write-GfmHostNnl -Message $Script:UiCommandWindowCmdDiv -ForegroundColor $Script:UiCommandWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:           : new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
+                Write-GfmHostNnl -Message $Script: UiCommandWindowCmdDiv -ForegroundColor $Script: UiCommandWindowBorderColor
 
                 # Draw the vertical borders
                 For ($i = 1; $i -LT $Script:UiCommandWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 # Draw the horizontal borders
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
-                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
+                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
 
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
-                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal -ForegroundColor $Script:UiCommandWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
+                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
 
                 # Draw the command input div
-                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
-                Write-GfmHostNnl -Message $Script:UiCommandWindowCmdDiv -ForegroundColor $Script:UiCommandWindowBorderColor
+                                 $Script         : Rui.CursorPosition = [Coordinates]:           : new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
+                Write-GfmHostNnl -Message $Script: UiCommandWindowCmdDiv -ForegroundColor $Script: UiCommandWindowBorderColor
 
                 # Draw the vertical borders
                 For ($i = 1; $i -LT $Script:UiCommandWindowHeight; $i++) {
-                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
-                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical -ForegroundColor $Script:UiCommandWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
+                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
                 }
             }
 
@@ -3126,7 +3128,7 @@ Function Invoke-GfmGamePlayScreenStarting {
         Write-GfmSceneWindow
         Write-GfmMessageWindow
         Write-GfmCommandWindow
-        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmSceneImage -CellArray $Script: CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
         Write-GfmPlayerName
         Write-GfmPlayerHp
         Write-GfmPlayerMp
@@ -3134,7 +3136,7 @@ Function Invoke-GfmGamePlayScreenStarting {
     }
     
     End {
-        Switch-GfmGameStateFlags -DesiredState [GameStateFlags]::Running
+        Switch-GfmGameStateFlags -DesiredState [GameStateFlags]:: Running
     }
 }
 
@@ -3157,14 +3159,14 @@ Function Test-GfmPlayScreen {
 
     Process {
         #New-GfmSceneImageSample
-        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmSceneImage -CellArray $Script: CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
 
-        $Script:PlayerName = 'Steve'
-        $Script:PlayerCurrentHitPoints = 100
-        $Script:PlayerMaximumHitPoints = 100
+        $Script:PlayerName               = 'Steve'
+        $Script:PlayerCurrentHitPoints   = 100
+        $Script:PlayerMaximumHitPoints   = 100
         $Script:PlayerCurrentMagicPoints = 25
         $Script:PlayerMaximumMagicPoints = 25
-        $Script:PlayerCurrentGold = 5000
+        $Script:PlayerCurrentGold        = 5000
 
         Write-GfmPlayerName
         Write-GfmPlayerHp
@@ -4013,476 +4015,476 @@ $Script:SiFieldNRoad[17, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 #region SiFieldNERoad
 
 Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNERoad' -CurrentOperation 'Creating SiFieldNERoad' -Id 3 -PercentComplete -1
-$Script:SiFieldNERoad[0, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[0, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[1, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[2, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[3, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[4, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNERoad[5, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 13] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[5, 15] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[5, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 13] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[6, 15] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[6, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[7, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[7, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[7, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[7, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[8, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[8, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[8, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[8, 16] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[8, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[8, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[9, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[9, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[9, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[9, 16] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNERoad[9, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[9, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[10, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[0, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[0, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[1, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[2, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[3, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[4, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNERoad[5, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 13]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[5, 15]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[5, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 13]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[6, 15]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[6, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[7, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[7, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[7, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[7, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 12]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[8, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[8, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[8, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[8, 16]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[8, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[8, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 12]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[9, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[9, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[9, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[9, 16]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNERoad[9, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[9, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[10, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[10, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[10, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[10, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4519,16 +4521,16 @@ $Script:SiFieldNERoad[10, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[10, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[10, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[10, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[11, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[11, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[11, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[11, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[11, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4565,16 +4567,16 @@ $Script:SiFieldNERoad[11, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[11, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[11, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[11, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[12, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[12, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[12, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[12, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[12, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4611,16 +4613,16 @@ $Script:SiFieldNERoad[12, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[12, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[12, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[12, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[13, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[13, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[13, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[13, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[13, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4657,16 +4659,16 @@ $Script:SiFieldNERoad[13, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[13, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[13, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[13, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[14, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[14, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[14, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[14, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[14, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4703,16 +4705,16 @@ $Script:SiFieldNERoad[14, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[14, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[14, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[14, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[15, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[15, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[15, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[15, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[15, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4749,16 +4751,16 @@ $Script:SiFieldNERoad[15, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[15, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[15, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[15, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNERoad[16, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNERoad[16, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[16, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNERoad[16, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNERoad[16, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -4847,476 +4849,476 @@ $Script:SiFieldNERoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complet
 #region SiFieldNWRoad
 
 Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldNWRoad' -CurrentOperation 'Creating SiFieldNWRoad' -Id 3 -PercentComplete -1
-$Script:SiFieldNWRoad[0, 0]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 1]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 2]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 3]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 4]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 5]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 6]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 7]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 8]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 9]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[0, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[1, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[2, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[3, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[4, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldNWRoad[5, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 13] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[5, 15] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[5, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 13] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[6, 15] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[6, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[7, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[7, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[7, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[7, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[8, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[8, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[8, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[8, 16] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[8, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[8, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[9, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[9, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[9, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[9, 16] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[9, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[9, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[10, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[0, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[0, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[1, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[2, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[3, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[4, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldNWRoad[5, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 13]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[5, 15]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[5, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 13]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[6, 15]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[6, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[7, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[7, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[7, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[7, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 12]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[8, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[8, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[8, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[8, 16]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[8, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[8, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 12]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[9, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[9, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[9, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[9, 16]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[9, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[9, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[10, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[10, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[10, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[10, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -5353,16 +5355,16 @@ $Script:SiFieldNWRoad[10, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[10, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[10, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[10, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[11, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[11, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[11, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[11, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[11, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -5399,16 +5401,16 @@ $Script:SiFieldNWRoad[11, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[11, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[11, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[11, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[12, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[12, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[12, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[12, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[12, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -5445,16 +5447,16 @@ $Script:SiFieldNWRoad[12, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[12, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[12, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[12, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[13, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[13, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[13, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[13, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[13, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -5491,16 +5493,16 @@ $Script:SiFieldNWRoad[13, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[13, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[13, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[13, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[14, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[14, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[14, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[14, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[14, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -5537,16 +5539,16 @@ $Script:SiFieldNWRoad[14, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[14, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[14, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[14, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[15, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[15, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[15, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[15, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[15, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -5583,16 +5585,16 @@ $Script:SiFieldNWRoad[15, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[15, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[15, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldNWRoad[15, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[16, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldNWRoad[16, 1] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 2] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 3] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 4] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 5] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 6] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 7] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 8] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldNWRoad[16, 9] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldNWRoad[16, 1]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 2]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 3]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 4]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 5]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 6]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 7]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 8]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldNWRoad[16, 9]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[16, 10] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[16, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldNWRoad[16, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -6515,476 +6517,476 @@ $Script:SiFieldNEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 #region SiFieldSRoad
 
 Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Status 'Creating SiFieldSRoad' -CurrentOperation 'Creating SiFieldSRoad' -Id 3 -PercentComplete -1
-$Script:SiFieldSRoad[0, 0]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 1]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 2]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 3]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 4]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 5]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 6]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 7]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 8]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 9]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[0, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[1, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[2, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[3, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 0] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 1] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 2] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 3] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 4] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 5] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 6] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 7] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 8] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 9] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 10] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 11] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 12] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 13] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 14] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 15] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 16] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 17] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 18] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 19] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 20] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 21] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 22] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 23] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 24] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 25] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 26] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 27] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 28] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 29] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 30] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 31] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 32] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 33] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 34] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 35] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 36] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 37] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 38] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 39] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 40] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 41] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 42] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 43] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 44] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[4, 45] = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
-$Script:SiFieldSRoad[5, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 13] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 14] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 15] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[5, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 13] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 14] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 15] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[6, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 12] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[7, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[7, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[7, 16] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[7, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[8, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[8, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[8, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[8, 16] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[8, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[8, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 11] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[9, 13] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[9, 14] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[9, 15] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[9, 16] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
-$Script:SiFieldSRoad[9, 17] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 18] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 19] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 20] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 21] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 22] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 23] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 24] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 25] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 26] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 27] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 28] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 29] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 30] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 31] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 32] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 33] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 34] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 35] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 36] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 37] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 38] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 39] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 40] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 41] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[9, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[10, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[0, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[0, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[1, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[2, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[3, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 0]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 1]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 2]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 3]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 4]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 5]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 6]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 7]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 8]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 9]   = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 10]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 11]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 12]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 13]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 14]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 15]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 16]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 17]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 18]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 19]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 20]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 21]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 22]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 23]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 24]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 25]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 26]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 27]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 28]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 29]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 30]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 31]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 32]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 33]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 34]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 35]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 36]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 37]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 38]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 39]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 40]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 41]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 42]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 43]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 44]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[4, 45]  = [BufferCell]::new(' ', 0, 'Blue', 'Complete')
+$Script:SiFieldSRoad[5, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 13]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 14]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 15]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[5, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 13]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 14]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 15]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[6, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 12]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[7, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[7, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[7, 16]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[7, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 12]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[8, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[8, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[8, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[8, 16]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[8, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[8, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 0]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 1]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 2]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 3]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 4]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 5]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 6]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 7]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 8]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 9]   = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 10]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 11]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 12]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[9, 13]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[9, 14]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[9, 15]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[9, 16]  = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
+$Script:SiFieldSRoad[9, 17]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 18]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 19]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 20]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 21]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 22]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 23]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 24]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 25]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 26]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 27]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 28]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 29]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 30]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 31]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 32]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 33]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 34]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 35]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 36]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 37]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 38]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 39]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 40]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 41]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 42]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 43]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 44]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[9, 45]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[10, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[10, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[10, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[10, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -7021,16 +7023,16 @@ $Script:SiFieldSRoad[10, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[10, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[10, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[10, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[11, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[11, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[11, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[11, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[11, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -7067,16 +7069,16 @@ $Script:SiFieldSRoad[11, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[11, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[11, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[11, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[12, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[12, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[12, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[12, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[12, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -7113,16 +7115,16 @@ $Script:SiFieldSRoad[12, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[12, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[12, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[12, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[13, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[13, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[13, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[13, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[13, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -7159,16 +7161,16 @@ $Script:SiFieldSRoad[13, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[13, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[13, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[13, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[14, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[14, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[14, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[14, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[14, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -7205,16 +7207,16 @@ $Script:SiFieldSRoad[14, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[14, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[14, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[14, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[15, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[15, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[15, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[15, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[15, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -7251,16 +7253,16 @@ $Script:SiFieldSRoad[15, 42] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[15, 43] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[15, 44] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[15, 45] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 0] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 1] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 2] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 3] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 4] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 5] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 6] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 7] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 8] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
-$Script:SiFieldSRoad[16, 9] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 0]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 1]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 2]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 3]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 4]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 5]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 6]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 7]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 8]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
+$Script:SiFieldSRoad[16, 9]  = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[16, 10] = [BufferCell]::new(' ', 0, 'Green', 'Complete')
 $Script:SiFieldSRoad[16, 11] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
 $Script:SiFieldSRoad[16, 12] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Complete')
@@ -9022,12 +9024,12 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, 
     @(
-        [MapTileObject]::new('Apple', 'apple', $true, 'A big, fat, juicy apple. Worm not included.', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
-        [MTOTree]::new(),
-        [MTOLadder]::new(),
-        [MTORope]::new(),
-        [MTOStairs]::new(),
-        [MTOPole]::new()
+        [MapTileObject]:: new('Apple', 'apple', $true, 'A big, fat, juicy apple. Worm not included.', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
+        [MTOTree]      :: new(),
+        [MTOLadder]    :: new(),
+        [MTORope]      :: new(),
+        [MTOStairs]    :: new(),
+        [MTOPole]      :: new()
     ),
     @($true, $false, $true, $false)
 )
