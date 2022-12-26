@@ -427,137 +427,137 @@ Write-Progress -Activity 'Creating Music Note Table' -Status 'Complete' -Id 1 -P
 #region Dragon Warrior Theme Jingle (Incomplete)
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Dragon Warrior Theme' -Id 2 -PercentComplete -1
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::F, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DragonWarriorTheme.Add([Note]::new(($Script:NoteTable[[Notes]::G, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
 #endregion
 
 #region Battle Theme Jingle
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Battle Theme' -Id 2 -PercentComplete -1
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Eighth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::C, [Octaves]::Seventh]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::ASharpOrBFlat, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [Octaves]::Sixth]), [NoteDuration]::Whole)) | Out-Null
 
 #endregion
 
 #region Duck Tales Theme Jingle
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Duck Tales Theme' -Id 2 -PercentComplete -1
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
 #endregion
 
 #region Ghostbusters Theme
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Ghostbusters Theme' -Id 2 -PercentComplete -1
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script: GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Fifth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Quarter)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::DSharpOrEFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new([Notes]::Rest, [NoteDuration]::Half)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script:GhostbustersTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 #Write-Progress -Activity 'Creating Song Note Tables' -Id 2 -Completed
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Complete' -Id 2 -PercentComplete -1
 
@@ -1405,49 +1405,49 @@ $Script:CommandTable = @{
         
         Switch($a0) {
             'a' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldNRoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldNRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'b' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldNERoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldNERoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'c' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldNWRoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldNWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'd' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldNEWRoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldNEWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'e' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldSRoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldSRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'f' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldSERoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldSERoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
             }
             
             'g' {
-                Write-GfmSceneImage -CellArray $Script: SiFieldSEWRoad
+                Write-GfmSceneImage -CellArray $Script:SiFieldSEWRoad
                 Update-GfmCmdHistory -CmdActualValid
                 $Script:UiCommandWindowCmdActual = ''
                 Set-GfmDefaultCursorPosition  
@@ -1464,7 +1464,7 @@ $Script:CommandTable = @{
         $Script:ScreenStateA             = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
         Clear-Host
         Read-Host -Prompt 'Press any key to restore the previous state'
-        $Script: Rui.SetBufferContents([Coordinates]::new(0, 0), $Script:ScreenStateA)
+        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $Script:ScreenStateA)
         Set-GfmDefaultCursorPosition
         Return
     };
@@ -1703,7 +1703,7 @@ Function Write-GfmSceneImage {
             }
             
             { $_ -EQ $Script:OsCheckWindows }  {
-                $Script: Rui.SetBufferContents($([Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
+                $Script:Rui.SetBufferContents($([Coordinates]::new($Script:SceneImageDrawOriginX, $Script:SceneImageDrawOriginY)), $CellArray)
             }
             
             Default {}
@@ -1729,26 +1729,26 @@ Function Test-GfmOs {
             Get-ChildItem Variable: /IsLinux | Out-Null
             If ($?) {
                 If ($(Get-ChildItem Variable:/IsLinux).Value -EQ $true) {
-                    Return $Script: OsCheckLinux
+                    Return $Script:OsCheckLinux
                 }
             }
 
             Get-ChildItem Variable: /IsMacOS | Out-Null
             If ($?) {
                 If ($(Get-ChildItem Variable:/IsMacOS).Value -EQ $true) {
-                    Return $Script: OsCheckMac
+                    Return $Script:OsCheckMac
                 }
             }
 
             Get-ChildItem Variable: /IsWindows | Out-Null
             If ($?) {
                 If ($(Get-ChildItem Variable:/IsWindows).Value -EQ $true) {
-                    Return $Script: OsCheckWindows
+                    Return $Script:OsCheckWindows
                 }
             }
         }
 
-        Return $Script: OsCheckUnknown
+        Return $Script:OsCheckUnknown
     }
 }
 
@@ -1906,7 +1906,7 @@ Function Write-GfmPlayerName {
         Write-GfmPositionalString `
             -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerNameDrawX, $Script:UiStatusWindowPlayerNameDrawY)) `
             -Message $Script:PlayerName `
-            -ForegroundColor $Script: PlayerStatNameDrawColor
+            -ForegroundColor $Script:PlayerStatNameDrawColor
     }
 
     End {
@@ -1929,28 +1929,28 @@ Function Write-GfmPlayerHp {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorSafe
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorSafe
             }
 
             ([PlayerHpState]::Caution) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorCaution
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorCaution
             }
 
             ([PlayerHpState]::Danger) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
 
             Default {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerHpDrawX, $Script:UiStatusWindowPlayerHpDrawY)) `
                     -Message $(Format-GfmPlayerHitPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
         }
     }
@@ -1975,28 +1975,28 @@ Function Write-GfmPlayerMp {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorSafe
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorSafe
             }
 
             ([PlayerMpState]::Caution) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorCaution
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorCaution
             }
 
             ([PlayerMpState]::Danger) {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
 
             Default {
                 Write-GfmPositionalString `
                     -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerMpDrawX, $Script:UiStatusWindowPlayerMpDrawY)) `
                     -Message $(Format-GfmPlayerMagicPoints) `
-                    -ForegroundColor $Script: PlayerStatNumberDrawColorDanger
+                    -ForegroundColor $Script:PlayerStatNumberDrawColorDanger
             }
         }
     }
@@ -2018,7 +2018,7 @@ Function Write-GfmPlayerGold {
         Write-GfmPositionalString `
             -Coordinates $([Coordinates]::new($Script:UiStatusWindowPlayerGoldDrawX, $Script:UiStatusWindowPlayerGoldDrawY)) `
             -Message $(Format-GfmPlayerGold) `
-            -ForegroundColor $Script: PlayerStatGoldDrawColor
+            -ForegroundColor $Script:PlayerStatGoldDrawColor
     }
 
     End {
@@ -2583,7 +2583,7 @@ Function Invoke-GfmGetAction {
     Process {
         # The argument passed here is the lowercase name of the item
         #  There are two sanity checks that need made from the start: are there any items on this tile,                                 and does the requested item exist?
-        $a = $Script                                                : CurrentMap.GetTileAtPlayerCoordinates().ObjectListing # Remember, this is now a List<MapTileObject> instance
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing # Remember, this is now a List<MapTileObject> instance
         
         If($a.Count -LE 0) {
             # There aren't any items on this map tile
@@ -2601,7 +2601,7 @@ Function Invoke-GfmGetAction {
                 # So now we need to check and see if the item can be added before attempting to do so.
                 If($b.CanAddToInventory -EQ $true) {
                     # We can add the item to the Player's Inventory; attempt to do so.
-                    $Script: PlayerInventory.Add($b) | Out-Null
+                    $Script:PlayerInventory.Add($b) | Out-Null
                     $c = $a.Remove($b) | Out-Null
                     If($c -EQ $false) {
                         # Failed to remove the item from the Map Tile OL: This is a critical failure
@@ -2656,7 +2656,7 @@ Function Write-GfmBadCommandException {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
-            -MsgColor $Script: UiCommandWindowCmdHistErr
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
@@ -2669,7 +2669,7 @@ Function Write-GfmBadCommandArg0Exception {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
-            -MsgColor $Script: UiCommandWindowCmdHistErr
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
@@ -2682,7 +2682,7 @@ Function Write-GfmBadCommandArg1Exception {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage "INVALID ARGUMENT 1: $Script:UiCommandWindowCmdActual" `
-            -MsgColor $Script: UiCommandWindowCmdHistErr
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
@@ -2695,7 +2695,7 @@ Function Write-GfmBadSomethingException {
             -UpdateMessageWindow `
             -MsgTeletype `
             -MsgWindowMessage 'I''m God, and I don''t know what just happened...' `
-            -MsgColor $Script: UiCommandWindowCmdHistErr
+            -MsgColor $Script:UiCommandWindowCmdHistErr
     }
 }
 
@@ -2847,7 +2847,7 @@ Function Update-GfmSceneImageFromCoords {
     Param ()
     
     Process {
-        Write-GfmSceneImage -CellArray $Script: CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
     }
 }
 
@@ -2869,29 +2869,37 @@ Function Write-GfmStatusWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
-                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
-                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal `
+                                 -ForegroundColor $Script:UiStatusWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
+                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal `
+                                 -ForegroundColor $Script:UiStatusWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiStatusWindowHeight; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new($Script:UiStatusWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
-                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical `
+                                     -ForegroundColor $Script:UiStatusWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
+                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical `
+                                     -ForegroundColor $Script:UiStatusWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 # For the time being, I'm simply going to copypaste the code from the previous case
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
-                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                    : new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
-                Write-GfmHostNnl -Message $Script: UiStatusWindowBorderHoirzontal -ForegroundColor $Script: UiStatusWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal `
+                                 -ForegroundColor $Script:UiStatusWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $Script:UiStatusWindowDrawY + $Script:UiStatusWindowHeight)
+                Write-GfmHostNnl -Message $Script:UiStatusWindowBorderHoirzontal `
+                                 -ForegroundColor $Script:UiStatusWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiStatusWindowHeight; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new($Script:UiStatusWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                  : new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
-                    Write-GfmHostNnl -Message $Script: UiStatusWindowBorderVertical -ForegroundColor $Script: UiStatusWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiStatusWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical `
+                                     -ForegroundColor $Script:UiStatusWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiStatusWindowDrawX + $Script:UiStatusWindowWidth), $i)
+                    Write-GfmHostNnl -Message $Script:UiStatusWindowBorderVertical `
+                                     -ForegroundColor $Script:UiStatusWindowBorderColor
                 }
             }
 
@@ -2912,28 +2920,36 @@ Function Write-GfmSceneWindow {
     Process {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
-                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
-                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiSceneWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
+                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiSceneWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiSceneWindowHeight; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new($Script:UiSceneWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
-                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical `
+                                     -ForegroundColor $Script:UiSceneWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
+                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical `
+                                     -ForegroundColor $Script:UiSceneWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
-                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
-                Write-GfmHostNnl -Message $Script: UiSceneWindowBorderHorizontal -ForegroundColor $Script: UiSceneWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $Script:UiSceneWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiSceneWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, ($Script:UiSceneWindowDrawY + $Script:UiSceneWindowHeight))
+                Write-GfmHostNnl -Message $Script:UiSceneWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiSceneWindowBorderColor
                 For ($i = 1; $i -LT $Script:UiSceneWindowHeight; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new($Script:UiSceneWindowDrawX, $i)
-                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                 : new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
-                    Write-GfmHostNnl -Message $Script: UiSceneWindowBorderVertical -ForegroundColor $Script: UiSceneWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawX, $i)
+                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical `
+                                     -ForegroundColor $Script:UiSceneWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawX + $Script:UiSceneWindowWidth) - 1, $i)
+                    Write-GfmHostNnl -Message $Script:UiSceneWindowBorderVertical `
+                                     -ForegroundColor $Script:UiSceneWindowBorderColor
                 }
             }
 
@@ -2954,31 +2970,39 @@ Function Write-GfmMessageWindow {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 For ($i = 0; $i -LE $Script:UiMessageWindowWidth - 1; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, $Script:UiMessageWindowDrawY)
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, $Script:UiMessageWindowDrawY)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
                 For ($i = 0; $i -LT $Script:UiMessageWindowHeight - 1; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 For ($i = 0; $i -LE $Script:UiMessageWindowWidth - 1; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, $Script:UiMessageWindowDrawY)
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                     : new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderHorizontal -ForegroundColor $Script: UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, $Script:UiMessageWindowDrawY)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($i, ($Script:UiMessageWindowDrawY + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderHorizontal `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
                 For ($i = 0; $i -LT $Script:UiMessageWindowHeight - 1; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
-                    Write-GfmHostNnl -Message $Script: UiMessageWindowBorderVertical -ForegroundColor $Script: UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawX, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawX + $Script:UiMessageWindowWidth) - 1, ($Script:UiMessageWindowDrawY + $i) + 1)
+                    Write-GfmHostNnl -Message $Script:UiMessageWindowBorderVertical `
+                                     -ForegroundColor $Script:UiMessageWindowBorderColor
                 }
             }
 
@@ -3000,43 +3024,51 @@ Function Write-GfmCommandWindow {
         Switch ($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 # Draw the horizontal borders
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
-                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
-
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
-                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
+                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiCommandWindowBorderColor
 
                 # Draw the command input div
-                                 $Script         : Rui.CursorPosition = [Coordinates]:           : new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
-                Write-GfmHostNnl -Message $Script: UiCommandWindowCmdDiv -ForegroundColor $Script: UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
+                Write-GfmHostNnl -Message $Script:UiCommandWindowCmdDiv `
+                                 -ForegroundColor $Script:UiCommandWindowBorderColor
 
                 # Draw the vertical borders
                 For ($i = 1; $i -LT $Script:UiCommandWindowHeight; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical `
+                                     -ForegroundColor $Script:UiCommandWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical `
+                                     -ForegroundColor $Script:UiCommandWindowBorderColor
                 }
             }
 
             $Script:OsCheckWindows {
                 # Draw the horizontal borders
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
-                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
-
-                                 $Script         : Rui.CursorPosition = [Coordinates]:                     : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
-                Write-GfmHostNnl -Message $Script: UiCommandWindowBorderHorizontal -ForegroundColor $Script: UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, $Script:UiCommandWindowDrawY)
+                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight))
+                Write-GfmHostNnl -Message $Script:UiCommandWindowBorderHorizontal `
+                                 -ForegroundColor $Script:UiCommandWindowBorderColor
 
                 # Draw the command input div
-                                 $Script         : Rui.CursorPosition = [Coordinates]:           : new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
-                Write-GfmHostNnl -Message $Script: UiCommandWindowCmdDiv -ForegroundColor $Script: UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowCmdDivDrawX, $Script:UiCommandWindowCmdDivDrawY)
+                Write-GfmHostNnl -Message $Script:UiCommandWindowCmdDiv `
+                                 -ForegroundColor $Script:UiCommandWindowBorderColor
 
                 # Draw the vertical borders
                 For ($i = 1; $i -LT $Script:UiCommandWindowHeight; $i++) {
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
-                                     $Script         : Rui.CursorPosition = [Coordinates]:                   : new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
-                    Write-GfmHostNnl -Message $Script: UiCommandWindowBorderVertical -ForegroundColor $Script: UiCommandWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawX, ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical `
+                                     -ForegroundColor $Script:UiCommandWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiCommandWindowDrawX + $Script:UiCommandWindowWidth), ($Script:UiCommandWindowDrawY + $i))
+                    Write-GfmHostNnl -Message $Script:UiCommandWindowBorderVertical `
+                                     -ForegroundColor $Script:UiCommandWindowBorderColor
                 }
             }
 
@@ -3128,7 +3160,7 @@ Function Invoke-GfmGamePlayScreenStarting {
         Write-GfmSceneWindow
         Write-GfmMessageWindow
         Write-GfmCommandWindow
-        Write-GfmSceneImage -CellArray $Script: CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
         Write-GfmPlayerName
         Write-GfmPlayerHp
         Write-GfmPlayerMp
@@ -3159,7 +3191,7 @@ Function Test-GfmPlayScreen {
 
     Process {
         #New-GfmSceneImageSample
-        Write-GfmSceneImage -CellArray $Script: CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
 
         $Script:PlayerName               = 'Steve'
         $Script:PlayerCurrentHitPoints   = 100
@@ -9024,12 +9056,12 @@ $Script:SiFieldSEWRoad[17, 45] = [BufferCell]::new(' ', 0, 'DarkYellow', 'Comple
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new($Script:SiFieldNERoad, 
     @(
-        [MapTileObject]:: new('Apple', 'apple', $true, 'A big, fat, juicy apple. Worm not included.', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
-        [MTOTree]      :: new(),
-        [MTOLadder]    :: new(),
-        [MTORope]      :: new(),
-        [MTOStairs]    :: new(),
-        [MTOPole]      :: new()
+        [MapTileObject]::new('Apple', 'apple', $true, 'A big, fat, juicy apple. Worm not included.', {Write-GfmMessageWindowMessage -Message 'I found an apple!' -Teletype}),
+        [MTOTree]::new(),
+        [MTOLadder]::new(),
+        [MTORope]::new(),
+        [MTOStairs]::new(),
+        [MTOPole]::new()
     ),
     @($true, $false, $true, $false)
 )
