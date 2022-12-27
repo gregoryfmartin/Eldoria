@@ -3,8 +3,6 @@ using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
-# Wee
-
 #region Global Variables
 
 #region Game State Definitions
@@ -48,24 +46,24 @@ using namespace System.Management.Automation.Host
     Danger
 }
 
-[String]              $Script:PlayerName                       = ''
-[Int]                 $Script:PlayerCurrentHitPoints           = 0
-[Int]                 $Script:PlayerMaximumHitPoints           = 0
-[Int]                 $Script:PlayerCurrentMagicPoints         = 0
-[Int]                 $Script:PlayerMaximumMagicPoints         = 0
-[Int]                 $Script:PlayerCurrentGold                = 0
-[Single]              $Script:PlayerStatNumThresholdCaution    = 0.6D
-[Single]              $Script:PlayerStatNumThresholdDanger     = 0.2D
-[PlayerHpState]       $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
-[PlayerMpState]       $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
-[ConsoleColor]        $Script:PlayerStatNameDrawColor          = 'Blue'
-[ConsoleColor]        $Script:PlayerStatNumberDrawColorSafe    = 'Green'
-[ConsoleColor]        $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
-[ConsoleColor]        $Script:PlayerStatNumberDrawColorDanger  = 'Red'
-[ConsoleColor]        $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
-[ConsoleColor]        $Script:PlayerAsideColor                 = 'DarkCyan'
-[Coordinates]         $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
-[List[MapTileObject]]$Script:PlayerInventory                   = [List[MapTileObject]]::new()
+[String]             $Script:PlayerName                       = ''
+[Int]                $Script:PlayerCurrentHitPoints           = 0
+[Int]                $Script:PlayerMaximumHitPoints           = 0
+[Int]                $Script:PlayerCurrentMagicPoints         = 0
+[Int]                $Script:PlayerMaximumMagicPoints         = 0
+[Int]                $Script:PlayerCurrentGold                = 0
+[Single]             $Script:PlayerStatNumThresholdCaution    = 0.6D
+[Single]             $Script:PlayerStatNumThresholdDanger     = 0.2D
+[PlayerHpState]      $Script:PlayerHitPointsState             = [PlayerHpState]::Normal
+[PlayerMpState]      $Script:PlayerMagicPointsState           = [PlayerMpState]::Normal
+[ConsoleColor]       $Script:PlayerStatNameDrawColor          = 'Blue'
+[ConsoleColor]       $Script:PlayerStatNumberDrawColorSafe    = 'Green'
+[ConsoleColor]       $Script:PlayerStatNumberDrawColorCaution = 'Yellow'
+[ConsoleColor]       $Script:PlayerStatNumberDrawColorDanger  = 'Red'
+[ConsoleColor]       $Script:PlayerStatGoldDrawColor          = 'DarkYellow'
+[ConsoleColor]       $Script:PlayerAsideColor                 = 'DarkCyan'
+[Coordinates]        $Script:PlayerMapCoordinates             = [Coordinates]::new(0, 0)
+[List[MapTileObject]]$Script:PlayerInventory                  = [List[MapTileObject]]::new()
 
 #endregion
 
@@ -80,23 +78,23 @@ using namespace System.Management.Automation.Host
 
 #region Status Window Variables
 
-[ConsoleColor]$Script:UiStatusWindowBorderColor       = 'White'
-[String]       $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
-[String]       $Script:UiStatusWindowBorderVertical   = '|'
-[Int]          $Script:UiStatusWindowDrawX            = 0
-[Int]          $Script:UiStatusWindowDrawY            = 0
-[Int]          $Script:UiStatusWindowWidth            = 19
-[Int]          $Script:UiStatusWindowHeight           = 11
-[Int]          $Script:UiStatusWindowPlayerNameDrawX  = 2
-[Int]          $Script:UiStatusWindowPlayerNameDrawY  = 2
-[Int]          $Script:UiStatusWindowPlayerHpDrawX    = 2
-[Int]          $Script:UiStatusWindowPlayerHpDrawY    = 4
-[Int]          $Script:UiStatusWindowPlayerMpDrawX    = 2
-[Int]          $Script:UiStatusWindowPlayerMpDrawY    = 6
-[Int]          $Script:UiStatusWindowPlayerGoldDrawX  = 2
-[Int]          $Script:UiStatusWindowPlayerGoldDrawY  = 9
-[Int]          $Script:UiStatusWindowPlayerAilDrawX   = 2
-[Int]          $Script:UiStatusWindowPlayerAilDrawY   = 11
+[ConsoleColor]$Script:UiStatusWindowBorderColor      = 'White'
+[String]      $Script:UiStatusWindowBorderHoirzontal = '@--~---~---~---~---@'
+[String]      $Script:UiStatusWindowBorderVertical   = '|'
+[Int]         $Script:UiStatusWindowDrawX            = 0
+[Int]         $Script:UiStatusWindowDrawY            = 0
+[Int]         $Script:UiStatusWindowWidth            = 19
+[Int]         $Script:UiStatusWindowHeight           = 11
+[Int]         $Script:UiStatusWindowPlayerNameDrawX  = 2
+[Int]         $Script:UiStatusWindowPlayerNameDrawY  = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawX    = 2
+[Int]         $Script:UiStatusWindowPlayerHpDrawY    = 4
+[Int]         $Script:UiStatusWindowPlayerMpDrawX    = 2
+[Int]         $Script:UiStatusWindowPlayerMpDrawY    = 6
+[Int]         $Script:UiStatusWindowPlayerGoldDrawX  = 2
+[Int]         $Script:UiStatusWindowPlayerGoldDrawY  = 9
+[Int]         $Script:UiStatusWindowPlayerAilDrawX   = 2
+[Int]         $Script:UiStatusWindowPlayerAilDrawY   = 11
 
 #endregion
 
@@ -115,45 +113,45 @@ Class CmdWindowHistoryMessage {
     }
 }
 
-[ConsoleColor]            $Script:UiCommandWindowBorderColor      = 'White'
-[ConsoleColor]            $Script:UiCommandWindowCmdHistValid     = 'Green'
-[ConsoleColor]            $Script:UiCommandWindowCmdHistErr       = 'Red'
-[ConsoleColor]            $Script:UiCommandWindowCmdBlankColor    = 'Black'
-[String]                  $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
-[String]                  $Script:UiCommandWindowBorderVertical   = '|'
-[String]                  $Script:UiCommandWindowCmdDiv           = '``````````````````'
-[String]                  $Script:UiCommandWindowCmdActual        = ''
-[String]                  $Script:UiCommandWindowCmdBlank         = '                  '
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA             = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB             = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC             = [CmdWindowHistoryMessage]::new('', 'White')
-[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD             = [CmdWindowHistoryMessage]::new('', 'White')
-[Int]                     $Script:UiCommandWindowDrawX            = 0
-[Int]                     $Script:UiCommandWindowDrawY            = 12
-[Int]                     $Script:UiCommandWindowWidth            = 19
-[Int]                     $Script:UiCommandWindowHeight           = 7
-[Int]                     $Script:UiCommandWindowCmdDivDrawX      = $Script:UiCommandWindowDrawX + 1
-[Int]                     $Script:UiCommandWindowCmdDivDrawY      = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
-[Int]                     $Script:UiCommandWindowHistDrawX        = $Script:UiCommandWindowDrawX + 1
-[Int]                     $Script:UiCommandWindowHistDDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
-[Int]                     $Script:UiCommandWindowHistCDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
-[Int]                     $Script:UiCommandWindowHistBDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
-[Int]                     $Script:UiCommandWindowHistADrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
+[ConsoleColor]           $Script:UiCommandWindowBorderColor      = 'White'
+[ConsoleColor]           $Script:UiCommandWindowCmdHistValid     = 'Green'
+[ConsoleColor]           $Script:UiCommandWindowCmdHistErr       = 'Red'
+[ConsoleColor]           $Script:UiCommandWindowCmdBlankColor    = 'Black'
+[String]                 $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
+[String]                 $Script:UiCommandWindowBorderVertical   = '|'
+[String]                 $Script:UiCommandWindowCmdDiv           = '``````````````````'
+[String]                 $Script:UiCommandWindowCmdActual        = ''
+[String]                 $Script:UiCommandWindowCmdBlank         = '                  '
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistA            = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistB            = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistC            = [CmdWindowHistoryMessage]::new('', 'White')
+[CmdWindowHistoryMessage]$Script:UiCommandWindowHistD            = [CmdWindowHistoryMessage]::new('', 'White')
+[Int]                    $Script:UiCommandWindowDrawX            = 0
+[Int]                    $Script:UiCommandWindowDrawY            = 12
+[Int]                    $Script:UiCommandWindowWidth            = 19
+[Int]                    $Script:UiCommandWindowHeight           = 7
+[Int]                    $Script:UiCommandWindowCmdDivDrawX      = $Script:UiCommandWindowDrawX + 1
+[Int]                    $Script:UiCommandWindowCmdDivDrawY      = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 2
+[Int]                    $Script:UiCommandWindowHistDrawX        = $Script:UiCommandWindowDrawX + 1
+[Int]                    $Script:UiCommandWindowHistDDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 3
+[Int]                    $Script:UiCommandWindowHistCDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 4
+[Int]                    $Script:UiCommandWindowHistBDrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 5
+[Int]                    $Script:UiCommandWindowHistADrawY       = ($Script:UiCommandWindowDrawY + $Script:UiCommandWindowHeight) - 6
 
 
 #endregion
 
 #region Scene Window Variables
 
-[ConsoleColor]$Script:UiSceneWindowBorderColor       = 'White'
-[String]       $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
-[String]       $Script:UiSceneWindowBorderVertical   = '|'
-[Int]          $Script:UiSceneWindowDrawX            = 30
-[Int]          $Script:UiSceneWindowDrawY            = 0
-[Int]          $Script:UiSceneWindowWidth            = 50
-[Int]          $Script:UiSceneWindowHeight           = 19
-[Int]          $Script:UiSceneWindowSceneDrawX       = 32
-[Int]          $Script:UiSceneWindowSceneDrawY       = 1
+[ConsoleColor]$Script:UiSceneWindowBorderColor      = 'White'
+[String]      $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
+[String]      $Script:UiSceneWindowBorderVertical   = '|'
+[Int]         $Script:UiSceneWindowDrawX            = 30
+[Int]         $Script:UiSceneWindowDrawY            = 0
+[Int]         $Script:UiSceneWindowWidth            = 50
+[Int]         $Script:UiSceneWindowHeight           = 19
+[Int]         $Script:UiSceneWindowSceneDrawX       = 32
+[Int]         $Script:UiSceneWindowSceneDrawY       = 1
 
 #endregion
 
@@ -172,20 +170,20 @@ Class MsgWindowHistoryMessage {
     }
 }
 
-[ConsoleColor]            $Script:UiMessageWindowBorderColor        = 'White'
-[String]                  $Script:UiMessageWindowBorderHorizontal   = '-'
-[String]                  $Script:UiMessageWindowBorderVertical     = '|'
-[Int]                     $Script:UiMessageWindowDrawX              = 0
-[Int]                     $Script:UiMessageWindowDrawY              = 20
-[Int]                     $Script:UiMessageWindowWidth              = 80
-[Int]                     $Script:UiMessageWindowHeight             = 4
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA            = [MsgWindowHistoryMessage]::new('', 'Black')
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB            = [MsgWindowHistoryMessage]::new('', 'Black')
-[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC            = [MsgWindowHistoryMessage]::new('', 'Black')
-[Int]                     $Script:UiMessageWindowMessageBottomDrawY = 23
-[Int]                     $Script:UiMessageWindowMessageMiddleDrawY = 22
-[Int]                     $Script:UiMessageWindowMessageTopDrawY    = 21
-[String]                  $Script:UiMessageWindowMessageBlank       = '                                                                             '
+[ConsoleColor]           $Script:UiMessageWindowBorderColor        = 'White'
+[String]                 $Script:UiMessageWindowBorderHorizontal   = '-'
+[String]                 $Script:UiMessageWindowBorderVertical     = '|'
+[Int]                    $Script:UiMessageWindowDrawX              = 0
+[Int]                    $Script:UiMessageWindowDrawY              = 20
+[Int]                    $Script:UiMessageWindowWidth              = 80
+[Int]                    $Script:UiMessageWindowHeight             = 4
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageA           = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageB           = [MsgWindowHistoryMessage]::new('', 'Black')
+[MsgWindowHistoryMessage]$Script:UiMessageWindowMessageC           = [MsgWindowHistoryMessage]::new('', 'Black')
+[Int]                    $Script:UiMessageWindowMessageBottomDrawY = 23
+[Int]                    $Script:UiMessageWindowMessageMiddleDrawY = 22
+[Int]                    $Script:UiMessageWindowMessageTopDrawY    = 21
+[String]                 $Script:UiMessageWindowMessageBlank       = '                                                                             '
 
 
 #endregion
@@ -194,21 +192,21 @@ Class MsgWindowHistoryMessage {
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
-[Int]    $Script:DefaultCursorX = $Script:UiCommandWindowDrawX + 1
-[Int]    $Script:DefaultCursorY = $Script:UiCommandWindowCmdDivDrawY + 1
-[String]$Script:OsCheckLinux    = 'OsLinux'
-[String]$Script:OsCheckMac      = 'OsMac'
-[String]$Script:OsCheckWindows  = 'OsWindows'
-[String]$Script:OsCheckUnknown  = 'OsUnknown'
+[Int]   $Script:DefaultCursorX = $Script:UiCommandWindowDrawX + 1
+[Int]   $Script:DefaultCursorY = $Script:UiCommandWindowCmdDivDrawY + 1
+[String]$Script:OsCheckLinux   = 'OsLinux'
+[String]$Script:OsCheckMac     = 'OsMac'
+[String]$Script:OsCheckWindows = 'OsWindows'
+[String]$Script:OsCheckUnknown = 'OsUnknown'
 
 #endregion
 
 #region Game State Machine Variables
 
-[GlobalGameState]$Script:GameState      = [GlobalGameState]::GamePlayScreen
-[Boolean]         $Script:StateStarting = $false
-[Boolean]         $Script:StateRunning  = $false
-[Boolean]         $Script:StateEnding   = $false
+[GlobalGameState]$Script:GameState     = [GlobalGameState]::GamePlayScreen
+[Boolean]        $Script:StateStarting = $false
+[Boolean]        $Script:StateRunning  = $false
+[Boolean]        $Script:StateEnding   = $false
 
 #endregion
 
@@ -476,27 +474,27 @@ $Script:BattleTheme.Add([Note]::new(($Script:NoteTable[[Notes]::FSharpOrGFlat, [
 #region Duck Tales Theme Jingle
 
 Write-Progress -Activity 'Creating Song Note Tables' -Status 'Creating Duck Tales Theme' -Id 2 -PercentComplete -1
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
-$Script:DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Sixteenth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::A, [Octaves]::Sixth]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Half)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::E, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::GSharpOrAFlat, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::D, [Octaves]::Seventh]), [NoteDuration]::Quarter)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::CSharpOrDFlat, [Octaves]::Seventh]), [NoteDuration]::Eighth)) | Out-Null
+$Script: DuckTalesTheme.Add([Note]::new(($Script:NoteTable[[Notes]::B, [Octaves]::Sixth]), [NoteDuration]::Eighth)) | Out-Null
 
 #endregion
 
