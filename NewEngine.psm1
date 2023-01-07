@@ -9253,6 +9253,10 @@ $Script:SampleMap.Tiles[1, 1] = [MapTile]::new($Script:SiFieldNRoad, @(), @($fal
 
 #endregion
 
+#region Closing Progress Bars
+
 Write-Progress -Activity 'Creating Music Note Table' -Id 1 -Completed
 Write-Progress -Activity 'Creating Song Note Tables' -Id 2 -Completed
 Write-Progress -Activity 'Creating Scene Image Buffer Cells' -Id 3 -Completed
+
+#endregion
