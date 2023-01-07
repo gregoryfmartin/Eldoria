@@ -8,12 +8,24 @@ using namespace System.Management.Automation.Host
 #region Game State Definitions
 
 [Flags()] Enum GlobalGameState {
-    SplashScreenA
-    SplashScreenB
-    TitleScreen
-    PlayerSetupScreen
-    GamePlayScreen
-    InventoryScreen
+    SplashScreenAStarting
+    SplashScreenARunning
+    SplashScreenAEnding
+    SplashScreenBStarting
+    SplashScreenBRunning
+    SplashScreenBEnding
+    TitleScreenStarting
+    TitleScreenRunning
+    TitleScreenEnding
+    PlayerSetupScreenStarting
+    PlayerSetupScreenRunning
+    PlayerSetupScreenEnding
+    GamePlayScreenStarting
+    GamePlayScreenRunning
+    GamePlayScreenEnding
+    InventoryScreenStarting
+    InventoryScreenRunning
+    InventoryScreenEnding
     Cleanup
 }
 
@@ -1587,6 +1599,176 @@ Class Map {
 [Map]$Script:PreviousMap = $null
 
 #endregion
+
+#endregion
+
+#region Game State ScriptBlock Definitions
+
+$Script:GameStateBlockTable = @{
+    [GlobalGameState]::SplashScreenAStarting = {
+        <#
+        WORKFLOW
+        
+        1. Properly initialize the variables for the Splash Screen A State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::SplashScreenARunning = {
+        <#
+        WORKFLOW
+        
+        1. Clear the screen (only once)
+        2. Teletype the text 'gregfmartin.org' on the first line in the center of the buffer
+        3. Teletype the text 'studios' on the second line in the center of the buffer, below the first one
+        4. Wait a second or three
+        5. Teletype the text CLEAR LINE on the first line in the center of the buffer
+        6. Teletype the text CLEAR LINE on the second line in the center of the buffer, below the first one
+        7. Wait a second or three
+        8. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::SplashScreenAEnding = {
+        <#
+        WORKFLOW
+        
+        1. Properly deinitialize the variables for the Splash Screen A State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::SplashScreenBStarting = {
+        <#
+        WORKFLOW
+        
+        1. Properly initialize the variables for the Splash Screen B State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::SplashScreenBRunning = {
+        <#
+        WORKFLOW
+        
+        1. Clear the screen (only once)
+        2. Teletype the text 'In association with' on the first line in the center of the buffer
+        3. Teletype the text 'OLIY COW' on the second line in the center of the buffer, below the first one
+        4. Wait a second or three
+        5. Teletype the text CLEAR LINE on the first line in the center of the buffer
+        6. Teletype the text CLEAR LINE on the second line in the center of the buffer, below the first one
+        7. Wait a second or three
+        8. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::SplashScreenBEnding = {
+        <#
+        WORKFLOW
+        
+        1. Properly deinitialize the variables for the Splash Screen B State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::TitleScreenStarting = {
+        <#
+        WORKFLOW
+        
+        1. Properly initialize the variables for the Title Screen State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::TitleScreenRunning = {
+        <#
+        WORKFLOW
+        
+        1. Clear the screen (only once)
+        2. Draw the title screen (TBD)
+        3. Wait for input from the user before moving on; input from the user will trigger a state transfer
+        #>
+    }
+    
+    [GlobalGameState]::TitleScreenEnding = {
+        <#
+        WORKFLOW
+        
+        1. Properly deinitialize the variables for the Title Screen State
+        2. Transition to the next state (previously defined by user interaction from the Title Screen Running state)
+        #>
+    }
+    
+    [GlobalGameState]::PlayerSetupScreenStarting = {
+        <#
+        WORKFLOW
+        
+        1. Properly initialize the variables for the Player Setup Screen State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::PlayerSetupScreenRunning = {
+        <#
+        WORKFLOW
+        
+        1. Clear the screen (only once)
+        2. Draw the form (TBD)
+        3. Accept input from the user to satisfy all of the prerequisite requirements
+        4. Accept input from the user to confirm that their input information is correct
+        5. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::PlayerSetupScreenEnding = {
+        <#
+        WORKFLOW
+        
+        1. Commit the values from the temporary stores to the actual stores relative to the user's input information
+        2. Properly deinitialize the variables for the Player Setup Screen State
+        3. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::GamePlayScreenStarting = {
+        <#
+        WORKFLOW
+        
+        1. Properly initialize variables for the Game Play Screen State
+        2. Transition to the next state
+        #>
+    }
+    
+    [GlobalGameState]::GamePlayScreenRunning = {
+        <#
+        WORKFLOW
+        
+        1. Clear the screen (only once)
+        2. Draw the entirety of the play area (only as needed, should only be once)
+        3. Permit the Command Parser to accept input (when possible) (this may fix another issue I've had with it)
+        #>
+    }
+    
+    [GlobalGameState]::GamePlayScreenEnding = {}
+    
+    [GlobalGameState]::InventoryScreenStarting = {}
+    
+    [GlobalGameState]::InventoryScreenRunning = {}
+    
+    [GlobalGameState]::InventoryScreenEnding = {}
+    
+    [GlobalGameState]::Cleanup = {}
+}
+
+$Script:GamePlayStateBlockTable = @{
+    [GamePlayState]::Normal = {}
+    
+    [GamePlayState]::Battle = {}
+    
+    [GamePlayState]::Shop = {}
+    
+    [GamePlayState]::Inn = {}
+}
 
 #endregion
 
