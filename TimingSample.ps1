@@ -1,10 +1,12 @@
-[int]  $tps   = 50
-[int]  $st    = 1000 / $tps
-[int]  $mfs   = 5
-[float]$timer = 0.0
-[float]$fps   = 1.0 / 60.0
+[Int]$frameRate = 30
+[Single]$frameMs = 1000 / $frameRate
 
 while(1) {
-    $timer += $fps
-    $timer 
+    $startMs = Get-Date
+    # Do something here
+    Write-Host 'Buffalo farts, those are the best'
+    $endMs = Get-Date
+    # $msDelta = $(New-TimeSpan -Start $startMs -End $endMs).TotalMilliseconds; Write-Host $msDelta
+    # $delayMs = $frameMs - $msDelta; Write-Host $delayMs
+    Start-Sleep -Milliseconds ($frameMs - $(New-TimeSpan -Start $startMs -End $endMs).TotalMilliseconds)
 }
