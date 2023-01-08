@@ -200,6 +200,14 @@ Class MsgWindowHistoryMessage {
 
 #endregion
 
+#region Timing Variables
+
+[Int]    $Script:TargetFrameRate  = 30
+[Single] $Script:MsPerFrame       = 1000 / $Script:TargetFrameRate
+[Boolean]$Script:GameRunning      = $true
+
+#endregion
+
 #region General Globals
 
 $Script:Rui = $(Get-Host).UI.RawUI
@@ -3358,6 +3366,27 @@ Function Invoke-GfmGamePlayScreenEnding {
     
     Process {
         
+    }
+}
+
+#endregion
+
+#region Lifecycle Functions
+
+Function Start-GfmGame {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {      
+        While($Script:GameRunning -EQ $true) {            
+            $frameStartMs = Get-Date
+            
+            # Logic
+            # Draw
+            
+            $frameEndMs = Get-Date
+            Start-Sleep -Milliseconds ($Script:MsPerFrame - $(New-TimeSpan -Start $frameStartMs -End $frameEndMs).TotalMilliseconds)   
+        }
     }
 }
 
