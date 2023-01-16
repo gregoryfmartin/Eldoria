@@ -202,9 +202,12 @@ Class MsgWindowHistoryMessage {
 
 #region Timing Variables
 
-[Int]    $Script:TargetFrameRate  = 30
-[Single] $Script:MsPerFrame       = 1000 / $Script:TargetFrameRate
-[Boolean]$Script:GameRunning      = $true
+[Int]     $Script:TargetFrameRate  = 30
+[Single]  $Script:MsPerFrame       = 1000 / $Script:TargetFrameRate
+[Boolean] $Script:GameRunning      = $true
+[Double]  $Script:LastFrameTime    = 0D
+[Double]  $Script:CurrentFrameTime = 0D
+[TimeSpan]$Script:FpsDelta         = $null
 
 #endregion
 
@@ -223,10 +226,11 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 #region Game State Machine Variables
 
-[GlobalGameState]$Script:GameState     = [GlobalGameState]::GamePlayScreen
-[Boolean]        $Script:StateStarting = $false
-[Boolean]        $Script:StateRunning  = $false
-[Boolean]        $Script:StateEnding   = $false
+[GlobalGameState]$Script:GameState = [GlobalGameState]::GamePlayScreen
+[Boolean]        $Script:DrawDirty = $false
+# [Boolean]        $Script:StateStarting = $false
+# [Boolean]        $Script:StateRunning  = $false
+# [Boolean]        $Script:StateEnding   = $false
 
 #endregion
 
@@ -3378,14 +3382,38 @@ Function Start-GfmGame {
     Param ()
     
     Process {      
-        While($Script:GameRunning -EQ $true) {            
-            $frameStartMs = Get-Date
+        While ($Script:GameRunning -EQ $true) {            
+            $Script:CurrentFrameTime = [DateTime]::Now.Ticks
             
-            # Logic
-            # Draw
+            If (($Script:CurrentFrameTime - $Script:LastFrameTime) -GE $Script:MsPerFrame) {
+                $Script:FpsDelta = [TimeSpan]::new($Script:CurrentFrameTime - $Script:LastFrameTime)
+                Invoke-GfmGameLogic
+                Invoke-GfmGameDraw
+            }
+        }
+    }
+}
+
+Function Invoke-GfmGameLogic {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        # Query the current state of the game
+        Invoke-Command $Script:GameStateBlockTable[$Script:GameState]
+    }
+}
+
+Function Invoke-GfmGameDraw {
+    [CmdletBinding()]
+    Param ()
+    
+    Process {
+        # Query the current state/substate of the game
+        Switch ($Script:GameState) {
+            # TODO: Add the possible top-level states here
             
-            $frameEndMs = Get-Date
-            Start-Sleep -Milliseconds ($Script:MsPerFrame - $(New-TimeSpan -Start $frameStartMs -End $frameEndMs).TotalMilliseconds)   
+            Default {}
         }
     }
 }

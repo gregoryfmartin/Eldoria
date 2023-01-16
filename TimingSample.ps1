@@ -22,7 +22,6 @@ while(1) {
     if(($currentframetime - $lastframetime) -GE $fc) {
         [TimeSpan]$ts = [TimeSpan]::new($currentframetime - $lastframetime)
         Write-Host "$($ts.TotalSeconds)"
-        #Write-Host "$(($currentframetime - $lastframetime) / 10000000)"
         $lastframetime = $currentframetime
         Write-Host 'Executing frame'
     }
