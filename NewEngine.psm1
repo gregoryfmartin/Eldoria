@@ -42,6 +42,18 @@ using namespace System.Management.Automation.Host
     Ending
 }
 
+[Boolean]$Script:RefreshGPSSceneImage = $true
+[Boolean]$Script:RefreshGPSPlayerName = $true
+[Boolean]$Script:RefreshGPSPlayerHp = $true
+[Boolean]$Script:RefreshGPSPlayerMp = $true
+[Boolean]$Script:RefreshGPSPlayerGold = $true
+[Boolean]$Script:RefreshGPSStatusWindow = $true
+[Boolean]$Script:RefreshGPSSceneWindow = $true
+[Boolean]$Script:RefreshGPSCommandWindow = $true
+[Boolean]$Script:RefreshGPSMessageWindow = $true
+[Boolean]$Script:GPSAllowUserInput = $true
+[Boolean]$Script:PlayerDataInitialized = $false
+
 #endregion
 
 #region Player-Specific Variables
@@ -207,7 +219,7 @@ Class MsgWindowHistoryMessage {
 [Boolean] $Script:GameRunning      = $true
 [Double]  $Script:LastFrameTime    = 0D
 [Double]  $Script:CurrentFrameTime = 0D
-[TimeSpan]$Script:FpsDelta         = $null
+[TimeSpan]$Script:FpsDelta         = [TimeSpan]::Zero
 
 #endregion
 
@@ -226,7 +238,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 #region Game State Machine Variables
 
-[GlobalGameState]$Script:GameState = [GlobalGameState]::GamePlayScreen
+[GlobalGameState]$Script:GameState = [GlobalGameState]::GamePlayScreenRunning
 [Boolean]        $Script:DrawDirty = $false
 # [Boolean]        $Script:StateStarting = $false
 # [Boolean]        $Script:StateRunning  = $false
@@ -1759,6 +1771,8 @@ $Script:GameStateBlockTable = @{
         2. Draw the entirety of the play area (only as needed, should only be once)
         3. Permit the Command Parser to accept input (when possible) (this may fix another issue I've had with it)
         #>
+
+        Test-GfmPlayScreen
     }
     
     [GlobalGameState]::GamePlayScreenEnding = {}
@@ -3388,7 +3402,7 @@ Function Start-GfmGame {
             If (($Script:CurrentFrameTime - $Script:LastFrameTime) -GE $Script:MsPerFrame) {
                 $Script:FpsDelta = [TimeSpan]::new($Script:CurrentFrameTime - $Script:LastFrameTime)
                 Invoke-GfmGameLogic
-                Invoke-GfmGameDraw
+                #Invoke-GfmGameDraw
             }
         }
     }
@@ -3427,20 +3441,58 @@ Function Test-GfmPlayScreen {
     Param ()
 
     Process {
-        #New-GfmSceneImageSample
-        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+    	If($Script:RefreshGPSStatusWindow) {
+    		Write-GfmStatusWindow
+    		$Script:RefreshGPSStatusWindow = $false
+    	}
+    	If($Script:RefreshGPSSceneWindow) {
+    		Write-GfmSceneWindow
+    		$Script:RefreshGPSSceneWindow = $false
+    	}
+    	If($Script:RefreshGPSCommandWindow) {
+    		Write-GfmCommandWindow
+    		$Script:RefreshGPSCommandWindow = $false
+    	}
+    	If($Script:RefreshGPSMessageWindow) {
+    		Write-GfmMessageWindow
+    		$Script:RefreshGPSMessageWindow = $false
+    	}
 
-        $Script:PlayerName               = 'Steve'
-        $Script:PlayerCurrentHitPoints   = 100
-        $Script:PlayerMaximumHitPoints   = 100
-        $Script:PlayerCurrentMagicPoints = 25
-        $Script:PlayerMaximumMagicPoints = 25
-        $Script:PlayerCurrentGold        = 5000
+		If($Script:RefreshGPSSceneImage) {
+        	Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+        	$Script:REfreshGPSSceneImage = $false
+        }
 
-        Write-GfmPlayerName
-        Write-GfmPlayerHp
-        Write-GfmPlayerMp
-        Write-GfmPlayerGold
+		If(-NOT($Script:PlayerDataInitialized)) {
+	        $Script:PlayerName = 'Steve'
+	        $Script:PlayerCurrentHitPoints = 100
+	        $Script:PlayerMaximumHitPoints = 100
+	        $Script:PlayerCurrentMagicPoints = 25
+	        $Script:PlayerMaximumMagicPoints = 25
+	        $Script:PlayerCurrentGold = 5000
+	        $Script:PlayerDataInitialized = $true
+        }
+
+        If($Script:RefreshGPSPlayerName) {
+        	Write-GfmPlayerName
+        	$Script:RefreshGPSPlayerName = $false
+        }
+        If($Script:RefreshGPSPlayerHp) {
+        	Write-GfmPlayerHp
+        	$Script:RefreshGPSPlayerHp = $false
+        }
+        If($Script:RefreshGPSPlayerMp) {
+        	Write-GfmPlayerMp
+        	$Script:RefreshGPSPlayerMp = $false
+        }
+        If($Script:RefreshGPSPlayerGold) {
+        	Write-GfmPlayerGold
+        	$Script:RefreshGPSPlayerGold = $false
+        }
+
+        While($Script:GPSAllowUserInput) {
+        	Read-GfmUserCommandInput
+        }
     }
 }
 

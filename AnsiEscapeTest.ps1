@@ -174,8 +174,8 @@ Function Write-GfmTtyString {
     
     Process {
         # Write the prefix control sequences first
-        #Write-Output "$($ATString.coords.ToAnsiEscapedString())$($ATString.decor.ToAnsiEscapedString())$($ATString.fgColor.ToAnsiEscapedString())$($ATString.bgColor.ToAnsiEscapedString())"
-        "$($ATString.coords.ToAnsiEscapedString())$($ATString.decor.ToAnsiEscapedString())$($ATString.fgColor.ToAnsiEscapedString())$($ATString.bgColor.ToAnsiEscapedString())" | Write-Information -InformationAction SilentlyContinue
+        Write-Host "$($ATString.coords.ToAnsiEscapedString())$($ATString.decor.ToAnsiEscapedString())$($ATString.fgColor.ToAnsiEscapedString())$($ATString.bgColor.ToAnsiEscapedString())" -NoNewline
+        #"$($ATString.coords.ToAnsiEscapedString())$($ATString.decor.ToAnsiEscapedString())$($ATString.fgColor.ToAnsiEscapedString())$($ATString.bgColor.ToAnsiEscapedString())" | Write-Information -InformationAction SilentlyContinue
         
         # Teletype the message using the legacy algorithm
         [Char[]]$msgCharArray = $ATString.message.ToCharArray()
@@ -186,21 +186,21 @@ Function Write-GfmTtyString {
             $typeCounter++
             If($typeCounter -GE $TypeSpeed) {
                 $typeCounter = 0
-                #Write-Output $msgCharArray[$msgcaProbe]
-                $msgCharArray[$msgcaProbe] | Write-Information -InformationAction Continue
+                Write-Host $msgCharArray[$msgcaProbe] -NoNewline
+                #$msgCharArray[$msgcaProbe] | Write-Information -InformationAction Continue
                 $msgcaProbe++
             }
         }
         
         # Write the suffix reset control sequence
-        #Write-Output $([GfmATReset]::new().ToAnsiEscapedString())
-        $([GfmATReset]::new().ToAnsiEscapedString()) | Write-Information -InformationAction SilentlyContinue
+        Write-Host $([GfmATReset]::new().ToAnsiEscapedString()) -NoNewline
+        #$([GfmATReset]::new().ToAnsiEscapedString()) | Write-Information -InformationAction SilentlyContinue
     }
 }
 
 #Write-GfmHostNnl -ATString $([GfmATString]::new([GfmCCRed24]::new(), [GfmATBackgroundColor24None]::new(), [GfmATDecoration]::new($false), [GfmATCoordinatesNone]::new(), 'Hello, world!'))
 
-Write-GfmTtyString -ATString $([GfmATString]::new([GfmCCBlue24]::new(), [GfmATBackgroundColor24None]::new(), [GfmATDecoration]::new($false), [GfmATCoordinatesNone]::new(), 'Hello, world!'))
+Write-GfmTtyString -ATString $([GfmATString]::new([GfmCCGreen24]::new(), [GfmATBackgroundColor24None]::new(), [GfmATDecoration]::new($false), [GfmATCoordinatesNone]::new(), 'Hello, world!'))
 
 #Write-Host $([GfmATString]::new([GfmCCRed24]::new(), [GfmATBackgroundColor24None]::new(), [GfmATDecoration]::new($false), [GfmATCoordinatesNone]::new(), 'Hello, world!')).ToAnsiControlSequencesPrefixString()"Boo!" -NoNewline
 

@@ -5,18 +5,18 @@ Import-Module '.\NewEngine.psm1'
 Clear-Host
 
 # 9.18.2022:0901 PASS
-Write-GfmStatusWindow
+#Write-GfmStatusWindow
 
 # 9.18.2022:0902 FAIL
 # 9.18.2022:0918 PASS
-Write-GfmSceneWindow
+#Write-GfmSceneWindow
 
 # 9.18.2022:0903 FAIL
 # 9.18.2022:2220 PASS
-Write-GfmMessageWindow
+#Write-GfmMessageWindow
 
 # 10.31.2022:2053
-Write-GfmCommandWindow
+#Write-GfmCommandWindow
 
 # 9.18.2022:0905 PASS
 #Write-GfmPositionalString -Coordinates $([System.Management.Automation.Host.Coordinates]::new(10, 10)) `
@@ -32,14 +32,16 @@ Write-GfmCommandWindow
 
 # Scene Test
 # 9.18.2022:2256 PASS
-Test-GfmPlayScreen
+#Test-GfmPlayScreen
 
-While(1) {
-    Read-GfmUserCommandInput
+#While(1) {
+#    Read-GfmUserCommandInput
     # $PressedKey = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     # If ($PressedKey.VirtualKeyCode -EQ 65) {
     #     Write-GfmMessageWindowMessage `
     #         -Message "$(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500) $(Get-Random -Minimum 5 -Maximum 500)" `
     #         -Teletype
     # }
-}
+#}
+
+Start-GfmGame
