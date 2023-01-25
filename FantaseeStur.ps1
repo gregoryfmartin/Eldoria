@@ -216,8 +216,16 @@ Class CCDarkGrey24 : ConsoleColor24 {
 
 Class CCTextDefault24 : CCDarkGrey24 {}
 
+Class ATForegroundColor24None : ATForegroundColor24 {
+    ATForegroundColor24None(): base([CCBlack24]::new()) {}
+    
+    [String]ToAnsiControlSequenceString() {
+        Return ''
+    }
+}
+
 Class ATBackgroundColor24None : ATBackgroundColor24 {
-    ATBackgroundColor24None(): base([CCBlack24]::new()) {}
+    ATBackgroundColor24None() : base([CCBlack24]::new()) {}
     
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -246,6 +254,13 @@ Class ATStringPrefix {
     [ValidateNotNullOrEmpty()][ATDecoration]$Decorations
     [ValidateNotNullOrEmpty()][ATCoordinates]$Coordinates
     
+    ATStringPrefix() {
+        $this.ForegroundColor = [ATForegroundColor24None]::new()
+        $this.BackgroundColor = [ATBackgroundColor24None]::new()
+        $this.Decorations     = [ATDecorationNone]::new()
+        $this.Coordinates     = [ATCoordinatesNone]::new()
+    }
+    
     ATStringPrefix(
         [ATForegroundColor24]$ForegroundColor,
         [ATBackgroundColor24]$BackgroundColor,
@@ -263,10 +278,24 @@ Class ATStringPrefix {
     }
 }
 
+Class ATStringPrefixNone : ATStringPrefix {
+    ATStringPrefixNone(): base() {}
+    
+    [String]ToAnsiControlSequenceString() {
+        Return ''
+    }
+}
+
 Class ATString {
     [ValidateNotNullOrEmpty()][ATStringPrefix]$Prefix
     [ValidateNotNullOrEmpty()][String]$UserData
     [ValidateNotNullOrEmpty()][Boolean]$UseATReset
+    
+    ATString() {
+        $this.Prefix     = [ATStringPrefixNone]::new()
+        $this.UserData   = ''
+        $this.UseATReset = $false
+    }
     
     ATString(
         [ATStringPrefix]$Prefix,
@@ -286,6 +315,14 @@ Class ATString {
         }
         
         Return $a
+    }
+}
+
+Class ATStringNone : ATString {
+    ATStringNone(): base() {}
+    
+    [String]ToAnsiControlSequenceString() {
+        Return ''
     }
 }
 
@@ -766,70 +803,88 @@ Class WindowBase {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {}
             
             { $_ -EQ $Script:OsCheckWindows } {
-                [ATString]$bt = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $this.TopLeft
-                    ),
-                    "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
-                    $false
-                )
-                [ATString]$bb = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column)
-                    ),
-                    "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
-                    $false
-                )
-                [ATString]$bl = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinates]::new($this.TopLeft.Row, $this.TopLeft.Column + 1)
-                    ),
-                    $(Invoke-Command -ScriptBlock {
-                        [String]$temp = ''
-                        
-                        For($a = 0; $a -LE $this.Height - 2; $a++) {
-                            If($a -NE $this.Height - 2) {
-                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.TopLeft.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
-                            } Else {
-                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                [ATString]$bt = [ATStringNone]::new()
+                [ATString]$bb = [ATStringNone]::new()
+                [ATString]$bl = [ATStringNone]::new()
+                [ATString]$br = [ATStringNone]::new()
+                
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]) {
+                    $bt = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            $this.TopLeft
+                        ),
+                        "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] = $false
+                }
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom]) {
+                    $bb = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column)
+                        ),
+                        "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $false
+                }
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft]) {
+                    $bl = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($this.TopLeft.Row, $this.TopLeft.Column + 1)
+                        ),
+                        $(Invoke-Command -ScriptBlock {
+                            [String]$temp = ''
+                            
+                            For($a = 0; $a -LE $this.Height - 2; $a++) {
+                                If($a -NE $this.Height - 2) {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.TopLeft.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
+                                } Else {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                                }
                             }
-                        }
-                        
-                        Return $temp
-                    }),
-                    $false
-                )
-                [ATString]$br = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column + 1)
-                    ),
-                    $(Invoke-Command -ScriptBlock {
-                        [String]$temp = ''
-                        
-                        For($a = 0; $a -LE $this.Height - 2; $a++) {
-                            If($a -NE $this.Height - 2) {
-                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.BottomRight.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
-                            } Else {
-                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                            
+                            Return $temp
+                        }),
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
+                }
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight]) {
+                    $br = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column + 1)
+                        ),
+                        $(Invoke-Command -ScriptBlock {
+                            [String]$temp = ''
+                            
+                            For($a = 0; $a -LE $this.Height - 2; $a++) {
+                                If($a -NE $this.Height - 2) {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.BottomRight.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
+                                } Else {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                                }
                             }
-                        }
-                        
-                        Return $temp
-                    }),
-                    $false
-                )
+                            
+                            Return $temp
+                        }),
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
+                }
+
                 
                 Write-Output "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
@@ -840,11 +895,11 @@ Class WindowBase {
 }
 
 Class StatusWindow : WindowBase {
-    Static [Coordinates]$PlayerNameDrawCoordinates = [Coordinates]::new(2, 2)
-    Static [Coordinates]$PlayerHpDrawCoordinates   = [Coordinates]::new(2, 4)
-    Static [Coordinates]$PlayerMpDrawCoordinates   = [Coordinates]::new(2, 6)
-    Static [Coordinates]$PlayerGoldDrawCoordinates = [Coordinates]::new(2, 9)
-    Static [Coordinates]$PlayerAilDrawCoordinates  = [Coordinates]::new(2, 11)
+    Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new(2, 2)
+    Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new(2, 4)
+    Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new(2, 6)
+    Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new(2, 9)
+    Static [ATCoordinates]$PlayerAilDrawCoordinates  = [ATCoordinates]::new(2, 11)
     
     [Boolean]$PlayerNameDrawDirty
     [Boolean]$PlayerHpDrawDirty
@@ -853,8 +908,8 @@ Class StatusWindow : WindowBase {
     [Boolean]$PlayerAilDrawDirty
     
     StatusWindow() : base() {
-        $this.TopLeft     = [Coordinates]::new(0, 0)
-        $this.BottomRight = [Coordinates]::new(19, 11)
+        $this.TopLeft     = [ATCoordinates]::new(0, 0)
+        $this.BottomRight = [ATCoordinates]::new(19, 11)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -870,6 +925,23 @@ Class StatusWindow : WindowBase {
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
         $this.PlayerAilDrawDirty  = $true
+    }
+    
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+        
+        Switch($(Test-GfmOs)) {
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {}
+            
+            { $_ -EQ $Script:OsCheckWindows } {
+                [ATString]$pss = [ATStringNone]::new()
+                
+                If($this.PlayerNameDrawDirty) {
+                }
+            }
+            
+            Default {}
+        }
     }
 }
 
