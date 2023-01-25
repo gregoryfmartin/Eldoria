@@ -1,0 +1,843 @@
+using namespace System
+using namespace System.Collections
+using namespace System.Collections.Generic
+using namespace System.Management.Automation.Host
+
+# GLOBAL VARIABLE DEFINITIONS
+
+[String]$Script:OsCheckLinux   = 'OsLinux'
+[String]$Script:OsCheckMac     = 'OsMac'
+[String]$Script:OsCheckWindows = 'OsWindows'
+[String]$Script:OsCheckUnknown = 'OsUnknown'
+
+# ENUMERATION DEFINITIONS
+
+Enum GameStatePrimary {
+    SplashScreenAStarting
+    SplashScreenARunning
+    SplashScreenAEnding
+    SplashScreenBStarting
+    SplashScreenBRunning
+    SplashScreenBEnding
+    TitleScreenStarting
+    TitleScreenRunning
+    TitleScreenEnding
+    PlayerSetupScreenStarting
+    PlayerSetupScreenRunning
+    PlayerSetupScreenEnding
+    GamePlayScreenStarting
+    GamePlayScreenRunning
+    GamePlayScreenEnding
+    InventoryScreenStarting
+    InventoryScreenRunning
+    InventoryScreenEnding
+    Cleanup
+}
+
+Enum GameStateSecondary {
+    Normal
+    Battle
+    Shop
+    Inn
+}
+
+Enum StatNumberState {
+    Normal
+    Caution
+    Danger
+}
+
+# CLASS DEFINITIONS
+
+Class ConsoleColor24 {
+    [ValidateRange(0, 255)][Int]$Red
+    [ValidateRange(0, 255)][Int]$Green
+    [ValidateRange(0, 255)][Int]$Blue
+    
+    ConsoleColor24(
+        [Int]$Red,
+        [Int]$Green,
+        [Int]$Blue
+    ) {
+        $this.Red   = $Red
+        $this.Green = $Green
+        $this.Blue  = $Blue
+    }
+}
+
+Class ATForegroundColor24 {
+    [ValidateNotNullOrEmpty()][ConsoleColor24]$Color
+    
+    ATForegroundColor24(
+        [ConsoleColor24]$Color
+    ) {
+        $this.Color = $Color
+    }
+    
+    [String]ToAnsiControlSequenceString() {
+        Return "`e[38;2;$($this.Color.Red.ToString());$($this.Color.Green.ToString());$($this.Color.Blue.ToString())m"
+    }
+}
+
+Class ATBackgroundColor24 {
+    [ValidateNotNullOrEmpty()][ConsoleColor24]$Color
+    
+    ATBackgroundColor24(
+        [ConsoleColor24]$Color
+    ) {
+        $this.Color = $Color
+    }
+    
+    [String]ToAnsiControlSequenceString() {
+        Return "`e[48;2;$($this.Color.Red.ToString());$($this.Color.Green.ToString());$($this.Color.Blue.ToString())m"
+    }
+}
+
+Class ATDecoration {
+    [ValidateNotNullOrEmpty()][Boolean]$Blink
+    
+    ATDecoration(
+        [Boolean]$Blink
+    ) {
+        $this.Blink = $Blink
+    }
+    
+    [String]ToAnsiControlSequenceString() {
+        [String]$a = ""
+        
+        If($this.Blink) {
+            $a += "`e[5m"
+        }
+        
+        Return $a
+    }
+}
+
+Class ATCoordinates {
+    [ValidateNotNullOrEmpty()][Int]$Row
+    [ValidateNotNullOrEmpty()][Int]$Column
+    
+    ATCoordinates(
+        [Int]$Row,
+        [Int]$Column
+    ) {
+        $this.Row = $Row
+        $this.Column = $Column
+    }
+    
+    ATCoordinates(
+        [Coordinates]$AutomationCoordinates
+    ) {
+        $this.Row    = $AutomationCoordinates.X
+        $this.Column = $AutomationCoordinates.Y
+    }
+    
+    [String]ToAnsiControlSequenceString() {
+        Return "`e[$($this.Row.ToString());$($this.Column.ToString())H"
+    }
+
+    [Coordinates]ToAutomationCoordinates() {
+        Return [Coordinates]::new($this.Row, $this.Column)
+    }
+}
+
+Class ATReset {
+    [String]ToAnsiControlSequenceString() {
+        Return "`e[0m"
+    }
+}
+
+Class CCBlack24 : ConsoleColor24 {
+    CCBlack24() : base(0, 0, 0) {}
+}
+
+Class CCWhite24 : ConsoleColor24 {
+    CCWhite24() : base(255, 255, 255) {}
+}
+
+Class CCRed24 : ConsoleColor24 {
+    CCRed24() : base(255, 0, 0) {}
+}
+
+Class CCGreen24 : ConsoleColor24 {
+    CCGreen24() : base(0, 255, 0) {}
+}
+
+Class CCBlue24 : ConsoleColor24 {
+    CCBlue24() : base (0, 0, 255) {}
+}
+
+Class CCYellow24 : ConsoleColor24 {
+    CCYellow24() : base(255, 255, 0) {}
+}
+
+Class CCDarkYellow24 : ConsoleColor24 {
+    CCDarkYellow24() : base(255, 204, 0) {}
+}
+
+Class CCDarkCyan24 : ConsoleColor24 {
+    CCDarkCyan24() : base(0, 139, 139) {}
+}
+
+Class CCDarkGrey24 : ConsoleColor24 {
+    CCDarkGrey24() : base(45, 45, 45) {}
+}
+
+Class CCTextDefault24 : CCDarkGrey24 {}
+
+Class ATBackgroundColor24None : ATBackgroundColor24 {
+    ATBackgroundColor24None(): base([CCBlack24]::new()) {}
+    
+    [String]ToAnsiControlSequenceString() {
+        Return ''
+    }
+}
+
+Class ATCoordinatesNone : ATCoordinates {
+    ATCoordinatesNone(): base(0, 0) {}
+    
+    [String]ToAnsiControlSequenceString() {
+        Return ''
+    }
+}
+
+Class ATDecorationNone : ATDecoration {
+    ATDecorationNone(): base($false) {}
+    
+    [String]ToAnsiControlSequenceString() {
+        Return ''
+    }
+}
+
+Class ATStringPrefix {
+    [ValidateNotNullOrEmpty()][ATForegroundColor24]$ForegroundColor
+    [ValidateNotNullOrEmpty()][ATBackgroundColor24]$BackgroundColor
+    [ValidateNotNullOrEmpty()][ATDecoration]$Decorations
+    [ValidateNotNullOrEmpty()][ATCoordinates]$Coordinates
+    
+    ATStringPrefix(
+        [ATForegroundColor24]$ForegroundColor,
+        [ATBackgroundColor24]$BackgroundColor,
+        [ATDecoration]$Decorations,
+        [ATCoordinates]$Coordinates
+    ) {
+        $this.ForegroundColor = $ForegroundColor
+        $this.BackgroundColor = $BackgroundColor
+        $this.Decorations     = $Decorations
+        $this.Coordinates     = $Coordinates
+    }
+    
+    [String]ToAnsiControlSequenceString() {
+        Return "$($this.Coordinates.ToAnsiControlSequenceString())$($this.Decorations.ToAnsiControlSequenceString())$($this.ForegroundColor.ToAnsiControlSequenceString())$($this.BackgroundColor.ToAnsiControlSequenceString())"
+    }
+}
+
+Class ATString {
+    [ValidateNotNullOrEmpty()][ATStringPrefix]$Prefix
+    [ValidateNotNullOrEmpty()][String]$UserData
+    [ValidateNotNullOrEmpty()][Boolean]$UseATReset
+    
+    ATString(
+        [ATStringPrefix]$Prefix,
+        [String]$UserData,
+        [Boolean]$UseATReset
+    ) {
+        $this.Prefix     = $Prefix
+        $this.UserData   = $UserData
+        $this.UseATReset = $UseATReset
+    }
+    
+    [String]ToAnsiControlSequenceString() {
+        [String]$a = "$($this.Prefix.ToAnsiControlSequenceString())$($this.UserData)"
+        
+        If($this.UseATReset) {
+            $a += $([ATReset]::new()).ToAnsiControlSequenceString()
+        }
+        
+        Return $a
+    }
+}
+
+Class Player {
+    [String]$Name
+    [Int]$CurrentHitPoints
+    [Int]$MaxHitPoints
+    [Int]$CurrentMagicPoints
+    [Int]$MaxMagicPoints
+    [Int]$CurrentGold
+    [Int]$MaxGold
+    [StatNumberState]$HitPointsState
+    [StatNumberState]$MagicPointsState
+    [Coordinates]$MapCoordinates
+    #[List[MapTileObject]]$Inventory
+    
+    Static [Single]$StatNumThresholdCaution         = 0.6D
+    Static [Single]$StatNumThresholdDanger          = 0.2D
+    Static [ConsoleColor24]$StatNameDrawColor       = [CCBlue24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCGreen24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorCaution = [CCYellow24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCRed24]::new()
+    Static [ConsoleColor24]$StatGoldDrawColor       = [CCDarkYellow24]::new()
+    Static [ConsoleColor24]$AsideDrawColor          = [CCDarkCyan24]::new()
+    
+    Player(
+        [String]$Name,
+        [Int]$CurrentHitPoints,
+        [Int]$MaxHitPoints,
+        [Int]$CurrentMagicPoints,
+        [Int]$MaxMagicPoints,
+        [Int]$CurrentGold,
+        [Int]$MaxGold
+    ) {
+        $this.Name               = $Name
+        $this.CurrentHitPoints   = $CurrentHitPoints
+        $this.MaxHitPoints       = $MaxHitPoints
+        $this.CurrentMagicPoints = $CurrentMagicPoints
+        $this.MaxMagicPoints     = $MaxMagicPoints
+        $this.CurrentGold        = $CurrentGold
+        $this.MaxGold            = $MaxGold
+        $this.HitPointsState     = [StatNumberState]::Normal
+        $this.MagicPointsState   = [StatNumberState]::Normal
+        $this.MapCoordinates     = [Coordinates]::new(0, 0)
+    }
+    
+    [String]GetFormattedHitPointsString() {
+        [String]$a = ''
+        
+        Switch($this.HitPointsState) {
+            [StatNumberState]::Normal {
+                [ATString]$p1 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    'H ',
+                    $false
+                )
+                [ATString]$p2 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorSafe,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.CurrentHitPoints) `n`t",
+                    $false
+                )
+                [ATString]$p3 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    '/ ',
+                    $false
+                )
+                [ATString]$p4 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorSafe,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.MaxHitPoints)",
+                    $true
+                )
+                
+                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+            }
+            
+            [StatNumberState]::Caution {
+                [ATString]$p1 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    'H ',
+                    $false
+                )
+                [ATString]$p2 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorCaution,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.CurrentHitPoints) `n`t",
+                    $false
+                )
+                [ATString]$p3 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    '/ ',
+                    $false
+                )
+                [ATString]$p4 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorCaution,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.MaxHitPoints)",
+                    $true
+                )
+                
+                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+            }
+            
+            [StatNumberState]::Danger {
+                [ATString]$p1 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    'H ',
+                    $false
+                )
+                [ATString]$p2 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorDanger,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.CurrentHitPoints) `n`t",
+                    $false
+                )
+                [ATString]$p3 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    '/ ',
+                    $false
+                )
+                [ATString]$p4 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorDanger,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.MaxHitPoints)",
+                    $true
+                )
+                
+                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+            }
+            
+            Default {}
+        }
+        
+        Return $a
+    }
+    
+    [String]GetFormattedMagicPointsString() {
+        [String]$a = ''
+        
+        Switch($this.MagicPointsState) {
+            [StatNumberState]::Normal {
+                [ATString]$p1 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    'M ',
+                    $false
+                )
+                [ATString]$p2 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorSafe,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.CurrentMagicPoints) `n`t",
+                    $false
+                )
+                [ATString]$p3 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    '/ ',
+                    $false
+                )
+                [ATString]$p4 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorSafe,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.MaxMagicPoints)",
+                    $true
+                )
+                
+                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+            }
+            
+            [StatNumberState]::Caution {
+                [ATString]$p1 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    'M ',
+                    $false
+                )
+                [ATString]$p2 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorCaution,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.CurrentMagicPoints) `n`t",
+                    $false
+                )
+                [ATString]$p3 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    '/ ',
+                    $false
+                )
+                [ATString]$p4 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorCaution,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.MaxMagicPoints)",
+                    $true
+                )
+                
+                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+            }
+            
+            [StatNumberState]::Danger {
+                [ATString]$p1 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    'M ',
+                    $false
+                )
+                [ATString]$p2 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorDanger,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.CurrentMagicPoints) `n`t",
+                    $false
+                )
+                [ATString]$p3 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    '/ ',
+                    $false
+                )
+                [ATString]$p4 = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [Player]::StatNumDrawColorDanger,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($this.MaxMagicPoints)",
+                    $true
+                )
+                
+                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+            }
+            
+            Default {}
+        }
+        
+        Return $a
+    }
+    
+    [String]GetFormattedGoldString() {
+        [ATString]$p1 = [ATString]::new(
+            [ATStringPrefix]::new(
+                [Player]::StatGoldDrawColor,
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            "$($this.CurrentGold)",
+            $false
+        )
+        [ATString]$p2 = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            'G',
+            $true
+        )
+        
+        Return "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+    }
+    
+    [Void]TestCurrentHpState() {
+        Switch($this.CurrentHitPoints) {
+            { $_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution) } {
+                $this.HitPointsState = [StatNumberState]::Normal
+            }
+            
+            { ($_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution)) } {
+                $this.HitPointsState = [StatNumberState]::Caution
+            }
+            
+            { $_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger) } {
+                $this.HitPointsState = [StatNumberState]::Danger
+            }
+            
+            Default {}
+        }
+    }
+
+    [Void]TestCurrentMpState() {
+        Switch($this.CurrentMagicPoints) {
+            { $_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution) } {
+                $this.MagicPointsState = [StatNumberState]::Normal
+            }
+            
+            { ($_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution)) } {
+                $this.MagicPointsState = [StatNumberState]::Caution
+            }
+            
+            { $_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger) } {
+                $this.MagicPointsState = [StatNumberState]::Danger
+            }
+            
+            Default {}
+        }
+    }
+}
+
+Class SceneImage {
+    Static [Int]$Width                = 46
+    Static [Int]$Height               = 18
+    Static [ATCoordinates]$DrawOrigin = [ATCoordinates]::new(32, 1)
+    
+    [BufferCell[,]]$Image
+    
+    SceneImage() {
+        $this.Image = New-Object 'BufferCell[,]' [SceneImage]::Height, [SceneImage]::Width
+    }
+    
+    SceneImage(
+        [BufferCell[,]]$Image
+    ) {
+        $this.Image = $Image
+    }
+}
+
+Class WindowBase {
+    Static [Int]$BorderDrawColorTop     = 0
+    Static [Int]$BorderDrawColorBottom  = 1
+    Static [Int]$BorderDrawColorLeft    = 2
+    Static [Int]$BorderDrawColorRight   = 3
+    Static [Int]$BorderStringHorizontal = 0
+    Static [Int]$BorderStringVertical   = 1
+    Static [Int]$BorderDirtyTop         = 0
+    Static [Int]$BorderDirtyBottom      = 1
+    Static [Int]$BorderDirtyLeft        = 2
+    Static [Int]$BorderDirtyRight       = 3
+    
+    [ATCoordinates]$TopLeft
+    [ATCoordinates]$BottomRight
+    [ConsoleColor24[]]$BorderDrawColors
+    [String[]]$BorderStrings
+    [Boolean[]]$BorderDrawDirty
+    [Int]$Width
+    [Int]$Height
+
+    WindowBase() {
+        $this.TopLeft          = [ATCoordinatesNone]::new()
+        $this.BottomRight      = [ATCoordinatesNone]::new()
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            '',
+            ''
+        )
+        $this.BorderDrawDirty = [Boolean[]](
+            $true,
+            $true,
+            $true,
+            $true
+        )
+        $this.Width  = $this.TopLeft.Column + $this.BottomRight.Column
+        $this.Height = $this.TopLeft.Row + $this.BottomRight.Row
+    }
+    
+    WindowBase(
+        [ATCoordinates]$TopLeft,
+        [ATCoordinates]$BottomRight,
+        [ConsoleColor24[]]$BorderDrawColors,
+        [String[]]$BorderStrings,
+        [Boolean[]]$BorderDrawDirty
+    ) {
+        $this.TopLeft          = $TopLeft
+        $this.BottomRight      = $BottomRight
+        $this.BorderDrawColors = $BorderDrawColors
+        $this.BorderStrings    = $BorderStrings
+        $this.BorderDrawDirty  = $BorderDrawDirty
+        $this.Width            = $this.TopLeft.Column + $this.BottomRight.Column
+        $this.Height           = $this.TopLeft.Row + $this.BottomRight.Row
+    }
+    
+    [Void]Draw() {
+        Switch($(Test-GfmOs)) {
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {}
+            
+            { $_ -EQ $Script:OsCheckWindows } {
+                [ATString]$bt = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        $this.TopLeft
+                    ),
+                    "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
+                    $false
+                )
+                [ATString]$bb = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column)
+                    ),
+                    "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
+                    $false
+                )
+                [ATString]$bl = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.TopLeft.Row, $this.TopLeft.Column + 1)
+                    ),
+                    {
+                        Return "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                    },
+                    $false
+                )
+            }
+            
+            Default {}
+        }
+    }
+}
+
+Class StatusWindow : WindowBase {
+    Static [Coordinates]$PlayerNameDrawCoordinates = [Coordinates]::new(2, 2)
+    Static [Coordinates]$PlayerHpDrawCoordinates   = [Coordinates]::new(2, 4)
+    Static [Coordinates]$PlayerMpDrawCoordinates   = [Coordinates]::new(2, 6)
+    Static [Coordinates]$PlayerGoldDrawCoordinates = [Coordinates]::new(2, 9)
+    Static [Coordinates]$PlayerAilDrawCoordinates  = [Coordinates]::new(2, 11)
+    
+    [Boolean]$PlayerNameDrawDirty
+    [Boolean]$PlayerHpDrawDirty
+    [Boolean]$PlayerMpDrawDirty
+    [Boolean]$PlayerGoldDrawDirty
+    [Boolean]$PlayerAilDrawDirty
+    
+    StatusWindow() : base() {
+        $this.TopLeft     = [Coordinates]::new(0, 0)
+        $this.BottomRight = [Coordinates]::new(19, 11)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            '@--~---~---~---~---@',
+            '|'
+        )
+        $this.PlayerNameDrawDirty = $true
+        $this.PlayerHpDrawDirty   = $true
+        $this.PlayerMpDrawDirty   = $true
+        $this.PlayerGoldDrawDirty = $true
+        $this.PlayerAilDrawDirty  = $true
+    }
+}
+
+# FUNCTION DEFINITIONS
+Function Test-GfmOs {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Get-PSDrive -Name Variable | Out-Null
+        If ($?) {
+            Get-ChildItem Variable:/IsLinux | Out-Null
+            If ($?) {
+                If ($(Get-ChildItem Variable:/IsLinux).Value -EQ $true) {
+                    Return $Script:OsCheckLinux
+                }
+            }
+
+            Get-ChildItem Variable:/IsMacOS | Out-Null
+            If ($?) {
+                If ($(Get-ChildItem Variable:/IsMacOS).Value -EQ $true) {
+                    Return $Script:OsCheckMac
+                }
+            }
+
+            Get-ChildItem Variable:/IsWindows | Out-Null
+            If ($?) {
+                If ($(Get-ChildItem Variable:/IsWindows).Value -EQ $true) {
+                    Return $Script:OsCheckWindows
+                }
+            }
+        }
+
+        Return $Script:OsCheckUnknown
+    }
+}
