@@ -49,6 +49,9 @@ Enum StatNumberState {
 
 # CLASS DEFINITIONS
 
+<#
+Defines a 24-bit color to be used in ANSI-based terminals. Each channel is clamped to appropriate unsigned integer values.
+#>
 Class ConsoleColor24 {
     [ValidateRange(0, 255)][Int]$Red
     [ValidateRange(0, 255)][Int]$Green
@@ -65,6 +68,28 @@ Class ConsoleColor24 {
     }
 }
 
+Class ATControlSequences {
+    Static [String]$ForegroundColor24Prefix = "`e[38;2;"
+    Static [String]$BackgroundColor24Prefix = "`e[48;2;"
+    Static [String]$DecorationBlink         = "`e[5m"
+    Static [String]$ModifierReset           = "`e[0m"
+    
+    Static [String]GenerateFG24String([ConsoleColor24]$Color) {
+        Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString());m"
+    }
+    
+    Static [String]GenerateBG24String([ConsoleColor24]$Color) {
+        Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString());m"
+    }
+    
+    Static [String]GenerateCoordinateString([Int]$Row, [Int]$Column) {
+        Return "`e[$($Row.ToString());$($Column.ToString())H"
+    }
+}
+
+<#
+Defines an ANSI Buffer Cell Foreground Color modifier in 24-bit color. This class leverages ConsoleColor24 to accomplish this.
+#>
 Class ATForegroundColor24 {
     [ValidateNotNullOrEmpty()][ConsoleColor24]$Color
     
@@ -75,10 +100,13 @@ Class ATForegroundColor24 {
     }
     
     [String]ToAnsiControlSequenceString() {
-        Return "`e[38;2;$($this.Color.Red.ToString());$($this.Color.Green.ToString());$($this.Color.Blue.ToString())m"
+        Return [ATControlSequences]::GenerateFG24String($this.Color)
     }
 }
 
+<#
+Defines an ANSI Buffer Cell Background Color modifier in 24-bit color. This class leverages ConsoleColor24 to accomplish this.
+#>
 Class ATBackgroundColor24 {
     [ValidateNotNullOrEmpty()][ConsoleColor24]$Color
     
@@ -89,10 +117,13 @@ Class ATBackgroundColor24 {
     }
     
     [String]ToAnsiControlSequenceString() {
-        Return "`e[48;2;$($this.Color.Red.ToString());$($this.Color.Green.ToString());$($this.Color.Blue.ToString())m"
+        Return [ATControlSequences]::GenerateBG24String($this.Color)
     }
 }
 
+<#
+Defines a collection of potential ANSI Buffer Cell decorators.
+#>
 Class ATDecoration {
     [ValidateNotNullOrEmpty()][Boolean]$Blink
     
@@ -106,7 +137,7 @@ Class ATDecoration {
         [String]$a = ""
         
         If($this.Blink) {
-            $a += "`e[5m"
+            $a += [ATControlSequences]::DecorationBlink
         }
         
         Return $a
@@ -133,7 +164,7 @@ Class ATCoordinates {
     }
     
     [String]ToAnsiControlSequenceString() {
-        Return "`e[$($this.Row.ToString());$($this.Column.ToString())H"
+        Return [ATControlSequences]::GenerateCoordinateString($this.Row, $this.Column)
     }
 
     [Coordinates]ToAutomationCoordinates() {
@@ -141,11 +172,11 @@ Class ATCoordinates {
     }
 }
 
-Class ATReset {
-    [String]ToAnsiControlSequenceString() {
-        Return "`e[0m"
-    }
-}
+# Class ATReset {
+#     [String]ToAnsiControlSequenceString() {
+#         Return "`e[0m"
+#     }
+# }
 
 Class CCBlack24 : ConsoleColor24 {
     CCBlack24() : base(0, 0, 0) {}
@@ -251,7 +282,7 @@ Class ATString {
         [String]$a = "$($this.Prefix.ToAnsiControlSequenceString())$($this.UserData)"
         
         If($this.UseATReset) {
-            $a += $([ATReset]::new()).ToAnsiControlSequenceString()
+            $a += [ATControlSequences]::ModifierReset
         }
         
         Return $a
@@ -762,11 +793,45 @@ Class WindowBase {
                         [ATDecorationNone]::new(),
                         [ATCoordinates]::new($this.TopLeft.Row, $this.TopLeft.Column + 1)
                     ),
-                    {
-                        Return "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                    },
+                    $(Invoke-Command -ScriptBlock {
+                        [String]$temp = ''
+                        
+                        For($a = 0; $a -LE $this.Height - 2; $a++) {
+                            If($a -NE $this.Height - 2) {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.TopLeft.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
+                            } Else {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                            }
+                        }
+                        
+                        Return $temp
+                    }),
                     $false
                 )
+                [ATString]$br = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column + 1)
+                    ),
+                    $(Invoke-Command -ScriptBlock {
+                        [String]$temp = ''
+                        
+                        For($a = 0; $a -LE $this.Height - 2; $a++) {
+                            If($a -NE $this.Height - 2) {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.BottomRight.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
+                            } Else {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                            }
+                        }
+                        
+                        Return $temp
+                    }),
+                    $false
+                )
+                
+                Write-Output "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
             
             Default {}
