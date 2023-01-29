@@ -5,10 +5,12 @@ using namespace System.Management.Automation.Host
 
 # GLOBAL VARIABLE DEFINITIONS
 
-[String]$Script:OsCheckLinux   = 'OsLinux'
-[String]$Script:OsCheckMac     = 'OsMac'
-[String]$Script:OsCheckWindows = 'OsWindows'
-[String]$Script:OsCheckUnknown = 'OsUnknown'
+[String]      $Script:OsCheckLinux    = 'OsLinux'
+[String]      $Script:OsCheckMac      = 'OsMac'
+[String]      $Script:OsCheckWindows  = 'OsWindows'
+[String]      $Script:OsCheckUnknown  = 'OsUnknown'
+[Player]      $Script:ThePlayer       = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
+[StatusWindow]$Script:TheStatusWindow = [StatusWindow]::new()
 
 # ENUMERATION DEFINITIONS
 
@@ -75,11 +77,11 @@ Class ATControlSequences {
     Static [String]$ModifierReset           = "`e[0m"
     
     Static [String]GenerateFG24String([ConsoleColor24]$Color) {
-        Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString());m"
+        Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
     
     Static [String]GenerateBG24String([ConsoleColor24]$Color) {
-        Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString());m"
+        Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
     
     Static [String]GenerateCoordinateString([Int]$Row, [Int]$Column) {
@@ -288,7 +290,7 @@ Class ATStringPrefixNone : ATStringPrefix {
 
 Class ATString {
     [ValidateNotNullOrEmpty()][ATStringPrefix]$Prefix
-    [ValidateNotNullOrEmpty()][String]$UserData
+    [ValidateNotNull()][String]$UserData
     [ValidateNotNullOrEmpty()][Boolean]$UseATReset
     
     ATString() {
@@ -369,17 +371,32 @@ Class Player {
         $this.MapCoordinates     = [Coordinates]::new(0, 0)
     }
     
-    [String]GetFormattedHitPointsString() {
+    [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
+        [ATString]$p1 = [ATString]::new(
+            [ATStringPrefix]::new(
+                [Player]::StatNameDrawColor,
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $Coordinates
+            ),
+            $this.Name,
+            $true
+        )
+        
+        Return "$($p1.ToAnsiControlSequenceString())"
+    }
+    
+    [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
         [String]$a = ''
         
         Switch($this.HitPointsState) {
-            [StatNumberState]::Normal {
+            Normal {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        $Coordinates
                     ),
                     'H ',
                     $false
@@ -418,13 +435,13 @@ Class Player {
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
             
-            [StatNumberState]::Caution {
+            Caution {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        $Coordinates
                     ),
                     'H ',
                     $false
@@ -463,13 +480,13 @@ Class Player {
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
             
-            [StatNumberState]::Danger {
+            Danger {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        $Coordinates
                     ),
                     'H ',
                     $false
@@ -514,17 +531,17 @@ Class Player {
         Return $a
     }
     
-    [String]GetFormattedMagicPointsString() {
+    [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
         [String]$a = ''
         
         Switch($this.MagicPointsState) {
-            [StatNumberState]::Normal {
+            Normal {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        $Coordinates
                     ),
                     'M ',
                     $false
@@ -563,13 +580,13 @@ Class Player {
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
             
-            [StatNumberState]::Caution {
+            Caution {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        $Coordinates
                     ),
                     'M ',
                     $false
@@ -608,13 +625,13 @@ Class Player {
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
             
-            [StatNumberState]::Danger {
+            Danger {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        $Coordinates
                     ),
                     'M ',
                     $false
@@ -659,13 +676,13 @@ Class Player {
         Return $a
     }
     
-    [String]GetFormattedGoldString() {
+    [String]GetFormattedGoldString([ATCoordinates]$Coordinates) {
         [ATString]$p1 = [ATString]::new(
             [ATStringPrefix]::new(
                 [Player]::StatGoldDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
-                [ATCoordinatesNone]::new()
+                $Coordinates
             ),
             "$($this.CurrentGold)",
             $false
@@ -886,7 +903,7 @@ Class WindowBase {
                 }
 
                 
-                Write-Output "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
+                Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
             
             Default {}
@@ -895,21 +912,21 @@ Class WindowBase {
 }
 
 Class StatusWindow : WindowBase {
-    Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new(2, 2)
-    Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new(2, 4)
-    Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new(2, 6)
-    Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new(2, 9)
-    Static [ATCoordinates]$PlayerAilDrawCoordinates  = [ATCoordinates]::new(2, 11)
+    Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new(2, 3)
+    Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new(4, 3)
+    Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new(6, 3)
+    Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new(9, 3)
+    # Static [ATCoordinates]$PlayerAilDrawCoordinates  = [ATCoordinates]::new(2, 11)
     
     [Boolean]$PlayerNameDrawDirty
     [Boolean]$PlayerHpDrawDirty
     [Boolean]$PlayerMpDrawDirty
     [Boolean]$PlayerGoldDrawDirty
-    [Boolean]$PlayerAilDrawDirty
+    # [Boolean]$PlayerAilDrawDirty
     
     StatusWindow() : base() {
         $this.TopLeft     = [ATCoordinates]::new(0, 0)
-        $this.BottomRight = [ATCoordinates]::new(19, 11)
+        $this.BottomRight = [ATCoordinates]::new(10, 19)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -924,7 +941,7 @@ Class StatusWindow : WindowBase {
         $this.PlayerHpDrawDirty   = $true
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
-        $this.PlayerAilDrawDirty  = $true
+        # $this.PlayerAilDrawDirty  = $true
     }
     
     [Void]Draw() {
@@ -934,9 +951,21 @@ Class StatusWindow : WindowBase {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {}
             
             { $_ -EQ $Script:OsCheckWindows } {
-                [ATString]$pss = [ATStringNone]::new()
-                
                 If($this.PlayerNameDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
+                    $this.PlayerNameDrawDirty = $false
+                }
+                If($this.PlayerHpDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
+                    $this.PlayerHpDrawDirty = $false
+                }
+                If($this.PlayerMpDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
+                    $this.PlayerMpDrawDirty = $false
+                }
+                If($this.PlayerGoldDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
+                    $this.PlayerGoldDrawDirty = $false
                 }
             }
             
@@ -946,6 +975,7 @@ Class StatusWindow : WindowBase {
 }
 
 # FUNCTION DEFINITIONS
+
 Function Test-GfmOs {
     [CmdletBinding()]
     Param ()
@@ -978,3 +1008,10 @@ Function Test-GfmOs {
         Return $Script:OsCheckUnknown
     }
 }
+
+# RUNNER
+Clear-Host
+
+$Script:TheStatusWindow.Draw()
+
+Read-Host
