@@ -768,8 +768,8 @@ Class WindowBase {
     Static [Int]$BorderDirtyLeft        = 2
     Static [Int]$BorderDirtyRight       = 3
     
-    [ATCoordinates]$TopLeft
-    [ATCoordinates]$BottomRight
+    [ATCoordinates]$LeftTop
+    [ATCoordinates]$RightBottom
     [ConsoleColor24[]]$BorderDrawColors
     [String[]]$BorderStrings
     [Boolean[]]$BorderDrawDirty
@@ -777,8 +777,8 @@ Class WindowBase {
     [Int]$Height
 
     WindowBase() {
-        $this.TopLeft          = [ATCoordinatesNone]::new()
-        $this.BottomRight      = [ATCoordinatesNone]::new()
+        $this.LeftTop          = [ATCoordinatesNone]::new()
+        $this.RightBottom      = [ATCoordinatesNone]::new()
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCBlack24]::new(),
             [CCBlack24]::new(),
@@ -795,31 +795,27 @@ Class WindowBase {
             $true,
             $true
         )
-        $this.Width  = $this.TopLeft.Column + $this.BottomRight.Column
-        $this.Height = $this.TopLeft.Row + $this.BottomRight.Row
+        $this.UpdateDimensions()
     }
     
     WindowBase(
-        [ATCoordinates]$TopLeft,
-        [ATCoordinates]$BottomRight,
+        [ATCoordinates]$LeftTop,
+        [ATCoordinates]$RightBottom,
         [ConsoleColor24[]]$BorderDrawColors,
         [String[]]$BorderStrings,
         [Boolean[]]$BorderDrawDirty
     ) {
-        $this.TopLeft          = $TopLeft
-        $this.BottomRight      = $BottomRight
+        $this.LeftTop          = $LeftTop
+        $this.RightBottom      = $RightBottom
         $this.BorderDrawColors = $BorderDrawColors
         $this.BorderStrings    = $BorderStrings
         $this.BorderDrawDirty  = $BorderDrawDirty
-        $this.Width            = $this.TopLeft.Column + $this.BottomRight.Column
-        $this.Height           = $this.TopLeft.Row + $this.BottomRight.Row
+        $this.UpdateDimensions()
     }
     
     [Void]Draw() {
         Switch($(Test-GfmOs)) {
-            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {}
-            
-            { $_ -EQ $Script:OsCheckWindows } {
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 [ATString]$bt = [ATStringNone]::new()
                 [ATString]$bb = [ATStringNone]::new()
                 [ATString]$bl = [ATStringNone]::new()
@@ -831,7 +827,7 @@ Class WindowBase {
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            $this.TopLeft
+                            $this.LeftTop
                         ),
                         "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
                         $false
@@ -844,7 +840,7 @@ Class WindowBase {
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column)
+                            [ATCoordinates]::new($this.RightBottom.Row, $this.LeftTop.Column)
                         ),
                         "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
                         $false
@@ -857,14 +853,14 @@ Class WindowBase {
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new($this.TopLeft.Row, $this.TopLeft.Column + 1)
+                            [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column)
                         ),
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
                             
-                            For($a = 0; $a -LE $this.Height - 2; $a++) {
-                                If($a -NE $this.Height - 2) {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.TopLeft.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
+                            For($a = 0; $a -LE $this.Height - 3; $a++) {
+                                If($a -NE $this.Height - 3) {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                                 } Else {
                                     $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
                                 }
@@ -882,14 +878,101 @@ Class WindowBase {
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight],
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new($this.BottomRight.Row, $this.TopLeft.Column + 1)
+                            [ATCoordinates]::new($this.LeftTop.Row + 1, $this.RightBottom.Column + 1)
                         ),
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
                             
-                            For($a = 0; $a -LE $this.Height - 2; $a++) {
-                                If($a -NE $this.Height - 2) {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new($this.BottomRight.Row, ($this.TopLeft.Column + 1) + $a).ToAnsiControlSequenceString())"
+                            For($a = 0; $a -LE $this.Height - 3; $a++) {
+                                If($a -NE $this.Height - 3) {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, ($this.RightBottom.Column + 1)).ToAnsiControlSequenceString())"
+                                } Else {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                                }
+                            }
+                            
+                            Return $temp
+                        }),
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
+                }
+
+                
+                Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
+            }
+            
+            { $_ -EQ $Script:OsCheckWindows } {
+                [ATString]$bt = [ATStringNone]::new()
+                [ATString]$bb = [ATStringNone]::new()
+                [ATString]$bl = [ATStringNone]::new()
+                [ATString]$br = [ATStringNone]::new()
+                
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]) {
+                    $bt = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            $this.LeftTop
+                        ),
+                        "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] = $false
+                }
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom]) {
+                    $bb = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($this.RightBottom.Row, $this.LeftTop.Column)
+                        ),
+                        "$($this.BorderStrings[[WindowBase]::BorderStringHorizontal])",
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $false
+                }
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft]) {
+                    $bl = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column)
+                        ),
+                        $(Invoke-Command -ScriptBlock {
+                            [String]$temp = ''
+                            
+                            For($a = 0; $a -LE $this.Height - 3; $a++) {
+                                If($a -NE $this.Height - 3) {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
+                                } Else {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                                }
+                            }
+                            
+                            Return $temp
+                        }),
+                        $false
+                    )
+                    $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
+                }
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight]) {
+                    $br = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight],
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($this.LeftTop.Row + 1, $this.RightBottom.Column + 1)
+                        ),
+                        $(Invoke-Command -ScriptBlock {
+                            [String]$temp = ''
+                            
+                            For($a = 0; $a -LE $this.Height - 3; $a++) {
+                                If($a -NE $this.Height - 3) {
+                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, ($this.RightBottom.Column + 1)).ToAnsiControlSequenceString())"
                                 } Else {
                                     $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
                                 }
@@ -909,6 +992,11 @@ Class WindowBase {
             Default {}
         }
     }
+
+    [Void]UpdateDimensions() {
+        $this.Width  = $this.LeftTop.Column + $this.RightBottom.Column
+        $this.Height = $this.LeftTop.Row + $this.RightBottom.Row
+    }
 }
 
 Class StatusWindow : WindowBase {
@@ -925,8 +1013,8 @@ Class StatusWindow : WindowBase {
     # [Boolean]$PlayerAilDrawDirty
     
     StatusWindow() : base() {
-        $this.TopLeft     = [ATCoordinates]::new(0, 0)
-        $this.BottomRight = [ATCoordinates]::new(10, 19)
+        $this.LeftTop          = [ATCoordinates]::new(1, 1)
+        $this.RightBottom      = [ATCoordinates]::new(10, 19)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -937,6 +1025,8 @@ Class StatusWindow : WindowBase {
             '@--~---~---~---~---@',
             '|'
         )
+        $this.Width               = $this.LeftTop.Column + $this.RightBottom.Column
+        $this.Height              = $this.LeftTop.Row + $this.RightBottom.Row
         $this.PlayerNameDrawDirty = $true
         $this.PlayerHpDrawDirty   = $true
         $this.PlayerMpDrawDirty   = $true
@@ -972,6 +1062,13 @@ Class StatusWindow : WindowBase {
             Default {}
         }
     }
+}
+
+Class CommandWindow : WindowBase {
+    Static [ConsoleColor24]$HistoryEntryValid = [CCGreen24]::new()
+    Static [ConsoleColor24]$HistoryEntryError = [CCRed24]::new()
+    Static [ATString]$CommandDiv              = [ATStringNone]::new()
+    Static [ATString]$CommandBlank            = '                  '
 }
 
 # FUNCTION DEFINITIONS
