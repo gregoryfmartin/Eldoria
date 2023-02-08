@@ -944,14 +944,18 @@ Class WindowBase {
                         ),
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
-                            
-                            For($a = 0; $a -LE $this.Height - 3; $a++) {
-                                If($a -NE $this.Height - 3) {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
-                                } Else {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                                }
+
+                            For($a = 0; $a -LT $this.Height - 2; $a++) {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                             }
+                            
+                            # For($a = 0; $a -LE $this.Height - 3; $a++) {
+                            #     If($a -NE $this.Height - 3) {
+                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
+                            #     } Else {
+                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                            #     }
+                            # }
                             
                             Return $temp
                         }),
@@ -969,14 +973,18 @@ Class WindowBase {
                         ),
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
-                            
-                            For($a = 0; $a -LE $this.Height - 3; $a++) {
-                                If($a -NE $this.Height - 3) {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, ($this.RightBottom.Column + 1)).ToAnsiControlSequenceString())"
-                                } Else {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                                }
+
+                            For($a = 0; $a -LT $this.Height - 2; $a++) {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.RightBottom.Column + 1).ToAnsiControlSequenceString())"
                             }
+                            
+                            # For($a = 0; $a -LE $this.Height - 3; $a++) {
+                            #     If($a -NE $this.Height - 3) {
+                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, ($this.RightBottom.Column + 1)).ToAnsiControlSequenceString())"
+                            #     } Else {
+                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
+                            #     }
+                            # }
                             
                             Return $temp
                         }),
@@ -1031,6 +1039,7 @@ Class StatusWindow : WindowBase {
         $this.PlayerHpDrawDirty   = $true
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
+        $this.UpdateDimensions()
         # $this.PlayerAilDrawDirty  = $true
     }
     
