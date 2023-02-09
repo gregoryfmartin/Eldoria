@@ -950,14 +950,6 @@ Class WindowBase {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                             }
                             
-                            # For($a = 0; $a -LE $this.Height - 3; $a++) {
-                            #     If($a -NE $this.Height - 3) {
-                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
-                            #     } Else {
-                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                            #     }
-                            # }
-                            
                             Return $temp
                         }),
                         $false
@@ -978,14 +970,6 @@ Class WindowBase {
                             For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.RightBottom.Column + 1).ToAnsiControlSequenceString())"
                             }
-                            
-                            # For($a = 0; $a -LE $this.Height - 3; $a++) {
-                            #     If($a -NE $this.Height - 3) {
-                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, ($this.RightBottom.Column + 1)).ToAnsiControlSequenceString())"
-                            #     } Else {
-                            #         $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                            #     }
-                            # }
                             
                             Return $temp
                         }),
@@ -1095,6 +1079,8 @@ Class CommandWindow : WindowBase {
     [ATString]$CommandActual
     [ATString[]]$CommandHistory
 
+    [Boolean]$CommandDivDirty
+
     CommandWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new(12, 1)
         $this.RightBottom      = [ATCoordinates]::new(20, 19)
@@ -1110,7 +1096,9 @@ Class CommandWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        [Int]$rowBase    = $this.Height
+        $this.CommandDivDirty = $true
+
+        [Int]$rowBase    = $this.RightBottom.Row
         [Int]$columnBase = $this.LeftTop.Column + 1
 
         [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - 2, $columnBase)
@@ -1128,7 +1116,7 @@ Class CommandWindow : WindowBase {
         
         [CommandWindow]::CommandDiv = [ATString]::new(
             [ATStringPrefix]::new(
-                [CCWhite24]::new(), # I should add a custom color for the div
+                [CCBlack24]::new(), # I should add a custom color for the div
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [CommandWindow]::CommandDivDrawCoordinates
@@ -1150,6 +1138,11 @@ Class CommandWindow : WindowBase {
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+
+        If($this.CommandDivDirty) {
+            Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
+            $this.CommandDivDirty = $false
+        }
     }
 }
 
