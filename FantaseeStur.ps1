@@ -5,12 +5,13 @@ using namespace System.Management.Automation.Host
 
 # GLOBAL VARIABLE DEFINITIONS
 
-[String]      $Script:OsCheckLinux    = 'OsLinux'
-[String]      $Script:OsCheckMac      = 'OsMac'
-[String]      $Script:OsCheckWindows  = 'OsWindows'
-[String]      $Script:OsCheckUnknown  = 'OsUnknown'
-[Player]      $Script:ThePlayer       = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
-[StatusWindow]$Script:TheStatusWindow = [StatusWindow]::new()
+[String]       $Script:OsCheckLinux     = 'OsLinux'
+[String]       $Script:OsCheckMac       = 'OsMac'
+[String]       $Script:OsCheckWindows   = 'OsWindows'
+[String]       $Script:OsCheckUnknown   = 'OsUnknown'
+[Player]       $Script:ThePlayer        = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
+[StatusWindow] $Script:TheStatusWindow  = [StatusWindow]::new()
+[CommandWindow]$Script:TheCommandWindow = [CommandWindow]::new()
 
 # ENUMERATION DEFINITIONS
 
@@ -281,7 +282,7 @@ Class ATStringPrefix {
 }
 
 Class ATStringPrefixNone : ATStringPrefix {
-    ATStringPrefixNone(): base() {}
+    ATStringPrefixNone() : base() {}
     
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -321,7 +322,7 @@ Class ATString {
 }
 
 Class ATStringNone : ATString {
-    ATStringNone(): base() {}
+    ATStringNone() : base() {}
     
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -945,7 +946,7 @@ Class WindowBase {
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
 
-                            For($a = 0; $a -LT $this.Height - 2; $a++) {
+                            For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                             }
                             
@@ -974,7 +975,7 @@ Class WindowBase {
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
 
-                            For($a = 0; $a -LT $this.Height - 2; $a++) {
+                            For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.RightBottom.Column + 1).ToAnsiControlSequenceString())"
                             }
                             
@@ -1002,8 +1003,10 @@ Class WindowBase {
     }
 
     [Void]UpdateDimensions() {
-        $this.Width  = $this.LeftTop.Column + $this.RightBottom.Column
-        $this.Height = $this.LeftTop.Row + $this.RightBottom.Row
+        # $this.Width  = $this.LeftTop.Column + $this.RightBottom.Column
+        # $this.Height = $this.LeftTop.Row + $this.RightBottom.Row
+        $this.Width  = $this.RightBottom.Column - $this.LeftTop.Column
+        $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
     }
 }
 
@@ -1033,13 +1036,11 @@ Class StatusWindow : WindowBase {
             '@--~---~---~---~---@',
             '|'
         )
-        $this.Width               = $this.LeftTop.Column + $this.RightBottom.Column
-        $this.Height              = $this.LeftTop.Row + $this.RightBottom.Row
+        $this.UpdateDimensions()
         $this.PlayerNameDrawDirty = $true
         $this.PlayerHpDrawDirty   = $true
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
-        $this.UpdateDimensions()
         # $this.PlayerAilDrawDirty  = $true
     }
     
@@ -1074,10 +1075,82 @@ Class StatusWindow : WindowBase {
 }
 
 Class CommandWindow : WindowBase {
+    Static [Int]$CommandHistoryARef = 0
+    Static [Int]$CommandHistoryBRef = 1
+    Static [Int]$CommandHistoryCRef = 2
+    Static [Int]$CommandHistoryDRef = 3
+
+    Static [ATCoordinates]$CommandDivDrawCoordinates      = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$CommandHistoryDDrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$CommandHistoryCDrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$CommandHistoryBDrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$CommandHistoryADrawCoordinates = [ATCoordinatesNone]::new()
+
     Static [ConsoleColor24]$HistoryEntryValid = [CCGreen24]::new()
     Static [ConsoleColor24]$HistoryEntryError = [CCRed24]::new()
+    Static [ConsoleColor24]$HistoryBlankColor = [CCBlack24]::new()
     Static [ATString]$CommandDiv              = [ATStringNone]::new()
-    Static [ATString]$CommandBlank            = '                  '
+    Static [ATString]$CommandBlank            = [ATStringNone]::new()
+
+    [ATString]$CommandActual
+    [ATString[]]$CommandHistory
+
+    CommandWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new(12, 1)
+        $this.RightBottom      = [ATCoordinates]::new(20, 19)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            '@--~---~---~---~---@',
+            '|'
+        )
+        $this.UpdateDimensions()
+
+        [Int]$rowBase    = $this.Height
+        [Int]$columnBase = $this.LeftTop.Column + 1
+
+        [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - 2, $columnBase)
+        [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - 3, $columnBase)
+        [CommandWindow]::CommandHistoryCDrawCoordinates = [ATCoordinates]::new($rowBase - 4, $columnBase)
+        [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - 5, $columnBase)
+        [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - 6, $columnBase)
+
+        $this.CommandActual                                       = [ATStringNone]::new()
+        $this.CommandHistory                                      = New-Object 'ATString[]' 4
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = [ATStringNone]::new()
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = [ATStringNone]::new()
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = [ATStringNone]::new()
+        $this.CommandHistory[[CommandWindow]::CommandHistoryDRef] = [ATStringNone]::new()
+        
+        [CommandWindow]::CommandDiv = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCWhite24]::new(), # I should add a custom color for the div
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [CommandWindow]::CommandDivDrawCoordinates
+            ),
+            '``````````````````',
+            $true
+        )
+        # [CommandWindow]::CommandBlank = [ATString]::new(
+        #     [ATStringPrefix]::new(
+        #         [CommandWindow]::HistoryBlankColor,
+        #         [ATBackgroundColor24None]::new(),
+        #         [ATDecoration]::new(),
+        #         [ATCoordinatesNone]::new() # These can't yet be specified
+        #     ),
+        #     '                  ',
+        #     $true
+        # )
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
 }
 
 # FUNCTION DEFINITIONS
@@ -1119,5 +1192,6 @@ Function Test-GfmOs {
 Clear-Host
 
 $Script:TheStatusWindow.Draw()
+$Script:TheCommandWindow.Draw()
 
 Read-Host
