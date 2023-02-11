@@ -330,6 +330,24 @@ Class ATStringNone : ATString {
     }
 }
 
+Class ATSceneImageString : ATString {
+    Static [String]$SceneImageBlank = ' '
+
+    ATSceneImageString(
+        [ATBackgroundColor24]$BackgroundColor,
+        [ATCoordinates]$Coordinates
+    ): base() {
+        $this.Prefix = [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            $BackgroundColor,
+            [ATDecorationNone]::new(),
+            $Coordinates
+        )
+        $this.UserData = [ATSceneImageString]::SceneImageBlank
+        $this.UseATReset = $true
+    }
+}
+
 Class Player {
     [String]$Name
     [Int]$CurrentHitPoints
@@ -741,18 +759,17 @@ Class Player {
 }
 
 Class SceneImage {
-    Static [Int]$Width                = 46
-    Static [Int]$Height               = 18
-    Static [ATCoordinates]$DrawOrigin = [ATCoordinates]::new(32, 1)
+    Static [Int]$Width  = 46
+    Static [Int]$Height = 18
     
-    [BufferCell[,]]$Image
+    [ATSceneImageString[,]]$Image
     
     SceneImage() {
-        $this.Image = New-Object 'BufferCell[,]' [SceneImage]::Height, [SceneImage]::Width
+        $this.Image = New-Object 'ATSceneImageString[,]' [SceneImage]::Height, [SceneImage]::Width
     }
     
     SceneImage(
-        [BufferCell[,]]$Image
+        [ATSceneImageString[,]]$Image
     ) {
         $this.Image = $Image
     }
@@ -1148,6 +1165,8 @@ Class CommandWindow : WindowBase {
 }
 
 Class SceneWindow : WindowBase {
+    Static [ATCoordinates]$SceneImageDrawCoordinates = [ATCoordinatesNone]::new()
+
     SceneWindow(): base() {
         $this.LeftTop          = [ATCoordinates]::new(1, 30)
         $this.RightBottom      = [ATCoordinates]::new(20, 78)
@@ -1162,6 +1181,8 @@ Class SceneWindow : WindowBase {
             '|'
         )
         $this.UpdateDimensions()
+
+        [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 1)
     }
     
     [Void]Draw() {
