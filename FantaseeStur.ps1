@@ -1013,10 +1013,23 @@ Class WindowBase {
 }
 
 Class StatusWindow : WindowBase {
-    Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new(2, 3)
-    Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new(4, 3)
-    Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new(6, 3)
-    Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new(9, 3)
+    Static [Int]$PlayerStatDrawColumn = 3
+    Static [Int]$PlayerNameDrawRow    = 2
+    Static [Int]$PlayerHpDrawRow      = 4
+    Static [Int]$PlayerMpDrawRow      = 6
+    Static [Int]$PlayerGoldDrawRow    = 9
+    Static [Int]$WindowLTRow          = 1
+    Static [Int]$WindowLTColumn       = 1
+    Static [Int]$WindowRBRow          = 10
+    Static [Int]$WindowRBColumn       = 19
+
+    Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
+    Static [String]$WindowBorderVertical   = '|'
+
+    Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+    Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+    Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerMpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+    Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     # Static [ATCoordinates]$PlayerAilDrawCoordinates  = [ATCoordinates]::new(2, 11)
     
     [Boolean]$PlayerNameDrawDirty
@@ -1026,8 +1039,8 @@ Class StatusWindow : WindowBase {
     # [Boolean]$PlayerAilDrawDirty
     
     StatusWindow() : base() {
-        $this.LeftTop          = [ATCoordinates]::new(1, 1)
-        $this.RightBottom      = [ATCoordinates]::new(10, 19)
+        $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -1035,8 +1048,8 @@ Class StatusWindow : WindowBase {
             [CCWhite24]::new()
         )
         $this.BorderStrings = [String[]](
-            '@--~---~---~---~---@',
-            '|'
+            [StatusWindow]::WindowBorderHorizontal,
+            [StatusWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
         $this.PlayerNameDrawDirty = $true
@@ -1077,10 +1090,24 @@ Class StatusWindow : WindowBase {
 }
 
 Class CommandWindow : WindowBase {
-    Static [Int]$CommandHistoryARef = 0
-    Static [Int]$CommandHistoryBRef = 1
-    Static [Int]$CommandHistoryCRef = 2
-    Static [Int]$CommandHistoryDRef = 3
+    Static [Int]$CommandHistoryARef    = 0
+    Static [Int]$CommandHistoryBRef    = 1
+    Static [Int]$CommandHistoryCRef    = 2
+    Static [Int]$CommandHistoryDRef    = 3
+    Static [Int]$WindowLTRow           = 12
+    Static [Int]$WindowLTColumn        = 1
+    Static [Int]$WindowRBRow           = 20
+    Static [Int]$WindowRBColumn        = 19
+    Static [Int]$DrawColumnOffset      = 1
+    Static [Int]$DrawDivRowOffset      = 2
+    Static [Int]$DrawHistoryDRowOffset = 3
+    Static [Int]$DrawHistoryCRowOffset = 4
+    Static [Int]$DrawHistoryBRowOffset = 5
+    Static [Int]$DrawHistoryARowOffset = 6
+
+    Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
+    Static [String]$WindowBorderVertical   = '|'
+    Static [String]$WindowCommandDiv       = '``````````````````'
 
     Static [ATCoordinates]$CommandDivDrawCoordinates      = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryDDrawCoordinates = [ATCoordinatesNone]::new()
@@ -1088,11 +1115,12 @@ Class CommandWindow : WindowBase {
     Static [ATCoordinates]$CommandHistoryBDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryADrawCoordinates = [ATCoordinatesNone]::new()
 
-    Static [ConsoleColor24]$HistoryEntryValid = [CCGreen24]::new()
-    Static [ConsoleColor24]$HistoryEntryError = [CCRed24]::new()
-    Static [ConsoleColor24]$HistoryBlankColor = [CCBlack24]::new()
-    Static [ATString]$CommandDiv              = [ATStringNone]::new()
-    Static [ATString]$CommandBlank            = [ATStringNone]::new()
+    Static [ConsoleColor24]$HistoryEntryValid   = [CCGreen24]::new()
+    Static [ConsoleColor24]$HistoryEntryError   = [CCRed24]::new()
+    Static [ConsoleColor24]$HistoryBlankColor   = [CCBlack24]::new()
+    Static [ConsoleColor24]$CommandDivDrawColor = [CCWhite24]::new()
+    Static [ATString]$CommandDiv                = [ATStringNone]::new()
+    Static [ATString]$CommandBlank              = [ATStringNone]::new()
 
     [ATString]$CommandActual
     [ATString[]]$CommandHistory
@@ -1100,8 +1128,8 @@ Class CommandWindow : WindowBase {
     [Boolean]$CommandDivDirty
 
     CommandWindow() : base() {
-        $this.LeftTop          = [ATCoordinates]::new(12, 1)
-        $this.RightBottom      = [ATCoordinates]::new(20, 19)
+        $this.LeftTop          = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -1109,24 +1137,24 @@ Class CommandWindow : WindowBase {
             [CCWhite24]::new()
         )
         $this.BorderStrings = [String[]](
-            '@--~---~---~---~---@',
-            '|'
+            [CommandWindow]::WindowBorderHorizontal,
+            [CommandWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
 
         $this.CommandDivDirty = $true
 
         [Int]$rowBase    = $this.RightBottom.Row
-        [Int]$columnBase = $this.LeftTop.Column + 1
+        [Int]$columnBase = $this.LeftTop.Column + [CommandWindow]::DrawColumnOffset
 
-        [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - 2, $columnBase)
-        [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - 3, $columnBase)
-        [CommandWindow]::CommandHistoryCDrawCoordinates = [ATCoordinates]::new($rowBase - 4, $columnBase)
-        [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - 5, $columnBase)
-        [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - 6, $columnBase)
+        [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawDivRowOffset, $columnBase)
+        [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryDRowOffset, $columnBase)
+        [CommandWindow]::CommandHistoryCDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryCRowOffset, $columnBase)
+        [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryBRowOffset, $columnBase)
+        [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryARowOffset, $columnBase)
 
         $this.CommandActual                                       = [ATStringNone]::new()
-        $this.CommandHistory                                      = New-Object 'ATString[]' 4
+        $this.CommandHistory                                      = New-Object 'ATString[]' 4 # This literal can't be codified; PS requires it be here
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = [ATStringNone]::new()
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = [ATStringNone]::new()
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = [ATStringNone]::new()
@@ -1134,12 +1162,12 @@ Class CommandWindow : WindowBase {
         
         [CommandWindow]::CommandDiv = [ATString]::new(
             [ATStringPrefix]::new(
-                [CCBlack24]::new(), # I should add a custom color for the div
+                [CommandWindow]::CommandDivDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [CommandWindow]::CommandDivDrawCoordinates
             ),
-            '``````````````````',
+            [CommandWindow]::WindowCommandDiv,
             $true
         )
         # [CommandWindow]::CommandBlank = [ATString]::new(
@@ -1165,11 +1193,24 @@ Class CommandWindow : WindowBase {
 }
 
 Class SceneWindow : WindowBase {
+    Static [Int]$WindowLTRow           = 1
+    Static [Int]$WindowLTColumn        = 30
+    Static [Int]$WindowRBRow           = 20
+    Static [Int]$WindowRBColumn        = 78
+    Static [Int]$ImageDrawRowOffset    = 1
+    Static [Int]$ImageDrawColumnOffset = 1
+    
+
+    Static [String]$WindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
+    Static [String]$WindowBorderVertical   = '|'
+
     Static [ATCoordinates]$SceneImageDrawCoordinates = [ATCoordinatesNone]::new()
 
+    [Boolean]$SceneImageDirty = $true
+
     SceneWindow(): base() {
-        $this.LeftTop          = [ATCoordinates]::new(1, 30)
-        $this.RightBottom      = [ATCoordinates]::new(20, 78)
+        $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -1177,17 +1218,30 @@ Class SceneWindow : WindowBase {
             [CCWhite24]::new()
         )
         $this.BorderStrings = [String[]](
-            '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@',
-            '|'
+            [SceneWindow]::WindowBorderHorizontal,
+            [SceneWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
 
-        [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 1)
+        [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + [SceneWindow]::ImageDrawRowOffset, $this.LeftTop.Column + [SceneWindow]::ImageDrawColumnOffset)
     }
     
     [Void]Draw() {
         ([WindowBase]$this).Draw()
     }
+
+    [Void]DrawSceneImage(
+        [ATSceneImageString]$SceneImage
+    ) {
+        If($this.SceneImageDirty) {
+            # TODO: Implement drawing logic
+            $this.SceneImageDirty = $false
+        }
+    }
+}
+
+Class MessageWindow : WindowBase {
+
 }
 
 # FUNCTION DEFINITIONS
