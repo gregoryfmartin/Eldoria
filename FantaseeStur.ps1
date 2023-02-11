@@ -1252,7 +1252,7 @@ Class MessageWindow : WindowBase {
     
     MessageWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
-        $this.RightBottom      = [ATCoordinates]::new(26, 78)
+        $this.RightBottom      = [ATCoordinates]::new(25, 78)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
