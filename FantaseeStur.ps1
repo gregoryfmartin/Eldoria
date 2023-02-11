@@ -12,6 +12,7 @@ using namespace System.Management.Automation.Host
 [Player]       $Script:ThePlayer        = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
 [StatusWindow] $Script:TheStatusWindow  = [StatusWindow]::new()
 [CommandWindow]$Script:TheCommandWindow = [CommandWindow]::new()
+[SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
 
 # ENUMERATION DEFINITIONS
 
@@ -1146,6 +1147,28 @@ Class CommandWindow : WindowBase {
     }
 }
 
+Class SceneWindow : WindowBase {
+    SceneWindow(): base() {
+        $this.LeftTop          = [ATCoordinates]::new(1, 30)
+        $this.RightBottom      = [ATCoordinates]::new(20, 78)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@',
+            '|'
+        )
+        $this.UpdateDimensions()
+    }
+    
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
 # FUNCTION DEFINITIONS
 
 Function Test-GfmOs {
@@ -1186,5 +1209,6 @@ Clear-Host
 
 $Script:TheStatusWindow.Draw()
 $Script:TheCommandWindow.Draw()
+$Script:TheSceneWindow.Draw()
 
 Read-Host
