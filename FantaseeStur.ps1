@@ -13,6 +13,7 @@ using namespace System.Management.Automation.Host
 [StatusWindow] $Script:TheStatusWindow  = [StatusWindow]::new()
 [CommandWindow]$Script:TheCommandWindow = [CommandWindow]::new()
 [SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
+[MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
 
 # ENUMERATION DEFINITIONS
 
@@ -1241,7 +1242,33 @@ Class SceneWindow : WindowBase {
 }
 
 Class MessageWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 21
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 26
+    Static [Int]$WindowBRColumn = 80
+    
+    Static [String]$WindowBorderHorizontal = '-------------------------------------------------------------------------------'
+    Static [String]$WindowBorderVertical   = '|'
+    
+    MessageWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new(21, 1)
+        $this.RightBottom      = [ATCoordinates]::new(26, 78)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [MessageWindow]::WindowBorderHorizontal,
+            [MessageWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions() 
+    }
 
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
 }
 
 # FUNCTION DEFINITIONS
@@ -1285,5 +1312,6 @@ Clear-Host
 $Script:TheStatusWindow.Draw()
 $Script:TheCommandWindow.Draw()
 $Script:TheSceneWindow.Draw()
+$Script:TheMessageWindow.Draw()
 
 Read-Host
