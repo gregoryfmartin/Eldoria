@@ -14,6 +14,7 @@ using namespace System.Management.Automation.Host
 [CommandWindow]$Script:TheCommandWindow = [CommandWindow]::new()
 [SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
 [MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
+[SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
 
 # ENUMERATION DEFINITIONS
 
@@ -71,6 +72,15 @@ Class ConsoleColor24 {
         $this.Green = $Green
         $this.Blue  = $Blue
     }
+
+    ConsoleColor24(
+        [PSCustomObject]$JsonData
+    ) {
+        $psoProps = $JsonData.PSObject.Properties
+        $this.Red   = [Int]$psoProps['Red'].Value
+        $this.Green = [Int]$psoProps['Green'].Value
+        $this.Blue  = [Int]$psoProps['Blue'].Value
+    }
 }
 
 Class ATControlSequences {
@@ -103,6 +113,12 @@ Class ATForegroundColor24 {
     ) {
         $this.Color = $Color
     }
+
+    ATForegroundColor24(
+        [PSCustomObject]$JsonData
+    ) {
+        $this.Color = [ConsoleColor24]::new($JsonData)
+    }
     
     [String]ToAnsiControlSequenceString() {
         Return [ATControlSequences]::GenerateFG24String($this.Color)
@@ -119,6 +135,12 @@ Class ATBackgroundColor24 {
         [ConsoleColor24]$Color
     ) {
         $this.Color = $Color
+    }
+
+    ATBackgroundColor24(
+        [PSObject]$JsonData
+    ) {
+        $this.Color = [ConsoleColor24]::new($JsonData)
     }
     
     [String]ToAnsiControlSequenceString() {
@@ -137,9 +159,16 @@ Class ATDecoration {
     ) {
         $this.Blink = $Blink
     }
+
+    ATDecoration(
+        [PSObject]$JsonData
+    ) {
+        $psoProps = $JsonData.PSObject.Properties
+        $this.Blink = [Boolean]$psoProps['Blink'].Value
+    }
     
     [String]ToAnsiControlSequenceString() {
-        [String]$a = ""
+        [String]$a = ''
         
         If($this.Blink) {
             $a += [ATControlSequences]::DecorationBlink
@@ -157,7 +186,7 @@ Class ATCoordinates {
         [Int]$Row,
         [Int]$Column
     ) {
-        $this.Row = $Row
+        $this.Row    = $Row
         $this.Column = $Column
     }
     
@@ -166,6 +195,14 @@ Class ATCoordinates {
     ) {
         $this.Row    = $AutomationCoordinates.X
         $this.Column = $AutomationCoordinates.Y
+    }
+
+    ATCoordinates(
+        [PSObject]$JsonData
+    ) {
+        $psoProps    = $JsonData.PSObject.Properties
+        $this.Row    = [Int]$psoProps['Row'].Value
+        $this.Column = [Int]$psoProps['Column'].Value
     }
     
     [String]ToAnsiControlSequenceString() {
@@ -243,6 +280,10 @@ Class ATCoordinatesNone : ATCoordinates {
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
+}
+
+Class ATCoordinatesDefault : ATCoordinates {
+    ATCoordinatesDefault() : base(0, 0) {} # TODO: Need to set these values relative to the Command Window
 }
 
 Class ATDecorationNone : ATDecoration {
@@ -344,7 +385,7 @@ Class ATSceneImageString : ATString {
             [ATDecorationNone]::new(),
             $Coordinates
         )
-        $this.UserData = [ATSceneImageString]::SceneImageBlank
+        $this.UserData   = [ATSceneImageString]::SceneImageBlank
         $this.UseATReset = $true
     }
 }
@@ -774,6 +815,8 @@ Class SceneImage {
     ) {
         $this.Image = $Image
     }
+
+
 }
 
 Class WindowBase {
@@ -1198,8 +1241,8 @@ Class SceneWindow : WindowBase {
     Static [Int]$WindowLTColumn        = 30
     Static [Int]$WindowRBRow           = 20
     Static [Int]$WindowRBColumn        = 78
-    Static [Int]$ImageDrawRowOffset    = 1
-    Static [Int]$ImageDrawColumnOffset = 1
+    Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
+    Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
     
 
     Static [String]$WindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
@@ -1224,7 +1267,8 @@ Class SceneWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + [SceneWindow]::ImageDrawRowOffset, $this.LeftTop.Column + [SceneWindow]::ImageDrawColumnOffset)
+        #[SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + [SceneWindow]::ImageDrawRowOffset, $this.LeftTop.Column + [SceneWindow]::ImageDrawColumnOffset)
+        [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new([SceneWindow]::ImageDrawRowOffset, [SceneWindow]::ImageDrawColumnOffset)
     }
     
     [Void]Draw() {
@@ -1313,5 +1357,6 @@ $Script:TheStatusWindow.Draw()
 $Script:TheCommandWindow.Draw()
 $Script:TheSceneWindow.Draw()
 $Script:TheMessageWindow.Draw()
+#$Script:SampleSi.Serialize() | Out-File './SampleOutput.txt'
 
 Read-Host
