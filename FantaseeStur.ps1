@@ -15,7 +15,9 @@ using namespace System.Management.Automation.Host
 [SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
 [MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
 [SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
+[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
+$Script:TheSceneWindow.Image = $Script:SampleSiRandom
 # ENUMERATION DEFINITIONS
 
 Enum GameStatePrimary {
@@ -254,6 +256,10 @@ Class CCDarkCyan24 : ConsoleColor24 {
 
 Class CCDarkGrey24 : ConsoleColor24 {
     CCDarkGrey24() : base(45, 45, 45) {}
+}
+
+Class CCRandom24 : ConsoleColor24 {
+    CCRandom24() : base($(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0)) {}
 }
 
 Class CCTextDefault24 : CCDarkGrey24 {}
@@ -801,13 +807,13 @@ Class Player {
 }
 
 Class SceneImage {
-    Static [Int]$Width  = 46
+    Static [Int]$Width  = 48
     Static [Int]$Height = 18
     
     [ATSceneImageString[,]]$Image
     
     SceneImage() {
-        $this.Image = New-Object 'ATSceneImageString[,]' [SceneImage]::Height, [SceneImage]::Width
+        $this.Image = New-Object 'ATSceneImageString[,]' ([Int32]([SceneImage]::Height)), ([Int32]([SceneImage]::Width))
     }
     
     SceneImage(
@@ -816,7 +822,51 @@ Class SceneImage {
         $this.Image = $Image
     }
 
+    [Void]CreateSceneImageATString([ATBackgroundColor24[]]$ImageColorMap) {
+        For($r = 0; $r -LT [SceneImage]::Height; $r++) {
+            For($c = 0; $c -LT [SceneImage]::Width; $c++) {
+                $rf = ($r * [SceneImage]::Width) + $c
+                $this.Image[$r, $c] = [ATSceneImageString]::new(
+                    $ImageColorMap[$rf],
+                    [ATCoordinates]::new(([SceneWindow]::ImageDrawRowOffset + $r), ([SceneWindow]::ImageDrawColumnOffset + $c))
+                )
+            }
+        }
+    }
 
+    [String]ToAnsiControlSequenceString() {
+        [String]$a = ''
+
+        For($r = 0; $r -LT [SceneImage]::Height; $r++) {
+            For($c = 0; $c -LT [SceneImage]::Width; $c++) {
+                $a += $this.Image[$r, $c].ToAnsiControlSequenceString()
+            }
+        }
+
+        Return $a
+    }
+}
+
+Class SIEmpty : SceneImage {
+    SIEmpty(): base() {}
+
+    [String]ToAnsiControlSequenceString() {
+        Return ''
+    }
+}
+
+Class SIRandomNoise : SceneImage {
+    [ATBackgroundColor24[]]$ColorMap
+
+    SIRandomNoise(): base() {
+        $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
+
+        For($a = 0; $a -LT $this.ColorMap.Count; $a++) {
+            $this.ColorMap[$a] = [CCRandom24]::new()
+        }
+
+        $this.CreateSceneImageATString($this.ColorMap)
+    }
 }
 
 Class WindowBase {
@@ -920,13 +970,9 @@ Class WindowBase {
                         ),
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
-                            
-                            For($a = 0; $a -LE $this.Height - 3; $a++) {
-                                If($a -NE $this.Height - 3) {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
-                                } Else {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                                }
+
+                            For($a = 0; $a -LT $this.Height; $a++) {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                             }
                             
                             Return $temp
@@ -945,13 +991,9 @@ Class WindowBase {
                         ),
                         $(Invoke-Command -ScriptBlock {
                             [String]$temp = ''
-                            
-                            For($a = 0; $a -LE $this.Height - 3; $a++) {
-                                If($a -NE $this.Height - 3) {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical]) $([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, ($this.RightBottom.Column + 1)).ToAnsiControlSequenceString())"
-                                } Else {
-                                    $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])"
-                                }
+
+                            For($a = 0; $a -LT $this.Height; $a++) {
+                                $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.RightBottom.Column + 1).ToAnsiControlSequenceString())"
                             }
                             
                             Return $temp
@@ -1107,7 +1149,24 @@ Class StatusWindow : WindowBase {
         ([WindowBase]$this).Draw()
         
         Switch($(Test-GfmOs)) {
-            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {}
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                If($this.PlayerNameDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
+                    $this.PlayerNameDrawDirty = $false
+                }
+                If($this.PlayerHpDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
+                    $this.PlayerHpDrawDirty = $false
+                }
+                If($this.PlayerMpDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
+                    $this.PlayerMpDrawDirty = $false
+                }
+                If($this.PlayerGoldDrawDirty) {
+                    Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
+                    $this.PlayerGoldDrawDirty = $false
+                }
+            }
             
             { $_ -EQ $Script:OsCheckWindows } {
                 If($this.PlayerNameDrawDirty) {
@@ -1251,6 +1310,7 @@ Class SceneWindow : WindowBase {
     Static [ATCoordinates]$SceneImageDrawCoordinates = [ATCoordinatesNone]::new()
 
     [Boolean]$SceneImageDirty = $true
+    [SceneImage]$Image        = [SIEmpty]::new()
 
     SceneWindow(): base() {
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
@@ -1273,13 +1333,9 @@ Class SceneWindow : WindowBase {
     
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-    }
 
-    [Void]DrawSceneImage(
-        [ATSceneImageString]$SceneImage
-    ) {
         If($this.SceneImageDirty) {
-            # TODO: Implement drawing logic
+            Write-Host "$($this.Image.ToAnsiControlSequenceString())"
             $this.SceneImageDirty = $false
         }
     }
