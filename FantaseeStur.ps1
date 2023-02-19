@@ -27,6 +27,8 @@ using namespace System.Management.Automation.Host
 [SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
 
 $Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
+
+
 # ENUMERATION DEFINITIONS
 
 Enum GameStatePrimary {
@@ -224,12 +226,6 @@ Class ATCoordinates {
         Return [Coordinates]::new($this.Row, $this.Column)
     }
 }
-
-# Class ATReset {
-#     [String]ToAnsiControlSequenceString() {
-#         Return "`e[0m"
-#     }
-# }
 
 Class CCBlack24 : ConsoleColor24 {
     CCBlack24() : base(0, 0, 0) {}
@@ -8518,6 +8514,5 @@ $Script:TheStatusWindow.Draw()
 $Script:TheCommandWindow.Draw()
 $Script:TheSceneWindow.Draw()
 $Script:TheMessageWindow.Draw()
-#$Script:SampleSi.Serialize() | Out-File './SampleOutput.txt'
 
 Read-Host
