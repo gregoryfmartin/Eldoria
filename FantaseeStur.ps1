@@ -17,6 +17,9 @@ using namespace System.Management.Automation.Host
 [SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
+[Map]$Script:CurrentMap  = $null
+[Map]$Script:PreviousMap = $null
+
 [SIFieldNorthRoad]        $Script:FieldNorthRoadImage         = [SIFieldNorthRoad]::new()
 [SIFieldNorthEastRoad]    $Script:FieldNorthEastRoadImage     = [SIFieldNorthEastRoad]::new()
 [SIFieldNorthWestRoad]    $Script:FieldNorthWestRoadImage     = [SIFieldNorthWestRoad]::new()
@@ -523,7 +526,7 @@ Class Player {
     [StatNumberState]$HitPointsState
     [StatNumberState]$MagicPointsState
     [Coordinates]$MapCoordinates
-    #[List[MapTileObject]]$Inventory
+    [List[MapTileObject]]$Inventory
     
     Static [Single]$StatNumThresholdCaution         = 0.6D
     Static [Single]$StatNumThresholdDanger          = 0.2D
@@ -7967,6 +7970,78 @@ Class SIFieldSouthEastWestRoad : SIInternalBase {
 
         $this.CreateSceneImageATString($this.ColorMap)
         $this.ColorMap = $null
+    }
+}
+
+Class MapTileObject {
+    [String]$Name
+    [String]$MapObjName
+    [ScriptBlock]$Effect
+    [Boolean]$CanAddToInventory
+    [String]$ExamineString
+
+    MapTileObject(
+        [String]$Name,
+        [String]$MapObjName,
+        [Boolean]$CanAddToInventory,
+        [String]$ExamineString,
+        [ScriptBlock]$Effect
+    ) {
+        $this.Name              = $Name
+        $this.MapObjName        = $MapObjName
+        $this.Effect            = $Effect
+        $this.CanAddToInventory = $CanAddToInventory
+        $this.ExamineString     = $ExamineString
+    }
+}
+
+Class MapTile {
+    Static [Int]$TileExitNorth = 0
+    Static [Int]$TileExitSouth = 1
+    Static [Int]$TileExitEast  = 2
+    Static [Int]$TileExitWest  = 3
+
+    [SceneImage]$BackgroundImage
+    [List[MapTileObject]]$ObjectListing
+    [Boolean[]]$Exits
+
+    MapTile(
+        [SceneImage]$BackgroundImage,
+        [MapTileObject[]]$ObjectListing,
+        [Boolean[]]$Exits
+    ) {
+        $this.BackgroundImage = $BackgroundImage
+        $this.ObjectListing   = [List[MapTileObject]]::new()
+        $this.Exits           = $Exits
+        
+        Foreach($a In $ObjectListing) {
+            $this.ObjectListing.Add($a) | Out-Null
+        }
+    }
+}
+
+Class Map {
+    [String]$Name
+    [Int]$MapWidth
+    [Int]$MapHeight
+    [Boolean]$BoundaryWrap
+    [MapTile[,]]$Tiles
+
+    Map(
+        [String]$Name,
+        [Int]$MapWidth,
+        [Int]$MapHeight,
+        [Boolean]$BoundaryWrap
+    ) {
+        $this.Name         = $Name
+        $this.MapWidth     = $MapWidth
+        $this.MapHeight    = $MapHeight
+        $this.BoundaryWrap = $BoundaryWrap
+        $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+    }
+
+    [MapTile]GetTileAtPlayerCoordinates() {
+        Return $this.Tiles[$Script:ThePlayer.MapCoordinates.Y, $Script:ThePlayer.MapCoordinates.X]
     }
 }
 
