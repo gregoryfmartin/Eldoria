@@ -17,7 +17,16 @@ using namespace System.Management.Automation.Host
 [SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
-$Script:TheSceneWindow.Image = [SIFieldSouthEastWestRoad]::new()
+[SIFieldNorthRoad]        $Script:FieldNorthRoadImage         = [SIFieldNorthRoad]::new()
+[SIFieldNorthEastRoad]    $Script:FieldNorthEastRoadImage     = [SIFieldNorthEastRoad]::new()
+[SIFieldNorthWestRoad]    $Script:FieldNorthWestRoadImage     = [SIFieldNorthWestRoad]::new()
+[SIFieldNorthEastWestRoad]$Script:FieldNorthEastWestRoadImage = [SIFieldNorthEastWestRoad]::new()
+[SIFieldSouthRoad]        $Script:FieldSouthRoadImage         = [SIFieldSouthRoad]::new()
+[SIFieldSouthEastRoad]    $Script:FieldSouthEastRoadImage     = [SIFieldSouthEastRoad]::new()
+[SIFieldSouthWestRoad]    $Script:FieldSouthWestRoadImage     = [SIFieldSouthWestRoad]::new()
+[SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
+
+$Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 # ENUMERATION DEFINITIONS
 
 Enum GameStatePrimary {
