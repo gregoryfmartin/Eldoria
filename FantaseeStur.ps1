@@ -15,7 +15,7 @@ using namespace System.Management.Automation.Host
 [SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
 [MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
 [SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
-[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
+#[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
 $Script:TheSceneWindow.Image = [SIFieldNorthRoad]::new()
 # ENUMERATION DEFINITIONS
@@ -1037,6 +1037,7 @@ Class SIFieldNorthRoad : SIInternalBase {
         $this.ColorMap[139] = [CCPantoneSkyBlue24]::new()
         $this.ColorMap[140] = [CCPantoneSkyBlue24]::new()
         $this.ColorMap[141] = [CCPantoneSkyBlue24]::new()
+        $this.ColorMap[142] = [CCPantoneSkyBlue24]::new()
         $this.ColorMap[143] = [CCPantoneSkyBlue24]::new() # End Row 2
         $this.ColorMap[144] = [CCPantoneSkyBlue24]::new()
         $this.ColorMap[145] = [CCPantoneSkyBlue24]::new()
