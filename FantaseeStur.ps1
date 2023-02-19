@@ -262,6 +262,21 @@ Class CCRandom24 : ConsoleColor24 {
     CCRandom24() : base($(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0)) {}
 }
 
+# https://www.pantone.com/connect/14-4318-TCX
+Class CCPantoneSkyBlue24 : ConsoleColor24 {
+    CCPantoneSkyBlue24(): base(54, 73, 83) {}
+}
+
+# https://www.pantone.com/connect/15-6322-TPX
+Class CCPantoneLightGrassGreen24 : ConsoleColor24 {
+    CCPantoneLightGrassGreen24(): base(49, 70, 53) {}
+}
+
+# https://www.pantone.com/connect/19-1218-TCX
+Class CCPantonePottingSoil24 : ConsoleColor24 {
+    CCPantonePottingSoil24(): base(33, 22, 18) {}
+}
+
 Class CCTextDefault24 : CCDarkGrey24 {}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
