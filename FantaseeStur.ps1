@@ -262,6 +262,102 @@ Class CCRandom24 : ConsoleColor24 {
     CCRandom24() : base($(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0)) {}
 }
 
+Class CCAppleRedLight24 : ConsoleColor24 {
+    CCAppleRedLight24(): base(255, 59, 48) {}
+}
+
+Class CCAppleRedDark24 : ConsoleColor24 {
+    CCAppleRedDark24(): base(255, 69, 58) {}
+}
+
+Class CCAppleOrangeLight24 : ConsoleColor24 {
+    CCAppleOrangeLight24(): base(255, 149, 0) {}
+}
+
+Class CCAppleOrangeDark24 : ConsoleColor24 {
+    CCAppleOrangeDark24(): base(255, 159, 10) {}
+}
+
+Class CCAppleYellowLight24 : ConsoleColor24 {
+    CCAppleYellowLight24(): base(255, 204, 0) {}
+}
+
+Class CCAppleYellowDark24 : ConsoleColor24 {
+    CCAppleYellowDark24(): base(255, 214, 10) {}
+}
+
+Class CCAppleGreenLight24 : ConsoleColor24 {
+    CCAppleGreenLight24(): base(52, 199, 89) {}
+}
+
+Class CCAppleGreenDark24 : ConsoleColor24 {
+    CCAppleGreenDark24(): base(48, 209, 88) {}
+}
+
+Class CCAppleMintLight24 : ConsoleColor24 {
+    CCAppleMintLight24(): base(0, 199, 190) {}
+}
+
+Class CCAppleMintDark24 : ConsoleColor24 {
+    CCAppleMintDark24(): base(99, 230, 226) {}
+}
+
+Class CCAppleTealLight24 : ConsoleColor24 {
+    CCAppleTealLight24(): base(48, 176, 199) {}
+}
+
+Class CCAppleTealDark24 : ConsoleColor24 {
+    CCAppleTealDark24(): base(64, 200, 224) {}
+}
+
+Class CCAppleCyanLight24 : ConsoleColor24 {
+    CCAppleCyanLight24(): base(50, 173, 230) {}
+}
+
+Class CCAppleCyanDark24 : ConsoleColor24 {
+    CCAppleCyanDark24(): base(100, 210, 255) {}
+}
+
+Class CCAppleBlueLight24 : ConsoleColor24 {
+    CCAppleBlueLight24(): base(0, 122, 255) {}
+}
+
+Class CCAppleBlueDark24 : ConsoleColor24 {
+    CCAppleBlueDark24(): base(10, 132, 255) {}
+}
+
+Class CCAppleIndigoLight24 : ConsoleColor24 {
+    CCAppleIndigoLight24(): base(88, 86, 214) {}
+}
+
+Class CCAppleIndigoDark24 : ConsoleColor24 {
+    CCAppleIndigoDark24(): base(94, 92, 230) {}
+}
+
+Class CCApplePurpleLight24 : ConsoleColor24 {
+    CCApplePurpleLight24(): base(175, 82, 222) {}
+}
+
+Class CCApplePurpleDark24 : ConsoleColor24 {
+    CCApplePurpleDark24(): base(191, 90, 242) {}
+}
+
+Class CCApplePinkLight24 : ConsoleColor24 {
+    CCApplePinkLight24(): base(255, 45, 85) {}
+}
+
+Class CCApplePinkDark24 : ConsoleColor24 {
+    CCApplePinkDark24(): base(255, 55, 95) {}
+}
+
+Class CCAppleBrownLight24 : ConsoleColor24 {
+    CCAppleBrownLight24(): base(162, 132, 94) {}
+}
+
+Class CCAppleBrownDark24 : ConsoleColor24 {
+    CCAppleBrownDark24(): base(172, 142, 104) {}
+}
+
 # https://www.pantone.com/connect/14-4318-TCX
 Class CCPantoneSkyBlue24 : ConsoleColor24 {
     CCPantoneSkyBlue24(): base(54, 73, 83) {}
@@ -840,7 +936,7 @@ Class SceneImage {
     [Void]CreateSceneImageATString([ATBackgroundColor24[]]$ImageColorMap) {
         For($r = 0; $r -LT [SceneImage]::Height; $r++) {
             For($c = 0; $c -LT [SceneImage]::Width; $c++) {
-                $rf = ($r * [SceneImage]::Width) + $c
+                $rf                 = ($r * [SceneImage]::Width) + $c
                 $this.Image[$r, $c] = [ATSceneImageString]::new(
                     $ImageColorMap[$rf],
                     [ATCoordinates]::new(([SceneWindow]::ImageDrawRowOffset + $r), ([SceneWindow]::ImageDrawColumnOffset + $c))
