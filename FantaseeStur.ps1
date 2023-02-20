@@ -366,6 +366,30 @@ Class CCAppleBrownDark24 : ConsoleColor24 {
     CCAppleBrownDark24(): base(172, 142, 104) {}
 }
 
+Class CCAppleGrey1Light24 : ConsoleColor24 {
+    CCAppleGrey1Light24(): base(142, 142, 147) {}
+}
+
+Class CCAppleGrey1Dark24 : ConsoleColor24 {
+    CCAppleGrey1Dark24(): base(142, 142, 147) {}
+}
+
+Class CCAppleGrey2Light24 : ConsoleColor24 {
+    CCAppleGrey2Light24(): base(174, 174, 178) {}
+}
+
+Class CCAppleGrey2Dark24 : ConsoleColor24 {
+    CCAppleGrey2Dark24(): base(99, 99, 102) {}
+}
+
+Class CCAppleGrey3Light24 : ConsoleColor24 {
+    CCAppleGrey3Light24(): base(199, 199, 204) {}
+}
+
+Class CCAppleGrey3Dark24 : ConsoleColor24 {
+    CCAppleGrey3Dark24(): base(72, 72, 74) {}
+}
+
 # https://www.pantone.com/connect/14-4318-TCX
 Class CCPantoneSkyBlue24 : ConsoleColor24 {
     CCPantoneSkyBlue24(): base(54, 73, 83) {}
@@ -530,12 +554,12 @@ Class Player {
     
     Static [Single]$StatNumThresholdCaution         = 0.6D
     Static [Single]$StatNumThresholdDanger          = 0.2D
-    Static [ConsoleColor24]$StatNameDrawColor       = [CCBlue24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCGreen24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorCaution = [CCYellow24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCRed24]::new()
-    Static [ConsoleColor24]$StatGoldDrawColor       = [CCDarkYellow24]::new()
-    Static [ConsoleColor24]$AsideDrawColor          = [CCDarkCyan24]::new()
+    Static [ConsoleColor24]$StatNameDrawColor       = [CCAppleBlueLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCAppleGreenLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorCaution = [CCAppleYellowLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
+    Static [ConsoleColor24]$StatGoldDrawColor       = [CCAppleYellowDark24]::new()
+    Static [ConsoleColor24]$AsideDrawColor          = [CCAppleIndigoLight24]::new()
     
     Player(
         [String]$Name,
@@ -556,6 +580,7 @@ Class Player {
         $this.HitPointsState     = [StatNumberState]::Normal
         $this.MagicPointsState   = [StatNumberState]::Normal
         $this.MapCoordinates     = [Coordinates]::new(0, 0)
+        $this.Inventory          = [List[MapTileObject]]::new()
     }
     
     [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
