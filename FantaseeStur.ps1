@@ -8058,11 +8058,11 @@ Class MTORope : MapTileObject {
 }
 
 Class MTOStairs : MapTileObject {
-    MTOStairs: base('Stairs', 'stairs', $false, '', {}) {}
+    MTOStairs(): base('Stairs', 'stairs', $false, '', {}) {}
 }
 
 Class MTOPole : MapTileObject {
-    MTOPole: base('Pole', 'pole', $false, '', {}) {}
+    MTOPole(): base('Pole', 'pole', $false, '', {}) {}
 }
 
 Class WindowBase {
