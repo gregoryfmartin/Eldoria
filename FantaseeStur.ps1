@@ -8045,6 +8045,26 @@ Class Map {
     }
 }
 
+Class MTOTree : MapTileObject {
+    MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {}) {}
+}
+
+Class MTOLadder : MapTileObject {
+    MTOLadder():  base('Ladder', 'ladder', $false, '', {}) {}
+}
+
+Class MTORope : MapTileObject {
+    MTORope(): base('Rope', 'rope', $false, '', {}) {}
+}
+
+Class MTOStairs : MapTileObject {
+    MTOStairs: base('Stairs', 'stairs', $false, '', {}) {}
+}
+
+Class MTOPole : MapTileObject {
+    MTOPole: base('Pole', 'pole', $false, '', {}) {}
+}
+
 Class WindowBase {
     Static [Int]$BorderDrawColorTop     = 0
     Static [Int]$BorderDrawColorBottom  = 1
