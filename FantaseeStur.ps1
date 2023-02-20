@@ -390,6 +390,30 @@ Class CCAppleGrey3Dark24 : ConsoleColor24 {
     CCAppleGrey3Dark24(): base(72, 72, 74) {}
 }
 
+Class CCAppleGrey4Light24 : ConsoleColor24 {
+    CCAppleGrey4Light24(): base(209, 209, 214) {}
+}
+
+Class CCAppleGrey4Dark24 : ConsoleColor24 {
+    CCAppleGrey4Dark24(): base(58, 58, 60) {}
+}
+
+Class CCAppleGrey5Light24 : ConsoleColor24 {
+    CCAppleGrey5Light24(): base(229, 229, 234) {}
+}
+
+Class CCAppleGrey5Dark24 : ConsoleColor24 {
+    CCAppleGrey5Dark24(): base(44, 44, 46) {}
+}
+
+Class CCAppleGrey6Light24 : ConsoleColor24 {
+    CCAppleGrey6Light24(): base(242, 242, 247) {}
+}
+
+Class CCAppleGrey6Dark24 : ConsoleColor24 {
+    CCAppleGrey6Dark24(): base(28, 28, 30) {}
+}
+
 # https://www.pantone.com/connect/14-4318-TCX
 Class CCPantoneSkyBlue24 : ConsoleColor24 {
     CCPantoneSkyBlue24(): base(54, 73, 83) {}
