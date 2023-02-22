@@ -189,7 +189,6 @@ Class EmojiBank {
     Static [String]$PersonGestureBowing      = "`u{1F647}"
     Static [String]$PersonGestureFacepalming = "`u{1F926}"
     Static [String]$PersonGestureShrugging   = "`u{1F937}"
-    
 }
 
 <#
