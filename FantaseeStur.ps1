@@ -8475,6 +8475,7 @@ Class StatusWindow : WindowBase {
     Static [Int]$WindowRBColumn       = 19
 
     Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
+    #Static [String]$WindowBorderHorizontal = "`u{25fd}--~---~---~---~---`u{25fd}"
     Static [String]$WindowBorderVertical   = '|'
 
     Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
