@@ -8474,9 +8474,9 @@ Class StatusWindow : WindowBase {
     Static [Int]$WindowRBRow          = 10
     Static [Int]$WindowRBColumn       = 19
 
-    Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
+    Static  [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
     #Static [String]$WindowBorderHorizontal = "`u{25fd}--~---~---~---~---`u{25fd}"
-    Static [String]$WindowBorderVertical   = '|'
+    Static  [String]$WindowBorderVertical   = '|'
 
     Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
@@ -8708,13 +8708,24 @@ Class SceneWindow : WindowBase {
 }
 
 Class MessageWindow : WindowBase {
-    Static [Int]$WindowLTRow    = 21
-    Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowBRRow    = 26
-    Static [Int]$WindowBRColumn = 80
+    Static [Int]$MessageHistoryARef = 0
+    Static [Int]$MessageHistoryBRef = 1
+    Static [Int]$MessageHistoryCRef = 2
+    Static [Int]$WindowLTRow        = 21
+    Static [Int]$WindowLTColumn     = 1
+    Static [Int]$WindowBRRow        = 26
+    Static [Int]$WindowBRColumn     = 80
     
     Static [String]$WindowBorderHorizontal = '-------------------------------------------------------------------------------'
     Static [String]$WindowBorderVertical   = '|'
+
+    Static [ATCoordinates]$MessageADrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$MessageBDrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$MessageCDrawCoordinates = [ATCoordinatesNone]::new()
+
+    Static [ATString]$MessageWindowBlank = [ATStringNone]::new()
+
+    [ATString[]]$MessageHistory
     
     MessageWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
@@ -8729,11 +8740,59 @@ Class MessageWindow : WindowBase {
             [MessageWindow]::WindowBorderHorizontal,
             [MessageWindow]::WindowBorderVertical
         )
-        $this.UpdateDimensions() 
+        $this.UpdateDimensions()
+
+        [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
+        [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageADrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
+        [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
+
+        [MessageWindow]::MessageWindowBlank = [ATString]::new(
+            [ATStringPrefix]::new(
+                [ATForegroundColor24None]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            '                                                                             ',
+            $true
+        )
+
+        $this.MessageHistory                                      = New-Object 'MessageWindow[]' 3
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATStringNone]::new()
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = [ATStringNone]::new()
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATStringNone]::new()
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+    }
+
+    [Void]AddAndWriteMessage([String]$Message, [ATForegroundColor24]$ForegroundColor) {
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef]; $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef]; $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                $ForegroundColor,
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [MessageWindow]::MessageCDrawCoordinates
+            ),
+            $Message,
+            $true
+        )
+
+        # Write the messages to the window, first blanks and then the messages themselves
+        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
+        Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+
+        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
+        Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+
+        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
+        Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
     }
 }
 
@@ -8775,9 +8834,12 @@ Function Test-GfmOs {
 # RUNNER
 Clear-Host
 
-$Script:TheStatusWindow.Draw()
-$Script:TheCommandWindow.Draw()
-$Script:TheSceneWindow.Draw()
-$Script:TheMessageWindow.Draw()
+$Script: TheStatusWindow.Draw()
+$Script: TheCommandWindow.Draw()
+$Script: TheSceneWindow.Draw()
+$Script: TheMessageWindow.Draw()
+$Script: TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
+$Script: TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
+$Script: TheMessageWindow.AddAndWriteMessage('This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
 Read-Host
