@@ -8742,9 +8742,9 @@ Class MessageWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
-        [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageADrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
-        [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
+        [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
+        [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageCDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
+        [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
 
         [MessageWindow]::MessageWindowBlank = [ATString]::new(
             [ATStringPrefix]::new(
@@ -8782,17 +8782,17 @@ Class MessageWindow : WindowBase {
         )
 
         # Write the messages to the window, first blanks and then the messages themselves
-        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
+        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
         Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
         [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
         Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
         Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
-        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
+        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
         Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
     }
 }
 
@@ -8834,12 +8834,12 @@ Function Test-GfmOs {
 # RUNNER
 Clear-Host
 
-$Script: TheStatusWindow.Draw()
-$Script: TheCommandWindow.Draw()
-$Script: TheSceneWindow.Draw()
-$Script: TheMessageWindow.Draw()
-$Script: TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
-$Script: TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
-$Script: TheMessageWindow.AddAndWriteMessage('This is yet ANOTHER message', [CCAppleRedLight24]::new())
+$Script:TheStatusWindow.Draw()
+$Script:TheCommandWindow.Draw()
+$Script:TheSceneWindow.Draw()
+$Script:TheMessageWindow.Draw()
+$Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
+$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
+$Script:TheMessageWindow.AddAndWriteMessage('This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
 Read-Host
