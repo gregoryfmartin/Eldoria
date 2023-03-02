@@ -5,16 +5,18 @@ using namespace System.Management.Automation.Host
 
 # GLOBAL VARIABLE DEFINITIONS
 
-[String]       $Script:OsCheckLinux     = 'OsLinux'
-[String]       $Script:OsCheckMac       = 'OsMac'
-[String]       $Script:OsCheckWindows   = 'OsWindows'
-[String]       $Script:OsCheckUnknown   = 'OsUnknown'
-[Player]       $Script:ThePlayer        = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
-[StatusWindow] $Script:TheStatusWindow  = [StatusWindow]::new()
-[CommandWindow]$Script:TheCommandWindow = [CommandWindow]::new()
-[SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
-[MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
-[SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
+[String]       $Script:OsCheckLinux             = 'OsLinux'
+[String]       $Script:OsCheckMac               = 'OsMac'
+[String]       $Script:OsCheckWindows           = 'OsWindows'
+[String]       $Script:OsCheckUnknown           = 'OsUnknown'
+[ATCoordinates]$Script:DefaultCursorCoordinates = [ATCoordinatesNone]::new()
+[Player]       $Script:ThePlayer                = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
+[StatusWindow] $Script:TheStatusWindow          = [StatusWindow]::new()
+[CommandWindow]$Script:TheCommandWindow         = [CommandWindow]::new()
+[SceneWindow]  $Script:TheSceneWindow           = [SceneWindow]::new()
+[MessageWindow]$Script:TheMessageWindow         = [MessageWindow]::new()
+[SceneImage]   $Script:SampleSi                 = [SceneImage]::new($null)
+
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
 [Map]$Script:CurrentMap  = $null
@@ -31,6 +33,37 @@ using namespace System.Management.Automation.Host
 
 $Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
+# COMMAND TABLE DEFINITION
+$Script:CommandTable = @{
+    'move'      = {}
+    'm'         = {}
+    'climb'     = {}
+    'cl'        = {}
+    'enter'     = {}
+    'en'        = {}
+    'exit'      = {}
+    'ex'        = {}
+    'look'      = {}
+    'l'         = {}
+    'examine'   = {}
+    'exa'       = {}
+    'get'       = {}
+    'g'         = {}
+    'take'      = {}
+    't'         = {}
+    'drop'      = {}
+    'd'         = {}
+    'inventory' = {}
+    'i'         = {}
+    'use'       = {}
+    'u'         = {}
+    'equip'     = {}
+    'eq'        = {}
+    'open'      = {}
+    'op'        = {}
+    'bg'        = {}
+    'scap'      = {}
+}
 
 # ENUMERATION DEFINITIONS
 
@@ -346,7 +379,7 @@ Class ATCoordinates {
     }
 
     [Coordinates]ToAutomationCoordinates() {
-        Return [Coordinates]::new($this.Row, $this.Column)
+        Return [Coordinates]::new($this.Column, $this.Row)
     }
 }
 
@@ -8649,6 +8682,8 @@ Class CommandWindow : WindowBase {
         #     '                  ',
         #     $true
         # )
+
+        $Script:DefaultCursorCoordinates = [ATCoordinates]::new(($rowBase - 2), ($columnBase - 1))
     }
 
     [Void]Draw() {
@@ -8658,6 +8693,54 @@ Class CommandWindow : WindowBase {
             Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
             $this.CommandDivDirty = $false
         }
+    }
+
+    [Void]ReadUserInput() {
+        $rui    = $(Get-Host).UI.RawUI
+        $keyCap = $rui.ReadKey('IncludeKeyDown')
+        
+        While($keyCap.VirtualKeyCode -NE 13) {
+            If($rui.CursorPosition.X -GE 19) {
+                # Invoke the parser
+            }
+
+            If($keyCap.VirtualKeyCode -EQ 8) {
+                $fx = $rui.CursorPosition.X
+                
+                If($fx -GE $Script:DefaultCursorCoordinates.Column) {
+                    # Perform the backspace operation
+                    # Let's try to do this with just escape sequences and a whitespace
+                    [ATString]$rub = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [ATForegroundColor24None]::new(),
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinatesNone]::new()
+                        ),
+                        "`b  `b", # Double backspace character here is required to move the cusor back to the pre-whitespace position.
+                        $true
+
+                    )
+                    Write-Host "$($rub.ToAnsiControlSequenceString())"
+
+                    # Remove the character from the cmdactual string
+                    If($this.CommandActual.UserData.Length -GT 0) {
+                        $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                    }
+                }
+            } Else {
+                # Append the character to the cmdactual string
+                $this.CommandActual.UserData += $keyCap.Character
+            }
+
+            # Invoke ReadKey again
+            $keyCap = $rui.ReadKey('IncludeKeyDown')
+        }
+    }
+
+    [Void]ParseCommand() {
+        # Clear the user input portion of the Command Window
+
     }
 }
 
@@ -8796,6 +8879,12 @@ Class MessageWindow : WindowBase {
     }
 }
 
+Class Utilities {
+    Static [Void]SetCursorToDefaultPosition() {
+        $(Get-Host).UI.RawUI.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
+    }
+}
+
 # FUNCTION DEFINITIONS
 
 Function Test-GfmOs {
@@ -8841,5 +8930,6 @@ $Script:TheMessageWindow.Draw()
 $Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
 $Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
 $Script:TheMessageWindow.AddAndWriteMessage('This is yet ANOTHER message', [CCAppleRedLight24]::new())
+[Utilities]::SetCursorToDefaultPosition()
 
 Read-Host
