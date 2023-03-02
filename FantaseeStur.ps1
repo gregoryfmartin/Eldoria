@@ -8711,17 +8711,17 @@ Class CommandWindow : WindowBase {
                 If($fx -GE $Script:DefaultCursorCoordinates.Column) {
                     # Perform the backspace operation
                     # Let's try to do this with just escape sequences and a whitespace
-                    # [ATString]$rub = [ATString]::new(
-                    #     [ATStringPrefix]::new(
-                    #         [ATForegroundColor24None]::new(),
-                    #         [ATBackgroundColor24None]::new(),
-                    #         [ATDecorationNone]::new(),
-                    #         [ATCoordinatesNone]::new()
-                    #     ),
-                    #     "`b  `b", # Double backspace character here is required to move the cusor back to the pre-whitespace position.
-                    #     $true
-                    # )
-                    Write-Host "`b"
+                    [ATString]$rub = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [ATForegroundColor24None]::new(),
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($rui.CursorPosition.Y, $fx - 1)
+                        ),
+                        ' ', # Double backspace character here is required to move the cusor back to the pre-whitespace position.
+                        $true
+                    )
+                    Write-Host "$($rub.ToAnsiControlSequenceString())"
 
                     # Remove the character from the cmdactual string
                     If($this.CommandActual.UserData.Length -GT 0) {
