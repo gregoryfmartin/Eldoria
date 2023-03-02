@@ -8702,6 +8702,7 @@ Class CommandWindow : WindowBase {
         While($keyCap.VirtualKeyCode -NE 13) {
             If($rui.CursorPosition.X -GE 19) {
                 # Invoke the parser
+                $this.ParseCommand()
             }
 
             If($keyCap.VirtualKeyCode -EQ 8) {
@@ -8710,18 +8711,17 @@ Class CommandWindow : WindowBase {
                 If($fx -GE $Script:DefaultCursorCoordinates.Column) {
                     # Perform the backspace operation
                     # Let's try to do this with just escape sequences and a whitespace
-                    [ATString]$rub = [ATString]::new(
-                        [ATStringPrefix]::new(
-                            [ATForegroundColor24None]::new(),
-                            [ATBackgroundColor24None]::new(),
-                            [ATDecorationNone]::new(),
-                            [ATCoordinatesNone]::new()
-                        ),
-                        "`b  `b", # Double backspace character here is required to move the cusor back to the pre-whitespace position.
-                        $true
-
-                    )
-                    Write-Host "$($rub.ToAnsiControlSequenceString())"
+                    # [ATString]$rub = [ATString]::new(
+                    #     [ATStringPrefix]::new(
+                    #         [ATForegroundColor24None]::new(),
+                    #         [ATBackgroundColor24None]::new(),
+                    #         [ATDecorationNone]::new(),
+                    #         [ATCoordinatesNone]::new()
+                    #     ),
+                    #     "`b  `b", # Double backspace character here is required to move the cusor back to the pre-whitespace position.
+                    #     $true
+                    # )
+                    Write-Host "`b"
 
                     # Remove the character from the cmdactual string
                     If($this.CommandActual.UserData.Length -GT 0) {
@@ -8736,11 +8736,16 @@ Class CommandWindow : WindowBase {
             # Invoke ReadKey again
             $keyCap = $rui.ReadKey('IncludeKeyDown')
         }
+
+        $this.ParseCommand()
     }
 
     [Void]ParseCommand() {
         # Clear the user input portion of the Command Window
-
+        Clear-Host
+        Write-Host 'Command Parser was invoked'
+        Read-Host
+        Exit
     }
 }
 
@@ -8751,7 +8756,6 @@ Class SceneWindow : WindowBase {
     Static [Int]$WindowRBColumn        = 78
     Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
-    
 
     Static [String]$WindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
     Static [String]$WindowBorderVertical   = '|'
@@ -8931,5 +8935,9 @@ $Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCApple
 $Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
 $Script:TheMessageWindow.AddAndWriteMessage('This is yet ANOTHER message', [CCAppleRedLight24]::new())
 [Utilities]::SetCursorToDefaultPosition()
+
+While(1) {
+    $Script:TheCommandWindow.ReadUserInput()
+}
 
 Read-Host
