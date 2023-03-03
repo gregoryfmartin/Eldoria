@@ -15,6 +15,7 @@ using namespace System.Management.Automation.Host
 [SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
 [MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
 [SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
+[CommandBar]   $Script:TheCommandBar    = [CommandBar]::new()
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
 [Map]$Script:CurrentMap  = $null
@@ -8796,6 +8797,56 @@ Class MessageWindow : WindowBase {
     }
 }
 
+Class CommandBar : WindowBase {
+    #Static [String]$WindowBorderHorizontal = '-------------------------------------------------------------------------------'
+    Static [String]$WindowBorderHorizontal = ''
+    Static [String]$WindowBorderVertical   = '|'
+
+    CommandBar(): base() {
+        $this.LeftTop          = [ATCoordinates]::new(26, 1)
+        $this.RightBottom      = [ATCoordinates]::new(28, 78)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [CommandBar]::WindowBorderHorizontal,
+            [CommandBar]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        # [ATString]$cbbg = [ATString]::new(
+        #     [ATStringPrefix]::new(
+        #         [ATForegroundColor24None]::new(),
+        #         [CCAppleCyanDark24]::new(),
+        #         [ATDecorationNone]::new(),
+        #         [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 1)
+        #     ),
+        #     '                                                                             ',
+        #     $true
+        # )
+        [ATString]$cbfg = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCAppleIndigoLight24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 1)
+            ),
+            '> ',
+            $false
+        )
+
+        Write-Host "$($cbfg.ToAnsiControlSequenceString())>"
+        $(Get-Host).UI.RawUI.CursorPosition = $([ATCoordinates]::new($this.LeftTop.Row + 2, $this.LeftTop.Column + 1)).ToAutomationCoordinates()
+    }
+}
+
 # FUNCTION DEFINITIONS
 
 Function Test-GfmOs {
@@ -8838,6 +8889,7 @@ $Script:TheStatusWindow.Draw()
 $Script:TheCommandWindow.Draw()
 $Script:TheSceneWindow.Draw()
 $Script:TheMessageWindow.Draw()
+$Script:TheCommandBar.Draw()
 $Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
 $Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
 $Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
