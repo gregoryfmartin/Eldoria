@@ -8840,6 +8840,6 @@ $Script:TheSceneWindow.Draw()
 $Script:TheMessageWindow.Draw()
 $Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
 $Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
-$Script:TheMessageWindow.AddAndWriteMessage('This is yet ANOTHER message', [CCAppleRedLight24]::new())
+$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
 Read-Host
