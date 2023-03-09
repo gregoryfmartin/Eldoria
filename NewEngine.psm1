@@ -42,9 +42,9 @@ using namespace System.Management.Automation.Host
     Ending
 }
 
-[Boolean]$Script:RefreshGPSSceneImage = $true
-[Boolean]$Script:RefreshGPSPlayerName = $true
-[Boolean]$Script:RefreshGPSPlayerHp = $true
+[Boolean]$Script:DirtyFlagSceneImage = $true
+[Boolean]$Script:DirtyFlagPlayerName = $true
+[Boolean]$Script:DirtyFlagPlayerHp = $true
 [Boolean]$Script:RefreshGPSPlayerMp = $true
 [Boolean]$Script:RefreshGPSPlayerGold = $true
 [Boolean]$Script:RefreshGPSStatusWindow = $true
@@ -3391,6 +3391,10 @@ Function Invoke-GfmGamePlayScreenEnding {
 
 #region Lifecycle Functions
 
+<#
+.SYNOPSIS
+Serves as the entry point for the game program.
+#>
 Function Start-GfmGame {
     [CmdletBinding()]
     Param ()
@@ -3402,12 +3406,15 @@ Function Start-GfmGame {
             If (($Script:CurrentFrameTime - $Script:LastFrameTime) -GE $Script:MsPerFrame) {
                 $Script:FpsDelta = [TimeSpan]::new($Script:CurrentFrameTime - $Script:LastFrameTime)
                 Invoke-GfmGameLogic
-                #Invoke-GfmGameDraw
             }
         }
     }
 }
 
+<#
+.SYNOPSIS
+Runs the core logic of the game.
+#>
 Function Invoke-GfmGameLogic {
     [CmdletBinding()]
     Param ()
@@ -3415,20 +3422,6 @@ Function Invoke-GfmGameLogic {
     Process {
         # Query the current state of the game
         Invoke-Command $Script:GameStateBlockTable[$Script:GameState]
-    }
-}
-
-Function Invoke-GfmGameDraw {
-    [CmdletBinding()]
-    Param ()
-    
-    Process {
-        # Query the current state/substate of the game
-        Switch ($Script:GameState) {
-            # TODO: Add the possible top-level states here
-            
-            Default {}
-        }
     }
 }
 
@@ -3458,9 +3451,9 @@ Function Test-GfmPlayScreen {
     		$Script:RefreshGPSMessageWindow = $false
     	}
 
-		If($Script:RefreshGPSSceneImage) {
+		If($Script:DirtyFlagSceneImage) {
         	Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
-        	$Script:REfreshGPSSceneImage = $false
+        	$Script:DirtyFlagSceneImage = $false
         }
 
 		If(-NOT($Script:PlayerDataInitialized)) {
@@ -3473,13 +3466,13 @@ Function Test-GfmPlayScreen {
 	        $Script:PlayerDataInitialized = $true
         }
 
-        If($Script:RefreshGPSPlayerName) {
+        If($Script:DirtyFlagPlayerName) {
         	Write-GfmPlayerName
-        	$Script:RefreshGPSPlayerName = $false
+        	$Script:DirtyFlagPlayerName = $false
         }
-        If($Script:RefreshGPSPlayerHp) {
+        If($Script:DirtyFlagPlayerHp) {
         	Write-GfmPlayerHp
-        	$Script:RefreshGPSPlayerHp = $false
+        	$Script:DirtyFlagPlayerHp = $false
         }
         If($Script:RefreshGPSPlayerMp) {
         	Write-GfmPlayerMp
