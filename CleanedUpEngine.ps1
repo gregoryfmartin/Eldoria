@@ -516,7 +516,7 @@ The string that will be written to the console.
 The color to give to the text when it's being written.
 
 .PARAMETER TypeSpeed
-The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]:: Normal.
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]::Normal.
 #>
 Function Write-GfmTtyString {
     [CmdletBinding()]
@@ -543,6 +543,46 @@ Function Write-GfmTtyString {
                 $msgcaProbe++
             }
         }
+    }
+}
+
+#endregion
+
+#region WRITE-GFMPOSITIONALTTYSTRING
+
+<#
+.SYNOPSIS
+Combines the positional string and teletype functions.
+
+.PARAMETER Coordinates
+The Coordinates (in console cells) where the string will start to be written to.
+
+.PARAMETER Message
+The string that will be written to the console.
+
+.PARAMETER ForegroundColor
+The color to give to the string when it's being written.
+
+.PARAMETER TypeSpeed
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]::Normal.
+#>
+Function Write-GfmPositionalTtyString {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [Coordinates]$Coordinates,
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [String]$Message,
+        [Parameter(Mandatory = $true)]
+        [System.ConsoleColor]$ForegroundColor,
+        [Parameter(Mandatory = $false)]
+        [TtySpeed]$TypeSpeed = [TtySpeed]::Normal
+    )
+
+    Process {
+        $Script:Rui.CursorPosition = $Coordinates
+        Write-GfmTtyString -Message $Message -ForegroundColor $ForegroundColor -TypeSpeed $TypeSpeed
     }
 }
 
