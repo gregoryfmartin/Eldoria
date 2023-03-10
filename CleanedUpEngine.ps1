@@ -884,4 +884,40 @@ Function Write-GfmSceneImage {
 
 #endregion
 
+#region UPDATE-GFMPLAYERNAME
+
+<#
+.SYNOPSIS
+Changes the player's name and writes it to the console window if applicable.
+
+.PARAMETER NewName
+The new name to assign to the player.
+
+.PARAMETER WriteToConsole
+Writes the name to the console at the predefined cell coordinates if necessary.
+#>
+Function Update-GfmPlayerName {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$NewName,
+        [Switch]$WriteToConsole
+    )
+
+    Process {
+        $Script:PlayerName = $NewName
+        If($WriteToConsole) {
+            Write-GfmPlayerName
+        }
+    }
+
+    End {
+        If($WriteToConsole) {
+            Set-GfmDefaultCursorPosition
+        }
+    }
+}
+
+#endregion
+
 #endregion
