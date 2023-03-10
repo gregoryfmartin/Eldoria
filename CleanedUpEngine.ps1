@@ -503,6 +503,51 @@ Function Write-GfmPositionalString {
 
 #endregion
 
+#region WRITE-GFMTTYSTRING
+
+<#
+.SYNOPSIS
+Writes a string to the console in a teletype fashion. This function will leverage Write-GfmHostNnl.
+
+.PARAMETER Message
+The string that will be written to the console.
+
+.PARAMETER ForegroundColor
+The color to give to the text when it's being written.
+
+.PARAMETER TypeSpeed
+The speed at which to type the characters of the Message to the console at. By default, this is [TtySpeed]:: Normal.
+#>
+Function Write-GfmTtyString {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [String]$Message,
+        [Parameter(Mandatory = $true)]
+        [ConsoleColor]$ForegroundColor,
+        [Parameter(Mandatory = $false)]
+        [TtySpeed]$TypeSpeed = [TtySpeed]::Normal
+    )
+
+    Process {
+        [Char[]]$msgCharArray = $Message.ToCharArray()
+        [Int]   $typeCounter  = 0
+        [Int]   $msgcaProbe   = 0
+
+        While($msgcaProbe -LE ($msgCharArray.Count - 1)) {
+            $typeCounter++
+            If ($typeCounter -GE $TypeSpeed) {
+                $typeCounter = 0
+                Write-GfmHostNnl -Message $msgCharArray[$msgcaProbe] -ForegroundColor $ForegroundColor
+                $msgcaProbe++
+            }
+        }
+    }
+}
+
+#endregion
+
 #region FORMAT-GFMPLAYERHITPOINTS
 
 <#
