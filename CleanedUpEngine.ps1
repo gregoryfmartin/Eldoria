@@ -449,6 +449,29 @@ Function Test-GfmPlayerHpForState {
 
 #endregion
 
+#region TEST-GFMPLAYERMPFORSTATE
+
+<#
+.SYNOPSIS
+Tests the player's current magic points against a fraction of the maximum and determines their state accordingly.
+#>
+Function Test-GfmPlayerMpForState {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        If($Script:PlayerCurrentMagicPoints -GT ($Script:PlayerMaxMagicPoints * $Script:PlayerStatNumTCaution)) {
+            $Script:PlayerMagicPointsState = [PlayerStatNumState]::Normal
+        } Elseif(($Script:PlayerCurrentMagicPoints -GT ($Script:PlayerMaxMagicPoints * $Script:PlayerStatNumTDanger)) -AND ($Script:PlayerCurrentMagicPoints -LT ($Script:PlayerMaxMagicPoints * $Script:PlayerStatNumTCaution))) {
+            $Script:PlayerMagicPointsState = [PlayerStatNumState]::Caution
+        } Elseif($Script:PlayerCurrentMagicPoints -LT ($Script:PlayerMaxMagicPoints * $Script:PlayerStatNumTDanger)) {
+            $Script:PlayerMagicPointsState = [PlayerStatNumState]::Danger
+        }
+    }
+}
+
+#endregion
+
 #region WRITE-GFMHOSTNNL
 
 <#
