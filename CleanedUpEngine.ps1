@@ -368,3 +368,14 @@ $Script:Rui = $(Get-Host).UI.RawUI
 [BufferCell[,]]$Script:ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
 
 #endregion
+
+
+
+
+#region MAP VARIABLES
+
+[Map]$Script:SampleMap   = [Map]::new('Sample Map', [Coordinates]::new(2, 2), $true)
+[Map]$Script:CurrentMap  = $Script:SampleMap
+[Map]$Script:PreviousMap = $null
+
+#endregion
