@@ -426,6 +426,18 @@ Function Test-GfmOs {
 
 #endregion
 
+#region TEST-GFMPLAYERHPFORSTATE
+
+Function Test-GfmPlayerHpForState {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+    }
+}
+
+#endregion
+
 #region WRITE-GFMHOSTNNL
 
 <#
@@ -655,6 +667,10 @@ Function Write-GfmPlayerName {
             -Message $Script:PlayerName `
             -ForegroundColor $Script:PlayerStatDrawColorName
     }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
 }
 
 #endregion
@@ -772,6 +788,10 @@ Function Write-GfmPlayerGold {
             -Coordinates $Script:UiStatusWindowPlayerGoldDrawOirgin `
             -Message $(Format-GfmPlayerGold) `
             -ForegroundColor $Script:PlayerStatDrawColorGold
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
     }
 }
 
