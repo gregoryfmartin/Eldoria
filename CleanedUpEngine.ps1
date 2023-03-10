@@ -659,6 +659,55 @@ Function Write-GfmPlayerName {
 
 #endregion
 
+#region WRITE-GFMPLAYERHP
+
+<#
+.SYNOPSIS
+Writes the player's hit points - relative to their state - to the console window at the predefined cell coordinates.
+#>
+Function Write-GfmPlayerHp {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Switch($Script:PlayerHitPointsState) {
+            ([PlayerStatNumState]::Normal) {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerHpDrawOrigin `
+                    -Message $(Format-GfmPlayerHitPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorSafe
+            }
+
+            ([PlayerStatNumState]::Caution) {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerHpDrawOrigin `
+                    -Message $(Format-GfmPlayerHitPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorCaution
+            }
+
+            ([PlayerStatNumState]::Danger) {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerHpDrawOrigin `
+                    -Message $(Format-GfmPlayerHitPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorDanger
+            }
+
+            Default {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerHpDrawOrigin `
+                    -Message $(Format-GfmPlayerHitPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorSafe
+            }
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
 #region NEW-GFMSCENEIMAGESAMPLE
 
 <#
