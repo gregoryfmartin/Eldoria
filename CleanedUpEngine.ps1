@@ -460,6 +460,33 @@ Function New-GfmSceneImageSample {
 
 #region WRITE-GFMSCENEIMAGE
 
+Function Write-GfmSceneImage {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [BufferCell[,]]$CellArray
+    )
+
+    Process {
+        Switch($(Test-GfmOs)) {
+            { $_ -EQ $Script:OsCheckLinux -OR $_ -EQ $Script:OsCheckMac } {
+                For($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
+                    For($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
+                        $Script:Rui.CursorPosition = [Coordinates]::new(($Script:SceneImageDrawOrigin.X + $w), ($Script:SceneImageDrawOrigin.Y + $h))
+                        Write-Host ' ' -BackgroundColor $CellArray[$h, $w].BackgroundColor -NoNewline
+                    }
+                }
+            }
+
+            { $_ -EQ $Script:OsCheckWindows } {
+                $Script:Rui.SetBufferContents($Script:SceneImageDrawOrigin, $CellArray)
+            }
+
+            Default {}
+        }
+    }
+}
+
 #endregion
 
 #endregion
