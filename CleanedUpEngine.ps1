@@ -428,11 +428,22 @@ Function Test-GfmOs {
 
 #region TEST-GFMPLAYERHPFORSTATE
 
+<#
+.SYNOPSIS
+Tests the player's current hit points against a fraction of the maximum and determines their state accordingly.
+#>
 Function Test-GfmPlayerHpForState {
     [CmdletBinding()]
     Param ()
 
     Process {
+        If($Script:PlayerCurrentHitPoints -GT ($Script:PlayerMaxHitPoints * $Script:PlayerStatNumTCaution)) {
+            $Script:PlayerHitPointsState = [PlayerStatNumState]::Normal
+        } Elseif(($Script:PlayerCurrentHitPoints -GT ($Script:PlayerMaxHitPoints * $Script:PlayerStatNumTDanger)) -AND ($Script:PlayerCurrentHitPoints -LT ($Script:PlayerMaxHitPoints * $Script:PlayerStatNumTCaution))) {
+            $Script:PlayerHitPointsState = [PlayerStatNumState]::Caution
+        } Elseif($Script:PlayerCurrentHitPoints -LT ($Script:PlayerMaxHitPoints * $Script:PlayerStatNumTDanger)) {
+            $Script:PlayerHitPointsState = [PlayerStatNumState]::Danger
+        }
     }
 }
 
