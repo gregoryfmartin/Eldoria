@@ -451,6 +451,23 @@ Function Write-GfmHostNnl {
 
 #endregion
 
+#region SET-GFMDEFAULTCURSORPOSITION
+
+<#
+.SYNOPSIS
+Sets the console cursor position to the predefined "default" location.
+#>
+Function Set-GfmDefaultCursorPosition {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        $Script:Rui.CursorPosition = $Script:DefaultCursorCoords
+    }
+}
+
+#endregion
+
 #region FORMAT-GFMPLAYERHITPOINTS
 
 <#
