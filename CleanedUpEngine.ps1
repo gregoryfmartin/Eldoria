@@ -436,4 +436,30 @@ Function Format-GfmPlayerGold {
 
 #endregion
 
+#region NEW-GFMSCENEIMAGESAMPLE
+
+<#
+.SYNOPSIS
+Creates a new Sample Scene Image. This Scene Image is used for testing purposes only.
+#>
+Function New-GfmSceneImageSample {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        For($h = 0; $h -LT $Script:SceneImageHeight; $h++) {
+            For($w = 0; $w -LT $Script:SceneImageWidth; $w++) {
+                [Int]$r = Get-Random -Minimum 1 -Maximum 15
+                $Script:SceneImageSample[$h, $w] = [BufferCell]::new(' ', 0, $r, 0)
+            }
+        }
+    }
+}
+
+#endregion
+
+#region WRITE-GFMSCENEIMAGE
+
+#endregion
+
 #endregion
