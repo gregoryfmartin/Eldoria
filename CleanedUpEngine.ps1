@@ -426,6 +426,31 @@ Function Test-GfmOs {
 
 #endregion
 
+#region WRITE-GFMHOSTNNL
+
+<#
+.SYNOPSIS
+A wrapper for Write-Host that utilizes the NoNewline switch, which is a common requirement for a lot of console write calls in this script.
+#>
+Function Write-GfmHostNnl {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [String]$Message,
+        [Parameter(Mandatory = $true)]
+        [ConsoleColor]$ForegroundColor,
+        [Parameter(Mandatory = $false)]
+        [ConsoleColor]$BackgroundColor = 0
+    )
+
+    Process {
+        Write-Host $Message -NoNewline -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
+    }
+}
+
+#endregion
+
 #region FORMAT-GFMPLAYERHITPOINTS
 
 <#
