@@ -959,4 +959,43 @@ Function Update-GfmPlayerHp {
 
 #endregion
 
+#region UPDATE-GFMPLAYERMP
+
+<#
+.SYNOPSIS
+Updates the player's current magic points and writes it to the console window if applicable.
+
+.PARAMETER MpDelta
+The additive to the current magic points value. To subtract from the current magic points, assign this a negative value.
+
+.PARAMETER WriteToConsole
+Writes the MP String to the console at the predefined cell coordinates if necessary.
+#>
+Function Update-GfmPlayerMp {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [Int]$MpDelta,
+        [Switch]$WriteToConsole
+    )
+
+    Process {
+        $t = $Script:PlayerCurrentMagicPoints + $MpDelta
+        $t = [Math]::Clamp($t, 0, $Script:PlayerMaxMagicPoints)
+        $Script:PlayerCurrentMagicPoints = $t
+        Test-GfmPlayerMpForState
+        If($WriteToConsole) {
+            Write-GfmPlayerMp
+        }
+    }
+
+    End {
+        If($WriteToConsole) {
+            Set-GfmDefaultCursorPosition
+        }
+    }
+}
+
+#endregion
+
 #endregion
