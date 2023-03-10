@@ -419,4 +419,21 @@ Function Format-GfmPlayerMagicPoints {
 
 #endregion
 
+#region FORMAT-GFMPLAYERGOLD
+
+<#
+.SYNOPSIS
+Returns a formatted string to display the player's gold information. This string doesn't contain coordinate data. The calling function is expected to do this.
+#>
+Function Format-GfmPlayerGold {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Return "$($Script:PlayerCurrentGold)G"
+    }
+}
+
+#endregion
+
 #endregion
