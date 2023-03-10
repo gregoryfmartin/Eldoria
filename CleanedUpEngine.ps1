@@ -153,6 +153,31 @@ Class MTOPole : MapTileObject {
     }) {}
 }
 
+Class MapTile {
+    Static [Int]$TileExitNorth = 0
+    Static [Int]$TileExitSouth = 1
+    Static [Int]$TileExitEast  = 2
+    Static [Int]$TileExitWest  = 3
+
+    [BufferCell[,]]$BackgroundImage
+    [Boolean[]]$Exits
+    [List[MapTileObject]]$ObjectListing
+
+    MapTile(
+        [BufferCell[,]]$BackgroundImage,
+        [Boolean[]]$Exits,
+        [MapTileObject[]]$ObjectListing
+    ) {
+        $this.BackgroundImage = $BackgroundImage
+        $this.Exits           = $Exits
+        $this.ObjectListing   = [List[MapTileObject]]::new()
+        
+        Foreach($a in $ObjectListing) {
+            $this.ObjectListing.Add($a) | Out-Null
+        }
+    }
+}
+
 #endregion
 
 
