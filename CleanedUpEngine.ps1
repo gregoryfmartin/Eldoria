@@ -379,3 +379,44 @@ $Script:Rui = $(Get-Host).UI.RawUI
 [Map]$Script:PreviousMap = $null
 
 #endregion
+
+
+
+
+#region FUNCTION DEFINITIONS
+
+#region FORMAT-GFMPLAYERHITPOINTS
+
+<#
+.SYNOPSIS
+Returns a formatted string to display the player's hit point information. This string doesn't contain coordinate data. The calling function is expected to do this.
+#>
+Function Format-GfmPlayerHitPoints {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Return "H $($Script:PlayerCurrentHitPoints) `n`t/ $($Script:PlayerMaxHitPoints)"
+    }
+}
+
+#endregion
+
+#region FORMAT-GFMPLAYERMAGICPOINTS
+
+<#
+.SYNOPSIS
+Returns a formatted string to display the player's magic point information. This string doesn't contain coordinate data. The calling function is expected to do this.
+#>
+Function Format-GfmPlayerMagicPoints {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Return "M $($Script:PlayerCurrentMagicPoints) `n`t/ $($Script:PlayerMaxMagicPoints)"
+    }
+}
+
+#endregion
+
+#endregion
