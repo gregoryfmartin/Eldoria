@@ -171,3 +171,17 @@ Enum PlayerStatNumState {
 [Coordinates] $Script:UiMessageWindowMsgCDrawOrigin   = [Coordinates]::new(2, 21)
 
 #endregion
+
+
+
+
+#region TIMING VARIABLES
+
+[Int]     $Script:TargetFrameRate  = 30
+[Single]  $Script:MsPerFrame       = 1000 / $Script:TargetFrameRate
+[Boolean] $Script:GameRunning      = $true
+[Double]  $Script:LastFrameTime    = 0D
+[Double]  $Script:CurrentFrameTime = 0D
+[TimeSpan]$Script:FpsDelta         = [TimeSpan]::Zero
+
+#endregion
