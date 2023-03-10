@@ -1036,4 +1036,91 @@ Function Update-GfmPlayerGold {
 
 #endregion
 
+#region WRITE-GFMMESSAGEWINDOWMSG
+
+<#
+.SYNOPSIS
+Writes a message to the Message Window Area
+
+.PARAMETER Message
+The message to add to the Message Window "queue".
+
+.PARAMETER Teletype
+Specifies if we're going to use the teletype method for printing the message to the window.
+#>
+Function Write-GfmMessageWindowMsg {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$Message,
+        [Parameter(Mandatory = $false)]
+        [ConsoleColor]$ForegroundColor = 15,
+        [Switch]$Teletype
+    )
+
+    Process {
+        $Script:UiMessageWindowMsgAStr = $Script:UiMessageWindowMsgBStr; $Script:UiMessageWindowMsgAColor = $Script:UiMessageWindowMsgBColor
+        $Script:UiMessageWindowMsgBStr = $Script:UiMessageWidnowMsgCStr; $Script:UiMessageWindowMsgBColor = $Script:UiMessageWindowMsgCColor
+        $Script:UiMessageWindowMsgCStr = $Message; $Script:UiMessageWindowMsgCColor                       = $ForegroundColor
+        
+        If($Teletype) {
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgCDrawOrigin `
+                -Message $Script:UiMessageWindowMsgBlank `
+                -ForegroundColor 0
+            Write-GfmPositionalTtyString `
+                -Coordinates $Script:UiMessageWindowMsgCDrawOrigin `
+                -Message $Script:UiMessageWindowMsgCStr `
+                -ForegroundColor $Script:UiMessageWindowMsgCColor
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgBDrawOrigin `
+                -Message $Script:UiMessageWindowMsgBlank `
+                -ForegroundColor 0
+            Write-GfmPositionalTtyString `
+                -Coordinates $Script:UiMessageWindowMsgBDrawOrigin `
+                -Message $Script:UiMessageWindowMsgBStr `
+                -ForegroundColor $Script:UiMessageWindowMsgBColor
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgADrawOrigin `
+                -Message $Script:UiMessageWindowMsgBlank `
+                -ForegroundColor 0
+            Write-GfmPositionalTtyString `
+                -Coordinates $Script:UiMessageWindowMsgADrawOrigin `
+                -Message $Script:UiMessageWindowMsgAStr `
+                -ForegroundColor $Script:UiMessageWindowMsgAColor
+        } Else {
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgCDrawOrigin `
+                -Message $Script:UiMessageWindowMsgBlank `
+                -ForegroundColor 0
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgCDrawOrigin `
+                -Message $Script:UiMessageWindowMsgCStr `
+                -ForegroundColor $Script:UiMessageWindowMsgCColor
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgBDrawOrigin `
+                -Message $Script:UiMessageWindowMsgBlank `
+                -ForegroundColor 0
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgBDrawOrigin `
+                -Message $Script:UiMessageWindowMsgBStr `
+                -ForegroundColor $Script:UiMessageWindowMsgBColor
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgADrawOrigin `
+                -Message $Script:UiMessageWindowMsgBlank `
+                -ForegroundColor 0
+            Write-GfmPositionalString `
+                -Coordinates $Script:UiMessageWindowMsgADrawOrigin `
+                -Message $Script:UiMessageWindowMsgAStr `
+                -ForegroundColor $Script:UiMessageWindowMsgAColor
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
 #endregion
