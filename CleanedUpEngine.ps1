@@ -998,4 +998,42 @@ Function Update-GfmPlayerMp {
 
 #endregion
 
+#region UPDATE-GFMPLAYERGOLD
+
+<#
+.SYNOPSIS
+Updates the player's current gold points and writes it to the console window if applicable.
+
+.PARAMETER GDelta
+The additive to the current gold points value. To subtract from the current gold points, assign this a negative value.
+
+.PARAMETER WriteToConsole
+Writes the Gold String to the console at the predefined cell coordinates if necessary.
+#>
+Function Update-GfmPlayerGold {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [Int]$GDelta,
+        [Switch]$WriteToConsole
+    )
+
+    Process {
+        $t = $Script:PlayerCurrentGold + $GDelta
+        $t = [Math]::Clamp($t, 0, $Script:PlayerMaxGold)
+        $Script:PlayerCurrentGold = $t
+        If($WriteToConsole) {
+            Write-GfmPlayerGold
+        }
+    }
+
+    End {
+        If($WriteToConsole) {
+            Set-GfmDefaultCursorPosition
+        }
+    }
+}
+
+#endregion
+
 #endregion
