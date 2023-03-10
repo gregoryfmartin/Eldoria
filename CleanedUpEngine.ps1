@@ -3,7 +3,7 @@ using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
-# GAME STATE DEFINITIONS
+#region GAME STATE DEFINITIONS
 
 Enum GlobalGameState {
     Initialize
@@ -42,7 +42,13 @@ Enum PlayerStatNumState {
     Danger
 }
 
-# PLAYER VARIABLES
+#endregion
+
+
+
+
+#region PLAYER VARIABLES
+
 [String]             $Script:PlayerName                 = ''
 [Int]                $Script:PlayerCurrentHitPoints     = 0
 [Int]                $Script:PlayerMaxHitPoints         = 0
@@ -63,13 +69,24 @@ Enum PlayerStatNumState {
 [Coordinates]        $Script:PlayerMapCoordinates       = [Coordainates]::new(0, 0) # Origin coordinates apply for Maps
 [List[MapTileObject]]$Script:PlayerInventory            = [List[MapTileObject]]::new()
 
-# SCENE IMAGE VARIABLES
+#endregion
+
+
+
+
+#region SCENE IMAGE VARIABLES
 
 [Int]        $Script:SceneImageWidth      = 46
 [Int]        $Script:SceneImageHeight     = 18
 [Coordinates]$Script:SceneImageDrawOrigin = [Coordinates]::new(32, 2)
 
-# STATUS WINDOW VARIABLES
+#endregion
+
+
+
+
+#region STATUS WINDOW VARIABLES
+
 [String]      $Script:UiStatusindowBorderHorizontal      = '@--~---~---~---~---@'
 [String]      $Script:UiStatusWindowBorderVertical       = '|'
 [ConsoleColor]$Script:UiStatusWindowBorderColor          = 15
@@ -81,7 +98,13 @@ Enum PlayerStatNumState {
 [Coordinates] $Script:UiStatusWindowPlayerMpDrawOrigin   = [Coordinates]::new(2, 6)
 [Coordinates] $Script:UiStatusWindowPlayerGoldDrawOiring = [Coordinates]::new(2, 9)
 
-# COMMAND WINDOW VARIABLES
+#endregion
+
+
+
+
+#region COMMAND WINDOW VARIABLES
+
 [String]      $Script:UiCommandWindowBorderHorizontal = '@--~---~---~---~---@'
 [String]      $Script:UiCommandWindowBorderVertical   = '|'
 [String]      $Script:UiCommandWindowCmdDiv           = '``````````````````'
@@ -108,10 +131,43 @@ Enum PlayerStatNumState {
 [Coordinates] $Script:UiCommandWindowHistBDrawOrigin  = [Coordinates]::new(($Script:UiCommandWindowDrawOrigin.X + 1), (($Script:UiCommandWindowDrawOrigin.Y + $Script:UiCommandWindowHeight) - 5))
 [Coordinates] $Script:UICommandWindowHistADrawOrigin  = [Coordinates]::new(($Script:UiCommandWindowDrawOrigin.X + 1), (($Script:UiCommandWindowDrawOrigin.Y + $Script:UiCommandWindowHeight) - 6))
 
-# SCENE WINDOW VARIABLES
-[String]       $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
-[String]       $Script:UiSceneWindowBorderVertical   = '|'
-[ConsoleColor]$Script:UiSceneWindowBorderColor       = 15
-[Int]          $Script:UiSceneWindowWidth            = 50
-[Int]          $Script:UiSceneWindowHeight           = 19
-[Coordinates]  $Script:UiSceneWindowDrawOrigin       = [Coordinates]::new(30, 1)
+#endregion
+
+
+
+
+#region SCENE WINDOW VARIABLES
+
+[String]      $Script:UiSceneWindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
+[String]      $Script:UiSceneWindowBorderVertical   = '|'
+[ConsoleColor]$Script:UiSceneWindowBorderColor      = 15
+[Int]         $Script:UiSceneWindowWidth            = 50
+[Int]         $Script:UiSceneWindowHeight           = 19
+[Coordinates] $Script:UiSceneWindowDrawOrigin       = [Coordinates]::new(30, 1)
+
+#endregion
+
+
+
+
+#region MESSAGE WINDOW VARIABLES
+
+[String]      $Script:UiMessageWindowBorderHorizontal = '-'
+[String]      $Script:UiMessageWindowBorderVertical   = '|'
+[String]      $Script:UiMessageWindowMsgAStr          = ''
+[String]      $Script:UiMessageWindowMsgBStr          = ''
+[String]      $Script:UiMessageWindowMsgCStr          = ''
+[String]      $Script:UiMessageWindowMsgBlank         = '                                                                             '
+[ConsoleColor]$Script:UiMessageWindowBorderColor      = 15
+[ConsoleColor]$Script:UiMessageWindowBlackFgColor     = 0
+[ConsoleColor]$Script:UiMessageWindowMsgAColor        = 15
+[ConsoleColor]$Script:UiMessageWindowMsgBColor        = 15
+[ConsoleColor]$Script:UiMessageWindowMsgCColor        = 15
+[Int]         $Script:UiMessageWindowWidth            = 80
+[Int]         $Script:UiMessageWindowHeight           = 5
+[Coordinates] $Script:UiMessageWindowDrawOrigin       = [Coordinates]::new(1, 20)
+[Coordinates] $Script:UiMessageWindowMsgADrawOrigin   = [Coordinates]::new(2, 23)
+[Coordinates] $Script:UiMessageWindowMsgBDrawOrigin   = [Coordinates]::new(2, 22)
+[Coordinates] $Script:UiMessageWindowMsgCDrawOrigin   = [Coordinates]::new(2, 21)
+
+#endregion
