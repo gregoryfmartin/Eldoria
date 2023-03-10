@@ -178,6 +178,28 @@ Class MapTile {
     }
 }
 
+Class Map {
+    [String]$Name
+    [Coordinates]$Dimensions
+    [Boolean]$BoundaryWarp
+    [MapTile[,]]$Tiles
+
+    Map(
+        [String]$Name,
+        [Coordinates]$Dimensions,
+        [Boolean]$BoundaryWarp
+    ) {
+        $this.Name         = $Name
+        $this.Dimensions   = $Dimensions
+        $this.BoundaryWarp = $BoundaryWarp
+        $This.Tiles = New-Object 'MapTile[,]' $this.Dimensions.Y, $this.Dimensions.X
+    }
+
+    [MapTile]GetTileAtPlayerCoordinates() {
+        Return $this.Tiles[$Script:PlayerMapCoordinates.Y, $Script:PlayerMapCoordinates.X]
+    }
+}
+
 #endregion
 
 
