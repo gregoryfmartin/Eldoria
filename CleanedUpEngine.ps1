@@ -920,4 +920,43 @@ Function Update-GfmPlayerName {
 
 #endregion
 
+#region UPDATE-GFMPLAYERHP
+
+<#
+.SYNOPSIS
+Updates the player's current hit points and writes it to the console window if applicable.
+
+.PARAMETER HpDelta
+The additive to the current hit points value. To subtract from the current hit points, assign this a negative value.
+
+.PARAMETER WriteToConsole
+Writes the HP String to the console at the predefined cell coordinates if necessary.
+#>
+Function Update-GfmPlayerHp {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [Int]$HpDelta,
+        [Switch]$WriteToConsole
+    )
+
+    Process {
+        $t = $Script:PlayerCurrentHitPoints + $HpDelta
+        $t = [Math]::Clamp($t, 0, $Script:PlayerMaxHitPoints)
+        $Script:PlayerCurrentHitPoints = $t
+        Test-GfmPlayerHpForState
+        If($WriteToConsole) {
+            Write-GfmPlayerHp
+        }
+    }
+    
+    End {
+        If($WriteToConsole) {
+            Set-GfmDefaultCursorPosition
+        }
+    }
+}
+
+#endregion
+
 #endregion
