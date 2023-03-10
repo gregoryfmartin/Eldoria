@@ -94,6 +94,70 @@ Enum NoteDuration {
 
 
 
+#region CLASS DEFINITIONS
+
+Class MapTileObject {
+    [String]$Name
+    [String]$MapObjName
+    [String[]]$ExamineStrings
+    [Boolean]$CanAddToInventory
+    [ScriptBlock]$Effect
+
+    MapTileObject(
+        [String]$Name,
+        [String]$MapObjName,
+        [String[]]$ExamineStrings,
+        [Boolean]$CanAddToInventory,
+        [ScriptBlock]$Effect = {}
+    ) {
+        $this.Name              = $Name
+        $this.MapObjName        = $MapObjName
+        $this.ExamineStrings    = $ExamineStrings
+        $this.CanAddToInventory = $CanAddToInventory
+        $this.Effect            = $Effect
+    }
+
+    [String]GetRandomExamineString() {
+        [Int]$r = $(Get-Random -Minimum 1 -Maximum $($this.ExamineStrings.Length - 1))
+        Return $this.ExamineStrings[$r]
+    }
+}
+
+Class MTOTree : MapTileObject {
+    MTOTree(): base('Tree', 'tree', @('It''s a tree. Looks like all the other ones.'), $false, {
+        # TODO: Do something with the tree
+    }) {}
+}
+
+Class MTOLadder : MapTileObject {
+    MTOLadder(): base('Ladder', 'ladder', @('Maybe I can climb this ladder?'), $false, {
+        # TODO: Do something with the ladder
+    }) {}
+}
+
+Class MTORope : MapTileObject {
+    MTORope(): base('Rope', 'rope', @('A tightly braided and durable rope.'), $false, {
+        # TODO: Do something with the rope
+    }) {}
+}
+
+Class MTOStairs : MapTileObject {
+    MTOStairs(): base('Stairs', 'stairs', @('Stairs. A faithful ally for elevating one''s position.'), $false, {
+        # TODO: Do something with the stairs
+    }) {}
+}
+
+Class MTOPole : MapTileObject {
+    MTOPole(): base('Pole', 'pole', @('Not the north or the south one. Just a pole. For climbing.'), $false, {
+        # TODO: Do something with the pole
+    }) {}
+}
+
+#endregion
+
+
+
+
 #region PLAYER VARIABLES
 
 [String]             $Script:PlayerName                 = ''
@@ -113,7 +177,7 @@ Enum NoteDuration {
 [ConsoleColor]       $Script:PlayerStatDrawColorDanger  = 12
 [ConsoleColor]       $Script:PlayerStatDrawColorGold    = 6
 [ConsoleColor]       $Script:PlayerAsideColor           = 3
-[Coordinates]        $Script:PlayerMapCoordinates       = [Coordainates]::new(0, 0) # Origin coordinates apply for Maps
+[Coordinates]        $Script:PlayerMapCoordinates       = [Coordinates]::new(0, 0) # Origin coordinates apply for Maps
 [List[MapTileObject]]$Script:PlayerInventory            = [List[MapTileObject]]::new()
 
 #endregion
@@ -253,7 +317,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 #region SCREEN BUFFER VARIABLES
 
-[BufferCell[,]]$Script:ScreenBufferA = New-Obhect 'BufferCell[,]' 80, 80
+[BufferCell[,]]$Script:ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
 [BufferCell[,]]$Script:ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
 
 #endregion
