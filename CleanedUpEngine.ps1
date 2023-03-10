@@ -3,7 +3,7 @@ using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
-#region GAME STATE DEFINITIONS
+#region ENUMERATION DEFINITIONS
 
 Enum GlobalGameState {
     Initialize
@@ -40,6 +40,53 @@ Enum PlayerStatNumState {
     Normal
     Caution
     Danger
+}
+
+Enum TtySpeed {
+    SuperSlow = 1000000
+    Slow      = 750000
+    Normal    = 100000
+    Moderate  = 75000
+    Quick     = 65000
+    Fast      = 50000
+    SuperFast = 25000
+    LineClear = 1
+}
+
+Enum Notes {
+    C = 0
+    CSharpOrDFlat
+    D
+    DSharpOrEFlat
+    E
+    F
+    FSharpOrGFlat
+    G
+    GSharpOrAFlat
+    A
+    ASharpOrBFlat
+    B
+    Rest = 37
+}
+
+Enum Octaves {
+    First = 0
+    Second
+    Third
+    Fourth
+    Fifth
+    Sixth
+    Seventh
+    Eighth
+    Ninth
+}
+
+Enum NoteDuration {
+    Whole     = 1600
+    Half      = 800
+    Quarter   = 400
+    Eighth    = 200
+    Sixteenth = 100
 }
 
 #endregion
