@@ -385,6 +385,47 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 #region FUNCTION DEFINITIONS
 
+#region TEST-GFMOS
+
+<#
+.SYNOPSIS
+Checks to see what OS the script is running on and returns a script-specific string identifier to be used elsewhere.
+#>
+Function Test-GfmOs {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Get-PSDrive -Name Variable | Out-Null
+        If ($?) {
+            Get-ChildItem Variable:/IsLinux | Out-Null
+            If ($?) {
+                If ($(Get-ChildItem Variable:/IsLinux).Value -EQ $true) {
+                    Return $Script:OsCheckLinux
+                }
+            }
+
+            Get-ChildItem Variable:/IsMacOS | Out-Null
+            If ($?) {
+                If ($(Get-ChildItem Variable:/IsMacOS).Value -EQ $true) {
+                    Return $Script:OsCheckMac
+                }
+            }
+
+            Get-ChildItem Variable:/IsWindows | Out-Null
+            If ($?) {
+                If ($(Get-ChildItem Variable:/IsWindows).Value -EQ $true) {
+                    Return $Script:OsCheckWindows
+                }
+            }
+        }
+
+        Return $Script:OsCheckUnknown
+    }
+}
+
+#endregion
+
 #region FORMAT-GFMPLAYERHITPOINTS
 
 <#
