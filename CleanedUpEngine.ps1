@@ -708,6 +708,55 @@ Function Write-GfmPlayerHp {
 
 #endregion
 
+#region WRITE-GFMPLAYERMP
+
+<#
+.SYNOPSIS
+Writes the player's magic points - relative to their state - to the console window at the predefined cell coordinates.
+#>
+Function Write-GfmPlayerMp {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Switch($Script:PlayerMagicPointsState) {
+            ([PlayerStatNumState]::Normal) {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerMpDrawOrigin `
+                    -Message $(Format-GfmPlayerMagicPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorSafe
+            }
+
+            ([PlayerStatNumState]::Caution) {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerMpDrawOrigin `
+                    -Message $(Format-GfmPlayerMagicPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorCaution
+            }
+
+            ([PlayerStatNumState]::Danger) {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerMpDrawOrigin `
+                    -Message $(Format-GfmPlayerMagicPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorDanger
+            }
+
+            Default {
+                Write-GfmPositionalString `
+                    -Coordinates $Script:UiStatusWindowPlayerMpDrawOrigin `
+                    -Message $(Format-GfmPlayerMagicPoints) `
+                    -ForegroundColor $Script:PlayerStatDrawColorSafe
+            }
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
 #region NEW-GFMSCENEIMAGESAMPLE
 
 <#
