@@ -639,6 +639,26 @@ Function Format-GfmPlayerGold {
 
 #endregion
 
+#region WRITE-GFMPLAYERNAME
+
+<#
+.SYNOPSIS
+Writes the player's name to the console window at the predefined cell coordinates.
+#>
+Function Write-GfmPlayerName {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Write-GfmPositionalString `
+            -Coordinates $Script:UiStatusWindowPlayerNameDrawOrigin `
+            -Message $Script:PlayerName `
+            -ForegroundColor $Script:PlayerStatDrawColorName
+    }
+}
+
+#endregion
+
 #region NEW-GFMSCENEIMAGESAMPLE
 
 <#
