@@ -247,3 +247,13 @@ $Script:Rui = $(Get-Host).UI.RawUI
 [String]     $Script:OsCheckUnknown      = 'OsUnknown'
 
 #endregion
+
+
+
+
+#region SCREEN BUFFER VARIABLES
+
+[BufferCell[,]]$Script:ScreenBufferA = New-Obhect 'BufferCell[,]' 80, 80
+[BufferCell[,]]$Script:ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+
+#endregion
