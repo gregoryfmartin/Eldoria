@@ -177,11 +177,26 @@ Enum PlayerStatNumState {
 
 #region TIMING VARIABLES
 
-[Int]     $Script:TargetFrameRate  = 30
-[Single]  $Script:MsPerFrame       = 1000 / $Script:TargetFrameRate
-[Boolean] $Script:GameRunning      = $true
-[Double]  $Script:LastFrameTime    = 0D
-[Double]  $Script:CurrentFrameTime = 0D
-[TimeSpan]$Script:FpsDelta         = [TimeSpan]::Zero
+[Int]      $Script:TargetFrameRate  = 30
+[Single]   $Script:MsPerFrame       = 1000 / $Script:TargetFrameRate
+[Boolean]  $Script:GameRunning      = $true
+[Double]   $Script:LastFrameTime    = 0D
+[Double]   $Script:CurrentFrameTime = 0D
+[TimeSpan]$Script:FpsDelta          = [TimeSpan]::Zero
+
+#endregion
+
+
+
+
+#region GENERAL VARIABLES
+
+$Script:Rui = $(Get-Host).UI.RawUI
+
+[Coordinates]$Script:DefaultCursorCoords = [Coordinates]::new(($Script:UiCommandWindowDrawOrigin.X + 1), ($Script:UiCommandWindowDivDrawOrigin.Y + 1))
+[String]     $Script:OsCheckLinux        = 'OsLinux'
+[String]     $Script:OsCheckMac          = 'OsMac'
+[String]     $Script:OsCheckWindows      = 'OsWindows'
+[String]     $Script:OsCheckUnknown      = 'OsUnknown'
 
 #endregion
