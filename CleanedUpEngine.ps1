@@ -254,7 +254,7 @@ Class Map {
 [Coordinates] $Script:UiStatusWindowPlayerNameDrawOrigin = [Coordinates]::new(2, 2)
 [Coordinates] $Script:UiStatusWindowPlayerHpDrawOrigin   = [Coordinates]::new(2, 4)
 [Coordinates] $Script:UiStatusWindowPlayerMpDrawOrigin   = [Coordinates]::new(2, 6)
-[Coordinates] $Script:UiStatusWindowPlayerGoldDrawOiring = [Coordinates]::new(2, 9)
+[Coordinates] $Script:UiStatusWindowPlayerGoldDrawOirgin = [Coordinates]::new(2, 9)
 
 #endregion
 
@@ -752,6 +752,26 @@ Function Write-GfmPlayerMp {
 
     End {
         Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
+#region WRITE-GFMPLAYERGOLD
+
+<#
+.SYNOPSIS
+Writes the player's gold points to the console window at the predefined cell coordinates.
+#>
+Function Write-GfmPlayerGold {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Write-GfmPositionalString `
+            -Coordinates $Script:UiStatusWindowPlayerGoldDrawOirgin `
+            -Message $(Format-GfmPlayerGold) `
+            -ForegroundColor $Script:PlayerStatDrawColorGold
     }
 }
 
