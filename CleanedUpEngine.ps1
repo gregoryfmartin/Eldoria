@@ -468,6 +468,41 @@ Function Set-GfmDefaultCursorPosition {
 
 #endregion
 
+#region WRITE-GFMPOSITIONALSTRING
+
+<#
+.SYNOPSIS
+Writes a string to the console buffer at a caller-specified cell coordinate location. This function will leverage Write-GfmHostNnl to perform the write operation.
+
+.PARAMETER Coordinates
+The Coordinates (in console cells) where the string will start to be written to.
+
+.PARAMETER Message
+The string to write to the console.
+
+.PARAMETER ForegroundColor
+The color to give to the text when it's being written.
+#>
+Function Write-GfmPositionalString {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [Coordinates]$Coordinates,
+        [Parameter(Mandatory = $true)]
+        [AllowEmptyString()]
+        [String]$Message,
+        [Parameter(Mandatory = $true)]
+        [ConsoleColor]$ForegroundColor
+    )
+
+    Process {
+        $Script:Rui.CursorPosition = $Coordinates
+        Write-GfmHostNnl -Message $Message -ForegroundColor $ForegroundColor
+    }
+}
+
+#endregion
+
 #region FORMAT-GFMPLAYERHITPOINTS
 
 <#
