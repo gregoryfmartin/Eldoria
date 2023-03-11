@@ -1521,4 +1521,24 @@ Function Write-GfmMapNoItemsFoundException {
 
 #endregion
 
+#region WRITE-GFMMAPINVALIDITEMEXCEPTION
+
+<##>
+Function Write-GfmMapInvalidItemException {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message "There's no $ItemName here" `
+            -ForegroundColor 'Magenta' `
+            -Teletype
+    }
+}
+
+#endregion
+
 #endregion
