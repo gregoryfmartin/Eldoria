@@ -1123,4 +1123,52 @@ Function Write-GfmMessageWindowMsg {
 
 #endregion
 
+#region READ-GFMUSERCMDINPUT
+
+<#
+#>
+Function Read-GfmUserCmdInput {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
+        While($keyCap.VirtualKeyCode -NE 13) {
+            If($Script:Rui.CursorPosition.X -GE 19) {
+                Invoke-GfmCmdParser
+            }
+            If($keyCap.VirtualKeyCode -EQ 8) {
+                $fx = $Script:Rui.CursorPosition.X
+                If($fx -GE $Script:DefaultCursorCoords.X) {
+                    Write-GfmHostNnl `
+                        -Message ' ' `
+                        -ForegroundColor 0 `
+                        -BackgroundColor 0
+                    $Script:Rui.CursorPosition = [Coordinates]::new($fx - 1, $Script:DefaultCursorCoords.Y)
+                    If($Script:UiCommandWindowCmdActual.Length -GT 0) {
+                        $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                    }
+                } Else {
+                    Write-GfmPositionalString `
+                        -Coordinates $([Coordinates]::new($fx + 1, $Script:DefaultCursorCoords.Y)) `
+                        -Message ' ' `
+                        -ForegroundColor 0
+                    Set-GfmDefaultCursorPosition
+                    If($Script:UiCommandWindowCmdActual.Length -GT 0) {
+                        $Script:UiCommandWindowCmdActual = $Script:UiCommandWindowCmdActual.Remove($Script:UiCommandWindowCmdActual.Length - 1, 1)
+                    }
+                }
+            } Else {
+                $Script:UiCommandWindowCmdActual += $keyCap.Character
+            }
+
+            $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
+        }
+
+        Invoke-GfmCmdParser
+    }
+}
+
+#endregion
+
 #endregion
