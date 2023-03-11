@@ -1471,4 +1471,21 @@ Function Write-GfmBadSomethingException {
 
 #endregion
 
+#region WRITE-GFMMAPINVISIBLEWALLEXCEPTION
+
+<##>
+Function Write-GfmMapInvisibleWallException {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message 'The invisible wall blocks your path...' `
+            -ForegroundColor 5 `
+            -Teletype
+    }
+}
+
+#endregion
+
 #endregion
