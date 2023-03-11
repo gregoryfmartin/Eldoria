@@ -1171,4 +1171,48 @@ Function Read-GfmUserCmdInput {
 
 #endregion
 
+#region INVOKE-GFMCMDPARSER
+
+<#
+#>
+Function Invoke-GfmCmdParser {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Set-GfmDefaultCursorPosition
+        Write-GfmHostNnl `
+            -Message $Script:UiCommandWindowCmdBlank `
+            -ForegroundColor 0
+        If([String]::IsNullOrEmpty($Script:UiCommandWindowCmdActual)) {
+            Return
+        } Else {
+            $cmdactSplit = -SPLIT $Script:UiCommandWindowCmdActual
+            $rootFound   = $Script:CommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
+            If($null -NE $rootFound) {
+                Switch($cmdactSplit.Length) {
+                    1 {
+                        Invoke-Command $rootFound.Value
+                    }
+
+                    2 {
+                        Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1]
+                    }
+
+                    3 {
+                        Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
+                    }
+
+                    Default {}
+                }
+            } Else {
+                Write-GfmBadCommandException
+                Return
+            }
+        }
+    }
+}
+
+#endregion
+
 #endregion
