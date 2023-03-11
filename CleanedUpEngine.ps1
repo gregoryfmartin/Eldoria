@@ -1453,4 +1453,22 @@ Function Write-GfmBadCommandArg1Exception {
 
 #endregion
 
+#region WRITE-GFMBADSOMETHINGEXCEPTION
+
+<##>
+Function Write-GfmBadSomethingException {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage 'I''m God, and I don''t know what just happened...' `
+            -MsgColor $Script:UiCommandWindowCmdHistErr
+    }
+}
+
+#endregion
+
 #endregion
