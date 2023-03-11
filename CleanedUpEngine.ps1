@@ -1417,4 +1417,22 @@ Function Write-GfmBadCommandException {
 
 #endregion
 
+#region WRITE-GFMBADCOMMANDARG0EXCEPTION
+
+<##>
+Function Write-GfmBadCommandArg0Exception {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage "INVALID ARGUMENT 0: $Script:UiCommandWindowCmdActual" `
+            -MsgColor $Script:UiCommandWindowCmdErr
+    }
+}
+
+#endregion
+
 #endregion
