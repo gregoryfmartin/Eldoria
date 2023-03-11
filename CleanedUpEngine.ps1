@@ -1541,4 +1541,36 @@ Function Write-GfmMapInvalidItemException {
 
 #endregion
 
+#region UPDATE-GFMCMDHISTORY
+
+Function Update-GfmCmdHistory {
+    [CmdletBinding()]
+    Param (
+        [Switch]$CmdActualValid,
+        [Switch]$UpdateMessageWindow,
+        [Switch]$MsgTeletype,
+        [String]$MsgWindowMessage = '',
+        [ConsoleColor]$MsgColor   = 15
+    )
+
+    Process {
+        $Script:UiCommandWindowHistStrA = $Script:UiCommandWindowHistStrB; $Script:UiCommandWindowHistColA = $Script:UiCommandWindowHistColB
+        $Script:UiCommandWindowHistStrB = $Script:UiCommandWindowHistStrC; $Script:UiCommandWindowHistColB = $Script:UiCommandWindowHistColC
+        $Script:UiCommandWindowHistStrC = $Script:UiCommandWindowHistStrD; $Script:UiCommandWindowHistColC = $Script:UiCommandWindowHistColD
+        $Script:UiCommandWindowHistStrD = $Script:UiCommandWindowCmdActual
+        If($CmdActualValid) {
+            $Script:UiCommandWindowHistColD = $Script:UiCommandWindowCmdValid
+        } Else {
+            $Script:UiCommandWindowHistColD = $Script:UiCommandWindowCmdErr
+        }
+        Write-GfmPositionalString `
+            -Coordinates $Script:UiCommandWindowHistDDrawOrigin `
+            -Message $Script:UiCommandWindowCmdBlank `
+            -ForegroundColor $Script:UiCommandWindowBlankFgColor `
+            -TypeSpeed LineClear
+    }
+}
+
+#endregion
+
 #endregion
