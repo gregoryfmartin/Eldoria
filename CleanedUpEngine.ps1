@@ -1252,4 +1252,61 @@ Function Invoke-GfmItemReactor {
 
 #endregion
 
+#region INVOKE-GFMLOOKACTION
+
+<##>
+Function Invoke-GfmLookAction {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Update-GfmCmdHistory -CmdActualValid
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        $b = 78
+        $c = ''
+        $f = ''
+        $z = 0
+        $y = $false
+        If($a.Count -LE 0) {
+            Write-GfmMessageWindowMsg `
+                -Message 'It doesn''t look like there''s anything of interest here.' `
+                -ForegroundColor $Script:PlayerAsideColor `
+                -Teletype
+            Return
+        }
+        Foreach($d in $a) {
+            If($z -EQ $a.Count - 1) {
+                $c += $d.Name
+            } Else {
+                $c += $d.Name + ', '
+            }
+            $z++
+        }$e = $c.Length
+        If($e -GT $b) {
+            $y = $true
+            $c -MATCH '([\s,]+\w+){5}$' | Out-Null
+            If($_ -EQ $true) {
+                $c = $c -REPLACE '([\s,]+\w+){5}$', ''
+                $f = $matches[0].Remove(0, 2)
+            }
+        }
+        Write-GfmMessageWindowMsg `
+            -Message 'I can see the following things here:' `
+            -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+        Write-GfmMessageWindowMsg `
+            -Message $c `
+            -ForegroundColor $Script:MapTileItemsDiscoveredColor `
+            -Teletype
+        If($y -EQ $true) {
+            Write-GfmMessageWindowMsg `
+                -Message $f `
+                -ForegroundColor $Script:MapTileItemsDiscoveredColor `
+                -Teletype
+        }
+    }
+}
+
+#endregion
+
 #endregion
