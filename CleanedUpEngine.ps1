@@ -1399,4 +1399,22 @@ Function Invoke-GfmGetAction {
 
 #endregion
 
+#region WRITE-GFMBADCOMMANDEXCEPTION
+
+<##>
+Function Write-GfmBadCommandException {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Update-GfmCmdHistory `
+            -UpdateMessageWindow `
+            -MsgTeletype `
+            -MsgWindowMessage "INVALID COMMAND: $Script:UiCommandWindowCmdActual" `
+            -MsgColor $Script:UiCommandWindowCmdErr
+    }
+}
+
+#endregion
+
 #endregion
