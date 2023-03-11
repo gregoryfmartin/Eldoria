@@ -1504,4 +1504,21 @@ Function Write-GfmMapYouShallNotPassException {
 
 #endregion
 
+#region WRITE-GFMMAPNOITEMSFOUNDEXCEPTION
+
+<##>
+Function Write-GfmMapNoItemsFoundException {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Write-GfmMessageWindowMessage `
+            -Message 'There''s nothing of interest here...' `
+            -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+    }
+}
+
+#endregion
+
 #endregion
