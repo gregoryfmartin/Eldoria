@@ -1543,6 +1543,7 @@ Function Write-GfmMapInvalidItemException {
 
 #region UPDATE-GFMCMDHISTORY
 
+<##>
 Function Update-GfmCmdHistory {
     [CmdletBinding()]
     Param (
@@ -1563,11 +1564,60 @@ Function Update-GfmCmdHistory {
         } Else {
             $Script:UiCommandWindowHistColD = $Script:UiCommandWindowCmdErr
         }
-        Write-GfmPositionalString `
+        Write-GfmPositionalTtyString `
             -Coordinates $Script:UiCommandWindowHistDDrawOrigin `
             -Message $Script:UiCommandWindowCmdBlank `
             -ForegroundColor $Script:UiCommandWindowBlankFgColor `
             -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistDDrawOrigin `
+            -Message $Script:UiCommandWindowHistStrD `
+            -ForegroundColor $Script:UiCommandWindowHistColD `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistCDrawOrigin `
+            -Message $Script:UiCommandWindowCmdBlank `
+            -ForegroundColor $Script:UiCommandWindowBlankFgColor `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistCDrawOrigin `
+            -Message $Script:UiCommandWindowHistStrC `
+            -ForegroundColor $Script:UiCommandWindowHistColC `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistBDrawOrigin `
+            -Message $Script:UiCommandWindowCmdBlank `
+            -ForegroundColor $Script:UiCommandWindowBlankFgColor `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistBDrawOrigin `
+            -Message $Script:UiCommandWindowHistStrB `
+            -ForegroundColor $Script:UiCommandWindowHistColB `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistADrawOrigin `
+            -Message $Script:UiCommandWindowCmdBlank `
+            -ForegroundColor $Script:UiCommandWindowBlankFgColor `
+            -TypeSpeed LineClear
+        Write-GfmPositionalTtyString `
+            -Coordinates $Script:UiCommandWindowHistADrawOrigin `
+            -Message $Script:UiCommandWindowHistStrA `
+            -ForegroundColor $Script:UiCommandWindowHistColA `
+            -TypeSpeed LineClear
+        If($UpdateMessageWindow) {
+            If($MsgTeletype) {
+                Write-GfmMessageWindowMsg `
+                    -Message $MsgWindowMessage `
+                    -ForegroundColor $MsgColor `
+                    -Teletype
+            } Else {
+                Write-GfmMessageWindowMsg `
+                    -Message $MsgWindowMessage `
+                    -ForegroundColor $MsgColor
+            }
+        }
+        $Script:UiCommandWindowCmdActual = ''
+        Set-GfmDefaultCursorPosition
     }
 }
 
