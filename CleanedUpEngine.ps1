@@ -1309,4 +1309,37 @@ Function Invoke-GfmLookAction {
 
 #endregion
 
+#region INVOKE-GFMEXAMINEACTION
+
+<##>
+Function Invoke-GfmExamineAction {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+
+    Process {
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        Foreach($b in $a) {
+            If($b.Name -EQ $ItemName) {
+                Update-GfmCmdHistory -CmdActualValid
+                Write-GfmMessageWindowMsg `
+                    -Message $b.ExamineString `
+                    -ForegroundColor $Script:PlayerAsideColor `
+                    -Teletype
+                Return
+            }
+        }
+        Update-GfmCmdHistory
+        Write-GfmMessageWindowMsg `
+            -Message "There's no $ItemName to be found here..." `
+            -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+        Return
+    }
+}
+
+#endregion
+
 #endregion
