@@ -1623,4 +1623,18 @@ Function Update-GfmCmdHistory {
 
 #endregion
 
+#region UPDATE-GFMSCENEIMAGEFROMCOORDS
+
+<##>
+Function Update-GfmSceneImageFromCoords {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Write-GfmSceneImage -CellArray $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+    }
+}
+
+#endregion
+
 #endregion
