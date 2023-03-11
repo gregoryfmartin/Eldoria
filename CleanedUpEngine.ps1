@@ -1488,4 +1488,20 @@ Function Write-GfmMapInvisibleWallException {
 
 #endregion
 
+#region WRITE-GFMMAPYOUSHALLNOTPASSEXCEPTION
+
+<##>
+Function Write-GfmMapYouShallNotPassException {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        -Message 'The path you asked for is impossible...' `
+        -ForegroundColor $Script:PlayerAsideColor `
+        -Teletype
+    }
+}
+
+#endregion
+
 #endregion
