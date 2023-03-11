@@ -1342,4 +1342,61 @@ Function Invoke-GfmExamineAction {
 
 #endregion
 
+#region INVOKE-GFMGETACTION
+
+<##>
+Function Invoke-GfmGetAction {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+
+    Process {
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        If($a.Count -LE 0) {
+            Update-GfmCmdHistory
+            Write-GfmMessageWindowMsg `
+                -Message 'There doesn''t appear to be anything to collect here...' `
+                -ForegroundColor $Script:PlayerAsideColor `
+                -Teletype
+            Return
+        }
+        Foreach($b in $a) {
+            If($b.Name -EQ $ItemName) {
+                If($b.CanAddToInventory -EQ $true) {
+                    $Script:PlayerInventory.Add($b) | Out-Null
+                    $c = $a.Remove($b) | Out-Null
+                    If($c -EQ $false) {
+                        Write-Error 'Failed to remove item from Map Tile Object Listing!'
+                        Exit
+                    } Else {
+                        Update-GfmCmdHistory -CmdActualValid
+                        Write-GfmMessageWindowMsg `
+                            -Message "I've taken the $($b.MapObjName) and put it in my pocket." `
+                            -ForegroundColor $Script:PlayerAsideColor `
+                            -Teletype
+                        Return
+                    }
+                } Else {
+                    Update-GfmCmdHistory
+                    Write-GfmMessageWindowMsg `
+                        -Message "It's not possible to take the $($b.MapObjName)." `
+                        -ForegroundColor $Script:PlayerAsideColor `
+                        -Teletype
+                    Return
+                }
+            }
+        }
+        Update-GfmCmdHistory
+        Write-GfmMessageWindowMsg `
+            -Message "There's no $ItemName to be found here..." `
+            -ForegroundColor $Script:PlayerAsideColor `
+            -Teletype
+        Return
+    }
+}
+
+#endregion
+
 #endregion
