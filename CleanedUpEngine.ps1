@@ -1215,4 +1215,41 @@ Function Invoke-GfmCmdParser {
 
 #endregion
 
+#region INVOKE-GFMITEMREACTOR
+
+<#
+#>
+Function Invoke-GfmItemReactor {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $true)]
+        [String]$ItemName
+    )
+
+    Process {
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        If($a.Count -EQ 0) {
+            Update-GfmCmdHistory -CmdActualValid
+            Write-GfmMapNoItemsFoundException
+            Return
+        } Elseif($a.Count -GT 0) {
+            Foreach($c in $a) {
+                If($c.MapObjName -EQ $ItemName) {
+                    Update-GfmCmdHistory -CmdActualValid
+                    Invoke-Command $c.$Effect
+                    Return
+                }
+            }
+            Update-GfmCmdHistory -CmdActualValid
+            Write-GfmMapInvalidItemException -ItemName $ItemName
+            Return
+        } Else {
+            Write-GfmBadSomethingException
+            Return
+        }
+    }
+}
+
+#endregion
+
 #endregion
