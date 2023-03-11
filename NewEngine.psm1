@@ -1509,11 +1509,11 @@ $Script:CommandTable = @{
 #region Map Variable Definitions
 
 [ConsoleColor]$Script:MapTileItemsDiscoveredColor = 'Magenta'
-[String]       $Script:MTODescTree                = 'It''s a tree. Looks like all the other ones.'
-[String]       $Script:MTODescLadder              = 'Maybe I can climb this ladder?'
-[String]       $Script:MTODescRope                = 'A tightly braided and durable rope.'
-[String]       $Script:MTODescStairs              = 'Stairs. A faithful ally for elevating one''s position.'
-[String]       $Script:MTODescPole                = 'Not the north or the south one. Just a pole. For climbing.'
+[String]      $Script:MTODescTree                 = 'It''s a tree. Looks like all the other ones.'
+[String]      $Script:MTODescLadder               = 'Maybe I can climb this ladder?'
+[String]      $Script:MTODescRope                 = 'A tightly braided and durable rope.'
+[String]      $Script:MTODescStairs               = 'Stairs. A faithful ally for elevating one''s position.'
+[String]      $Script:MTODescPole                 = 'Not the north or the south one. Just a pole. For climbing.'
 
 Class MapTileObject {
     # TODO: Perhaps create a collection of Examine Strings and randomly select one when printing it to the console
