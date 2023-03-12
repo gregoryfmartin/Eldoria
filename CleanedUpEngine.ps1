@@ -1761,4 +1761,70 @@ Function Write-GfmSceneWindow {
 
 #endregion
 
+#region WRITE-GFMMESSAGEWINDOW
+
+<##>
+Function Write-GfmMessageWindow {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Switch($(Test-GfmOs)) {
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                For($i = 1; $i -LE ($Script:UiMessageWindowDrawOrigin.X + $Script:UiMessageWindowWidth); $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawOrigin.X + $i), $Script:UiMessageWindowDrawOrigin.Y)
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderHorizontal `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawOrigin.X + $i), ($Script:UiMessageWindowDrawOrigin.Y + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderHorizontal `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+                For($i = $Script:UiMessageWindowDrawOrigin.Y; $i -LE ($Script:UiMessageWindowDrawOrigin.Y + $Script:UiMessageWindowHeight); $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawOrigin.X, ($Script:UiMessageWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderVertical `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawOrigin.X + $Script:UiMessageWindowWidth), ($Script:UiMessageWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderVertical `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+            }
+
+            $Script:OsCheckWindows {
+                For($i = 1; $i -LE ($Script:UiMessageWindowDrawOrigin.X + $Script:UiMessageWindowWidth); $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawOrigin.X + $i), $Script:UiMessageWindowDrawOrigin.Y)
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderHorizontal `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawOrigin.X + $i), ($Script:UiMessageWindowDrawOrigin.Y + $Script:UiMessageWindowHeight))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderHorizontal `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+                For($i = $Script:UiMessageWindowDrawOrigin.Y; $i -LE ($Script:UiMessageWindowDrawOrigin.Y + $Script:UiMessageWindowHeight); $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiMessageWindowDrawOrigin.X, ($Script:UiMessageWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderVertical `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiMessageWindowDrawOrigin.X + $Script:UiMessageWindowWidth), ($Script:UiMessageWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiMessageWindowBorderVertical `
+                        -ForegroundColor $Script:UiMessageWindowBorderColor
+                }
+            }
+            
+            Default {}
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
 #endregion
