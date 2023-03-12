@@ -5,16 +5,18 @@ using namespace System.Management.Automation.Host
 
 # GLOBAL VARIABLE DEFINITIONS
 
-[String]       $Script:OsCheckLinux     = 'OsLinux'
-[String]       $Script:OsCheckMac       = 'OsMac'
-[String]       $Script:OsCheckWindows   = 'OsWindows'
-[String]       $Script:OsCheckUnknown   = 'OsUnknown'
-[Player]       $Script:ThePlayer        = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
-[StatusWindow] $Script:TheStatusWindow  = [StatusWindow]::new()
-[CommandWindow]$Script:TheCommandWindow = [CommandWindow]::new()
-[SceneWindow]  $Script:TheSceneWindow   = [SceneWindow]::new()
-[MessageWindow]$Script:TheMessageWindow = [MessageWindow]::new()
-[SceneImage]   $Script:SampleSi         = [SceneImage]::new($null)
+[String]         $Script:OsCheckLinux       = 'OsLinux'
+[String]         $Script:OsCheckMac         = 'OsMac'
+[String]         $Script:OsCheckWindows     = 'OsWindows'
+[String]         $Script:OsCheckUnknown     = 'OsUnknown'
+[Player]         $Script:ThePlayer          = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
+[StatusWindow]   $Script:TheStatusWindow    = [StatusWindow]::new()
+[CommandWindow]  $Script:TheCommandWindow   = [CommandWindow]::new()
+[SceneWindow]    $Script:TheSceneWindow     = [SceneWindow]::new()
+[MessageWindow]  $Script:TheMessageWindow   = [MessageWindow]::new()
+[InventoryWindow]$Script:TheInventoryWindow = [InventoryWindow]::new()
+[SceneImage]     $Script:SampleSi           = [SceneImage]::new($null)
+
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
 [Map]$Script:CurrentMap  = $null
@@ -576,7 +578,7 @@ Class ATCoordinatesNone : ATCoordinates {
 }
 
 Class ATCoordinatesDefault : ATCoordinates {
-    ATCoordinatesDefault() : base(0, 0) {} # TODO: Need to set these values relative to the Command Window
+    ATCoordinatesDefault() : base(1, 18) {}
 }
 
 Class ATDecorationNone : ATDecoration {
@@ -8796,6 +8798,60 @@ Class MessageWindow : WindowBase {
     }
 }
 
+Class InventoryWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 1
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 20
+    Static [Int]$WindowBRColumn = 79
+    
+    Static [String]$WindowBorderHorizontal = '********************************************************************************'
+    Static [String]$WindowBorderVertical   = '*'
+
+    Static [String]$PlayerChevronCharacter = '>'
+    Static [String]$PagingChevronRight     = '>'
+    Static [String]$PagingChevronLeft      = '<'
+    
+    Static [Boolean]$PlayerChevronDirty        = $true
+    Static [Boolean]$PagingChevronRightDirty   = $true
+    Static [Boolean]$PagingChevronLeftDirty    = $true
+    Static [Boolean]$ItemsListDirty            = $true
+    Static [Boolean]$CurrentPageDirty          = $true
+    Static [Boolean]$PlayerChevronVisible      = $false
+    Static [Boolean]$PagingChevronRightVisible = $false
+    Static [Boolean]$PagingChevronLeftVisible  = $false
+    
+    Static [Int]$ItemsPerPage = 10
+    Static [Int]$NumPages     = 1
+    
+    Static [Tuple[]]$PlayerChevronPositions           = $null
+    Static [ATCoordinates]$PagingChevronRightPosition = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$PagingChevronLeftPosition  = [ATCoordinatesNone]::new()
+    
+    Static [Tuple[]]$ItemLabels = $null
+
+    Static [Boolean]$DebugMode = $true
+
+    InventoryWindow(): base() {
+        $this.LeftTop          = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([InventoryWindow]::WindowBRRow, [InventoryWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [InventoryWindow]::WindowBorderHorizontal,
+            [InventoryWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
 # FUNCTION DEFINITIONS
 
 Function Test-GfmOs {
@@ -8834,12 +8890,16 @@ Function Test-GfmOs {
 # RUNNER
 Clear-Host
 
-$Script:TheStatusWindow.Draw()
-$Script:TheCommandWindow.Draw()
-$Script:TheSceneWindow.Draw()
-$Script:TheMessageWindow.Draw()
-$Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
-$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
-$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
+#$Script:TheStatusWindow.Draw()
+#$Script:TheCommandWindow.Draw()
+#$Script:TheSceneWindow.Draw()
+#$Script:TheMessageWindow.Draw()
+#$Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
+#$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
+#$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
+
+$Script:TheInventoryWindow.Draw()
+
+#$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
 
 Read-Host

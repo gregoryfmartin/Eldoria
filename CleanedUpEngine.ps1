@@ -1827,4 +1827,36 @@ Function Write-GfmMessageWindow {
 
 #endregion
 
+#region WRITE-GFMCOMMANDWINDOW
+
+Function Write-GfmCommandWindow {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Switch($(Test-GfmOs)) {
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                $Script:Rui.CursorPosition = $Script:UiCommandWindowDrawOrigin
+                Write-GfmHostNnl `
+                    -Message $Script:UiCommandWindowBorderHorizontal `
+                    -ForegroundColor $Script:UiCommandWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiCommandWindowDrawOrigin.X, ($Script:UiCommandWindowDrawOrigin.Y + $Script:UiCommandWindowHeight))
+                Write-GfmHostNnl `
+                    -Message $Script:UiCommandWindowBorderHorizontal `
+                    -ForegroundColor $Script:UiCommandWindowBorderColor
+            }
+
+            $Script:OsCheckWindows {}
+            
+            Default {}
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
 #endregion
