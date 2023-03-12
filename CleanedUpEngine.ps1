@@ -1699,4 +1699,66 @@ Function Write-GfmStatusWindow {
 
 #endregion
 
+#region WRITE-GFMSCENEWINDOW
+
+<##>
+Function Write-GfmSceneWindow {
+    [CmdletBinding()]
+    Param ()
+
+    Process {
+        Switch($(Test-GfmOs)) {
+            { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                $Script:Rui.CursorPosition = $Script:UiSceneWindowDrawOrigin
+                Write-GfmHostNnl `
+                    -Message $Script:UiSceneWindowBorderHorizontal `
+                    -ForegroundColor $Script:UiSceneWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawOrigin.X, ($Script:UiSceneWindowDrawOrigin.Y + $Script:UiSceneWindowHeight))
+                Write-GfmHostNnl `
+                    -Message $Script:UiSceneWindowBorderHorizontal `
+                    -ForegroundColor $Script:UiSceneWindowBorderColor
+                For($i = 1; $i -LT ($Script:UiSceneWindowDrawOrigin.Y + $Script:UiSceneWindowHeight); $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawOrigin.X, ($Script:UiSceneWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiSceneWindowBorderVertical `
+                        -ForegroundColor $Script:UiSceneWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawOrigin.X + $Script:UiSceneWindowWidth), ($Script:UiSceneWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiSceneWindowBorderVertical `
+                        -ForegroundColor $Script:UiSceneWindowBorderVertical
+                }
+            }
+
+            $Script:OsCheckWindows {
+                $Script:Rui.CursorPosition = $Script:UiSceneWindowDrawOrigin
+                Write-GfmHostNnl `
+                    -Message $Script:UiSceneWindowBorderHorizontal `
+                    -ForegroundColor $Script:UiSceneWindowBorderColor
+                $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawOrigin.X, ($Script:UiSceneWindowDrawOrigin.Y + $Script:UiSceneWindowHeight))
+                Write-GfmHostNnl `
+                    -Message $Script:UiSceneWindowBorderHorizontal `
+                    -ForegroundColor $Script:UiSceneWindowBorderColor
+                For($i = 1; $i -LT ($Script:UiSceneWindowDrawOrigin.Y + $Script:UiSceneWindowHeight); $i++) {
+                    $Script:Rui.CursorPosition = [Coordinates]::new($Script:UiSceneWindowDrawOrigin.X, ($Script:UiSceneWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiSceneWindowBorderVertical `
+                        -ForegroundColor $Script:UiSceneWindowBorderColor
+                    $Script:Rui.CursorPosition = [Coordinates]::new(($Script:UiSceneWindowDrawOrigin.X + $Script:UiSceneWindowWidth), ($Script:UiSceneWindowDrawOrigin.Y + $i))
+                    Write-GfmHostNnl `
+                        -Message $Script:UiSceneWindowBorderVertical `
+                        -ForegroundColor $Script:UiSceneWindowBorderVertical
+                }
+            }
+            
+            Default {}
+        }
+    }
+
+    End {
+        Set-GfmDefaultCursorPosition
+    }
+}
+
+#endregion
+
 #endregion
