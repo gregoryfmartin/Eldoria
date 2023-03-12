@@ -685,6 +685,31 @@ Class ATSceneImageString : ATString {
     }
 }
 
+Class CollectionInspectionFrame {
+    [Int]$Start
+    [Int]$End
+    [Int]$Width
+
+    CollectionInspectionFrame(
+        [Int]$Start,
+        [Int]$Width
+    ) {
+        $this.Start = $Start
+        $this.Width = $Width
+        $this.End   = $this.Start + $this.Width
+    }
+
+    [Void]ShiftUp() {
+        $this.Start = $this.End
+        $this.End   = $this.Start + $this.Width
+    }
+
+    [Void]ShiftDown() {
+        $this.Start -= $this.Width
+        $this.End    = $this.Start + $this.Width
+    }
+}
+
 Class Player {
     [String]$Name
     [Int]$CurrentHitPoints
@@ -8822,6 +8847,7 @@ Class InventoryWindow : WindowBase {
     
     Static [Int]$ItemsPerPage = 10
     Static [Int]$NumPages     = 1
+    Static [Int]$CurrentPage  = 1
     
     Static [Tuple[]]$PlayerChevronPositions           = $null
     Static [ATCoordinates]$PagingChevronRightPosition = [ATCoordinatesNone]::new()
@@ -8830,6 +8856,8 @@ Class InventoryWindow : WindowBase {
     Static [Tuple[]]$ItemLabels = $null
 
     Static [Boolean]$DebugMode = $true
+
+    Static [Int]$MoronCounter = 0
 
     InventoryWindow(): base() {
         $this.LeftTop          = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
@@ -8849,6 +8877,48 @@ Class InventoryWindow : WindowBase {
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+    }
+
+    [Void]CalculatePages() {
+        # Determine the total number of pages
+        $pic = $Script:ThePlayer.Inventory.Count
+        $pp  = $pic / [InventoryWindow]::ItemsPerPage
+        
+        # If the total number of items is less then ItemsPerPage, we only need one page
+        # Otherwise, we allocate the number of pages stored in pp
+        If($pp -LT 1) {
+            [InventoryWindow]::NumPages = 1
+        } Else {
+            [InventoryWindow]::NumPages = $pp
+        }
+    }
+
+    [Void]PopulatePage() {
+        # The current page would be identified by CurrentPage, we need the total number of items in the player's inventory
+        $pic = $Script:ThePlayer.Inventory.Count
+
+        # Check to see if there's nothing in the player's inventory
+        If($pic -LE 0) {
+            # Check the value of the MoronCounter
+            If([InventoryWindow]::MoronCounter -LT 20) {
+                # Safely increment the MoronCounter and cut to WriteZeroInventoryPage
+                [InventoryWindow]::MoronCounter++
+                $this.WriteZeroInventoryPage()
+            } Else {
+                # The MoronCounter has been violated, employ the virus
+                $this.InvokeMoronStatus()
+            }
+        } Else {
+            # 
+        }
+    }
+
+    [Void]WriteZeroInventoryPage() {
+        # This gets called when the player has nothing in their inventory yet calls to the inventory screen
+    }
+
+    [Void]InvokeMoronStatus() {
+        # This gets called when the player has tripped the MoronCounter threshold
     }
 }
 
