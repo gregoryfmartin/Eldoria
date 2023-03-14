@@ -39,3 +39,14 @@ If($null -EQ $notFound) {
     #$sampleDict[$notFound]
     Invoke-Command $notFound.Value
 }
+
+$sampleList = New-Object System.Collections.Generic.List[String]
+$sampleList.Add('Get rekt') | Out-Null
+$sampleList.Add('Get pumpd') | Out-Null
+$sampleList.Add('Git gud') | Out-Null
+
+Try {
+    $sampleList.GetRange(0, 10)
+} Catch {
+    $sampleList.GetRange(0, $sampleList.Count)
+}

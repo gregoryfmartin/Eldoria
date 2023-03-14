@@ -8844,20 +8844,24 @@ Class InventoryWindow : WindowBase {
     Static [Boolean]$PlayerChevronVisible      = $false
     Static [Boolean]$PagingChevronRightVisible = $false
     Static [Boolean]$PagingChevronLeftVisible  = $false
+    Static [Boolean]$ZeroPageActive            = $true
     
-    Static [Int]$ItemsPerPage = 10
-    Static [Int]$NumPages     = 1
-    Static [Int]$CurrentPage  = 1
+    Static [Int]$ItemsPerPage             = 10
+    Static [Int]$NumPages                 = 1
+    Static [Int]$CurrentPage              = 1
+    Static [List[MapTileObject]]$PageRefs = $null
     
-    Static [Tuple[]]$PlayerChevronPositions           = $null
+    Static [List[Tuple]]$PlayerChevronPositions       = $null
     Static [ATCoordinates]$PagingChevronRightPosition = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$PagingChevronLeftPosition  = [ATCoordinatesNone]::new()
     
-    Static [Tuple[]]$ItemLabels = $null
+    Static [List[ATString]]$ItemLabels = $null
 
     Static [Boolean]$DebugMode = $true
 
     Static [Int]$MoronCounter = 0
+
+    Static [String]$ZeroPagePrompt = 'You have no items in your inventory.'
 
     InventoryWindow(): base() {
         $this.LeftTop          = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
@@ -8873,10 +8877,30 @@ Class InventoryWindow : WindowBase {
             [InventoryWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
+
+        [InventoryWindow]::PageRefs               = [List[MapTileObject]]::new()
+        [InventoryWindow]::PlayerChevronPositions = [List[Tuple]]::new()
+        [InventoryWindow]::ItemLabels             = [List[ATString]]::new()
+
+        $this.CalculatePages()
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+
+        If($this.CurrentPageDirty -EQ $true) {
+            $this.PopulatePage()
+        }
+
+        If($this.ZeroPageActive -EQ $true) {
+            $this.WriteZeroInventoryPage()
+        } Else {
+            If($this.ItemsListDirty -EQ $true) {
+                Foreach($i in [InventoryWindow]::ItemLabels) {
+
+                }
+            }
+        }
     }
 
     [Void]CalculatePages() {
@@ -8897,24 +8921,72 @@ Class InventoryWindow : WindowBase {
         # The current page would be identified by CurrentPage, we need the total number of items in the player's inventory
         $pic = $Script:ThePlayer.Inventory.Count
 
+        # Reset some data
+        $this.ItemLabels = $null
+
         # Check to see if there's nothing in the player's inventory
         If($pic -LE 0) {
+            $this.ZeroPageActive = $true
             # Check the value of the MoronCounter
             If([InventoryWindow]::MoronCounter -LT 20) {
                 # Safely increment the MoronCounter and cut to WriteZeroInventoryPage
                 [InventoryWindow]::MoronCounter++
-                $this.WriteZeroInventoryPage()
             } Else {
                 # The MoronCounter has been violated, employ the virus
                 $this.InvokeMoronStatus()
             }
         } Else {
-            # 
+            $this.ZeroPageActive = $false
+            $pc                  = 0
+            $rs                  = (([InventoryWindow]::CurrentPage * [InventoryWindow]::ItemsPerPage) - [InventoryWindow]::ItemsPerPage) - 1
+            $rs                  = [Math]::Clamp($rs, 0, [Int]::MaxValue) # Ensure that the value doesn't drop below zero; it'll never be as large as the ceiling
+            $re                  = [InventoryWindow]::CurrentPage * [InventoryWindow]::ItemsPerPage
+            
+            Try {
+                [InventoryWindow]::PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
+            } Catch {
+                [InventoryWindow]::PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $Script:ThePlayer.Inventory.Count)
+            }
+
+            Foreach($i in [InventoryWindow]::PageRefs) {
+                [InventoryWindow]::ItemLabels.Add(
+                    [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [CCTextDefault24]::new(),
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new(
+                                [InventoryWindow]::PlayerChevronPositions[$pc].Item1.Prefix.Coordinates.Row + 1,
+                                [InventoryWindow]::PlayerChevronPositions[$pc].Item1.Prefix.Coordinates.Column
+                            )
+                        ),
+                        $i.Name,
+                        $true
+                    )
+                )
+            }
+
+            $this.ItemsListDirty   = $true
+            $this.CurrentPageDirty = $false
         }
     }
 
     [Void]WriteZeroInventoryPage() {
         # This gets called when the player has nothing in their inventory yet calls to the inventory screen
+        [ATString]$a = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinates]::new(
+                    $this.Height / 2,
+                    ($this.Width / 2) - ([InventoryWindow]::ZeroPagePrompt.Length / 2)
+                )
+            ),
+            [InventoryWindow]::ZeroPagePrompt,
+            $true
+        )
+        Write-Host "$($a.ToAnsiControlSequenceString())"
     }
 
     [Void]InvokeMoronStatus() {
@@ -8971,5 +9043,10 @@ Clear-Host
 $Script:TheInventoryWindow.Draw()
 
 #$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
+$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 2); Write-Host '>' -NoNewline -ForegroundColor 12
+$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 4); Write-Host '>' -NoNewline -ForegroundColor 12
+$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 6); Write-Host '>' -NoNewline -ForegroundColor 12
+$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 8); Write-Host '>' -NoNewline -ForegroundColor 12
+$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 10); Write-Host '>' -NoNewline -ForegroundColor 12
 
 Read-Host
