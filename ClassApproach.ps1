@@ -8844,7 +8844,8 @@ Class InventoryWindow : WindowBase {
     Static [Boolean]$PlayerChevronVisible      = $false
     Static [Boolean]$PagingChevronRightVisible = $false
     Static [Boolean]$PagingChevronLeftVisible  = $false
-    Static [Boolean]$ZeroPageActive            = $true
+    Static [Boolean]$ZeroPageActive            = $false
+    Static [Boolean]$MoronPageActive           = $false
     
     Static [Int]$ItemsPerPage             = 10
     Static [Int]$NumPages                 = 1
@@ -8883,24 +8884,162 @@ Class InventoryWindow : WindowBase {
         [InventoryWindow]::ItemLabels             = [List[ATString]]::new()
 
         $this.CalculatePages()
+        $this.CreatePlayerChevronPositions()
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
-        If($this.CurrentPageDirty -EQ $true) {
+        If([InventoryWindow]::CurrentPageDirty -EQ $true) {
             $this.PopulatePage()
         }
 
-        If($this.ZeroPageActive -EQ $true) {
+        If([InventoryWindow]::ZeroPageActive -EQ $true) {
             $this.WriteZeroInventoryPage()
         } Else {
-            If($this.ItemsListDirty -EQ $true) {
-                Foreach($i in [InventoryWindow]::ItemLabels) {
-
+            # We're in a normal inventory screen state
+            # Check to see which Player Chevron is active and draw it
+            Foreach($pchev in [InventoryWindow]::PlayerChevronPositions) {
+                If($pchev.Item2 -EQ $true) {
+                    Write-Host "$($pchev.Item1.ToAnsiControlSequenceString())"
                 }
             }
         }
+    }
+
+    [Void]CreatePlayerChevronPositions() {
+        # Item 1 is the ATString for the Chevron
+        # Item 2 is the Boolean that says if it's active or not; only one can be active at a time
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(2, 5)
+                ),
+                '>',
+                $true
+            ),
+            $true   
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(4, 5)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(6, 5)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(8, 5)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(10, 5)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(2, 35)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(4, 35)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(6, 35)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(8, 35)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
+        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCAppleGreenLight24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(10, 35)
+                ),
+                '>',
+                $true
+            ),
+            $false
+        )) | Out-Null
     }
 
     [Void]CalculatePages() {
@@ -8917,16 +9056,32 @@ Class InventoryWindow : WindowBase {
         }
     }
 
+    [Void]TurnPageForward() {
+        If(([InventoryWindow]::CurrentPage + 1) -LE [InventoryWindow]::NumPages) {
+            [InventoryWindow]::CurrentPage++
+            [InventoryWindow]::CurrentPageDirty = $true
+        }
+    }
+
+    [Void]TurnPageBackward() {
+        If(([InventoryWindow]::CurrentPage - 1) -GE 1) {
+            [InventoryWindow]::CurrentPage--
+            [InventoryWindow]::CurrentPageDirty = $true
+        }
+    }
+
     [Void]PopulatePage() {
         # The current page would be identified by CurrentPage, we need the total number of items in the player's inventory
         $pic = $Script:ThePlayer.Inventory.Count
 
         # Reset some data
-        $this.ItemLabels = $null
+        [InventoryWindow]::ItemLabels = $null
 
         # Check to see if there's nothing in the player's inventory
         If($pic -LE 0) {
-            $this.ZeroPageActive = $true
+            [InventoryWindow]::ZeroPageActive   = $true
+            [InventoryWindow]::CurrentPageDirty = $false
+            
             # Check the value of the MoronCounter
             If([InventoryWindow]::MoronCounter -LT 20) {
                 # Safely increment the MoronCounter and cut to WriteZeroInventoryPage
@@ -9040,13 +9195,16 @@ Clear-Host
 #$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
 #$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
+# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+
 $Script:TheInventoryWindow.Draw()
 
 #$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
-$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 2); Write-Host '>' -NoNewline -ForegroundColor 12
-$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 4); Write-Host '>' -NoNewline -ForegroundColor 12
-$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 6); Write-Host '>' -NoNewline -ForegroundColor 12
-$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 8); Write-Host '>' -NoNewline -ForegroundColor 12
-$(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 10); Write-Host '>' -NoNewline -ForegroundColor 12
+# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 2); Write-Host '>' -NoNewline -ForegroundColor 12
+# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 4); Write-Host '>' -NoNewline -ForegroundColor 12
+# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 6); Write-Host '>' -NoNewline -ForegroundColor 12
+# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 8); Write-Host '>' -NoNewline -ForegroundColor 12
+# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 10); Write-Host '>' -NoNewline -ForegroundColor 12
 
 Read-Host
