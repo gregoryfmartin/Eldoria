@@ -8885,6 +8885,7 @@ Class InventoryWindow : WindowBase {
 
         $this.CalculatePages()
         $this.CreatePlayerChevronPositions()
+        $this.CreateItemLabels()
     }
 
     [Void]Draw() {
@@ -8908,9 +8909,12 @@ Class InventoryWindow : WindowBase {
     }
 
     [Void]CreatePlayerChevronPositions() {
+        [List[Int]]$b = [List[Int]]::new()
+        $b.Add(5) | Out-Null
+        
         # Item 1 is the ATString for the Chevron
         # Item 2 is the Boolean that says if it's active or not; only one can be active at a time
-        [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
+        $a = [Tuple]::Create(
             [ATString]::new(
                 [ATStringPrefix]::new(
                     [CCAppleGreenLight24]::new(),
@@ -8921,8 +8925,9 @@ Class InventoryWindow : WindowBase {
                 '>',
                 $true
             ),
-            $true   
-        )) | Out-Null
+            $true 
+        )
+        [InventoryWindow]::PlayerChevronPositions.Add($a)
         [InventoryWindow]::PlayerChevronPositions.Add([Tuple]::Create(
             [ATString]::new(
                 [ATStringPrefix]::new(
@@ -9042,6 +9047,30 @@ Class InventoryWindow : WindowBase {
         )) | Out-Null
     }
 
+    [Void]CreateItemLabels() {
+        [InventoryWindow]::ItemLabels = [List[ATString]]::new()
+        $c                            = 0
+        
+        Foreach($i in $Script:ThePlayer.Inventory) {
+            [InventoryWindow]::ItemLabels.Add(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(
+                            [InventoryWindow]::PlayerChevronPositions[$c].Item1.Prefix.Coordinates.Row + 2,
+                            [InventoryWindow]::PlayerChevronPositions[$c].Item1.Prefix.Coordinates.Column
+                        )
+                    ),
+                    $i.Name,
+                    $true
+                )
+            ) | Out-Null
+            $c++ # LOLZ
+        }
+    }
+
     [Void]CalculatePages() {
         # Determine the total number of pages
         $pic = $Script:ThePlayer.Inventory.Count
@@ -9074,7 +9103,7 @@ Class InventoryWindow : WindowBase {
         # The current page would be identified by CurrentPage, we need the total number of items in the player's inventory
         $pic = $Script:ThePlayer.Inventory.Count
 
-        # Reset some data
+        # Reset the labels
         [InventoryWindow]::ItemLabels = $null
 
         # Check to see if there's nothing in the player's inventory
