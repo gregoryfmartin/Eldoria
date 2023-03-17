@@ -8852,7 +8852,7 @@ Class InventoryWindow : WindowBase {
     Static [Int]$CurrentPage              = 1
     Static [List[MapTileObject]]$PageRefs = $null
     
-    Static [List[Tuple]]$PlayerChevronPositions       = $null
+    Static [Tuple[]]$PlayerChevronPositions           = $null
     Static [ATCoordinates]$PagingChevronRightPosition = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$PagingChevronLeftPosition  = [ATCoordinatesNone]::new()
     
@@ -8879,9 +8879,8 @@ Class InventoryWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        [InventoryWindow]::PageRefs               = [List[MapTileObject]]::new()
-        [InventoryWindow]::PlayerChevronPositions = [List[Tuple]]::new()
-        [InventoryWindow]::ItemLabels             = [List[ATString]]::new()
+        [InventoryWindow]::PageRefs   = [List[MapTileObject]]::new()
+        [InventoryWindow]::ItemLabels = [List[ATString]]::new()
 
         $this.CalculatePages()
         $this.CreatePlayerChevronPositions()
@@ -8909,9 +8908,22 @@ Class InventoryWindow : WindowBase {
     }
 
     [Void]CreatePlayerChevronPositions() {
-        [List[Int]]$b = [List[Int]]::new()
-        $b.Add(5) | Out-Null
-        
+        [InventoryWindow]::PlayerChevronPositions = @(
+            [Tuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(2, 5)
+                    ),
+                    '>',
+                    $true
+                ),
+                $true 
+            )
+        )
+
         # Item 1 is the ATString for the Chevron
         # Item 2 is the Boolean that says if it's active or not; only one can be active at a time
         $a = [Tuple]::Create(
