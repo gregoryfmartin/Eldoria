@@ -8864,7 +8864,7 @@ Class InventoryWindow : WindowBase {
 			[CCAppleYellowLight24]::new(),
 			[ATBackgroundColor24None]::new(),
 			[ATDecorationNone]::new(),
-			[ATCoordinates]::new(0, 0)
+			[ATCoordinates]::new(2, 78)
 		),
 		[InventoryWindow]::PagingChevronRightCharacter,
 		$true
@@ -8874,7 +8874,7 @@ Class InventoryWindow : WindowBase {
 			[CCAppleYellowLight24]::new(),
 			[ATBackgroundColor24None]::new(),
 			[ATDecorationNone]::new(),
-			[ATCoordinates]::new(0, 0)
+			[ATCoordinates]::new(2, 1)
 		),
 		[InventoryWindow]::PagingChevronLeftCharacter,
 		$true
@@ -8886,20 +8886,21 @@ Class InventoryWindow : WindowBase {
 
 	Static [String]$ZeroPagePrompt = 'You have no items in your inventory.'
 
-	[Boolean]$PlayerChevronDirty = $true
-	[Boolean]$PagingChevronRightDirty = $true
-	[Boolean]$PagingChevronLeftDirty = $true
-	[Boolean]$ItemsListDirty = $true
-	[Boolean]$CurrentPageDirty = $true
-	[Boolean]$PlayerChevronVisible = $true
-	[Boolean]$PagingChevronRightVisible = $false
-	[Boolean]$PagingChevronLeftVisible = $false
-	[Boolean]$ZeroPageActive = $false
-	[Boolean]$MoronPageActive = $false
+    [Boolean]$PlayerChevronDirty        = $true
+    [Boolean]$PagingChevronRightDirty   = $true
+    [Boolean]$PagingChevronLeftDirty    = $true
+    [Boolean]$ItemsListDirty            = $true
+    [Boolean]$CurrentPageDirty          = $true
+    [Boolean]$PlayerChevronVisible      = $true
+    [Boolean]$PagingChevronRightVisible = $false
+    [Boolean]$PagingChevronLeftVisible  = $false
+    [Boolean]$ZeroPageActive            = $false
+    [Boolean]$MoronPageActive           = $false
+    [Boolean]$BookDirty                 = $true
 
-	[Int]$ItemsPerPage = 10
-	[Int]$NumPages = 1
-	[Int]$CurrentPage = 1
+	[Int]$ItemsPerPage             = 10
+	[Int]$NumPages                 = 1
+	[Int]$CurrentPage              = 1
 	[List[MapTileObject]]$PageRefs = $null
 
 	[List[Tuple[[ATString], [Boolean]]]]$IChevrons
@@ -8922,12 +8923,16 @@ Class InventoryWindow : WindowBase {
 
 		$this.PageRefs = [List[MapTileObject]]::new()
 
-		$this.CalculateNumPages()
 		$this.CreateIChevrons()
 	}
 
 	[Void]Draw() {
 		([WindowBase]$this).Draw()
+
+        If($this.BookDirty -EQ $true) {
+            $this.CalculateNumPages()
+            $this.BookDirty = $false
+        }
 
 		If($this.CurrentPageDirty -EQ $true) {
 			$this.PopulatePage()
@@ -8945,11 +8950,21 @@ Class InventoryWindow : WindowBase {
 			}
 			If($this.NumPages -GT 1) {
 				If($this.CurrentPage -EQ 1) {
+                    $this.PagingChevronLeftVisible = $false
+                    If($this.PagingChevronRightVisible -EQ $false) {
+                        $this.PagingChevronRightVisible = $true
+                    }
 					If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
 						Write-Host "$([InventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
 						$this.PagingChevronRightDirty = $false
 					}
 				} Elseif($this.CurrentPage -GT 1 -AND $this.CurrentPage -LT $this.NumPages) {
+                    If($this.PagingChevronLeftVisible -EQ $false) {
+                        $this.PagingChevronLeftVisible -EQ $true
+                    }
+                    If($this.PagingChevronRightVisible -EQ $false) {
+                        $this.PagingChevronRightVisible = $true
+                    }
 					If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
 						Write-Host "$([InventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
 						$this.PagingChevronRightDirty = $false
@@ -8959,6 +8974,10 @@ Class InventoryWindow : WindowBase {
 						$this.PagingChevronLeftDirty = $false
 					}
 				} Elseif($this.CurrentPage -GE $this.NumPages) {
+                    $this.PagingChevronRightVisible = $false
+                    If($this.PagingChevronLeftVisible -EQ $false) {
+                        $this.PagingChevronLeftVisible = $true
+                    }
 					If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
 						Write-Host "$([InventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
 						$this.PagingChevronLeftDirty = $false
@@ -9129,11 +9148,11 @@ Class InventoryWindow : WindowBase {
 	}
 
 	[Void]CalculateNumPages() {
-		$pp = $Script:ThePlayer.Inventory.Count / $this.ItemsPerPage
+		$pp  = $Script:ThePlayer.Inventory.Count / $this.ItemsPerPage
 		If($pp -LT 1) {
 			$this.NumPages = 1
 		} Else {
-			$this.NumPages = $pp
+			$this.NumPages = [Math]::Ceiling($pp)
 		}
 	}
 
@@ -9265,6 +9284,13 @@ Clear-Host
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
