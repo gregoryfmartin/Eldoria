@@ -71,6 +71,16 @@ Enum StatNumberState {
     Danger
 }
 
+Enum CommonVirtualKeyCodes {
+    Escape     = 27
+    LeftArrow  = 37
+    RightArrow = 39
+    UpArrow    = 38
+    DownArrow  = 40
+    A          = 65
+    D          = 68
+}
+
 # CLASS DEFINITIONS
 
 Class EmojiBank {
@@ -8856,9 +8866,11 @@ Class InventoryWindow : WindowBase {
 	Static [String]$WindowBorderHorizontal = '********************************************************************************'
 	Static [String]$WindowBorderVertical   = '*'
 
-	Static [String]$IChevronCharacter = '>'
+	Static [String]$IChevronCharacter           = '>'
+	Static [String]$IChevronBlankCharacter      = ' '
 	Static [String]$PagingChevronRightCharacter = '>'
-	Static [String]$PagingChevronLeftCharacter = '<'
+	Static [String]$PagingChevronLeftCharacter  = '<'
+    
 	Static [ATString]$PagingChevronRight = [ATString]::new(
 		[ATStringPrefix]::new(
 			[CCAppleYellowLight24]::new(),
@@ -8905,6 +8917,8 @@ Class InventoryWindow : WindowBase {
 
 	[List[Tuple[[ATString], [Boolean]]]]$IChevrons
 	[List[ATString]]$ItemLabels
+
+    [Int]$ActiveIChevronIndex = 0
 
 	InventoryWindow(): base() {
 		$this.LeftTop = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
@@ -9012,7 +9026,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(5, 15)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9025,7 +9039,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(7, 15)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9038,7 +9052,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(9, 15)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9051,7 +9065,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(11, 15)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9064,7 +9078,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(3, 50)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9077,7 +9091,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(5, 50)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9090,7 +9104,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(7, 50)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9103,7 +9117,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(9, 50)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9116,7 +9130,7 @@ Class InventoryWindow : WindowBase {
 					[ATDecorationNone]::new(),
 					[ATCoordinates]::new(11, 50)
 				),
-				[InventoryWindow]::IChevronCharacter,
+				[InventoryWindow]::IChevronBlankCharacter,
 				$true
 			),
 			$false
@@ -9206,13 +9220,19 @@ Class InventoryWindow : WindowBase {
 	}
 
 	[ATString]GetActiveIChevron() {
+        $this.ActiveIChevronIndex = 0
+
 		Foreach($a in $this.IChevrons) {
 			If($a.Item2 -EQ $true) {
 				Return $a.Item1
 			}
+            $this.ActiveIChevronIndex++
 		}
-		$this.IChevrons[0].Item2 = $true
-		Return $this.IChevrons[1].Item1
+
+        # No match found - Set the first to be active
+        $this.ActiveIChevronIndex = 0
+		$this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
+		Return $this.IChevrons[$this.ActiveIChevronIndex].Item1
 	}
 
 	[Void]WriteZeroInventoryPage() {
@@ -9233,6 +9253,28 @@ Class InventoryWindow : WindowBase {
 	}
 
 	[Void]WriteMoronPage() {}
+
+    [Void]HandleInput() {
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown')
+        While($keyCap.VirtualKeyCode -NE [CommonVirtualKeyCodes]::Escape) {
+            If($keyCap.VirtualKeyCode -EQ [CommonVirtualKeyCodes]::UpArrow) {
+                # See if the Active IChevron can be moved "up"
+                If(($this.ActiveIChevronIndex - 1) -GT 0) {
+                    # Set the currently active IChevron to inactive
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+
+                    # Set the IChevron "behind" this one to active
+                    $this.ActiveIChevronIndex--
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+
+                    # Set the IChevron to dirty so it redraws
+                    $this.PlayerChevronDirty = $true
+                }
+            }
+        }
+    }
 }
 
 # FUNCTION DEFINITIONS
