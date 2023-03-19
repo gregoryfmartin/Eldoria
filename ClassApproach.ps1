@@ -551,7 +551,7 @@ Class CCPantonePottingSoil24 : ConsoleColor24 {
     CCPantonePottingSoil24(): base(33, 22, 18) {}
 }
 
-Class CCTextDefault24 : CCDarkGrey24 {}
+Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
     ATForegroundColor24None(): base([CCBlack24]::new()) {}
@@ -8261,6 +8261,30 @@ Class MTOPole : MapTileObject {
     MTOPole(): base('Pole', 'pole', $false, '', {}) {}
 }
 
+Class MTOBacon : MapTileObject {
+    MTOBacon(): base('Bacon', 'bacon', $false, '', {}) {}
+}
+
+Class MTOApple : MapTileObject {
+    MTOApple(): base('Apple', 'apple', $false, '', {}) {}
+}
+
+Class MTOStick : MapTileObject {
+    MTOStick(): base('Stick', 'stick', $false, '', {}) {}
+}
+
+Class MTOYogurt : MapTileObject {
+    MTOYogurt(): base('Yogurt', 'yogurt', $false, '', {}) {}
+}
+
+Class MTORock : MapTileObject {
+    MTORock(): base('Rock', 'rock', $false, '', {}) {}
+}
+
+Class MTOMilk : MapTileObject {
+    MTOMilk(): base('Milk', 'milk', $false, '', {}) {}
+}
+
 Class WindowBase {
     Static [Int]$BorderDrawColorTop     = 0
     Static [Int]$BorderDrawColorBottom  = 1
@@ -8824,23 +8848,25 @@ Class MessageWindow : WindowBase {
 }
 
 Class InventoryWindow : WindowBase {
-	Static [Int]$WindowLTRow    = 1
+	Static [Int]$WindowLTRow = 1
 	Static [Int]$WindowLTColumn = 1
-	Static [Int]$WindowBRRow    = 20
+	Static [Int]$WindowBRRow = 20
 	Static [Int]$WindowBRColumn = 79
 
 	Static [String]$WindowBorderHorizontal = '********************************************************************************'
 	Static [String]$WindowBorderVertical   = '*'
 
-	Static [String]$PlayerChevronCharacter = '>'
-	Static [ATString]$PagingChevronRight   = [ATString]::new(
+	Static [String]$IChevronCharacter = '>'
+	Static [String]$PagingChevronRightCharacter = '>'
+	Static [String]$PagingChevronLeftCharacter = '<'
+	Static [ATString]$PagingChevronRight = [ATString]::new(
 		[ATStringPrefix]::new(
 			[CCAppleYellowLight24]::new(),
 			[ATBackgroundColor24None]::new(),
 			[ATDecorationNone]::new(),
 			[ATCoordinates]::new(0, 0)
 		),
-		'>',
+		[InventoryWindow]::PagingChevronRightCharacter,
 		$true
 	)
 	Static [ATString]$PagingChevronLeft = [ATString]::new(
@@ -8850,7 +8876,7 @@ Class InventoryWindow : WindowBase {
 			[ATDecorationNone]::new(),
 			[ATCoordinates]::new(0, 0)
 		),
-		'<',
+		[InventoryWindow]::PagingChevronLeftCharacter,
 		$true
 	)
 
@@ -8860,49 +8886,28 @@ Class InventoryWindow : WindowBase {
 
 	Static [String]$ZeroPagePrompt = 'You have no items in your inventory.'
 
-	[Boolean]$PlayerChevronDirty        = $true
-	[Boolean]$PagingChevronRightDirty   = $true
-	[Boolean]$PagingChevronLeftDirty    = $true
-	[Boolean]$ItemsListDirty            = $true
-	[Boolean]$CurrentPageDirty          = $true
-	[Boolean]$PlayerChevronVisible      = $false
+	[Boolean]$PlayerChevronDirty = $true
+	[Boolean]$PagingChevronRightDirty = $true
+	[Boolean]$PagingChevronLeftDirty = $true
+	[Boolean]$ItemsListDirty = $true
+	[Boolean]$CurrentPageDirty = $true
+	[Boolean]$PlayerChevronVisible = $true
 	[Boolean]$PagingChevronRightVisible = $false
-	[Boolean]$PagingChevronLeftVisible  = $false
-	[Boolean]$ZeroPageActive            = $false
-	[Boolean]$MoronPageActive           = $false
+	[Boolean]$PagingChevronLeftVisible = $false
+	[Boolean]$ZeroPageActive = $false
+	[Boolean]$MoronPageActive = $false
 
-	[Int]$ItemsPerPage             = 10
-	[Int]$NumPages                 = 1
-	[Int]$CurrentPage              = 1
+	[Int]$ItemsPerPage = 10
+	[Int]$NumPages = 1
+	[Int]$CurrentPage = 1
 	[List[MapTileObject]]$PageRefs = $null
 
-    # So there's a problem with strong typing here, and my guess is because of how the Tuple gets created with the factory
-    # pattern (i.e. the factory function creates an rvalue tuple whose type doesn't quite match the lvalue tuple type?)
-	$IChevronAA
-	[Tuple]$IChevronAB
-	[Tuple]$IChevronAC
-	[Tuple]$IChevronAD
-	[Tuple]$IChevronAE
-	[Tuple]$IChevronBA
-	[Tuple]$IChevronBB
-	[Tuple]$IChevronBC
-	[Tuple]$IChevronBD
-	[Tuple]$IChevronBE
-
-	[ATString]$ILabelAA
-	[ATString]$ILabelAB
-	[ATString]$ILabelAC
-	[ATString]$ILabelAD
-	[ATString]$ILabelAE
-	[ATString]$ILabelBA
-	[ATString]$ILabelBB
-	[ATString]$ILabelBC
-	[ATString]$ILabelBD
-	[ATString]$ILabelBE
+	[List[Tuple[[ATString], [Boolean]]]]$IChevrons
+	[List[ATString]]$ItemLabels
 
 	InventoryWindow(): base() {
-		$this.LeftTop          = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
-		$this.RightBottom      = [ATCoordinates]::new([InventoryWindow]::WindowBRRow, [InventoryWindow]::WindowBRColumn)
+		$this.LeftTop = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
+		$this.RightBottom = [ATCoordinates]::new([InventoryWindow]::WindowBRRow, [InventoryWindow]::WindowBRColumn)
 		$this.BorderDrawColors = [ConsoleColor24[]](
 			[CCWhite24]::new(),
 			[CCWhite24]::new(),
@@ -8926,7 +8931,8 @@ Class InventoryWindow : WindowBase {
 
 		If($this.CurrentPageDirty -EQ $true) {
 			$this.PopulatePage()
-		} Elseif($this.ZeroPageActive -EQ $true) {
+		}
+        If($this.ZeroPageActive -EQ $true) {
 			If($this.MoronPageActive -EQ $true) {
 				$this.WriteMoronPage()
 			} Else {
@@ -8959,354 +8965,167 @@ Class InventoryWindow : WindowBase {
 					}
 				}
 			}
+
 			$this.WriteItemLabels()
 		}
 	}
 
 	[Void]CreateIChevrons() {
-		$this.IChevronAA = [System.Tuple]::Create(
+		$this.IChevrons = [List[Tuple[[ATString], [Boolean]]]]::new()
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(2, 5)
+					[ATCoordinates]::new(3, 5)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$true
-		)
-		$this.IChevronAB = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(4, 5)
+					[ATCoordinates]::new(5, 5)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronAC = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(6, 5)
+					[ATCoordinates]::new(7, 5)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronAD = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(8, 5)
+					[ATCoordinates]::new(9, 5)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronAE = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(10, 5)
+					[ATCoordinates]::new(11, 5)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronBA = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(2, 35)
+					[ATCoordinates]::new(3, 35)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronBB = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(4, 35)
+					[ATCoordinates]::new(5, 35)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronBC = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(6, 35)
+					[ATCoordinates]::new(7, 35)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronBD = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(8, 35)
+					[ATCoordinates]::new(9, 35)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
-		$this.IChevronBE = [Tuple]::Create(
+		))
+		$this.IChevrons.Add([Tuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(10, 35)
+					[ATCoordinates]::new(11, 35)
 				),
-				'>',
+				[InventoryWindow]::IChevronCharacter,
 				$true
 			),
 			$false
-		)
+		))
 	}
 
 	[Void]CreateItemLabels() {
-		$this.ILabelAA = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronAA.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronAA.Item1.Prefix.Coordinates.Column
+		$this.ItemLabels = [List[ATString]]::new()
+		[Int]$c = 0
+
+		Foreach($i in $this.PageRefs) {
+			$this.ItemLabels.Add(
+				[ATString]::new(
+					[ATStringPrefix]::new(
+						[CCTextDefault24]::new(),
+						[ATBackgroundColor24None]::new(),
+						[ATDecorationNone]::new(),
+						[ATCoordinates]::new(
+							$this.IChevrons[$c].Item1.Prefix.Coordinates.Row,
+							$this.IChevrons[$c].Item1.Prefix.Coordinates.Column + 2
+						)
+					),
+					$i.Name,
+					$true
 				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[0].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelAB = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronAB.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronAB.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[1].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelAC = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronAC.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronAC.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[2].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelAD = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronAD.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronAD.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[3].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelAE = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronAE.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronAE.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[4].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelBA = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronBA.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronBA.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[5].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelBB = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronBB.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronBB.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[6].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelBC = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronBC.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronBC.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[7].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelBD = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronBD.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronBD.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[8].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
-		$this.ILabelBE = [ATString]::new(
-			[ATStringPrefix]::new(
-				[CCTextDefault24]::new(),
-				[ATBackgroundColor24None]::new(),
-				[ATDecorationNone]::new(),
-				[ATCoordinates]::new(
-					$this.IChevronBE.Item1.Prefix.Coordinates.Row + 2,
-					$this.IChevronBE.Item1.Prefix.Coordinates.Column
-				)
-			),
-			{
-				$a = ''
-				Try {
-					$a = $this.PageRefs[9].Name
-				} Catch {
-					$a = ''
-				}
-				Return $a
-			},
-			$true
-		)
+			)
+			$c++
+		}
 	}
 
 	[Void]CalculateNumPages() {
@@ -9336,8 +9155,8 @@ Class InventoryWindow : WindowBase {
 		If($Script:ThePlayer.Inventory.Count -LE 0) {
 			$this.ZeroPageActive = $true
 			$this.CurrentPageDirty = $false
-			If($this.MoronCounter -LT 20) {
-				$this.MoronCounter++
+			If([InventoryWindow]::MoronCounter -LT 20) {
+				[InventoryWindow]::MoronCounter++
 			} Else {
 				$this.MoronPageActive = $true
 			}
@@ -9362,43 +9181,19 @@ Class InventoryWindow : WindowBase {
 	}
 
 	[Void]WriteItemLabels() {
-		Write-Host "$($this.ILabelAA.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelAB.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelAC.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelAD.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelAE.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelBA.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelBB.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelBC.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelBD.ToAnsiControlSequenceString())"
-		Write-Host "$($this.ILabelBE.ToAnsiControlSequenceString())"
+		Foreach($i in $this.ItemLabels) {
+			Write-Host "$($i.ToAnsiControlSequenceString())"
+		}
 	}
 
 	[ATString]GetActiveIChevron() {
-		If($this.IChevronAA.Item2 -EQ $true) {
-			Return $this.IChevronAA.Item1
-		} Elseif($this.IChevronAB.Item2 -EQ $true) {
-			Return $this.IChevronAB.Item1
-		} Elseif($this.IChevronAC.Item2 -EQ $true) {
-			Return $this.IChevronAC.Item1
-		} Elseif($this.IChevronAD.Item2 -EQ $true) {
-			Return $this.IChevronAD.Item1
-		} Elseif($this.IChevronAE.Item2 -EQ $true) {
-			Return $this.IChevronAE.Item1
-		} Elseif($this.IChevronBA.Item2 -EQ $true) {
-			Return $this.IChevronBA.Item1
-		} Elseif($this.IChevronBB.Item2 -EQ $true) {
-			Return $this.IChevronBB.Item1
-		} Elseif($this.IChevronBC.Item2 -EQ $true) {
-			Return $this.IChevronBC.Item1
-		} Elseif($this.IChevronBD.Item2 -EQ $true) {
-			Return $this.IChevronBD.Item1
-		} Elseif($this.IChevronBE.Item2 -EQ $true) {
-			Return $this.IChevronBE.Item1
-		} Else {
-			$this.IChevronAA.Item2 = $true
-			Return $this.IChevronAA.Item1
+		Foreach($a in $this.IChevrons) {
+			If($a.Item2 -EQ $true) {
+				Return $a.Item1
+			}
 		}
+		$this.IChevrons[0].Item2 = $true
+		Return $this.IChevrons[1].Item1
 	}
 
 	[Void]WriteZeroInventoryPage() {
@@ -9467,8 +9262,16 @@ Clear-Host
 #$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
 #$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
-# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 
 $Script:TheInventoryWindow.Draw()
 
