@@ -8997,7 +8997,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(3, 5)
+					[ATCoordinates]::new(3, 15)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9010,7 +9010,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(5, 5)
+					[ATCoordinates]::new(5, 15)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9023,7 +9023,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(7, 5)
+					[ATCoordinates]::new(7, 15)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9036,7 +9036,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(9, 5)
+					[ATCoordinates]::new(9, 15)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9049,7 +9049,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(11, 5)
+					[ATCoordinates]::new(11, 15)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9062,7 +9062,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(3, 35)
+					[ATCoordinates]::new(3, 50)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9075,7 +9075,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(5, 35)
+					[ATCoordinates]::new(5, 50)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9088,7 +9088,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(7, 35)
+					[ATCoordinates]::new(7, 50)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9101,7 +9101,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(9, 35)
+					[ATCoordinates]::new(9, 50)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
@@ -9114,7 +9114,7 @@ Class InventoryWindow : WindowBase {
 					[CCAppleGreenLight24]::new(),
 					[ATBackgroundColor24None]::new(),
 					[ATDecorationNone]::new(),
-					[ATCoordinates]::new(11, 35)
+					[ATCoordinates]::new(11, 50)
 				),
 				[InventoryWindow]::IChevronCharacter,
 				$true
