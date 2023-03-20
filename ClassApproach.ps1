@@ -9196,16 +9196,16 @@ Class InventoryWindow : WindowBase {
 				$this.MoronPageActive = $true
 			}
 		} Else {
-			$this.ZeroPageActive = $false
+			$this.ZeroPageActive  = $false
 			$this.MoronPageActive = $false
-			$rs = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage) - 1
-			$rs = [Math]::Clamp($rs, 0, [Int]::MaxValue)
-			$re = $this.CurrentPage * $this.ItemsPerPage
+			$rs                   = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage) - 1
+			$rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
+			$re                   = $this.CurrentPage * $this.ItemsPerPage
 
 			Try {
 				$this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
 			} Catch {
-				$this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $Script:ThePlayer.Inventory.Count)
+				$this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs + 1, ($Script:ThePlayer.Inventory.Count - ($rs + 1)))
 			}
 
 			$this.CreateItemLabels()
@@ -9321,6 +9321,10 @@ Class InventoryWindow : WindowBase {
                 }
 
                 $this.PlayerChevronDirty = $true
+            }
+
+            68 {
+                $this.TurnPageForward()
             }
         }
     }
