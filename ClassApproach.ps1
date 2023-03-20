@@ -8886,7 +8886,7 @@ Class InventoryWindow : WindowBase {
             [CCAppleYellowLight24]::new(),
             [ATBackgroundColor24None]::new(),
             [ATDecorationNone]::new(),
-            [ATCoordinates]::new(2, 2)
+            [ATCoordinates]::new(2, 3)
         ),
         [InventoryWindow]::PagingChevronLeftCharacter,
         $true
@@ -8917,6 +8917,7 @@ Class InventoryWindow : WindowBase {
     
     [List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
     [List[ATString]]$ItemLabels
+    [List[ATString]]$ItemLabelBlanks
 
     [Int]$ActiveIChevronIndex = 0
 
@@ -9003,7 +9004,10 @@ Class InventoryWindow : WindowBase {
                 }
             }
 
-            $this.WriteItemLabels()
+            If($this.ItemsListDirty -EQ $true) {
+                $this.WriteItemLabels()
+                $this.ItemsListDirty = $false
+            }
         }
     }
 
@@ -9019,7 +9023,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronCharacter,
                 $true
-            )
+            ),
+            $true
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9031,7 +9036,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9043,7 +9049,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9055,7 +9062,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9067,7 +9075,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9079,7 +9088,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9091,7 +9101,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9103,7 +9114,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9115,7 +9127,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
@@ -9127,7 +9140,8 @@ Class InventoryWindow : WindowBase {
                 ),
                 [InventoryWindow]::IChevronBlankCharacter,
                 $false
-            )
+            ),
+            $false
         ))
     }
 
@@ -9153,6 +9167,132 @@ Class InventoryWindow : WindowBase {
             )
             $c++ # FYI - This was intentional
         }
+
+        $this.CreateItemLabelBlanks()
+    }
+
+    [Void]CreateItemLabelBlanks() {
+        $this.ItemLabelBlanks = [List[ATString]]::new()
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(3, 17)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(5, 17)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(7, 17)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(9, 17)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(11, 17)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(3, 52)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(5, 52)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(7, 52)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(9, 52)
+                ),
+                '               ',
+                $true
+            )
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]::new(
+                [ATStringPrefix]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinates]::new(11, 52)
+                ),
+                '               ',
+                $true
+            )
+        )
     }
 
     [Void]CalculateNumPages() {
@@ -9209,6 +9349,9 @@ Class InventoryWindow : WindowBase {
     }
 
     [Void]WriteItemLabels() {
+        Foreach($i in $this.ItemLabelBlanks) {
+            Write-Host "$($i.ToAnsiControlSequenceString())"
+        }
         Foreach($i in $this.ItemLabels) {
             Write-Host "$($i.ToAnsiControlSequenceString())"
         }
@@ -9250,7 +9393,7 @@ Class InventoryWindow : WindowBase {
     [Void]WriteMoronPage() {}
 
     [Void]HandleInput() {
-        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown')
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
             27 {}
 
@@ -9308,6 +9451,10 @@ Class InventoryWindow : WindowBase {
 
             68 {
                 $this.TurnPageForward()
+            }
+
+            65 {
+                $this.TurnPageBackward()
             }
         }
     }
