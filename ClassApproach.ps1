@@ -8915,7 +8915,7 @@ Class InventoryWindow : WindowBase {
 	[Int]$CurrentPage              = 1
 	[List[MapTileObject]]$PageRefs = $null
 
-	[List[Tuple[[ATString], [Boolean]]]]$IChevrons
+	[List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
 	[List[ATString]]$ItemLabels
 
     [Int]$ActiveIChevronIndex = 0
@@ -8959,7 +8959,9 @@ Class InventoryWindow : WindowBase {
 			}
 		} Else {
 			If($this.PlayerChevronVisible -EQ $true -AND $this.PlayerChevronDirty -EQ $true) {
-				Write-Host "$($this.GetActiveIChevron().ToAnsiControlSequenceString())"
+				Foreach($ic in $this.IChevrons) {
+                    Write-Host "$($ic.Item1.ToAnsiControlSequenceString())"
+                }
 				$this.PlayerChevronDirty = $false
 			}
 			If($this.NumPages -GT 1) {
@@ -9004,8 +9006,8 @@ Class InventoryWindow : WindowBase {
 	}
 
 	[Void]CreateIChevrons() {
-		$this.IChevrons = [List[Tuple[[ATString], [Boolean]]]]::new()
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9018,7 +9020,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$true
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9031,7 +9033,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9044,7 +9046,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9057,7 +9059,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9070,7 +9072,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9083,7 +9085,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9096,7 +9098,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9109,7 +9111,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9122,7 +9124,7 @@ Class InventoryWindow : WindowBase {
 			),
 			$false
 		))
-		$this.IChevrons.Add([Tuple]::Create(
+		$this.IChevrons.Add([ValueTuple]::Create(
 			[ATString]::new(
 				[ATStringPrefix]::new(
 					[CCAppleGreenLight24]::new(),
@@ -9263,7 +9265,7 @@ Class InventoryWindow : WindowBase {
 
             38 {
                 # See if the chevron can be moved "up"
-                If(($this.ActiveIChevronIndex - 1) -GT 0) {
+                If(($this.ActiveIChevronIndex - 1) -GE 0) {
                     # Set the currently active IChevron to inactive
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
