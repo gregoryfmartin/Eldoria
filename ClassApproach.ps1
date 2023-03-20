@@ -9255,7 +9255,59 @@ Class InventoryWindow : WindowBase {
             27 {}
 
             38 {
-                
+                If(($this.ActiveIChevronIndex - 1) -GE 0) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    $this.ActiveIChevronIndex--
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            40 {
+                If(($this.ActiveIChevronIndex + 1) -LT $this.ItemsPerPage) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    $this.ActiveIChevronIndex++
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            39 {
+                If(($this.ActiveIChevronIndex + 5) -LT $this.ItemsPerPage) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    $this.ActiveIChevronIndex += 5
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            37 {
+                If(($this.ActiveIChevronIndex -5) -GE 0) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    $this.ActiveIChevronIndex -= 5
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            68 {
+                $this.TurnPageForward()
             }
         }
     }
