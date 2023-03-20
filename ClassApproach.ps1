@@ -9256,22 +9256,69 @@ Class InventoryWindow : WindowBase {
 
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown')
-        While($keyCap.VirtualKeyCode -NE [CommonVirtualKeyCodes]::Escape) {
-            If($keyCap.VirtualKeyCode -EQ [CommonVirtualKeyCodes]::UpArrow) {
-                # See if the Active IChevron can be moved "up"
+        Switch($keyCap.VirtualKeyCode) {
+            27 {
+                # TODO: Exit the Inventory Screen
+            }
+
+            38 {
+                # See if the chevron can be moved "up"
                 If(($this.ActiveIChevronIndex - 1) -GT 0) {
                     # Set the currently active IChevron to inactive
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
-
+                    
                     # Set the IChevron "behind" this one to active
                     $this.ActiveIChevronIndex--
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
-
-                    # Set the IChevron to dirty so it redraws
-                    $this.PlayerChevronDirty = $true
                 }
+                
+                $this.PlayerChevronDirty = $true
+            }
+
+            40 {
+                # See if the chevron can be moved "down"
+                If(($this.ActiveIChevronIndex + 1) -LT $this.ItemsPerPage) {
+                    # Set the currently active IChevron to inactive
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    # Set the IChevron "in front" of this one to active
+                    $this.ActiveIChevronIndex++
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            39 {
+                # See if the chevron can be moved to the "right"
+                If(($this.ActiveIChevronIndex + 5) -LT $this.ItemsPerPage) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    $this.ActiveIChevronIndex += 5
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            37 {
+                # See if the chevron can be moved to the "left"
+                If(($this.ActiveIChevronIndex - 5) -GE 0) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    
+                    $this.ActiveIChevronIndex -= 5
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
             }
         }
     }
@@ -9341,7 +9388,12 @@ $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 
-$Script:TheInventoryWindow.Draw()
+#$Script:TheInventoryWindow.Draw()
+
+While(1) {
+    $Script:TheInventoryWindow.Draw()
+    $Script:TheInventoryWindow.HandleInput()
+}
 
 #$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
 # $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 2); Write-Host '>' -NoNewline -ForegroundColor 12
