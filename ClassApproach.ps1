@@ -8257,43 +8257,43 @@ Class MTOTree : MapTileObject {
 }
 
 Class MTOLadder : MapTileObject {
-    MTOLadder():  base('Ladder', 'ladder', $false, '', {}) {}
+    MTOLadder():  base('Ladder', 'ladder', $false, 'Used to climb things. Just don''t walk under one.', {}) {}
 }
 
 Class MTORope : MapTileObject {
-    MTORope(): base('Rope', 'rope', $false, '', {}) {}
+    MTORope(): base('Rope', 'rope', $false, 'It''s not a snake. Hopefully.', {}) {}
 }
 
 Class MTOStairs : MapTileObject {
-    MTOStairs(): base('Stairs', 'stairs', $false, '', {}) {}
+    MTOStairs(): base('Stairs', 'stairs', $false, 'A faithful ally for elevating one''s position.', {}) {}
 }
 
 Class MTOPole : MapTileObject {
-    MTOPole(): base('Pole', 'pole', $false, '', {}) {}
+    MTOPole(): base('Pole', 'pole', $false, 'Not the north or the south one.', {}) {}
 }
 
 Class MTOBacon : MapTileObject {
-    MTOBacon(): base('Bacon', 'bacon', $false, '', {}) {}
+    MTOBacon(): base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {}) {}
 }
 
 Class MTOApple : MapTileObject {
-    MTOApple(): base('Apple', 'apple', $false, '', {}) {}
+    MTOApple(): base('Apple', 'apple', $false, 'A big, juicy, red apple. Worm not included.', {}) {}
 }
 
 Class MTOStick : MapTileObject {
-    MTOStick(): base('Stick', 'stick', $false, '', {}) {}
+    MTOStick(): base('Stick', 'stick', $false, 'Be careful not to poke your eye out with it.', {}) {}
 }
 
 Class MTOYogurt : MapTileObject {
-    MTOYogurt(): base('Yogurt', 'yogurt', $false, '', {}) {}
+    MTOYogurt(): base('Yogurt', 'yogurt', $false, 'For some reason, people enjoy this spoiled milk.', {}) {}
 }
 
 Class MTORock : MapTileObject {
-    MTORock(): base('Rock', 'rock', $false, '', {}) {}
+    MTORock(): base('Rock', 'rock', $false, 'A garden variety rock. Good for taunting raccoons with.', {}) {}
 }
 
 Class MTOMilk : MapTileObject {
-    MTOMilk(): base('Milk', 'milk', $false, '', {}) {}
+    MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {}) {}
 }
 
 Class WindowBase {
