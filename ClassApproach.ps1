@@ -9458,7 +9458,7 @@ Class InventoryWindow : WindowBase {
             }
 
             40 {
-                If(($this.ActiveIChevronIndex + 1) -LT $this.ItemsPerPage) {
+                If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
@@ -9474,7 +9474,7 @@ Class InventoryWindow : WindowBase {
             }
 
             39 {
-                If(($this.ActiveIChevronIndex + 5) -LT $this.ItemsPerPage) {
+                If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
