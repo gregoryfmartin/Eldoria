@@ -9371,7 +9371,7 @@ Class InventoryWindow : WindowBase {
             Try {
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
             } Catch {
-                $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, ($Script:ThePlayer.Inventory.Count - ($rs + 1)))
+                $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, ($Script:ThePlayer.Inventory.Count - $rs))
             }
 
             $this.CreateItemLabels()
