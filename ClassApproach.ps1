@@ -236,6 +236,7 @@ Class ATControlSequences {
     Static [String]$BackgroundColor24Prefix = "`e[48;2;"
     Static [String]$DecorationBlink         = "`e[5m"
     Static [String]$ModifierReset           = "`e[0m"
+    Static [String]$CursorHide              = "`e[?25l"
     
     Static [String]GenerateFG24String([ConsoleColor24]$Color) {
         Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
@@ -9006,6 +9007,7 @@ Class InventoryWindow : WindowBase {
 
             If($this.ItemsListDirty -EQ $true) {
                 $this.WriteItemLabels()
+                Write-Host "$([ATControlSequences]::CursorHide)"
                 $this.ItemsListDirty = $false
             }
         }
