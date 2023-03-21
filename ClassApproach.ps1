@@ -9428,7 +9428,7 @@ Class InventoryWindow : WindowBase {
             $rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
             $re                   = 10
             #$re                   = $this.CurrentPage * $this.ItemsPerPage
-            
+
             Try {
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
             } Catch {
@@ -9436,6 +9436,8 @@ Class InventoryWindow : WindowBase {
             }
 
             $this.CreateItemLabels()
+
+            $this.ResetIChevronPosition()
 
             $this.ItemsListDirty   = $true
             $this.CurrentPageDirty = $false
@@ -9485,6 +9487,21 @@ Class InventoryWindow : WindowBase {
     }
 
     [Void]WriteMoronPage() {}
+
+    [Void]ResetIChevronPosition() {
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
+        
+        $this.ActiveIChevronIndex                                      = 0
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+        
+        $this.PlayerChevronDirty = $true
+        $this.ActiveItemBlinking = $false
+        $this.ItemDescDirty      = $true
+    }
 
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
