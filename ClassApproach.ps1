@@ -8871,6 +8871,7 @@ Class InventoryWindow : WindowBase {
     Static [String]$IChevronBlankCharacter      = ' '
     Static [String]$PagingChevronRightCharacter = '>'
     Static [String]$PagingChevronLeftCharacter  = '<'
+    Static [String]$PagingChevronBlankCharater  = ' '
     
     Static [ATString]$PagingChevronRight = [ATString]::new(
         [ATStringPrefix]::new(
@@ -8890,6 +8891,26 @@ Class InventoryWindow : WindowBase {
             [ATCoordinates]::new(2, 3)
         ),
         [InventoryWindow]::PagingChevronLeftCharacter,
+        $true
+    )
+    Static [ATString]$PagingChevronRightBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCAppleMintLight24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(2, 78)
+        ),
+        [InventoryWindow]::PagingChevronBlankCharater,
+        $true
+    )
+    Static [ATString]$PagingChevronLeftBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(2, 3)
+        ),
+        [InventoryWindow]::PagingChevronBlankCharater,
         $true
     )
 
@@ -8970,7 +8991,11 @@ Class InventoryWindow : WindowBase {
 
             If($this.NumPages -GT 1) {
                 If($this.CurrentPage -EQ 1) {
-                    $this.PagingChevronLeftVisible = $false
+                    If($this.PagingChevronLeftVisible -EQ $true) {
+                        Write-Host "$([InventoryWindow]::PagingChevronLeftBlank.ToAnsiControlSequenceString())"
+                        $this.PagingChevronLeftVisible = $false
+                        $this.PagingChevronLeftDirty = $true
+                    }
                     If($this.PagingChevronRightVisible -EQ $false) {
                         $this.PagingChevronRightVisible = $true
                     }
@@ -8994,7 +9019,11 @@ Class InventoryWindow : WindowBase {
                         $this.PagingChevronLeftDirty = $false
                     }
                 } Elseif($this.CurrentPage -GE $this.NumPages) {
-                    $this.PagingChevronRightVisible = $false
+                    If($this.PagingChevronRightVisible -EQ $true) {
+                        Write-Host "$([InventoryWindow]::PagingChevronRightBlank.ToAnsiControlSequenceString())"
+                        $this.PagingChevronRightVisible = $false
+                        $this.PagingChevronRightDirty = $true
+                    }
                     If($this.PagingChevronLeftVisible -EQ $false) {
                         $this.PagingChevronLeftVisible = $true
                     }
@@ -9508,6 +9537,23 @@ Clear-Host
 #$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
 #$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
