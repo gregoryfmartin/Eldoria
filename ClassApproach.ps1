@@ -9059,7 +9059,8 @@ Class InventoryWindow : WindowBase {
 
             # Try to make the "active" Item Label blink
             If($this.ActiveItemBlinking -EQ $false) {
-                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
 
                 $this.ItemsListDirty     = $true
                 $this.ActiveItemBlinking = $true
@@ -9256,6 +9257,7 @@ Class InventoryWindow : WindowBase {
             $c++ # FYI - This was intentional
         }
 
+        $this.ResetIChevronPosition()
         $this.CreateItemLabelBlanks()
     }
 
@@ -9437,7 +9439,7 @@ Class InventoryWindow : WindowBase {
 
             $this.CreateItemLabels()
 
-            $this.ResetIChevronPosition()
+            # $this.ResetIChevronPosition()
 
             $this.ItemsListDirty   = $true
             $this.CurrentPageDirty = $false
@@ -9489,14 +9491,22 @@ Class InventoryWindow : WindowBase {
     [Void]WriteMoronPage() {}
 
     [Void]ResetIChevronPosition() {
-        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
-        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
-        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
         
-        $this.ActiveIChevronIndex                                      = 0
-        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
-        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+        # This seems to be the only way to deal with this reliably since the ActiveIChevronIndex can't be
+        # reset to zero yet.
+        Try {
+            $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+            $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Catch {
+        }
+        
+        $this.ActiveIChevronIndex                                          = 0
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
         
         $this.PlayerChevronDirty = $true
         $this.ActiveItemBlinking = $false
@@ -9510,14 +9520,16 @@ Class InventoryWindow : WindowBase {
 
             38 {
                 If(($this.ActiveIChevronIndex - 1) -GE 0) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     
                     $this.ActiveIChevronIndex--
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
                 $this.PlayerChevronDirty = $true
@@ -9527,14 +9539,16 @@ Class InventoryWindow : WindowBase {
 
             40 {
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     
                     $this.ActiveIChevronIndex++
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
                 $this.PlayerChevronDirty = $true
@@ -9544,15 +9558,17 @@ Class InventoryWindow : WindowBase {
 
             39 {
                 If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     
                     $this.ActiveIChevronIndex += 5
 
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
                 $this.PlayerChevronDirty = $true
@@ -9562,14 +9578,16 @@ Class InventoryWindow : WindowBase {
 
             37 {
                 If(($this.ActiveIChevronIndex -5) -GE 0) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     
                     $this.ActiveIChevronIndex -= 5
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
                 $this.PlayerChevronDirty = $true
