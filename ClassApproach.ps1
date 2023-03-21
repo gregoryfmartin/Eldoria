@@ -8872,6 +8872,10 @@ Class InventoryWindow : WindowBase {
     Static [String]$PagingChevronRightCharacter = '>'
     Static [String]$PagingChevronLeftCharacter  = '<'
     Static [String]$PagingChevronBlankCharater  = ' '
+
+    Static [String]$DivLineHorizontalString = '----------------------------------------------------------------------------'
+
+    Static [String]$DescLineBlank = '                                                                          '
     
     Static [ATString]$PagingChevronRight = [ATString]::new(
         [ATStringPrefix]::new(
@@ -8914,6 +8918,17 @@ Class InventoryWindow : WindowBase {
         $true
     )
 
+    Static [ATString]$DivLineHorizontal = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCTextDefault24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(13, 3)
+        ),
+        [InventoryWindow]::DivLineHorizontalString,
+        $true
+    )
+
     Static [Boolean]$DebugMode = $false
 
     Static [Int]$MoronCounter = 0
@@ -8932,6 +8947,8 @@ Class InventoryWindow : WindowBase {
     [Boolean]$MoronPageActive           = $false
     [Boolean]$BookDirty                 = $true
     [Boolean]$ActiveItemBlinking        = $false
+    [Boolean]$DivLineDirty              = $true
+    [Boolean]$ItemDescDirty             = $true
     
     [Int]$ItemsPerPage             = 10
     [Int]$NumPages                 = 1
@@ -8983,6 +9000,11 @@ Class InventoryWindow : WindowBase {
                 $this.WriteZeroInventoryPage()
             }
         } Else {
+            If($this.DivLineDirty -EQ $true) {
+                Write-Host "$([InventoryWindow]::DivLineHorizontal.ToAnsiControlSequenceString())"
+                $this.DivLineDirty = $false
+            }
+
             If($this.PlayerChevronVisible -EQ $true -AND $this.PlayerChevronDirty -EQ $true) {
                 Foreach($ic in $this.IChevrons) {
                     Write-Host "$($ic.Item1.ToAnsiControlSequenceString())"
@@ -9047,6 +9069,32 @@ Class InventoryWindow : WindowBase {
                 $this.WriteItemLabels()
                 Write-Host "$([ATControlSequences]::CursorHide)"
                 $this.ItemsListDirty = $false
+            }
+
+            If($this.ItemDescDirty -EQ $true) {
+                [ATString]$b = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(15, 4)
+                    ),
+                    [InventoryWindow]::DescLineBlank,
+                    $true
+                )
+                [ATString]$d = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(15, 4)
+                    ),
+                    $this.PageRefs[$this.ActiveIChevronIndex].ExamineString,
+                    $true
+                )
+
+                Write-Host "$($b.ToAnsiControlSequenceString())"
+                Write-Host "$($d.ToAnsiControlSequenceString())"
             }
         }
     }
@@ -9349,6 +9397,7 @@ Class InventoryWindow : WindowBase {
             $this.CurrentPage++
             $this.CurrentPageDirty   = $true
             $this.ActiveItemBlinking = $false
+            $this.ItemDescDirty      = $true
         }
     }
 
@@ -9357,6 +9406,7 @@ Class InventoryWindow : WindowBase {
             $this.CurrentPage--
             $this.CurrentPageDirty   = $true
             $this.ActiveItemBlinking = $false
+            $this.ItemDescDirty      = $true
         }
     }
 
@@ -9455,6 +9505,7 @@ Class InventoryWindow : WindowBase {
 
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
             }
 
             40 {
@@ -9471,6 +9522,7 @@ Class InventoryWindow : WindowBase {
 
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
             }
 
             39 {
@@ -9488,6 +9540,7 @@ Class InventoryWindow : WindowBase {
 
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
             }
 
             37 {
@@ -9504,6 +9557,7 @@ Class InventoryWindow : WindowBase {
 
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
             }
 
             68 {
@@ -9597,6 +9651,7 @@ $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 
 #$Script:TheInventoryWindow.Draw()
 
