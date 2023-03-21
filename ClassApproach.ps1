@@ -9347,14 +9347,16 @@ Class InventoryWindow : WindowBase {
     [Void]TurnPageForward() {
         If(($this.CurrentPage + 1) -LE $this.NumPages) {
             $this.CurrentPage++
-            $this.CurrentPageDirty = $true
+            $this.CurrentPageDirty   = $true
+            $this.ActiveItemBlinking = $false
         }
     }
 
     [Void]TurnPageBackward() {
         If(($this.CurrentPage - 1) -GE 1) {
             $this.CurrentPage--
-            $this.CurrentPageDirty = $true
+            $this.CurrentPageDirty   = $true
+            $this.ActiveItemBlinking = $false
         }
     }
 
