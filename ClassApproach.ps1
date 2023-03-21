@@ -9360,16 +9360,18 @@ Class InventoryWindow : WindowBase {
                 $this.MoronPageActive = $true
             }
         } Else {
+            $this.PageRefs        = [List[MapTileObject]]::new()
             $this.ZeroPageActive  = $false
             $this.MoronPageActive = $false
             $rs                   = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage) - 1
             $rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
-            $re                   = $this.CurrentPage * $this.ItemsPerPage
+            $re                   = 10
+            #$re                   = $this.CurrentPage * $this.ItemsPerPage
             
             Try {
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
             } Catch {
-                $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs + 1, ($Script:ThePlayer.Inventory.Count - ($rs + 1)))
+                $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, ($Script:ThePlayer.Inventory.Count - ($rs + 1)))
             }
 
             $this.CreateItemLabels()
