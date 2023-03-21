@@ -8931,6 +8931,7 @@ Class InventoryWindow : WindowBase {
     [Boolean]$ZeroPageActive            = $false
     [Boolean]$MoronPageActive           = $false
     [Boolean]$BookDirty                 = $true
+    [Boolean]$ActiveItemBlinking        = $false
     
     [Int]$ItemsPerPage             = 10
     [Int]$NumPages                 = 1
@@ -9032,6 +9033,14 @@ Class InventoryWindow : WindowBase {
                         $this.PagingChevronLeftDirty = $false
                     }
                 }
+            }
+
+            # Try to make the "active" Item Label blink
+            If($this.ActiveItemBlinking -EQ $false) {
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
+
+                $this.ItemsListDirty     = $true
+                $this.ActiveItemBlinking = $true
             }
 
             If($this.ItemsListDirty -EQ $true) {
@@ -9432,54 +9441,67 @@ Class InventoryWindow : WindowBase {
 
             38 {
                 If(($this.ActiveIChevronIndex - 1) -GE 0) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
                     
                     $this.ActiveIChevronIndex--
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
                 }
 
                 $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
             }
 
             40 {
                 If(($this.ActiveIChevronIndex + 1) -LT $this.ItemsPerPage) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
                     
                     $this.ActiveIChevronIndex++
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
                 }
 
                 $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
             }
 
             39 {
                 If(($this.ActiveIChevronIndex + 5) -LT $this.ItemsPerPage) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
                     
                     $this.ActiveIChevronIndex += 5
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
                 }
 
                 $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
             }
 
             37 {
                 If(($this.ActiveIChevronIndex -5) -GE 0) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecorationNone]::new()
                     
                     $this.ActiveIChevronIndex -= 5
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [InventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]::new($true)
                 }
 
                 $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
             }
 
             68 {
