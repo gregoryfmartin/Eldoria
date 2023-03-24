@@ -5,17 +5,18 @@ using namespace System.Management.Automation.Host
 
 # GLOBAL VARIABLE DEFINITIONS
 
-[String]         $Script:OsCheckLinux       = 'OsLinux'
-[String]         $Script:OsCheckMac         = 'OsMac'
-[String]         $Script:OsCheckWindows     = 'OsWindows'
-[String]         $Script:OsCheckUnknown     = 'OsUnknown'
-[Player]         $Script:ThePlayer          = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
-[StatusWindow]   $Script:TheStatusWindow    = [StatusWindow]::new()
-[CommandWindow]  $Script:TheCommandWindow   = [CommandWindow]::new()
-[SceneWindow]    $Script:TheSceneWindow     = [SceneWindow]::new()
-[MessageWindow]  $Script:TheMessageWindow   = [MessageWindow]::new()
-[InventoryWindow]$Script:TheInventoryWindow = [InventoryWindow]::new()
-[SceneImage]     $Script:SampleSi           = [SceneImage]::new($null)
+[String]              $Script:OsCheckLinux             = 'OsLinux'
+[String]              $Script:OsCheckMac               = 'OsMac'
+[String]              $Script:OsCheckWindows           = 'OsWindows'
+[String]              $Script:OsCheckUnknown           = 'OsUnknown'
+[Player]              $Script:ThePlayer                = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
+[StatusWindow]        $Script:TheStatusWindow          = [StatusWindow]::new()
+[CommandWindow]       $Script:TheCommandWindow         = [CommandWindow]::new()
+[SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
+[MessageWindow]       $Script:TheMessageWindow         = [MessageWindow]::new()
+[InventoryWindow]     $Script:TheInventoryWindow       = [InventoryWindow]::new()
+[SceneImage]          $Script:SampleSi                 = [SceneImage]::new($null)
+[ATCoordinatesDefault]$Script:DefaultCursorCoordinates = [ATCoordinatesDefault]::new()
 
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
@@ -32,6 +33,13 @@ using namespace System.Management.Automation.Host
 [SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
 
 $Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
+
+$Script:Rui = $(Get-Host).UI.RawUI
+
+
+# LOGGING FILE CREATION
+[String]$Script:LogFileName = '.\Log.log'
+'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $Script:LogFileName
 
 
 # ENUMERATION DEFINITIONS
@@ -8721,6 +8729,89 @@ Class CommandWindow : WindowBase {
             $this.CommandDivDirty = $false
         }
     }
+
+    [Void]HandleInput() {
+        $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
+        
+        $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
+
+        While($keyCap.VirtualKeyCode -NE 13) {
+            $cpx = $Script:Rui.CursorPosition.X
+            
+            If($cpx -GE 19) {
+                #TODO: Invoke the Command Parser due to length violation
+            }
+            
+            Switch($keyCap.VirtualKeyCode) {
+                8 { # Backspace
+                    "CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is $($keyCap.VirtualKeyCode)" | Out-File -FilePath $Script:LogFileName -Append
+                    
+                    $fpx = $Script:Rui.CursorPosition.X
+                    "CommandWindow::HandleInput - `tObtaining current Cursor Position X (Row) Value as FPX. The current value is $($fpx)" | Out-File -FilePath $Script:LogFileName -Append
+
+                    "CommandWindow::HandleInput - `tComparing FPX against the Default Coordinates X (Row). The default value is $($Script:DefaultCursorCoordinates.Row), and FPX is $($fpx)." | Out-File -FilePath $Script:LogFileName -Append
+                    If($fpx -GT $Script:DefaultCursorCoordinates.Row) {
+                        "CommandWindow::HandleInput - `t`tFPX is GREATER THAN the Default Coordinates X (Row)." | Out-File -FilePath $Script:LogFileName -Append
+                        "CommandWindow::HandleInput - `t`tThe character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1])." | Out-File -FilePath $Script:LogFileName -Append
+                        "CommandWindow::HandleInput - `t`tPerforming character deletion from console window." | Out-File -FilePath $Script:LogFileName -Append
+                        Write-Host " `b" -NoNewLine
+
+                        "CommandWindow::HandleInput - `t`tThe current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character." | Out-File -FilePath $Script:LogFileName -Append
+                        If($this.CommandActual.UserData.Length -GT 0) {
+                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                            "CommandWindow::HandleInput - `t`tThe last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
+                        } Else {
+                            "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
+                        }
+                    } Elseif($fpx -LT $Script:DefaultCursorCoordinates.Row) {
+                        "CommandWindow::HandleInput - `t`tFPX is LESS THAN the Default Coordinates X (Row)." | Out-File -FilePath $Script:LogFileName -Append
+                        "CommandWindow::HandleInput - `t`tThis character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
+                        # Write-Host "`b " -NoNewLine
+                    } Elseif($fpx -EQ $Script:DefaultCursorCoordinates.Row) {
+                        "CommandWindow::HandleInput - `t`tFPX is EQUAL TO the Default Coordinates X (Row)."                                       | Out-File -FilePath $Script:LogFileName -Append
+                        "CommandWindow::HandleInput - `t`tThe character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1])." | Out-File -FilePath $Script:LogFileName -Append
+                        Write-Host " `b" -NoNewline
+
+                        "CommandWindow::HandleInput - `t`tThe current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character." | Out-File -FilePath $Script:LogFileName -Append
+                        If($this.CommandActual.UserData.Length -GT 0) {
+                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                            "CommandWindow::HandleInput - `t`tThe last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
+                        } Else {
+                            "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
+                        }
+                    }
+    
+                    # If($fpx -GE ([ATCoordinatesDefault]::new()).Column) {
+                    #     Write-Host ' ' -NoNewline
+                    #     $Script:Rui.CursorPosition = [Coordinates]::new($fpx - 1, ([ATCoordinatesDefault]::new()).Row)
+        
+                    #     If($this.CommandActual.UserData.Length -GT 0) {
+                    #         $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                    #     }
+                    # } Else {
+                    #     Write-Host " `b" -NoNewLine
+                    #     # $Script:Rui.CursorPosition = [Coordinates]::new(($Script:Rui.CursorPosition.X + 1), ([ATCoordinatesDefault]::new()).Row)
+                    #     # Write-Host ' ' -NoNewline
+                    #     # $Script:Rui.CursorPosition = ([ATCoordinatesDefault]::new()).ToAutomationCoordinates()
+                    #     If($this.CommandActual.UserData.Length -GT 0) {
+                    #         $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                    #     }
+                    # }
+                }
+    
+                Default {
+                    "CommandWindow::HandleInput - A regular keypress has been detected. Adding $($keyCap.Character) to Command Actual." | Out-File -FilePath $Script:LogFileName -Append
+                    $this.CommandActual.UserData += $keyCap.Character
+                    "CommandWindow::HandleInput - `tThe current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
+                }
+            }
+
+            $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
+        }
+
+        # TODO: Invoke the Command Parser
+    }
 }
 
 Class SceneWindow : WindowBase {
@@ -9691,8 +9782,11 @@ $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 #$Script:TheInventoryWindow.Draw()
 
 While(1) {
-    $Script:TheInventoryWindow.Draw()
-    $Script:TheInventoryWindow.HandleInput()
+    $Script:TheStatusWindow.Draw()
+    $Script:TheCommandWindow.Draw()
+    $Script:TheSceneWindow.Draw()
+    $Script:TheMessageWindow.Draw()
+    $Script:TheCommandWindow.HandleInput()
 }
 
 #$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
