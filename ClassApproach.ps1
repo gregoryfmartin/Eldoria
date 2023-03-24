@@ -89,6 +89,19 @@ Enum CommonVirtualKeyCodes {
     D          = 68
 }
 
+# COMMAND TABLE DEFINITION
+$Script:TheCommandTable = @{
+    'move' = {
+        Param([String]$a0)
+
+        Switch($a0) {
+            { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
+                $Script:ThePlayer.MapMoveNorth()
+            }
+        }
+    }
+}
+
 # CLASS DEFINITIONS
 
 Class EmojiBank {
@@ -1136,6 +1149,44 @@ Class Player {
             }
             
             Default {}
+        }
+    }
+
+    [Void]MapMoveNorth() {
+        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
+            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                $a = $Script:CurrentMap.MapHeight - 1
+                $b = $this.MapCoordinates.Y + 1
+                $c = $a % $b
+
+                If($c -EQ $a) {
+                    $this.MapCoordinates.Y = 0
+                } Else {
+                    $this.MapCoordinates.Y++
+                }
+
+                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                Return
+            } Else {
+                $a = $Script:CurrentMap.MapHeight - 1
+                $b = $this.MapCoordinates.Y + 1
+                $c = $a % $b
+
+                If($c -EQ $a) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    # TODO: Write a message to the Message Window that the Invisible Wall has been encountered
+                } Else {
+                    $this.MapCoordinates.Y++
+                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    Return
+                }
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($true)
+            # TODO: Write a message to the Message Window that it's not possible to exit in this direction on this tile
+            Return
         }
     }
 }
@@ -8665,6 +8716,7 @@ Class CommandWindow : WindowBase {
     [ATString[]]$CommandHistory
 
     [Boolean]$CommandDivDirty
+    [Boolean]$CommandHistoryDirty
 
     CommandWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
@@ -8681,7 +8733,8 @@ Class CommandWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        $this.CommandDivDirty = $true
+        $this.CommandDivDirty     = $true
+        $this.CommandHistoryDirty = $false
 
         [Int]$rowBase    = $this.RightBottom.Row
         [Int]$columnBase = $this.LeftTop.Column + [CommandWindow]::DrawColumnOffset
@@ -8692,13 +8745,6 @@ Class CommandWindow : WindowBase {
         [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryBRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryARowOffset, $columnBase)
 
-        $this.CommandActual                                       = [ATStringNone]::new()
-        $this.CommandHistory                                      = New-Object 'ATString[]' 4 # This literal can't be codified; PS requires it be here
-        $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = [ATStringNone]::new()
-        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = [ATStringNone]::new()
-        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = [ATStringNone]::new()
-        $this.CommandHistory[[CommandWindow]::CommandHistoryDRef] = [ATStringNone]::new()
-        
         [CommandWindow]::CommandDiv = [ATString]::new(
             [ATStringPrefix]::new(
                 [CommandWindow]::CommandDivDrawColor,
@@ -8709,16 +8755,59 @@ Class CommandWindow : WindowBase {
             [CommandWindow]::WindowCommandDiv,
             $true
         )
-        # [CommandWindow]::CommandBlank = [ATString]::new(
-        #     [ATStringPrefix]::new(
-        #         [CommandWindow]::HistoryBlankColor,
-        #         [ATBackgroundColor24None]::new(),
-        #         [ATDecoration]::new(),
-        #         [ATCoordinatesNone]::new() # These can't yet be specified
-        #     ),
-        #     '                  ',
-        #     $true
-        # )
+        [CommandWindow]::CommandBlank = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CommandWindow]::HistoryBlankColor,
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new() # These can't yet be specified
+            ),
+            '                  ',
+            $true
+        )
+        
+        $this.CommandActual                                       = [ATStringNone]::new()
+        $this.CommandHistory                                      = New-Object 'ATString[]' 4 # This literal can't be codified; PS requires it be here
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [CommandWindow]::CommandHistoryADrawCoordinates
+            ),
+            [CommandWindow]::CommandBlank.UserData,
+            $true
+        )
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [CommandWindow]::CommandHistoryBDrawCoordinates
+            ),
+            [CommandWindow]::CommandBlank.UserData,
+            $true
+        )
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [CommandWindow]::CommandHistoryCDrawCoordinates
+            ),
+            [CommandWindow]::CommandBlank.UserData,
+            $true
+        )
+        $this.CommandHistory[[CommandWindow]::CommandHistoryDRef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [CommandWindow]::CommandHistoryDDrawCoordinates
+            ),
+            [CommandWindow]::CommandBlank.UserData,
+            $true
+        )
     }
 
     [Void]Draw() {
@@ -8727,6 +8816,15 @@ Class CommandWindow : WindowBase {
         If($this.CommandDivDirty) {
             Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
             $this.CommandDivDirty = $false
+        }
+
+        If($this.CommandHistoryDirty -EQ $true) {
+            Foreach($cmd in $this.CommandHistory) {
+                [CommandWindow]::CommandBlank.Prefix.Coordinates = $cmd.Prefix.Coordinates
+                Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())"
+                Write-Host "$($cmd.ToAnsiControlSequenceString())"
+            }
+            $this.CommandHistoryDirty = $false
         }
     }
 
@@ -8739,7 +8837,7 @@ Class CommandWindow : WindowBase {
             $cpx = $Script:Rui.CursorPosition.X
             
             If($cpx -GE 19) {
-                #TODO: Invoke the Command Parser due to length violation
+                $this.InvokeCommandParser()
             }
             
             Switch($keyCap.VirtualKeyCode) {
@@ -8781,23 +8879,6 @@ Class CommandWindow : WindowBase {
                             "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
                         }
                     }
-    
-                    # If($fpx -GE ([ATCoordinatesDefault]::new()).Column) {
-                    #     Write-Host ' ' -NoNewline
-                    #     $Script:Rui.CursorPosition = [Coordinates]::new($fpx - 1, ([ATCoordinatesDefault]::new()).Row)
-        
-                    #     If($this.CommandActual.UserData.Length -GT 0) {
-                    #         $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                    #     }
-                    # } Else {
-                    #     Write-Host " `b" -NoNewLine
-                    #     # $Script:Rui.CursorPosition = [Coordinates]::new(($Script:Rui.CursorPosition.X + 1), ([ATCoordinatesDefault]::new()).Row)
-                    #     # Write-Host ' ' -NoNewline
-                    #     # $Script:Rui.CursorPosition = ([ATCoordinatesDefault]::new()).ToAutomationCoordinates()
-                    #     If($this.CommandActual.UserData.Length -GT 0) {
-                    #         $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                    #     }
-                    # }
                 }
     
                 Default {
@@ -8810,7 +8891,86 @@ Class CommandWindow : WindowBase {
             $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         }
 
-        # TODO: Invoke the Command Parser
+        $this.InvokeCommandParser()
+    }
+
+    [Void]InvokeCommandParser() {
+        "CommandWindow::InvokeCommandParser - Starting the CommandParser." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::InvokeCommandParser - `tWriting the Command Blank." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
+        Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
+        $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
+        "CommandWindow::InvokeCommandParser - `tCommand Blank has been written." | Out-File -FilePath $Script:LogFileName -Append
+
+        "CommandWindow::InvokeCommandParser - `tChecking to see if Command Actual contains anything." | Out-File -FilePath $Script:LogFileName -Append
+        If([String]::IsNullOrEmpty($this.CommandActual.UserData)) {
+            "CommandWindow::InvokeCommandParser - `t`tIt doesn't. Exiting." | Out-File -FilePath $Script:LogFileName -Append
+            Return
+        } Else {
+            "CommandWindow::InvokeCommandParser - `t`tIt contains data. The current data is $($this.CommandActual.UserData). Attempting to split the string." | Out-File -FilePath $Script:LogFileName -Append
+            $cmdactSplit = -SPLIT $this.CommandActual.UserData
+            "CommandWindow::InvokeCommandParser - `t`tSplit is successful. The split data is $({Foreach($a in $cmdactSplit){"$a, "}})." | Out-File -FilePath $Script:LogFileName -Append
+            
+            "CommandWindow::InvokeCommandParser - `t`tAttempting to find the root command in the Command Table." | Out-File -FilePath $Script:LogFileName -Append
+            $rootFound   = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
+            
+            If($null -NE $rootFound) {
+                "CommandWindow::InvokeCommandParser - `t`tA root command has been identified as '$($cmdactSplit[0])' Now checking the length of the split to determine the ScriptBlock invocation style." | Out-File -FilePath $Script:LogFileName -Append
+                Switch($cmdactSplit.Length) {
+                    1 {
+                        "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 1, invoking the root command '$($cmdactSplit[0])' without arguments." | Out-File -FilePath $Script:LogFileName -Append
+                        Invoke-Command $rootFound.Value
+                    }
+
+                    2 {
+                        "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 2, invoking the root command '$($cmdactSplit[0])' with one argument '$($cmdactSplit[1])'." | Out-File -FilePath $Script:LogFileName -Append
+                        Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1]
+                    }
+
+                    3 {
+                        "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 3, invoking the root command '$($cmdactSplit[0])' with two arguments, '$($cmdactSplit[1])' and '$($cmdactSplit[2])'." | Out-File -FilePath $Script:LogFileName -Append
+                        Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
+                    }
+
+                    Default {
+                        "CommandWindow::InvokeCommandParser - `t`t`tAn unknown exceptional case has occurred." | Out-File -FilePath $Script:LogFileName -Append
+                        # TODO: This is an exceptional case
+                    }
+                }
+            } Else {
+                "CommandWindow::InvokeCommandParser - `t`tAn invalid command has been typed in. Asking the Command Window to update the history." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                Return
+            }
+        }
+    }
+
+    [Void]InvokeItemReactor(
+        [String]$ItemName
+    ) {
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+
+        If($a.Count -EQ 0) {
+            # There are no objects on this map tile
+            # TODO: Update the Command History with a valid response
+            # TODO: Write to the message window that there weren't any items found
+        }
+    }
+
+    [Void]UpdateCommandHistory(
+        [Boolean]$CmdValid
+    ) {
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef]          = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef]
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef]          = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef]
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef]          = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef]
+        $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
+        If($CmdValid -EQ $true) {
+            $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
+        } Else {
+            $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryError
+            $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations = [ATDecoration]::new($true)
+        }
+        $this.CommandHistoryDirty = $true
     }
 }
 
@@ -8857,6 +9017,11 @@ Class SceneWindow : WindowBase {
             Write-Host "$($this.Image.ToAnsiControlSequenceString())"
             $this.SceneImageDirty = $false
         }
+    }
+
+    [Void]UpdateCurrentImage([SceneImage]$NewImage) {
+        $this.Image           = $NewImage
+        $this.SceneImageDirty = $true
     }
 }
 
