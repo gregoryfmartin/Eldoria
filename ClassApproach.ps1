@@ -8682,6 +8682,7 @@ Class CommandWindow : WindowBase {
     Static [Int]$CommandHistoryBRef    = 1
     Static [Int]$CommandHistoryCRef    = 2
     Static [Int]$CommandHistoryDRef    = 3
+    Static [Int]$CommandHistoryERef    = 4
     Static [Int]$WindowLTRow           = 12
     Static [Int]$WindowLTColumn        = 1
     Static [Int]$WindowRBRow           = 20
@@ -8692,12 +8693,14 @@ Class CommandWindow : WindowBase {
     Static [Int]$DrawHistoryCRowOffset = 4
     Static [Int]$DrawHistoryBRowOffset = 5
     Static [Int]$DrawHistoryARowOffset = 6
+    Static [Int]$DrawHistoryERowOffset = 7
 
     Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
     Static [String]$WindowBorderVertical   = '|'
     Static [String]$WindowCommandDiv       = '``````````````````'
 
     Static [ATCoordinates]$CommandDivDrawCoordinates      = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$CommandHistoryEDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryDDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryCDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryBDrawCoordinates = [ATCoordinatesNone]::new()
@@ -8751,6 +8754,7 @@ Class CommandWindow : WindowBase {
 
         "CommandWindow::Constructor - `tCalculating History String Drawing Coordinates." | Out-File -FilePath $Script:LogFileName -Append
         [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawDivRowOffset, $columnBase)
+        [CommandWindow]::CommandHistoryEDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryERowOffset, $columnBase)
         [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryDRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryCDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryCRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryBRowOffset, $columnBase)
@@ -8758,6 +8762,7 @@ Class CommandWindow : WindowBase {
 
         "CommandWindow::Constructor - `tHistory String Drawing Coordinates have been calculated as follows:" | Out-File -FilePath $Script:LogFileName -Append
         "CommandWindow::Constructor - `t`tDiv: (R$([CommandWindow]::CommandDivDrawCoordinates.Row), C$([CommandWindow]::CommandDivDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Constructor - `t`tE: (R$([CommandWindow]::CommandHistoryEDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryEDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
         "CommandWindow::Constructor - `t`tD: (R$([CommandWindow]::CommandHistoryDDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryDDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
         "CommandWindow::Constructor - `t`tC: (R$([CommandWindow]::CommandHistoryCDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryCDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
         "CommandWindow::Constructor - `t`tB: (R$([CommandWindow]::CommandHistoryBDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryBDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
@@ -8795,7 +8800,7 @@ Class CommandWindow : WindowBase {
         )
 
         $this.CommandActual                                       = [ATStringNone]::new()
-        $this.CommandHistory                                      = New-Object 'ATString[]' 4 # This literal can't be codified; PS requires it be here
+        $this.CommandHistory                                      = New-Object 'ATString[]' 5 # This literal can't be codified; PS requires it be here
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -8836,6 +8841,16 @@ Class CommandWindow : WindowBase {
             [CommandWindow]::CommandBlank.UserData,
             $true
         )
+        $this.CommandHistory[[CommandWindow]::CommandHistoryERef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [CommandWindow]::CommandHistoryEDrawCoordinates
+            ),
+            [CommandWindow]::CommandBlank.UserData,
+            $true
+        )
     }
 
     [Void]Draw() {
@@ -8871,6 +8886,10 @@ Class CommandWindow : WindowBase {
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryADrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].ToAnsiControlSequenceString())"
+
+            [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryEDrawCoordinates
+            Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].ToAnsiControlSequenceString())"
 
             # Foreach($cmd in $this.CommandHistory) {
             #     "CommandWindow::Draw - `t`tCurrent CMD iteration values: (R$($cmd.Prefix.Coordinates.Row), C$($cmd.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
@@ -9024,6 +9043,12 @@ Class CommandWindow : WindowBase {
         [Boolean]$CmdValid
     ) {
         "CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "CommandWindow::UpdateCommandHistory - Setting History E ('$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData)') to History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData
+        $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations
+        $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor
+
         "CommandWindow::UpdateCommandHistory - Setting History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)') to History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations
@@ -9042,7 +9067,7 @@ Class CommandWindow : WindowBase {
         "CommandWindow::UpdateCommandHistory - Setting History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)') to Command Actual ('$($this.CommandActual.UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
 
-        "CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A: $($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData), B: $($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData), C: $($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData), D: $($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: $($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData), A: $($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData), B: $($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData), C: $($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData), D: $($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)" | Out-File -FilePath $Script:LogFileName -Append
 
         "CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false." | Out-File -FilePath $Script:LogFileName -Append
         If($CmdValid -EQ $true) {
