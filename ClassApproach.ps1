@@ -8709,6 +8709,7 @@ Class CommandWindow : WindowBase {
     Static [ConsoleColor24]$CommandDivDrawColor = [CCWhite24]::new()
     Static [ATString]$CommandDiv                = [ATStringNone]::new()
     Static [ATString]$CommandBlank              = [ATStringNone]::new()
+    Static [ATString]$CommandHistBlank          = [ATStringNone]::new()
 
     [ATString]$CommandActual
     [ATString[]]$CommandHistory
@@ -8782,6 +8783,16 @@ Class CommandWindow : WindowBase {
             '                  ',
             $true
         )
+        [CommandWindow]::CommandHistBlank = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CommandWindow]::HistoryBlankColor,
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new() # These can't yet be specified
+            ),
+            '                  ',
+            $true
+        )
 
         $this.CommandActual                                       = [ATStringNone]::new()
         $this.CommandHistory                                      = New-Object 'ATString[]' 4 # This literal can't be codified; PS requires it be here
@@ -8844,17 +8855,36 @@ Class CommandWindow : WindowBase {
         "CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
         If($this.CommandHistoryDirty -EQ $true) {
             "CommandWindow::Draw - `tCommandHistoryDirty is true, draw the Command History strings to the console." | Out-File -FilePath $Script:LogFileName -Append
-            Foreach($cmd in $this.CommandHistory) {
-                "CommandWindow::Draw - `t`tUpdating the Blank's Coordinates to match the current iteration." | Out-File -FilePath $Script:LogFileName -Append
-                [CommandWindow]::CommandBlank.Prefix.Coordinates = $cmd.Prefix.Coordinates
-                "CommandWindow::Draw - `t`tThe blank's current coordinates are (R$([CommandWindow]::CommandBlank.Prefix.Coordinates.Row), C$([CommandWindow]::CommandBlank.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-                
-                "CommandWindow::Draw - `t`tDrawing the Command Blank first to clear out the line." | Out-File -FilePath $Script:LogFileName -Append
-                Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())"
+            
+            [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryDDrawCoordinates
+            Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].ToAnsiControlSequenceString())"
 
-                "CommandWindow::Draw - `t`tDrawing the Command itself ($($cmd.ToAnsiControlSequenceString()))." | Out-File -FilePath $Script:LogFileName -Append
-                Write-Host "$($cmd.ToAnsiControlSequenceString())"
-            }
+            [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryCDrawCoordinates
+            Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].ToAnsiControlSequenceString())"
+
+            [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryBDrawCoordinates
+            Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].ToAnsiControlSequenceString())"
+
+            [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryADrawCoordinates
+            Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].ToAnsiControlSequenceString())"
+
+            # Foreach($cmd in $this.CommandHistory) {
+            #     "CommandWindow::Draw - `t`tCurrent CMD iteration values: (R$($cmd.Prefix.Coordinates.Row), C$($cmd.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+
+            #     "CommandWindow::Draw - `t`tUpdating the Blank's Coordinates to match the current iteration." | Out-File -FilePath $Script:LogFileName -Append
+            #     [CommandWindow]::CommandBlank.Prefix.Coordinates = $cmd.Prefix.Coordinates
+            #     "CommandWindow::Draw - `t`tThe blank's current coordinates are (R$([CommandWindow]::CommandBlank.Prefix.Coordinates.Row), C$([CommandWindow]::CommandBlank.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+                
+            #     "CommandWindow::Draw - `t`tDrawing the Command Blank first to clear out the line." | Out-File -FilePath $Script:LogFileName -Append
+            #     Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())"
+
+            #     "CommandWindow::Draw - `t`tDrawing the Command itself ($($cmd.ToAnsiControlSequenceString()))." | Out-File -FilePath $Script:LogFileName -Append
+            #     Write-Host "$($cmd.ToAnsiControlSequenceString())"
+            # }
 
             "CommandWindow::Draw - `tSetting the CommandHistoryDirty flag to false." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistoryDirty = $false
@@ -8995,16 +9025,24 @@ Class CommandWindow : WindowBase {
     ) {
         "CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around." | Out-File -FilePath $Script:LogFileName -Append
         "CommandWindow::UpdateCommandHistory - Setting History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)') to History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
-        $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef]
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor
         
         "CommandWindow::UpdateCommandHistory - Setting History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)') to History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
-        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef]
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor
         
         "CommandWindow::UpdateCommandHistory - Setting History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)') to History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
-        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef]
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor
         
         "CommandWindow::UpdateCommandHistory - Setting History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)') to Command Actual ('$($this.CommandActual.UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
+
+        "CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A: $($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData), B: $($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData), C: $($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData), D: $($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)" | Out-File -FilePath $Script:LogFileName -Append
 
         "CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false." | Out-File -FilePath $Script:LogFileName -Append
         If($CmdValid -EQ $true) {

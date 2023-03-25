@@ -40,6 +40,7 @@ CommandWindow::UpdateCommandHistory - Setting History A ('                  ') t
 CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('greg').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A:                   , B:                   , C:                   , D: greg
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
@@ -49,54 +50,61 @@ CommandWindow::Draw - Calling base class Draw function.
 CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
 CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
 CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R15, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([15;2H[38;2;229;229;234m                  [0m).
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R16, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([16;2H[38;2;229;229;234m                  [0m).
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R17, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([17;2H[5m[38;2;255;0;0mgreg[0m).
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R17, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([17;2H[5m[38;2;255;0;0mgreg[0m).
 CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is g.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gr.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is t.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gre.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is greg.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gregt.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gregto.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gregtoa.
+CommandWindow::HandleInput - 	The current value of Command Actual is te.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gregtoas.
+CommandWindow::HandleInput - 	The current value of Command Actual is tes.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gregtoast.
+CommandWindow::HandleInput - 	The current value of Command Actual is test.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is gregtoast. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is test. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('greg').
+CommandWindow::UpdateCommandHistory - Setting History D ('greg') to Command Actual ('test').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A:                   , B:                   , C: greg, D: test
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding b to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is b.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is ba.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is bar.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding f to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is barf.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is barf. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
 CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('greg').
-CommandWindow::UpdateCommandHistory - Setting History C ('greg') to History D ('greg').
-CommandWindow::UpdateCommandHistory - Setting History D ('greg') to Command Actual ('gregtoast').
+CommandWindow::UpdateCommandHistory - Setting History C ('greg') to History D ('test').
+CommandWindow::UpdateCommandHistory - Setting History D ('test') to Command Actual ('barf').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A:                   , B: greg, C: test, D: barf
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
@@ -106,22 +114,80 @@ CommandWindow::Draw - Calling base class Draw function.
 CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
 CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
 CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R16, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([16;2H[38;2;229;229;234m                  [0m).
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R17, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([17;2H[5m[38;2;255;0;0mgregtoast[0m).
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R17, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([17;2H[5m[38;2;255;0;0mgregtoast[0m).
-CommandWindow::Draw - 		Updating the Blank's Coordinates to match the current iteration.
-CommandWindow::Draw - 		The blank's current coordinates are (R17, C2).
-CommandWindow::Draw - 		Drawing the Command Blank first to clear out the line.
-CommandWindow::Draw - 		Drawing the Command itself ([17;2H[5m[38;2;255;0;0mgregtoast[0m).
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is g.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding u to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gu.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gut.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gutt.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gutte.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding d to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gutted.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is gutted. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('greg').
+CommandWindow::UpdateCommandHistory - Setting History B ('greg') to History C ('test').
+CommandWindow::UpdateCommandHistory - Setting History C ('test') to History D ('barf').
+CommandWindow::UpdateCommandHistory - Setting History D ('barf') to Command Actual ('gutted').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A: greg, B: test, C: barf, D: gutted
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding q to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is q.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding u to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is qu.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is que.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is quee.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding f to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is queef.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is queef. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History A ('greg') to History B ('test').
+CommandWindow::UpdateCommandHistory - Setting History B ('test') to History C ('barf').
+CommandWindow::UpdateCommandHistory - Setting History C ('barf') to History D ('gutted').
+CommandWindow::UpdateCommandHistory - Setting History D ('gutted') to Command Actual ('queef').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: A: test, B: barf, C: gutted, D: queef
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
 CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is  .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is   .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is    .
