@@ -20,39 +20,6 @@ CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
 CommandWindow::Draw - 	CommandDivDirty is true, draw the Command Div to the console.
 CommandWindow::Draw - 	Setting CommandDivDirty to false to avoid overdraws.
 CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is g.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gr.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gre.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is greg.
-CommandWindow::InvokeCommandParser - Starting the CommandParser.
-CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
-CommandWindow::InvokeCommandParser - 	Command Blank has been written.
-CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is greg. Attempting to split the string.
-CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
-CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
-CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
-CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('greg').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: greg
-CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
-CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
-CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
-CommandWindow::Draw - Starting the Draw function.
-CommandWindow::Draw - Calling base class Draw function.
-CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
-CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
-CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
-CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is t.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
@@ -73,9 +40,9 @@ CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History ar
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('greg').
-CommandWindow::UpdateCommandHistory - Setting History D ('greg') to Command Actual ('test').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C: greg, D: test
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('test').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: test
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
@@ -86,29 +53,65 @@ CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
 CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
 CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
 CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is a.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is as.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is ass.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is g.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gr.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is gre.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is greg.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is ass. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is greg. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
 CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('greg').
-CommandWindow::UpdateCommandHistory - Setting History C ('greg') to History D ('test').
-CommandWindow::UpdateCommandHistory - Setting History D ('test') to Command Actual ('ass').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B: greg, C: test, D: ass
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('test').
+CommandWindow::UpdateCommandHistory - Setting History D ('test') to Command Actual ('greg').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C: test, D: greg
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is l.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is lo.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is loo.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding k to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is look.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is look. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'look' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'look' without arguments.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('test').
+CommandWindow::UpdateCommandHistory - Setting History C ('test') to History D ('greg').
+CommandWindow::UpdateCommandHistory - Setting History D ('greg') to Command Actual ('look').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B: test, C: greg, D: look
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
 CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
 CommandWindow::Draw - Starting the Draw function.
@@ -135,11 +138,11 @@ CommandWindow::InvokeCommandParser - 		Attempting to find the root command in th
 CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('greg').
-CommandWindow::UpdateCommandHistory - Setting History B ('greg') to History C ('test').
-CommandWindow::UpdateCommandHistory - Setting History C ('test') to History D ('ass').
-CommandWindow::UpdateCommandHistory - Setting History D ('ass') to Command Actual ('barf').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A: greg, B: test, C: ass, D: barf
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('test').
+CommandWindow::UpdateCommandHistory - Setting History B ('test') to History C ('greg').
+CommandWindow::UpdateCommandHistory - Setting History C ('greg') to History D ('look').
+CommandWindow::UpdateCommandHistory - Setting History D ('look') to Command Actual ('barf').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A: test, B: greg, C: look, D: barf
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
@@ -150,101 +153,111 @@ CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
 CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
 CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
 CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is l.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is lo.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is loo.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding k to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is look.
-CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
-CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 4
-CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 4.
-CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is k.
-CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is look. Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is loo.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is a.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is as.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is as. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('test').
+CommandWindow::UpdateCommandHistory - Setting History A ('test') to History B ('greg').
+CommandWindow::UpdateCommandHistory - Setting History B ('greg') to History C ('look').
+CommandWindow::UpdateCommandHistory - Setting History C ('look') to History D ('barf').
+CommandWindow::UpdateCommandHistory - Setting History D ('barf') to Command Actual ('as').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: test, A: greg, B: look, C: barf, D: as
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is a.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is as.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is ass.
 CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
 CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 3
 CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 3.
 CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is o.
+CommandWindow::HandleInput - 		The character that would be deleted here is s.
 CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is loo. Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is lo.
+CommandWindow::HandleInput - 		The current value of Command Actual is ass. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is as.
 CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
 CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 2
 CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 2.
 CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is o.
+CommandWindow::HandleInput - 		The character that would be deleted here is s.
 CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is lo. Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is l.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is le.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is lea.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding f to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is leaf.
-CommandWindow::InvokeCommandParser - Starting the CommandParser.
-CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
-CommandWindow::InvokeCommandParser - 	Command Blank has been written.
-CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is leaf. Attempting to split the string.
-CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
-CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
-CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
-CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('greg').
-CommandWindow::UpdateCommandHistory - Setting History A ('greg') to History B ('test').
-CommandWindow::UpdateCommandHistory - Setting History B ('test') to History C ('ass').
-CommandWindow::UpdateCommandHistory - Setting History C ('ass') to History D ('barf').
-CommandWindow::UpdateCommandHistory - Setting History D ('barf') to Command Actual ('leaf').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: greg, A: test, B: ass, C: barf, D: leaf
-CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
-CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
-CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
-CommandWindow::Draw - Starting the Draw function.
-CommandWindow::Draw - Calling base class Draw function.
-CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
-CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
-CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
-CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is t.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is ti.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is tit.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is tits.
-CommandWindow::InvokeCommandParser - Starting the CommandParser.
-CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
-CommandWindow::InvokeCommandParser - 	Command Blank has been written.
-CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is tits. Attempting to split the string.
-CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
-CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
-CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
-CommandWindow::UpdateCommandHistory - Setting History E ('greg') to History A ('test').
-CommandWindow::UpdateCommandHistory - Setting History A ('test') to History B ('ass').
-CommandWindow::UpdateCommandHistory - Setting History B ('ass') to History C ('barf').
-CommandWindow::UpdateCommandHistory - Setting History C ('barf') to History D ('leaf').
-CommandWindow::UpdateCommandHistory - Setting History D ('leaf') to Command Actual ('tits').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: test, A: ass, B: barf, C: leaf, D: tits
-CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
-CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
-CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
-CommandWindow::Draw - Starting the Draw function.
-CommandWindow::Draw - Calling base class Draw function.
-CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
-CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
-CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
-CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is  .
+CommandWindow::HandleInput - 		The current value of Command Actual is as. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is a.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 1
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 1.
+CommandWindow::HandleInput - 		FPX is EQUAL TO the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is a.
+CommandWindow::HandleInput - 		The current value of Command Actual is a. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is .
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 0
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 0.
+CommandWindow::HandleInput - 		FPX is LESS THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		This character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default.

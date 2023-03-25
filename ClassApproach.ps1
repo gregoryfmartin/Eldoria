@@ -94,10 +94,14 @@ $Script:TheCommandTable = @{
 
         Switch($a0) {
             { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
-                $Script:ThePlayer.MapMoveNorth()
+                #$Script:ThePlayer.MapMoveNorth()
             }
         }
     }
+
+    'm' = {}
+
+    'look' = {}
 }
 
 # CLASS DEFINITIONS
@@ -9001,6 +9005,7 @@ Class CommandWindow : WindowBase {
                 Switch($cmdactSplit.Length) {
                     1 {
                         "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 1, invoking the root command '$($cmdactSplit[0])' without arguments." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $rootFound.Value
                     }
 
@@ -9016,6 +9021,7 @@ Class CommandWindow : WindowBase {
 
                     Default {
                         "CommandWindow::InvokeCommandParser - `t`t`tAn unknown exceptional case has occurred." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
                         # TODO: This is an exceptional case
                     }
                 }
@@ -9073,6 +9079,7 @@ Class CommandWindow : WindowBase {
         If($CmdValid -EQ $true) {
             "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
+            $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations     = [ATDecorationNone]::new()
         } Else {
             "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryError
