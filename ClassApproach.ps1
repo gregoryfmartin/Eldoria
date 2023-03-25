@@ -3,6 +3,10 @@ using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
+# LOGGING FILE CREATION
+[String]$Script:LogFileName = '.\Log.log'
+'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $Script:LogFileName
+
 # GLOBAL VARIABLE DEFINITIONS
 
 [String]              $Script:OsCheckLinux             = 'OsLinux'
@@ -35,12 +39,6 @@ using namespace System.Management.Automation.Host
 $Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
 $Script:Rui = $(Get-Host).UI.RawUI
-
-
-# LOGGING FILE CREATION
-[String]$Script:LogFileName = '.\Log.log'
-'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $Script:LogFileName
-
 
 # ENUMERATION DEFINITIONS
 
@@ -8719,31 +8717,50 @@ Class CommandWindow : WindowBase {
     [Boolean]$CommandHistoryDirty
 
     CommandWindow() : base() {
-        $this.LeftTop          = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
-        $this.RightBottom      = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
+        "CommandWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "CommandWindow::Constructor - `tSetting LeftTop and BottomRight relative to the desired window position." | Out-File -FilePath $Script:LogFileName -Append
+        $this.LeftTop     = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
+        
+        "CommandWindow::Constructor - `tSetting the BorderDrawColors relative to the desired effect for this window (all sides CCWhite24)." | Out-File -FilePath $Script:LogFileName -Append
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new()
         )
+
+        "CommandWindow::Constructor - `tSettings BorderStrings relative to the desired strings for this window." | Out-File -FilePath $Script:LogFileName -Append
         $this.BorderStrings = [String[]](
             [CommandWindow]::WindowBorderHorizontal,
             [CommandWindow]::WindowBorderVertical
         )
+
+        "CommandWindow::Constructor - `tCalling UpdateDimensions to ensure that measurements are correct." | Out-File -FilePath $Script:LogFileName -Append
         $this.UpdateDimensions()
 
+        "CommandWindow::Constructor - `tCommandDivDirty to true and CommandHistoryDirty to false." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandDivDirty     = $true
         $this.CommandHistoryDirty = $false
 
+        "CommandWindow::Constructor - `tDefining rowBase to $($this.RightBottom.Row) and columnBase to $($this.LeftTop.Column + [CommandWindow]::DrawColumnOffset)." | Out-File -FilePath $Script:LogFileName -Append
         [Int]$rowBase    = $this.RightBottom.Row
         [Int]$columnBase = $this.LeftTop.Column + [CommandWindow]::DrawColumnOffset
 
+        "CommandWindow::Constructor - `tCalculating History String Drawing Coordinates." | Out-File -FilePath $Script:LogFileName -Append
         [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawDivRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryDRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryCDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryCRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryBRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryARowOffset, $columnBase)
+
+        "CommandWindow::Constructor - `tHistory String Drawing Coordinates have been calculated as follows:" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Constructor - `t`tDiv: (R$([CommandWindow]::CommandDivDrawCoordinates.Row), C$([CommandWindow]::CommandDivDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Constructor - `t`tD: (R$([CommandWindow]::CommandHistoryDDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryDDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Constructor - `t`tC: (R$([CommandWindow]::CommandHistoryCDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryCDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Constructor - `t`tB: (R$([CommandWindow]::CommandHistoryBDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryBDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Constructor - `t`tA: (R$([CommandWindow]::CommandHistoryADrawCoordinates.Row), C$([CommandWindow]::CommandHistoryADrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
 
         [CommandWindow]::CommandDiv = [ATString]::new(
             [ATStringPrefix]::new(
@@ -8765,7 +8782,7 @@ Class CommandWindow : WindowBase {
             '                  ',
             $true
         )
-        
+
         $this.CommandActual                                       = [ATStringNone]::new()
         $this.CommandHistory                                      = New-Object 'ATString[]' 4 # This literal can't be codified; PS requires it be here
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = [ATString]::new(
@@ -8811,19 +8828,35 @@ Class CommandWindow : WindowBase {
     }
 
     [Void]Draw() {
+        "CommandWindow::Draw - Starting the Draw function." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::Draw - Calling base class Draw function." | Out-File -FilePath $Script:LogFileName -Append
         ([WindowBase]$this).Draw()
 
-        If($this.CommandDivDirty) {
+        "CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
+        If($this.CommandDivDirty -EQ $true) {
+            "CommandWindow::Draw - `tCommandDivDirty is true, draw the Command Div to the console." | Out-File -FilePath $Script:LogFileName -Append
             Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
+
+            "CommandWindow::Draw - `tSetting CommandDivDirty to false to avoid overdraws." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandDivDirty = $false
         }
 
+        "CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
         If($this.CommandHistoryDirty -EQ $true) {
+            "CommandWindow::Draw - `tCommandHistoryDirty is true, draw the Command History strings to the console." | Out-File -FilePath $Script:LogFileName -Append
             Foreach($cmd in $this.CommandHistory) {
+                "CommandWindow::Draw - `t`tUpdating the Blank's Coordinates to match the current iteration." | Out-File -FilePath $Script:LogFileName -Append
                 [CommandWindow]::CommandBlank.Prefix.Coordinates = $cmd.Prefix.Coordinates
+                "CommandWindow::Draw - `t`tThe blank's current coordinates are (R$([CommandWindow]::CommandBlank.Prefix.Coordinates.Row), C$([CommandWindow]::CommandBlank.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+                
+                "CommandWindow::Draw - `t`tDrawing the Command Blank first to clear out the line." | Out-File -FilePath $Script:LogFileName -Append
                 Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())"
+
+                "CommandWindow::Draw - `t`tDrawing the Command itself ($($cmd.ToAnsiControlSequenceString()))." | Out-File -FilePath $Script:LogFileName -Append
                 Write-Host "$($cmd.ToAnsiControlSequenceString())"
             }
+
+            "CommandWindow::Draw - `tSetting the CommandHistoryDirty flag to false." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistoryDirty = $false
         }
     }
@@ -8960,16 +8993,33 @@ Class CommandWindow : WindowBase {
     [Void]UpdateCommandHistory(
         [Boolean]$CmdValid
     ) {
-        $this.CommandHistory[[CommandWindow]::CommandHistoryARef]          = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef]
-        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef]          = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef]
-        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef]          = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef]
+        "CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::UpdateCommandHistory - Setting History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)') to History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $this.CommandHistory[[CommandWindow]::CommandHistoryARef] = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef]
+        
+        "CommandWindow::UpdateCommandHistory - Setting History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)') to History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef]
+        
+        "CommandWindow::UpdateCommandHistory - Setting History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)') to History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef]
+        
+        "CommandWindow::UpdateCommandHistory - Setting History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)') to Command Actual ('$($this.CommandActual.UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
+
+        "CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false." | Out-File -FilePath $Script:LogFileName -Append
         If($CmdValid -EQ $true) {
+            "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
         } Else {
+            "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryError
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations = [ATDecoration]::new($true)
         }
+
+        "CommandWindow::UpdateCommandHistory - `tClearing the Command Actual." | Out-File -FilePath $Script:LogFileName -Append
+        $this.CommandActual.UserData = ''
+
+        "CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistoryDirty = $true
     }
 }
