@@ -42,6 +42,8 @@ $Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
+[Boolean]$Script:GpsRestoredFromInvBackup = $true
+
 # ENUMERATION DEFINITIONS
 
 Enum GameStatePrimary {
@@ -140,12 +142,18 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::GamePlayScreen = {
         "TheGlobalStateBlockTable::GamePlayScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
         
-        "TheGlobalStateBlockTable::GamePlayScreen - `tChecking to see if the Inventory Window instance isn't null." | Out-File -FilePath $Script:LogFileName -Append
+        "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null." | Out-File -FilePath $Script:LogFileName -Append
         If($null -NE $Script:TheInventoryWindow) {
-            "TheGlobalStateBlockTable::GamePlayScreen - `t`tIt isn't null - setting to null." | Out-File -FilePath $Script:LogFileName -Append
+            "TheGlobalStateBlockTable::GamePlayScreen - It isn't null - setting to null." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheInventoryWindow = $null
         } Else {
-            "TheGlobalStateBlockTable::GamePlayScreen - `t`tThe instance is already null, skipping." | Out-File -FilePath $Script:LogFileName -Append
+            "TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping." | Out-File -FilePath $Script:LogFileName -Append
+        }
+
+        "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup." | Out-File -FilePath $Script:LogFileName -Append
+        If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
+            $Script:TheBufferManager.RestoreBufferAToActive()
+            $Script:GpsRestoredFromInvBackup = $true
         }
 
         "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheStatusWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
@@ -175,6 +183,11 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheInventoryWindow = [InventoryWindow]::new()
         } Else {
             "TheGlobalStateBlockTable::InventoryScreen - `t`tIt isn't, skipping." | Out-File -FilePath $Script:LogFileName -Append
+        }
+
+        "TheGlobalStateBlockTable::InventoryScreen - Checking to see if the GPS Buffer Backup Restore flag is true to turn it off." | Out-File -FilePath $Script:LogFileName -Append
+        If($Script:GpsRestoredFromInvBackup -EQ $true) {
+            $Script:GpsRestoredFromInvBackup = $false
         }
 
         "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
@@ -8483,11 +8496,13 @@ Class BufferManager {
     [Void]RestoreBufferAToActive() {
         Clear-Host
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
+        $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
     }
 
     [Void]RestoreBufferBToActive() {
         Clear-Host
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
+        $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
     }
 }
 
@@ -10025,7 +10040,10 @@ Class InventoryWindow : WindowBase {
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
-            27 {}
+            27 {
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+            }
 
             38 {
                 If(($this.ActiveIChevronIndex - 1) -GE 0) {
