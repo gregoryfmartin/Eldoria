@@ -18,9 +18,11 @@ using namespace System.Management.Automation.Host
 [CommandWindow]       $Script:TheCommandWindow         = [CommandWindow]::new()
 [SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
 [MessageWindow]       $Script:TheMessageWindow         = [MessageWindow]::new()
-[InventoryWindow]     $Script:TheInventoryWindow       = [InventoryWindow]::new()
+[InventoryWindow]     $Script:TheInventoryWindow       = $null
 [SceneImage]          $Script:SampleSi                 = [SceneImage]::new($null)
 [ATCoordinatesDefault]$Script:DefaultCursorCoordinates = [ATCoordinatesDefault]::new()
+[BufferManager]       $Script:TheBufferManager         = [BufferManager]::new()
+[GameCore]            $Script:TheGameCore              = [GameCore]::new()
 
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
@@ -43,24 +45,12 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # ENUMERATION DEFINITIONS
 
 Enum GameStatePrimary {
-    SplashScreenAStarting
-    SplashScreenARunning
-    SplashScreenAEnding
-    SplashScreenBStarting
-    SplashScreenBRunning
-    SplashScreenBEnding
-    TitleScreenStarting
-    TitleScreenRunning
-    TitleScreenEnding
-    PlayerSetupScreenStarting
-    PlayerSetupScreenRunning
-    PlayerSetupScreenEnding
-    GamePlayScreenStarting
-    GamePlayScreenRunning
-    GamePlayScreenEnding
-    InventoryScreenStarting
-    InventoryScreenRunning
-    InventoryScreenEnding
+    SplashScreenA
+    SplashScreenB
+    TitleScreen
+    PlayerSetupScreen
+    GamePlayScreen
+    InventoryScreen
     Cleanup
 }
 
@@ -101,8 +91,106 @@ $Script:TheCommandTable = @{
 
     'm' = {}
 
-    'look' = {}
+    'look' = {
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        Return
+    }
+
+    'l' = {
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        Return
+    }
+
+    'inventory' = {
+        "TheCommandTable::inventory - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheCommandTable::inventory - `tCalling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        
+        "TheCommandTable::inventory - `tCalling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
+        # Copy the active buffer to the A back buffer
+        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        
+        "TheCommandTable::inventory - `tSetting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::inventory - `tSetting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
+        # Change state
+        $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+        $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
+
+        "TheCommandTable::inventory - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
+    'i' = {
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        Return
+    }
 }
+
+# GLOBAL STATE BLOCK TABLE DEFINITION
+$Script:TheGlobalStateBlockTable = @{
+    [GameStatePrimary]::SplashScreenA = {}
+
+    [GameStatePrimary]::SplashScreenB = {}
+
+    [GameStatePrimary]::TitleScreen = {}
+
+    [GameStatePrimary]::PlayerSetupScreen = {}
+
+    [GameStatePrimary]::GamePlayScreen = {
+        "TheGlobalStateBlockTable::GamePlayScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheGlobalStateBlockTable::GamePlayScreen - `tChecking to see if the Inventory Window instance isn't null." | Out-File -FilePath $Script:LogFileName -Append
+        If($null -NE $Script:TheInventoryWindow) {
+            "TheGlobalStateBlockTable::GamePlayScreen - `t`tIt isn't null - setting to null." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheInventoryWindow = $null
+        } Else {
+            "TheGlobalStateBlockTable::GamePlayScreen - `t`tThe instance is already null, skipping." | Out-File -FilePath $Script:LogFileName -Append
+        }
+
+        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheStatusWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheStatusWindow.Draw()
+        
+        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheCommandWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.Draw()
+        
+        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheSceneWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheSceneWindow.Draw()
+        
+        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheMessageWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheMessageWindow.Draw()
+        
+        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheCommandWindow.HandleInput method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.HandleInput()
+        
+        "TheGlobalStateBlockTable::GamePlayScreen - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
+    }
+
+    [GameStatePrimary]::InventoryScreen = {
+        "TheGlobalStateBlockTable::InventoryScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+
+        "TheGlobalStateBlockTable::InventoryScreen - `tChecking to see if the Inventory Window instance is null." | Out-File -FilePath $Script:LogFileName -Append
+        If($null -EQ $Script:TheInventoryWindow) {
+            "TheGlobalStateBlockTable::InventoryScreen - `t`tIt is - creating a new instance." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheInventoryWindow = [InventoryWindow]::new()
+        } Else {
+            "TheGlobalStateBlockTable::InventoryScreen - `t`tIt isn't, skipping." | Out-File -FilePath $Script:LogFileName -Append
+        }
+
+        "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheInventoryWindow.Draw()
+        
+        "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.HandleInput method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheInventoryWindow.HandleInput()
+        
+        "TheGlobalStateBlockTable::InventoryScreen - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
+    }
+
+    [GameStatePrimary]::Cleanup = {}
+}
+
+[GameStatePrimary]$Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+[GameStatePrimary]$Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
 
 # CLASS DEFINITIONS
 
@@ -8357,6 +8445,52 @@ Class MTOMilk : MapTileObject {
     MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {}) {}
 }
 
+Class BufferManager {
+    [BufferCell[,]]$ScreenBufferA
+    [BufferCell[,]]$ScreenBufferB
+
+    BufferManager() {
+        $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
+        $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+    }
+
+    [Void]CopyActiveToBufferA() {
+        $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+    }
+    
+    [Void]CopyActiveToBufferAWithWipe() {
+        $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        Clear-Host
+    }
+
+    [Void]CopyActiveToBufferB() {
+        $this.ScreenBufferB = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+    }
+
+    [Void]CopyActiveToBufferBWithWipe() {
+        $this.ScreenBufferB = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        Clear-Host
+    }
+
+    [Void]SwapAToB() {
+        $this.ScreenBufferB = $this.ScreenBufferA
+    }
+
+    [Void]SwapBToA() {
+        $this.ScreenBufferA = $this.ScreenBufferB
+    }
+
+    [Void]RestoreBufferAToActive() {
+        Clear-Host
+        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
+    }
+
+    [Void]RestoreBufferBToActive() {
+        Clear-Host
+        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
+    }
+}
+
 Class WindowBase {
     Static [Int]$BorderDrawColorTop     = 0
     Static [Int]$BorderDrawColorBottom  = 1
@@ -9005,7 +9139,6 @@ Class CommandWindow : WindowBase {
                 Switch($cmdactSplit.Length) {
                     1 {
                         "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 1, invoking the root command '$($cmdactSplit[0])' without arguments." | Out-File -FilePath $Script:LogFileName -Append
-                        $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $rootFound.Value
                     }
 
@@ -9982,6 +10115,61 @@ Class InventoryWindow : WindowBase {
     }
 }
 
+Class GameCore {
+    [Int]$TargetFrameRate
+    [Single]$MsPerFrame
+    [Boolean]$GameRunning
+    [Double]$LastFrameTime
+    [Double]$CurrentFrameTime
+    [TimeSpan]$FpsDelta
+
+    GameCore() {
+        "GameCore::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
+        "GameCore::Constructor - `tSetting up variables." | Out-File -FilePath $Script:LogFileName -Append
+        
+        $this.TargetFrameRate      = 30
+        $this.MsPerFrame           = 1000 / $this.TargetFrameRate
+        $this.GameRunning          = $true
+        $this.LastFrameTime        = 0D
+        $this.CurrentFrameTime     = 0D
+        $this.FpsDelta             = [TimeSpan]::Zero
+        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+        
+        "GameCore::Constructor - `tLeaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
+    }
+
+    [Void]Run() {
+        "GameCore::Run - Starting the Run method." | Out-File -FilePath $Script:LogFileName -Append
+        "GameCore::Run - `tChecking to see if the GameRunning flag is true or not." | Out-File -FilePath $Script:LogFileName -Append
+
+        While($this.GameRunning -EQ $true) {
+            "GameCore::Run - `t`tGameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
+            "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
+            $this.LastFrameTime = $this.CurrentFrameTime
+            
+            "GameCore::Run - `t`tSetting CurrentFrameTime ($($this.CurrentFrameTime)) to the current time in ticks ($([DateTime]::Now.Ticks))." | Out-File -FilePath $Script:LogFileName -Append
+            $this.CurrentFrameTime = [DateTime]::Now.Ticks
+
+            "GameCore::Run - `t`tChecking to see if CurrentFrameTime ($($this.CurrentFrameTime)) minus LastFrameTime ($($this.LastFrameTime)) is GREATER THAN OR EQUAL TO MsPerFrame ($($this.MsPerFrame))." | Out-File -FilePath $Script:LogFileName -Append
+            "GameCore::Run - `t`tThe equation is $($this.CurrentFrameTime) - $($this.LastFrameTime) >= $($this.MsPerFrame)" | Out-File -FilePath $Script:LogFileName -Append
+            If(($this.CurrentFrameTime - $this.LastFrameTime) -GE $this.MsPerFrame) {
+                "GameCore::Run - `t`t`tThe value is GREATER THAN OR EQUAL TO MsPerFrame." | Out-File -FilePath $Script:LogFileName -Append
+                "GameCore::Run - `t`t`tSet FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime." | Out-File -FilePath $Script:LogFileName -Append
+                $this.FpsDelta = [TimeSpan]::new($this.CurrentFrameTime - $this.LastFrameTime)
+
+                "GameCore::Run - `t`t`tCall the Logic method." | Out-File -FilePath $Script:LogFileName -Append
+                $this.Logic()
+            }
+        }
+    }
+
+    [Void]Logic() {
+        "GameCore::Logic - Starting the Logic method." | Out-File -FilePath $Script:LogFileName -Append
+        "GameCore::Logic - Invoking the ScriptBlock for the game state $($Script:TheGlobalGameState)" | Out-File -FilePath $Script:LogFileName -Append
+        Invoke-Command $Script:TheGlobalStateBlockTable[$Script:TheGlobalGameState]
+    }
+}
+
 # FUNCTION DEFINITIONS
 
 Function Test-GfmOs {
@@ -10064,15 +10252,17 @@ $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 
+$Script:TheGameCore.Run()
+
 #$Script:TheInventoryWindow.Draw()
 
-While(1) {
-    $Script:TheStatusWindow.Draw()
-    $Script:TheCommandWindow.Draw()
-    $Script:TheSceneWindow.Draw()
-    $Script:TheMessageWindow.Draw()
-    $Script:TheCommandWindow.HandleInput()
-}
+# While(1) {
+#     $Script:TheStatusWindow.Draw()
+#     $Script:TheCommandWindow.Draw()
+#     $Script:TheSceneWindow.Draw()
+#     $Script:TheMessageWindow.Draw()
+#     $Script:TheCommandWindow.HandleInput()
+# }
 
 #$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
 # $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 2); Write-Host '>' -NoNewline -ForegroundColor 12
