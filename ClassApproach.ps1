@@ -154,6 +154,8 @@ $Script:TheGlobalStateBlockTable = @{
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
             
+            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+            # and I really don't feel like trying to figure out how to grab the buffer
             $Script:GpsRestoredFromInvBackup             = $true
             $Script:TheSceneWindow.SceneImageDirty       = $true
             $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
