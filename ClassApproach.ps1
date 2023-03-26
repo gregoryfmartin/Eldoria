@@ -153,7 +153,8 @@ $Script:TheGlobalStateBlockTable = @{
         "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup." | Out-File -FilePath $Script:LogFileName -Append
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
-            $Script:GpsRestoredFromInvBackup = $true
+            $Script:GpsRestoredFromInvBackup       = $true
+            $Script:TheSceneWindow.SceneImageDirty = $true
         }
 
         "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheStatusWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append

@@ -21,9 +21,9 @@ GameCore::Run - Starting the Run method.
 GameCore::Run - 	Checking to see if the GameRunning flag is true or not.
 GameCore::Run - 		GameRunning is true.
 GameCore::Run - 		Setting LastFrameTime (0) to CurrentFrameTime (0).
-GameCore::Run - 		Setting CurrentFrameTime (0) to the current time in ticks (638153820933262089).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.38153820933269E+17) minus LastFrameTime (0) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.38153820933269E+17 - 0 >= 33.33333
+GameCore::Run - 		Setting CurrentFrameTime (0) to the current time in ticks (638153823156173989).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38153823156182E+17) minus LastFrameTime (0) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38153823156182E+17 - 0 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -46,6 +46,139 @@ TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is i.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding v to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is iv.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is ive.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding n to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is iven.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is ivent.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is ivento.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is iventor.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding y to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is iventory.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 8
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 8.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is y.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is iventory. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is iventor.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 7
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 7.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is r.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is iventor. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is ivento.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 6
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 6.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is o.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is ivento. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is ivent.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 5
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 5.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is t.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is ivent. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is iven.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 4
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 4.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is n.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is iven. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is ive.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 3
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 3.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is e.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is ive. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is iv.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 2
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 2.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is v.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is iv. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is i.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 1
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 1.
+CommandWindow::HandleInput - 		FPX is EQUAL TO the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is i.
+CommandWindow::HandleInput - 		The current value of Command Actual is i. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is l.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is lo.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is loo.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding k to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is look.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is look. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'look' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'look' without arguments.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('look').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: look
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
+GameCore::Run - 		GameRunning is true.
+GameCore::Run - 		Setting LastFrameTime (0) to CurrentFrameTime (6.38153823156182E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.38153823156182E+17) to the current time in ticks (638153823213153242).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815382321316E+17) minus LastFrameTime (6.38153823156182E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.3815382321316E+17 - 6.38153823156182E+17 >= 33.33333
+GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
+GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
+GameCore::Run - 			Call the Logic method.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
+TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
+TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is i.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding n to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is in.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding v to Command Actual.
@@ -54,36 +187,6 @@ CommandWindow::HandleInput - A regular keypress has been detected. Adding e to C
 CommandWindow::HandleInput - 	The current value of Command Actual is inve.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding n to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is inven.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is invenr.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is invenrt.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is invenrto.
-CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
-CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 8
-CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 8.
-CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is o.
-CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is invenrto. Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is invenrt.
-CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
-CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 7
-CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 7.
-CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is t.
-CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is invenrt. Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is invenr.
-CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
-CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 6
-CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 6.
-CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is r.
-CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is invenr. Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is inven.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is invent.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
@@ -107,9 +210,9 @@ CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History ar
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('inventory').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: inventory
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('look').
+CommandWindow::UpdateCommandHistory - Setting History D ('look') to Command Actual ('inventory').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C: look, D: inventory
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
@@ -120,10 +223,10 @@ TheCommandTable::inventory - 	Setting TheGlobalGameState to InventoryScreen.
 TheCommandTable::inventory - 	Leaving the block.
 TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (0) to CurrentFrameTime (6.38153820933269E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.38153820933269E+17) to the current time in ticks (638153821055858580).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.38153821055865E+17) minus LastFrameTime (6.38153820933269E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.38153821055865E+17 - 6.38153820933269E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.38153823156182E+17) to CurrentFrameTime (6.3815382321316E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.3815382321316E+17) to the current time in ticks (638153823253691717).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.381538232537E+17) minus LastFrameTime (6.3815382321316E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.381538232537E+17 - 6.3815382321316E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -137,10 +240,10 @@ TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.Draw met
 TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.HandleInput method.
 TheGlobalStateBlockTable::InventoryScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (6.38153820933269E+17) to CurrentFrameTime (6.38153821055865E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.38153821055865E+17) to the current time in ticks (638153821071783808).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.38153821071808E+17) minus LastFrameTime (6.38153821055865E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.38153821071808E+17 - 6.38153821055865E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.3815382321316E+17) to CurrentFrameTime (6.381538232537E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.381538232537E+17) to the current time in ticks (638153823264464739).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38153823264495E+17) minus LastFrameTime (6.381538232537E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38153823264495E+17 - 6.381538232537E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
