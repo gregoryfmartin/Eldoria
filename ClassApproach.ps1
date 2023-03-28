@@ -106,20 +106,27 @@ $Script:TheCommandTable = @{
     'inventory' = {
         "TheCommandTable::inventory - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
         
-        "TheCommandTable::inventory - `tCalling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::inventory - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        "TheCommandTable::inventory - `tCalling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::inventory - Calling TheMessageWindow.WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheMessageWindow.WriteMessage(
+            'Entering the Inventory Screen',
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+        
+        "TheCommandTable::inventory - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
         # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
         
-        "TheCommandTable::inventory - `tSetting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
-        "TheCommandTable::inventory - `tSetting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::inventory - Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::inventory - Setting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
         # Change state
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
-        "TheCommandTable::inventory - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::inventory - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
@@ -9321,8 +9328,14 @@ Class MessageWindow : WindowBase {
     Static [ATString]$MessageWindowBlank = [ATStringNone]::new()
 
     [ATString[]]$MessageHistory
+
+    [Boolean]$MessageADirty = $false
+    [Boolean]$MessageBDirty = $false
+    [Boolean]$MessageCDirty = $false
     
     MessageWindow() : base() {
+        "MessageWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
+        
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
         $this.RightBottom      = [ATCoordinates]::new(25, 78)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -9337,9 +9350,18 @@ Class MessageWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
+        "MessageWindow::Constructor - Calculating the Message Draw Coordinates." | Out-File -FilePath $Script:LogFileName -Append
+
         [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageCDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
+
+        "MessageWindow::Constructor - The calculated coordinates are as follows:" | Out-File -FilePath $Script:LogFileName -Append
+        "MessageWindow::Constructor - Message A: (R$([MessageWindow]::MessageADrawCoordinates.Row), C$([MessageWindow]::MessageADrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+        "MessageWindow::Constructor - Message B: (R$([MessageWindow]::MessageBDrawCoordinates.Row), C$([MessageWindow]::MessageBDrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+        "MessageWindow::Constructor - Message C: (R$([MessageWindow]::MessageCDrawCoordinates.Row), C$([MessageWindow]::MessageCDrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+
+        "MessageWindow::Constructor - Creating the MessageWindowBlank ATString." | Out-File -FilePath $Script:LogFileName -Append
 
         [MessageWindow]::MessageWindowBlank = [ATString]::new(
             [ATStringPrefix]::new(
@@ -9352,42 +9374,203 @@ Class MessageWindow : WindowBase {
             $true
         )
 
-        $this.MessageHistory                                      = New-Object 'MessageWindow[]' 3
-        $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATStringNone]::new()
-        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = [ATStringNone]::new()
-        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATStringNone]::new()
-    }
+        "MessageWindow::Constructor - Creating the MessageHistory ATString array with a size of 3." | Out-File -FilePath $Script:LogFileName -Append
 
-    [Void]Draw() {
-        ([WindowBase]$this).Draw()
-    }
+        $this.MessageHistory = New-Object 'ATString[]' 3
+        
+        "MessageWindow::Constructor - Creating new ATString instances in the MessageHistory array using the appropriate draw coorinates and the MessageWindowBlank UserData as models." | Out-File -FilePath $Script:LogFileName -Append
 
-    [Void]AddAndWriteMessage([String]$Message, [ATForegroundColor24]$ForegroundColor) {
-        $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef]; $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
-        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef]; $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [MessageWindow]::MessageADrawCoordinates
+            ),
+            [MessageWindow]::MessageWindowBlank.UserData,
+            $true
+        )
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [MessageWindow]::MessageBDrawCoordinates
+            ),
+            [MessageWindow]::MessageWindowBlank.UserData,
+            $true
+        )
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
             [ATStringPrefix]::new(
-                $ForegroundColor,
+                [CCTextDefault24]::new(),
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [MessageWindow]::MessageCDrawCoordinates
             ),
-            $Message,
+            [MessageWindow]::MessageWindowBlank.UserData,
             $true
         )
 
+        "MessageWindow::Constructor - Leaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
+    }
+
+    [Void]Draw() {
+        "MessageWindow::Draw - Entering the Draw method." | Out-File -FilePath $Script:LogFileName -Append
+
+        "MessageWindow::Draw - Calling the base class Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        
+        ([WindowBase]$this).Draw()
+
+        "MessageWindow::Draw - Checking to see if MessageADirty is true." | Out-File -FilePath $Script:LogFileName -Append
+
+        If($this.MessageADirty -EQ $true) {
+            "MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
+            Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+
+            "MessageWindow::Draw - Setting MessageADirty to false." | Out-File -FilePath $Script:LogFileName -Append
+            $this.MessageADirty = $false
+        }
+
+        "MessageWindow::Draw - Checking to see if MessageBDirty is true." | Out-File -FilePath $Script:LogFileName -Append
+        If($this.MessageBDirty -EQ $true) {
+            "MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
+            Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+
+            "MessageWindow::Draw - Setting MessageBDirty to false." | Out-File -FilePath $Script:LogFileName -Append
+            $this.MessageBDirty = $false
+        }
+
+        "MessageWindow::Draw - Checking to see if MessageCDirty is true." | Out-File -FilePath $Script:LogFileName -Append
+        If($this.MessageCDirty -EQ $true) {
+            "MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
+            Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+
+            "MessageWindow::Draw - Setting MessageCDirty to false." | Out-File -FilePath $Script:LogFileName -Append
+            $this.MessageCDirty = $false
+        }
+
+        "MessageWindow::Draw - Leaving the Draw method." | Out-File -FilePath $Script:LogFileName -Append
+    }
+
+    [Void]WriteMessage([String]$Message, [ATForegroundColor24]$ForegroundColor, [ATDecoration]$Decoration) {
+        "MessageWindow::Draw - Entering the WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
+        "MessageWindow::Draw - Parameter Values: Message: ($($Message)), ForegroundColor: ($($ForegroundColor)), and Decoration: ($($Decoration))." | Out-File -FilePath $Script:LogFileName -Append
+
+        "MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B." | Out-File -FilePath $Script:LogFileName -Append
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
+
+        "MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C." | Out-File -FilePath $Script:LogFileName -Append
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
+        
+        "MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method." | Out-File -FilePath $Script:LogFileName -Append
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
+        
+        # $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
+        #     [ATStringPrefix]::new(
+        #         $ForegroundColor,
+        #         [ATBackgroundColor24None]::new(),
+        #         [ATDecorationNone]::new(),
+        #         [MessageWindow]::MessageCDrawCoordinates
+        #     ),
+        #     $Message,
+        #     $true
+        # )
+
         # Write the messages to the window, first blanks and then the messages themselves
-        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
-        Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
-        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
-        Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+        "MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws." | Out-File -FilePath $Script:LogFileName -Append
+        $this.MessageADirty = $true
+        $this.MessageBDirty = $true
+        $this.MessageCDirty = $true
+        # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
+        # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+        # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
-        [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
-        Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+        # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
+        # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+        # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+
+        # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
+        # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
+        # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+
+        "MessageWindow::Draw - Leaving the WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
+    }
+
+    [Void]WriteBadCommandMessage([String]$Command) {
+        $this.WriteMessage(
+            "$($Command) isn't a valid command.",
+            [CCAppleRedDark24]::new(),
+            [ATDecoration]::new($true)
+        )
+    }
+
+    [Void]WriteBadArg0Message([String]$Command, [String]$Arg0) {
+        $this.WriteMessage(
+            "We can't $($Command) with a(n) $($Arg0).",
+            [CCAppleYellowDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteBadArg1Message([String]$Command, [String]$Arg0, [String]$Arg1) {
+        $this.WriteMessage(
+            "We can't $($Command) with a(n) $(Arg0) and a(n) $($Arg1).",
+            [CCAppleYellowDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteSomethingBadMessage() {
+        $this.WriteMessage(
+            'I''m God, and even I don''t know what just happened...',
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteInvisibleWallEncounteredMessage() {
+        $this.WriteMessage(
+            'The invisible wall blocks your path...',
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteYouShallNotPassMessage() {
+        $this.WriteMessage(
+            'The path you asked for is impossible...',
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteMapNoItemsFoundMessage() {
+        $this.WriteMessage(
+            'There''s nothing of interest here.',
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteMapInvalidItemMessage([String]$ItemName) {
+        $this.WriteMessage(
+            "There's no $($ItemName) here.",
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
     }
 }
 
@@ -10239,9 +10422,9 @@ Clear-Host
 #$Script:TheCommandWindow.Draw()
 #$Script:TheSceneWindow.Draw()
 #$Script:TheMessageWindow.Draw()
-#$Script:TheMessageWindow.AddAndWriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
-#$Script:TheMessageWindow.AddAndWriteMessage('This is a another message', [CCAppleMintLight24]::new())
-#$Script:TheMessageWindow.AddAndWriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
+#$Script:TheMessageWindow.WriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
+#$Script:TheMessageWindow.WriteMessage('This is a another message', [CCAppleMintLight24]::new())
+#$Script:TheMessageWindow.WriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
