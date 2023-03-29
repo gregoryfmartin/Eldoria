@@ -26,7 +26,8 @@ using namespace System.Management.Automation.Host
 
 #[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
 
-[Map]$Script:CurrentMap  = $null
+[Map]$Script:SampleMap   = [Map]::new('Sample Map', 2, 2, $true)
+[Map]$Script:CurrentMap  = $Script:SampleMap
 [Map]$Script:PreviousMap = $null
 
 [SIFieldNorthRoad]        $Script:FieldNorthRoadImage         = [SIFieldNorthRoad]::new()
@@ -95,11 +96,13 @@ $Script:TheCommandTable = @{
 
     'look' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
+        $Script:TheCommandWindow.InvokeLookAction()
         Return
     }
 
     'l' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
+        $Script:TheCommandWindow.InvokeLookAction()
         Return
     }
 
@@ -9163,7 +9166,7 @@ Class CommandWindow : WindowBase {
             "CommandWindow::InvokeCommandParser - `t`tSplit is successful. The split data is $({Foreach($a in $cmdactSplit){"$a, "}})." | Out-File -FilePath $Script:LogFileName -Append
             
             "CommandWindow::InvokeCommandParser - `t`tAttempting to find the root command in the Command Table." | Out-File -FilePath $Script:LogFileName -Append
-            $rootFound   = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
+            $rootFound = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
             
             If($null -NE $rootFound) {
                 "CommandWindow::InvokeCommandParser - `t`tA root command has been identified as '$($cmdactSplit[0])' Now checking the length of the split to determine the ScriptBlock invocation style." | Out-File -FilePath $Script:LogFileName -Append
@@ -9206,6 +9209,58 @@ Class CommandWindow : WindowBase {
             # There are no objects on this map tile
             # TODO: Update the Command History with a valid response
             # TODO: Write to the message window that there weren't any items found
+        }
+    }
+
+    [Void]InvokeLookAction() {
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        $b = 78
+        $c = ''
+        $f = ''
+        $z = 0
+        $y = $false
+
+        If($a.Count -LE 0) {
+            $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+            Return
+        }
+
+        Foreach($d in $a) {
+            If($z -EQ $a.Count - 1) {
+                $c += $d.Name
+            } Else {
+                $c += $d.Name + ', '
+            }
+            $z++
+        }
+        $e = $c.Length
+
+        If($e -GT $b) {
+            $y = $true
+            $c -MATCH '([\s,]+\w+){5}$' | Out-Null
+            If($_ -EQ $true) {
+                $c = $c -REPLACE '([\s,]+\w+){5}$', ''
+                $f = $matches[0].Remove(0, 2)
+            }
+        }
+
+        $Script:TheMessageWindow.WriteMessage(
+            'I can see the following things here:',
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+        $Script:TheMessageWindow.WriteMessage(
+            $c,
+            [CCApplePinkDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+
+        If($y -EQ $true) {
+            $Script:TheMessageWindow.WriteMessage(
+                $f,
+                [CCApplePinkDark24]::new(),
+                [ATDecorationNone]::new()
+            )
         }
     }
 
@@ -10461,6 +10516,54 @@ $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+
+$Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
+    $Script:FieldNorthEastRoadImage,
+    @(
+        [MTOApple]::new(),
+        [MTOTree]::new(),
+        [MTOLadder]::new(),
+        [MTORope]::new(),
+        [MTOStairs]::new(),
+        [MTOPole]::new()
+    ),
+    @(
+        $true,
+        $false,
+        $true,
+        $false
+    )
+)
+$Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
+    $Script:FieldNorthWestRoadImage,
+    @(),
+    @(
+        $true,
+        $false,
+        $false,
+        $true
+    )
+)
+$Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
+    $Script:FieldSouthEastWestRoadImage,
+    @(),
+    @(
+        $false,
+        $true,
+        $true,
+        $false
+    )
+)
+$Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
+    $Script:FieldNorthRoadImage,
+    @(),
+    @(
+        $false,
+        $true,
+        $false,
+        $true
+    )
+)
 
 $Script:TheGameCore.Run()
 
