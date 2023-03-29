@@ -112,13 +112,6 @@ $Script:TheCommandTable = @{
         "TheCommandTable::inventory - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        "TheCommandTable::inventory - Calling TheMessageWindow.WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
-        $Script:TheMessageWindow.WriteMessage(
-            'Entering the Inventory Screen',
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
-        )
-        
         "TheCommandTable::inventory - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
         # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
@@ -173,6 +166,9 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
             $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
             $Script:TheCommandWindow.CommandHistoryDirty = $true
+
+            # Write the sequence to show the cursor since it's hidden by the Inventory Screen
+            Write-Host "$([ATControlSequences]::CursorShow)"
         }
 
         "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheStatusWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
@@ -380,6 +376,7 @@ Class ATControlSequences {
     Static [String]$DecorationBlink         = "`e[5m"
     Static [String]$ModifierReset           = "`e[0m"
     Static [String]$CursorHide              = "`e[?25l"
+    Static [String]$CursorShow              = "`e[?25h"
     
     Static [String]GenerateFG24String([ConsoleColor24]$Color) {
         Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
