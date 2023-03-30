@@ -31,9 +31,9 @@ GameCore::Run - Starting the Run method.
 GameCore::Run - 	Checking to see if the GameRunning flag is true or not.
 GameCore::Run - 		GameRunning is true.
 GameCore::Run - 		Setting LastFrameTime (0) to CurrentFrameTime (0).
-GameCore::Run - 		Setting CurrentFrameTime (0) to the current time in ticks (638157264608092933).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157264608114E+17) minus LastFrameTime (0) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.38157264608114E+17 - 0 >= 33.33333
+GameCore::Run - 		Setting CurrentFrameTime (0) to the current time in ticks (638157301031169228).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815730103118E+17) minus LastFrameTime (0) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.3815730103118E+17 - 0 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -60,39 +60,83 @@ MessageWindow::Draw - Checking to see if MessageBDirty is true.
 MessageWindow::Draw - Checking to see if MessageCDirty is true.
 MessageWindow::Draw - Leaving the Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is t.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is i.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding n to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is in.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding v to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is inv.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is te.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is tes.
+CommandWindow::HandleInput - 	The current value of Command Actual is inve.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding n to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is inven.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is test.
+CommandWindow::HandleInput - 	The current value of Command Actual is invent.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is inventr.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 7
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 7.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is r.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is inventr. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is invent.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is invento.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is inventor.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding y to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is inventory.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is test. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is inventory. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'inventory' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'inventory' without arguments.
+TheCommandTable::inventory - Starting the block.
+TheCommandTable::inventory - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('test').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: test
+CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('inventory').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: inventory
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
 CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+TheCommandTable::inventory - Calling TheBufferManager.CopyActiveToBufferAWithWipe method.
+TheCommandTable::inventory - Setting ThePreviousGlobalGameState (GamePlayScreen) to TheGlobalGameState (GamePlayScreen).
+TheCommandTable::inventory - Setting TheGlobalGameState to InventoryScreen.
+TheCommandTable::inventory - Leaving the block.
 TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (0) to CurrentFrameTime (6.38157264608114E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.38157264608114E+17) to the current time in ticks (638157264634630830).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815726463464E+17) minus LastFrameTime (6.38157264608114E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.3815726463464E+17 - 6.38157264608114E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (0) to CurrentFrameTime (6.3815730103118E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.3815730103118E+17) to the current time in ticks (638157301109052610).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157301109062E+17) minus LastFrameTime (6.3815730103118E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38157301109062E+17 - 6.3815730103118E+17 >= 33.33333
+GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
+GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
+GameCore::Run - 			Call the Logic method.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state InventoryScreen
+TheGlobalStateBlockTable::InventoryScreen - Starting the block.
+TheGlobalStateBlockTable::InventoryScreen - 	Checking to see if the Inventory Window instance is null.
+TheGlobalStateBlockTable::InventoryScreen - 		It is - creating a new instance.
+TheGlobalStateBlockTable::InventoryScreen - Checking to see if the GPS Buffer Backup Restore flag is true to turn it off.
+TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.Draw method.
+TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.HandleInput method.
+TheGlobalStateBlockTable::InventoryScreen - 	Leaving the block.
+GameCore::Run - 		GameRunning is true.
+GameCore::Run - 		Setting LastFrameTime (6.3815730103118E+17) to CurrentFrameTime (6.38157301109062E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.38157301109062E+17) to the current time in ticks (638157301136996878).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157301137033E+17) minus LastFrameTime (6.38157301109062E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38157301137033E+17 - 6.38157301109062E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -100,7 +144,7 @@ GameCore::Logic - Starting the Logic method.
 GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
 TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
 TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
-TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping.
+TheGlobalStateBlockTable::GamePlayScreen - It isn't null - setting to null.
 TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
@@ -115,43 +159,27 @@ TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method
 MessageWindow::Draw - Entering the Draw method.
 MessageWindow::Draw - Calling the base class Draw method.
 MessageWindow::Draw - Checking to see if MessageADirty is true.
+MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageADirty to false.
 MessageWindow::Draw - Checking to see if MessageBDirty is true.
+MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageBDirty to false.
 MessageWindow::Draw - Checking to see if MessageCDirty is true.
+MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageCDirty to false.
 MessageWindow::Draw - Leaving the Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is g.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gr.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is gre.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is greg.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is greg. Attempting to split the string.
-CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
-CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		An invalid command has been typed in. Asking the Command Window to update the history.
-CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
-CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('test').
-CommandWindow::UpdateCommandHistory - Setting History D ('test') to Command Actual ('greg').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C: test, D: greg
-CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
-CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
-CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+CommandWindow::InvokeCommandParser - 		It doesn't. Exiting.
 TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (6.38157264608114E+17) to CurrentFrameTime (6.3815726463464E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.3815726463464E+17) to the current time in ticks (638157264641262805).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815726464127E+17) minus LastFrameTime (6.3815726463464E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.3815726464127E+17 - 6.3815726463464E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.38157301109062E+17) to CurrentFrameTime (6.38157301137033E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.38157301137033E+17) to the current time in ticks (638157301195570061).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157301195578E+17) minus LastFrameTime (6.38157301137033E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38157301195578E+17 - 6.38157301137033E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -167,8 +195,6 @@ CommandWindow::Draw - Starting the Draw function.
 CommandWindow::Draw - Calling base class Draw function.
 CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
 CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
-CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
-CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
 MessageWindow::Draw - Entering the Draw method.
@@ -180,28 +206,22 @@ MessageWindow::Draw - Leaving the Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
 CommandWindow::HandleInput - 	The current value of Command Actual is l.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is lo.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is loo.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding k to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is look.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is look. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is l. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		A root command has been identified as 'look' Now checking the length of the split to determine the ScriptBlock invocation style.
-CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'look' without arguments.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'l' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'l' without arguments.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('test').
-CommandWindow::UpdateCommandHistory - Setting History C ('test') to History D ('greg').
-CommandWindow::UpdateCommandHistory - Setting History D ('greg') to Command Actual ('look').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B: test, C: greg, D: look
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('inventory').
+CommandWindow::UpdateCommandHistory - Setting History D ('inventory') to Command Actual ('l').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C: inventory, D: l
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
@@ -222,10 +242,10 @@ MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
 MessageWindow::Draw - Leaving the WriteMessage method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (6.3815726463464E+17) to CurrentFrameTime (6.3815726464127E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.3815726464127E+17) to the current time in ticks (638157264654600305).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815726465461E+17) minus LastFrameTime (6.3815726464127E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.3815726465461E+17 - 6.3815726464127E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.38157301137033E+17) to CurrentFrameTime (6.38157301195578E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.38157301195578E+17) to the current time in ticks (638157301214390045).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.381573012144E+17) minus LastFrameTime (6.38157301195578E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.381573012144E+17 - 6.38157301195578E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -258,78 +278,150 @@ MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window a
 MessageWindow::Draw - Setting MessageCDirty to false.
 MessageWindow::Draw - Leaving the Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is g.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is e.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding x to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is ex.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa.
+CommandWindow::HandleInput - 	The current value of Command Actual is ge.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is get.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa .
-CommandWindow::HandleInput - A regular keypress has been detected. Adding c to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa c.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding h to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa ch.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa chi.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding c to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa chic.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding k to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa chick.
+CommandWindow::HandleInput - 	The current value of Command Actual is get .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is get a.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding p to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is get ap.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding p to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is get app.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is get appl.
 CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa chicke.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding n to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa chicken.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is exa chickens.
+CommandWindow::HandleInput - 	The current value of Command Actual is get apple.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is exa chickens. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is get apple. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		A root command has been identified as 'exa' Now checking the length of the split to determine the ScriptBlock invocation style.
-CommandWindow::InvokeCommandParser - 			Split length is 2, invoking the root command 'exa' with one argument 'chickens'.
-TheCommandTable::exa - Starting the block.
-TheCommandTable::exa - Because of the nature of this block, we're just going to call the function on the Command Window.
-CommandWindow::InvokeExamineAction - Starting the function.
-CommandWindow::InvokeExamineAction - Iterating through the current tile's Object Listing to find an Item Name match.
-CommandWindow::InvokeExamineAction - The Item Name we're looking for is chickens.
-CommandWindow::InvokeExamineAction - The iterator Item Name is Apple.
-CommandWindow::InvokeExamineAction - The iterator Item Name is Tree.
-CommandWindow::InvokeExamineAction - The iterator Item Name is Ladder.
-CommandWindow::InvokeExamineAction - The iterator Item Name is Rope.
-CommandWindow::InvokeExamineAction - The iterator Item Name is Stairs.
-CommandWindow::InvokeExamineAction - The iterator Item Name is Pole.
-CommandWindow::InvokeExamineAction - Match has NOT been found. Updating the Command Window History with failure.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'get' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 2, invoking the root command 'get' with one argument 'apple'.
+TheCommandTable::get - Starting the block.
+TheCommandTable::get - Because of the nature of this block, we're just going to call the function on the Command Window.
+CommandWindow::InvokeGetAction - Starting the function.
+CommandWindow::InvokeGetAction - Getting a reference to the current Map Tile's Object Listing.
+CommandWindow::InvokeGetAction - Checking to see if the length of the reference is LESS THAN OR EQUAL TO zero.
+CommandWindow::InvokeGetAction - The length of the reference is at least 1.
+CommandWindow::InvokeGetAction - Iterating through the reference collection to see if we can find a name match.
+CommandWindow::InvokeGetAction - The Item Name we're looking for is apple.
+CommandWindow::InvokeGetAction - The current iteration's name is Apple.
+CommandWindow::InvokeGetAction - Checking to see if these match.
+CommandWindow::InvokeGetAction - A match has been found.
+CommandWindow::InvokeGetAction - Checking to see if this Item can be added to the Player's Inventory.
+CommandWindow::InvokeGetAction - It can. Copying the current item into the Player's Inventory collection.
+CommandWindow::InvokeGetAction - Attempting to remove this item from the current Map Tile's Object Listing.
+CommandWindow::InvokeGetAction - Checking to see if the removal was successful or not.
+CommandWindow::InvokeGetAction - The removal was successful.
+CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('test').
-CommandWindow::UpdateCommandHistory - Setting History B ('test') to History C ('greg').
-CommandWindow::UpdateCommandHistory - Setting History C ('greg') to History D ('look').
-CommandWindow::UpdateCommandHistory - Setting History D ('look') to Command Actual ('exa chickens').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A: test, B: greg, C: look, D: exa chickens
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('inventory').
+CommandWindow::UpdateCommandHistory - Setting History C ('inventory') to History D ('l').
+CommandWindow::UpdateCommandHistory - Setting History D ('l') to Command Actual ('get apple').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B: inventory, C: l, D: get apple
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
 CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
-CommandWindow::InvokeExamineAction - Writing the error message to the Message Window History.
 MessageWindow::Draw - Entering the WriteMessage method.
-MessageWindow::Draw - Parameter Values: Message: (There's no chickens here.), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Parameter Values: Message: (I've taken the apple and put it in my pocket.), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
 MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
 MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
 MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
 MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
 MessageWindow::Draw - Leaving the WriteMessage method.
-CommandWindow::InvokeExamineAction - Leaving the function.
-TheCommandTable::exa - Leaving the block.
+CommandWindow::InvokeGetAction - Leaving the function.
+TheCommandTable::get - Leaving the block.
 TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (6.3815726464127E+17) to CurrentFrameTime (6.3815726465461E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.3815726465461E+17) to the current time in ticks (638157264688691315).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157264688704E+17) minus LastFrameTime (6.3815726465461E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.38157264688704E+17 - 6.3815726465461E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.38157301195578E+17) to CurrentFrameTime (6.381573012144E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.381573012144E+17) to the current time in ticks (638157301295621087).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815730129563E+17) minus LastFrameTime (6.381573012144E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.3815730129563E+17 - 6.381573012144E+17 >= 33.33333
+GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
+GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
+GameCore::Run - 			Call the Logic method.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
+TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
+TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
+MessageWindow::Draw - Entering the Draw method.
+MessageWindow::Draw - Calling the base class Draw method.
+MessageWindow::Draw - Checking to see if MessageADirty is true.
+MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageADirty to false.
+MessageWindow::Draw - Checking to see if MessageBDirty is true.
+MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageBDirty to false.
+MessageWindow::Draw - Checking to see if MessageCDirty is true.
+MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageCDirty to false.
+MessageWindow::Draw - Leaving the Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is l.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is l. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'l' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'l' without arguments.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('inventory').
+CommandWindow::UpdateCommandHistory - Setting History B ('inventory') to History C ('l').
+CommandWindow::UpdateCommandHistory - Setting History C ('l') to History D ('get apple').
+CommandWindow::UpdateCommandHistory - Setting History D ('get apple') to Command Actual ('l').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A: inventory, B: l, C: get apple, D: l
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+MessageWindow::Draw - Entering the WriteMessage method.
+MessageWindow::Draw - Parameter Values: Message: (I can see the following things here:), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
+MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
+MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
+MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
+MessageWindow::Draw - Leaving the WriteMessage method.
+MessageWindow::Draw - Entering the WriteMessage method.
+MessageWindow::Draw - Parameter Values: Message: (Tree, Ladder, Rope, Stairs, Pole), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
+MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
+MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
+MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
+MessageWindow::Draw - Leaving the WriteMessage method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
+GameCore::Run - 		GameRunning is true.
+GameCore::Run - 		Setting LastFrameTime (6.381573012144E+17) to CurrentFrameTime (6.3815730129563E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.3815730129563E+17) to the current time in ticks (638157301329306607).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157301329317E+17) minus LastFrameTime (6.3815730129563E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38157301329317E+17 - 6.3815730129563E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -392,26 +484,26 @@ CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root com
 TheCommandTable::inventory - Starting the block.
 TheCommandTable::inventory - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
-CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('test').
-CommandWindow::UpdateCommandHistory - Setting History A ('test') to History B ('greg').
-CommandWindow::UpdateCommandHistory - Setting History B ('greg') to History C ('look').
-CommandWindow::UpdateCommandHistory - Setting History C ('look') to History D ('exa chickens').
-CommandWindow::UpdateCommandHistory - Setting History D ('exa chickens') to Command Actual ('inventory').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: test, A: greg, B: look, C: exa chickens, D: inventory
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('inventory').
+CommandWindow::UpdateCommandHistory - Setting History A ('inventory') to History B ('l').
+CommandWindow::UpdateCommandHistory - Setting History B ('l') to History C ('get apple').
+CommandWindow::UpdateCommandHistory - Setting History C ('get apple') to History D ('l').
+CommandWindow::UpdateCommandHistory - Setting History D ('l') to Command Actual ('inventory').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: inventory, A: l, B: get apple, C: l, D: inventory
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
 CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
 CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
 TheCommandTable::inventory - Calling TheBufferManager.CopyActiveToBufferAWithWipe method.
-TheCommandTable::inventory - Setting ThePreviousGlobalGameState (GamePlayScreen) to TheGlobalGameState (GamePlayScreen).
+TheCommandTable::inventory - Setting ThePreviousGlobalGameState (InventoryScreen) to TheGlobalGameState (GamePlayScreen).
 TheCommandTable::inventory - Setting TheGlobalGameState to InventoryScreen.
 TheCommandTable::inventory - Leaving the block.
 TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (6.3815726465461E+17) to CurrentFrameTime (6.38157264688704E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.38157264688704E+17) to the current time in ticks (638157264736514449).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157264736524E+17) minus LastFrameTime (6.38157264688704E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.38157264736524E+17 - 6.38157264688704E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.3815730129563E+17) to CurrentFrameTime (6.38157301329317E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.38157301329317E+17) to the current time in ticks (638157301389529161).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.38157301389536E+17) minus LastFrameTime (6.38157301329317E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.38157301389536E+17 - 6.38157301329317E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.
@@ -425,10 +517,10 @@ TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.Draw met
 TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.HandleInput method.
 TheGlobalStateBlockTable::InventoryScreen - 	Leaving the block.
 GameCore::Run - 		GameRunning is true.
-GameCore::Run - 		Setting LastFrameTime (6.38157264688704E+17) to CurrentFrameTime (6.38157264736524E+17).
-GameCore::Run - 		Setting CurrentFrameTime (6.38157264736524E+17) to the current time in ticks (638157264756582553).
-GameCore::Run - 		Checking to see if CurrentFrameTime (6.381572647566E+17) minus LastFrameTime (6.38157264736524E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
-GameCore::Run - 		The equation is 6.381572647566E+17 - 6.38157264736524E+17 >= 33.33333
+GameCore::Run - 		Setting LastFrameTime (6.38157301329317E+17) to CurrentFrameTime (6.38157301389536E+17).
+GameCore::Run - 		Setting CurrentFrameTime (6.38157301389536E+17) to the current time in ticks (638157301454880215).
+GameCore::Run - 		Checking to see if CurrentFrameTime (6.3815730145489E+17) minus LastFrameTime (6.38157301389536E+17) is GREATER THAN OR EQUAL TO MsPerFrame (33.33333).
+GameCore::Run - 		The equation is 6.3815730145489E+17 - 6.38157301389536E+17 >= 33.33333
 GameCore::Run - 			The value is GREATER THAN OR EQUAL TO MsPerFrame.
 GameCore::Run - 			Set FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime.
 GameCore::Run - 			Call the Logic method.

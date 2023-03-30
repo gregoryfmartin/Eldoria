@@ -127,7 +127,22 @@ $Script:TheCommandTable = @{
     }
 
     'i' = {
+        "TheCommandTable::i - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheCommandTable::i - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($true)
+        
+        "TheCommandTable::i - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
+        # Copy the active buffer to the A back buffer
+        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        
+        "TheCommandTable::i - Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
+        "TheCommandTable::i - Setting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
+        # Change state
+        $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+        $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
+
+        "TheCommandTable::i - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
@@ -152,6 +167,54 @@ $Script:TheCommandTable = @{
         $Script:TheCommandWindow.InvokeExamineAction($a0)
         
         "TheCommandTable::exa - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
+    'get' = {
+        Param([String]$a0)
+
+        "TheCommandTable::get - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+
+        "TheCommandTable::get - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.InvokeGetAction($a0)
+        
+        "TheCommandTable::get - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
+    'g' = {
+        Param([String]$a0)
+
+        "TheCommandTable::g - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+
+        "TheCommandTable::g - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.InvokeGetAction($a0)
+        
+        "TheCommandTable::g - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
+    'take' = {
+        Param([String]$a0)
+
+        "TheCommandTable::take - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+
+        "TheCommandTable::take - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.InvokeGetAction($a0)
+        
+        "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
+    't' = {
+        Param([String]$a0)
+
+        "TheCommandTable::take - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+
+        "TheCommandTable::take - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.InvokeGetAction($a0)
+        
+        "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 }
@@ -8482,7 +8545,7 @@ Class MTOBacon : MapTileObject {
 }
 
 Class MTOApple : MapTileObject {
-    MTOApple(): base('Apple', 'apple', $false, 'A big, juicy, red apple. Worm not included.', {}) {}
+    MTOApple(): base('Apple', 'apple', $true, 'A big, juicy, red apple. Worm not included.', {}) {}
 }
 
 Class MTOStick : MapTileObject {
@@ -9318,6 +9381,68 @@ Class CommandWindow : WindowBase {
         Return
     }
 
+    [Void]InvokeGetAction(
+        [String]$ItemName
+    ) {
+        "CommandWindow::InvokeGetAction - Starting the function." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::InvokeGetAction - Getting a reference to the current Map Tile's Object Listing." | Out-File -FilePath $Script:LogFileName -Append
+        $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+        
+        "CommandWindow::InvokeGetAction - Checking to see if the length of the reference is LESS THAN OR EQUAL TO zero." | Out-File -FilePath $Script:LogFileName -Append
+        If($a.Count -LE 0) {
+            "CommandWindow::InvokeGetAction - It is, meaning that there's nothing on this tile." | Out-File -FilePath $Script:LogFileName -Append
+            "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+            "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+            Return
+        }
+        "CommandWindow::InvokeGetAction - The length of the reference is at least 1." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::InvokeGetAction - Iterating through the reference collection to see if we can find a name match." | Out-File -FilePath $Script:LogFileName -Append
+        Foreach($b in $a) {
+            "CommandWindow::InvokeGetAction - The Item Name we're looking for is $($ItemName)." | Out-File -FilePath $Script:LogFileName -Append
+            "CommandWindow::InvokeGetAction - The current iteration's name is $($b.Name)." | Out-File -FilePath $Script:LogFileName -Append
+            "CommandWindow::InvokeGetAction - Checking to see if these match." | Out-File -FilePath $Script:LogFileName -Append
+            If($b.Name -IEQ $ItemName) {
+                "CommandWindow::InvokeGetAction - A match has been found." | Out-File -FilePath $Script:LogFileName -Append
+                "CommandWindow::InvokeGetAction - Checking to see if this Item can be added to the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                If($b.CanAddToInventory -EQ $true) {
+                    "CommandWindow::InvokeGetAction - It can. Copying the current item into the Player's Inventory collection." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:ThePlayer.Inventory.Add($b) | Out-Null
+                    "CommandWindow::InvokeGetAction - Attempting to remove this item from the current Map Tile's Object Listing." | Out-File -FilePath $Script:LogFileName -Append
+                    $c = $a.Remove($b) | Out-Null
+                    "CommandWindow::InvokeGetAction - Checking to see if the removal was successful or not." | Out-File -FilePath $Script:LogFileName -Append
+                    If($c -EQ $false) {
+                        "CommandWindow::InvokeGetAction - The removal failed." | Out-File -FilePath $Script:LogFileName -Append
+                        "CommandWindow::InvokeGetAction - THIS IS A CRITICAL ERROR - PREMATURELY TERMINATING THE PROGRAM!" | Out-File -FilePath $Script:LogFileName -Append
+                        Write-Error 'Failed to remove an item from the Map Tile!'
+                        Exit
+                    } Else {
+                        "CommandWindow::InvokeGetAction - The removal was successful." | Out-File -FilePath $Script:LogFileName -Append
+                        "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+                        $Script:TheMessageWindow.WriteItemTakenMessage($ItemName)
+                        "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+                        Return
+                    }
+                } Else {
+                    "CommandWindow::InvokeGetAction - It can't. Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteItemCantTakeMessage($ItemName)
+                    "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+                    Return
+                }
+            }
+        }
+
+        "CommandWindow::InvokeGetAction - Although there are Items in the reference collection, none of them match the terms." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+        $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
+        "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
     [Void]UpdateCommandHistory(
         [Boolean]$CmdValid
     ) {
@@ -9677,6 +9802,24 @@ Class MessageWindow : WindowBase {
     [Void]WriteMapInvalidItemMessage([String]$ItemName) {
         $this.WriteMessage(
             "There's no $($ItemName) here.",
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteItemTakenMessage([String]$ItemName) {
+        $this.WriteMessage(
+            "I've taken the $($ItemName) and put it in my pocket.",
+            [CCAppleIndigoDark24]::new(),
+            [ATDecorationNone]::new()
+        )
+    }
+
+    [Void]WriteItemCantTakeMessage(
+        [String]$ItemName
+    ) {
+        $this.WriteMessage(
+            "It's not possible to take the $($ItemName).",
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
@@ -10535,41 +10678,41 @@ Clear-Host
 #$Script:TheMessageWindow.WriteMessage('This is a another message', [CCAppleMintLight24]::new())
 #$Script:TheMessageWindow.WriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
-$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
