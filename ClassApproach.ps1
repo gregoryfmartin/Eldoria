@@ -130,6 +130,30 @@ $Script:TheCommandTable = @{
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         Return
     }
+
+    'examine' = {
+        Param([String]$a0)
+
+        "TheCommandTable::examine - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheCommandTable::examine - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.InvokeExamineAction($a0)
+        
+        "TheCommandTable::examine - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
+
+    'exa' = {
+        Param([String]$a0)
+
+        "TheCommandTable::exa - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheCommandTable::exa - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.InvokeExamineAction($a0)
+        
+        "TheCommandTable::exa - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        Return
+    }
 }
 
 # GLOBAL STATE BLOCK TABLE DEFINITION
@@ -9259,6 +9283,36 @@ Class CommandWindow : WindowBase {
                 [ATDecorationNone]::new()
             )
         }
+    }
+
+    [Void]InvokeExamineAction(
+        [String]$ItemName
+    ) {
+        "CommandWindow::InvokeExamineAction - Starting the function." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::InvokeExamineAction - Iterating through the current tile's Object Listing to find an Item Name match." | Out-File -FilePath $Script:LogFileName -Append
+        "CommandWindow::InvokeExamineAction - The Item Name we're looking for is $($ItemName)." | Out-File -FilePath $Script:LogFileName -Append
+        Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
+            "CommandWindow::InvokeExamineAction - The iterator Item Name is $($a.Name)." | Out-File -FilePath $Script:LogFileName -Append
+            If($a.Name -IEQ $ItemName) {
+                "CommandWindow::InvokeExamineAction - Match has been found. Updating the Command Window History with success." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                "CommandWindow::InvokeExamineAction - Writing the Item's ExamineString to the Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheMessageWindow.WriteMessage(
+                    "$($a.ExamineString)",
+                    [CCAppleMintDark24]::new(),
+                    [ATDecorationNone]::new()
+                )
+                "CommandWindow::InvokeExamineAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+                Return
+            }
+        }
+
+        "CommandWindow::InvokeExamineAction - Match has NOT been found. Updating the Command Window History with failure." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+        "CommandWindow::InvokeExamineAction - Writing the error message to the Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
+        "CommandWindow::InvokeExamineAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+        Return
     }
 
     [Void]UpdateCommandHistory(
