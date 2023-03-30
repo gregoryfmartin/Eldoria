@@ -190,6 +190,9 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
             $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
             $Script:TheCommandWindow.CommandHistoryDirty = $true
+            $Script:TheMessageWindow.MessageADirty       = $true
+            $Script:TheMessageWindow.MessageBDirty       = $true
+            $Script:TheMessageWindow.MessageCDirty       = $true
 
             # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
