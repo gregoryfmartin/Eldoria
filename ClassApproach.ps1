@@ -10605,23 +10605,25 @@ Class GameCore {
         "GameCore::Run - `tChecking to see if the GameRunning flag is true or not." | Out-File -FilePath $Script:LogFileName -Append
 
         While($this.GameRunning -EQ $true) {
-            "GameCore::Run - `t`tGameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
-            "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
-            $this.LastFrameTime = $this.CurrentFrameTime
+            $this.Logic()
+
+            # "GameCore::Run - `t`tGameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
+            # "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
+            # $this.LastFrameTime = $this.CurrentFrameTime
             
-            "GameCore::Run - `t`tSetting CurrentFrameTime ($($this.CurrentFrameTime)) to the current time in ticks ($([DateTime]::Now.Ticks))." | Out-File -FilePath $Script:LogFileName -Append
-            $this.CurrentFrameTime = [DateTime]::Now.Ticks
+            # "GameCore::Run - `t`tSetting CurrentFrameTime ($($this.CurrentFrameTime)) to the current time in ticks ($([DateTime]::Now.Ticks))." | Out-File -FilePath $Script:LogFileName -Append
+            # $this.CurrentFrameTime = [DateTime]::Now.Ticks
 
-            "GameCore::Run - `t`tChecking to see if CurrentFrameTime ($($this.CurrentFrameTime)) minus LastFrameTime ($($this.LastFrameTime)) is GREATER THAN OR EQUAL TO MsPerFrame ($($this.MsPerFrame))." | Out-File -FilePath $Script:LogFileName -Append
-            "GameCore::Run - `t`tThe equation is $($this.CurrentFrameTime) - $($this.LastFrameTime) >= $($this.MsPerFrame)" | Out-File -FilePath $Script:LogFileName -Append
-            If(($this.CurrentFrameTime - $this.LastFrameTime) -GE $this.MsPerFrame) {
-                "GameCore::Run - `t`t`tThe value is GREATER THAN OR EQUAL TO MsPerFrame." | Out-File -FilePath $Script:LogFileName -Append
-                "GameCore::Run - `t`t`tSet FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime." | Out-File -FilePath $Script:LogFileName -Append
-                $this.FpsDelta = [TimeSpan]::new($this.CurrentFrameTime - $this.LastFrameTime)
+            # "GameCore::Run - `t`tChecking to see if CurrentFrameTime ($($this.CurrentFrameTime)) minus LastFrameTime ($($this.LastFrameTime)) is GREATER THAN OR EQUAL TO MsPerFrame ($($this.MsPerFrame))." | Out-File -FilePath $Script:LogFileName -Append
+            # "GameCore::Run - `t`tThe equation is $($this.CurrentFrameTime) - $($this.LastFrameTime) >= $($this.MsPerFrame)" | Out-File -FilePath $Script:LogFileName -Append
+            # If(($this.CurrentFrameTime - $this.LastFrameTime) -GE $this.MsPerFrame) {
+            #     "GameCore::Run - `t`t`tThe value is GREATER THAN OR EQUAL TO MsPerFrame." | Out-File -FilePath $Script:LogFileName -Append
+            #     "GameCore::Run - `t`t`tSet FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime." | Out-File -FilePath $Script:LogFileName -Append
+            #     $this.FpsDelta = [TimeSpan]::new($this.CurrentFrameTime - $this.LastFrameTime)
 
-                "GameCore::Run - `t`t`tCall the Logic method." | Out-File -FilePath $Script:LogFileName -Append
-                $this.Logic()
-            }
+            #     "GameCore::Run - `t`t`tCall the Logic method." | Out-File -FilePath $Script:LogFileName -Append
+            #     $this.Logic()
+            # }
         }
     }
 
@@ -10678,41 +10680,41 @@ Clear-Host
 #$Script:TheMessageWindow.WriteMessage('This is a another message', [CCAppleMintLight24]::new())
 #$Script:TheMessageWindow.WriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
-# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
