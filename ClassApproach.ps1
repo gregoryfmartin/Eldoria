@@ -304,6 +304,93 @@ $Script:TheCommandTable = @{
             }
         }
     }
+
+    'u' = {
+        Param(
+            [String]$a0,
+            [String]$a1
+        )
+
+        "TheCommandTable::use - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheCommandTable::use - Checking to see if we have the necessary parameters." | Out-File -FilePath $Script:LogFileName -Append
+        If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
+            "TheCommandTable::use - The necessary parameters exist. Continuing the function call." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::use - Checking to see if the first item exists in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
+            If($Script:ThePlayer.IsItemInInventory($a0)) {
+                "TheCommandTable::use - $($a0) has been found in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
+                "TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
+                    "TheCommandTable::use - $($a1) has been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+                    [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
+                    
+                    "TheCommandTable::use - Checking the item use filter on $($a1) to see if $($a0) is a valid item to use on it." | Out-File -FilePath $Script:LogFileName -Append
+                    If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                        "TheCommandTable::use - Filter check has passed, $($a0) can be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+                        "TheCommandTable::use - Using $($a0) on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        Invoke-Command $mti.Effect -ArgumentList $pi
+                    } Else {
+                        "TheCommandTable::use - Filter check has FAILED, $($a0) can't be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        
+                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheMessageWindow.WriteMessage(
+                            "Can't use a(n) $($a0) on a $($a1).",
+                            [CCAppleRedDark24]::new(),
+                            [ATDecoration]::new($true)
+                        )
+                    }
+                } Else {
+                    "TheCommandTable::use - $($a1) has NOT been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::use - Checking to see if the second term is 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                    If($a1 -IEQ 'self') {
+                        "TheCommandTable::use - $($a1) is the term 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                    } Else {
+                        "TheCommandTable::use - The second term is neither a valid map item or 'self'; this is an invalid command structure." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        
+                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheMessageWindow.WriteMessage(
+                            'Whatever you typed doesn''t make any sense.',
+                            [CCAppleRedDark24]::new(),
+                            [ATDecoration]::new($true)
+                        )
+                    }
+                }
+            }
+        } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
+            "TheCommandTable::use - Parameter a0 is available but a1 is NOT." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::use - This is an invalid command structure error." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            "TheCommandTable::use - Checking to see if $($a0) is in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+            If($Script:ThePlayer.IsItemInInventory($a0)) {
+                "TheCommandTable::use - It's in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheMessageWindow.WriteMessage(
+                    "You need to tell me what you want to use the $($a0) on.",
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecorationNone]::new()
+                )
+            } Else {
+                "TheCommandTable::use - It's not in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheMessageWindow.WriteMessage(
+                    "I have no idea how to use a(n) $($a0).",
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecorationNone]::new()
+                )
+            }
+        }
+    }
 }
 
 # GLOBAL STATE BLOCK TABLE DEFINITION
