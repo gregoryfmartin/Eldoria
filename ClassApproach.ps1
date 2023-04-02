@@ -217,6 +217,93 @@ $Script:TheCommandTable = @{
         "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
+
+    'use' = {
+        Param(
+            [String]$a0,
+            [String]$a1
+        )
+
+        "TheCommandTable::use - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        
+        "TheCommandTable::use - Checking to see if we have the necessary parameters." | Out-File -FilePath $Script:LogFileName -Append
+        If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
+            "TheCommandTable::use - The necessary parameters exist. Continuing the function call." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::use - Checking to see if the first item exists in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
+            If($Script:ThePlayer.IsItemInInventory($a0)) {
+                "TheCommandTable::use - $($a0) has been found in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
+                "TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
+                    "TheCommandTable::use - $($a1) has been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+                    [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
+                    
+                    "TheCommandTable::use - Checking the item use filter on $($a1) to see if $($a0) is a valid item to use on it." | Out-File -FilePath $Script:LogFileName -Append
+                    If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                        "TheCommandTable::use - Filter check has passed, $($a0) can be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+                        "TheCommandTable::use - Using $($a0) on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        Invoke-Command $mti.Effect -ArgumentList $pi
+                    } Else {
+                        "TheCommandTable::use - Filter check has FAILED, $($a0) can't be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        
+                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheMessageWindow.WriteMessage(
+                            "Can't use a(n) $($a0) on a $($a1).",
+                            [CCAppleRedDark24]::new(),
+                            [ATDecoration]::new($true)
+                        )
+                    }
+                } Else {
+                    "TheCommandTable::use - $($a1) has NOT been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::use - Checking to see if the second term is 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                    If($a1 -IEQ 'self') {
+                        "TheCommandTable::use - $($a1) is the term 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                    } Else {
+                        "TheCommandTable::use - The second term is neither a valid map item or 'self'; this is an invalid command structure." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        
+                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheMessageWindow.WriteMessage(
+                            'Whatever you typed doesn''t make any sense.',
+                            [CCAppleRedDark24]::new(),
+                            [ATDecoration]::new($true)
+                        )
+                    }
+                }
+            }
+        } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
+            "TheCommandTable::use - Parameter a0 is available but a1 is NOT." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::use - This is an invalid command structure error." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            "TheCommandTable::use - Checking to see if $($a0) is in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+            If($Script:ThePlayer.IsItemInInventory($a0)) {
+                "TheCommandTable::use - It's in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheMessageWindow.WriteMessage(
+                    "You need to tell me what you want to use the $($a0) on.",
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecorationNone]::new()
+                )
+            } Else {
+                "TheCommandTable::use - It's not in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheMessageWindow.WriteMessage(
+                    "I have no idea how to use a(n) $($a0).",
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecorationNone]::new()
+                )
+            }
+        }
+    }
 }
 
 # GLOBAL STATE BLOCK TABLE DEFINITION
@@ -1359,6 +1446,26 @@ Class Player {
             
             Default {}
         }
+    }
+
+    [Boolean]IsItemInInventory([String]$ItemName) {
+        Foreach($a in $this.Inventory) {
+            If($a.Name -IEQ $ItemName) {
+                Return $true
+            }
+        }
+
+        Return $false
+    }
+
+    [MapTileObject]GetItemReference([String]$ItemName) {
+        Foreach($a in $this.Inventory) {
+            If($a.Name -IEQ $ItemName) {
+                Return $a
+            }
+        }
+
+        Return $null
     }
 
     [Void]MapMoveNorth() {
@@ -8454,6 +8561,8 @@ Class MapTileObject {
     [ScriptBlock]$Effect
     [Boolean]$CanAddToInventory
     [String]$ExamineString
+    [List[String]]$TargetOfFilter
+    [ScriptBlock]$BaseEffectCall
 
     MapTileObject(
         [String]$Name,
@@ -8467,6 +8576,47 @@ Class MapTileObject {
         $this.Effect            = $Effect
         $this.CanAddToInventory = $CanAddToInventory
         $this.ExamineString     = $ExamineString
+        $this.TargetOfFilter    = [List[String]]::new()
+        $this.BaseEffectCall    = {
+            Param(
+                [ValidateNotNullOrEmpty()]
+                [String]$a0
+            )
+
+            Return $this.ValidateSourceInFilter($a0)
+        }
+    }
+
+    MapTileObject(
+        [String]$Name,
+        [String]$MapObjName,
+        [Boolean]$CanAddToInventory,
+        [String]$ExamineString,
+        [ScriptBlock]$Effect,
+        [String[]]$TargetOfFilter
+    ) {
+        $this.Name              = $Name
+        $this.MapObjName        = $MapObjName
+        $this.Effect            = $Effect
+        $this.CanAddToInventory = $CanAddToInventory
+        $this.ExamineString     = $ExamineString
+        $this.TargetOfFilter    = [List[String]]::new()
+        $this.BaseEffectCall    = {
+            Param(
+                [ValidateNotNullOrEmpty()]
+                [String]$a0
+            )
+
+            Return $this.ValidateSourceInFilter($a0)
+        }
+
+        Foreach($a in $TargetOfFilter) {
+            $this.TargetOfFilter.Add($a) | Out-Null
+        }
+    }
+
+    [Boolean]ValidateSourceInFilter([String]$SourceItemClass) {
+        Return ($SourceItemClass -IN $this.TargetOfFilter)
     }
 }
 
@@ -8492,6 +8642,26 @@ Class MapTile {
         Foreach($a In $ObjectListing) {
             $this.ObjectListing.Add($a) | Out-Null
         }
+    }
+
+    [Boolean]IsItemInTile([String]$ItemName) {
+        Foreach($a in $this.ObjectListing) {
+            If($a.Name -IEQ $ItemName) {
+                Return $true
+            }
+        }
+
+        Return $false
+    }
+
+    [MapTileObject]GetItemReference([String]$ItemName) {
+        Foreach($a in $this.ObjectListing) {
+            If($a.Name -IEQ $ItemName) {
+                Return $a
+            }
+        }
+
+        Return $null
     }
 }
 
@@ -8521,7 +8691,33 @@ Class Map {
 }
 
 Class MTOTree : MapTileObject {
-    MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {}) {}
+    MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
+        Param([MapTileObject]$Source)
+
+        "MTOTree::Effect - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        "MTOTree::Effect - Checking to see what item passed the filter." | Out-File -FilePath $Script:LogFileName -Append
+        Switch($Source.PSTypeNames[0]) {
+            'MTORope' {
+                "MTOTree::Effect - A Rope is being used on the Tree." | Out-File -FilePath $Script:LogFileName -Append
+                "MTOTree::Effect - Write a message to the Message Window that the Rope has been tied to the Tree." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheMessageWindow.WriteMessage(
+                    'I''ve tied the Rope to the Tree',
+                    [CCAppleIndigoDark24]::new(),
+                    [ATDecorationNone]::new()
+                )
+
+                <#
+                It's important to note that this action *SHOULD* cause a state change with this object. To be more specific,
+                prior to running this action, it's assumed that the Tree did NOT have a Rope tied to it. After this action,
+                it does. So the questions now are (A) can you tie another Rope to the Tree, and (B) what can you do with the Tree
+                now that it has a Rope tied to it?
+
+                Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
+                #>
+            }
+        }
+    },
+    @('MTORope')) {}
 }
 
 Class MTOLadder : MapTileObject {
@@ -10602,12 +10798,11 @@ Class GameCore {
 
     [Void]Run() {
         "GameCore::Run - Starting the Run method." | Out-File -FilePath $Script:LogFileName -Append
-        "GameCore::Run - `tChecking to see if the GameRunning flag is true or not." | Out-File -FilePath $Script:LogFileName -Append
+        "GameCore::Run - Checking to see if the GameRunning flag is true or not." | Out-File -FilePath $Script:LogFileName -Append
 
         While($this.GameRunning -EQ $true) {
+            "GameCore::Run - GameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
             $this.Logic()
-
-            # "GameCore::Run - `t`tGameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
             # "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
             # $this.LastFrameTime = $this.CurrentFrameTime
             
