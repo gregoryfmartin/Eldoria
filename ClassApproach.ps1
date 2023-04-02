@@ -391,6 +391,80 @@ $Script:TheCommandTable = @{
             }
         }
     }
+
+    'drop' = {
+        Param(
+            [String]$a0
+        )
+
+        "TheCommandTable::drop - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+
+        "TheCommandTable::drop - Checking to see if we have the correct parameters." | Out-File -FilePath $Script:LogFileName -Append
+        If($args.Length -GE 1) {
+            "TheCommandTable::drop - There were too many parameters given to the drop function." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::drop - Update the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            "TheCommandTable::drop - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheMessageWindow.WriteMessage(
+                'Can''t drop all those items at once, bruh.',
+                [CCAppleYellowDark24]::new(),
+                [ATDecorationNone]::new()
+            )
+
+            Return
+        }
+        
+        If($PSBoundParameters.Count -EQ 1) {
+            "TheCommandTable::drop - We have the correct number of parameters." | Out-File -FilePath $Script:LogFileName -Append
+            If($PSBoundParameters.ContainsKey('a0')) {
+                "TheCommandTable::drop - First, we need to see if this item exists in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                If($Script:ThePlayer.IsItemInInventory($a0)) {
+                    "TheCommandTable::drop - We've found the $($a0) in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::drop - Attempting to drop the $($a0) from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                    If($Script:ThePlayer.RemoveItemFromInventory($a0)) {
+                        "TheCommandTable::drop - The $($a0) was successfully remove from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::drop - Update the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+                        
+                        "TheCommandTable::drop - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheMessageWindow.WriteMessage(
+                            "Dropped $($a0) from your inventory.",
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+                    } Else {
+                        "TheCommandTable::drop - Although the $($a0) was found in the Player's Inventory, something happened that prevented its removal." | Out-File -FilePath $Script:LogFileName -Append
+                        "TheCommandTable::drop - THIS IS A FATAL ERROR - EXITING!" | Out-File -FilePath $Script:LogFileName -Append
+                        Exit
+                    }
+                } Else {
+                    "TheCommandTable::drop - The $($a0) wasn't found in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::drop - Since we can't find it there, there's nothing to drop." | Out-File -FilePath $Script:LogFileName -Append
+                    "TheCommandTable::drop - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    
+                    "TheCommandTable::drop - Writing a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheMessageWindow.WriteMessage(
+                        "There ain't no $($a0) in your pockets gov'.",
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecorationNone]::new()
+                    )
+                }
+            }
+        } Elseif($PSBoundParameters.Count -LE 0) {
+            "TheCommandTable::drop - There weren't enough parameters given to the drop command." | Out-File -FilePath $Script:LogFileName -Append
+            "TheCommandTable::drop - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            "TheCommandTable::drop - Writing a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheMessageWindow.WriteMessage(
+                'I don''t know what to drop...',
+                [CCAppleRedDark24]::new(),
+                [ATDecoration]::new($true)
+            )
+        }
+    }
 }
 
 # GLOBAL STATE BLOCK TABLE DEFINITION
@@ -1553,6 +1627,20 @@ Class Player {
         }
 
         Return $null
+    }
+
+    [Boolean]RemoveItemFromInventory([String]$ItemName) {
+        $c = 0
+
+        Foreach($a in $this.Inventory) {
+            If($a.Name -IEQ $ItemName) {
+                $this.Inventory.RemoveAt($c)
+                Return $true
+            }
+            $c++
+        }
+
+        Return $false
     }
 
     [Void]MapMoveNorth() {
