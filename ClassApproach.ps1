@@ -9,6 +9,8 @@ using namespace System.Management.Automation.Host
 
 # GLOBAL VARIABLE DEFINITIONS
 
+Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working' -PercentComplete -1
+
 [String]              $Script:OsCheckLinux             = 'OsLinux'
 [String]              $Script:OsCheckMac               = 'OsMac'
 [String]              $Script:OsCheckWindows           = 'OsWindows'
@@ -19,16 +21,24 @@ using namespace System.Management.Automation.Host
 [SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
 [MessageWindow]       $Script:TheMessageWindow         = [MessageWindow]::new()
 [InventoryWindow]     $Script:TheInventoryWindow       = $null
-[SceneImage]          $Script:SampleSi                 = [SceneImage]::new($null)
+#[SceneImage]          $Script:SampleSi                 = [SceneImage]::new($null)
 [ATCoordinatesDefault]$Script:DefaultCursorCoordinates = [ATCoordinatesDefault]::new()
 [BufferManager]       $Script:TheBufferManager         = [BufferManager]::new()
 [GameCore]            $Script:TheGameCore              = [GameCore]::new()
 
-#[SIRandomNoise]$Script:SampleSiRandom   = [SIRandomNoise]::new()
+#[SIRandomNoise]$Script:SampleSiRandom = [SIRandomNoise]::new()
+
+Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete' -PercentComplete -1
+
+Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Working' -PercentComplete -1
 
 [Map]$Script:SampleMap   = [Map]::new('Sample Map', 2, 2, $true)
 [Map]$Script:CurrentMap  = $Script:SampleMap
 [Map]$Script:PreviousMap = $null
+
+Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Complete' -PercentComplete -1
+
+Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Working' -PercentComplete -1
 
 [SIFieldNorthRoad]        $Script:FieldNorthRoadImage         = [SIFieldNorthRoad]::new()
 [SIFieldNorthEastRoad]    $Script:FieldNorthEastRoadImage     = [SIFieldNorthEastRoad]::new()
@@ -38,6 +48,10 @@ using namespace System.Management.Automation.Host
 [SIFieldSouthEastRoad]    $Script:FieldSouthEastRoadImage     = [SIFieldSouthEastRoad]::new()
 [SIFieldSouthWestRoad]    $Script:FieldSouthWestRoadImage     = [SIFieldSouthWestRoad]::new()
 [SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
+
+Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Completed
+Write-Progress -Activity 'Creating Maps              ' -Id 2 -Completed
+Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
 
 $Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
@@ -1756,6 +1770,7 @@ Class SIRandomNoise : SceneImage {
 
 Class SIFieldNorthRoad : SIInternalBase {
     SIFieldNorthRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -2628,6 +2643,7 @@ Class SIFieldNorthRoad : SIInternalBase {
 
 Class SIFieldNorthEastRoad : SIInternalBase {
     SIFieldNorthEastRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthEastRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -3500,6 +3516,7 @@ Class SIFieldNorthEastRoad : SIInternalBase {
 
 Class SIFieldNorthWestRoad : SIInternalBase {
     SIFieldNorthWestRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -4372,6 +4389,7 @@ Class SIFieldNorthWestRoad : SIInternalBase {
 
 Class SIFieldNorthEastWestRoad : SIInternalBase {
     SIFieldNorthEastWestRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthEastWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -5244,6 +5262,7 @@ Class SIFieldNorthEastWestRoad : SIInternalBase {
 
 Class SIFieldSouthRoad : SIInternalBase {
     SIFieldSouthRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -6116,6 +6135,7 @@ Class SIFieldSouthRoad : SIInternalBase {
 
 Class SIFieldSouthEastRoad : SIInternalBase {
     SIFieldSouthEastRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthEastRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -6988,6 +7008,7 @@ Class SIFieldSouthEastRoad : SIInternalBase {
 
 Class SIFieldSouthWestRoad : SIInternalBase {
     SIFieldSouthWestRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -7860,6 +7881,7 @@ Class SIFieldSouthWestRoad : SIInternalBase {
 
 Class SIFieldSouthEastWestRoad : SIInternalBase {
     SIFieldSouthEastWestRoad(): base() {
+        Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthEastWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -8853,6 +8875,7 @@ Class Map {
         [Int]$MapHeight,
         [Boolean]$BoundaryWrap
     ) {
+        Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Creating a map' -PercentComplete -1
         $this.Name         = $Name
         $this.MapWidth     = $MapWidth
         $this.MapHeight    = $MapHeight
@@ -8943,6 +8966,7 @@ Class BufferManager {
     [BufferCell[,]]$ScreenBufferB
 
     BufferManager() {
+        Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Buffer Manager' -PercentComplete -1
         $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
         $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
     }
@@ -9243,6 +9267,7 @@ Class StatusWindow : WindowBase {
     # [Boolean]$PlayerAilDrawDirty
     
     StatusWindow() : base() {
+        Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating Status Window' -PercentComplete -1
         $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -9354,6 +9379,7 @@ Class CommandWindow : WindowBase {
     [Boolean]$CommandHistoryDirty
 
     CommandWindow() : base() {
+        Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Command Window' -PercentComplete -1
         "CommandWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
         
         "CommandWindow::Constructor - `tSetting LeftTop and BottomRight relative to the desired window position." | Out-File -FilePath $Script:LogFileName -Append
@@ -9884,6 +9910,7 @@ Class SceneWindow : WindowBase {
     [SceneImage]$Image        = [SIEmpty]::new()
 
     SceneWindow(): base() {
+        Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Scene Window' -PercentComplete -1
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -9942,6 +9969,7 @@ Class MessageWindow : WindowBase {
     [Boolean]$MessageCDirty = $false
     
     MessageWindow() : base() {
+        Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Message Window' -PercentComplete -1
         "MessageWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
         
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
@@ -10960,8 +10988,9 @@ Class GameCore {
     [TimeSpan]$FpsDelta
 
     GameCore() {
+        Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Game Core' -PercentComplete -1
         "GameCore::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
-        "GameCore::Constructor - `tSetting up variables." | Out-File -FilePath $Script:LogFileName -Append
+        "GameCore::Constructor - Setting up variables." | Out-File -FilePath $Script:LogFileName -Append
         
         $this.TargetFrameRate      = 30
         $this.MsPerFrame           = 1000 / $this.TargetFrameRate
@@ -10971,7 +11000,7 @@ Class GameCore {
         $this.FpsDelta             = [TimeSpan]::Zero
         $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
         
-        "GameCore::Constructor - `tLeaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
+        "GameCore::Constructor - Leaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [Void]Run() {
