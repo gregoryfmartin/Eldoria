@@ -8889,6 +8889,9 @@ Class MTOTree : MapTileObject {
 
                 Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
                 #>
+
+                "MTOTree::Effect - Removing the Rope from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:ThePlayer.RemoveItemFromInventory($Source.Name)
             }
         }
     },

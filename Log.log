@@ -53,67 +53,37 @@ MessageWindow::Draw - Checking to see if MessageBDirty is true.
 MessageWindow::Draw - Checking to see if MessageCDirty is true.
 MessageWindow::Draw - Leaving the Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding d to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is d.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is dr.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is dro.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is dro .
-CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
-CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 4
-CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 4.
-CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
-CommandWindow::HandleInput - 		The character that would be deleted here is  .
-CommandWindow::HandleInput - 		Performing character deletion from console window.
-CommandWindow::HandleInput - 		The current value of Command Actual is dro . Attempting to delete the last character.
-CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is dro.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding p to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop .
-CommandWindow::HandleInput - A regular keypress has been detected. Adding c to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop c.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding a to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop ca.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop cat.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop cat .
-CommandWindow::HandleInput - A regular keypress has been detected. Adding d to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop cat d.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop cat do.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding g to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop cat dog.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is l.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is drop cat dog. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is l. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		A root command has been identified as 'drop' Now checking the length of the split to determine the ScriptBlock invocation style.
-CommandWindow::InvokeCommandParser - 			Split length is 3, invoking the root command 'drop' with two arguments, 'cat' and 'dog'.
-TheCommandTable::drop - Starting the block.
-TheCommandTable::drop - Checking to see if we have the correct parameters.
-TheCommandTable::drop - There were too many parameters given to the drop function.
-TheCommandTable::drop - Update the Command History in the Command Window.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'l' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'l' without arguments.
 CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
 CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
 CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('                  ').
-CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('drop cat dog').
-CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: drop cat dog
+CommandWindow::UpdateCommandHistory - Setting History D ('                  ') to Command Actual ('l').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C:                   , D: l
 CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
-CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
 CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
 CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
-TheCommandTable::drop - Write a message to the Message Window.
 MessageWindow::Draw - Entering the WriteMessage method.
-MessageWindow::Draw - Parameter Values: Message: (Can't drop all those items at once, bruh.), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Parameter Values: Message: (I can see the following things here:), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
+MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
+MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
+MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
+MessageWindow::Draw - Leaving the WriteMessage method.
+MessageWindow::Draw - Entering the WriteMessage method.
+MessageWindow::Draw - Parameter Values: Message: (Apple, Tree, Ladder, Rope, Stairs, Pole), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
 MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
 MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
 MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
@@ -150,34 +120,330 @@ MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window a
 MessageWindow::Draw - Setting MessageCDirty to false.
 MessageWindow::Draw - Leaving the Draw method.
 TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding d to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is d.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is dr.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is dro.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding p to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop .
-CommandWindow::HandleInput - A regular keypress has been detected. Adding f to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop f.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop fo.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop foo.
-CommandWindow::HandleInput - A regular keypress has been detected. Adding d to Command Actual.
-CommandWindow::HandleInput - 	The current value of Command Actual is drop food.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is i.
 CommandWindow::InvokeCommandParser - Starting the CommandParser.
 CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
 CommandWindow::InvokeCommandParser - 	Command Blank has been written.
 CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
-CommandWindow::InvokeCommandParser - 		It contains data. The current data is drop food. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is i. Attempting to split the string.
 CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
 CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
-CommandWindow::InvokeCommandParser - 		A root command has been identified as 'drop' Now checking the length of the split to determine the ScriptBlock invocation style.
-CommandWindow::InvokeCommandParser - 			Split length is 2, invoking the root command 'drop' with one argument 'food'.
-TheCommandTable::drop - Starting the block.
-TheCommandTable::drop - Checking to see if we have the correct parameters.
-TheCommandTable::drop - We have the correct number of parameters.
-TheCommandTable::drop - First, we need to see if this item exists in the Player's Inventory.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'i' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'i' without arguments.
+TheCommandTable::i - Starting the block.
+TheCommandTable::i - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History C ('                  ') to History D ('l').
+CommandWindow::UpdateCommandHistory - Setting History D ('l') to Command Actual ('i').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B:                   , C: l, D: i
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+TheCommandTable::i - Calling TheBufferManager.CopyActiveToBufferAWithWipe method.
+TheCommandTable::i - Setting ThePreviousGlobalGameState (GamePlayScreen) to TheGlobalGameState (GamePlayScreen).
+TheCommandTable::i - Setting TheGlobalGameState to InventoryScreen.
+TheCommandTable::i - Leaving the block.
+TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
+GameCore::Run - GameRunning is true.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state InventoryScreen
+TheGlobalStateBlockTable::InventoryScreen - Starting the block.
+TheGlobalStateBlockTable::InventoryScreen - 	Checking to see if the Inventory Window instance is null.
+TheGlobalStateBlockTable::InventoryScreen - 		It is - creating a new instance.
+TheGlobalStateBlockTable::InventoryScreen - Checking to see if the GPS Buffer Backup Restore flag is true to turn it off.
+TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.Draw method.
+TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.HandleInput method.
+TheGlobalStateBlockTable::InventoryScreen - 	Leaving the block.
+GameCore::Run - GameRunning is true.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
+TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
+TheGlobalStateBlockTable::GamePlayScreen - It isn't null - setting to null.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
+MessageWindow::Draw - Entering the Draw method.
+MessageWindow::Draw - Calling the base class Draw method.
+MessageWindow::Draw - Checking to see if MessageADirty is true.
+MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageADirty to false.
+MessageWindow::Draw - Checking to see if MessageBDirty is true.
+MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageBDirty to false.
+MessageWindow::Draw - Checking to see if MessageCDirty is true.
+MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageCDirty to false.
+MessageWindow::Draw - Leaving the Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding u to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is u.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding s to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is us.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use r.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding o to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use ro.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding p to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rop.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rope.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rope .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding t to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rope t.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding r to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rope tr.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rope tre.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is use rope tree.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is use rope tree. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'use' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 3, invoking the root command 'use' with two arguments, 'rope' and 'tree'.
+TheCommandTable::use - Starting the block.
+TheCommandTable::use - Checking to see if we have the necessary parameters.
+TheCommandTable::use - The necessary parameters exist. Continuing the function call.
+TheCommandTable::use - Checking to see if the first item exists in the player's inventory.
+TheCommandTable::use - rope has been found in the player's inventory.
+TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing.
+TheCommandTable::use - tree has been found in the current map tile's object listing.
+TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing.
+TheCommandTable::use - Checking the item use filter on tree to see if rope is a valid item to use on it.
+TheCommandTable::use - Filter check has passed, rope can be used on tree.
+TheCommandTable::use - Updating the Command History in the Command Window.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History B ('                  ') to History C ('l').
+CommandWindow::UpdateCommandHistory - Setting History C ('l') to History D ('i').
+CommandWindow::UpdateCommandHistory - Setting History D ('i') to Command Actual ('use rope tree').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A:                   , B: l, C: i, D: use rope tree
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+TheCommandTable::use - Using rope on tree.
+MTOTree::Effect - Starting the block.
+MTOTree::Effect - Checking to see what item passed the filter.
+MTOTree::Effect - A Rope is being used on the Tree.
+MTOTree::Effect - Write a message to the Message Window that the Rope has been tied to the Tree.
+MessageWindow::Draw - Entering the WriteMessage method.
+MessageWindow::Draw - Parameter Values: Message: (I've tied the Rope to the Tree), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
+MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
+MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
+MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
+MessageWindow::Draw - Leaving the WriteMessage method.
+MTOTree::Effect - Removing the Rope from the Player's Inventory.
+TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
+GameCore::Run - GameRunning is true.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
+TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
+TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
+MessageWindow::Draw - Entering the Draw method.
+MessageWindow::Draw - Calling the base class Draw method.
+MessageWindow::Draw - Checking to see if MessageADirty is true.
+MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageADirty to false.
+MessageWindow::Draw - Checking to see if MessageBDirty is true.
+MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageBDirty to false.
+MessageWindow::Draw - Checking to see if MessageCDirty is true.
+MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageCDirty to false.
+MessageWindow::Draw - Leaving the Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding i to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is i.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is i. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'i' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'i' without arguments.
+TheCommandTable::i - Starting the block.
+TheCommandTable::i - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('                  ').
+CommandWindow::UpdateCommandHistory - Setting History A ('                  ') to History B ('l').
+CommandWindow::UpdateCommandHistory - Setting History B ('l') to History C ('i').
+CommandWindow::UpdateCommandHistory - Setting History C ('i') to History D ('use rope tree').
+CommandWindow::UpdateCommandHistory - Setting History D ('use rope tree') to Command Actual ('i').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E:                   , A: l, B: i, C: use rope tree, D: i
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+TheCommandTable::i - Calling TheBufferManager.CopyActiveToBufferAWithWipe method.
+TheCommandTable::i - Setting ThePreviousGlobalGameState (InventoryScreen) to TheGlobalGameState (GamePlayScreen).
+TheCommandTable::i - Setting TheGlobalGameState to InventoryScreen.
+TheCommandTable::i - Leaving the block.
+TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
+GameCore::Run - GameRunning is true.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state InventoryScreen
+TheGlobalStateBlockTable::InventoryScreen - Starting the block.
+TheGlobalStateBlockTable::InventoryScreen - 	Checking to see if the Inventory Window instance is null.
+TheGlobalStateBlockTable::InventoryScreen - 		It is - creating a new instance.
+TheGlobalStateBlockTable::InventoryScreen - Checking to see if the GPS Buffer Backup Restore flag is true to turn it off.
+TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.Draw method.
+TheGlobalStateBlockTable::InventoryScreen - 	Calling TheInventoryWindow.HandleInput method.
+TheGlobalStateBlockTable::InventoryScreen - 	Leaving the block.
+GameCore::Run - GameRunning is true.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
+TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
+TheGlobalStateBlockTable::GamePlayScreen - It isn't null - setting to null.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
+MessageWindow::Draw - Entering the Draw method.
+MessageWindow::Draw - Calling the base class Draw method.
+MessageWindow::Draw - Checking to see if MessageADirty is true.
+MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageADirty to false.
+MessageWindow::Draw - Checking to see if MessageBDirty is true.
+MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageBDirty to false.
+MessageWindow::Draw - Checking to see if MessageCDirty is true.
+MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageCDirty to false.
+MessageWindow::Draw - Leaving the Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding l to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is l.
+CommandWindow::InvokeCommandParser - Starting the CommandParser.
+CommandWindow::InvokeCommandParser - 	Writing the Command Blank.
+CommandWindow::InvokeCommandParser - 	Command Blank has been written.
+CommandWindow::InvokeCommandParser - 	Checking to see if Command Actual contains anything.
+CommandWindow::InvokeCommandParser - 		It contains data. The current data is l. Attempting to split the string.
+CommandWindow::InvokeCommandParser - 		Split is successful. The split data is Foreach($a in $cmdactSplit){"$a, "}.
+CommandWindow::InvokeCommandParser - 		Attempting to find the root command in the Command Table.
+CommandWindow::InvokeCommandParser - 		A root command has been identified as 'l' Now checking the length of the split to determine the ScriptBlock invocation style.
+CommandWindow::InvokeCommandParser - 			Split length is 1, invoking the root command 'l' without arguments.
+CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around.
+CommandWindow::UpdateCommandHistory - Setting History E ('                  ') to History A ('l').
+CommandWindow::UpdateCommandHistory - Setting History A ('l') to History B ('i').
+CommandWindow::UpdateCommandHistory - Setting History B ('i') to History C ('use rope tree').
+CommandWindow::UpdateCommandHistory - Setting History C ('use rope tree') to History D ('i').
+CommandWindow::UpdateCommandHistory - Setting History D ('i') to Command Actual ('l').
+CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: l, A: i, B: use rope tree, C: i, D: l
+CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false.
+CommandWindow::UpdateCommandHistory - 	The Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid.
+CommandWindow::UpdateCommandHistory - 	Clearing the Command Actual.
+CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.
+MessageWindow::Draw - Entering the WriteMessage method.
+MessageWindow::Draw - Parameter Values: Message: (I can see the following things here:), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
+MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
+MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
+MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
+MessageWindow::Draw - Leaving the WriteMessage method.
+MessageWindow::Draw - Entering the WriteMessage method.
+MessageWindow::Draw - Parameter Values: Message: (Apple, Tree, Ladder, Rope, Stairs, Pole), ForegroundColor: (ATForegroundColor24), and Decoration: (ATDecorationNone).
+MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.
+MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.
+MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.
+MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws.
+MessageWindow::Draw - Leaving the WriteMessage method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Leaving the block.
+GameCore::Run - GameRunning is true.
+GameCore::Logic - Starting the Logic method.
+GameCore::Logic - Invoking the ScriptBlock for the game state GamePlayScreen
+TheGlobalStateBlockTable::GamePlayScreen - Starting the block.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null.
+TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping.
+TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheStatusWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.Draw method.
+CommandWindow::Draw - Starting the Draw function.
+CommandWindow::Draw - Calling base class Draw function.
+CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true.
+CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true.
+CommandWindow::Draw - 	CommandHistoryDirty is true, draw the Command History strings to the console.
+CommandWindow::Draw - 	Setting the CommandHistoryDirty flag to false.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheSceneWindow.Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheMessageWindow.Draw method.
+MessageWindow::Draw - Entering the Draw method.
+MessageWindow::Draw - Calling the base class Draw method.
+MessageWindow::Draw - Checking to see if MessageADirty is true.
+MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageADirty to false.
+MessageWindow::Draw - Checking to see if MessageBDirty is true.
+MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageBDirty to false.
+MessageWindow::Draw - Checking to see if MessageCDirty is true.
+MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string).
+MessageWindow::Draw - Setting MessageCDirty to false.
+MessageWindow::Draw - Leaving the Draw method.
+TheGlobalStateBlockTable::GamePlayScreen - 	Calling TheCommandWindow.HandleInput method.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding e to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is e.
+CommandWindow::HandleInput - A regular keypress has been detected. Adding x to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is ex.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 2
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 2.
+CommandWindow::HandleInput - 		FPX is GREATER THAN the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is x.
+CommandWindow::HandleInput - 		Performing character deletion from console window.
+CommandWindow::HandleInput - 		The current value of Command Actual is ex. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is e.
+CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is 8
+CommandWindow::HandleInput - 	Obtaining current Cursor Position X (Row) Value as FPX. The current value is 1
+CommandWindow::HandleInput - 	Comparing FPX against the Default Coordinates X (Row). The default value is 1, and FPX is 1.
+CommandWindow::HandleInput - 		FPX is EQUAL TO the Default Coordinates X (Row).
+CommandWindow::HandleInput - 		The character that would be deleted here is e.
+CommandWindow::HandleInput - 		The current value of Command Actual is e. Attempting to delete the last character.
+CommandWindow::HandleInput - 		The last character has been deleted. The current value of Command Actual is .
+CommandWindow::HandleInput - A regular keypress has been detected. Adding   to Command Actual.
+CommandWindow::HandleInput - 	The current value of Command Actual is  .
