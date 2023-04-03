@@ -4,13 +4,14 @@ using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 
 # LOGGING FILE CREATION
-[String]$Script:LogFileName = '.\Log.log'
-'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $Script:LogFileName
+# [String]$Script:LogFileName = '.\Log.log'
+# 'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $Script:LogFileName
 
 # GLOBAL VARIABLE DEFINITIONS
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working' -PercentComplete -1
 
+[LogManager]          $Script:TheLogManager            = [LogManager]::new()
 [String]              $Script:OsCheckLinux             = 'OsLinux'
 [String]              $Script:OsCheckMac               = 'OsMac'
 [String]              $Script:OsCheckWindows           = 'OsWindows'
@@ -121,114 +122,110 @@ $Script:TheCommandTable = @{
     }
 
     'inventory' = {
-        "TheCommandTable::inventory - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'inventory', 'Entered the block')
         
-        "TheCommandTable::inventory - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'inventory', 'Calling TheCommandWindow.UpdateCommandHistory method with true as an argument.')
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        "TheCommandTable::inventory - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
-        # Copy the active buffer to the A back buffer
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'inventory', 'Calling TheBufferManager.CopyActiveToBufferAWithWipe method.')
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
         
-        "TheCommandTable::inventory - Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
-        "TheCommandTable::inventory - Setting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
-        # Change state
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'inventory', "Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState)).")
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'inventory', 'Setting TheGlobalGameState to InventoryScreen.')
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
-        "TheCommandTable::inventory - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'inventory', 'Leaving the block')
         Return
     }
 
     'i' = {
-        "TheCommandTable::i - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'i', 'Entered the block')
         
-        "TheCommandTable::i - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'i', 'Calling TheCommandWindow.UpdateCommandHistory method with true as an argument.')
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        "TheCommandTable::i - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
-        # Copy the active buffer to the A back buffer
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'i', 'Calling TheBufferManager.CopyActiveToBufferAWithWipe method.')
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
         
-        "TheCommandTable::i - Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
-        "TheCommandTable::i - Setting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
-        # Change state
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'i', "Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState)).")
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'i', 'Setting TheGlobalGameState to InventoryScreen.')
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
-        "TheCommandTable::i - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'i', 'Leaving the block')
         Return
     }
 
     'examine' = {
         Param([String]$a0)
 
-        "TheCommandTable::examine - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'examine', 'Entered the block')
         
-        "TheCommandTable::examine - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'examine', 'Because of the nature of this block, we''re just going to call the function on the Command Window.')
         $Script:TheCommandWindow.InvokeExamineAction($a0)
         
-        "TheCommandTable::examine - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'examine', 'Leaving the block')
         Return
     }
 
     'exa' = {
         Param([String]$a0)
 
-        "TheCommandTable::exa - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'exa', 'Entered the block')
         
-        "TheCommandTable::exa - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'exa', 'Because of the nature of this block, we''re just going to call the function on the Command Window.')
         $Script:TheCommandWindow.InvokeExamineAction($a0)
         
-        "TheCommandTable::exa - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'exa', 'Leaving the block')
         Return
     }
 
     'get' = {
         Param([String]$a0)
 
-        "TheCommandTable::get - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'get', 'Entered the block')
 
-        "TheCommandTable::get - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'get', 'Because of the nature of this block, we''re just going to call the function on the Command Window.')
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        "TheCommandTable::get - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'get', 'Leaving the block')
         Return
     }
 
     'g' = {
         Param([String]$a0)
 
-        "TheCommandTable::g - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'g', 'Entered the block')
 
-        "TheCommandTable::g - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'g', 'Because of the nature of this block, we''re just going to call the function on the Command Window.')
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        "TheCommandTable::g - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'g', 'Leaving the block')
         Return
     }
 
     'take' = {
         Param([String]$a0)
 
-        "TheCommandTable::take - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'take', 'Entered the block')
 
-        "TheCommandTable::take - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'take', 'Because of the nature of this block, we''re just going to call the function on the Command Window.')
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'take', 'Leaving the block')
         Return
     }
 
     't' = {
         Param([String]$a0)
 
-        "TheCommandTable::take - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 't', 'Entered the block')
 
-        "TheCommandTable::take - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 't', 'Because of the nature of this block, we''re just going to call the function on the Command Window.')
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 't', 'Leaving the block')
         Return
     }
 
@@ -238,35 +235,35 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        "TheCommandTable::use - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Entered the block')
         
-        "TheCommandTable::use - Checking to see if we have the necessary parameters." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Checking to see if we have the necessary parameters.')
         If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
-            "TheCommandTable::use - The necessary parameters exist. Continuing the function call." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::use - Checking to see if the first item exists in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'The necessary parameters exist. Continuing the function call.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Checking to see if the first item exists in the Player''s Inventory.')
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                "TheCommandTable::use - $($a0) has been found in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
-                "TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "$($a0) has been found in the Player's Inventory")
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Checking to see if the second item exists in the Current Map Tile''s Object Listing.')
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
-                    "TheCommandTable::use - $($a1) has been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "$($a1) has been found in the Current Map Tile's Object Listing.")
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Getting references to actuals expressed in both the Player''s Inventory and the Current Map Tile''s Object Listing.')
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
                     
-                    "TheCommandTable::use - Checking the item use filter on $($a1) to see if $($a0) is a valid item to use on it." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "Checking the Item Use Filter on $($a1) to see if $($a0) is a valid item to use on it.")
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
-                        "TheCommandTable::use - Filter check has passed, $($a0) can be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "Filter check has passed; $($a0) can be used on $($a1).")
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
 
-                        "TheCommandTable::use - Using $($a0) on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "Using $($a0) on $($a1).")
                         Invoke-Command $mti.Effect -ArgumentList $pi
                     } Else {
-                        "TheCommandTable::use - Filter check has FAILED, $($a0) can't be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "Filter check has FAILED; $($a0) can't be used on $($a1).")
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         
-                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Write a message to the Message Window.')
                         $Script:TheMessageWindow.WriteMessage(
                             "Can't use a(n) $($a0) on a $($a1).",
                             [CCAppleRedDark24]::new(),
@@ -274,16 +271,16 @@ $Script:TheCommandTable = @{
                         )
                     }
                 } Else {
-                    "TheCommandTable::use - $($a1) has NOT been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::use - Checking to see if the second term is 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "$($a1) has NOT been found in the Current Map Tile's Object Listing.")
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Checking to see if the second term is ''self''.')
                     If($a1 -IEQ 'self') {
-                        "TheCommandTable::use - $($a1) is the term 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "$($a1) is the term 'self'.")
                     } Else {
-                        "TheCommandTable::use - The second term is neither a valid map item or 'self'; this is an invalid command structure." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'The second term is neither a valid map item or ''self''; this is an invalid command structure.')
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         
-                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Write a message to the Message Window.')
                         $Script:TheMessageWindow.WriteMessage(
                             'Whatever you typed doesn''t make any sense.',
                             [CCAppleRedDark24]::new(),
@@ -293,23 +290,23 @@ $Script:TheCommandTable = @{
                 }
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
-            "TheCommandTable::use - Parameter a0 is available but a1 is NOT." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::use - This is an invalid command structure error." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Parameter a0 is available but a1 is NOT.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'This is an invalid command structure error.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Updating the Command History in the Command Window.')
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             
-            "TheCommandTable::use - Checking to see if $($a0) is in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', "Checking to see if $($a0) is in the Player's Inventory.")
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                "TheCommandTable::use - It's in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'It''s in the Player''s Inventory.')
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Writing a specific message to the Message Window.')
                 $Script:TheMessageWindow.WriteMessage(
                     "You need to tell me what you want to use the $($a0) on.",
                     [CCAppleYellowDark24]::new(),
                     [ATDecorationNone]::new()
                 )
             } Else {
-                "TheCommandTable::use - It's not in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'It''s not in the Player''s Inventory.')
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'use', 'Writing a specific message to the Message Window.')
                 $Script:TheMessageWindow.WriteMessage(
                     "I have no idea how to use a(n) $($a0).",
                     [CCAppleYellowDark24]::new(),
@@ -325,35 +322,35 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        "TheCommandTable::use - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Entered the block')
         
-        "TheCommandTable::use - Checking to see if we have the necessary parameters." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Checking to see if we have the necessary parameters.')
         If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
-            "TheCommandTable::use - The necessary parameters exist. Continuing the function call." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::use - Checking to see if the first item exists in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'The necessary parameters exist. Continuing the function call.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Checking to see if the first item exists in the Player''s Inventory.')
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                "TheCommandTable::use - $($a0) has been found in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
-                "TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "$($a0) has been found in the Player's Inventory.")
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Checking to see if the second item exists in the Current Map Tile''s Object Listing.')
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
-                    "TheCommandTable::use - $($a1) has been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "$($a1) has been found in the Current Map Tile's Object Listing.")
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Getting references to actuals expressed in the Player''s Inventory and the Current Map Tile''s Object Listing.')
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
                     
-                    "TheCommandTable::use - Checking the item use filter on $($a1) to see if $($a0) is a valid item to use on it." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "Checking the Item Use Filter on $($a1) to see if $($a0) is a valid item to use on it.")
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
-                        "TheCommandTable::use - Filter check has passed, $($a0) can be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "Filter check has passed; $($a0) can be used on $($a1).")
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
 
-                        "TheCommandTable::use - Using $($a0) on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "Using $($a0) on $($a1).")
                         Invoke-Command $mti.Effect -ArgumentList $pi
                     } Else {
-                        "TheCommandTable::use - Filter check has FAILED, $($a0) can't be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "Filter check has FAILED; $($a0) can't be used on $($a1).")
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         
-                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Write a message to the Message Window.')
                         $Script:TheMessageWindow.WriteMessage(
                             "Can't use a(n) $($a0) on a $($a1).",
                             [CCAppleRedDark24]::new(),
@@ -361,16 +358,16 @@ $Script:TheCommandTable = @{
                         )
                     }
                 } Else {
-                    "TheCommandTable::use - $($a1) has NOT been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::use - Checking to see if the second term is 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "$($a1) has NOT been found in the Current Map Tile's Object Listing.")
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Checking to see if the second term is ''self''.')
                     If($a1 -IEQ 'self') {
-                        "TheCommandTable::use - $($a1) is the term 'self'." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "$($a1) is the term 'self'.")
                     } Else {
-                        "TheCommandTable::use - The second term is neither a valid map item or 'self'; this is an invalid command structure." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'The second term is neither a valid map item or ''self''; this is an invalid command structure.')
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         
-                        "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Write a message to the Message Window.')
                         $Script:TheMessageWindow.WriteMessage(
                             'Whatever you typed doesn''t make any sense.',
                             [CCAppleRedDark24]::new(),
@@ -380,23 +377,23 @@ $Script:TheCommandTable = @{
                 }
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
-            "TheCommandTable::use - Parameter a0 is available but a1 is NOT." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::use - This is an invalid command structure error." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Parameter a0 is available but a1 is NOT.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'This is an invalid command structure error.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Updating the Command History in the Command Window.')
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             
-            "TheCommandTable::use - Checking to see if $($a0) is in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', "Checking to see if $($a0) is in the Player's Inventory.")
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                "TheCommandTable::use - It's in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'It''s in the Player''s Inventory.')
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Writing a specific message to the Message Window.')
                 $Script:TheMessageWindow.WriteMessage(
                     "You need to tell me what you want to use the $($a0) on.",
                     [CCAppleYellowDark24]::new(),
                     [ATDecorationNone]::new()
                 )
             } Else {
-                "TheCommandTable::use - It's not in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'It''s NOT in the Player''s Inventory.')
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'u', 'Writing a specific message to the Message Window.')
                 $Script:TheMessageWindow.WriteMessage(
                     "I have no idea how to use a(n) $($a0).",
                     [CCAppleYellowDark24]::new(),
@@ -707,18 +704,24 @@ Class ConsoleColor24 {
         [Int]$Green,
         [Int]$Blue
     ) {
+        "$($this.GetType().Name)::Constructor - Entered the constructor" | Out-File -FilePath $Script:LogFileName
+        "$($this.GetType().Name)::Constructor - Color values passed here are as follows: R$($Red), G$($Green), B$($Blue)." | Out-File -FilePath $Script:LogFileName
         $this.Red   = $Red
         $this.Green = $Green
         $this.Blue  = $Blue
+        "$($this.GetType().Name)::Constructor - Leaving the constructor" | Out-File -FilePath $Script:LogFileName
     }
 
     ConsoleColor24(
         [PSCustomObject]$JsonData
     ) {
-        $psoProps = $JsonData.PSObject.Properties
+        'ConsoleColor24::Constructor 2 - Entered the constructor' | Out-File -FilePath $Script:LogFileName
+        'ConsoleColor24::Constructor 2 - Creating the color values from a JSON object.' | Out-File -FilePath $Script:LogFileName
+        $psoProps   = $JsonData.PSObject.Properties
         $this.Red   = [Int]$psoProps['Red'].Value
         $this.Green = [Int]$psoProps['Green'].Value
         $this.Blue  = [Int]$psoProps['Blue'].Value
+        'ConsoleColor24::Constructor 2 - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
     }
 }
 
@@ -731,14 +734,17 @@ Class ATControlSequences {
     Static [String]$CursorShow              = "`e[?25h"
     
     Static [String]GenerateFG24String([ConsoleColor24]$Color) {
+        'ATControlSequences::GenerateFG24String - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
     
     Static [String]GenerateBG24String([ConsoleColor24]$Color) {
+        'ATControlSequences::GenerateBG24String - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
     
     Static [String]GenerateCoordinateString([Int]$Row, [Int]$Column) {
+        'ATControlSequences::GenerateCoordinateString - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return "`e[$($Row.ToString());$($Column.ToString())H"
     }
 }
@@ -752,7 +758,9 @@ Class ATForegroundColor24 {
     ATForegroundColor24(
         [ConsoleColor24]$Color
     ) {
+        'ATForegroundColor24::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
         $this.Color = $Color
+        'ATForegroundColor24::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
     }
 
     ATForegroundColor24(
@@ -762,6 +770,7 @@ Class ATForegroundColor24 {
     }
     
     [String]ToAnsiControlSequenceString() {
+        'ATForegroundColor24::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return [ATControlSequences]::GenerateFG24String($this.Color)
     }
 }
@@ -775,7 +784,9 @@ Class ATBackgroundColor24 {
     ATBackgroundColor24(
         [ConsoleColor24]$Color
     ) {
+        'ATBackgroundColor24::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
         $this.Color = $Color
+        'ATBackgroundColor24::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
     }
 
     ATBackgroundColor24(
@@ -785,6 +796,7 @@ Class ATBackgroundColor24 {
     }
     
     [String]ToAnsiControlSequenceString() {
+        'ATBackgroundColor24::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return [ATControlSequences]::GenerateBG24String($this.Color)
     }
 }
@@ -798,7 +810,10 @@ Class ATDecoration {
     ATDecoration(
         [Boolean]$Blink
     ) {
+        'ATDecoration::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
+        "ATBackgroundColor24::Constructor - Are we using the blink decoration? $($Blink)" | Out-File -FilePath $Script:LogFileName
         $this.Blink = $Blink
+        'ATBackgroundColor24::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
     }
 
     ATDecoration(
@@ -809,6 +824,7 @@ Class ATDecoration {
     }
     
     [String]ToAnsiControlSequenceString() {
+        'ATBackgroundColor24::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
         [String]$a = ''
         
         If($this.Blink) {
@@ -827,15 +843,22 @@ Class ATCoordinates {
         [Int]$Row,
         [Int]$Column
     ) {
+        'ATCoordinates::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
+        "ATCoordinates::Constructor - Values assigned as as follows: Row $($Row), Column $($Column)." | Out-File -FilePath $Script:LogFileName
         $this.Row    = $Row
         $this.Column = $Column
+        'ATCoordinates::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
     }
     
     ATCoordinates(
         [Coordinates]$AutomationCoordinates
     ) {
+        'ATCoordinates::Constructor 2 - Entered the constructor' | Out-File -FilePath $Script:LogFileName
+        'ATCoordinates::Constructor 2 - Transposing values from Automation Coordinates to ATCoordinates' | Out-File -FilePath $Script:LogFileName
+        "ATCoordinates::Constructor 2 - Transposed values are X $($AutomationCoordinates.X), Y $($AutomationCoordinates.Y)" | Out-File -FilePath $Script:LogFileName
         $this.Row    = $AutomationCoordinates.X
         $this.Column = $AutomationCoordinates.Y
+        'ATCoordinates::Constructor 2 - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
     }
 
     ATCoordinates(
@@ -847,64 +870,92 @@ Class ATCoordinates {
     }
     
     [String]ToAnsiControlSequenceString() {
+        'ATCoordinates::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return [ATControlSequences]::GenerateCoordinateString($this.Row, $this.Column)
     }
 
     [Coordinates]ToAutomationCoordinates() {
+        'ATCoordinates::ToAutomationCoordinates - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return [Coordinates]::new($this.Row, $this.Column)
     }
 }
 
 Class CCBlack24 : ConsoleColor24 {
-    CCBlack24() : base(0, 0, 0) {}
+    CCBlack24() : base(0, 0, 0) {
+        'CCBlack24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCWhite24 : ConsoleColor24 {
-    CCWhite24() : base(255, 255, 255) {}
+    CCWhite24() : base(255, 255, 255) {
+        'CCWhite24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCRed24 : ConsoleColor24 {
-    CCRed24() : base(255, 0, 0) {}
+    CCRed24() : base(255, 0, 0) {
+        'CCRed24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCGreen24 : ConsoleColor24 {
-    CCGreen24() : base(0, 255, 0) {}
+    CCGreen24() : base(0, 255, 0) {
+        'CCGreen24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCBlue24 : ConsoleColor24 {
-    CCBlue24() : base (0, 0, 255) {}
+    CCBlue24() : base (0, 0, 255) {
+        'CCBlue24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCYellow24 : ConsoleColor24 {
-    CCYellow24() : base(255, 255, 0) {}
+    CCYellow24() : base(255, 255, 0) {
+        'CCYellow24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCDarkYellow24 : ConsoleColor24 {
-    CCDarkYellow24() : base(255, 204, 0) {}
+    CCDarkYellow24() : base(255, 204, 0) {
+        'CCDarkYellow24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCDarkCyan24 : ConsoleColor24 {
-    CCDarkCyan24() : base(0, 139, 139) {}
+    CCDarkCyan24() : base(0, 139, 139) {
+        'CCDarkCyan24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCDarkGrey24 : ConsoleColor24 {
-    CCDarkGrey24() : base(45, 45, 45) {}
+    CCDarkGrey24() : base(45, 45, 45) {
+        'CCDarkGrey24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCRandom24 : ConsoleColor24 {
-    CCRandom24() : base($(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0)) {}
+    CCRandom24() : base($(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0)) {
+        'CCRandom24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCAppleRedLight24 : ConsoleColor24 {
-    CCAppleRedLight24(): base(255, 59, 48) {}
+    CCAppleRedLight24(): base(255, 59, 48) {
+        'CCAppleRedLight24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCAppleRedDark24 : ConsoleColor24 {
-    CCAppleRedDark24(): base(255, 69, 58) {}
+    CCAppleRedDark24(): base(255, 69, 58) {
+        'CCAppleRedDark24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCAppleOrangeLight24 : ConsoleColor24 {
-    CCAppleOrangeLight24(): base(255, 149, 0) {}
+    CCAppleOrangeLight24(): base(255, 149, 0) {
+        'CCAppleOrangeLight24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+    }
 }
 
 Class CCAppleOrangeDark24 : ConsoleColor24 {
@@ -9007,6 +9058,22 @@ Class BufferManager {
         Clear-Host
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
         $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+    }
+}
+
+Class LogManager {
+    Static [String]$LogFileName = '.\Log.log'
+
+    LogManager() {
+        'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath [LogManager]::LogFileName
+    }
+
+    [Void]WriteToLog(
+        [String]$ClassName,
+        [String]$Function,
+        [String]$MessageContent
+    ) {
+        "$($ClassName)::$($Function) - $($MessageContent)" | Out-File -FilePath [LogManager]::LogFileName -Append
     }
 }
 
