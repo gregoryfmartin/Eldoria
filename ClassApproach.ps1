@@ -408,15 +408,15 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        "TheCommandTable::drop - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Starting the block.')
 
-        "TheCommandTable::drop - Checking to see if we have the correct parameters." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Checking to see if we have the correct parameters.')
         If($args.Length -GE 1) {
-            "TheCommandTable::drop - There were too many parameters given to the drop function." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::drop - Update the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'There were too many parameters given to the drop function.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Update the Command History in the Command Window.')
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             
-            "TheCommandTable::drop - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Write a message to the Message Window.')
             $Script:TheMessageWindow.WriteMessage(
                 'Can''t drop all those items at once, bruh.',
                 [CCAppleYellowDark24]::new(),
