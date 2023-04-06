@@ -427,35 +427,35 @@ $Script:TheCommandTable = @{
         }
         
         If($PSBoundParameters.Count -EQ 1) {
-            "TheCommandTable::drop - We have the correct number of parameters." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'We have the correct number of parameters.')
             If($PSBoundParameters.ContainsKey('a0')) {
-                "TheCommandTable::drop - First, we need to see if this item exists in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'First, we need to see if this item exists in the Player''s Inventory.')
                 If($Script:ThePlayer.IsItemInInventory($a0)) {
-                    "TheCommandTable::drop - We've found the $($a0) in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::drop - Attempting to drop the $($a0) from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', "We've found the $($a0) in the Player's Inventory.")
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', "Attempting to drop the $($a0) from the Player's Inventory.")
                     If($Script:ThePlayer.RemoveItemFromInventory($a0)) {
-                        "TheCommandTable::drop - The $($a0) was successfully remove from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::drop - Update the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', "The $() was successfully removed from the Player's Inventory.")
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Update the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         
-                        "TheCommandTable::drop - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Write a message to the Message Window.')
                         $Script:TheMessageWindow.WriteMessage(
                             "Dropped $($a0) from your inventory.",
                             [CCAppleYellowDark24]::new(),
                             [ATDecorationNone]::new()
                         )
                     } Else {
-                        "TheCommandTable::drop - Although the $($a0) was found in the Player's Inventory, something happened that prevented its removal." | Out-File -FilePath $Script:LogFileName -Append
-                        "TheCommandTable::drop - THIS IS A FATAL ERROR - EXITING!" | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', "Although the $($a0) was found in the Player's Inventory, something happened that prevented its removal.")
+                        $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'THIS IS A FATAL ERROR - EXITING!')
                         Exit
                     }
                 } Else {
-                    "TheCommandTable::drop - The $($a0) wasn't found in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::drop - Since we can't find it there, there's nothing to drop." | Out-File -FilePath $Script:LogFileName -Append
-                    "TheCommandTable::drop - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', "The $($a0) wasn't found in the Player's Inventory.")
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Since we can''t find it there, there''s nothing to drop.')
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Updating the Command History in the Command Window.')
                     $Script:TheCommandWindow.UpdateCommandHistory($false)
                     
-                    "TheCommandTable::drop - Writing a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Writing a message to the Message Window.')
                     $Script:TheMessageWindow.WriteMessage(
                         "There ain't no $($a0) in your pockets gov'.",
                         [CCAppleYellowDark24]::new(),
@@ -464,11 +464,11 @@ $Script:TheCommandTable = @{
                 }
             }
         } Elseif($PSBoundParameters.Count -LE 0) {
-            "TheCommandTable::drop - There weren't enough parameters given to the drop command." | Out-File -FilePath $Script:LogFileName -Append
-            "TheCommandTable::drop - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'There weren''t enough parameters given to the drop command.')
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Updating the Command History in the Command Window.')
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             
-            "TheCommandTable::drop - Writing a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheCommandTable', 'drop', 'Writing a message to the Message Window.')
             $Script:TheMessageWindow.WriteMessage(
                 'I don''t know what to drop...',
                 [CCAppleRedDark24]::new(),
@@ -489,22 +489,22 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::PlayerSetupScreen = {}
 
     [GameStatePrimary]::GamePlayScreen = {
-        "TheGlobalStateBlockTable::GamePlayScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Starting the block.')
         
-        "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Checking to see if the Inventory Window instance isn''t null.')
         If($null -NE $Script:TheInventoryWindow) {
-            "TheGlobalStateBlockTable::GamePlayScreen - It isn't null - setting to null." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'It isn''t null, setting to null.')
             $Script:TheInventoryWindow = $null
         } Else {
-            "TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'The instance is already null, skipping.')
         }
 
-        "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Checking to see if the GPS can be restored from a buffer backup.')
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'GPS can be restored from a backup.')
             $Script:TheBufferManager.RestoreBufferAToActive()
             
-            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
-            # and I really don't feel like trying to figure out how to grab the buffer
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Force all of the elements in the GPS to redraw. This is because 24-bit color information doesn''t get retained in Buffer Cell backups with the Windows API.')
             $Script:GpsRestoredFromInvBackup             = $true
             $Script:TheSceneWindow.SceneImageDirty       = $true
             $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
@@ -516,51 +516,52 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
 
-            # Write the sequence to show the cursor since it's hidden by the Inventory Screen
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Restore the cursor visibility.')
             Write-Host "$([ATControlSequences]::CursorShow)"
         }
 
-        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheStatusWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Calling TheStatusWindow.Draw method.')
         $Script:TheStatusWindow.Draw()
         
-        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheCommandWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Calling TheCommandWindow.Draw method.')
         $Script:TheCommandWindow.Draw()
         
-        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheSceneWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Calling TheSceneWindow.Draw method.')
         $Script:TheSceneWindow.Draw()
         
-        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheMessageWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Calling TheMessageWindow.Draw method.')
         $Script:TheMessageWindow.Draw()
         
-        "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheCommandWindow.HandleInput method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Calling TheCommandWindow.HandleInput method.')
         $Script:TheCommandWindow.HandleInput()
         
-        "TheGlobalStateBlockTable::GamePlayScreen - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::GamePlayScreen', 'Leaving the block.')
     }
 
     [GameStatePrimary]::InventoryScreen = {
-        "TheGlobalStateBlockTable::InventoryScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Starting the block.')
 
-        "TheGlobalStateBlockTable::InventoryScreen - `tChecking to see if the Inventory Window instance is null." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Checking to see if the Inventory Window instance is null.')
         If($null -EQ $Script:TheInventoryWindow) {
-            "TheGlobalStateBlockTable::InventoryScreen - `t`tIt is - creating a new instance." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'It is - creating a new instance.')
             $Script:TheInventoryWindow = [InventoryWindow]::new()
         } Else {
-            "TheGlobalStateBlockTable::InventoryScreen - `t`tIt isn't, skipping." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'It isn''t, skipping.')
         }
 
-        "TheGlobalStateBlockTable::InventoryScreen - Checking to see if the GPS Buffer Backup Restore flag is true to turn it off." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Checking to see if the GPS Buffer Backup Restore Flag is true to turn it off.')
         If($Script:GpsRestoredFromInvBackup -EQ $true) {
+            $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Buffer backup was true, setting to false.')
             $Script:GpsRestoredFromInvBackup = $false
         }
 
-        "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Calling TheInventoryWindow.Draw method.')
         $Script:TheInventoryWindow.Draw()
         
-        "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.HandleInput method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Calling TheInventoryWindow.HandleInput method.')
         $Script:TheInventoryWindow.HandleInput()
         
-        "TheGlobalStateBlockTable::InventoryScreen - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog('TheGlobalStateBlockTable', '[GameStatePrimary]::InventoryScreen', 'Leaving the block.')
     }
 
     [GameStatePrimary]::Cleanup = {}
@@ -704,24 +705,24 @@ Class ConsoleColor24 {
         [Int]$Green,
         [Int]$Blue
     ) {
-        "$($this.GetType().Name)::Constructor - Entered the constructor" | Out-File -FilePath $Script:LogFileName
-        "$($this.GetType().Name)::Constructor - Color values passed here are as follows: R$($Red), G$($Green), B$($Blue)." | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Color values passed here are as follows: R$($Red), G$($Green), B$($Blue).")
         $this.Red   = $Red
         $this.Green = $Green
         $this.Blue  = $Blue
-        "$($this.GetType().Name)::Constructor - Leaving the constructor" | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     ConsoleColor24(
         [PSCustomObject]$JsonData
     ) {
-        'ConsoleColor24::Constructor 2 - Entered the constructor' | Out-File -FilePath $Script:LogFileName
-        'ConsoleColor24::Constructor 2 - Creating the color values from a JSON object.' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Creating the color values from a JSON object.')
         $psoProps   = $JsonData.PSObject.Properties
         $this.Red   = [Int]$psoProps['Red'].Value
         $this.Green = [Int]$psoProps['Green'].Value
         $this.Blue  = [Int]$psoProps['Blue'].Value
-        'ConsoleColor24::Constructor 2 - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Leaving the constructor.')
     }
 }
 
@@ -734,17 +735,18 @@ Class ATControlSequences {
     Static [String]$CursorShow              = "`e[?25h"
     
     Static [String]GenerateFG24String([ConsoleColor24]$Color) {
+        $Script:TheLogManager.WriteToLog('ATControlSequences', '[Static] GenerateFG24String', 'Entered the function.')
         'ATControlSequences::GenerateFG24String - Entered the function' | Out-File -FilePath $Script:LogFileName
         Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
     
     Static [String]GenerateBG24String([ConsoleColor24]$Color) {
-        'ATControlSequences::GenerateBG24String - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog('ATControlSequences', '[Static] GenerateBG24String', 'Entered the function.')
         Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
     
     Static [String]GenerateCoordinateString([Int]$Row, [Int]$Column) {
-        'ATControlSequences::GenerateCoordinateString - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog('ATControlSequences', '[Static] GenerateCoordinateString', 'Entered the function.')
         Return "`e[$($Row.ToString());$($Column.ToString())H"
     }
 }
@@ -758,9 +760,9 @@ Class ATForegroundColor24 {
     ATForegroundColor24(
         [ConsoleColor24]$Color
     ) {
-        'ATForegroundColor24::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Color = $Color
-        'ATForegroundColor24::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     ATForegroundColor24(
@@ -770,7 +772,7 @@ Class ATForegroundColor24 {
     }
     
     [String]ToAnsiControlSequenceString() {
-        'ATForegroundColor24::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequence', 'Entered the function.')
         Return [ATControlSequences]::GenerateFG24String($this.Color)
     }
 }
@@ -784,9 +786,9 @@ Class ATBackgroundColor24 {
     ATBackgroundColor24(
         [ConsoleColor24]$Color
     ) {
-        'ATBackgroundColor24::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Color = $Color
-        'ATBackgroundColor24::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     ATBackgroundColor24(
@@ -796,7 +798,7 @@ Class ATBackgroundColor24 {
     }
     
     [String]ToAnsiControlSequenceString() {
-        'ATBackgroundColor24::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return [ATControlSequences]::GenerateBG24String($this.Color)
     }
 }
@@ -810,10 +812,10 @@ Class ATDecoration {
     ATDecoration(
         [Boolean]$Blink
     ) {
-        'ATDecoration::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
-        "ATBackgroundColor24::Constructor - Are we using the blink decoration? $($Blink)" | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Are we using the blink decoration? $($Blink)")
         $this.Blink = $Blink
-        'ATBackgroundColor24::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     ATDecoration(
@@ -824,13 +826,18 @@ Class ATDecoration {
     }
     
     [String]ToAnsiControlSequenceString() {
-        'ATBackgroundColor24::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         [String]$a = ''
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Are we using the blink decoration?')
         If($this.Blink) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Yes - adding it to the sequence.')
             $a += [ATControlSequences]::DecorationBlink
+        } Else {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'No - Skipping')
         }
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Leaving the function.')
         Return $a
     }
 }
@@ -843,302 +850,395 @@ Class ATCoordinates {
         [Int]$Row,
         [Int]$Column
     ) {
-        'ATCoordinates::Constructor - Entered the constructor' | Out-File -FilePath $Script:LogFileName
-        "ATCoordinates::Constructor - Values assigned as as follows: Row $($Row), Column $($Column)." | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Values assigned are as follows: Row $($Row), Column $($Column).")
         $this.Row    = $Row
         $this.Column = $Column
-        'ATCoordinates::Constructor - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     ATCoordinates(
         [Coordinates]$AutomationCoordinates
     ) {
-        'ATCoordinates::Constructor 2 - Entered the constructor' | Out-File -FilePath $Script:LogFileName
-        'ATCoordinates::Constructor 2 - Transposing values from Automation Coordinates to ATCoordinates' | Out-File -FilePath $Script:LogFileName
-        "ATCoordinates::Constructor 2 - Transposed values are X $($AutomationCoordinates.X), Y $($AutomationCoordinates.Y)" | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Transposing values from Automation Coordinates to ATCoordinates.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', "Transposed values are X $($AutomationCoordinates.X), Y $($AutomationCoordinates.Y).")
         $this.Row    = $AutomationCoordinates.X
         $this.Column = $AutomationCoordinates.Y
-        'ATCoordinates::Constructor 2 - Leaving the constructor' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Leaving the constructor.')
     }
 
     ATCoordinates(
         [PSObject]$JsonData
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 3', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 3', 'Populating the values from a JSON object.')
         $psoProps    = $JsonData.PSObject.Properties
         $this.Row    = [Int]$psoProps['Row'].Value
         $this.Column = [Int]$psoProps['Column'].Value
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 3', 'Leaving the constructor.')
     }
     
     [String]ToAnsiControlSequenceString() {
-        'ATCoordinates::ToAnsiControlSequenceString - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return [ATControlSequences]::GenerateCoordinateString($this.Row, $this.Column)
     }
 
     [Coordinates]ToAutomationCoordinates() {
-        'ATCoordinates::ToAutomationCoordinates - Entered the function' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAutomationCoordinates', 'Entered the function.')
         Return [Coordinates]::new($this.Row, $this.Column)
     }
 }
 
 Class CCBlack24 : ConsoleColor24 {
     CCBlack24() : base(0, 0, 0) {
-        'CCBlack24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCWhite24 : ConsoleColor24 {
     CCWhite24() : base(255, 255, 255) {
-        'CCWhite24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCRed24 : ConsoleColor24 {
     CCRed24() : base(255, 0, 0) {
-        'CCRed24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCGreen24 : ConsoleColor24 {
     CCGreen24() : base(0, 255, 0) {
-        'CCGreen24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCBlue24 : ConsoleColor24 {
     CCBlue24() : base (0, 0, 255) {
-        'CCBlue24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCYellow24 : ConsoleColor24 {
     CCYellow24() : base(255, 255, 0) {
-        'CCYellow24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCDarkYellow24 : ConsoleColor24 {
     CCDarkYellow24() : base(255, 204, 0) {
-        'CCDarkYellow24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCDarkCyan24 : ConsoleColor24 {
     CCDarkCyan24() : base(0, 139, 139) {
-        'CCDarkCyan24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCDarkGrey24 : ConsoleColor24 {
     CCDarkGrey24() : base(45, 45, 45) {
-        'CCDarkGrey24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCRandom24 : ConsoleColor24 {
     CCRandom24() : base($(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0), $(Get-Random -Maximum 255 -Minimum 0)) {
-        'CCRandom24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCAppleRedLight24 : ConsoleColor24 {
     CCAppleRedLight24(): base(255, 59, 48) {
-        'CCAppleRedLight24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCAppleRedDark24 : ConsoleColor24 {
     CCAppleRedDark24(): base(255, 69, 58) {
-        'CCAppleRedDark24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCAppleOrangeLight24 : ConsoleColor24 {
     CCAppleOrangeLight24(): base(255, 149, 0) {
-        'CCAppleOrangeLight24::Constructor - Constructor called' | Out-File -FilePath $Script:LogFileName
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
     }
 }
 
 Class CCAppleOrangeDark24 : ConsoleColor24 {
-    CCAppleOrangeDark24(): base(255, 159, 10) {}
+    CCAppleOrangeDark24(): base(255, 159, 10) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleYellowLight24 : ConsoleColor24 {
-    CCAppleYellowLight24(): base(255, 204, 0) {}
+    CCAppleYellowLight24(): base(255, 204, 0) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleYellowDark24 : ConsoleColor24 {
-    CCAppleYellowDark24(): base(255, 214, 10) {}
+    CCAppleYellowDark24(): base(255, 214, 10) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGreenLight24 : ConsoleColor24 {
-    CCAppleGreenLight24(): base(52, 199, 89) {}
+    CCAppleGreenLight24(): base(52, 199, 89) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGreenDark24 : ConsoleColor24 {
-    CCAppleGreenDark24(): base(48, 209, 88) {}
+    CCAppleGreenDark24(): base(48, 209, 88) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleMintLight24 : ConsoleColor24 {
-    CCAppleMintLight24(): base(0, 199, 190) {}
+    CCAppleMintLight24(): base(0, 199, 190) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleMintDark24 : ConsoleColor24 {
-    CCAppleMintDark24(): base(99, 230, 226) {}
+    CCAppleMintDark24(): base(99, 230, 226) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleTealLight24 : ConsoleColor24 {
-    CCAppleTealLight24(): base(48, 176, 199) {}
+    CCAppleTealLight24(): base(48, 176, 199) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleTealDark24 : ConsoleColor24 {
-    CCAppleTealDark24(): base(64, 200, 224) {}
+    CCAppleTealDark24(): base(64, 200, 224) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleCyanLight24 : ConsoleColor24 {
-    CCAppleCyanLight24(): base(50, 173, 230) {}
+    CCAppleCyanLight24(): base(50, 173, 230) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleCyanDark24 : ConsoleColor24 {
-    CCAppleCyanDark24(): base(100, 210, 255) {}
+    CCAppleCyanDark24(): base(100, 210, 255) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleBlueLight24 : ConsoleColor24 {
-    CCAppleBlueLight24(): base(0, 122, 255) {}
+    CCAppleBlueLight24(): base(0, 122, 255) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleBlueDark24 : ConsoleColor24 {
-    CCAppleBlueDark24(): base(10, 132, 255) {}
+    CCAppleBlueDark24(): base(10, 132, 255) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleIndigoLight24 : ConsoleColor24 {
-    CCAppleIndigoLight24(): base(88, 86, 214) {}
+    CCAppleIndigoLight24(): base(88, 86, 214) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleIndigoDark24 : ConsoleColor24 {
-    CCAppleIndigoDark24(): base(94, 92, 230) {}
+    CCAppleIndigoDark24(): base(94, 92, 230) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCApplePurpleLight24 : ConsoleColor24 {
-    CCApplePurpleLight24(): base(175, 82, 222) {}
+    CCApplePurpleLight24(): base(175, 82, 222) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCApplePurpleDark24 : ConsoleColor24 {
-    CCApplePurpleDark24(): base(191, 90, 242) {}
+    CCApplePurpleDark24(): base(191, 90, 242) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCApplePinkLight24 : ConsoleColor24 {
-    CCApplePinkLight24(): base(255, 45, 85) {}
+    CCApplePinkLight24(): base(255, 45, 85) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCApplePinkDark24 : ConsoleColor24 {
-    CCApplePinkDark24(): base(255, 55, 95) {}
+    CCApplePinkDark24(): base(255, 55, 95) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleBrownLight24 : ConsoleColor24 {
-    CCAppleBrownLight24(): base(162, 132, 94) {}
+    CCAppleBrownLight24(): base(162, 132, 94) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleBrownDark24 : ConsoleColor24 {
-    CCAppleBrownDark24(): base(172, 142, 104) {}
+    CCAppleBrownDark24(): base(172, 142, 104) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey1Light24 : ConsoleColor24 {
-    CCAppleGrey1Light24(): base(142, 142, 147) {}
+    CCAppleGrey1Light24(): base(142, 142, 147) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey1Dark24 : ConsoleColor24 {
-    CCAppleGrey1Dark24(): base(142, 142, 147) {}
+    CCAppleGrey1Dark24(): base(142, 142, 147) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey2Light24 : ConsoleColor24 {
-    CCAppleGrey2Light24(): base(174, 174, 178) {}
+    CCAppleGrey2Light24(): base(174, 174, 178) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey2Dark24 : ConsoleColor24 {
-    CCAppleGrey2Dark24(): base(99, 99, 102) {}
+    CCAppleGrey2Dark24(): base(99, 99, 102) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey3Light24 : ConsoleColor24 {
-    CCAppleGrey3Light24(): base(199, 199, 204) {}
+    CCAppleGrey3Light24(): base(199, 199, 204) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey3Dark24 : ConsoleColor24 {
-    CCAppleGrey3Dark24(): base(72, 72, 74) {}
+    CCAppleGrey3Dark24(): base(72, 72, 74) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey4Light24 : ConsoleColor24 {
-    CCAppleGrey4Light24(): base(209, 209, 214) {}
+    CCAppleGrey4Light24(): base(209, 209, 214) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey4Dark24 : ConsoleColor24 {
-    CCAppleGrey4Dark24(): base(58, 58, 60) {}
+    CCAppleGrey4Dark24(): base(58, 58, 60) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey5Light24 : ConsoleColor24 {
-    CCAppleGrey5Light24(): base(229, 229, 234) {}
+    CCAppleGrey5Light24(): base(229, 229, 234) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey5Dark24 : ConsoleColor24 {
-    CCAppleGrey5Dark24(): base(44, 44, 46) {}
+    CCAppleGrey5Dark24(): base(44, 44, 46) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey6Light24 : ConsoleColor24 {
-    CCAppleGrey6Light24(): base(242, 242, 247) {}
+    CCAppleGrey6Light24(): base(242, 242, 247) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class CCAppleGrey6Dark24 : ConsoleColor24 {
-    CCAppleGrey6Dark24(): base(28, 28, 30) {}
+    CCAppleGrey6Dark24(): base(28, 28, 30) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 # https://www.pantone.com/connect/14-4318-TCX
 Class CCPantoneSkyBlue24 : ConsoleColor24 {
-    CCPantoneSkyBlue24(): base(54, 73, 83) {}
+    CCPantoneSkyBlue24(): base(54, 73, 83) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 # https://www.pantone.com/connect/15-6322-TPX
 Class CCPantoneLightGrassGreen24 : ConsoleColor24 {
-    CCPantoneLightGrassGreen24(): base(49, 70, 53) {}
+    CCPantoneLightGrassGreen24(): base(49, 70, 53) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 # https://www.pantone.com/connect/19-1218-TCX
 Class CCPantonePottingSoil24 : ConsoleColor24 {
-    CCPantonePottingSoil24(): base(33, 22, 18) {}
+    CCPantonePottingSoil24(): base(33, 22, 18) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
-Class CCTextDefault24 : CCAppleGrey5Light24 {}
+Class CCTextDefault24 : CCAppleGrey5Light24 {
+    CCTextDefault24() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
+}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
-    ATForegroundColor24None(): base([CCBlack24]::new()) {}
+    ATForegroundColor24None(): base([CCBlack24]::new()) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
 
 Class ATBackgroundColor24None : ATBackgroundColor24 {
-    ATBackgroundColor24None() : base([CCBlack24]::new()) {}
+    ATBackgroundColor24None() : base([CCBlack24]::new()) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
 
 Class ATCoordinatesNone : ATCoordinates {
-    ATCoordinatesNone(): base(0, 0) {}
+    ATCoordinatesNone(): base(0, 0) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
 
 Class ATCoordinatesDefault : ATCoordinates {
-    ATCoordinatesDefault() : base(1, 18) {}
+    ATCoordinatesDefault() : base(1, 18) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 }
 
 Class ATDecorationNone : ATDecoration {
-    ATDecorationNone(): base($false) {}
+    ATDecorationNone(): base($false) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
@@ -1150,10 +1250,12 @@ Class ATStringPrefix {
     [ValidateNotNullOrEmpty()][ATCoordinates]$Coordinates
     
     ATStringPrefix() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.ForegroundColor = [ATForegroundColor24None]::new()
         $this.BackgroundColor = [ATBackgroundColor24None]::new()
         $this.Decorations     = [ATDecorationNone]::new()
         $this.Coordinates     = [ATCoordinatesNone]::new()
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     ATStringPrefix(
@@ -1162,10 +1264,12 @@ Class ATStringPrefix {
         [ATDecoration]$Decorations,
         [ATCoordinates]$Coordinates
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Entered the constructor.')
         $this.ForegroundColor = $ForegroundColor
         $this.BackgroundColor = $BackgroundColor
         $this.Decorations     = $Decorations
         $this.Coordinates     = $Coordinates
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Leaving the constructor.')
     }
     
     [String]ToAnsiControlSequenceString() {
@@ -1174,9 +1278,12 @@ Class ATStringPrefix {
 }
 
 Class ATStringPrefixNone : ATStringPrefix {
-    ATStringPrefixNone() : base() {}
+    ATStringPrefixNone() : base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
@@ -1187,9 +1294,11 @@ Class ATString {
     [ValidateNotNullOrEmpty()][Boolean]$UseATReset
     
     ATString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Prefix     = [ATStringPrefixNone]::new()
         $this.UserData   = ''
         $this.UseATReset = $false
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     ATString(
@@ -1197,26 +1306,34 @@ Class ATString {
         [String]$UserData,
         [Boolean]$UseATReset
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Prefix     = $Prefix
         $this.UserData   = $UserData
         $this.UseATReset = $UseATReset
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         [String]$a = "$($this.Prefix.ToAnsiControlSequenceString())$($this.UserData)"
         
         If($this.UseATReset) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', "Are we using the reset modifier? $($this.UseATReset)")
             $a += [ATControlSequences]::ModifierReset
         }
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Leaving the function.')
         Return $a
     }
 }
 
 Class ATStringNone : ATString {
-    ATStringNone() : base() {}
+    ATStringNone() : base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
     
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
@@ -1228,6 +1345,7 @@ Class ATSceneImageString : ATString {
         [ATBackgroundColor24]$BackgroundColor,
         [ATCoordinates]$Coordinates
     ): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Prefix = [ATStringPrefix]::new(
             [ATForegroundColor24None]::new(),
             $BackgroundColor,
@@ -1236,6 +1354,7 @@ Class ATSceneImageString : ATString {
         )
         $this.UserData   = [ATSceneImageString]::SceneImageBlank
         $this.UseATReset = $true
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
@@ -1295,6 +1414,7 @@ Class Player {
         [Int]$CurrentGold,
         [Int]$MaxGold
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Name               = $Name
         $this.CurrentHitPoints   = $CurrentHitPoints
         $this.MaxHitPoints       = $MaxHitPoints
@@ -1306,9 +1426,12 @@ Class Player {
         $this.MagicPointsState   = [StatNumberState]::Normal
         $this.MapCoordinates     = [Coordinates]::new(0, 0)
         $this.Inventory          = [List[MapTileObject]]::new()
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedNameString', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedNameString', "Passed in coordinates are: Row $($Coordinates.Row), Column $($Coordinates.Column)")
         [ATString]$p1 = [ATString]::new(
             [ATStringPrefix]::new(
                 [Player]::StatNameDrawColor,
@@ -1320,14 +1443,18 @@ Class Player {
             $true
         )
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedNameString', "Returning the following ATString: $($p1.ToAnsiControlSequenceString())")
         Return "$($p1.ToAnsiControlSequenceString())"
     }
     
     [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', 'Entered the function.')
         [String]$a = ''
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', 'Checking the value of HitPointsState.')
         Switch($this.HitPointsState) {
             Normal {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', 'The value is Normal.')
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -1370,9 +1497,11 @@ Class Player {
                 )
                 
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', "The temporary string is now set to the following value: $($a)")
             }
             
             Caution {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', 'The value is Caution.')
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -1415,9 +1544,11 @@ Class Player {
                 )
                 
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', "The temporary string is now set to the following value: $($a)")
             }
             
             Danger {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', 'The value is Danger.')
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -1460,19 +1591,24 @@ Class Player {
                 )
                 
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', "The temporary string is now set to the following value: $($a)")
             }
             
             Default {}
         }
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedHitPointsString', "Returning the following value to the caller: $($a)")
         Return $a
     }
     
     [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', 'Entering the function.')
         [String]$a = ''
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', 'Checking the value of MagicPointsState.')
         Switch($this.MagicPointsState) {
             Normal {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', 'The value is Normal.')
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -1515,9 +1651,11 @@ Class Player {
                 )
                 
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', "The temporary string is now set to the following value: $($a)")
             }
             
             Caution {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', 'The value is Caution.')
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -1560,9 +1698,11 @@ Class Player {
                 )
                 
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', "The temporary string is now set to the following value: $($a)")
             }
             
             Danger {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', 'The value is Danger.')
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -1605,15 +1745,18 @@ Class Player {
                 )
                 
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', "The temporary string is now set to the following value: $($a)")
             }
             
             Default {}
         }
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedMagicPointsString', "Returning the following value to the caller: $($a)")
         Return $a
     }
     
     [String]GetFormattedGoldString([ATCoordinates]$Coordinates) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedGoldString', 'Entering the function.')
         [ATString]$p1 = [ATString]::new(
             [ATStringPrefix]::new(
                 [Player]::StatGoldDrawColor,
@@ -1635,93 +1778,136 @@ Class Player {
             $true
         )
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetFormattedGoldString', "Returning the following value to the caller: $($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())")
         Return "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
     }
     
     [Void]TestCurrentHpState() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentHpState', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentHpState', 'Checking to see what the current value of CurrentHitPoints is.')
         Switch($this.CurrentHitPoints) {
             { $_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentHpState', 'CurrentHitPoints are greater than 60% of MaxHitPoints. Setting HitPointsState to Normal.')
                 $this.HitPointsState = [StatNumberState]::Normal
             }
             
             { ($_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution)) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentHpState', 'CurrentHitPoints are greater than 20% of MaxHitPoints and less than 60% of MaxHitPoints. Setting HitPointsState to Caution.')
                 $this.HitPointsState = [StatNumberState]::Caution
             }
             
             { $_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentHpState', 'CurrentHitPoints are less than 20% of MaxHitPoints. Setting HitPointsState to Danger.')
                 $this.HitPointsState = [StatNumberState]::Danger
             }
             
             Default {}
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentHpState', 'Leaving the function.')
     }
 
     [Void]TestCurrentMpState() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentMpState', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentMpState', 'Checking to see what the current value of CurrentMagicPoints is.')
         Switch($this.CurrentMagicPoints) {
             { $_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentMpState', 'CurrentMagicPoints are greater than 60% of MaxMagicPoints. Setting MagicPointsState to Normal.')
                 $this.MagicPointsState = [StatNumberState]::Normal
             }
             
             { ($_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution)) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentMpState', 'CurrentMagicPoints are greater than 20% of MaxMagicPoints and less than 60% of MaxMagicPoints. Setting MagicPointsState to Caution.')
                 $this.MagicPointsState = [StatNumberState]::Caution
             }
             
             { $_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentMpState', 'CurrentMagicPoints are less than 20% of MaxMagicPoints. Setting MagicPointsState to Danger.')
                 $this.MagicPointsState = [StatNumberState]::Danger
             }
             
             Default {}
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TestCurrentMpState', 'Leaving the function.')
     }
 
     [Boolean]IsItemInInventory([String]$ItemName) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInInventory', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInInventory', "Checking to see if we can find a $($ItemName) in the Player's Inventory.")
         Foreach($a in $this.Inventory) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInInventory', "The current item being checked is $($a.Name). Does it match $($ItemName)?")
             If($a.Name -IEQ $ItemName) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInInventory', 'Yes - returning true to the caller.')
                 Return $true
             }
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInInventory', 'No - continuing to check more items.')
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInInventory', 'We couldn''t find the item in the Player''s Inventory. Returning false to the caller.')
         Return $false
     }
 
     [MapTileObject]GetItemReference([String]$ItemName) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', "Checking to see if we can find a $($ItemName) in the Player's Inventory.")
         Foreach($a in $this.Inventory) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', "The current item being checked is $($a.Name). Does it match $($ItemName)?")
             If($a.Name -IEQ $ItemName) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'Yes - returning a reference of this item to the caller.')
                 Return $a
             }
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'No - continuing to check more items.')
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'We couldn''t find the item in the Player''s Inventory. Returning null to the caller.')
         Return $null
     }
 
     [Boolean]RemoveItemFromInventory([String]$ItemName) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Initializing the probe.')
         $c = 0
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', "Checking to see if we can find a $($ItemName) in the Player's Inventory.")
         Foreach($a in $this.Inventory) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', "The current item being checked is $($a.Name). Does it match $($ItemName)?")
             If($a.Name -IEQ $ItemName) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Yes - removing the item from the inventory at the current probe index.')
                 $this.Inventory.RemoveAt($c)
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Returning true to the caller.')
                 Return $true
             }
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'No - incrementing the probe and continuing to check more items.')
             $c++
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'We couldn''t find the item in the Player''s Inventory. Returning false to the caller.')
         Return $false
     }
 
     [Void]MapMoveNorth() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Checking the Current Map Tile to see if North is a valid exit.')
         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'North is a valid exit direction.')
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Checking to see if Boundary Wrap is enabled for the Current Map.')
             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Boundary Wrap is enabled.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Since BW is enabled, we need to see if moving North will exceed the ''natural'' north boundary to place the player back at the bottom.')
                 $a = $Script:CurrentMap.MapHeight - 1
                 $b = $this.MapCoordinates.Y + 1
                 $c = $a % $b
 
                 If($c -EQ $a) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Moving North exceeds the north boundary - wrapping to zero.')
                     $this.MapCoordinates.Y = 0
                 } Else {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Moving North doesn''t exceed the north boundary - incrementing by one.')
                     $this.MapCoordinates.Y++
                 }
 
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Notify TheSceneWindow about the change in the player''s position.')
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Update the Command History in the Command Window.')
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 Return
             } Else {
