@@ -1951,36 +1951,49 @@ Class SceneImage {
     [ATSceneImageString[,]]$Image
     
     SceneImage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
         $this.Image = New-Object 'ATSceneImageString[,]' ([Int32]([SceneImage]::Height)), ([Int32]([SceneImage]::Width))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     SceneImage(
         [ATSceneImageString[,]]$Image
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Entered the constructor.')
         $this.Image = $Image
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Leaving the constructor.')
     }
 
     [Void]CreateSceneImageATString([ATBackgroundColor24[]]$ImageColorMap) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', 'Entered the function.')
         For($r = 0; $r -LT [SceneImage]::Height; $r++) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Current R iteration is $($r).")
             For($c = 0; $c -LT [SceneImage]::Width; $c++) {
-                $rf                 = ($r * [SceneImage]::Width) + $c
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Current C iteration is $(c).")
+                $rf = ($r * [SceneImage]::Width) + $c
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "RF has been calculated to $($rf).")
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Creating a new ATSceneImageString at Image Coordinates ($($r), $($c)) with color $($ImageColorMap[$rf]) and offset location ($(([SceneWindow]::ImageDrawRowOffset + $r)), $(([SceneWindow]::ImageDrawColumnOffset + $c))).")
                 $this.Image[$r, $c] = [ATSceneImageString]::new(
                     $ImageColorMap[$rf],
                     [ATCoordinates]::new(([SceneWindow]::ImageDrawRowOffset + $r), ([SceneWindow]::ImageDrawColumnOffset + $c))
                 )
             }
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', 'Leaving the function.')
     }
 
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         [String]$a = ''
 
         For($r = 0; $r -LT [SceneImage]::Height; $r++) {
             For($c = 0; $c -LT [SceneImage]::Width; $c++) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', "Appending $($this.Image[$r, $c].ToAnsiControlSequenceString()) to the temporary string.")
                 $a += $this.Image[$r, $c].ToAnsiControlSequenceString()
             }
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Returning $($a) to the caller.")
         Return $a
     }
 }
