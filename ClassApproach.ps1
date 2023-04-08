@@ -1886,31 +1886,32 @@ Class Player {
 
     [Void]MapMoveNorth() {
         $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Entered the function.')
-        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Checking the Current Map Tile to see if North is a valid exit.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Checking the Current Map Tile to see if North is a valid exit.')
         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
-            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'North is a valid exit direction.')
-            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Checking to see if Boundary Wrap is enabled for the Current Map.')
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'North is a valid exit direction.')
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Checking to see if Boundary Wrap is enabled for the Current Map.')
             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Boundary Wrap is enabled.')
-                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Since BW is enabled, we need to see if moving North will exceed the ''natural'' north boundary to place the player back at the bottom.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Boundary Wrap is enabled.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Since BW is enabled, we need to see if moving North will exceed the ''natural'' north boundary to place the player back at the bottom.')
                 $a = $Script:CurrentMap.MapHeight - 1
                 $b = $this.MapCoordinates.Y + 1
                 $c = $a % $b
 
                 If($c -EQ $a) {
-                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Moving North exceeds the north boundary - wrapping to zero.')
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Moving North exceeds the north boundary - wrapping to zero.')
                     $this.MapCoordinates.Y = 0
                 } Else {
-                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Moving North doesn''t exceed the north boundary - incrementing by one.')
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Moving North doesn''t exceed the north boundary - incrementing by one.')
                     $this.MapCoordinates.Y++
                 }
 
-                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Notify TheSceneWindow about the change in the player''s position.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Notify TheSceneWindow about the change in the player''s position.')
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RemoveItemFromInventory', 'Update the Command History in the Command Window.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Update the Command History in the Command Window.')
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 Return
             } Else {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Boundary Wrap is disabled.')
                 $a = $Script:CurrentMap.MapHeight - 1
                 $b = $this.MapCoordinates.Y + 1
                 $c = $a % $b
