@@ -1912,21 +1912,31 @@ Class Player {
                 Return
             } Else {
                 $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Boundary Wrap is disabled.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Since BW is disabled, we need to see if moving North will exceed the ''natural'' north boundary and prohibit the player from moving further in this direction.')
                 $a = $Script:CurrentMap.MapHeight - 1
                 $b = $this.MapCoordinates.Y + 1
                 $c = $a % $b
 
                 If($c -EQ $a) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Moving North exceeds the boundary - invoking the invisible wall.')
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Update the Command History in the Command Window.')
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
                     # TODO: Write a message to the Message Window that the Invisible Wall has been encountered
                 } Else {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Moving North doesn''t exceed the north boundary - increment by one.')
                     $this.MapCoordinates.Y++
+
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Notify TheSceneWindow about the change in the player''s position.')
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                    
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Update the Command History in the Command Window.')
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
                     Return
                 }
             }
         } Else {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'It''s not possible to exit the Current Map Tile from the North direction.')
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'MapMoveNorth', 'Update the Command History in the Command Window.')
             $Script:TheCommandWindow.UpdateCommandHistory($true)
             # TODO: Write a message to the Message Window that it's not possible to exit in this direction on this tile
             Return
