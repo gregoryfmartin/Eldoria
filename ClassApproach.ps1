@@ -9095,6 +9095,8 @@ Class MapTileObject {
         [String]$ExamineString,
         [ScriptBlock]$Effect
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Values passed are as follows: Name = $($Name), MapObjName = $($MapObjName), CanAddToInventory = $($CanAddToInventory), ExamineString = $($ExamineString), Effect = $($Effect.ToString())")
         $this.Name              = $Name
         $this.MapObjName        = $MapObjName
         $this.Effect            = $Effect
@@ -9109,6 +9111,7 @@ Class MapTileObject {
 
             Return $this.ValidateSourceInFilter($a0)
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     MapTileObject(
@@ -9119,6 +9122,8 @@ Class MapTileObject {
         [ScriptBlock]$Effect,
         [String[]]$TargetOfFilter
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Values passed are as follows: Name = $($Name), MapObjName = $($MapObjName), CanAddToInventory = $($CanAddToInventory), ExamineString = $($ExamineString), Effect = $($Effect.ToString()), TargetOfFilter = $($TargetOfFilter.ToString())")
         $this.Name              = $Name
         $this.MapObjName        = $MapObjName
         $this.Effect            = $Effect
@@ -9137,9 +9142,13 @@ Class MapTileObject {
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Boolean]ValidateSourceInFilter([String]$SourceItemClass) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ValidateSourceInFilter', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ValidateSourceInFilter', "Is SourceItemClass in the Target Filter? $(($SourceItemClass -IN $this.TargetOfFilter) ? 'Yes' : 'No')")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Returning this to the caller.')
         Return ($SourceItemClass -IN $this.TargetOfFilter)
     }
 }
@@ -9159,6 +9168,8 @@ Class MapTile {
         [MapTileObject[]]$ObjectListing,
         [Boolean[]]$Exits
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Values passed are as follows: BackgroundImage = $($BackgroundImage.ToAnsiControlSequenceString()), ObjectListing = $($ObjectListing.ToString()), Exits = $($Exits.ToString()).")
         $this.BackgroundImage = $BackgroundImage
         $this.ObjectListing   = [List[MapTileObject]]::new()
         $this.Exits           = $Exits
@@ -9166,25 +9177,38 @@ Class MapTile {
         Foreach($a In $ObjectListing) {
             $this.ObjectListing.Add($a) | Out-Null
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Boolean]IsItemInTile([String]$ItemName) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInTile', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInTile', "Checking to see if $(ItemName) is in the ObjectListing of this Tile.")
         Foreach($a in $this.ObjectListing) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInTile', "Does $($ItemName) match $($a.Name)?")
             If($a.Name -IEQ $ItemName) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInTile', 'Yes - returning true to the caller.')
                 Return $true
             }
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInTile', 'No - continuing to check the remaining items.')
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'IsItemInTile', "$(ItemName) wasn't found in the ObjectListing for this Tile. Returning false to the caller.")
         Return $false
     }
 
     [MapTileObject]GetItemReference([String]$ItemName) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', "Checking to see if $(ItemName) is in the ObjectListing of this Tile.")
         Foreach($a in $this.ObjectListing) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', "Does $(ItemName) match $($a.Name)?")
             If($a.Name -IEQ $ItemName) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'Yes - returning a reference to the caller.')
                 Return $a
             }
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', 'No - continuing the check the remaining items.')
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetItemReference', "$(ItemName) wasn't found in the ObjectListing for this Tile. Returning null to the caller.")
         Return $null
     }
 }
@@ -9202,15 +9226,21 @@ Class Map {
         [Int]$MapHeight,
         [Boolean]$BoundaryWrap
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Values passed are as follows: Name = $($Name), MapWidth = $($MapWidth), MapHeight = $($MapHeight), BoundaryWrap = $($BoundaryWrap).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for creating Maps.')
         Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Creating a map' -PercentComplete -1
         $this.Name         = $Name
         $this.MapWidth     = $MapWidth
         $this.MapHeight    = $MapHeight
         $this.BoundaryWrap = $BoundaryWrap
-        $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+        $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [MapTile]GetTileAtPlayerCoordinates() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetTileAtPlayerCoordinates', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetTileAtPlayerCoordinates', "Returning the MapTile at Player Coordinates $($Script:ThePlayer.MapCoordinates.X), $($Script:ThePlayer.MapCoordinates.Y)")
         Return $this.Tiles[$Script:ThePlayer.MapCoordinates.Y, $Script:ThePlayer.MapCoordinates.X]
     }
 }
@@ -9219,12 +9249,12 @@ Class MTOTree : MapTileObject {
     MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
         Param([MapTileObject]$Source)
 
-        "MTOTree::Effect - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        "MTOTree::Effect - Checking to see what item passed the filter." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', "The following class was passed to the filter: $($Source.PSTypeNames[0]).")
         Switch($Source.PSTypeNames[0]) {
             'MTORope' {
-                "MTOTree::Effect - A Rope is being used on the Tree." | Out-File -FilePath $Script:LogFileName -Append
-                "MTOTree::Effect - Write a message to the Message Window that the Rope has been tied to the Tree." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'MTORope is being used.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Write a message to the Message Window that the Rope has been tied to the Tree.')
                 $Script:TheMessageWindow.WriteMessage(
                     'I''ve tied the Rope to the Tree',
                     [CCAppleIndigoDark24]::new(),
@@ -9240,52 +9270,116 @@ Class MTOTree : MapTileObject {
                 Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
                 #>
 
-                "MTOTree::Effect - Removing the Rope from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Removing the Rope from the Player''s Inventory.')
                 $Script:ThePlayer.RemoveItemFromInventory($Source.Name)
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
             }
         }
     },
-    @('MTORope')) {}
+    @('MTORope')) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOLadder : MapTileObject {
-    MTOLadder():  base('Ladder', 'ladder', $false, 'Used to climb things. Just don''t walk under one.', {}) {}
+    MTOLadder():  base('Ladder', 'ladder', $false, 'Used to climb things. Just don''t walk under one.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTORope : MapTileObject {
-    MTORope(): base('Rope', 'rope', $false, 'It''s not a snake. Hopefully.', {}) {}
+    MTORope(): base('Rope', 'rope', $false, 'It''s not a snake. Hopefully.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOStairs : MapTileObject {
-    MTOStairs(): base('Stairs', 'stairs', $false, 'A faithful ally for elevating one''s position.', {}) {}
+    MTOStairs(): base('Stairs', 'stairs', $false, 'A faithful ally for elevating one''s position.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOPole : MapTileObject {
-    MTOPole(): base('Pole', 'pole', $false, 'Not the north or the south one.', {}) {}
+    MTOPole(): base('Pole', 'pole', $false, 'Not the north or the south one.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOBacon : MapTileObject {
-    MTOBacon(): base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {}) {}
+    MTOBacon(): base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOApple : MapTileObject {
-    MTOApple(): base('Apple', 'apple', $true, 'A big, juicy, red apple. Worm not included.', {}) {}
+    MTOApple(): base('Apple', 'apple', $true, 'A big, juicy, red apple. Worm not included.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOStick : MapTileObject {
-    MTOStick(): base('Stick', 'stick', $false, 'Be careful not to poke your eye out with it.', {}) {}
+    MTOStick(): base('Stick', 'stick', $false, 'Be careful not to poke your eye out with it.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOYogurt : MapTileObject {
-    MTOYogurt(): base('Yogurt', 'yogurt', $false, 'For some reason, people enjoy this spoiled milk.', {}) {}
+    MTOYogurt(): base('Yogurt', 'yogurt', $false, 'For some reason, people enjoy this spoiled milk.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTORock : MapTileObject {
-    MTORock(): base('Rock', 'rock', $false, 'A garden variety rock. Good for taunting raccoons with.', {}) {}
+    MTORock(): base('Rock', 'rock', $false, 'A garden variety rock. Good for taunting raccoons with.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class MTOMilk : MapTileObject {
-    MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {}) {}
+    MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'EffectBlock', 'Leaving the function.')
+    }) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+    }
 }
 
 Class BufferManager {
