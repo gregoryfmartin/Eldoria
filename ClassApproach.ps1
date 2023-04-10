@@ -1999,9 +1999,12 @@ Class SceneImage {
 }
 
 Class SIEmpty : SceneImage {
-    SIEmpty(): base() {}
+    SIEmpty(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+    }
 
     [String]ToAnsiControlSequenceString() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ToAnsiControlSequenceString', 'Entered the function.')
         Return ''
     }
 }
@@ -2010,7 +2013,10 @@ Class SIInternalBase : SceneImage {
     [ATBackgroundColor24[]]$ColorMap
 
     SIInternalBase(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Creating a new Color Map with the size of $([SceneImage]::Width), $([SceneImage]::Height).")
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
@@ -2018,20 +2024,28 @@ Class SIRandomNoise : SceneImage {
     [ATBackgroundColor24[]]$ColorMap
 
     SIRandomNoise(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Creating a new Color Map with the size of $([SceneImage]::Width), $([SceneImage]::Height).")
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the new Color Map with CCRandom24 color instances.')
         For($a = 0; $a -LT $this.ColorMap.Count; $a++) {
             $this.ColorMap[$a] = [CCRandom24]::new()
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString with the Color Map.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling th Color Map.')
         $this.ColorMap = $null
     }
 }
 
 Class SIFieldNorthRoad : SIInternalBase {
     SIFieldNorthRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -2896,15 +2910,22 @@ Class SIFieldNorthRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleGreenLight24]::new()
         $this.ColorMap[862] = [CCAppleGreenLight24]::new()
         $this.ColorMap[863] = [CCAppleGreenLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
 Class SIFieldNorthEastRoad : SIInternalBase {
     SIFieldNorthEastRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthEastRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -3769,15 +3790,21 @@ Class SIFieldNorthEastRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleBrownLight24]::new()
         $this.ColorMap[862] = [CCAppleBrownLight24]::new()
         $this.ColorMap[863] = [CCAppleBrownLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
     }
 }
 
 Class SIFieldNorthWestRoad : SIInternalBase {
     SIFieldNorthWestRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthWestRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -4642,15 +4669,22 @@ Class SIFieldNorthWestRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleGreenLight24]::new()
         $this.ColorMap[862] = [CCAppleGreenLight24]::new()
         $this.ColorMap[863] = [CCAppleGreenLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
 Class SIFieldNorthEastWestRoad : SIInternalBase {
     SIFieldNorthEastWestRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthEastWestRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -5515,15 +5549,22 @@ Class SIFieldNorthEastWestRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleBrownLight24]::new()
         $this.ColorMap[862] = [CCAppleBrownLight24]::new()
         $this.ColorMap[863] = [CCAppleBrownLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
 Class SIFieldSouthRoad : SIInternalBase {
     SIFieldSouthRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -6388,15 +6429,22 @@ Class SIFieldSouthRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleGreenLight24]::new()
         $this.ColorMap[862] = [CCAppleGreenLight24]::new()
         $this.ColorMap[863] = [CCAppleGreenLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
 Class SIFieldSouthEastRoad : SIInternalBase {
     SIFieldSouthEastRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthEastRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -7261,15 +7309,22 @@ Class SIFieldSouthEastRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleBrownLight24]::new()
         $this.ColorMap[862] = [CCAppleBrownLight24]::new()
         $this.ColorMap[863] = [CCAppleBrownLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
 Class SIFieldSouthWestRoad : SIInternalBase {
     SIFieldSouthWestRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthWestRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -8134,15 +8189,22 @@ Class SIFieldSouthWestRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleGreenLight24]::new()
         $this.ColorMap[862] = [CCAppleGreenLight24]::new()
         $this.ColorMap[863] = [CCAppleGreenLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
 Class SIFieldSouthEastWestRoad : SIInternalBase {
     SIFieldSouthEastWestRoad(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the Scene Image Progress.')
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthEastWestRoad' -PercentComplete -1
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Filling the Color Map.')
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[2]   = [CCAppleBlueLight24]::new()
@@ -9007,9 +9069,13 @@ Class SIFieldSouthEastWestRoad : SIInternalBase {
         $this.ColorMap[861] = [CCAppleBrownLight24]::new()
         $this.ColorMap[862] = [CCAppleBrownLight24]::new()
         $this.ColorMap[863] = [CCAppleBrownLight24]::new() # End Row 17
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Finished filling the Color Map.')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calling CreateSceneImageATString.')
         $this.CreateSceneImageATString($this.ColorMap)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Nulling the Color Map.')
         $this.ColorMap = $null
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 }
 
