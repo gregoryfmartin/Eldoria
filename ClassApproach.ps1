@@ -9387,47 +9387,80 @@ Class BufferManager {
     [BufferCell[,]]$ScreenBufferB
 
     BufferManager() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for globals.')
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Buffer Manager' -PercentComplete -1
         $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
         $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Void]CopyActiveToBufferA() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferA', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferA', 'Copying a 80x80 rectangle of BufferCells from the current buffer into Buffer A.')
         $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferA', 'Leaving the function.')
     }
     
     [Void]CopyActiveToBufferAWithWipe() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferAWithWipe', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferAWithWipe', 'Copying a 80x80 rectangle of BufferCells from the current buffer into Buffer A.')
         $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferAWithWipe', 'Clearing the current buffer.')
         Clear-Host
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferAWithWipe', 'Leaving the function.')
     }
 
     [Void]CopyActiveToBufferB() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferB', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferB', 'Copying a 80x80 rectangle of BufferCells from the current buffer into Buffer B.')
         $this.ScreenBufferB = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferB', 'Leaving the function.')
     }
 
     [Void]CopyActiveToBufferBWithWipe() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferBWithWipe', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferBWithWipe', 'Copying a 80x80 rectangle of BufferCells from the current buffer into Buffer B.')
         $this.ScreenBufferB = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferBWithWipe', 'Clearing the current buffer.')
         Clear-Host
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CopyActiveToBufferBWithWipe', 'Leaving the function.')
     }
 
     [Void]SwapAToB() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'SwapAToB', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'SwapAToB', 'Copying Buffer A contents to Buffer B.')
         $this.ScreenBufferB = $this.ScreenBufferA
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'SwapAToB', 'Leaving the function.')
     }
 
     [Void]SwapBToA() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'SwapBToA', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'SwapBToA', 'Copying Buffer B contents to Buffer A.')
         $this.ScreenBufferA = $this.ScreenBufferB
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'SwapBToA', 'Leaving the function.')
     }
 
     [Void]RestoreBufferAToActive() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferAToActive', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferAToActive', 'Clearing the current buffer.')
         Clear-Host
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferAToActive', 'Restoring Buffer A contents to the current buffer.')
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferAToActive', 'Clearing Buffer A.')
         $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferAToActive', 'Leaving the function.')
     }
 
     [Void]RestoreBufferBToActive() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferBToActive', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferBToActive', 'Clearing the current buffer.')
         Clear-Host
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferBToActive', 'Restoring Buffer B contents to the current buffer.')
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferBToActive', 'Clearing Buffer B.')
         $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'RestoreBufferBToActive', 'Leaving the function.')
     }
 }
 
@@ -9468,6 +9501,8 @@ Class WindowBase {
     [Int]$Height
 
     WindowBase() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing members to defaults.')
         $this.LeftTop          = [ATCoordinatesNone]::new()
         $this.RightBottom      = [ATCoordinatesNone]::new()
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -9487,6 +9522,7 @@ Class WindowBase {
             $true
         )
         $this.UpdateDimensions()
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     WindowBase(
@@ -9496,12 +9532,15 @@ Class WindowBase {
         [String[]]$BorderStrings,
         [Boolean[]]$BorderDrawDirty
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', "Values passed are as follows: LeftTop = $($LeftTop.ToAnsiControlSequenceString()), RightBottom = $($RightBottom.ToAnsiControlSequenceString()), BorderDrawColors = $($BorderDrawColors), BorderStrings = $($BorderStrings), BorderDrawDirty = $($BorderDrawDirty).")
         $this.LeftTop          = $LeftTop
         $this.RightBottom      = $RightBottom
         $this.BorderDrawColors = $BorderDrawColors
         $this.BorderStrings    = $BorderStrings
         $this.BorderDrawDirty  = $BorderDrawDirty
         $this.UpdateDimensions()
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     [Void]Draw() {
