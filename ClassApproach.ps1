@@ -9540,12 +9540,16 @@ Class WindowBase {
         $this.BorderStrings    = $BorderStrings
         $this.BorderDrawDirty  = $BorderDrawDirty
         $this.UpdateDimensions()
-        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor 2', 'Leaving the constructor.')
     }
     
     [Void]Draw() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see what operating system the program is running on.')
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'The program is running on either Linux or Mac.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Instantiating the borders as ATStrings.')
                 [ATString]$bt = [ATStringNone]::new()
                 [ATString]$bb = [ATStringNone]::new()
                 [ATString]$bl = [ATStringNone]::new()
@@ -9620,11 +9624,13 @@ Class WindowBase {
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
                 }
 
-                
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Writing the border strings to the current buffer.')
                 Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
             
             { $_ -EQ $Script:OsCheckWindows } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'The program is running on Windows.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Instantiating the borders as ATStrings.')
                 [ATString]$bt = [ATStringNone]::new()
                 [ATString]$bb = [ATStringNone]::new()
                 [ATString]$bl = [ATStringNone]::new()
@@ -9699,19 +9705,23 @@ Class WindowBase {
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
                 }
 
-                
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Writing the borders to the current buffer.')                
                 Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
             
             Default {}
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Leaving the function.')
     }
 
     [Void]UpdateDimensions() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateDimensions', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateDimensions', 'Calculating Width and Height as differences between RightBottom and LeftTop.')
         # $this.Width  = $this.LeftTop.Column + $this.RightBottom.Column
         # $this.Height = $this.LeftTop.Row + $this.RightBottom.Row
         $this.Width  = $this.RightBottom.Column - $this.LeftTop.Column
         $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateDimensions', 'Leaving the function.')
     }
 }
 
@@ -9743,7 +9753,11 @@ Class StatusWindow : WindowBase {
     # [Boolean]$PlayerAilDrawDirty
     
     StatusWindow() : base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for globals.')
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating Status Window' -PercentComplete -1
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing members with defaults.')
         $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -9757,57 +9771,95 @@ Class StatusWindow : WindowBase {
             [StatusWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing StatusWindow-specific members with defaults.')
         $this.PlayerNameDrawDirty = $true
         $this.PlayerHpDrawDirty   = $true
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
         # $this.PlayerAilDrawDirty  = $true
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     [Void]Draw() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Entering the function.')
         ([WindowBase]$this).Draw()
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see what operating system the program is running on.')
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'The program is running on either Linux or Mac.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerNameDrawDirty flag has been set.')
                 If($this.PlayerNameDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s Name to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerNameDrawDirty flag to false.')
                     $this.PlayerNameDrawDirty = $false
                 }
+                
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerHpDrawDirty flag has been set.')
                 If($this.PlayerHpDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s HP to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerHpDrawDirty flag to false.')
                     $this.PlayerHpDrawDirty = $false
                 }
+
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerMpDrawDirty flag has been set.')
                 If($this.PlayerMpDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s MP to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerMpDrawDirty flag to false.')
                     $this.PlayerMpDrawDirty = $false
                 }
+
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerGoldDrawDirty flag has been set.')
                 If($this.PlayerGoldDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s Gold to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerGoldDrawDirty flag to false.')
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
             
             { $_ -EQ $Script:OsCheckWindows } {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'The program is running on Windows.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerNameDrawDirty flag has been set.')
                 If($this.PlayerNameDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s Name to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerNameDrawDirty flag to false.')
                     $this.PlayerNameDrawDirty = $false
                 }
+
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerHpDrawDirty flag has been set.')
                 If($this.PlayerHpDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s HP to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerHpDrawDirty flag to false.')
                     $this.PlayerHpDrawDirty = $false
                 }
+
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerMpDrawDirty flag has been set.')
                 If($this.PlayerMpDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Player''s MP to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerMpDrawDirty flag to false.')
                     $this.PlayerMpDrawDirty = $false
                 }
+
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerGoldDrawDirty flag has been set.')
                 If($this.PlayerGoldDrawDirty) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing th Player''s Gold to the buffer.')
                     Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerGoldDrawDirty flag to false.')
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
             
             Default {}
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Leaving the function.')
     }
 }
 
