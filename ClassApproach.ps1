@@ -9907,39 +9907,33 @@ Class CommandWindow : WindowBase {
     [Boolean]$CommandHistoryDirty
 
     CommandWindow() : base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for globals.')
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Command Window' -PercentComplete -1
-        "CommandWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
         
-        "CommandWindow::Constructor - `tSetting LeftTop and BottomRight relative to the desired window position." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing members to defaults.')
         $this.LeftTop     = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
         $this.RightBottom = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
-        
-        "CommandWindow::Constructor - `tSetting the BorderDrawColors relative to the desired effect for this window (all sides CCWhite24)." | Out-File -FilePath $Script:LogFileName -Append
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new()
         )
-
-        "CommandWindow::Constructor - `tSettings BorderStrings relative to the desired strings for this window." | Out-File -FilePath $Script:LogFileName -Append
         $this.BorderStrings = [String[]](
             [CommandWindow]::WindowBorderHorizontal,
             [CommandWindow]::WindowBorderVertical
         )
-
-        "CommandWindow::Constructor - `tCalling UpdateDimensions to ensure that measurements are correct." | Out-File -FilePath $Script:LogFileName -Append
         $this.UpdateDimensions()
 
-        "CommandWindow::Constructor - `tCommandDivDirty to true and CommandHistoryDirty to false." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Setting CommandWindow-specific members to defaults.')
         $this.CommandDivDirty     = $true
         $this.CommandHistoryDirty = $false
 
-        "CommandWindow::Constructor - `tDefining rowBase to $($this.RightBottom.Row) and columnBase to $($this.LeftTop.Column + [CommandWindow]::DrawColumnOffset)." | Out-File -FilePath $Script:LogFileName -Append
         [Int]$rowBase    = $this.RightBottom.Row
         [Int]$columnBase = $this.LeftTop.Column + [CommandWindow]::DrawColumnOffset
 
-        "CommandWindow::Constructor - `tCalculating History String Drawing Coordinates." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calculating history draw coordinates.')
         [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawDivRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryEDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryERowOffset, $columnBase)
         [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryDRowOffset, $columnBase)
@@ -9947,13 +9941,13 @@ Class CommandWindow : WindowBase {
         [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryBRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryARowOffset, $columnBase)
 
-        "CommandWindow::Constructor - `tHistory String Drawing Coordinates have been calculated as follows:" | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Constructor - `t`tDiv: (R$([CommandWindow]::CommandDivDrawCoordinates.Row), C$([CommandWindow]::CommandDivDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Constructor - `t`tE: (R$([CommandWindow]::CommandHistoryEDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryEDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Constructor - `t`tD: (R$([CommandWindow]::CommandHistoryDDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryDDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Constructor - `t`tC: (R$([CommandWindow]::CommandHistoryCDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryCDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Constructor - `t`tB: (R$([CommandWindow]::CommandHistoryBDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryBDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Constructor - `t`tA: (R$([CommandWindow]::CommandHistoryADrawCoordinates.Row), C$([CommandWindow]::CommandHistoryADrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Coordinates have been calculated as follows:')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Div: R$([CommandWindow]::CommandDivDrawCoordinates.Row), C$([CommandWindow]::CommandDivDrawCoordinates.Column).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "E: R$([CommandWindow]::CommandHistoryEDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryEDrawCoordinates.Column).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "D: R$([CommandWindow]::CommandHistoryDDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryDDrawCoordinates.Column).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "C: R$([CommandWindow]::CommandHistoryCDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryCDrawCoordinates.Column).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "B: R$([CommandWindow]::CommandHistoryBDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryBDrawCoordinates.Column).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "A: R$([CommandWindow]::CommandHistoryADrawCoordinates.Row), C$([CommandWindow]::CommandHistoryADrawCoordinates.Column).")
 
         [CommandWindow]::CommandDiv = [ATString]::new(
             [ATStringPrefix]::new(
@@ -10038,26 +10032,24 @@ Class CommandWindow : WindowBase {
             [CommandWindow]::CommandBlank.UserData,
             $true
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Void]Draw() {
-        "CommandWindow::Draw - Starting the Draw function." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::Draw - Calling base class Draw function." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Entering the function.')
         ([WindowBase]$this).Draw()
 
-        "CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the CommandDivDirty flag is set.')
         If($this.CommandDivDirty -EQ $true) {
-            "CommandWindow::Draw - `tCommandDivDirty is true, draw the Command Div to the console." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the div to the buffer.')
             Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
-
-            "CommandWindow::Draw - `tSetting CommandDivDirty to false to avoid overdraws." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Resetting the CommandDivDirty flag to false.')
             $this.CommandDivDirty = $false
         }
 
-        "CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the CommandHistoryDirty flag is set.')
         If($this.CommandHistoryDirty -EQ $true) {
-            "CommandWindow::Draw - `tCommandHistoryDirty is true, draw the Command History strings to the console." | Out-File -FilePath $Script:LogFileName -Append
-            
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the history items to the buffer.')
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryDDrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].ToAnsiControlSequenceString())"
@@ -10078,137 +10070,133 @@ Class CommandWindow : WindowBase {
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].ToAnsiControlSequenceString())"
 
-            # Foreach($cmd in $this.CommandHistory) {
-            #     "CommandWindow::Draw - `t`tCurrent CMD iteration values: (R$($cmd.Prefix.Coordinates.Row), C$($cmd.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-
-            #     "CommandWindow::Draw - `t`tUpdating the Blank's Coordinates to match the current iteration." | Out-File -FilePath $Script:LogFileName -Append
-            #     [CommandWindow]::CommandBlank.Prefix.Coordinates = $cmd.Prefix.Coordinates
-            #     "CommandWindow::Draw - `t`tThe blank's current coordinates are (R$([CommandWindow]::CommandBlank.Prefix.Coordinates.Row), C$([CommandWindow]::CommandBlank.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-                
-            #     "CommandWindow::Draw - `t`tDrawing the Command Blank first to clear out the line." | Out-File -FilePath $Script:LogFileName -Append
-            #     Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())"
-
-            #     "CommandWindow::Draw - `t`tDrawing the Command itself ($($cmd.ToAnsiControlSequenceString()))." | Out-File -FilePath $Script:LogFileName -Append
-            #     Write-Host "$($cmd.ToAnsiControlSequenceString())"
-            # }
-
-            "CommandWindow::Draw - `tSetting the CommandHistoryDirty flag to false." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Resetting the CommandHistoryDirty flag to false.')
             $this.CommandHistoryDirty = $false
         }
     }
 
     [Void]HandleInput() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Setting the Cursor Position to the default one.')
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Start the initial ReadKey call and store the result.')
         $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Starting to loop until the VirtualKeyCode of the key pressed is NOT EQUAL to 13 (Enter).')
         While($keyCap.VirtualKeyCode -NE 13) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Loop started.')
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Getting the current X (Column) value of the current Cursor Position.')
             $cpx = $Script:Rui.CursorPosition.X
             
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Checking to see if the current X (Column) value of the current Cursor Position is GREATER THAN OR EQUAL TO 19.')
             If($cpx -GE 19) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'It is - automatically invoke the Command Parser as this is a command phrase length violation.')
                 $this.InvokeCommandParser()
             }
             
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Checking to see what the value of VirtualKeyCode is.')
             Switch($keyCap.VirtualKeyCode) {
                 8 { # Backspace
-                    "CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is $($keyCap.VirtualKeyCode)" | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Backspace Key has been pressed.')
                     
                     $fpx = $Script:Rui.CursorPosition.X
-                    "CommandWindow::HandleInput - `tObtaining current Cursor Position X (Row) Value as FPX. The current value is $($fpx)" | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "Obtaining current Cursor Position X (Row) value. The current value is $(fpx).")
 
-                    "CommandWindow::HandleInput - `tComparing FPX against the Default Coordinates X (Row). The default value is $($Script:DefaultCursorCoordinates.Row), and FPX is $($fpx)." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "Comparing FPX against the Default Coordinates X (Row). The default value is $($Script:DefaultCursorCoordinates.Row), and FPX is $($fpx).")
                     If($fpx -GT $Script:DefaultCursorCoordinates.Row) {
-                        "CommandWindow::HandleInput - `t`tFPX is GREATER THAN the Default Coordinates X (Row)." | Out-File -FilePath $Script:LogFileName -Append
-                        "CommandWindow::HandleInput - `t`tThe character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1])." | Out-File -FilePath $Script:LogFileName -Append
-                        "CommandWindow::HandleInput - `t`tPerforming character deletion from console window." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'FPX is GREATER THAN the Default Coordinates X (Row).')
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1]).")
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Performing character deletion from the Command Window.')
                         Write-Host " `b" -NoNewLine
 
-                        "CommandWindow::HandleInput - `t`tThe current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character.")
                         If($this.CommandActual.UserData.Length -GT 0) {
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                            "CommandWindow::HandleInput - `t`tThe last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
+                            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData).")
                         } Else {
-                            "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
+                            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Command Actual has no data in it; there''s nothing to delete.')
                         }
                     } Elseif($fpx -LT $Script:DefaultCursorCoordinates.Row) {
-                        "CommandWindow::HandleInput - `t`tFPX is LESS THAN the Default Coordinates X (Row)." | Out-File -FilePath $Script:LogFileName -Append
-                        "CommandWindow::HandleInput - `t`tThis character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'FPX is LESS THAN the Default Coordinates X (Row).')
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'This character can''t be deleted because it''s part of the window. Resetting the Cursor X (ROw) position to the default.')
                         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
                         # Write-Host "`b " -NoNewLine
                     } Elseif($fpx -EQ $Script:DefaultCursorCoordinates.Row) {
-                        "CommandWindow::HandleInput - `t`tFPX is EQUAL TO the Default Coordinates X (Row)."                                       | Out-File -FilePath $Script:LogFileName -Append
-                        "CommandWindow::HandleInput - `t`tThe character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1])." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'FPX is EQUAL TO the Default Coordinates X (Row).')
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1]).")
                         Write-Host " `b" -NoNewline
 
-                        "CommandWindow::HandleInput - `t`tThe current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character.")
                         If($this.CommandActual.UserData.Length -GT 0) {
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                            "CommandWindow::HandleInput - `t`tThe last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
+                            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData).")
                         } Else {
-                            "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
+                            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Command Actual has no data in it; there''s nothing to delete.')
                         }
                     }
                 }
     
                 Default {
-                    "CommandWindow::HandleInput - A regular keypress has been detected. Adding $($keyCap.Character) to Command Actual." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "A regular keypress has been detected. Adding $($keyCap.Character) to Command Actual.")
                     $this.CommandActual.UserData += $keyCap.Character
-                    "CommandWindow::HandleInput - `tThe current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', "The current value of Command Actual is $($this.CommandActual.UserData).")
                 }
             }
 
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Starting the next iteration of ReadKey.')
             $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Invoking the Command Parser.')
         $this.InvokeCommandParser()
     }
 
     [Void]InvokeCommandParser() {
-        "CommandWindow::InvokeCommandParser - Starting the CommandParser." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::InvokeCommandParser - `tWriting the Command Blank." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'Starting the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'Writing the Command Blank in the default position.')
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-        "CommandWindow::InvokeCommandParser - `tCommand Blank has been written." | Out-File -FilePath $Script:LogFileName -Append
 
-        "CommandWindow::InvokeCommandParser - `tChecking to see if Command Actual contains anything." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'Checking to see if Command Actual contains anything.')
         If([String]::IsNullOrEmpty($this.CommandActual.UserData)) {
-            "CommandWindow::InvokeCommandParser - `t`tIt doesn't. Exiting." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'It doesn''t. Exiting.')
             Return
         } Else {
-            "CommandWindow::InvokeCommandParser - `t`tIt contains data. The current data is $($this.CommandActual.UserData). Attempting to split the string." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', "It contains data. The current data is $($this.CommandActual.UserData). Attempting to split the string.")
             $cmdactSplit = -SPLIT $this.CommandActual.UserData
-            "CommandWindow::InvokeCommandParser - `t`tSplit is successful. The split data is $({Foreach($a in $cmdactSplit){"$a, "}})." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', "Split is successful. The split data is $($cmdactSplit).")
             
-            "CommandWindow::InvokeCommandParser - `t`tAttempting to find the root command in the Command Table." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'Attempting to find the root command in the Command Table.')
             $rootFound = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
             
             If($null -NE $rootFound) {
-                "CommandWindow::InvokeCommandParser - `t`tA root command has been identified as '$($cmdactSplit[0])' Now checking the length of the split to determine the ScriptBlock invocation style." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', "A root command has been identified as $($cmdactSplit[0]). Now checking the length of the split to determine the ScriptBlock invocation style.")
                 Switch($cmdactSplit.Length) {
                     1 {
-                        "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 1, invoking the root command '$($cmdactSplit[0])' without arguments." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', "Split length is 1, invoking the root command '$($cmdactSplit[0])' without arguments.")
                         Invoke-Command $rootFound.Value
                     }
 
                     2 {
-                        "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 2, invoking the root command '$($cmdactSplit[0])' with one argument '$($cmdactSplit[1])'." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', "Split length is 2, invoking the root command '$($cmdactSplit[0])' with one argument '$($cmdactSplit[1])'.")
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1]
                     }
 
                     3 {
-                        "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 3, invoking the root command '$($cmdactSplit[0])' with two arguments, '$($cmdactSplit[1])' and '$($cmdactSplit[2])'." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', "Split length is 3, invoking the root comand '$($cmdactSplit[0])' with two arguments: '$($cmdactSplit[1])' and '$($cmdactSplit[2])'.")
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
                     }
 
                     Default {
-                        "CommandWindow::InvokeCommandParser - `t`t`tAn unknown exceptional case has occurred." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'An unknown exceptional case has occurred. Updating the Command History in the Command Window.')
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         # TODO: This is an exceptional case
                     }
                 }
             } Else {
-                "CommandWindow::InvokeCommandParser - `t`tAn invalid command has been typed in. Asking the Command Window to update the history." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeCommandParser', 'An invalid command has been typed in. Updating the Command History in the Command Window.')
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
                 Return
             }
@@ -10228,6 +10216,7 @@ Class CommandWindow : WindowBase {
     }
 
     [Void]InvokeLookAction() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Starting the function.')
         $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
         $b = 78
         $c = ''
@@ -10235,11 +10224,14 @@ Class CommandWindow : WindowBase {
         $z = 0
         $y = $false
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Checking to see if there are any objects in the Current Map Tile.')
         If($a.Count -LE 0) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'There aren''t any objects here. Notifying the Command Window.')
             $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
             Return
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Building the string that will have all of the objects in the Current Map Tile.')
         Foreach($d in $a) {
             If($z -EQ $a.Count - 1) {
                 $c += $d.Name
@@ -10247,18 +10239,26 @@ Class CommandWindow : WindowBase {
                 $c += $d.Name + ', '
             }
             $z++
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', "The current string value is $($c).")
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', "Getting the length of C. It's currently $($c.Length).")
         $e = $c.Length
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Checking to see if the length of C is GREATER THAN 78.')
         If($e -GT $b) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'The length of C is GREATER THAN 78.')
             $y = $true
+
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Executing a regex to get the first five matches of the item string.')
             $c -MATCH '([\s,]+\w+){5}$' | Out-Null
             If($_ -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'There are more than five matches - split the remainder into a different string.')
                 $c = $c -REPLACE '([\s,]+\w+){5}$', ''
                 $f = $matches[0].Remove(0, 2)
             }
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Writing the base messages to the Message Window.')
         $Script:TheMessageWindow.WriteMessage(
             'I can see the following things here:',
             [CCAppleIndigoDark24]::new(),
@@ -10270,153 +10270,160 @@ Class CommandWindow : WindowBase {
             [ATDecorationNone]::new()
         )
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Checking to see if we have overflow.')
         If($y -EQ $true) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'We have overflow - writing the split string as well.')
             $Script:TheMessageWindow.WriteMessage(
                 $f,
                 [CCApplePinkDark24]::new(),
                 [ATDecorationNone]::new()
             )
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeLookAction', 'Leaving the function.')
     }
 
     [Void]InvokeExamineAction(
         [String]$ItemName
     ) {
-        "CommandWindow::InvokeExamineAction - Starting the function." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::InvokeExamineAction - Iterating through the current tile's Object Listing to find an Item Name match." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::InvokeExamineAction - The Item Name we're looking for is $($ItemName)." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Iterating through the current tile''s Object Listing to find an Item Name match.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', "The Item Name we're looking for is $($ItemName).")
         Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
-            "CommandWindow::InvokeExamineAction - The iterator Item Name is $($a.Name)." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', "The iterator Item Name is $($a.Name).")
             If($a.Name -IEQ $ItemName) {
-                "CommandWindow::InvokeExamineAction - Match has been found. Updating the Command Window History with success." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Match has been found. Updating the Command History in the Command Window.')
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-                "CommandWindow::InvokeExamineAction - Writing the Item's ExamineString to the Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Writing the Item''s ExamineString to the Message Window History.')
                 $Script:TheMessageWindow.WriteMessage(
                     "$($a.ExamineString)",
                     [CCAppleMintDark24]::new(),
                     [ATDecorationNone]::new()
                 )
-                "CommandWindow::InvokeExamineAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Leaving the function.')
                 Return
             }
         }
 
-        "CommandWindow::InvokeExamineAction - Match has NOT been found. Updating the Command Window History with failure." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Match has NOT been found. Updating the Command History in the Command Window.')
         $Script:TheCommandWindow.UpdateCommandHistory($false)
-        "CommandWindow::InvokeExamineAction - Writing the error message to the Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Writing a message to the Message Window.')
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
-        "CommandWindow::InvokeExamineAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeExamineAction', 'Leaving the function.')
         Return
     }
 
     [Void]InvokeGetAction(
         [String]$ItemName
     ) {
-        "CommandWindow::InvokeGetAction - Starting the function." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::InvokeGetAction - Getting a reference to the current Map Tile's Object Listing." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Getting a reference to the current Map Tile''s Object Listing.')
         $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
         
-        "CommandWindow::InvokeGetAction - Checking to see if the length of the reference is LESS THAN OR EQUAL TO zero." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Checking to see if the length of the reference is LESS THAN OR EQUAL TO zero.')
         If($a.Count -LE 0) {
-            "CommandWindow::InvokeGetAction - It is, meaning that there's nothing on this tile." | Out-File -FilePath $Script:LogFileName -Append
-            "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'It is, meaning there''s nothing on this tile.')
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Updating the Command History and the Message Window History.')
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
-            "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Leaving the function.')
             Return
         }
-        "CommandWindow::InvokeGetAction - The length of the reference is at least 1." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::InvokeGetAction - Iterating through the reference collection to see if we can find a name match." | Out-File -FilePath $Script:LogFileName -Append
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'The length of the reference is at least 1.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Iterating through the reference collection to see if we can find a name match.')
         Foreach($b in $a) {
-            "CommandWindow::InvokeGetAction - The Item Name we're looking for is $($ItemName)." | Out-File -FilePath $Script:LogFileName -Append
-            "CommandWindow::InvokeGetAction - The current iteration's name is $($b.Name)." | Out-File -FilePath $Script:LogFileName -Append
-            "CommandWindow::InvokeGetAction - Checking to see if these match." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', "The Item Name we're looking for is $($ItemName).")
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', "The current iteration's name is $($b.Name).")
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Checking to see if these match.')
             If($b.Name -IEQ $ItemName) {
-                "CommandWindow::InvokeGetAction - A match has been found." | Out-File -FilePath $Script:LogFileName -Append
-                "CommandWindow::InvokeGetAction - Checking to see if this Item can be added to the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'A match has been found.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Checking to see if this Item can be added to the Player''s Inventory.')
                 If($b.CanAddToInventory -EQ $true) {
-                    "CommandWindow::InvokeGetAction - It can. Copying the current item into the Player's Inventory collection." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'It can - copying the current Item into the Player''s Inventory collection.')
                     $Script:ThePlayer.Inventory.Add($b) | Out-Null
-                    "CommandWindow::InvokeGetAction - Attempting to remove this item from the current Map Tile's Object Listing." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Attempting to remove this Item from the Current Map Tile''s Object Listing.')
                     $c = $a.Remove($b) | Out-Null
-                    "CommandWindow::InvokeGetAction - Checking to see if the removal was successful or not." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Checking to see if the removal was successful or not.')
                     If($c -EQ $false) {
-                        "CommandWindow::InvokeGetAction - The removal failed." | Out-File -FilePath $Script:LogFileName -Append
-                        "CommandWindow::InvokeGetAction - THIS IS A CRITICAL ERROR - PREMATURELY TERMINATING THE PROGRAM!" | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'The removal failed.')
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'THIS IS A CRITICAL ERROR - PREMATUREL TERMINATING THE PROGRAM!')
                         Write-Error 'Failed to remove an item from the Map Tile!'
                         Exit
                     } Else {
-                        "CommandWindow::InvokeGetAction - The removal was successful." | Out-File -FilePath $Script:LogFileName -Append
-                        "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'The removal was successful.')
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Updating the Command History and the Message Window History.')
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         $Script:TheMessageWindow.WriteItemTakenMessage($ItemName)
-                        "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Leaving the function.')
                         Return
                     }
                 } Else {
-                    "CommandWindow::InvokeGetAction - It can't. Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'It can''t. Updating the Command History and the Message History.')
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
                     $Script:TheMessageWindow.WriteItemCantTakeMessage($ItemName)
-                    "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Leaving the function.')
                     Return
                 }
             }
         }
 
-        "CommandWindow::InvokeGetAction - Although there are Items in the reference collection, none of them match the terms." | Out-File -FilePath $Script:LogFileName -Append
-        "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Although there are Items in the reference collection, none of them match the terms.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Updating the Command History and Message Window History.')
         $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
-        "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'InvokeGetAction', 'Leaving the function.')
         Return
     }
 
     [Void]UpdateCommandHistory(
         [Boolean]$CmdValid
     ) {
-        "CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'Starting to shuffle the Command History around.')
         
-        "CommandWindow::UpdateCommandHistory - Setting History E ('$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData)') to History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', "Setting History E ('$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData)') to History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)').")
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor
 
-        "CommandWindow::UpdateCommandHistory - Setting History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)') to History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', "Setting History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)') to History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)').")
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor
         
-        "CommandWindow::UpdateCommandHistory - Setting History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)') to History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', "Setting History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)') to History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)').")
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor
         
-        "CommandWindow::UpdateCommandHistory - Setting History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)') to History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', "CommandWindow::UpdateCommandHistory - Setting History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)') to History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)').")
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor
         
-        "CommandWindow::UpdateCommandHistory - Setting History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)') to Command Actual ('$($this.CommandActual.UserData)')." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', "Setting History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)') to Command Actual ('$($this.CommandActual.UserData)').")
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
 
-        "CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: $($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData), A: $($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData), B: $($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData), C: $($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData), D: $($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)" | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', "The current layout of the history is as follows: E: $($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData), A: $($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData), B: $($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData), C: $($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData), D: $($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData).")
 
-        "CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'Checking to see if the Command Valid flag is true or false.')
         If($CmdValid -EQ $true) {
-            "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'The Command Valid flag is true. Set the Foreground Color to HistoryEntryValid.')
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations     = [ATDecorationNone]::new()
         } Else {
-            "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'The Command Valid flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink.')
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryError
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations = [ATDecoration]::new($true)
         }
 
-        "CommandWindow::UpdateCommandHistory - `tClearing the Command Actual." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'Clearing the Command Actual.')
         $this.CommandActual.UserData = ''
 
-        "CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console.')
         $this.CommandHistoryDirty = $true
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCommandHistory', 'Leaving the function.')
     }
 }
 
@@ -10438,7 +10445,11 @@ Class SceneWindow : WindowBase {
     [SceneImage]$Image        = [SIEmpty]::new()
 
     SceneWindow(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for globals.')
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Scene Window' -PercentComplete -1
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing the members to defaults.')
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -10453,22 +10464,34 @@ Class SceneWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing the custom members to defaults.')
         #[SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + [SceneWindow]::ImageDrawRowOffset, $this.LeftTop.Column + [SceneWindow]::ImageDrawColumnOffset)
         [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new([SceneWindow]::ImageDrawRowOffset, [SceneWindow]::ImageDrawColumnOffset)
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
     
     [Void]Draw() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Entering the function.')
         ([WindowBase]$this).Draw()
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the SceneImageDirty flag is set.')
         If($this.SceneImageDirty) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - redrawing the Scene Image.')
             Write-Host "$($this.Image.ToAnsiControlSequenceString())"
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the SceneImageDirty flag to false.')
             $this.SceneImageDirty = $false
         }
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Leaving the function.')
     }
 
     [Void]UpdateCurrentImage([SceneImage]$NewImage) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCurrentImage', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCurrentImage', 'Updating the value of Image and setting the SceneImageDirty flag to true.')
         $this.Image           = $NewImage
         $this.SceneImageDirty = $true
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'UpdateCurrentImage', 'Leaving the function.')
     }
 }
 
@@ -10497,9 +10520,11 @@ Class MessageWindow : WindowBase {
     [Boolean]$MessageCDirty = $false
     
     MessageWindow() : base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for the globals.')
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Message Window' -PercentComplete -1
-        "MessageWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
-        
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing the members to defaults.')
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
         $this.RightBottom      = [ATCoordinates]::new(25, 78)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -10514,19 +10539,18 @@ Class MessageWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        "MessageWindow::Constructor - Calculating the Message Draw Coordinates." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Calculating the Message Draw Coordinates.')
 
         [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageCDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
 
-        "MessageWindow::Constructor - The calculated coordinates are as follows:" | Out-File -FilePath $Script:LogFileName -Append
-        "MessageWindow::Constructor - Message A: (R$([MessageWindow]::MessageADrawCoordinates.Row), C$([MessageWindow]::MessageADrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-        "MessageWindow::Constructor - Message B: (R$([MessageWindow]::MessageBDrawCoordinates.Row), C$([MessageWindow]::MessageBDrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-        "MessageWindow::Constructor - Message C: (R$([MessageWindow]::MessageCDrawCoordinates.Row), C$([MessageWindow]::MessageCDrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'The calculated coordinates are as follows:')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Message A: (R$([MessageWindow]::MessageADrawCoordinates.Row), C$([MessageWindow]::MessageADrawCoordinates.Column)).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Message B: (R$([MessageWindow]::MessageBDrawCoordinates.Row), C$([MessageWindow]::MessageBDrawCoordinates.Column)).")
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', "Message C: (R$([MessageWindow]::MessageCDrawCoordinates.Row), C$([MessageWindow]::MessageCDrawCoordinates.Column)).")
 
-        "MessageWindow::Constructor - Creating the MessageWindowBlank ATString." | Out-File -FilePath $Script:LogFileName -Append
-
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initialize the custom members with defaults.')
         [MessageWindow]::MessageWindowBlank = [ATString]::new(
             [ATStringPrefix]::new(
                 [ATForegroundColor24None]::new(),
@@ -10538,11 +10562,7 @@ Class MessageWindow : WindowBase {
             $true
         )
 
-        "MessageWindow::Constructor - Creating the MessageHistory ATString array with a size of 3." | Out-File -FilePath $Script:LogFileName -Append
-
         $this.MessageHistory = New-Object 'ATString[]' 3
-        
-        "MessageWindow::Constructor - Creating new ATString instances in the MessageHistory array using the appropriate draw coorinates and the MessageWindowBlank UserData as models." | Out-File -FilePath $Script:LogFileName -Append
 
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATString]::new(
             [ATStringPrefix]::new(
@@ -10575,68 +10595,64 @@ Class MessageWindow : WindowBase {
             $true
         )
 
-        "MessageWindow::Constructor - Leaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Void]Draw() {
-        "MessageWindow::Draw - Entering the Draw method." | Out-File -FilePath $Script:LogFileName -Append
-
-        "MessageWindow::Draw - Calling the base class Draw method." | Out-File -FilePath $Script:LogFileName -Append
-        
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Entering the function.')
         ([WindowBase]$this).Draw()
 
-        "MessageWindow::Draw - Checking to see if MessageADirty is true." | Out-File -FilePath $Script:LogFileName -Append
-
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the MessageADirty flag is set.')
         If($this.MessageADirty -EQ $true) {
-            "MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It''s set - redrawing Message A to the window at it''s predefined coordinates (blank first, then string).')
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
-            "MessageWindow::Draw - Setting MessageADirty to false." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting MessageADirty flag to false.')
             $this.MessageADirty = $false
         }
 
-        "MessageWindow::Draw - Checking to see if MessageBDirty is true." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the MessageBDirty flag is set.')
         If($this.MessageBDirty -EQ $true) {
-            "MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It''s set - redrawing Message B to the window at it''s predeinfed coordinates (blank first, then string).')
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
-            "MessageWindow::Draw - Setting MessageBDirty to false." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting MessageBDirty flag to false.')
             $this.MessageBDirty = $false
         }
 
-        "MessageWindow::Draw - Checking to see if MessageCDirty is true." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the MessageCDirty flag is set.')
         If($this.MessageCDirty -EQ $true) {
-            "MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It''s set - redrawing Message C to the window at it''s predefined coordinates (blank first, then string).')
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
-            "MessageWindow::Draw - Setting MessageCDirty to false." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the MessageCDirty flag to false.')
             $this.MessageCDirty = $false
         }
 
-        "MessageWindow::Draw - Leaving the Draw method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Leaving the function.')
     }
 
     [Void]WriteMessage([String]$Message, [ATForegroundColor24]$ForegroundColor, [ATDecoration]$Decoration) {
-        "MessageWindow::Draw - Entering the WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
-        "MessageWindow::Draw - Parameter Values: Message: ($($Message)), ForegroundColor: ($($ForegroundColor)), and Decoration: ($($Decoration))." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', 'Entering the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', "Parameter Values: Message = $($Message), ForegroundColor = $($ForegroundColor), Decoration = $($Decoration).")
 
-        "MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', 'Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B.')
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
 
-        "MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', 'Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C.')
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
         
-        "MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', 'Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method.')
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
@@ -10654,7 +10670,7 @@ Class MessageWindow : WindowBase {
 
         # Write the messages to the window, first blanks and then the messages themselves
 
-        "MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', 'Setting the Message Dirty Flags to true to force redraws.')
         $this.MessageADirty = $true
         $this.MessageBDirty = $true
         $this.MessageCDirty = $true
@@ -10670,89 +10686,122 @@ Class MessageWindow : WindowBase {
         # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
         # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
-        "MessageWindow::Draw - Leaving the WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMessage', 'Leaving the function.')
     }
 
-    [Void]WriteBadCommandMessage([String]$Command) {
+    [Void]WriteBadCommandMessage(
+        [String]$Command
+    ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteBadCommandMessage', 'Entering the function.')
         $this.WriteMessage(
             "$($Command) isn't a valid command.",
             [CCAppleRedDark24]::new(),
             [ATDecoration]::new($true)
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteBadCommandMessage', 'Leaving the function.')
     }
 
-    [Void]WriteBadArg0Message([String]$Command, [String]$Arg0) {
+    [Void]WriteBadArg0Message(
+        [String]$Command,
+        [String]$Arg0
+    ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteBadArg0Message', 'Entering the function.')
         $this.WriteMessage(
             "We can't $($Command) with a(n) $($Arg0).",
             [CCAppleYellowDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteBadArg0Message', 'Leaving the function.')
     }
 
-    [Void]WriteBadArg1Message([String]$Command, [String]$Arg0, [String]$Arg1) {
+    [Void]WriteBadArg1Message(
+        [String]$Command,
+        [String]$Arg0,
+        [String]$Arg1
+    ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteBadArg1Message', 'Entering the function.')
         $this.WriteMessage(
             "We can't $($Command) with a(n) $(Arg0) and a(n) $($Arg1).",
             [CCAppleYellowDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteBadArg1Message', 'Leaving the function.')
     }
 
     [Void]WriteSomethingBadMessage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteSomethingBadMessage', 'Entering the function.')
         $this.WriteMessage(
             'I''m God, and even I don''t know what just happened...',
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteSomethingBadMessage', 'Leaving the function.')
     }
 
     [Void]WriteInvisibleWallEncounteredMessage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteInvisibleWallEncounteredMessage', 'Entering the function.')
         $this.WriteMessage(
             'The invisible wall blocks your path...',
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteInvisibleWallEncounteredMessage', 'Leaving the function.')
     }
 
     [Void]WriteYouShallNotPassMessage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteYouShallNotPassMessage', 'Entering the function.')
         $this.WriteMessage(
             'The path you asked for is impossible...',
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteYouShallNotPassMessage', 'Leaving the function.')
     }
 
     [Void]WriteMapNoItemsFoundMessage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMapNoItemsFoundMessage', 'Entering the function.')
         $this.WriteMessage(
             'There''s nothing of interest here.',
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMapNoItemsFoundMessage', 'Leaving the function.')
     }
 
-    [Void]WriteMapInvalidItemMessage([String]$ItemName) {
+    [Void]WriteMapInvalidItemMessage(
+        [String]$ItemName
+    ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMapInvalidItemMessage', 'Entering the function.')
         $this.WriteMessage(
             "There's no $($ItemName) here.",
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteMapInvalidItemMessage', 'Leaving the function.')
     }
 
-    [Void]WriteItemTakenMessage([String]$ItemName) {
+    [Void]WriteItemTakenMessage(
+        [String]$ItemName
+    ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemTakenMessage', 'Entering the function.')
         $this.WriteMessage(
             "I've taken the $($ItemName) and put it in my pocket.",
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemTakenMessage', 'Leaving the function.')
     }
 
     [Void]WriteItemCantTakeMessage(
         [String]$ItemName
     ) {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemCantTakeMessage', 'Entering the function.')
         $this.WriteMessage(
             "It's not possible to take the $($ItemName).",
             [CCAppleIndigoDark24]::new(),
             [ATDecorationNone]::new()
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemCantTakeMessage', 'Leaving the function.')
     }
 }
 
