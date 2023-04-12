@@ -10909,6 +10909,8 @@ Class InventoryWindow : WindowBase {
     [Int]$ActiveIChevronIndex = 0
 
     InventoryWindow(): base() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entering the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing the members to defaults.')
         $this.LeftTop     = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
         $this.RightBottom = [ATCoordinates]::new([InventoryWindow]::WindowBRRow, [InventoryWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -10923,54 +10925,85 @@ Class InventoryWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Initializing custom members to defaults.')
         $this.PageRefs = [List[MapTileObject]]::new()
 
         $this.CreateIChevrons()
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Void]Draw() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Entering the function.')
         ([WindowBase]$this).Draw()
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the BookDirty flag has been set.')
         If($this.BookDirty -EQ $true) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - (re)calculating the total number of pages for this book.')
             $this.CalculateNumPages()
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the BookDirty flag to false.')
             $this.BookDirty = $false
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the CurrentPageDirty flag has been set.')
         If($this.CurrentPageDirty -EQ $true) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - populating the page contents.')
             $this.PopulatePage()
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the ZeroPageActive flag has been set.')
         If($this.ZeroPageActive -EQ $true) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - checking to see if the MoronPageActive flag has been set.')
             If($this.MoronPageActive -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - writing the Moron Page.')
                 $this.WriteMoronPage()
             } Else {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It isn''t - writing the Zero Inventory Page.')
                 $this.WriteZeroInventoryPage()
             }
         } Else {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It isn''t - checking to see if the DivLineDirty flag has been set.')
             If($this.DivLineDirty -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - drawing the Div Line to the window.')
                 Write-Host "$([InventoryWindow]::DivLineHorizontal.ToAnsiControlSequenceString())"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the DivLineDirty flag to false.')
                 $this.DivLineDirty = $false
             }
 
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PlayerChevronVisible flag is set AND if the PlayerChevronDirty flag has been set.')
             If($this.PlayerChevronVisible -EQ $true -AND $this.PlayerChevronDirty -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'They are - Looping through the chevrons and drawing them to the window.')
                 Foreach($ic in $this.IChevrons) {
                     Write-Host "$($ic.Item1.ToAnsiControlSequenceString())"
                 }
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PlayerChevronDirty flag to false.')
                 $this.PlayerChevronDirty = $false
             }
 
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the NumPages is GREATER THAN 1.')
             If($this.NumPages -GT 1) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if CurrentPag is EQUAL TO 1.')
                 If($this.CurrentPage -EQ 1) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if the PagingChevronLeftVisible flag has been set.')
                     If($this.PagingChevronLeftVisible -EQ $true) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Drawing the Paging Left Chevron Blank to the predefined coordinates.')
                         Write-Host "$([InventoryWindow]::PagingChevronLeftBlank.ToAnsiControlSequenceString())"
+
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PagingChevronLeftVisible flag to false and the PagingChevronLeftDirty flag to true.')
                         $this.PagingChevronLeftVisible = $false
                         $this.PagingChevronLeftDirty = $true
                     }
+
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PagingChevronRightVisible is NOT set.')
                     If($this.PagingChevronRightVisible -EQ $false) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It isn''t set - setting it to true.')
                         $this.PagingChevronRightVisible = $true
                     }
+
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the PagingChevronRightVisible flags is set AND if the PagingChevronRightDirty flag is set.')
                     If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'They are - Drawing the Paging Right Chevron to the predefined coordinates.')
                         Write-Host "$([InventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PagingChevronRightDirty flag to false.')
                         $this.PagingChevronRightDirty = $false
                     }
                 } Elseif($this.CurrentPage -GT 1 -AND $this.CurrentPage -LT $this.NumPages) {
