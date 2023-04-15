@@ -1969,7 +1969,7 @@ Class SceneImage {
         For($r = 0; $r -LT [SceneImage]::Height; $r++) {
             $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Current R iteration is $($r).")
             For($c = 0; $c -LT [SceneImage]::Width; $c++) {
-                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Current C iteration is $(c).")
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Current C iteration is $($c).")
                 $rf = ($r * [SceneImage]::Width) + $c
                 $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "RF has been calculated to $($rf).")
                 $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateSceneImageATString', "Creating a new ATSceneImageString at Image Coordinates ($($r), $($c)) with color $($ImageColorMap[$rf]) and offset location ($(([SceneWindow]::ImageDrawRowOffset + $r)), $(([SceneWindow]::ImageDrawColumnOffset + $c))).")
@@ -9468,7 +9468,7 @@ Class LogManager {
     Static [String]$LogFileName = '.\Log.log'
 
     LogManager() {
-        'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath [LogManager]::LogFileName
+        'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $([LogManager]::LogFileName)
     }
 
     [Void]WriteToLog(
@@ -9476,7 +9476,7 @@ Class LogManager {
         [String]$Function,
         [String]$MessageContent
     ) {
-        "$($ClassName)::$($Function) - $($MessageContent)" | Out-File -FilePath [LogManager]::LogFileName -Append
+        "$($ClassName)::$($Function) - $($MessageContent)" | Out-File -FilePath $([LogManager]::LogFileName) -Append
     }
 }
 
@@ -11707,9 +11707,9 @@ Class GameCore {
     [TimeSpan]$FpsDelta
 
     GameCore() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Entered the constructor.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Updating the Progress Bar for globals.')
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Game Core' -PercentComplete -1
-        "GameCore::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
-        "GameCore::Constructor - Setting up variables." | Out-File -FilePath $Script:LogFileName -Append
         
         $this.TargetFrameRate      = 30
         $this.MsPerFrame           = 1000 / $this.TargetFrameRate
@@ -11719,15 +11719,15 @@ Class GameCore {
         $this.FpsDelta             = [TimeSpan]::Zero
         $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
         
-        "GameCore::Constructor - Leaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Constructor', 'Leaving the constructor.')
     }
 
     [Void]Run() {
-        "GameCore::Run - Starting the Run method." | Out-File -FilePath $Script:LogFileName -Append
-        "GameCore::Run - Checking to see if the GameRunning flag is true or not." | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Run', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Run', 'Checking to see if GameRunning is true.')
 
         While($this.GameRunning -EQ $true) {
-            "GameCore::Run - GameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Run', 'It is - calling to the Logic function.')
             $this.Logic()
             # "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
             # $this.LastFrameTime = $this.CurrentFrameTime
@@ -11746,12 +11746,14 @@ Class GameCore {
             #     $this.Logic()
             # }
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Run', 'Leaving the function.')
     }
 
     [Void]Logic() {
-        "GameCore::Logic - Starting the Logic method." | Out-File -FilePath $Script:LogFileName -Append
-        "GameCore::Logic - Invoking the ScriptBlock for the game state $($Script:TheGlobalGameState)" | Out-File -FilePath $Script:LogFileName -Append
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Logic', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Logic', "Invoking the ScriptBlock for the game state $($SCript:TheGlobalGameState).")
         Invoke-Command $Script:TheGlobalStateBlockTable[$Script:TheGlobalGameState]
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Logic', 'Leaving the function.')
     }
 }
 
@@ -11904,4 +11906,4 @@ $Script:TheGameCore.Run()
 # $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 8); Write-Host '>' -NoNewline -ForegroundColor 12
 # $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 10); Write-Host '>' -NoNewline -ForegroundColor 12
 
-Read-Host
+# Read-Host
