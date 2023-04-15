@@ -10981,7 +10981,7 @@ Class InventoryWindow : WindowBase {
 
             $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the NumPages is GREATER THAN 1.')
             If($this.NumPages -GT 1) {
-                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if CurrentPag is EQUAL TO 1.')
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if CurrentPage is EQUAL TO 1.')
                 If($this.CurrentPage -EQ 1) {
                     $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if the PagingChevronLeftVisible flag has been set.')
                     If($this.PagingChevronLeftVisible -EQ $true) {
@@ -11006,53 +11006,84 @@ Class InventoryWindow : WindowBase {
                         $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting the PagingChevronRightDirty flag to false.')
                         $this.PagingChevronRightDirty = $false
                     }
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if CurrentPage is GREATER THAN 1 AND CurrentPage is LESS THAN NumPages.')
                 } Elseif($this.CurrentPage -GT 1 -AND $this.CurrentPage -LT $this.NumPages) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'CurrentPage is GREATER THAN 1 AND CurrentPage is LESS THAN NumPages.')
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if PagingChevronLeftVisible is false.')
                     If($this.PagingChevronLeftVisible -EQ $false) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Setting PagingChevronLeftVisible to true.')
                         $this.PagingChevronLeftVisible = $true
                     }
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if PagingChevronRightVisible is false.')
                     If($this.PagingChevronRightVisible -EQ $false) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Setting PagingChevronRightVisible to true.')
                         $this.PagingChevronRightVisible = $true
                     }
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if PagingChevronRightVisible is true and if PagingChevronRightDirty is true.')
                     If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'They are - writing the Paging Right Chevron to the predefined coordinates.')
                         Write-Host "$([InventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting PagingChevronRightDirty to false.')
                         $this.PagingChevronRightDirty = $false
                     }
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if PagingChevronLeftVisible is true AND if PagingChevronLeftDirty is true.')
                     If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'They are - writing the Paging Left Chevron to the predefined coordinates.')
                         Write-Host "$([InventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting PagingChevronLeftDirty to false.')
                         $this.PagingChevronLeftDirty = $false
                     }
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if CurrentPage is GREATER THAN OR EQUAL TO NumPages.')
                 } Elseif($this.CurrentPage -GE $this.NumPages) {
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Checking to see if PagingChevronRightVisible is true.')
                     If($this.PagingChevronRightVisible -EQ $true) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Writing the PagingChevronRightBlank to the predefined coordinates.')
                         Write-Host "$([InventoryWindow]::PagingChevronRightBlank.ToAnsiControlSequenceString())"
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting PagingChevronRightVisible to false.')
                         $this.PagingChevronRightVisible = $false
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting PagingChevronRightDirty to true.')
                         $this.PagingChevronRightDirty = $true
                     }
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if PagingChevronLeftVisible is false.')
                     If($this.PagingChevronLeftVisible -EQ $false) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - setting PagingChevronLeftVisible to true.')
                         $this.PagingChevronLeftVisible = $true
                     }
+                    $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if PagingChevronLeftVisible is true AND if PagingChevronLeftDirty is true.')
                     If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'They are - Writing the Paging Chevron Left to the predefined coordinates.')
                         Write-Host "$([InventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
+                        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting PagingChevronLeftDirty to false.')
                         $this.PagingChevronLeftDirty = $false
                     }
                 }
             }
 
-            # Try to make the "active" Item Label blink
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if the ActiveItemBlinking flag is false.')
             If($this.ActiveItemBlinking -EQ $false) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Setting the decoration and foreground color of the active item.')
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
 
-                $this.ItemsListDirty     = $true
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting ItemsListDirty to true.')
+                $this.ItemsListDirty = $true
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting ActiveItemBlinking to true.')
                 $this.ActiveItemBlinking = $true
             }
 
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if ItemsListDirty is true.')
             If($this.ItemsListDirty -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Writing the Item Labels to the page.')
                 $this.WriteItemLabels()
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Hiding the cursor.')
                 Write-Host "$([ATControlSequences]::CursorHide)"
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Setting ItemsListDirty to false.')
                 $this.ItemsListDirty = $false
             }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Checking to see if ItemDescDirty is true.')
             If($this.ItemDescDirty -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'It is - Creating an ATString Blank and Actual.')
                 [ATString]$b = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
@@ -11074,14 +11105,20 @@ Class InventoryWindow : WindowBase {
                     $true
                 )
 
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Writing the Blank and Actual.')
                 Write-Host "$($b.ToAnsiControlSequenceString())"
                 Write-Host "$($d.ToAnsiControlSequenceString())"
             }
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'Draw', 'Leaving the function.')
     }
 
     [Void]CreateIChevrons() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateIChevrons', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateIChevrons', 'Resetting the IChevrons collection.')
         $this.IChevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateIChevrons', 'Recreating the IChevron collection.')
         $this.IChevrons.Add([ValueTuple]::Create(
             [ATString]::new(
                 [ATStringPrefix]::new(
@@ -11212,13 +11249,18 @@ Class InventoryWindow : WindowBase {
             ),
             $false
         ))
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateIChevrons', 'Leaving the function.')
     }
 
     [Void]CreateItemLabels() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabels', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabels', 'Resetting the ItemLabels collection.')
         $this.ItemLabels = [List[ATString]]::new()
         [Int]$c          = 0
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabels', 'Looping through the PageRefs collection to generate corresponding ItemLabels.')
         Foreach($i in $this.PageRefs) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabels', 'Adding a new ItemLabel to the ItemLabels collection.')
             $this.ItemLabels.Add(
                 [ATString]::new(
                     [ATStringPrefix]::new(
@@ -11237,12 +11279,18 @@ Class InventoryWindow : WindowBase {
             $c++ # FYI - This was intentional
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabels', 'Resetting IChevron Positions and creating ItemLabelBlanks.')
         $this.ResetIChevronPosition()
         $this.CreateItemLabelBlanks()
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabels', 'Leaving the function.')
     }
 
     [Void]CreateItemLabelBlanks() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabelBlanks', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabelBlanks', 'Resetting the ItemLabelBlanks collection.')
         $this.ItemLabelBlanks = [List[ATString]]::new()
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabelBlanks', 'Recreating the ItemLabelBlanks collection.')
         $this.ItemLabelBlanks.Add(
             [ATString]::new(
                 [ATStringPrefix]::new(
@@ -11363,94 +11411,135 @@ Class InventoryWindow : WindowBase {
                 $true
             )
         )
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CreateItemLabelBlanks', 'Leaving the function.')
     }
 
     [Void]CalculateNumPages() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CalculateNumPages', 'Entered the function.')
         $pp = $Script:ThePlayer.Inventory.Count / $this.ItemsPerPage
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CalculateNumPages', "NumPages has been calculated to be $($pp).")
         If($pp -LT 1) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CalculateNumPages', 'Setting NumPages to 1.')
             $this.NumPages = 1
         } Else {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CalculateNumPages', "Setting NumPages to $([Math]::Ceiling($pp)).")
             $this.NumPages = [Math]::Ceiling($pp)
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'CalculateNumPages', 'Leaving the function.')
     }
 
     [Void]TurnPageForward() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageForward', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageForward', 'Checking to see if a pre-increment of CurrentPage is LESS THAN OR EQUAL TO NumPages.')
         If(($this.CurrentPage + 1) -LE $this.NumPages) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageForward', 'This check passes - incrementing CurrentPage, setting CurrentPageDirty to true, setting ActiveItemBlinking to false, and setting ItemDescDirty to true.')
             $this.CurrentPage++
             $this.CurrentPageDirty   = $true
             $this.ActiveItemBlinking = $false
             $this.ItemDescDirty      = $true
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageForward', 'Leaving the function.')
     }
 
     [Void]TurnPageBackward() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageBackward', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageBackward', 'Checking to see if a pre-decrement of CurrentPage is GREATER THAN OR EQUAL TO 1.')
         If(($this.CurrentPage - 1) -GE 1) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageBackward', 'This check passes - decrementing CurrentPage, setting CurrentPageDirty to true, setting ActiveItemBlinking to false, and setting ItemDescDirty to true.')
             $this.CurrentPage--
             $this.CurrentPageDirty   = $true
             $this.ActiveItemBlinking = $false
             $this.ItemDescDirty      = $true
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'TurnPageBackward', 'Leaving the function.')
     }
 
     [Void]PopulatePage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'Checking to see if ThePlayer''s Inventory size is LESS THAN OR EQUAL TO 0.')
         If($Script:ThePlayer.Inventory.Count -LE 0) {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'It is - Setting ZeroPageActive to true and CurrentPageDirty to false.')
             $this.ZeroPageActive   = $true
             $this.CurrentPageDirty = $false
             
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'Checking to see if the MoronCounter is LESS THAN OR EQUAL TO 20.')
             If([InventoryWindow]::MoronCounter -LT 20) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'It is - increment the MoronCounter.')
                 [InventoryWindow]::MoronCounter++
             } Else {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'It isn''t - Setting MoronPageActive to true.')
                 $this.MoronPageActive = $true
             }
         } Else {
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'It isn''t - resetting PageRefs and repopulating with a minimal scope of the Player''s Inventory.')
             $this.PageRefs        = [List[MapTileObject]]::new()
             $this.ZeroPageActive  = $false
             $this.MoronPageActive = $false
             $rs                   = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage) - 1
             $rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
             $re                   = 10
-            #$re                   = $this.CurrentPage * $this.ItemsPerPage
+            #$re                  = $this.CurrentPage * $this.ItemsPerPage
+            
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', "Range selection start index was calculated to be $($rs); Range selection end is always 10.")
 
             Try {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', "Trying to select 10 items from index $($rs).")
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
             } Catch {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', "This failed - trying to select $($Script:ThePlayer.Inventory.Count - $rs) items from $($rs).")
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, ($Script:ThePlayer.Inventory.Count - $rs))
             }
 
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'Creating the Item Labels.')
             $this.CreateItemLabels()
 
             # $this.ResetIChevronPosition()
 
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'Setting ItemsListDirty to true and CurrentPageDirty to false.')
             $this.ItemsListDirty   = $true
             $this.CurrentPageDirty = $false
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'PopulatePage', 'Leaving the function.')
     }
 
     [Void]WriteItemLabels() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemLabels', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemLabels', 'Writing the Item Label Blanks.')
         Foreach($i in $this.ItemLabelBlanks) {
             Write-Host "$($i.ToAnsiControlSequenceString())"
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemLabels', 'Writing the Item Labels.')
         Foreach($i in $this.ItemLabels) {
             Write-Host "$($i.ToAnsiControlSequenceString())"
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteItemLabels', 'Leaving the function.')
     }
 
     [ATString]GetActiveIChevron() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', 'Setting ActiveIChevronIndex to 0.')
         $this.ActiveIChevronIndex = 0
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', 'Looping through the IChevon collection to find the ''active'' one.')
         Foreach($a in $this.IChevrons) {
             If($a.Item2 -EQ $true) {
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', "Found the Active IChevron at index $($this.ActiveIChevronIndex).")
                 Return $a.Item1
             }
+            $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', 'Not yet found - incrementing ActiveIChevronIndex.')
             $this.ActiveIChevronIndex++
         }
 
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', 'An active IChevron wasn''t found in the IChevron collection - setting the first element as the active.')
         $this.ActiveIChevronIndex = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'GetActiveIChevron', 'Leaving the function.')
         Return $this.IChevrons[$this.ActiveIChevronIndex].Item1
     }
 
     [Void]WriteZeroInventoryPage() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteZeroInventoryPage', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteZeroInventoryPage', 'Creating an ATString instance with a message and writing it to the window.')
         [ATString]$a = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -11466,42 +11555,56 @@ Class InventoryWindow : WindowBase {
         )
 
         Write-Host "$($a.ToAnsiControlSequenceString())"
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'WriteZeroInventoryPage', 'Leaving the function.')
     }
 
     [Void]WriteMoronPage() {}
 
     [Void]ResetIChevronPosition() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Setting the currently active IChevron to inactive.')
         $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
         
         # This seems to be the only way to deal with this reliably since the ActiveIChevronIndex can't be
         # reset to zero yet.
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Attempting to clear the decoration settings of the Item Label in the ActiveIChevronIndex position.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Note that this can cause an intentional exception, which is captured and ignored.')
         Try {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
         } Catch {
         }
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Setting the ActiveIChevronIndex to 0, and resetting the IChevron and Active Item Label Decorations.')
         $this.ActiveIChevronIndex                                          = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
         
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Setting PlayerChevronDirty to true, ActiveItemBlinking to false, and ItemDescDirty to true.')
         $this.PlayerChevronDirty = $true
         $this.ActiveItemBlinking = $false
         $this.ItemDescDirty      = $true
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'ResetIChevronPosition', 'Leaving the function.')
     }
 
     [Void]HandleInput() {
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Entered the function.')
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Calling ReadKey with NoEcho option.')
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Checking to see the value of VirtualKeyCode.')
         Switch($keyCap.VirtualKeyCode) {
-            27 {
+            27 { # Escape
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '27 (Escape) - Reverting the Global Game State back to the GamePlayScreen.')
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
             }
 
-            38 {
+            38 { # Up Arrow
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '38 (Up Arrow) - If possible, move the Active IChevron ''up'' one (decrement the indexer).')
                 If(($this.ActiveIChevronIndex - 1) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -11520,7 +11623,8 @@ Class InventoryWindow : WindowBase {
                 $this.ItemDescDirty      = $true
             }
 
-            40 {
+            40 { # Down Arrow
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '40 (Down Arrow) - If possible, move the Active IChevron ''down'' one (increment the indexer).')
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -11539,7 +11643,8 @@ Class InventoryWindow : WindowBase {
                 $this.ItemDescDirty      = $true
             }
 
-            39 {
+            39 { # Right Arrow
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '39 (Right Arrow) - If possible, move the Active IChevron ''right'' one (increment the indexer by 5).')
                 If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -11559,7 +11664,8 @@ Class InventoryWindow : WindowBase {
                 $this.ItemDescDirty      = $true
             }
 
-            37 {
+            37 { # Left Arrow
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '37 (Left Arrow) - If possible, move the Active IChevron ''left'' one (decrement the indexer by 5).')
                 If(($this.ActiveIChevronIndex -5) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -11578,14 +11684,17 @@ Class InventoryWindow : WindowBase {
                 $this.ItemDescDirty      = $true
             }
 
-            68 {
+            68 { # D
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '68 (D) - Turn the Inventory Page forward.')
                 $this.TurnPageForward()
             }
 
-            65 {
+            65 { # A
+                $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', '65 (A) - Turn the Inventory Page backward.')
                 $this.TurnPageBackward()
             }
         }
+        $Script:TheLogManager.WriteToLog("$($this.GetType().Name)", 'HandleInput', 'Leaving the function.')
     }
 }
 
