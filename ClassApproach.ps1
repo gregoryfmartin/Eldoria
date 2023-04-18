@@ -15,7 +15,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]              $Script:OsCheckMac               = 'OsMac'
 [String]              $Script:OsCheckWindows           = 'OsWindows'
 [String]              $Script:OsCheckUnknown           = 'OsUnknown'
-[Player]              $Script:ThePlayer                = [Player]::new('Steve', 500, 500, 25, 25, 5000, 5000)
+[Player]              $Script:ThePlayer                = [Player]::new('Steve', 100, 500, 25, 25, 5000, 5000, @('MTOMilk'))
 [StatusWindow]        $Script:TheStatusWindow          = [StatusWindow]::new()
 [CommandWindow]       $Script:TheCommandWindow         = [CommandWindow]::new()
 [SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
@@ -266,6 +266,12 @@ $Script:TheCommandTable = @{
                     }
                 } Else {
                     If($a1 -IEQ 'self') {
+                        [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+
+                        If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                            $Script:TheCommandWindow.UpdateCommandHistory($true)
+                            Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
+                        }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         $Script:TheMessageWindow.WriteMessage(
@@ -320,6 +326,12 @@ $Script:TheCommandTable = @{
                     }
                 } Else {
                     If($a1 -IEQ 'self') {
+                        [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+
+                        If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                            $Script:TheCommandWindow.UpdateCommandHistory($true)
+                            Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
+                        }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         $Script:TheMessageWindow.WriteMessage(
@@ -1117,6 +1129,7 @@ Class Player {
     [StatNumberState]$MagicPointsState
     [ATCoordinates]$MapCoordinates
     [List[MapTileObject]]$Inventory
+    [List[String]]$TargetOfFilter
     
     Static [Single]$StatNumThresholdCaution         = 0.6D
     Static [Single]$StatNumThresholdDanger          = 0.2D
@@ -1147,6 +1160,35 @@ Class Player {
         $this.MagicPointsState   = [StatNumberState]::Normal
         $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
         $this.Inventory          = [List[MapTileObject]]::new()
+        $this.TargetOfFilter     = [List[String]]::new()
+    }
+
+    Player(
+        [String]$Name,
+        [Int]$CurrentHitPoints,
+        [Int]$MaxHitPoints,
+        [Int]$CurrentMagicPoints,
+        [Int]$MaxMagicPoints,
+        [Int]$CurrentGold,
+        [Int]$MaxGold,
+        [String[]]$TargetOfFilter
+    ) {
+        $this.Name               = $Name
+        $this.CurrentHitPoints   = $CurrentHitPoints
+        $this.MaxHitPoints       = $MaxHitPoints
+        $this.CurrentMagicPoints = $CurrentMagicPoints
+        $this.MaxMagicPoints     = $MaxMagicPoints
+        $this.CurrentGold        = $CurrentGold
+        $this.MaxGold            = $MaxGold
+        $this.HitPointsState     = [StatNumberState]::Normal
+        $this.MagicPointsState   = [StatNumberState]::Normal
+        $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
+        $this.Inventory          = [List[MapTileObject]]::new()
+        $this.TargetOfFilter     = [List[String]]::new()
+
+        Foreach($a in $TargetOfFilter) {
+            $this.TargetOfFilter.Add($a) | Out-Null
+        }
     }
     
     [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
@@ -1166,6 +1208,8 @@ Class Player {
     
     [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
         [String]$a = ''
+
+        $this.TestCurrentHpState()
         
         Switch($this.HitPointsState) {
             Normal {
@@ -1273,7 +1317,7 @@ Class Player {
                     [ATStringPrefix]::new(
                         [Player]::StatNumDrawColorDanger,
                         [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
+                        [ATDecoration]::new($true),
                         [ATCoordinatesNone]::new()
                     ),
                     "$($this.CurrentHitPoints) `n`t",
@@ -1293,7 +1337,7 @@ Class Player {
                     [ATStringPrefix]::new(
                         [Player]::StatNumDrawColorDanger,
                         [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
+                        [ATDecoration]::new($true),
                         [ATCoordinatesNone]::new()
                     ),
                     "$($this.MaxHitPoints)",
@@ -1312,6 +1356,8 @@ Class Player {
     [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
         [String]$a = ''
         
+        $this.TestCurrentMpState()
+
         Switch($this.MagicPointsState) {
             Normal {
                 [ATString]$p1 = [ATString]::new(
@@ -1418,7 +1464,7 @@ Class Player {
                     [ATStringPrefix]::new(
                         [Player]::StatNumDrawColorDanger,
                         [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
+                        [ATDecoration]::new($true),
                         [ATCoordinatesNone]::new()
                     ),
                     "$($this.CurrentMagicPoints) `n`t",
@@ -1438,7 +1484,7 @@ Class Player {
                     [ATStringPrefix]::new(
                         [Player]::StatNumDrawColorDanger,
                         [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
+                        [ATDecoration]::new($true),
                         [ATCoordinatesNone]::new()
                     ),
                     "$($this.MaxMagicPoints)",
@@ -1699,6 +1745,36 @@ Class Player {
             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
             Return
         }
+    }
+
+    [Boolean]ValidateSourceInFilter(
+        [String]$SourceItemClass
+    ) {
+        Return ($SourceItemClass -IN $this.TargetOfFilter)
+    }
+
+    [Boolean]IncrementHitPoints(
+        [Int]$IncAmt
+    ) {
+        # Check to see if the Current Hit Points are EQUAL TO the Max Hit Points
+        If($this.CurrentHitPoints -EQ $this.MaxHitPoints) {
+            Return $false
+        }
+
+        # Ensure that IncAmt is GREATER THAN zero; the clamping function below relies on it
+        If($IncAmt -LE 0) {
+            Return $false
+        }
+
+        # It can safely be assumed that the Player's Current Hit Points are LESS THAN the Max Hit Points; add the IncAmt, but clamp at max
+        $a = $this.CurrentHitPoints += $IncAmt
+        $a = [Math]::Clamp($a, 0, $this.MaxHitPoints)
+        $this.CurrentHitPoints = $a
+
+        # Notify the Status Window that the Player's Hit Point information is dirty
+        $Script:TheStatusWindow.PlayerHpDrawDirty = $true
+        
+        Return $true
     }
 }
 
@@ -8908,7 +8984,7 @@ Class MTOTree : MapTileObject {
         #>
         Param(
             [MTOTree]$Self,
-            [MapTileObject]$Source
+            [Object]$Source
         )
 
         Switch($Source.PSTypeNames[0]) {
@@ -8937,7 +9013,9 @@ Class MTOTree : MapTileObject {
             }
         }
     },
-    @('MTORope')) {
+    @(
+        'MTORope'
+    )) {
         $this.HasRopeTied = $false
     }
 }
@@ -8979,7 +9057,40 @@ Class MTORock : MapTileObject {
 }
 
 Class MTOMilk : MapTileObject {
-    MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {}) {}
+    [Int]$PlayerHpBonus
+
+    MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {
+        Param(
+            [MTOMilk]$Self,
+            [Object]$Source
+        )
+
+        Switch($Source.PSTypeNames[0]) {
+            'Player' {
+                # Attempt to increment the Player's HP by the Hp Bonus
+                If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
+                    # Increment was successful; write a message to the Message Window
+                    $Script:TheMessageWindow.WriteMessage(
+                        'Hmmm. Delicious cow juice.',
+                        [CCAppleGreenLight24]::new(),
+                        [ATDecorationNone]::new()
+                    )
+
+                    # Remove the milk from the Player's Inventory
+                    $Script:ThePlayer.RemoveItemFromInventory($Self.Name)
+                } Else {
+                    # Increment wasn't successful; write a message to the Message Window
+                    $Script:TheMessageWindow.WriteMessage(
+                        'There''s no need to drink this now.',
+                        [CCAppleYellowLight24]::new(),
+                        [ATDecorationNone]::new()
+                    )
+                }
+            }
+        }
+    }) {
+        $this.PlayerHpBonus = 25
+    }
 }
 
 Class BufferManager {
@@ -10941,6 +11052,9 @@ $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
