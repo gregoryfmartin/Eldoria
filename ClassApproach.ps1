@@ -8886,6 +8886,7 @@ Class MapTileObject {
     [String]$ExamineString
     [List[String]]$TargetOfFilter
     [ScriptBlock]$BaseEffectCall
+    [String]$PlayerEffectString
 
     MapTileObject(
         [String]$Name,
@@ -8908,6 +8909,7 @@ Class MapTileObject {
 
             Return $this.ValidateSourceInFilter($a0)
         }
+        $this.PlayerEffectString = ''
     }
 
     MapTileObject(
@@ -8932,6 +8934,37 @@ Class MapTileObject {
 
             Return $this.ValidateSourceInFilter($a0)
         }
+        $this.PlayerEffectString = ''
+
+        Foreach($a in $TargetOfFilter) {
+            $this.TargetOfFilter.Add($a) | Out-Null
+        }
+    }
+
+    MapTileObject(
+        [String]$Name,
+        [String]$MapObjName,
+        [Boolean]$CanAddToInventory,
+        [String]$ExamineString,
+        [ScriptBlock]$Effect,
+        [String[]]$TargetOfFilter,
+        [String]$PlayerEffectString
+    ) {
+        $this.Name              = $Name
+        $this.MapObjName        = $MapObjName
+        $this.Effect            = $Effect
+        $this.CanAddToInventory = $CanAddToInventory
+        $this.ExamineString     = $ExamineString
+        $this.TargetOfFilter    = [List[String]]::new()
+        $this.BaseEffectCall    = {
+            Param(
+                [ValidateNotNullOrEmpty()]
+                [String]$a0
+            )
+
+            Return $this.ValidateSourceInFilter($a0)
+        }
+        $this.PlayerEffectString = $PlayerEffectString
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
@@ -9169,6 +9202,9 @@ Class MTOMilk : MapTileObject {
         
         If($this.IsSpoiled -EQ $true) {
             $this.ExamineString = 'This looks funny. Should I really be drinking this?'
+            $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
+        } Else {
+            $this.PlayerEffectString = "+$($this.PlayerHpBonus) HP"
         }
     }
 }
@@ -10494,9 +10530,31 @@ Class InventoryWindow : WindowBase {
                     $this.PageRefs[$this.ActiveIChevronIndex].ExamineString,
                     $true
                 )
+                [ATString]$f = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(16, 4)
+                    ),
+                    [InventoryWindow]::DescLineBlank,
+                    $true
+                )
+                [ATString]$e = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCApplePinkLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(16, 4)
+                    ),
+                    $this.PageRefs[$this.ActiveIChevronIndex].PlayerEffectString,
+                    $true
+                )
 
                 Write-Host "$($b.ToAnsiControlSequenceString())"
                 Write-Host "$($d.ToAnsiControlSequenceString())"
+                Write-Host "$($f.ToAnsiControlSequenceString())"
+                Write-Host "$($e.ToAnsiControlSequenceString())"
             }
         }
     }
