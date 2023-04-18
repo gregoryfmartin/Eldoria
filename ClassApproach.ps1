@@ -309,7 +309,7 @@ $Script:TheCommandTable = @{
                     
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-                        Invoke-Command $mti.Effect -ArgumentList $pi
+                        Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         $Script:TheMessageWindow.WriteMessage(
