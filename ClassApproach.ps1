@@ -29,7 +29,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete
 
 Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Working' -PercentComplete -1
 
-[Map]$Script:SampleMap   = [Map]::new('Sample Map', 2, 2, $true)
+[Map]$Script:SampleMap   = [Map]::new('Sample Map', 2, 2, $false)
 [Map]$Script:CurrentMap  = $Script:SampleMap
 [Map]$Script:PreviousMap = $null
 
@@ -50,7 +50,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Completed
 Write-Progress -Activity 'Creating Maps              ' -Id 2 -Completed
 Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
 
-$Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
+#$Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
@@ -100,7 +100,7 @@ $Script:TheCommandTable = @{
 
         Switch($a0) {
             { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
-                #$Script:ThePlayer.MapMoveNorth()
+                $Script:ThePlayer.MapMoveNorth()
             }
         }
     }
@@ -1081,7 +1081,7 @@ Class Player {
     [Int]$MaxGold
     [StatNumberState]$HitPointsState
     [StatNumberState]$MagicPointsState
-    [Coordinates]$MapCoordinates
+    [ATCoordinates]$MapCoordinates
     [List[MapTileObject]]$Inventory
     
     Static [Single]$StatNumThresholdCaution         = 0.6D
@@ -1111,7 +1111,7 @@ Class Player {
         $this.MaxGold            = $MaxGold
         $this.HitPointsState     = [StatNumberState]::Normal
         $this.MagicPointsState   = [StatNumberState]::Normal
-        $this.MapCoordinates     = [Coordinates]::new(0, 0)
+        $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
         $this.Inventory          = [List[MapTileObject]]::new()
     }
     
@@ -1516,16 +1516,19 @@ Class Player {
     }
 
     [Void]MapMoveNorth() {
+        $ab = $this
+        $aa = $Script:CurrentMap.GetTileAtPlayerCoordinates()
+
         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
                 $a = $Script:CurrentMap.MapHeight - 1
-                $b = $this.MapCoordinates.Y + 1
+                $b = $this.MapCoordinates.Row + 1
                 $c = $a % $b
 
                 If($c -EQ $a) {
-                    $this.MapCoordinates.Y = 0
+                    $this.MapCoordinates.Row = 0
                 } Else {
-                    $this.MapCoordinates.Y++
+                    $this.MapCoordinates.Row++
                 }
 
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
@@ -1533,22 +1536,25 @@ Class Player {
                 Return
             } Else {
                 $a = $Script:CurrentMap.MapHeight - 1
-                $b = $this.MapCoordinates.Y + 1
+                $b = $this.MapCoordinates.Row + 1
                 $c = $a % $b
 
                 If($c -EQ $a) {
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
                     # TODO: Write a message to the Message Window that the Invisible Wall has been encountered
+                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
-                    $this.MapCoordinates.Y++
+                    $this.MapCoordinates.Row++
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    
                     Return
                 }
             }
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($true)
             # TODO: Write a message to the Message Window that it's not possible to exit in this direction on this tile
+            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
             Return
         }
     }
@@ -8742,7 +8748,7 @@ Class Map {
     }
 
     [MapTile]GetTileAtPlayerCoordinates() {
-        Return $this.Tiles[$Script:ThePlayer.MapCoordinates.Y, $Script:ThePlayer.MapCoordinates.X]
+        Return $this.Tiles[$Script:ThePlayer.MapCoordinates.Row, $Script:ThePlayer.MapCoordinates.Column]
     }
 }
 
@@ -9678,6 +9684,7 @@ Class SceneWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.SceneImageDirty) {
+            $this.Image = $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
             Write-Host "$($this.Image.ToAnsiControlSequenceString())"
             $this.SceneImageDirty = $false
         }
@@ -10811,9 +10818,9 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     )
 )
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
-    $Script:FieldNorthWestRoadImage,
+    $Script:FieldSouthWestRoadImage,
     @(
-        [MTOTree]::new()
+        [MTOApple]::new()
     ),
     @(
         $true,
@@ -10823,7 +10830,7 @@ $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
     )
 )
 $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
-    $Script:FieldSouthEastWestRoadImage,
+    $Script:FieldSouthEastRoadImage,
     @(
         [MTOTree]::new()
     ),
