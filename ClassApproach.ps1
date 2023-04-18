@@ -102,10 +102,44 @@ $Script:TheCommandTable = @{
             { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
                 $Script:ThePlayer.MapMoveNorth()
             }
+
+            { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
+                $Script:ThePlayer.MapMoveSouth()
+            }
+
+            { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
+                $Script:ThePlayer.MapMoveEast()
+            }
+
+            { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
+                $Script:ThePlayer.MapMoveWest()
+            }
         }
     }
 
-    'm' = {}
+    'm' = {
+        Param(
+            [String]$a0
+        )
+
+        Switch($a0) {
+            { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
+                $Script:ThePlayer.MapMoveNorth()
+            }
+
+            { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
+                $Script:ThePlayer.MapMoveSouth()
+            }
+
+            { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
+                $Script:ThePlayer.MapMoveEast()
+            }
+
+            { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
+                $Script:ThePlayer.MapMoveWest()
+            }
+        }
+    }
 
     'look' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
@@ -1516,9 +1550,6 @@ Class Player {
     }
 
     [Void]MapMoveNorth() {
-        $ab = $this
-        $aa = $Script:CurrentMap.GetTileAtPlayerCoordinates()
-
         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
                 $a = $Script:CurrentMap.MapHeight - 1
@@ -1541,7 +1572,6 @@ Class Player {
 
                 If($c -EQ $a) {
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    # TODO: Write a message to the Message Window that the Invisible Wall has been encountered
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Row++
@@ -1553,7 +1583,119 @@ Class Player {
             }
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($true)
-            # TODO: Write a message to the Message Window that it's not possible to exit in this direction on this tile
+            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+            Return
+        }
+    }
+
+    [Void]MapMoveSouth() {
+        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
+            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                $a = 0
+                $b = $this.MapCoordinates.Row - 1
+
+                If($b -LT $a) {
+                    $this.MapCoordinates.Row = $Script:CurrentMap.MapHeight - 1
+                } Else {
+                    $this.MapCoordinates.Row--
+                }
+
+                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                Return
+            } Else {
+                $a = 0
+                $b = $this.MapCoordinates.Row - 1
+
+                If($b -LT $a) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+                } Else {
+                    $this.MapCoordinates.Row--
+                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    
+                    Return
+                }
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($true)
+            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+            Return
+        }
+    }
+
+    [Void]MapMoveEast() {
+        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitEast] -EQ $true) {
+            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                $a = $Script:CurrentMap.MapWidth - 1
+                $b = $this.MapCoordinates.Column + 1
+                $c = $a % $b
+
+                If($c -EQ $a) {
+                    $this.MapCoordinates.Column = 0
+                } Else {
+                    $this.MapCoordinates.Column++
+                }
+
+                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                Return
+            } Else {
+                $a = $Script:CurrentMap.MapWidth - 1
+                $b = $this.MapCoordinates.Column + 1
+                $c = $a % $b
+
+                If($c -EQ $a) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+                } Else {
+                    $this.MapCoordinates.Column++
+                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    
+                    Return
+                }
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($true)
+            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+            Return
+        }
+    }
+
+    [Void]MapMoveWest() {
+        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitWest] -EQ $true) {
+            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+                $a = 0
+                $b = $this.MapCoordinates.Column - 1
+
+                If($b -LT $a) {
+                    $this.MapCoordinates.Column = $Script:CurrentMap.MapWidth - 1
+                } Else {
+                    $this.MapCoordinates.Column--
+                }
+
+                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                Return
+            } Else {
+                $a = 0
+                $b = $this.MapCoordinates.Column - 1
+
+                If($b -LT $a) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+                } Else {
+                    $this.MapCoordinates.Column--
+                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    
+                    Return
+                }
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($true)
             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
             Return
         }
@@ -10818,7 +10960,7 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     )
 )
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
-    $Script:FieldSouthWestRoadImage,
+    $Script:FieldNorthWestRoadImage,
     @(
         [MTOApple]::new()
     ),
@@ -10842,7 +10984,7 @@ $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
     )
 )
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
-    $Script:FieldNorthRoadImage,
+    $Script:FieldSouthWestRoadImage,
     @(
         [MTOTree]::new()
     ),
@@ -10873,4 +11015,4 @@ $Script:TheGameCore.Run()
 # $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 8); Write-Host '>' -NoNewline -ForegroundColor 12
 # $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 10); Write-Host '>' -NoNewline -ForegroundColor 12
 
-Read-Host
+#Read-Host
