@@ -15,7 +15,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]              $Script:OsCheckMac               = 'OsMac'
 [String]              $Script:OsCheckWindows           = 'OsWindows'
 [String]              $Script:OsCheckUnknown           = 'OsUnknown'
-[Player]              $Script:ThePlayer                = [Player]::new('Steve', 100, 500, 25, 25, 5000, 5000, @('MTOMilk'))
+[Player]              $Script:ThePlayer                = [Player]::new('Steve', 250, 500, 25, 25, 5000, 5000, @('MTOMilk'))
 [StatusWindow]        $Script:TheStatusWindow          = [StatusWindow]::new()
 [CommandWindow]       $Script:TheCommandWindow         = [CommandWindow]::new()
 [SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
@@ -1787,13 +1787,37 @@ Class Player {
         }
 
         # It can safely be assumed that the Player's Current Hit Points are LESS THAN the Max Hit Points; add the IncAmt, but clamp at max
-        $a = $this.CurrentHitPoints += $IncAmt
-        $a = [Math]::Clamp($a, 0, $this.MaxHitPoints)
+        $a                     = $this.CurrentHitPoints += $IncAmt
+        $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
         $this.CurrentHitPoints = $a
 
         # Notify the Status Window that the Player's Hit Point information is dirty
         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
         
+        Return $true
+    }
+
+    [Boolean]DecrementHitPoints(
+        [Int]$DecAmt
+    ) {
+        # Check to see if Current Hit Points are EQUAL TO zero
+        If($this.CurrentHitPoints -EQ 0) {
+            Return $false
+        }
+
+        # Ensure that DecAmt is LESS THAN zero; the clamping function below relies on it
+        If($DecAmt -GE 0) {
+            Return $false
+        }
+
+        # It can be safely assumed that the Player's Current Hit Points are GREATER THAN zero; add the DecAmt, but clamp at zero
+        $a                     = $this.CurrentHitPoints += $DecAmt
+        $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
+        $this.CurrentHitPoints = $a
+        
+        # Notify the Status Window that the Player's Hit Point information is dirty
+        $Script:TheStatusWindow.PlayerHpDrawDirty = $true
+
         Return $true
     }
 }
@@ -9078,6 +9102,7 @@ Class MTORock : MapTileObject {
 
 Class MTOMilk : MapTileObject {
     [Int]$PlayerHpBonus
+    [Boolean]$IsSpoiled
 
     MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {
         Param(
@@ -9087,29 +9112,64 @@ Class MTOMilk : MapTileObject {
 
         Switch($Source.PSTypeNames[0]) {
             'Player' {
-                # Attempt to increment the Player's HP by the Hp Bonus
-                If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
-                    # Increment was successful; write a message to the Message Window
-                    $Script:TheMessageWindow.WriteMessage(
-                        'Hmmm. Delicious cow juice.',
-                        [CCAppleGreenLight24]::new(),
-                        [ATDecorationNone]::new()
-                    )
+                <#
+                Now we're getting into some pretty esoteric stuff here.
 
-                    # Remove the milk from the Player's Inventory
-                    $Script:ThePlayer.RemoveItemFromInventory($Self.Name)
+                First, we need to check and see if the Milk is spoiled.
+                #>
+                If($Self.IsSpoiled -EQ $true) {
+                    # It is - this will cause the Player's Hp to decrease
+                    # Attempt to decrement the Player's Hp by the Hp Bonus
+                    If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
+                        # Decrement was successful; write a message to the Message Window
+                        $Script:TheMessageWindow.WriteMessage(
+                            'Now that wasn''t very smart, was it?',
+                            [CCAppleOrangeLight24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+
+                        # Remove the milk from the Player's Inventory
+                        $Source.RemoveItemFromInventory($Self.Name)
+                    } Else {
+                        # Decrement failed; write a message to the Message Window
+                        $Script:TheMessageWindow.WriteMessage(
+                            'There''s no need to drink this now.',
+                            [CCAppleYellowLight24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+                    }
                 } Else {
-                    # Increment wasn't successful; write a message to the Message Window
-                    $Script:TheMessageWindow.WriteMessage(
-                        'There''s no need to drink this now.',
-                        [CCAppleYellowLight24]::new(),
-                        [ATDecorationNone]::new()
-                    )
+                    # The milk isn't spoiled - attempt to increment the Player's Hp by the Hp Bonus
+                    # Attempt to increment the Player's HP by the Hp Bonus
+                    If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
+                        # Increment was successful; write a message to the Message Window
+                        $Script:TheMessageWindow.WriteMessage(
+                            'Hmmm. Delicious cow juice.',
+                            [CCAppleGreenLight24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+
+                        # Remove the milk from the Player's Inventory
+                        $Script:ThePlayer.RemoveItemFromInventory($Self.Name)
+                    } Else {
+                        # Increment wasn't successful; write a message to the Message Window
+                        $Script:TheMessageWindow.WriteMessage(
+                            'There''s no need to drink this now.',
+                            [CCAppleYellowLight24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+                    }
                 }
             }
         }
     }) {
+        $a = $(Get-Random -Minimum 0 -Maximum 10)
         $this.PlayerHpBonus = 75
+        $this.IsSpoiled     = ($a -GE 6 ? $true : $false)
+        
+        If($this.IsSpoiled -EQ $true) {
+            $this.ExamineString = 'This looks funny. Should I really be drinking this?'
+        }
     }
 }
 
