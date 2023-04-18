@@ -281,6 +281,16 @@ $Script:TheCommandTable = @{
                         )
                     }
                 }
+            } Else {
+                # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMessage(
+                    "You don't seem to have any $($a0) in your pocket(s).",
+                    [CCAppleYellowLight24]::new(),
+                    [ATDecorationNone]::new()
+                )
+
+                Return
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -341,6 +351,16 @@ $Script:TheCommandTable = @{
                         )
                     }
                 }
+            } Else {
+                # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMessage(
+                    "You don't seem to have any $($a0) in your pocket(s).",
+                    [CCAppleYellowLight24]::new(),
+                    [ATDecorationNone]::new()
+                )
+
+                Return
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
