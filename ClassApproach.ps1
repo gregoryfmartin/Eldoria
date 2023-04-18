@@ -8750,6 +8750,14 @@ Class MTOTree : MapTileObject {
     [Boolean]$HasRopeTied
 
     MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
+        <#
+        Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments: 
+        A reference to the object itself, and the source. AFAIK, this is because of how the ScriptBlock gets invoked. The $this reference
+        doesn't work as it references the CommandWindow instance rather than the owning object (in this case, MTOTree). Because of this
+        somewhate counterintuitive nature, the caller (in this case, the 'use' command) will invoke the ScriptBlock with two arguments that
+        match the signature here. State changes can be inflicted upon Self (passed as a reference), and Source gets removed from the Player's
+        Inventory.
+        #>
         Param(
             [MTOTree]$Self,
             [MapTileObject]$Source
