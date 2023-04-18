@@ -221,7 +221,7 @@ $Script:TheCommandTable = @{
                     
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-                        Invoke-Command $mti.Effect -ArgumentList $pi
+                        Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         $Script:TheMessageWindow.WriteMessage(
@@ -8747,8 +8747,13 @@ Class Map {
 }
 
 Class MTOTree : MapTileObject {
+    [Boolean]$HasRopeTied
+
     MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
-        Param([MapTileObject]$Source)
+        Param(
+            [MTOTree]$Self,
+            [MapTileObject]$Source
+        )
 
         Switch($Source.PSTypeNames[0]) {
             'MTORope' {
@@ -8765,12 +8770,20 @@ Class MTOTree : MapTileObject {
                 now that it has a Rope tied to it?
 
                 Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
+
+                UPDATE: I have this functionality in place.
                 #>
+                
+                $Self.HasRopeTied   = $true
+                $Self.ExamineString = 'A rope is tied to this tree. Wee.'
+
                 $Script:ThePlayer.RemoveItemFromInventory($Source.Name)
             }
         }
     },
-    @('MTORope')) {}
+    @('MTORope')) {
+        $this.HasRopeTied = $false
+    }
 }
 
 Class MTOLadder : MapTileObject {
