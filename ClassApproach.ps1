@@ -10812,7 +10812,9 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
 )
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
     $Script:FieldNorthWestRoadImage,
-    @(),
+    @(
+        [MTOTree]::new()
+    ),
     @(
         $true,
         $false,
@@ -10822,7 +10824,9 @@ $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
 )
 $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
     $Script:FieldSouthEastWestRoadImage,
-    @(),
+    @(
+        [MTOTree]::new()
+    ),
     @(
         $false,
         $true,
@@ -10832,7 +10836,9 @@ $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
 )
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
     $Script:FieldNorthRoadImage,
-    @(),
+    @(
+        [MTOTree]::new()
+    ),
     @(
         $false,
         $true,
