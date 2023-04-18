@@ -9109,7 +9109,7 @@ Class MTOMilk : MapTileObject {
             }
         }
     }) {
-        $this.PlayerHpBonus = 25
+        $this.PlayerHpBonus = 75
     }
 }
 
