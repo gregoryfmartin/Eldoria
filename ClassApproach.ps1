@@ -21,12 +21,9 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
 [MessageWindow]       $Script:TheMessageWindow         = [MessageWindow]::new()
 [InventoryWindow]     $Script:TheInventoryWindow       = $null
-#[SceneImage]          $Script:SampleSi                 = [SceneImage]::new($null)
 [ATCoordinatesDefault]$Script:DefaultCursorCoordinates = [ATCoordinatesDefault]::new()
 [BufferManager]       $Script:TheBufferManager         = [BufferManager]::new()
 [GameCore]            $Script:TheGameCore              = [GameCore]::new()
-
-#[SIRandomNoise]$Script:SampleSiRandom = [SIRandomNoise]::new()
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete' -PercentComplete -1
 
@@ -97,7 +94,9 @@ Enum CommonVirtualKeyCodes {
 # COMMAND TABLE DEFINITION
 $Script:TheCommandTable = @{
     'move' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
         Switch($a0) {
             { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
@@ -111,124 +110,100 @@ $Script:TheCommandTable = @{
     'look' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheCommandWindow.InvokeLookAction()
+        
         Return
     }
 
     'l' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheCommandWindow.InvokeLookAction()
+        
         Return
     }
 
     'inventory' = {
-        # "TheCommandTable::inventory - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheCommandTable::inventory - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        # "TheCommandTable::inventory - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
         # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-        
-        # "TheCommandTable::inventory - Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
-        # "TheCommandTable::inventory - Setting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
+
         # Change state
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
-        # "TheCommandTable::inventory - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
     'i' = {
-        # "TheCommandTable::i - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheCommandTable::i - Calling TheCommandWindow.UpdateCommandHistory method with true as an argument." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        # "TheCommandTable::i - Calling TheBufferManager.CopyActiveToBufferAWithWipe method." | Out-File -FilePath $Script:LogFileName -Append
         # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
         
-        # "TheCommandTable::i - Setting ThePreviousGlobalGameState ($($Script:ThePreviousGlobalGameState)) to TheGlobalGameState ($($Script:TheGlobalGameState))." | Out-File -FilePath $Script:LogFileName -Append
-        # "TheCommandTable::i - Setting TheGlobalGameState to InventoryScreen." | Out-File -FilePath $Script:LogFileName -Append
         # Change state
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
-        # "TheCommandTable::i - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
     'examine' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
-        # "TheCommandTable::examine - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheCommandTable::examine - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.InvokeExamineAction($a0)
         
-        # "TheCommandTable::examine - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
     'exa' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
-        # "TheCommandTable::exa - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheCommandTable::exa - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.InvokeExamineAction($a0)
-        
-        # "TheCommandTable::exa - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+
         Return
     }
 
     'get' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
-        # "TheCommandTable::get - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "TheCommandTable::get - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.InvokeGetAction($a0)
-        
-        # "TheCommandTable::get - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
+
         Return
     }
 
     'g' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
-        # "TheCommandTable::g - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "TheCommandTable::g - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        # "TheCommandTable::g - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
     'take' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
-        # "TheCommandTable::take - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "TheCommandTable::take - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        # "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
     't' = {
-        Param([String]$a0)
+        Param(
+            [String]$a0
+        )
 
-        # "TheCommandTable::take - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "TheCommandTable::take - Because of the nature of this block, we're just going to call the function on the Command Window." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.InvokeGetAction($a0)
         
-        # "TheCommandTable::take - Leaving the block." | Out-File -FilePath $Script:LogFileName -Append
         Return
     }
 
@@ -238,35 +213,17 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        # "TheCommandTable::use - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheCommandTable::use - Checking to see if we have the necessary parameters." | Out-File -FilePath $Script:LogFileName -Append
         If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
-            # "TheCommandTable::use - The necessary parameters exist. Continuing the function call." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::use - Checking to see if the first item exists in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                # "TheCommandTable::use - $($a0) has been found in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
-                # "TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
-                    # "TheCommandTable::use - $($a1) has been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
                     
-                    # "TheCommandTable::use - Checking the item use filter on $($a1) to see if $($a0) is a valid item to use on it." | Out-File -FilePath $Script:LogFileName -Append
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
-                        # "TheCommandTable::use - Filter check has passed, $($a0) can be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-                        # "TheCommandTable::use - Using $($a0) on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
                         Invoke-Command $mti.Effect -ArgumentList $pi
                     } Else {
-                        # "TheCommandTable::use - Filter check has FAILED, $($a0) can't be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        
-                        # "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheMessageWindow.WriteMessage(
                             "Can't use a(n) $($a0) on a $($a1).",
                             [CCAppleRedDark24]::new(),
@@ -274,16 +231,9 @@ $Script:TheCommandTable = @{
                         )
                     }
                 } Else {
-                    # "TheCommandTable::use - $($a1) has NOT been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::use - Checking to see if the second term is 'self'." | Out-File -FilePath $Script:LogFileName -Append
                     If($a1 -IEQ 'self') {
-                        # "TheCommandTable::use - $($a1) is the term 'self'." | Out-File -FilePath $Script:LogFileName -Append
                     } Else {
-                        # "TheCommandTable::use - The second term is neither a valid map item or 'self'; this is an invalid command structure." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        
-                        # "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheMessageWindow.WriteMessage(
                             'Whatever you typed doesn''t make any sense.',
                             [CCAppleRedDark24]::new(),
@@ -293,23 +243,15 @@ $Script:TheCommandTable = @{
                 }
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
-            # "TheCommandTable::use - Parameter a0 is available but a1 is NOT." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::use - This is an invalid command structure error." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             
-            # "TheCommandTable::use - Checking to see if $($a0) is in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                # "TheCommandTable::use - It's in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                # "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheMessageWindow.WriteMessage(
                     "You need to tell me what you want to use the $($a0) on.",
                     [CCAppleYellowDark24]::new(),
                     [ATDecorationNone]::new()
                 )
             } Else {
-                # "TheCommandTable::use - It's not in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                # "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheMessageWindow.WriteMessage(
                     "I have no idea how to use a(n) $($a0).",
                     [CCAppleYellowDark24]::new(),
@@ -325,35 +267,17 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        # "TheCommandTable::use - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheCommandTable::use - Checking to see if we have the necessary parameters." | Out-File -FilePath $Script:LogFileName -Append
         If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
-            # "TheCommandTable::use - The necessary parameters exist. Continuing the function call." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::use - Checking to see if the first item exists in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                # "TheCommandTable::use - $($a0) has been found in the player's inventory." | Out-File -FilePath $Script:LogFileName -Append
-                # "TheCommandTable::use - Checking to see if the second item exists in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
-                    # "TheCommandTable::use - $($a1) has been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::use - Getting references to actuals expressed in the player's inventory and the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
                     
-                    # "TheCommandTable::use - Checking the item use filter on $($a1) to see if $($a0) is a valid item to use on it." | Out-File -FilePath $Script:LogFileName -Append
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
-                        # "TheCommandTable::use - Filter check has passed, $($a0) can be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-                        # "TheCommandTable::use - Using $($a0) on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
                         Invoke-Command $mti.Effect -ArgumentList $pi
                     } Else {
-                        # "TheCommandTable::use - Filter check has FAILED, $($a0) can't be used on $($a1)." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        
-                        # "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheMessageWindow.WriteMessage(
                             "Can't use a(n) $($a0) on a $($a1).",
                             [CCAppleRedDark24]::new(),
@@ -361,16 +285,9 @@ $Script:TheCommandTable = @{
                         )
                     }
                 } Else {
-                    # "TheCommandTable::use - $($a1) has NOT been found in the current map tile's object listing." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::use - Checking to see if the second term is 'self'." | Out-File -FilePath $Script:LogFileName -Append
                     If($a1 -IEQ 'self') {
-                        # "TheCommandTable::use - $($a1) is the term 'self'." | Out-File -FilePath $Script:LogFileName -Append
                     } Else {
-                        # "TheCommandTable::use - The second term is neither a valid map item or 'self'; this is an invalid command structure." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        
-                        # "TheCommandTable::use - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheMessageWindow.WriteMessage(
                             'Whatever you typed doesn''t make any sense.',
                             [CCAppleRedDark24]::new(),
@@ -380,23 +297,15 @@ $Script:TheCommandTable = @{
                 }
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
-            # "TheCommandTable::use - Parameter a0 is available but a1 is NOT." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::use - This is an invalid command structure error." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::use - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             
-            # "TheCommandTable::use - Checking to see if $($a0) is in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                # "TheCommandTable::use - It's in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                # "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheMessageWindow.WriteMessage(
                     "You need to tell me what you want to use the $($a0) on.",
                     [CCAppleYellowDark24]::new(),
                     [ATDecorationNone]::new()
                 )
             } Else {
-                # "TheCommandTable::use - It's not in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                # "TheCommandTable::use - Writing a specific message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheMessageWindow.WriteMessage(
                     "I have no idea how to use a(n) $($a0).",
                     [CCAppleYellowDark24]::new(),
@@ -411,15 +320,8 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # "TheCommandTable::drop - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "TheCommandTable::drop - Checking to see if we have the correct parameters." | Out-File -FilePath $Script:LogFileName -Append
         If($args.Length -GE 1) {
-            # "TheCommandTable::drop - There were too many parameters given to the drop function." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::drop - Update the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            
-            # "TheCommandTable::drop - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheMessageWindow.WriteMessage(
                 'Can''t drop all those items at once, bruh.',
                 [CCAppleYellowDark24]::new(),
@@ -430,35 +332,20 @@ $Script:TheCommandTable = @{
         }
         
         If($PSBoundParameters.Count -EQ 1) {
-            # "TheCommandTable::drop - We have the correct number of parameters." | Out-File -FilePath $Script:LogFileName -Append
             If($PSBoundParameters.ContainsKey('a0')) {
-                # "TheCommandTable::drop - First, we need to see if this item exists in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
                 If($Script:ThePlayer.IsItemInInventory($a0)) {
-                    # "TheCommandTable::drop - We've found the $($a0) in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::drop - Attempting to drop the $($a0) from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
                     If($Script:ThePlayer.RemoveItemFromInventory($a0)) {
-                        # "TheCommandTable::drop - The $($a0) was successfully remove from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::drop - Update the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-                        
-                        # "TheCommandTable::drop - Write a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheMessageWindow.WriteMessage(
                             "Dropped $($a0) from your inventory.",
                             [CCAppleYellowDark24]::new(),
                             [ATDecorationNone]::new()
                         )
                     } Else {
-                        # "TheCommandTable::drop - Although the $($a0) was found in the Player's Inventory, something happened that prevented its removal." | Out-File -FilePath $Script:LogFileName -Append
-                        # "TheCommandTable::drop - THIS IS A FATAL ERROR - EXITING!" | Out-File -FilePath $Script:LogFileName -Append
                         Exit
                     }
                 } Else {
-                    # "TheCommandTable::drop - The $($a0) wasn't found in the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::drop - Since we can't find it there, there's nothing to drop." | Out-File -FilePath $Script:LogFileName -Append
-                    # "TheCommandTable::drop - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
                     $Script:TheCommandWindow.UpdateCommandHistory($false)
-                    
-                    # "TheCommandTable::drop - Writing a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
                     $Script:TheMessageWindow.WriteMessage(
                         "There ain't no $($a0) in your pockets gov'.",
                         [CCAppleYellowDark24]::new(),
@@ -467,11 +354,7 @@ $Script:TheCommandTable = @{
                 }
             }
         } Elseif($PSBoundParameters.Count -LE 0) {
-            # "TheCommandTable::drop - There weren't enough parameters given to the drop command." | Out-File -FilePath $Script:LogFileName -Append
-            # "TheCommandTable::drop - Updating the Command History in the Command Window." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            
-            # "TheCommandTable::drop - Writing a message to the Message Window." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheMessageWindow.WriteMessage(
                 'I don''t know what to drop...',
                 [CCAppleRedDark24]::new(),
@@ -492,22 +375,15 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::PlayerSetupScreen = {}
 
     [GameStatePrimary]::GamePlayScreen = {
-        # "TheGlobalStateBlockTable::GamePlayScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the Inventory Window instance isn't null." | Out-File -FilePath $Script:LogFileName -Append
         If($null -NE $Script:TheInventoryWindow) {
-            # "TheGlobalStateBlockTable::GamePlayScreen - It isn't null - setting to null." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheInventoryWindow = $null
-        } Else {
-            # "TheGlobalStateBlockTable::GamePlayScreen - The instance is already null, skipping." | Out-File -FilePath $Script:LogFileName -Append
         }
 
-        # "TheGlobalStateBlockTable::GamePlayScreen - Checking to see if the GPS can be restored from a buffer backup." | Out-File -FilePath $Script:LogFileName -Append
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
-            # and I really don't feel like trying to figure out how to grab the buffer
+            # and I really don't feel like trying to figure out how to grab the buffer manually
             $Script:GpsRestoredFromInvBackup             = $true
             $Script:TheSceneWindow.SceneImageDirty       = $true
             $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
@@ -523,47 +399,24 @@ $Script:TheGlobalStateBlockTable = @{
             Write-Host "$([ATControlSequences]::CursorShow)"
         }
 
-        # "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheStatusWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheStatusWindow.Draw()
-        
-        # "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheCommandWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.Draw()
-        
-        # "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheSceneWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheSceneWindow.Draw()
-        
-        # "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheMessageWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheMessageWindow.Draw()
-        
-        # "TheGlobalStateBlockTable::GamePlayScreen - `tCalling TheCommandWindow.HandleInput method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.HandleInput()
-        
-        # "TheGlobalStateBlockTable::GamePlayScreen - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [GameStatePrimary]::InventoryScreen = {
-        # "TheGlobalStateBlockTable::InventoryScreen - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "TheGlobalStateBlockTable::InventoryScreen - `tChecking to see if the Inventory Window instance is null." | Out-File -FilePath $Script:LogFileName -Append
         If($null -EQ $Script:TheInventoryWindow) {
-            # "TheGlobalStateBlockTable::InventoryScreen - `t`tIt is - creating a new instance." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheInventoryWindow = [InventoryWindow]::new()
-        } Else {
-            # "TheGlobalStateBlockTable::InventoryScreen - `t`tIt isn't, skipping." | Out-File -FilePath $Script:LogFileName -Append
         }
 
-        # "TheGlobalStateBlockTable::InventoryScreen - Checking to see if the GPS Buffer Backup Restore flag is true to turn it off." | Out-File -FilePath $Script:LogFileName -Append
         If($Script:GpsRestoredFromInvBackup -EQ $true) {
             $Script:GpsRestoredFromInvBackup = $false
         }
 
-        # "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.Draw method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheInventoryWindow.Draw()
-        
-        # "TheGlobalStateBlockTable::InventoryScreen - `tCalling TheInventoryWindow.HandleInput method." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheInventoryWindow.HandleInput()
-        
-        # "TheGlobalStateBlockTable::InventoryScreen - `tLeaving the block." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [GameStatePrimary]::Cleanup = {}
@@ -1039,17 +892,22 @@ Class CCAppleGrey6Dark24 : ConsoleColor24 {
     CCAppleGrey6Dark24(): base(28, 28, 30) {}
 }
 
-# https://www.pantone.com/connect/14-4318-TCX
+<#
+https://www.pantone.com/connect/14-4318-TCX
+#>
 Class CCPantoneSkyBlue24 : ConsoleColor24 {
     CCPantoneSkyBlue24(): base(54, 73, 83) {}
 }
-
-# https://www.pantone.com/connect/15-6322-TPX
+<#
+https://www.pantone.com/connect/15-6322-TPX
+#>
 Class CCPantoneLightGrassGreen24 : ConsoleColor24 {
     CCPantoneLightGrassGreen24(): base(49, 70, 53) {}
 }
 
-# https://www.pantone.com/connect/19-1218-TCX
+<#
+https://www.pantone.com/connect/19-1218-TCX
+#>
 Class CCPantonePottingSoil24 : ConsoleColor24 {
     CCPantonePottingSoil24(): base(33, 22, 18) {}
 }
@@ -8892,12 +8750,8 @@ Class MTOTree : MapTileObject {
     MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
         Param([MapTileObject]$Source)
 
-        # "MTOTree::Effect - Starting the block." | Out-File -FilePath $Script:LogFileName -Append
-        # "MTOTree::Effect - Checking to see what item passed the filter." | Out-File -FilePath $Script:LogFileName -Append
         Switch($Source.PSTypeNames[0]) {
             'MTORope' {
-                # "MTOTree::Effect - A Rope is being used on the Tree." | Out-File -FilePath $Script:LogFileName -Append
-                # "MTOTree::Effect - Write a message to the Message Window that the Rope has been tied to the Tree." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheMessageWindow.WriteMessage(
                     'I''ve tied the Rope to the Tree',
                     [CCAppleIndigoDark24]::new(),
@@ -8912,8 +8766,6 @@ Class MTOTree : MapTileObject {
 
                 Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
                 #>
-
-                # "MTOTree::Effect - Removing the Rope from the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:ThePlayer.RemoveItemFromInventory($Source.Name)
             }
         }
@@ -9232,8 +9084,6 @@ Class WindowBase {
     }
 
     [Void]UpdateDimensions() {
-        # $this.Width  = $this.LeftTop.Column + $this.RightBottom.Column
-        # $this.Height = $this.LeftTop.Row + $this.RightBottom.Row
         $this.Width  = $this.RightBottom.Column - $this.LeftTop.Column
         $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
     }
@@ -9251,7 +9101,6 @@ Class StatusWindow : WindowBase {
     Static [Int]$WindowRBColumn       = 19
 
     Static  [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
-    #Static [String]$WindowBorderHorizontal = "`u{25fd}--~---~---~---~---`u{25fd}"
     Static  [String]$WindowBorderVertical   = '|'
 
     Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
@@ -9380,13 +9229,9 @@ Class CommandWindow : WindowBase {
 
     CommandWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Command Window' -PercentComplete -1
-        # "CommandWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
         
-        # "CommandWindow::Constructor - `tSetting LeftTop and BottomRight relative to the desired window position." | Out-File -FilePath $Script:LogFileName -Append
         $this.LeftTop     = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
         $this.RightBottom = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
-        
-        # "CommandWindow::Constructor - `tSetting the BorderDrawColors relative to the desired effect for this window (all sides CCWhite24)." | Out-File -FilePath $Script:LogFileName -Append
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -9394,38 +9239,24 @@ Class CommandWindow : WindowBase {
             [CCWhite24]::new()
         )
 
-        # "CommandWindow::Constructor - `tSettings BorderStrings relative to the desired strings for this window." | Out-File -FilePath $Script:LogFileName -Append
         $this.BorderStrings = [String[]](
             [CommandWindow]::WindowBorderHorizontal,
             [CommandWindow]::WindowBorderVertical
         )
 
-        # "CommandWindow::Constructor - `tCalling UpdateDimensions to ensure that measurements are correct." | Out-File -FilePath $Script:LogFileName -Append
         $this.UpdateDimensions()
 
-        # "CommandWindow::Constructor - `tCommandDivDirty to true and CommandHistoryDirty to false." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandDivDirty     = $true
         $this.CommandHistoryDirty = $false
+        [Int]$rowBase             = $this.RightBottom.Row
+        [Int]$columnBase          = $this.LeftTop.Column + [CommandWindow]::DrawColumnOffset
 
-        # "CommandWindow::Constructor - `tDefining rowBase to $($this.RightBottom.Row) and columnBase to $($this.LeftTop.Column + [CommandWindow]::DrawColumnOffset)." | Out-File -FilePath $Script:LogFileName -Append
-        [Int]$rowBase    = $this.RightBottom.Row
-        [Int]$columnBase = $this.LeftTop.Column + [CommandWindow]::DrawColumnOffset
-
-        # "CommandWindow::Constructor - `tCalculating History String Drawing Coordinates." | Out-File -FilePath $Script:LogFileName -Append
         [CommandWindow]::CommandDivDrawCoordinates      = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawDivRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryEDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryERowOffset, $columnBase)
         [CommandWindow]::CommandHistoryDDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryDRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryCDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryCRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryBDrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryBRowOffset, $columnBase)
         [CommandWindow]::CommandHistoryADrawCoordinates = [ATCoordinates]::new($rowBase - [CommandWindow]::DrawHistoryARowOffset, $columnBase)
-
-        # "CommandWindow::Constructor - `tHistory String Drawing Coordinates have been calculated as follows:" | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Constructor - `t`tDiv: (R$([CommandWindow]::CommandDivDrawCoordinates.Row), C$([CommandWindow]::CommandDivDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Constructor - `t`tE: (R$([CommandWindow]::CommandHistoryEDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryEDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Constructor - `t`tD: (R$([CommandWindow]::CommandHistoryDDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryDDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Constructor - `t`tC: (R$([CommandWindow]::CommandHistoryCDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryCDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Constructor - `t`tB: (R$([CommandWindow]::CommandHistoryBDrawCoordinates.Row), C$([CommandWindow]::CommandHistoryBDrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Constructor - `t`tA: (R$([CommandWindow]::CommandHistoryADrawCoordinates.Row), C$([CommandWindow]::CommandHistoryADrawCoordinates.Column))" | Out-File -FilePath $Script:LogFileName -Append
 
         [CommandWindow]::CommandDiv = [ATString]::new(
             [ATStringPrefix]::new(
@@ -9513,23 +9344,14 @@ Class CommandWindow : WindowBase {
     }
 
     [Void]Draw() {
-        # "CommandWindow::Draw - Starting the Draw function." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::Draw - Calling base class Draw function." | Out-File -FilePath $Script:LogFileName -Append
         ([WindowBase]$this).Draw()
 
-        # "CommandWindow::Draw - Checking to see if the CommandDivDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
         If($this.CommandDivDirty -EQ $true) {
-            # "CommandWindow::Draw - `tCommandDivDirty is true, draw the Command Div to the console." | Out-File -FilePath $Script:LogFileName -Append
             Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
-
-            # "CommandWindow::Draw - `tSetting CommandDivDirty to false to avoid overdraws." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandDivDirty = $false
         }
 
-        # "CommandWindow::Draw - Checking to see if the CommandHistoryDirty flag is true." | Out-File -FilePath $Script:LogFileName -Append
         If($this.CommandHistoryDirty -EQ $true) {
-            # "CommandWindow::Draw - `tCommandHistoryDirty is true, draw the Command History strings to the console." | Out-File -FilePath $Script:LogFileName -Append
-            
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryDDrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].ToAnsiControlSequenceString())"
@@ -9550,21 +9372,6 @@ Class CommandWindow : WindowBase {
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].ToAnsiControlSequenceString())"
 
-            # Foreach($cmd in $this.CommandHistory) {
-            #     "CommandWindow::Draw - `t`tCurrent CMD iteration values: (R$($cmd.Prefix.Coordinates.Row), C$($cmd.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-
-            #     "CommandWindow::Draw - `t`tUpdating the Blank's Coordinates to match the current iteration." | Out-File -FilePath $Script:LogFileName -Append
-            #     [CommandWindow]::CommandBlank.Prefix.Coordinates = $cmd.Prefix.Coordinates
-            #     "CommandWindow::Draw - `t`tThe blank's current coordinates are (R$([CommandWindow]::CommandBlank.Prefix.Coordinates.Row), C$([CommandWindow]::CommandBlank.Prefix.Coordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-                
-            #     "CommandWindow::Draw - `t`tDrawing the Command Blank first to clear out the line." | Out-File -FilePath $Script:LogFileName -Append
-            #     Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())"
-
-            #     "CommandWindow::Draw - `t`tDrawing the Command itself ($($cmd.ToAnsiControlSequenceString()))." | Out-File -FilePath $Script:LogFileName -Append
-            #     Write-Host "$($cmd.ToAnsiControlSequenceString())"
-            # }
-
-            # "CommandWindow::Draw - `tSetting the CommandHistoryDirty flag to false." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistoryDirty = $false
         }
     }
@@ -9583,49 +9390,26 @@ Class CommandWindow : WindowBase {
             
             Switch($keyCap.VirtualKeyCode) {
                 8 { # Backspace
-                    # "CommandWindow::HandleInput - Backspace Key has been pressed. Virtual Key Code value is $($keyCap.VirtualKeyCode)" | Out-File -FilePath $Script:LogFileName -Append
-                    
                     $fpx = $Script:Rui.CursorPosition.X
-                    # "CommandWindow::HandleInput - `tObtaining current Cursor Position X (Row) Value as FPX. The current value is $($fpx)" | Out-File -FilePath $Script:LogFileName -Append
-
-                    # "CommandWindow::HandleInput - `tComparing FPX against the Default Coordinates X (Row). The default value is $($Script:DefaultCursorCoordinates.Row), and FPX is $($fpx)." | Out-File -FilePath $Script:LogFileName -Append
                     If($fpx -GT $Script:DefaultCursorCoordinates.Row) {
-                        # "CommandWindow::HandleInput - `t`tFPX is GREATER THAN the Default Coordinates X (Row)." | Out-File -FilePath $Script:LogFileName -Append
-                        # "CommandWindow::HandleInput - `t`tThe character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1])." | Out-File -FilePath $Script:LogFileName -Append
-                        # "CommandWindow::HandleInput - `t`tPerforming character deletion from console window." | Out-File -FilePath $Script:LogFileName -Append
                         Write-Host " `b" -NoNewLine
 
-                        # "CommandWindow::HandleInput - `t`tThe current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character." | Out-File -FilePath $Script:LogFileName -Append
                         If($this.CommandActual.UserData.Length -GT 0) {
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                            # "CommandWindow::HandleInput - `t`tThe last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
-                        } Else {
-                            # "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
                         }
                     } Elseif($fpx -LT $Script:DefaultCursorCoordinates.Row) {
-                        # "CommandWindow::HandleInput - `t`tFPX is LESS THAN the Default Coordinates X (Row)." | Out-File -FilePath $Script:LogFileName -Append
-                        # "CommandWindow::HandleInput - `t`tThis character can't be deleted because it's part of the window. Resetting the Cursor X (Row) position to the default." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-                        # Write-Host "`b " -NoNewLine
                     } Elseif($fpx -EQ $Script:DefaultCursorCoordinates.Row) {
-                        # "CommandWindow::HandleInput - `t`tFPX is EQUAL TO the Default Coordinates X (Row)."                                       | Out-File -FilePath $Script:LogFileName -Append
-                        # "CommandWindow::HandleInput - `t`tThe character that would be deleted here is $($this.CommandActual.UserData[$fpx - 1])." | Out-File -FilePath $Script:LogFileName -Append
                         Write-Host " `b" -NoNewline
 
-                        # "CommandWindow::HandleInput - `t`tThe current value of Command Actual is $($this.CommandActual.UserData). Attempting to delete the last character." | Out-File -FilePath $Script:LogFileName -Append
                         If($this.CommandActual.UserData.Length -GT 0) {
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                            # "CommandWindow::HandleInput - `t`tThe last character has been deleted. The current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
-                        } Else {
-                            # "CommandWindow::HandleInput - `t`tCommand Actual has no data in it; there's nothing to delete." | Out-File -FilePath $Script:LogFileName -Append
                         }
                     }
                 }
     
                 Default {
-                    # "CommandWindow::HandleInput - A regular keypress has been detected. Adding $($keyCap.Character) to Command Actual." | Out-File -FilePath $Script:LogFileName -Append
                     $this.CommandActual.UserData += $keyCap.Character
-                    # "CommandWindow::HandleInput - `tThe current value of Command Actual is $($this.CommandActual.UserData)." | Out-File -FilePath $Script:LogFileName -Append
                 }
             }
 
@@ -9636,51 +9420,36 @@ Class CommandWindow : WindowBase {
     }
 
     [Void]InvokeCommandParser() {
-        # "CommandWindow::InvokeCommandParser - Starting the CommandParser." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::InvokeCommandParser - `tWriting the Command Blank." | Out-File -FilePath $Script:LogFileName -Append
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-        # "CommandWindow::InvokeCommandParser - `tCommand Blank has been written." | Out-File -FilePath $Script:LogFileName -Append
 
-        # "CommandWindow::InvokeCommandParser - `tChecking to see if Command Actual contains anything." | Out-File -FilePath $Script:LogFileName -Append
         If([String]::IsNullOrEmpty($this.CommandActual.UserData)) {
-            # "CommandWindow::InvokeCommandParser - `t`tIt doesn't. Exiting." | Out-File -FilePath $Script:LogFileName -Append
             Return
         } Else {
-            # "CommandWindow::InvokeCommandParser - `t`tIt contains data. The current data is $($this.CommandActual.UserData). Attempting to split the string." | Out-File -FilePath $Script:LogFileName -Append
             $cmdactSplit = -SPLIT $this.CommandActual.UserData
-            # "CommandWindow::InvokeCommandParser - `t`tSplit is successful. The split data is $({Foreach($a in $cmdactSplit){"$a, "}})." | Out-File -FilePath $Script:LogFileName -Append
-            
-            # "CommandWindow::InvokeCommandParser - `t`tAttempting to find the root command in the Command Table." | Out-File -FilePath $Script:LogFileName -Append
-            $rootFound = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
+            $rootFound   = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
             
             If($null -NE $rootFound) {
-                # "CommandWindow::InvokeCommandParser - `t`tA root command has been identified as '$($cmdactSplit[0])' Now checking the length of the split to determine the ScriptBlock invocation style." | Out-File -FilePath $Script:LogFileName -Append
                 Switch($cmdactSplit.Length) {
                     1 {
-                        # "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 1, invoking the root command '$($cmdactSplit[0])' without arguments." | Out-File -FilePath $Script:LogFileName -Append
                         Invoke-Command $rootFound.Value
                     }
 
                     2 {
-                        # "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 2, invoking the root command '$($cmdactSplit[0])' with one argument '$($cmdactSplit[1])'." | Out-File -FilePath $Script:LogFileName -Append
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1]
                     }
 
                     3 {
-                        # "CommandWindow::InvokeCommandParser - `t`t`tSplit length is 3, invoking the root command '$($cmdactSplit[0])' with two arguments, '$($cmdactSplit[1])' and '$($cmdactSplit[2])'." | Out-File -FilePath $Script:LogFileName -Append
                         Invoke-Command $rootFound.Value -ArgumentList $cmdactSplit[1], $cmdactSplit[2]
                     }
 
                     Default {
-                        # "CommandWindow::InvokeCommandParser - `t`t`tAn unknown exceptional case has occurred." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
                         # TODO: This is an exceptional case
                     }
                 }
             } Else {
-                # "CommandWindow::InvokeCommandParser - `t`tAn invalid command has been typed in. Asking the Command Window to update the history." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
                 Return
             }
@@ -9754,141 +9523,97 @@ Class CommandWindow : WindowBase {
     [Void]InvokeExamineAction(
         [String]$ItemName
     ) {
-        # "CommandWindow::InvokeExamineAction - Starting the function." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::InvokeExamineAction - Iterating through the current tile's Object Listing to find an Item Name match." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::InvokeExamineAction - The Item Name we're looking for is $($ItemName)." | Out-File -FilePath $Script:LogFileName -Append
         Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
-            # "CommandWindow::InvokeExamineAction - The iterator Item Name is $($a.Name)." | Out-File -FilePath $Script:LogFileName -Append
             If($a.Name -IEQ $ItemName) {
-                # "CommandWindow::InvokeExamineAction - Match has been found. Updating the Command Window History with success." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-                # "CommandWindow::InvokeExamineAction - Writing the Item's ExamineString to the Message Window History." | Out-File -FilePath $Script:LogFileName -Append
                 $Script:TheMessageWindow.WriteMessage(
                     "$($a.ExamineString)",
                     [CCAppleMintDark24]::new(),
                     [ATDecorationNone]::new()
                 )
-                # "CommandWindow::InvokeExamineAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
                 Return
             }
         }
 
-        # "CommandWindow::InvokeExamineAction - Match has NOT been found. Updating the Command Window History with failure." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($false)
-        # "CommandWindow::InvokeExamineAction - Writing the error message to the Message Window History." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
-        # "CommandWindow::InvokeExamineAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+        
         Return
     }
 
     [Void]InvokeGetAction(
         [String]$ItemName
     ) {
-        # "CommandWindow::InvokeGetAction - Starting the function." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::InvokeGetAction - Getting a reference to the current Map Tile's Object Listing." | Out-File -FilePath $Script:LogFileName -Append
         $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
         
-        # "CommandWindow::InvokeGetAction - Checking to see if the length of the reference is LESS THAN OR EQUAL TO zero." | Out-File -FilePath $Script:LogFileName -Append
         If($a.Count -LE 0) {
-            # "CommandWindow::InvokeGetAction - It is, meaning that there's nothing on this tile." | Out-File -FilePath $Script:LogFileName -Append
-            # "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
-            # "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+            
             Return
         }
-        # "CommandWindow::InvokeGetAction - The length of the reference is at least 1." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::InvokeGetAction - Iterating through the reference collection to see if we can find a name match." | Out-File -FilePath $Script:LogFileName -Append
+
         Foreach($b in $a) {
-            # "CommandWindow::InvokeGetAction - The Item Name we're looking for is $($ItemName)." | Out-File -FilePath $Script:LogFileName -Append
-            # "CommandWindow::InvokeGetAction - The current iteration's name is $($b.Name)." | Out-File -FilePath $Script:LogFileName -Append
-            # "CommandWindow::InvokeGetAction - Checking to see if these match." | Out-File -FilePath $Script:LogFileName -Append
             If($b.Name -IEQ $ItemName) {
-                # "CommandWindow::InvokeGetAction - A match has been found." | Out-File -FilePath $Script:LogFileName -Append
-                # "CommandWindow::InvokeGetAction - Checking to see if this Item can be added to the Player's Inventory." | Out-File -FilePath $Script:LogFileName -Append
                 If($b.CanAddToInventory -EQ $true) {
-                    # "CommandWindow::InvokeGetAction - It can. Copying the current item into the Player's Inventory collection." | Out-File -FilePath $Script:LogFileName -Append
                     $Script:ThePlayer.Inventory.Add($b) | Out-Null
-                    # "CommandWindow::InvokeGetAction - Attempting to remove this item from the current Map Tile's Object Listing." | Out-File -FilePath $Script:LogFileName -Append
                     $c = $a.Remove($b) | Out-Null
-                    # "CommandWindow::InvokeGetAction - Checking to see if the removal was successful or not." | Out-File -FilePath $Script:LogFileName -Append
+
                     If($c -EQ $false) {
-                        # "CommandWindow::InvokeGetAction - The removal failed." | Out-File -FilePath $Script:LogFileName -Append
-                        # "CommandWindow::InvokeGetAction - THIS IS A CRITICAL ERROR - PREMATURELY TERMINATING THE PROGRAM!" | Out-File -FilePath $Script:LogFileName -Append
                         Write-Error 'Failed to remove an item from the Map Tile!'
                         Exit
                     } Else {
-                        # "CommandWindow::InvokeGetAction - The removal was successful." | Out-File -FilePath $Script:LogFileName -Append
-                        # "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         $Script:TheMessageWindow.WriteItemTakenMessage($ItemName)
-                        # "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+
                         Return
                     }
                 } Else {
-                    # "CommandWindow::InvokeGetAction - It can't. Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
                     $Script:TheMessageWindow.WriteItemCantTakeMessage($ItemName)
-                    # "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+
                     Return
                 }
             }
         }
 
-        # "CommandWindow::InvokeGetAction - Although there are Items in the reference collection, none of them match the terms." | Out-File -FilePath $Script:LogFileName -Append
-        # "CommandWindow::InvokeGetAction - Updating the Command Window History and Message Window History." | Out-File -FilePath $Script:LogFileName -Append
         $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
-        # "CommandWindow::InvokeGetAction - Leaving the function." | Out-File -FilePath $Script:LogFileName -Append
+
         Return
     }
 
     [Void]UpdateCommandHistory(
         [Boolean]$CmdValid
     ) {
-        # "CommandWindow::UpdateCommandHistory - Starting to shuffle the Command History around." | Out-File -FilePath $Script:LogFileName -Append
-        
-        # "CommandWindow::UpdateCommandHistory - Setting History E ('$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData)') to History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor
 
-        # "CommandWindow::UpdateCommandHistory - Setting History A ('$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData)') to History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor
         
-        # "CommandWindow::UpdateCommandHistory - Setting History B ('$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData)') to History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor
         
-        # "CommandWindow::UpdateCommandHistory - Setting History C ('$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData)') to History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor
         
-        # "CommandWindow::UpdateCommandHistory - Setting History D ('$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)') to Command Actual ('$($this.CommandActual.UserData)')." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
 
-        # "CommandWindow::UpdateCommandHistory - The current layout of the history is as follows: E: $($this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData), A: $($this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData), B: $($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData), C: $($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData), D: $($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData)" | Out-File -FilePath $Script:LogFileName -Append
-
-        # "CommandWindow::UpdateCommandHistory - Checking to see if the Command Valid flag is true or false." | Out-File -FilePath $Script:LogFileName -Append
         If($CmdValid -EQ $true) {
-            # "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is true. Set the Foreground Color to HistoryEntryValid." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations     = [ATDecorationNone]::new()
         } Else {
-            # "CommandWindow::UpdateCommandHistory - `tThe Command Valid Flag is false. Set the Foreground Color to HistoryEntryError and set the Decoration to Blink." | Out-File -FilePath $Script:LogFileName -Append
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryError
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations = [ATDecoration]::new($true)
         }
 
-        # "CommandWindow::UpdateCommandHistory - `tClearing the Command Actual." | Out-File -FilePath $Script:LogFileName -Append
         $this.CommandActual.UserData = ''
-
-        # "CommandWindow::UpdateCommandHistory - Set the CommandHistoryDirty flag to true so the Draw function will draw the strings to the console." | Out-File -FilePath $Script:LogFileName -Append
-        $this.CommandHistoryDirty = $true
+        $this.CommandHistoryDirty    = $true
     }
 }
 
@@ -9925,7 +9650,6 @@ Class SceneWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        #[SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + [SceneWindow]::ImageDrawRowOffset, $this.LeftTop.Column + [SceneWindow]::ImageDrawColumnOffset)
         [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new([SceneWindow]::ImageDrawRowOffset, [SceneWindow]::ImageDrawColumnOffset)
     }
     
@@ -9970,7 +9694,6 @@ Class MessageWindow : WindowBase {
     
     MessageWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Message Window' -PercentComplete -1
-        # "MessageWindow::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
         
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
         $this.RightBottom      = [ATCoordinates]::new(25, 78)
@@ -9986,18 +9709,9 @@ Class MessageWindow : WindowBase {
         )
         $this.UpdateDimensions()
 
-        # "MessageWindow::Constructor - Calculating the Message Draw Coordinates." | Out-File -FilePath $Script:LogFileName -Append
-
         [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageCDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
-
-        # "MessageWindow::Constructor - The calculated coordinates are as follows:" | Out-File -FilePath $Script:LogFileName -Append
-        # "MessageWindow::Constructor - Message A: (R$([MessageWindow]::MessageADrawCoordinates.Row), C$([MessageWindow]::MessageADrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-        # "MessageWindow::Constructor - Message B: (R$([MessageWindow]::MessageBDrawCoordinates.Row), C$([MessageWindow]::MessageBDrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-        # "MessageWindow::Constructor - Message C: (R$([MessageWindow]::MessageCDrawCoordinates.Row), C$([MessageWindow]::MessageCDrawCoordinates.Column))." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "MessageWindow::Constructor - Creating the MessageWindowBlank ATString." | Out-File -FilePath $Script:LogFileName -Append
 
         [MessageWindow]::MessageWindowBlank = [ATString]::new(
             [ATStringPrefix]::new(
@@ -10010,11 +9724,7 @@ Class MessageWindow : WindowBase {
             $true
         )
 
-        # "MessageWindow::Constructor - Creating the MessageHistory ATString array with a size of 3." | Out-File -FilePath $Script:LogFileName -Append
-
         $this.MessageHistory = New-Object 'ATString[]' 3
-        
-        # "MessageWindow::Constructor - Creating new ATString instances in the MessageHistory array using the appropriate draw coorinates and the MessageWindowBlank UserData as models." | Out-File -FilePath $Script:LogFileName -Append
 
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATString]::new(
             [ATStringPrefix]::new(
@@ -10046,69 +9756,45 @@ Class MessageWindow : WindowBase {
             [MessageWindow]::MessageWindowBlank.UserData,
             $true
         )
-
-        # "MessageWindow::Constructor - Leaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [Void]Draw() {
-        # "MessageWindow::Draw - Entering the Draw method." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "MessageWindow::Draw - Calling the base class Draw method." | Out-File -FilePath $Script:LogFileName -Append
-        
         ([WindowBase]$this).Draw()
 
-        # "MessageWindow::Draw - Checking to see if MessageADirty is true." | Out-File -FilePath $Script:LogFileName -Append
-
         If($this.MessageADirty -EQ $true) {
-            # "MessageWindow::Draw - MessageADirty is true, redrawing Message A to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
-            # "MessageWindow::Draw - Setting MessageADirty to false." | Out-File -FilePath $Script:LogFileName -Append
             $this.MessageADirty = $false
         }
 
-        # "MessageWindow::Draw - Checking to see if MessageBDirty is true." | Out-File -FilePath $Script:LogFileName -Append
         If($this.MessageBDirty -EQ $true) {
-            # "MessageWindow::Draw - MessageBDirty is true, redrawing Message B to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
-            # "MessageWindow::Draw - Setting MessageBDirty to false." | Out-File -FilePath $Script:LogFileName -Append
             $this.MessageBDirty = $false
         }
 
-        # "MessageWindow::Draw - Checking to see if MessageCDirty is true." | Out-File -FilePath $Script:LogFileName -Append
         If($this.MessageCDirty -EQ $true) {
-            # "MessageWindow::Draw - MessageCDirty is true, redrawing Message C to the window at its predefined coordinates (blank first, then string)." | Out-File -FilePath $Script:LogFileName -Append
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
-            # "MessageWindow::Draw - Setting MessageCDirty to false." | Out-File -FilePath $Script:LogFileName -Append
             $this.MessageCDirty = $false
         }
-
-        # "MessageWindow::Draw - Leaving the Draw method." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [Void]WriteMessage([String]$Message, [ATForegroundColor24]$ForegroundColor, [ATDecoration]$Decoration) {
-        # "MessageWindow::Draw - Entering the WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
-        # "MessageWindow::Draw - Parameter Values: Message: ($($Message)), ForegroundColor: ($($ForegroundColor)), and Decoration: ($($Decoration))." | Out-File -FilePath $Script:LogFileName -Append
-
-        # "MessageWindow::Draw - Setting Message A UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message B." | Out-File -FilePath $Script:LogFileName -Append
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
 
-        # "MessageWindow::Draw - Setting Message B UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of Message C." | Out-File -FilePath $Script:LogFileName -Append
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
         
-        # "MessageWindow::Draw - Setting Message C UserData, Prefix.Decorations, and Prefix.ForegroundColor to those of the parameters passed to this method." | Out-File -FilePath $Script:LogFileName -Append
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
@@ -10124,25 +9810,9 @@ Class MessageWindow : WindowBase {
         #     $true
         # )
 
-        # Write the messages to the window, first blanks and then the messages themselves
-
-        # "MessageWindow::Draw - Settings the Message Dirty Flags to true to force redraws." | Out-File -FilePath $Script:LogFileName -Append
         $this.MessageADirty = $true
         $this.MessageBDirty = $true
         $this.MessageCDirty = $true
-        # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
-        # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
-
-        # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
-        # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
-
-        # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
-        # Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-        # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
-
-        # "MessageWindow::Draw - Leaving the WriteMessage method." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [Void]WriteBadCommandMessage([String]$Command) {
@@ -10799,7 +10469,6 @@ Class InventoryWindow : WindowBase {
             $rs                   = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage) - 1
             $rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
             $re                   = 10
-            #$re                   = $this.CurrentPage * $this.ItemsPerPage
 
             Try {
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
@@ -10808,8 +10477,6 @@ Class InventoryWindow : WindowBase {
             }
 
             $this.CreateItemLabels()
-
-            # $this.ResetIChevronPosition()
 
             $this.ItemsListDirty   = $true
             $this.CurrentPageDirty = $false
@@ -10864,13 +10531,10 @@ Class InventoryWindow : WindowBase {
         $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
         
-        # This seems to be the only way to deal with this reliably since the ActiveIChevronIndex can't be
-        # reset to zero yet.
         Try {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-        } Catch {
-        }
+        } Catch {}
         
         $this.ActiveIChevronIndex                                          = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
@@ -10989,8 +10653,6 @@ Class GameCore {
 
     GameCore() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Game Core' -PercentComplete -1
-        # "GameCore::Constructor - Starting the constructor." | Out-File -FilePath $Script:LogFileName -Append
-        # "GameCore::Constructor - Setting up variables." | Out-File -FilePath $Script:LogFileName -Append
         
         $this.TargetFrameRate      = 30
         $this.MsPerFrame           = 1000 / $this.TargetFrameRate
@@ -10999,16 +10661,10 @@ Class GameCore {
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
         $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
-        
-        # "GameCore::Constructor - Leaving the constructor." | Out-File -FilePath $Script:LogFileName -Append
     }
 
     [Void]Run() {
-        # "GameCore::Run - Starting the Run method." | Out-File -FilePath $Script:LogFileName -Append
-        # "GameCore::Run - Checking to see if the GameRunning flag is true or not." | Out-File -FilePath $Script:LogFileName -Append
-
         While($this.GameRunning -EQ $true) {
-            # "GameCore::Run - GameRunning is true." | Out-File -FilePath $Script:LogFileName -Append
             $this.Logic()
             # "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
             # $this.LastFrameTime = $this.CurrentFrameTime
@@ -11030,8 +10686,6 @@ Class GameCore {
     }
 
     [Void]Logic() {
-        # "GameCore::Logic - Starting the Logic method." | Out-File -FilePath $Script:LogFileName -Append
-        # "GameCore::Logic - Invoking the ScriptBlock for the game state $($Script:TheGlobalGameState)" | Out-File -FilePath $Script:LogFileName -Append
         Invoke-Command $Script:TheGlobalStateBlockTable[$Script:TheGlobalGameState]
     }
 }
