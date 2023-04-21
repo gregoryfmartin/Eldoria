@@ -9201,7 +9201,7 @@ Class MTOMilk : MapTileObject {
         $this.IsSpoiled     = ($a -GE 6 ? $true : $false)
         
         If($this.IsSpoiled -EQ $true) {
-            $this.ExamineString = 'This looks funny. Should I really be drinking this?'
+            $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
             $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
         } Else {
             $this.PlayerEffectString = "+$($this.PlayerHpBonus) HP"
@@ -10995,8 +10995,8 @@ Class InventoryWindow : WindowBase {
 
             40 {
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                 = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData        = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     
