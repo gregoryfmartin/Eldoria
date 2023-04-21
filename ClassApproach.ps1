@@ -91,6 +91,12 @@ Enum CommonVirtualKeyCodes {
     D          = 68
 }
 
+Enum ItemRemovalStatus {
+    Success
+    FailGeneral
+    FailKeyItem
+}
+
 # COMMAND TABLE DEFINITION
 $Script:TheCommandTable = @{
     'move' = {
@@ -144,20 +150,20 @@ $Script:TheCommandTable = @{
     'look' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheCommandWindow.InvokeLookAction()
-        
+
         Return
     }
 
     'l' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheCommandWindow.InvokeLookAction()
-        
+
         Return
     }
 
     'inventory' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-        
+
         # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
@@ -170,10 +176,10 @@ $Script:TheCommandTable = @{
 
     'i' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-        
+
         # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-        
+
         # Change state
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
@@ -187,7 +193,7 @@ $Script:TheCommandTable = @{
         )
 
         $Script:TheCommandWindow.InvokeExamineAction($a0)
-        
+
         Return
     }
 
@@ -217,7 +223,7 @@ $Script:TheCommandTable = @{
         )
 
         $Script:TheCommandWindow.InvokeGetAction($a0)
-        
+
         Return
     }
 
@@ -227,7 +233,7 @@ $Script:TheCommandTable = @{
         )
 
         $Script:TheCommandWindow.InvokeGetAction($a0)
-        
+
         Return
     }
 
@@ -237,7 +243,7 @@ $Script:TheCommandTable = @{
         )
 
         $Script:TheCommandWindow.InvokeGetAction($a0)
-        
+
         Return
     }
 
@@ -252,7 +258,7 @@ $Script:TheCommandTable = @{
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
-                    
+
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
@@ -294,7 +300,7 @@ $Script:TheCommandTable = @{
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            
+
             If($Script:ThePlayer.IsItemInInventory($a0)) {
                 $Script:TheMessageWindow.WriteMessage(
                     "You need to tell me what you want to use the $($a0) on.",
@@ -322,7 +328,7 @@ $Script:TheCommandTable = @{
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
-                    
+
                     If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
@@ -364,7 +370,7 @@ $Script:TheCommandTable = @{
             }
         } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            
+
             If($Script:ThePlayer.IsItemInInventory($a0)) {
                 $Script:TheMessageWindow.WriteMessage(
                     "You need to tell me what you want to use the $($a0) on.",
@@ -396,11 +402,11 @@ $Script:TheCommandTable = @{
 
             Return
         }
-        
+
         If($PSBoundParameters.Count -EQ 1) {
             If($PSBoundParameters.ContainsKey('a0')) {
                 If($Script:ThePlayer.IsItemInInventory($a0)) {
-                    If($Script:ThePlayer.RemoveItemFromInventory($a0)) {
+                    If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         $Script:TheMessageWindow.WriteMessage(
                             "Dropped $($a0) from your inventory.",
@@ -447,7 +453,7 @@ $Script:TheGlobalStateBlockTable = @{
 
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
-            
+
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
             # and I really don't feel like trying to figure out how to grab the buffer manually
             $Script:GpsRestoredFromInvBackup             = $true
@@ -620,7 +626,7 @@ Class ConsoleColor24 {
     [ValidateRange(0, 255)][Int]$Red
     [ValidateRange(0, 255)][Int]$Green
     [ValidateRange(0, 255)][Int]$Blue
-    
+
     ConsoleColor24(
         [Int]$Red,
         [Int]$Green,
@@ -648,15 +654,15 @@ Class ATControlSequences {
     Static [String]$ModifierReset           = "`e[0m"
     Static [String]$CursorHide              = "`e[?25l"
     Static [String]$CursorShow              = "`e[?25h"
-    
+
     Static [String]GenerateFG24String([ConsoleColor24]$Color) {
         Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
-    
+
     Static [String]GenerateBG24String([ConsoleColor24]$Color) {
         Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
     }
-    
+
     Static [String]GenerateCoordinateString([Int]$Row, [Int]$Column) {
         Return "`e[$($Row.ToString());$($Column.ToString())H"
     }
@@ -667,7 +673,7 @@ Defines an ANSI Buffer Cell Foreground Color modifier in 24-bit color. This clas
 #>
 Class ATForegroundColor24 {
     [ValidateNotNullOrEmpty()][ConsoleColor24]$Color
-    
+
     ATForegroundColor24(
         [ConsoleColor24]$Color
     ) {
@@ -679,7 +685,7 @@ Class ATForegroundColor24 {
     ) {
         $this.Color = [ConsoleColor24]::new($JsonData)
     }
-    
+
     [String]ToAnsiControlSequenceString() {
         Return [ATControlSequences]::GenerateFG24String($this.Color)
     }
@@ -690,7 +696,7 @@ Defines an ANSI Buffer Cell Background Color modifier in 24-bit color. This clas
 #>
 Class ATBackgroundColor24 {
     [ValidateNotNullOrEmpty()][ConsoleColor24]$Color
-    
+
     ATBackgroundColor24(
         [ConsoleColor24]$Color
     ) {
@@ -702,7 +708,7 @@ Class ATBackgroundColor24 {
     ) {
         $this.Color = [ConsoleColor24]::new($JsonData)
     }
-    
+
     [String]ToAnsiControlSequenceString() {
         Return [ATControlSequences]::GenerateBG24String($this.Color)
     }
@@ -713,7 +719,7 @@ Defines a collection of potential ANSI Buffer Cell decorators.
 #>
 Class ATDecoration {
     [ValidateNotNullOrEmpty()][Boolean]$Blink
-    
+
     ATDecoration(
         [Boolean]$Blink
     ) {
@@ -726,14 +732,14 @@ Class ATDecoration {
         $psoProps = $JsonData.PSObject.Properties
         $this.Blink = [Boolean]$psoProps['Blink'].Value
     }
-    
+
     [String]ToAnsiControlSequenceString() {
         [String]$a = ''
-        
+
         If($this.Blink) {
             $a += [ATControlSequences]::DecorationBlink
         }
-        
+
         Return $a
     }
 }
@@ -741,7 +747,7 @@ Class ATDecoration {
 Class ATCoordinates {
     [ValidateNotNullOrEmpty()][Int]$Row
     [ValidateNotNullOrEmpty()][Int]$Column
-    
+
     ATCoordinates(
         [Int]$Row,
         [Int]$Column
@@ -749,7 +755,7 @@ Class ATCoordinates {
         $this.Row    = $Row
         $this.Column = $Column
     }
-    
+
     ATCoordinates(
         [Coordinates]$AutomationCoordinates
     ) {
@@ -764,7 +770,7 @@ Class ATCoordinates {
         $this.Row    = [Int]$psoProps['Row'].Value
         $this.Column = [Int]$psoProps['Column'].Value
     }
-    
+
     [String]ToAnsiControlSequenceString() {
         Return [ATControlSequences]::GenerateCoordinateString($this.Row, $this.Column)
     }
@@ -982,7 +988,7 @@ Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
     ATForegroundColor24None(): base([CCBlack24]::new()) {}
-    
+
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
@@ -990,7 +996,7 @@ Class ATForegroundColor24None : ATForegroundColor24 {
 
 Class ATBackgroundColor24None : ATBackgroundColor24 {
     ATBackgroundColor24None() : base([CCBlack24]::new()) {}
-    
+
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
@@ -998,7 +1004,7 @@ Class ATBackgroundColor24None : ATBackgroundColor24 {
 
 Class ATCoordinatesNone : ATCoordinates {
     ATCoordinatesNone(): base(0, 0) {}
-    
+
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
@@ -1010,7 +1016,7 @@ Class ATCoordinatesDefault : ATCoordinates {
 
 Class ATDecorationNone : ATDecoration {
     ATDecorationNone(): base($false) {}
-    
+
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
@@ -1021,14 +1027,14 @@ Class ATStringPrefix {
     [ValidateNotNullOrEmpty()][ATBackgroundColor24]$BackgroundColor
     [ValidateNotNullOrEmpty()][ATDecoration]$Decorations
     [ValidateNotNullOrEmpty()][ATCoordinates]$Coordinates
-    
+
     ATStringPrefix() {
         $this.ForegroundColor = [ATForegroundColor24None]::new()
         $this.BackgroundColor = [ATBackgroundColor24None]::new()
         $this.Decorations     = [ATDecorationNone]::new()
         $this.Coordinates     = [ATCoordinatesNone]::new()
     }
-    
+
     ATStringPrefix(
         [ATForegroundColor24]$ForegroundColor,
         [ATBackgroundColor24]$BackgroundColor,
@@ -1040,7 +1046,7 @@ Class ATStringPrefix {
         $this.Decorations     = $Decorations
         $this.Coordinates     = $Coordinates
     }
-    
+
     [String]ToAnsiControlSequenceString() {
         Return "$($this.Coordinates.ToAnsiControlSequenceString())$($this.Decorations.ToAnsiControlSequenceString())$($this.ForegroundColor.ToAnsiControlSequenceString())$($this.BackgroundColor.ToAnsiControlSequenceString())"
     }
@@ -1048,7 +1054,7 @@ Class ATStringPrefix {
 
 Class ATStringPrefixNone : ATStringPrefix {
     ATStringPrefixNone() : base() {}
-    
+
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
@@ -1058,13 +1064,13 @@ Class ATString {
     [ValidateNotNullOrEmpty()][ATStringPrefix]$Prefix
     [ValidateNotNull()][String]$UserData
     [ValidateNotNullOrEmpty()][Boolean]$UseATReset
-    
+
     ATString() {
         $this.Prefix     = [ATStringPrefixNone]::new()
         $this.UserData   = ''
         $this.UseATReset = $false
     }
-    
+
     ATString(
         [ATStringPrefix]$Prefix,
         [String]$UserData,
@@ -1074,21 +1080,21 @@ Class ATString {
         $this.UserData   = $UserData
         $this.UseATReset = $UseATReset
     }
-    
+
     [String]ToAnsiControlSequenceString() {
         [String]$a = "$($this.Prefix.ToAnsiControlSequenceString())$($this.UserData)"
-        
+
         If($this.UseATReset) {
             $a += [ATControlSequences]::ModifierReset
         }
-        
+
         Return $a
     }
 }
 
 Class ATStringNone : ATString {
     ATStringNone() : base() {}
-    
+
     [String]ToAnsiControlSequenceString() {
         Return ''
     }
@@ -1150,7 +1156,7 @@ Class Player {
     [ATCoordinates]$MapCoordinates
     [List[MapTileObject]]$Inventory
     [List[String]]$TargetOfFilter
-    
+
     Static [Single]$StatNumThresholdCaution         = 0.6D
     Static [Single]$StatNumThresholdDanger          = 0.2D
     Static [ConsoleColor24]$StatNameDrawColor       = [CCAppleBlueLight24]::new()
@@ -1159,7 +1165,7 @@ Class Player {
     Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
     Static [ConsoleColor24]$StatGoldDrawColor       = [CCAppleYellowDark24]::new()
     Static [ConsoleColor24]$AsideDrawColor          = [CCAppleIndigoLight24]::new()
-    
+
     Player(
         [String]$Name,
         [Int]$CurrentHitPoints,
@@ -1210,7 +1216,7 @@ Class Player {
             $this.TargetOfFilter.Add($a) | Out-Null
         }
     }
-    
+
     [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
         [ATString]$p1 = [ATString]::new(
             [ATStringPrefix]::new(
@@ -1222,15 +1228,15 @@ Class Player {
             $this.Name,
             $true
         )
-        
+
         Return "$($p1.ToAnsiControlSequenceString())"
     }
-    
+
     [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
         [String]$a = ''
 
         $this.TestCurrentHpState()
-        
+
         Switch($this.HitPointsState) {
             Normal {
                 [ATString]$p1 = [ATString]::new(
@@ -1273,10 +1279,10 @@ Class Player {
                     "$($this.MaxHitPoints)",
                     $true
                 )
-                
+
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
-            
+
             Caution {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
@@ -1318,10 +1324,10 @@ Class Player {
                     "$($this.MaxHitPoints)",
                     $true
                 )
-                
+
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
-            
+
             Danger {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
@@ -1363,19 +1369,19 @@ Class Player {
                     "$($this.MaxHitPoints)",
                     $true
                 )
-                
+
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
-            
+
             Default {}
         }
-        
+
         Return $a
     }
-    
+
     [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
         [String]$a = ''
-        
+
         $this.TestCurrentMpState()
 
         Switch($this.MagicPointsState) {
@@ -1420,10 +1426,10 @@ Class Player {
                     "$($this.MaxMagicPoints)",
                     $true
                 )
-                
+
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
-            
+
             Caution {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
@@ -1465,10 +1471,10 @@ Class Player {
                     "$($this.MaxMagicPoints)",
                     $true
                 )
-                
+
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
-            
+
             Danger {
                 [ATString]$p1 = [ATString]::new(
                     [ATStringPrefix]::new(
@@ -1510,16 +1516,16 @@ Class Player {
                     "$($this.MaxMagicPoints)",
                     $true
                 )
-                
+
                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
             }
-            
+
             Default {}
         }
-        
+
         Return $a
     }
-    
+
     [String]GetFormattedGoldString([ATCoordinates]$Coordinates) {
         [ATString]$p1 = [ATString]::new(
             [ATStringPrefix]::new(
@@ -1541,24 +1547,24 @@ Class Player {
             'G',
             $true
         )
-        
+
         Return "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
     }
-    
+
     [Void]TestCurrentHpState() {
         Switch($this.CurrentHitPoints) {
             { $_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution) } {
                 $this.HitPointsState = [StatNumberState]::Normal
             }
-            
+
             { ($_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution)) } {
                 $this.HitPointsState = [StatNumberState]::Caution
             }
-            
+
             { $_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger) } {
                 $this.HitPointsState = [StatNumberState]::Danger
             }
-            
+
             Default {}
         }
     }
@@ -1568,20 +1574,22 @@ Class Player {
             { $_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution) } {
                 $this.MagicPointsState = [StatNumberState]::Normal
             }
-            
+
             { ($_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution)) } {
                 $this.MagicPointsState = [StatNumberState]::Caution
             }
-            
+
             { $_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger) } {
                 $this.MagicPointsState = [StatNumberState]::Danger
             }
-            
+
             Default {}
         }
     }
 
-    [Boolean]IsItemInInventory([String]$ItemName) {
+    [Boolean]IsItemInInventory(
+        [String]$ItemName
+    ) {
         Foreach($a in $this.Inventory) {
             If($a.Name -IEQ $ItemName) {
                 Return $true
@@ -1591,7 +1599,9 @@ Class Player {
         Return $false
     }
 
-    [MapTileObject]GetItemReference([String]$ItemName) {
+    [MapTileObject]GetItemReference(
+        [String]$ItemName
+    ) {
         Foreach($a in $this.Inventory) {
             If($a.Name -IEQ $ItemName) {
                 Return $a
@@ -1601,18 +1611,58 @@ Class Player {
         Return $null
     }
 
-    [Boolean]RemoveItemFromInventory([String]$ItemName) {
+    # [Boolean]RemoveInventoryItemByName(
+    #     [String]$ItemName
+    # ) {
+    #     $c = 0
+
+    #     Foreach($a in $this.Inventory) {
+    #         If($a.Name -IEQ $ItemName) {
+    #             $this.Inventory.RemoveAt($c)
+    #             Return $true
+    #         }
+    #         $c++
+    #     }
+
+    #     Return $false
+    # }
+
+    [ItemRemovalStatus]RemoveInventoryItemByName(
+        [String]$ItemName
+    ) {
         $c = 0
 
         Foreach($a in $this.Inventory) {
             If($a.Name -IEQ $ItemName) {
+                If($a.KeyItem -EQ $true) {
+                    Return [ItemRemovalStatus]::FailKeyItem
+                }
                 $this.Inventory.RemoveAt($c)
-                Return $true
+                Return [ItemRemovalStatus]::Success
             }
             $c++
         }
 
-        Return $false
+        Return [ItemRemovalStatus]::FailGeneral
+    }
+
+    [ItemRemovalStatus]RemoveInventoryItemByIndex(
+        [Int]$Index
+    ) {
+        [MapTileObject]$a = $null
+
+        Try {
+            $a = $this.Inventory[$Index]
+        } Catch {
+            Return [ItemRemovalStatus]::FailGeneral
+        }
+
+        If($a.KeyItem -EQ $true) {
+            Return [ItemRemovalStatus]::FailKeyItem
+        }
+
+        $this.Inventory.RemoveAt($Index)
+        Return [ItemRemovalStatus]::Success
     }
 
     [Void]MapMoveNorth() {
@@ -1643,7 +1693,7 @@ Class Player {
                     $this.MapCoordinates.Row++
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    
+
                     Return
                 }
             }
@@ -1680,7 +1730,7 @@ Class Player {
                     $this.MapCoordinates.Row--
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    
+
                     Return
                 }
             }
@@ -1719,7 +1769,7 @@ Class Player {
                     $this.MapCoordinates.Column++
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    
+
                     Return
                 }
             }
@@ -1756,7 +1806,7 @@ Class Player {
                     $this.MapCoordinates.Column--
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    
+
                     Return
                 }
             }
@@ -1793,7 +1843,7 @@ Class Player {
 
         # Notify the Status Window that the Player's Hit Point information is dirty
         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
-        
+
         Return $true
     }
 
@@ -1814,7 +1864,7 @@ Class Player {
         $a                     = $this.CurrentHitPoints += $DecAmt
         $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
         $this.CurrentHitPoints = $a
-        
+
         # Notify the Status Window that the Player's Hit Point information is dirty
         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
 
@@ -1825,13 +1875,13 @@ Class Player {
 Class SceneImage {
     Static [Int]$Width  = 48
     Static [Int]$Height = 18
-    
+
     [ATSceneImageString[,]]$Image
-    
+
     SceneImage() {
         $this.Image = New-Object 'ATSceneImageString[,]' ([Int32]([SceneImage]::Height)), ([Int32]([SceneImage]::Width))
     }
-    
+
     SceneImage(
         [ATSceneImageString[,]]$Image
     ) {
@@ -8887,6 +8937,7 @@ Class MapTileObject {
     [List[String]]$TargetOfFilter
     [ScriptBlock]$BaseEffectCall
     [String]$PlayerEffectString
+    [Boolean]$KeyItem
 
     MapTileObject(
         [String]$Name,
@@ -8910,6 +8961,7 @@ Class MapTileObject {
             Return $this.ValidateSourceInFilter($a0)
         }
         $this.PlayerEffectString = ''
+        $this.KeyItem            = $false
     }
 
     MapTileObject(
@@ -8935,6 +8987,7 @@ Class MapTileObject {
             Return $this.ValidateSourceInFilter($a0)
         }
         $this.PlayerEffectString = ''
+        $this.KeyItem            = $false
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
@@ -8965,6 +9018,39 @@ Class MapTileObject {
             Return $this.ValidateSourceInFilter($a0)
         }
         $this.PlayerEffectString = $PlayerEffectString
+        $this.KeyItem            = $false
+
+        Foreach($a in $TargetOfFilter) {
+            $this.TargetOfFilter.Add($a) | Out-Null
+        }
+    }
+
+    MapTileObject(
+        [String]$Name,
+        [String]$MapObjName,
+        [Boolean]$CanAddToInventory,
+        [String]$ExamineString,
+        [ScriptBlock]$Effect,
+        [String[]]$TargetOfFilter,
+        [String]$PlayerEffectString,
+        [Boolean]$KeyItem
+    ) {
+        $this.Name              = $Name
+        $this.MapObjName        = $MapObjName
+        $this.Effect            = $Effect
+        $this.CanAddToInventory = $CanAddToInventory
+        $this.ExamineString     = $ExamineString
+        $this.TargetOfFilter    = [List[String]]::new()
+        $this.BaseEffectCall    = {
+            Param(
+                [ValidateNotNullOrEmpty()]
+                [String]$a0
+            )
+
+            Return $this.ValidateSourceInFilter($a0)
+        }
+        $this.PlayerEffectString = $PlayerEffectString
+        $this.KeyItem            = $KeyItem
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
@@ -8994,7 +9080,7 @@ Class MapTile {
         $this.BackgroundImage = $BackgroundImage
         $this.ObjectListing   = [List[MapTileObject]]::new()
         $this.Exits           = $Exits
-        
+
         Foreach($a In $ObjectListing) {
             $this.ObjectListing.Add($a) | Out-Null
         }
@@ -9052,7 +9138,7 @@ Class MTOTree : MapTileObject {
 
     MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
         <#
-        Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments: 
+        Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments:
         A reference to the object itself, and the source. AFAIK, this is because of how the ScriptBlock gets invoked. The $this reference
         doesn't work as it references the CommandWindow instance rather than the owning object (in this case, MTOTree). Because of this
         somewhat counterintuitive nature, the caller (in this case, the 'use' command) will invoke the ScriptBlock with two arguments that
@@ -9082,11 +9168,11 @@ Class MTOTree : MapTileObject {
 
                 UPDATE: I have this functionality in place.
                 #>
-                
+
                 $Self.HasRopeTied   = $true
                 $Self.ExamineString = 'A rope is tied to this tree. Wee.'
 
-                $Script:ThePlayer.RemoveItemFromInventory($Source.Name)
+                $Script:ThePlayer.RemoveInventoryItemByName($Source.Name)
             }
         }
     },
@@ -9114,7 +9200,9 @@ Class MTOPole : MapTileObject {
 }
 
 Class MTOBacon : MapTileObject {
-    MTOBacon(): base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {}) {}
+    MTOBacon(): base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {}) {
+        $this.KeyItem = $true
+    }
 }
 
 Class MTOApple : MapTileObject {
@@ -9162,7 +9250,7 @@ Class MTOMilk : MapTileObject {
                         )
 
                         # Remove the milk from the Player's Inventory
-                        $Source.RemoveItemFromInventory($Self.Name)
+                        $Source.RemoveInventoryItemByName($Self.Name)
                     } Else {
                         # Decrement failed; write a message to the Message Window
                         $Script:TheMessageWindow.WriteMessage(
@@ -9183,7 +9271,7 @@ Class MTOMilk : MapTileObject {
                         )
 
                         # Remove the milk from the Player's Inventory
-                        $Script:ThePlayer.RemoveItemFromInventory($Self.Name)
+                        $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
                     } Else {
                         # Increment wasn't successful; write a message to the Message Window
                         $Script:TheMessageWindow.WriteMessage(
@@ -9199,7 +9287,7 @@ Class MTOMilk : MapTileObject {
         $a = $(Get-Random -Minimum 0 -Maximum 10)
         $this.PlayerHpBonus = 75
         $this.IsSpoiled     = ($a -GE 6 ? $true : $false)
-        
+
         If($this.IsSpoiled -EQ $true) {
             $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
             $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
@@ -9222,7 +9310,7 @@ Class BufferManager {
     [Void]CopyActiveToBufferA() {
         $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
     }
-    
+
     [Void]CopyActiveToBufferAWithWipe() {
         $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
         Clear-Host
@@ -9269,7 +9357,7 @@ Class WindowBase {
     Static [Int]$BorderDirtyBottom      = 1
     Static [Int]$BorderDirtyLeft        = 2
     Static [Int]$BorderDirtyRight       = 3
-    
+
     [ATCoordinates]$LeftTop
     [ATCoordinates]$RightBottom
     [ConsoleColor24[]]$BorderDrawColors
@@ -9299,7 +9387,7 @@ Class WindowBase {
         )
         $this.UpdateDimensions()
     }
-    
+
     WindowBase(
         [ATCoordinates]$LeftTop,
         [ATCoordinates]$RightBottom,
@@ -9314,7 +9402,7 @@ Class WindowBase {
         $this.BorderDrawDirty  = $BorderDrawDirty
         $this.UpdateDimensions()
     }
-    
+
     [Void]Draw() {
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
@@ -9322,7 +9410,7 @@ Class WindowBase {
                 [ATString]$bb = [ATStringNone]::new()
                 [ATString]$bl = [ATStringNone]::new()
                 [ATString]$br = [ATStringNone]::new()
-                
+
                 If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]) {
                     $bt = [ATString]::new(
                         [ATStringPrefix]::new(
@@ -9363,7 +9451,7 @@ Class WindowBase {
                             For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                             }
-                            
+
                             Return $temp
                         }),
                         $false
@@ -9384,7 +9472,7 @@ Class WindowBase {
                             For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.RightBottom.Column + 1).ToAnsiControlSequenceString())"
                             }
-                            
+
                             Return $temp
                         }),
                         $false
@@ -9392,16 +9480,16 @@ Class WindowBase {
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
                 }
 
-                
+
                 Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
-            
+
             { $_ -EQ $Script:OsCheckWindows } {
                 [ATString]$bt = [ATStringNone]::new()
                 [ATString]$bb = [ATStringNone]::new()
                 [ATString]$bl = [ATStringNone]::new()
                 [ATString]$br = [ATStringNone]::new()
-                
+
                 If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]) {
                     $bt = [ATString]::new(
                         [ATStringPrefix]::new(
@@ -9442,7 +9530,7 @@ Class WindowBase {
                             For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.LeftTop.Column).ToAnsiControlSequenceString())"
                             }
-                            
+
                             Return $temp
                         }),
                         $false
@@ -9463,7 +9551,7 @@ Class WindowBase {
                             For($a = 0; $a -LT $this.Height; $a++) {
                                 $temp += "$($this.BorderStrings[[WindowBase]::BorderStringVertical])$([ATCoordinates]::new(($this.LeftTop.Row + 1) + $a, $this.RightBottom.Column + 1).ToAnsiControlSequenceString())"
                             }
-                            
+
                             Return $temp
                         }),
                         $false
@@ -9471,10 +9559,10 @@ Class WindowBase {
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
                 }
 
-                
+
                 Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
             }
-            
+
             Default {}
         }
     }
@@ -9504,13 +9592,13 @@ Class StatusWindow : WindowBase {
     Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerMpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     # Static [ATCoordinates]$PlayerAilDrawCoordinates  = [ATCoordinates]::new(2, 11)
-    
+
     [Boolean]$PlayerNameDrawDirty
     [Boolean]$PlayerHpDrawDirty
     [Boolean]$PlayerMpDrawDirty
     [Boolean]$PlayerGoldDrawDirty
     # [Boolean]$PlayerAilDrawDirty
-    
+
     StatusWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating Status Window' -PercentComplete -1
         $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
@@ -9532,10 +9620,10 @@ Class StatusWindow : WindowBase {
         $this.PlayerGoldDrawDirty = $true
         # $this.PlayerAilDrawDirty  = $true
     }
-    
+
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-        
+
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 If($this.PlayerNameDrawDirty) {
@@ -9555,7 +9643,7 @@ Class StatusWindow : WindowBase {
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
-            
+
             { $_ -EQ $Script:OsCheckWindows } {
                 If($this.PlayerNameDrawDirty) {
                     Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
@@ -9574,7 +9662,7 @@ Class StatusWindow : WindowBase {
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
-            
+
             Default {}
         }
     }
@@ -9625,7 +9713,7 @@ Class CommandWindow : WindowBase {
 
     CommandWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Command Window' -PercentComplete -1
-        
+
         $this.LeftTop     = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
         $this.RightBottom = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -9774,16 +9862,16 @@ Class CommandWindow : WindowBase {
 
     [Void]HandleInput() {
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-        
+
         $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
 
         While($keyCap.VirtualKeyCode -NE 13) {
             $cpx = $Script:Rui.CursorPosition.X
-            
+
             If($cpx -GE 19) {
                 $this.InvokeCommandParser()
             }
-            
+
             Switch($keyCap.VirtualKeyCode) {
                 8 { # Backspace
                     $fpx = $Script:Rui.CursorPosition.X
@@ -9803,7 +9891,7 @@ Class CommandWindow : WindowBase {
                         }
                     }
                 }
-    
+
                 Default {
                     $this.CommandActual.UserData += $keyCap.Character
                 }
@@ -9825,7 +9913,7 @@ Class CommandWindow : WindowBase {
         } Else {
             $cmdactSplit = -SPLIT $this.CommandActual.UserData
             $rootFound   = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
-            
+
             If($null -NE $rootFound) {
                 Switch($cmdactSplit.Length) {
                     1 {
@@ -9933,7 +10021,7 @@ Class CommandWindow : WindowBase {
 
         $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
-        
+
         Return
     }
 
@@ -9941,11 +10029,11 @@ Class CommandWindow : WindowBase {
         [String]$ItemName
     ) {
         $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
-        
+
         If($a.Count -LE 0) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
-            
+
             Return
         }
 
@@ -9989,15 +10077,15 @@ Class CommandWindow : WindowBase {
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor
-        
+
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor
-        
+
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor
-        
+
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
 
         If($CmdValid -EQ $true) {
@@ -10020,7 +10108,7 @@ Class SceneWindow : WindowBase {
     Static [Int]$WindowRBColumn        = 78
     Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
-    
+
 
     Static [String]$WindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
     Static [String]$WindowBorderVertical   = '|'
@@ -10048,7 +10136,7 @@ Class SceneWindow : WindowBase {
 
         [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new([SceneWindow]::ImageDrawRowOffset, [SceneWindow]::ImageDrawColumnOffset)
     }
-    
+
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
@@ -10073,7 +10161,7 @@ Class MessageWindow : WindowBase {
     Static [Int]$WindowLTColumn     = 1
     Static [Int]$WindowBRRow        = 26
     Static [Int]$WindowBRColumn     = 80
-    
+
     Static [String]$WindowBorderHorizontal = '-------------------------------------------------------------------------------'
     Static [String]$WindowBorderVertical   = '|'
 
@@ -10088,10 +10176,10 @@ Class MessageWindow : WindowBase {
     [Boolean]$MessageADirty = $false
     [Boolean]$MessageBDirty = $false
     [Boolean]$MessageCDirty = $false
-    
+
     MessageWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Message Window' -PercentComplete -1
-        
+
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
         $this.RightBottom      = [ATCoordinates]::new(25, 78)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -10191,11 +10279,11 @@ Class MessageWindow : WindowBase {
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
-        
+
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
-        
+
         # $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
         #     [ATStringPrefix]::new(
         #         $ForegroundColor,
@@ -10303,7 +10391,7 @@ Class InventoryWindow : WindowBase {
 
     Static [String]$WindowBorderHorizontal = '********************************************************************************'
     Static [String]$WindowBorderVertical   = '*'
-    
+
     Static [String]$IChevronCharacter           = '>'
     Static [String]$IChevronBlankCharacter      = ' '
     Static [String]$PagingChevronRightCharacter = '>'
@@ -10313,7 +10401,7 @@ Class InventoryWindow : WindowBase {
     Static [String]$DivLineHorizontalString = '----------------------------------------------------------------------------'
 
     Static [String]$DescLineBlank = '                                                                          '
-    
+
     Static [ATString]$PagingChevronRight = [ATString]::new(
         [ATStringPrefix]::new(
             [CCAppleYellowLight24]::new(),
@@ -10386,12 +10474,12 @@ Class InventoryWindow : WindowBase {
     [Boolean]$ActiveItemBlinking        = $false
     [Boolean]$DivLineDirty              = $true
     [Boolean]$ItemDescDirty             = $true
-    
+
     [Int]$ItemsPerPage             = 10
     [Int]$NumPages                 = 1
     [Int]$CurrentPage              = 1
     [List[MapTileObject]]$PageRefs = $null
-    
+
     [List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
     [List[ATString]]$ItemLabels
     [List[ATString]]$ItemLabelBlanks
@@ -10550,11 +10638,33 @@ Class InventoryWindow : WindowBase {
                     $this.PageRefs[$this.ActiveIChevronIndex].PlayerEffectString,
                     $true
                 )
+                [ATString]$h = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(17, 4)
+                    ),
+                    [InventoryWindow]::DescLineBlank,
+                    $true
+                )
+                [ATString]$i = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleYellowLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecoration]::new($true),
+                        [ATCoordinates]::new(17, 4)
+                    ),
+                    ($this.PageRefs[$this.ActiveIChevronIndex].KeyItem -EQ $true ? 'KEY ITEM': ''),
+                    $true
+                )
 
                 Write-Host "$($b.ToAnsiControlSequenceString())"
                 Write-Host "$($d.ToAnsiControlSequenceString())"
                 Write-Host "$($f.ToAnsiControlSequenceString())"
                 Write-Host "$($e.ToAnsiControlSequenceString())"
+                Write-Host "$($h.ToAnsiControlSequenceString())"
+                Write-Host "$($i.ToAnsiControlSequenceString())"
             }
         }
     }
@@ -10696,7 +10806,7 @@ Class InventoryWindow : WindowBase {
     [Void]CreateItemLabels() {
         $this.ItemLabels = [List[ATString]]::new()
         [Int]$c          = 0
-        
+
         Foreach($i in $this.PageRefs) {
             $this.ItemLabels.Add(
                 [ATString]::new(
@@ -10875,7 +10985,7 @@ Class InventoryWindow : WindowBase {
         If($Script:ThePlayer.Inventory.Count -LE 0) {
             $this.ZeroPageActive   = $true
             $this.CurrentPageDirty = $false
-            
+
             If([InventoryWindow]::MoronCounter -LT 20) {
                 [InventoryWindow]::MoronCounter++
             } Else {
@@ -10949,18 +11059,18 @@ Class InventoryWindow : WindowBase {
     [Void]ResetIChevronPosition() {
         $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
-        
+
         Try {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
         } Catch {}
-        
+
         $this.ActiveIChevronIndex                                          = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
-        
+
         $this.PlayerChevronDirty = $true
         $this.ActiveItemBlinking = $false
         $this.ItemDescDirty      = $true
@@ -10980,7 +11090,7 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
+
                     $this.ActiveIChevronIndex--
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -10995,11 +11105,11 @@ Class InventoryWindow : WindowBase {
 
             40 {
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                 = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData        = [InventoryWindow]::IChevronBlankCharacter
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
+
                     $this.ActiveIChevronIndex++
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -11018,7 +11128,7 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
+
                     $this.ActiveIChevronIndex += 5
 
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
@@ -11038,7 +11148,7 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
+
                     $this.ActiveIChevronIndex -= 5
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -11058,6 +11168,39 @@ Class InventoryWindow : WindowBase {
             65 {
                 $this.TurnPageBackward()
             }
+
+            83 {
+                # This is the drop item functionality
+                Switch($this.CurrentPage) {
+                    1 {
+                        [ItemRemovalStatus]$a = $Script:ThePlayer.RemoveInventoryItemByIndex($this.ActiveIChevronIndex)
+                        If($a -EQ [ItemRemovalStatus]::Success) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 * 2), 250)
+
+                            $this.CurrentPageDirty = $true # This should be all that's needed to refresh the page
+                            Return
+                        }
+                        [Console]::Beep(493.9, 250)
+                        [Console]::Beep((493.9 / 2), 250)
+                    }
+
+                    { $_ -GT 1 } {
+                        [Int]$a               = ((10 * ($this.CurrentPage - 1)) + $this.ActiveIChevronIndex) - 1
+                        [ItemRemovalStatus]$b = $Script:ThePlayer.RemoveInventoryItemByIndex($a)
+                        If($b -EQ [ItemRemovalStatus]::Success) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 * 2), 250)
+
+                            $this.CurrentPageDirty = $true # This should be all that's needed to refresh the page
+                            Return
+                        }
+
+                        [Console]::Beep(493.9, 250)
+                        [Console]::Beep((493.9 / 2), 250)
+                    }
+                }
+            }
         }
     }
 }
@@ -11072,7 +11215,7 @@ Class GameCore {
 
     GameCore() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Game Core' -PercentComplete -1
-        
+
         $this.TargetFrameRate      = 30
         $this.MsPerFrame           = 1000 / $this.TargetFrameRate
         $this.GameRunning          = $true
@@ -11087,7 +11230,7 @@ Class GameCore {
             $this.Logic()
             # "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
             # $this.LastFrameTime = $this.CurrentFrameTime
-            
+
             # "GameCore::Run - `t`tSetting CurrentFrameTime ($($this.CurrentFrameTime)) to the current time in ticks ($([DateTime]::Now.Ticks))." | Out-File -FilePath $Script:LogFileName -Append
             # $this.CurrentFrameTime = [DateTime]::Now.Ticks
 
