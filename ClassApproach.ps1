@@ -11178,7 +11178,9 @@ Class InventoryWindow : WindowBase {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 * 2), 250)
 
-                            $this.CurrentPageDirty = $true # This should be all that's needed to refresh the page
+                            $this.BookDirty        = $true
+                            $this.CurrentPageDirty = $true
+
                             Return
                         }
                         [Console]::Beep(493.9, 250)
@@ -11192,7 +11194,9 @@ Class InventoryWindow : WindowBase {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 * 2), 250)
 
-                            $this.CurrentPageDirty = $true # This should be all that's needed to refresh the page
+                            $this.BookDirty        = $true
+                            $this.CurrentPageDirty = $true
+
                             Return
                         }
 
