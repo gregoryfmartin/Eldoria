@@ -10583,6 +10583,20 @@ Class InventoryWindow : WindowBase {
                         $this.PagingChevronLeftDirty = $false
                     }
                 }
+            } Elseif($this.NumPages -EQ 1) {
+                # Both of the paging chevrons need hidden at this point since there aren't any more pages in the book... currently.
+                If($this.PagingChevronLeftVisible -EQ $true) {
+                    $this.PagingChevronLeftVisible = $false
+                }
+                If($this.PagingChevronRightVisible -EQ $true) {
+                    $this.PagingChevronRightVisible = $false
+                }
+                If($this.PagingChevronLeftVisible -EQ $false) {
+                    Write-Host "$([InventoryWindow]::PagingChevronLeftBlank.ToAnsiControlSequenceString())"
+                }
+                If($this.PagingChevronRightVisible -EQ $false) {
+                    Write-Host "$([InventoryWindow]::PagingChevronRightBlank.ToAnsiControlSequenceString())"
+                }
             }
 
             # Try to make the "active" Item Label blink
@@ -11327,44 +11341,44 @@ Clear-Host
 #$Script:TheMessageWindow.WriteMessage('This is a another message', [CCAppleMintLight24]::new())
 #$Script:TheMessageWindow.WriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
 
-# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
