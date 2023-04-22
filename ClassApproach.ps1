@@ -11014,7 +11014,7 @@ Class InventoryWindow : WindowBase {
             $this.PageRefs        = [List[MapTileObject]]::new()
             $this.ZeroPageActive  = $false
             $this.MoronPageActive = $false
-            $rs                   = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage) - 1
+            $rs                   = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage)
             $rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
             $re                   = 10
 
@@ -11351,34 +11351,34 @@ $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
