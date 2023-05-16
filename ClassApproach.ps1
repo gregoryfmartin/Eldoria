@@ -15,7 +15,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]              $Script:OsCheckMac               = 'OsMac'
 [String]              $Script:OsCheckWindows           = 'OsWindows'
 [String]              $Script:OsCheckUnknown           = 'OsUnknown'
-[Player]              $Script:ThePlayer                = [Player]::new('Steve', 250, 500, 25, 25, 5000, 5000, @('MTOMilk'))
+#[Player]              $Script:ThePlayer                = [Player]::new('Steve', 250, 500, 25, 25, 5000, @('MTOMilk'))
 [StatusWindow]        $Script:TheStatusWindow          = [StatusWindow]::new()
 [CommandWindow]       $Script:TheCommandWindow         = [CommandWindow]::new()
 [SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
@@ -24,6 +24,251 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [ATCoordinatesDefault]$Script:DefaultCursorCoordinates = [ATCoordinatesDefault]::new()
 [BufferManager]       $Script:TheBufferManager         = [BufferManager]::new()
 [GameCore]            $Script:TheGameCore              = [GameCore]::new()
+
+
+
+
+
+
+[Player]$Script:ThePlayer = [Player]@{
+    Name = 'Steve'
+    Stats = @{
+        [StatId]::HitPoints = [BattleEntityProperty]@{
+            Base                = 200
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 200
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                        Return
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                        Return
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                        Return
+                    }
+                }
+            }
+        }
+        [StatId]::MagicPoints = [BattleEntityProperty]@{
+            Base                = 50
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 50
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                        Return
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                        Return
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                        Return
+                    }
+                }
+            }
+        }
+        [StatId]::Attack = [BattleEntityProperty]@{
+            Base                = 15
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 15
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return $Self.Base
+            }
+        }
+        [StatId]::Defense = [BattleEntityProperty]@{
+            Base                = 8
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 8
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicAttack = [BattleEntityProperty]@{
+            Base                = 6
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 6
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicDefense = [BattleEntityProperty]@{
+            Base                = 4
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 4
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Speed = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Luck = [BattleEntityProperty]@{
+            Base                = 5
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 5
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Accuracy = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+    }
+    ActionListing = @{
+        [ActionSlot]::A = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::B = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::C = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::D = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+    }
+    SpoilsEffect    = {}
+    ActionMarbleBag = [System.Collections.Generic.List[[ActionSlot]]]::new()
+    CurrentGold     = 500
+    MapCoordinates  = [ATCoordinates]::new(0, 0)
+    Inventory       = [List[MapTileObject]]::new()
+    TargetOfFilter  = [List[String]]::new()
+}
+
+
+
+
+
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete' -PercentComplete -1
 
@@ -95,6 +340,64 @@ Enum ItemRemovalStatus {
     Success
     FailGeneral
     FailKeyItem
+}
+
+Enum BattleActionType {
+    Physical
+    ElementalFire
+    ElementalWater
+    ElementalEarth
+    ElementalWind
+    ElementalLight
+    ElementalDark
+    MagicPoison
+    MagicConfuse
+    MagicSleep
+    MagicAging
+    None
+}
+
+Enum HpIncrementResult {
+    FailHpFull
+    FailHpAddNegative
+    Success
+}
+
+Enum HpDecrementResult {
+    FailHpEmpty
+    FailHpSubtractPositive
+    Success
+}
+
+Enum MpIncrementResult {
+    FailMpFull
+    FailMpAddNegative
+    Success
+}
+
+Enum MpDecrementResult {
+    FailMpEmpty
+    FailMpSubtractPositive
+    Success
+}
+
+Enum StatId {
+    HitPoints
+    MagicPoints
+    Attack
+    Defense
+    MagicAttack
+    MagicDefense
+    Speed
+    Luck
+    Accuracy
+}
+
+Enum ActionSlot {
+    A
+    B
+    C
+    D
 }
 
 # COMMAND TABLE DEFINITION
@@ -470,6 +773,9 @@ $Script:TheGlobalStateBlockTable = @{
             # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
         }
+
+        # Update the Player
+        $Script:ThePlayer.Update()
 
         $Script:TheStatusWindow.Draw()
         $Script:TheCommandWindow.Draw()
@@ -1118,472 +1424,831 @@ Class ATSceneImageString : ATString {
     }
 }
 
-Class CollectionInspectionFrame {
-    [Int]$Start
-    [Int]$End
-    [Int]$Width
+<#
+HASHTABLE CREATOR
 
-    CollectionInspectionFrame(
-        [Int]$Start,
-        [Int]$Width
+[BattleEntityProperty]@{
+    Base                = ?
+    BasePre             = 0
+    BaseAugmentValue    = 0
+    Max                 = ?
+    MaxPre              = 0
+    MaxAugmentValue     = 0
+    AugmentTurnDuration = 0
+    BaseAugmentActive   = $false
+    MaxAugmentActive    = $false
+    State               = [StatNumberState]::Normal
+    ValidateFunction    = {
+        Param(
+            [BattleEntityProperty]$Self
+        )
+
+        Return
+    }
+}
+#>
+Class BattleEntityProperty {
+    Static [Single]$StatNumThresholdCaution         = 0.6D
+    Static [Single]$StatNumThresholdDanger          = 0.2D
+    Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCAppleGreenLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorCaution = [CCAppleYellowLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
+
+    [Int]$Base
+    [Int]$BasePre
+    [Int]$BaseAugmentValue
+    [Int]$Max
+    [Int]$MaxPre
+    [Int]$MaxAugmentValue
+    [Int]$AugmentTurnDuration
+    [Boolean]$BaseAugmentActive
+    [Boolean]$MaxAugmentActive
+    [StatNumberState]$State
+    [ScriptBlock]$ValidateFunction
+
+    BattleEntityProperty() {
+        $this.Base                = 0
+        $this.BasePre             = 0
+        $this.BaseAugmentValue    = 0
+        $this.Max                 = 0
+        $this.MaxPre              = 0
+        $this.MaxAugmentValue     = 0
+        $this.AugmentTurnDuration = 0
+        $this.BaseAugmentActive   = $false
+        $this.MaxAugmentActive    = $false
+        $this.State               = [StatNumberState]::Normal
+        $this.ValidateFunction    = $null
+    }
+
+    BattleEntityProperty(
+        [Int]$Base,
+        [Int]$BasePre,
+        [Int]$BaseAugmentValue,
+        [Int]$Max,
+        [Int]$MaxPre,
+        [Int]$MaxAugmentValue,
+        [Int]$AugmentTurnDuration,
+        [Boolean]$BaseAugmentActive,
+        [Boolean]$MaxAugmentActive,
+        [StatNumberState]$State,
+        [ScriptBlock]$ValidateFunction
     ) {
-        $this.Start = $Start
-        $this.Width = $Width
-        $this.End   = $this.Start + $this.Width
+        $this.Base                = $Base
+        $this.BasePre             = $BasePre
+        $this.BaseAugmentValue    = $BaseAugmentValue
+        $this.Max                 = $Max
+        $this.MaxPre              = $MaxPre
+        $this.MaxAugmentValue     = $MaxAugmentValue
+        $this.AugmentTurnDuration = $AugmentTurnDuration
+        $this.BaseAugmentActive   = $BaseAugmentActive
+        $this.MaxAugmentActive    = $MaxAugmentActive
+        $this.State               = $State
+        $this.ValidateFunction    = $ValidateFunction
     }
 
-    [Void]ShiftUp() {
-        $this.Start = $this.End
-        $this.End   = $this.Start + $this.Width
+    [Void]Update() {
+        If($this.AugmentTurnDuration -GT 0) {
+            If($this.BasePre -EQ 0) {
+                $this.BasePre = $this.Base
+            }
+            If($this.MaxPre -EQ 0) {
+                $this.MaxPre = $this.Max
+            }
+            If($this.MaxAugmentActive -EQ $false) {
+                [Int]$t                = $this.Max + $this.MaxAugmentValue
+                $t                     = [Math]::Clamp($t, 0, [Int]::MaxValue)
+                $this.Max              = $t
+                $this.MaxAugmentActive = $true
+            }
+            If($this.BaseAugmentActive -EQ $false) {
+                [Int]$t                 = $this.Base + $this.BaseAugmentValue
+                $t                      = [Math]::Clamp($t, 0, $this.Max)
+                $this.Base              = $t
+                $this.BaseAugmentActive = $true
+            }
+        } Else {
+            If($this.MaxAugmentActive -EQ $true) {
+                $this.Max    = $this.MaxPre
+                $this.MaxPre = 0
+                $this.MaxAugmentActive = $false
+            }
+            If($this.BaseAugmentActive -EQ $true) {
+                $this.Base              = $this.BasePre
+                $this.BasePre           = 0
+                $this.BaseAugmentActive = $false
+            }
+        }
+
+        Invoke-Command $this.ValidateFunction -ArgumentList $this
     }
 
-    [Void]ShiftDown() {
-        $this.Start -= $this.Width
-        $this.End    = $this.Start + $this.Width
+    <#
+    .OUTPUTS
+    Integer
+        -1 - The value of IncAmt is less than or equal to zero.
+        -2 - The value of Base is equal to Max (no need to increment Base at this point)
+        0  - Base was successfully incremented by IncAmt
+    #>
+    [Int]IncrementBase(
+        [Int]$IncAmt
+    ) {
+        If($IncAmt -LE 0) {
+            Return -1
+        }
+
+        If($this.Base -EQ $this.Max) {
+            Return -2
+        }
+
+        [Int]$t    = $this.Base + $IncAmt
+        $t         = [Math]::Clamp($t, 0, $this.Max) # This should work regardless if BaseAugmentActive = true
+        $this.Base = $t
+
+        Return 0
+    }
+
+    <#
+    .OUTPUTS
+    Integer
+        -1 - The value of DecAmt is greater than or equal to zero.
+        -2 - The value of Base is less than or equal to zero.
+        0  - Base was successfully decremented by DecAmt.
+    #>
+    [Int]DecrementBase(
+        [Int]$DecAmt
+    ) {
+        If($DecAmt -GE 0) {
+            Return -1
+        }
+
+        If($this.Base -LE 0) {
+            Return -2
+        }
+
+        [Int]$t    = $this.Base - $DecAmt
+        $t         = [Math]::Clamp($t, 0, $this.Max)
+        $this.Base = $t
+        
+        Return 0
+    }
+
+    <# 
+    .OUTPUTS
+    Integer
+        -1 - The value of IncAmt is less than or equal to zero.
+        0  - Max was successfully incremented by IncAmt.
+    #>
+    [Int]IncrementMax(
+        [Int]$IncAmt
+    ) {
+        If($IncAmt -LE 0) {
+            Return -1
+        }
+
+        $this.Max += $IncAmt
+
+        Return 0
+    }
+
+    <#
+    .OUTPUTS
+    Integer
+        -1 - The value of DecAmt is greater than or equal to zero.
+        0  - Max was successfully decremented by DecAmt.
+    #>
+    [Int]DecrementMax(
+        [Int]$DecAmt
+    ) {
+        If($DecAmt -GE 0) {
+            Return -1
+        }
+
+        [Int]$t   = $this.Max - $DecAmt
+        $t        = [Math]::Clamp($t, 0, [Int]::MaxValue)
+        $this.Max = $t
+        
+        If($this.Max -LT $this.Base) {
+            $this.Base = $this.Max
+        }
+
+        Return 0
     }
 }
 
-Class Player {
+<#
+HASHTABLE CREATOR
+
+[BattleAction]@{
+    Name   = ?
+    Type   = ?
+    Effect = ?
+}
+#>
+Class BattleAction {
     [String]$Name
-    [Int]$CurrentHitPoints
-    [Int]$MaxHitPoints
-    [Int]$CurrentMagicPoints
-    [Int]$MaxMagicPoints
+    [ScriptBlock]$Effect
+    [BattleActionType]$Type
+
+    BattleAction() {
+        $this.Name   = ''
+        $this.Type   = [BattleActionType]::None
+        $this.Effect = $null
+    }
+
+    BattleAction(
+        [String]$Name,
+        [BattleActionType]$Type,
+        [ScriptBlock]$Effect
+    ) {
+        $this.Name   = $Name
+        $this.Type   = $Type
+        $this.Effect = $Effect
+    }
+}
+
+<#
+HASHTABLE CREATOR
+
+[BattleEntity]@{
+    Name            = ?
+    Stats           = @{
+        [StatId]::HitPoints    = [BattleEntityProperty]@{}
+        [StatId]::MagicPoints  = [BattleEntityProperty]@{}
+        [StatId]::Attack       = [BattleEntityProperty]@{}
+        [StatId]::Defense      = [BattleEntityProperty]@{}
+        [StatId]::MagicAttack  = [BattleEntityProperty]@{}
+        [StatId]::MagicDefense = [BattleEntityProperty]@{}
+        [StatId]::Speed        = [BattleEntityProperty]@{}
+        [StatId]::Luck         = [BattleEntityProperty]@{}
+        [StatId]::Accuracy     = [BattleEntityProperty]@{}
+    }
+    SpoilsEffect    = {}
+    ActionListing   = $null
+    ActionMarbleBag = $null
+}
+
+FULL HASHTABLE CREATOR
+[BattleEntity]@{
+    Name = 'Steve'
+    Stats = @{
+        [StatId]::HitPoints = [BattleEntityProperty]@{
+            Base                = 200
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 200
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                    }
+                }
+            }
+        }
+        [StatId]::MagicPoints = [BattleEntityProperty]@{
+            Base                = 50
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 50
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                    }
+                }
+            }
+        }
+        [StatId]::Attack = [BattleEntityProperty]@{
+            Base                = 15
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 15
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return $Self.Base
+            }
+        }
+        [StatId]::Defense = [BattleEntityProperty]@{
+            Base                = 8
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 8
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicAttack = [BattleEntityProperty]@{
+            Base                = 6
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 6
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicDefense = [BattleEntityProperty]@{
+            Base                = 4
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 4
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Speed = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Luck = [BattleEntityProperty]@{
+            Base                = 5
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 5
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Accuracy = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+    }
+    ActionListing = @{
+        [ActionSlot]::A = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::B = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::C = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::D = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+    }
+    SpoilsEffect = {}
+    ActionMarbleBag = [System.Collections.Generic.List[[ActionSlot]]]::new()
+}
+#>
+
+<#
+Name            - The user-friendly name of the entity. This will be used for display in the various game windows.
+Stats           - A Hashtable of the format [StatId], [BattleEntityProperty]. This pairs a BattleEntityProperty with a StatId.
+ActionListing   - A Hashtable of the format [ActionSlot], [BattleAction]. This pairs a BattleAction with an ActionSlot.
+SpoilsEffect    - A ScriptBlock that's run when the BattleEntity loses a combat sequence. This is meant to apply to Enemies.
+ActionMarbleBag - A List of fixed size (10) that helps determine the chance of an Action from the ActionListing being selected by the AI.
+NameDrawColor   - The foreground color to use while drawing the Name property to a window.
+#>
+Class BattleEntity {
+    [String]$Name
+    [Hashtable]$Stats
+    [Hashtable]$ActionListing
+    [ScriptBlock]$SpoilsEffect
+    [List[ActionSlot]]$ActionMarbleBag
+    [ConsoleColor24]$NameDrawColor
+
+    BattleEntity() {
+        $this.Name            = ''
+        $this.Stats           = @{}
+        $this.ActionListing   = @{}
+        $this.SpoilsEffect    = $null
+        $this.ActionMarbleBag = $null
+        $this.NameDrawColor   = [CCAppleBlueLight24]::new()
+    }
+
+    BattleEntity(
+        [String]$Name,
+        [Hashtable]$Stats,
+        [Hashtable]$ActionListing,
+        [ScriptBlock]$SpoilsEffect,
+        [List[ActionSlot]]$ActionMarbleBag,
+        [ConsoleColor24]$NameDrawColor
+    ) {
+        $this.Name            = $Name
+        $this.Stats           = $Stats
+        $this.ActionListing   = $ActionListing
+        $this.SpoilsEffect    = $SpoilsEffect
+        $this.ActionMarbleBag = $ActionMarbleBag
+        $this.NameDrawColor   = $NameDrawColor
+    }
+
+    [Void]Update() {
+        Foreach($a in $this.Stats.Values) {
+            $a.Update()
+        }
+    }
+}
+
+<#
+HASHTABLE CREATOR
+
+[Player]@{
+    Name = 'Steve'
+    Stats = @{
+        [StatId]::HitPoints = [BattleEntityProperty]@{
+            Base                = 200
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 200
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                    }
+                }
+            }
+        }
+        [StatId]::MagicPoints = [BattleEntityProperty]@{
+            Base                = 50
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 50
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                    }
+                }
+            }
+        }
+        [StatId]::Attack = [BattleEntityProperty]@{
+            Base                = 15
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 15
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return $Self.Base
+            }
+        }
+        [StatId]::Defense = [BattleEntityProperty]@{
+            Base                = 8
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 8
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicAttack = [BattleEntityProperty]@{
+            Base                = 6
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 6
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicDefense = [BattleEntityProperty]@{
+            Base                = 4
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 4
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Speed = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Luck = [BattleEntityProperty]@{
+            Base                = 5
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 5
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Accuracy = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+    }
+    ActionListing = @{
+        [ActionSlot]::A = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::B = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::C = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::D = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+    }
+    SpoilsEffect    = {}
+    ActionMarbleBag = [System.Collections.Generic.List[[ActionSlot]]]::new()
+    CurrentGold     = 500
+    MapCoordinates  = [ATCoordinates]::new(0, 0)
+    Inventory       = [List[MapTileObject]]::new()
+    TargetOfFilter  = [List[String]]::new(@('MTOMilk'))
+}
+#>
+Class Player : BattleEntity {
+    Static [ConsoleColor24]$AsideColor = [CCAppleIndigoLight24]::new()
+    Static [ConsoleColor24]$GoldDrawColor = [CCAppleYellowLight24]::new()
+
     [Int]$CurrentGold
-    [Int]$MaxGold
-    [StatNumberState]$HitPointsState
-    [StatNumberState]$MagicPointsState
     [ATCoordinates]$MapCoordinates
     [List[MapTileObject]]$Inventory
     [List[String]]$TargetOfFilter
 
-    Static [Single]$StatNumThresholdCaution         = 0.6D
-    Static [Single]$StatNumThresholdDanger          = 0.2D
-    Static [ConsoleColor24]$StatNameDrawColor       = [CCAppleBlueLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCAppleGreenLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorCaution = [CCAppleYellowLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
-    Static [ConsoleColor24]$StatGoldDrawColor       = [CCAppleYellowDark24]::new()
-    Static [ConsoleColor24]$AsideDrawColor          = [CCAppleIndigoLight24]::new()
-
-    Player(
-        [String]$Name,
-        [Int]$CurrentHitPoints,
-        [Int]$MaxHitPoints,
-        [Int]$CurrentMagicPoints,
-        [Int]$MaxMagicPoints,
-        [Int]$CurrentGold,
-        [Int]$MaxGold
-    ) {
-        $this.Name               = $Name
-        $this.CurrentHitPoints   = $CurrentHitPoints
-        $this.MaxHitPoints       = $MaxHitPoints
-        $this.CurrentMagicPoints = $CurrentMagicPoints
-        $this.MaxMagicPoints     = $MaxMagicPoints
-        $this.CurrentGold        = $CurrentGold
-        $this.MaxGold            = $MaxGold
-        $this.HitPointsState     = [StatNumberState]::Normal
-        $this.MagicPointsState   = [StatNumberState]::Normal
-        $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
-        $this.Inventory          = [List[MapTileObject]]::new()
-        $this.TargetOfFilter     = [List[String]]::new()
+    Player(): base() {
+        $this.CurrentGold    = 0
+        $this.MapCoordinates = [ATCoordinates]::new(0, 0)
+        $this.Inventory      = [List[MapTileObject]]::new()
+        $this.TargetOfFilter = [List[String]]::new()
     }
 
     Player(
-        [String]$Name,
-        [Int]$CurrentHitPoints,
-        [Int]$MaxHitPoints,
-        [Int]$CurrentMagicPoints,
-        [Int]$MaxMagicPoints,
         [Int]$CurrentGold,
-        [Int]$MaxGold,
+        [ATCoordinates]$MapCoordinates,
+        [List[MapTileObject]]$Inventory,
         [String[]]$TargetOfFilter
-    ) {
-        $this.Name               = $Name
-        $this.CurrentHitPoints   = $CurrentHitPoints
-        $this.MaxHitPoints       = $MaxHitPoints
-        $this.CurrentMagicPoints = $CurrentMagicPoints
-        $this.MaxMagicPoints     = $MaxMagicPoints
-        $this.CurrentGold        = $CurrentGold
-        $this.MaxGold            = $MaxGold
-        $this.HitPointsState     = [StatNumberState]::Normal
-        $this.MagicPointsState   = [StatNumberState]::Normal
-        $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
-        $this.Inventory          = [List[MapTileObject]]::new()
-        $this.TargetOfFilter     = [List[String]]::new()
+    ): base() {
+        $this.CurrentGold    = $CurrentGold
+        $this.MapCoordinates = $MapCoordinates
+        $this.Inventory      = $Inventory
+        $this.TargetOfFilter = [List[String]]::new()
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
         }
     }
 
-    [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
-        [ATString]$p1 = [ATString]::new(
-            [ATStringPrefix]::new(
-                [Player]::StatNameDrawColor,
-                [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
-                $Coordinates
-            ),
-            $this.Name,
-            $true
-        )
+    Player(
+        [String]$Name,
+        [Int]$BaseHp,
+        [Int]$MaxHp,
+        [Int]$BaseMp,
+        [Int]$MaxMp,
+        [Int]$Gold,
+        [String[]]$TargetOfFilter
+    ): base() {
+        $this.Name        = $Name
+        $this.CurrentGold = $Gold
 
-        Return "$($p1.ToAnsiControlSequenceString())"
-    }
+        $this.Stats[[StatId]::HitPoints].Base   = $BaseHp
+        $this.Stats[[StatId]::HitPoints].Max    = $MaxHp
+        $this.Stats[[StatId]::MagicPoints].Base = $BaseMp
+        $this.Stats[[StatId]::MagicPoints].Max  = $MaxMp
 
-    [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
-        [String]$a = ''
+        $this.MapCoordinates = [ATCoordinates]::new(0, 0)
+        $this.Inventory      = [List[MapTileObject]]::new()
+        $this.TargetOfFilter = [List[String]]::new()
 
-        $this.TestCurrentHpState()
-
-        Switch($this.HitPointsState) {
-            Normal {
-                [ATString]$p1 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $Coordinates
-                    ),
-                    'H ',
-                    $false
-                )
-                [ATString]$p2 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorSafe,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.CurrentHitPoints) `n`t",
-                    $false
-                )
-                [ATString]$p3 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    '/ ',
-                    $false
-                )
-                [ATString]$p4 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorSafe,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.MaxHitPoints)",
-                    $true
-                )
-
-                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-            }
-
-            Caution {
-                [ATString]$p1 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $Coordinates
-                    ),
-                    'H ',
-                    $false
-                )
-                [ATString]$p2 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorCaution,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.CurrentHitPoints) `n`t",
-                    $false
-                )
-                [ATString]$p3 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    '/ ',
-                    $false
-                )
-                [ATString]$p4 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorCaution,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.MaxHitPoints)",
-                    $true
-                )
-
-                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-            }
-
-            Danger {
-                [ATString]$p1 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $Coordinates
-                    ),
-                    'H ',
-                    $false
-                )
-                [ATString]$p2 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorDanger,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecoration]::new($true),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.CurrentHitPoints) `n`t",
-                    $false
-                )
-                [ATString]$p3 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    '/ ',
-                    $false
-                )
-                [ATString]$p4 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorDanger,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecoration]::new($true),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.MaxHitPoints)",
-                    $true
-                )
-
-                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-            }
-
-            Default {}
-        }
-
-        Return $a
-    }
-
-    [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
-        [String]$a = ''
-
-        $this.TestCurrentMpState()
-
-        Switch($this.MagicPointsState) {
-            Normal {
-                [ATString]$p1 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $Coordinates
-                    ),
-                    'M ',
-                    $false
-                )
-                [ATString]$p2 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorSafe,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.CurrentMagicPoints) `n`t",
-                    $false
-                )
-                [ATString]$p3 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    '/ ',
-                    $false
-                )
-                [ATString]$p4 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorSafe,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.MaxMagicPoints)",
-                    $true
-                )
-
-                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-            }
-
-            Caution {
-                [ATString]$p1 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $Coordinates
-                    ),
-                    'M ',
-                    $false
-                )
-                [ATString]$p2 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorCaution,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.CurrentMagicPoints) `n`t",
-                    $false
-                )
-                [ATString]$p3 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    '/ ',
-                    $false
-                )
-                [ATString]$p4 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorCaution,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.MaxMagicPoints)",
-                    $true
-                )
-
-                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-            }
-
-            Danger {
-                [ATString]$p1 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        $Coordinates
-                    ),
-                    'M ',
-                    $false
-                )
-                [ATString]$p2 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorDanger,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecoration]::new($true),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.CurrentMagicPoints) `n`t",
-                    $false
-                )
-                [ATString]$p3 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    '/ ',
-                    $false
-                )
-                [ATString]$p4 = [ATString]::new(
-                    [ATStringPrefix]::new(
-                        [Player]::StatNumDrawColorDanger,
-                        [ATBackgroundColor24None]::new(),
-                        [ATDecoration]::new($true),
-                        [ATCoordinatesNone]::new()
-                    ),
-                    "$($this.MaxMagicPoints)",
-                    $true
-                )
-
-                $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-            }
-
-            Default {}
-        }
-
-        Return $a
-    }
-
-    [String]GetFormattedGoldString([ATCoordinates]$Coordinates) {
-        [ATString]$p1 = [ATString]::new(
-            [ATStringPrefix]::new(
-                [Player]::StatGoldDrawColor,
-                [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
-                $Coordinates
-            ),
-            "$($this.CurrentGold)",
-            $false
-        )
-        [ATString]$p2 = [ATString]::new(
-            [ATStringPrefix]::new(
-                [CCTextDefault24]::new(),
-                [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
-                [ATCoordinatesNone]::new()
-            ),
-            'G',
-            $true
-        )
-
-        Return "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-    }
-
-    [Void]TestCurrentHpState() {
-        Switch($this.CurrentHitPoints) {
-            { $_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution) } {
-                $this.HitPointsState = [StatNumberState]::Normal
-            }
-
-            { ($_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution)) } {
-                $this.HitPointsState = [StatNumberState]::Caution
-            }
-
-            { $_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger) } {
-                $this.HitPointsState = [StatNumberState]::Danger
-            }
-
-            Default {}
-        }
-    }
-
-    [Void]TestCurrentMpState() {
-        Switch($this.CurrentMagicPoints) {
-            { $_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution) } {
-                $this.MagicPointsState = [StatNumberState]::Normal
-            }
-
-            { ($_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution)) } {
-                $this.MagicPointsState = [StatNumberState]::Caution
-            }
-
-            { $_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger) } {
-                $this.MagicPointsState = [StatNumberState]::Danger
-            }
-
-            Default {}
+        Foreach($a in $TargetOfFilter) {
+            $this.TargetOfFilter.Add($a) | Out-Null
         }
     }
 
@@ -1822,55 +2487,736 @@ Class Player {
     ) {
         Return ($SourceItemClass -IN $this.TargetOfFilter)
     }
-
-    [Boolean]IncrementHitPoints(
-        [Int]$IncAmt
-    ) {
-        # Check to see if the Current Hit Points are EQUAL TO the Max Hit Points
-        If($this.CurrentHitPoints -EQ $this.MaxHitPoints) {
-            Return $false
-        }
-
-        # Ensure that IncAmt is GREATER THAN zero; the clamping function below relies on it
-        If($IncAmt -LE 0) {
-            Return $false
-        }
-
-        # It can safely be assumed that the Player's Current Hit Points are LESS THAN the Max Hit Points; add the IncAmt, but clamp at max
-        $a                     = $this.CurrentHitPoints += $IncAmt
-        $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
-        $this.CurrentHitPoints = $a
-
-        # Notify the Status Window that the Player's Hit Point information is dirty
-        $Script:TheStatusWindow.PlayerHpDrawDirty = $true
-
-        Return $true
-    }
-
-    [Boolean]DecrementHitPoints(
-        [Int]$DecAmt
-    ) {
-        # Check to see if Current Hit Points are EQUAL TO zero
-        If($this.CurrentHitPoints -EQ 0) {
-            Return $false
-        }
-
-        # Ensure that DecAmt is LESS THAN zero; the clamping function below relies on it
-        If($DecAmt -GE 0) {
-            Return $false
-        }
-
-        # It can be safely assumed that the Player's Current Hit Points are GREATER THAN zero; add the DecAmt, but clamp at zero
-        $a                     = $this.CurrentHitPoints += $DecAmt
-        $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
-        $this.CurrentHitPoints = $a
-
-        # Notify the Status Window that the Player's Hit Point information is dirty
-        $Script:TheStatusWindow.PlayerHpDrawDirty = $true
-
-        Return $true
-    }
 }
+
+# Class Player {
+#     [String]$Name
+#     [Int]$CurrentHitPoints
+#     [Int]$MaxHitPoints
+#     [Int]$CurrentMagicPoints
+#     [Int]$MaxMagicPoints
+#     [Int]$CurrentGold
+#     [Int]$MaxGold
+#     [StatNumberState]$HitPointsState
+#     [StatNumberState]$MagicPointsState
+#     [ATCoordinates]$MapCoordinates
+#     [List[MapTileObject]]$Inventory
+#     [List[String]]$TargetOfFilter
+
+#     Static [Single]$StatNumThresholdCaution         = 0.6D
+#     Static [Single]$StatNumThresholdDanger          = 0.2D
+#     Static [ConsoleColor24]$StatNameDrawColor       = [CCAppleBlueLight24]::new()
+#     Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCAppleGreenLight24]::new()
+#     Static [ConsoleColor24]$StatNumDrawColorCaution = [CCAppleYellowLight24]::new()
+#     Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
+#     Static [ConsoleColor24]$StatGoldDrawColor       = [CCAppleYellowDark24]::new()
+#     Static [ConsoleColor24]$AsideDrawColor          = [CCAppleIndigoLight24]::new()
+
+#     Player(
+#         [String]$Name,
+#         [Int]$CurrentHitPoints,
+#         [Int]$MaxHitPoints,
+#         [Int]$CurrentMagicPoints,
+#         [Int]$MaxMagicPoints,
+#         [Int]$CurrentGold,
+#         [Int]$MaxGold
+#     ) {
+#         $this.Name               = $Name
+#         $this.CurrentHitPoints   = $CurrentHitPoints
+#         $this.MaxHitPoints       = $MaxHitPoints
+#         $this.CurrentMagicPoints = $CurrentMagicPoints
+#         $this.MaxMagicPoints     = $MaxMagicPoints
+#         $this.CurrentGold        = $CurrentGold
+#         $this.MaxGold            = $MaxGold
+#         $this.HitPointsState     = [StatNumberState]::Normal
+#         $this.MagicPointsState   = [StatNumberState]::Normal
+#         $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
+#         $this.Inventory          = [List[MapTileObject]]::new()
+#         $this.TargetOfFilter     = [List[String]]::new()
+#     }
+
+#     Player(
+#         [String]$Name,
+#         [Int]$CurrentHitPoints,
+#         [Int]$MaxHitPoints,
+#         [Int]$CurrentMagicPoints,
+#         [Int]$MaxMagicPoints,
+#         [Int]$CurrentGold,
+#         [Int]$MaxGold,
+#         [String[]]$TargetOfFilter
+#     ) {
+#         $this.Name               = $Name
+#         $this.CurrentHitPoints   = $CurrentHitPoints
+#         $this.MaxHitPoints       = $MaxHitPoints
+#         $this.CurrentMagicPoints = $CurrentMagicPoints
+#         $this.MaxMagicPoints     = $MaxMagicPoints
+#         $this.CurrentGold        = $CurrentGold
+#         $this.MaxGold            = $MaxGold
+#         $this.HitPointsState     = [StatNumberState]::Normal
+#         $this.MagicPointsState   = [StatNumberState]::Normal
+#         $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
+#         $this.Inventory          = [List[MapTileObject]]::new()
+#         $this.TargetOfFilter     = [List[String]]::new()
+
+#         Foreach($a in $TargetOfFilter) {
+#             $this.TargetOfFilter.Add($a) | Out-Null
+#         }
+#     }
+
+#     [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
+#         [ATString]$p1 = [ATString]::new(
+#             [ATStringPrefix]::new(
+#                 [Player]::StatNameDrawColor,
+#                 [ATBackgroundColor24None]::new(),
+#                 [ATDecorationNone]::new(),
+#                 $Coordinates
+#             ),
+#             $this.Name,
+#             $true
+#         )
+
+#         Return "$($p1.ToAnsiControlSequenceString())"
+#     }
+
+#     [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
+#         [String]$a = ''
+
+#         $this.TestCurrentHpState()
+
+#         Switch($this.HitPointsState) {
+#             Normal {
+#                 [ATString]$p1 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         $Coordinates
+#                     ),
+#                     'H ',
+#                     $false
+#                 )
+#                 [ATString]$p2 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorSafe,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.CurrentHitPoints) `n`t",
+#                     $false
+#                 )
+#                 [ATString]$p3 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     '/ ',
+#                     $false
+#                 )
+#                 [ATString]$p4 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorSafe,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.MaxHitPoints)",
+#                     $true
+#                 )
+
+#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+#             }
+
+#             Caution {
+#                 [ATString]$p1 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         $Coordinates
+#                     ),
+#                     'H ',
+#                     $false
+#                 )
+#                 [ATString]$p2 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorCaution,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.CurrentHitPoints) `n`t",
+#                     $false
+#                 )
+#                 [ATString]$p3 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     '/ ',
+#                     $false
+#                 )
+#                 [ATString]$p4 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorCaution,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.MaxHitPoints)",
+#                     $true
+#                 )
+
+#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+#             }
+
+#             Danger {
+#                 [ATString]$p1 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         $Coordinates
+#                     ),
+#                     'H ',
+#                     $false
+#                 )
+#                 [ATString]$p2 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorDanger,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecoration]::new($true),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.CurrentHitPoints) `n`t",
+#                     $false
+#                 )
+#                 [ATString]$p3 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     '/ ',
+#                     $false
+#                 )
+#                 [ATString]$p4 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorDanger,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecoration]::new($true),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.MaxHitPoints)",
+#                     $true
+#                 )
+
+#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+#             }
+
+#             Default {}
+#         }
+
+#         Return $a
+#     }
+
+#     [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
+#         [String]$a = ''
+
+#         $this.TestCurrentMpState()
+
+#         Switch($this.MagicPointsState) {
+#             Normal {
+#                 [ATString]$p1 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         $Coordinates
+#                     ),
+#                     'M ',
+#                     $false
+#                 )
+#                 [ATString]$p2 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorSafe,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.CurrentMagicPoints) `n`t",
+#                     $false
+#                 )
+#                 [ATString]$p3 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     '/ ',
+#                     $false
+#                 )
+#                 [ATString]$p4 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorSafe,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.MaxMagicPoints)",
+#                     $true
+#                 )
+
+#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+#             }
+
+#             Caution {
+#                 [ATString]$p1 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         $Coordinates
+#                     ),
+#                     'M ',
+#                     $false
+#                 )
+#                 [ATString]$p2 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorCaution,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.CurrentMagicPoints) `n`t",
+#                     $false
+#                 )
+#                 [ATString]$p3 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     '/ ',
+#                     $false
+#                 )
+#                 [ATString]$p4 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorCaution,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.MaxMagicPoints)",
+#                     $true
+#                 )
+
+#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+#             }
+
+#             Danger {
+#                 [ATString]$p1 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         $Coordinates
+#                     ),
+#                     'M ',
+#                     $false
+#                 )
+#                 [ATString]$p2 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorDanger,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecoration]::new($true),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.CurrentMagicPoints) `n`t",
+#                     $false
+#                 )
+#                 [ATString]$p3 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [CCTextDefault24]::new(),
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecorationNone]::new(),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     '/ ',
+#                     $false
+#                 )
+#                 [ATString]$p4 = [ATString]::new(
+#                     [ATStringPrefix]::new(
+#                         [Player]::StatNumDrawColorDanger,
+#                         [ATBackgroundColor24None]::new(),
+#                         [ATDecoration]::new($true),
+#                         [ATCoordinatesNone]::new()
+#                     ),
+#                     "$($this.MaxMagicPoints)",
+#                     $true
+#                 )
+
+#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+#             }
+
+#             Default {}
+#         }
+
+#         Return $a
+#     }
+
+#     [String]GetFormattedGoldString([ATCoordinates]$Coordinates) {
+#         [ATString]$p1 = [ATString]::new(
+#             [ATStringPrefix]::new(
+#                 [Player]::StatGoldDrawColor,
+#                 [ATBackgroundColor24None]::new(),
+#                 [ATDecorationNone]::new(),
+#                 $Coordinates
+#             ),
+#             "$($this.CurrentGold)",
+#             $false
+#         )
+#         [ATString]$p2 = [ATString]::new(
+#             [ATStringPrefix]::new(
+#                 [CCTextDefault24]::new(),
+#                 [ATBackgroundColor24None]::new(),
+#                 [ATDecorationNone]::new(),
+#                 [ATCoordinatesNone]::new()
+#             ),
+#             'G',
+#             $true
+#         )
+
+#         Return "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+#     }
+
+#     [Void]TestCurrentHpState() {
+#         Switch($this.CurrentHitPoints) {
+#             { $_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution) } {
+#                 $this.HitPointsState = [StatNumberState]::Normal
+#             }
+
+#             { ($_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution)) } {
+#                 $this.HitPointsState = [StatNumberState]::Caution
+#             }
+
+#             { $_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger) } {
+#                 $this.HitPointsState = [StatNumberState]::Danger
+#             }
+
+#             Default {}
+#         }
+#     }
+
+#     [Void]TestCurrentMpState() {
+#         Switch($this.CurrentMagicPoints) {
+#             { $_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution) } {
+#                 $this.MagicPointsState = [StatNumberState]::Normal
+#             }
+
+#             { ($_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution)) } {
+#                 $this.MagicPointsState = [StatNumberState]::Caution
+#             }
+
+#             { $_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger) } {
+#                 $this.MagicPointsState = [StatNumberState]::Danger
+#             }
+
+#             Default {}
+#         }
+#     }
+
+#     [Boolean]IsItemInInventory(
+#         [String]$ItemName
+#     ) {
+#         Foreach($a in $this.Inventory) {
+#             If($a.Name -IEQ $ItemName) {
+#                 Return $true
+#             }
+#         }
+
+#         Return $false
+#     }
+
+#     [MapTileObject]GetItemReference(
+#         [String]$ItemName
+#     ) {
+#         Foreach($a in $this.Inventory) {
+#             If($a.Name -IEQ $ItemName) {
+#                 Return $a
+#             }
+#         }
+
+#         Return $null
+#     }
+
+#     # [Boolean]RemoveInventoryItemByName(
+#     #     [String]$ItemName
+#     # ) {
+#     #     $c = 0
+
+#     #     Foreach($a in $this.Inventory) {
+#     #         If($a.Name -IEQ $ItemName) {
+#     #             $this.Inventory.RemoveAt($c)
+#     #             Return $true
+#     #         }
+#     #         $c++
+#     #     }
+
+#     #     Return $false
+#     # }
+
+#     [ItemRemovalStatus]RemoveInventoryItemByName(
+#         [String]$ItemName
+#     ) {
+#         $c = 0
+
+#         Foreach($a in $this.Inventory) {
+#             If($a.Name -IEQ $ItemName) {
+#                 If($a.KeyItem -EQ $true) {
+#                     Return [ItemRemovalStatus]::FailKeyItem
+#                 }
+#                 $this.Inventory.RemoveAt($c)
+#                 Return [ItemRemovalStatus]::Success
+#             }
+#             $c++
+#         }
+
+#         Return [ItemRemovalStatus]::FailGeneral
+#     }
+
+#     [ItemRemovalStatus]RemoveInventoryItemByIndex(
+#         [Int]$Index
+#     ) {
+#         [MapTileObject]$a = $null
+
+#         Try {
+#             $a = $this.Inventory[$Index]
+#         } Catch {
+#             Return [ItemRemovalStatus]::FailGeneral
+#         }
+
+#         If($a.KeyItem -EQ $true) {
+#             Return [ItemRemovalStatus]::FailKeyItem
+#         }
+
+#         $this.Inventory.RemoveAt($Index)
+#         Return [ItemRemovalStatus]::Success
+#     }
+
+#     [Void]MapMoveNorth() {
+#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
+#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+#                 $a = $Script:CurrentMap.MapHeight - 1
+#                 $b = $this.MapCoordinates.Row + 1
+#                 $c = $a % $b
+
+#                 If($c -EQ $a) {
+#                     $this.MapCoordinates.Row = 0
+#                 } Else {
+#                     $this.MapCoordinates.Row++
+#                 }
+
+#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                 Return
+#             } Else {
+#                 $a = $Script:CurrentMap.MapHeight - 1
+#                 $b = $this.MapCoordinates.Row + 1
+#                 $c = $a % $b
+
+#                 If($c -EQ $a) {
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+#                 } Else {
+#                     $this.MapCoordinates.Row++
+#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+#                     Return
+#                 }
+#             }
+#         } Else {
+#             $Script:TheCommandWindow.UpdateCommandHistory($true)
+#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+#             Return
+#         }
+#     }
+
+#     [Void]MapMoveSouth() {
+#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
+#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+#                 $a = 0
+#                 $b = $this.MapCoordinates.Row - 1
+
+#                 If($b -LT $a) {
+#                     $this.MapCoordinates.Row = $Script:CurrentMap.MapHeight - 1
+#                 } Else {
+#                     $this.MapCoordinates.Row--
+#                 }
+
+#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                 Return
+#             } Else {
+#                 $a = 0
+#                 $b = $this.MapCoordinates.Row - 1
+
+#                 If($b -LT $a) {
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+#                 } Else {
+#                     $this.MapCoordinates.Row--
+#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+#                     Return
+#                 }
+#             }
+#         } Else {
+#             $Script:TheCommandWindow.UpdateCommandHistory($true)
+#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+#             Return
+#         }
+#     }
+
+#     [Void]MapMoveEast() {
+#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitEast] -EQ $true) {
+#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+#                 $a = $Script:CurrentMap.MapWidth - 1
+#                 $b = $this.MapCoordinates.Column + 1
+#                 $c = $a % $b
+
+#                 If($c -EQ $a) {
+#                     $this.MapCoordinates.Column = 0
+#                 } Else {
+#                     $this.MapCoordinates.Column++
+#                 }
+
+#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                 Return
+#             } Else {
+#                 $a = $Script:CurrentMap.MapWidth - 1
+#                 $b = $this.MapCoordinates.Column + 1
+#                 $c = $a % $b
+
+#                 If($c -EQ $a) {
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+#                 } Else {
+#                     $this.MapCoordinates.Column++
+#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+#                     Return
+#                 }
+#             }
+#         } Else {
+#             $Script:TheCommandWindow.UpdateCommandHistory($true)
+#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+#             Return
+#         }
+#     }
+
+#     [Void]MapMoveWest() {
+#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitWest] -EQ $true) {
+#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
+#                 $a = 0
+#                 $b = $this.MapCoordinates.Column - 1
+
+#                 If($b -LT $a) {
+#                     $this.MapCoordinates.Column = $Script:CurrentMap.MapWidth - 1
+#                 } Else {
+#                     $this.MapCoordinates.Column--
+#                 }
+
+#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                 Return
+#             } Else {
+#                 $a = 0
+#                 $b = $this.MapCoordinates.Column - 1
+
+#                 If($b -LT $a) {
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
+#                 } Else {
+#                     $this.MapCoordinates.Column--
+#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+#                     Return
+#                 }
+#             }
+#         } Else {
+#             $Script:TheCommandWindow.UpdateCommandHistory($true)
+#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+#             Return
+#         }
+#     }
+
+#     [Boolean]ValidateSourceInFilter(
+#         [String]$SourceItemClass
+#     ) {
+#         Return ($SourceItemClass -IN $this.TargetOfFilter)
+#     }
+
+#     [Boolean]IncrementHitPoints(
+#         [Int]$IncAmt
+#     ) {
+#         # Check to see if the Current Hit Points are EQUAL TO the Max Hit Points
+#         If($this.CurrentHitPoints -EQ $this.MaxHitPoints) {
+#             Return $false
+#         }
+
+#         # Ensure that IncAmt is GREATER THAN zero; the clamping function below relies on it
+#         If($IncAmt -LE 0) {
+#             Return $false
+#         }
+
+#         # It can safely be assumed that the Player's Current Hit Points are LESS THAN the Max Hit Points; add the IncAmt, but clamp at max
+#         $a                     = $this.CurrentHitPoints += $IncAmt
+#         $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
+#         $this.CurrentHitPoints = $a
+
+#         # Notify the Status Window that the Player's Hit Point information is dirty
+#         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
+
+#         Return $true
+#     }
+
+#     [Boolean]DecrementHitPoints(
+#         [Int]$DecAmt
+#     ) {
+#         # Check to see if Current Hit Points are EQUAL TO zero
+#         If($this.CurrentHitPoints -EQ 0) {
+#             Return $false
+#         }
+
+#         # Ensure that DecAmt is LESS THAN zero; the clamping function below relies on it
+#         If($DecAmt -GE 0) {
+#             Return $false
+#         }
+
+#         # It can be safely assumed that the Player's Current Hit Points are GREATER THAN zero; add the DecAmt, but clamp at zero
+#         $a                     = $this.CurrentHitPoints += $DecAmt
+#         $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
+#         $this.CurrentHitPoints = $a
+
+#         # Notify the Status Window that the Player's Hit Point information is dirty
+#         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
+
+#         Return $true
+#     }
+# }
 
 Class SceneImage {
     Static [Int]$Width  = 48
@@ -9627,38 +10973,848 @@ Class StatusWindow : WindowBase {
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 If($this.PlayerNameDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
+                    [ATString]$a = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $Script:ThePlayer.NameDrawColor,
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [StatusWindow]::PlayerNameDrawCoordinates
+                        ),
+                        $Script:ThePlayer.Name,
+                        $true
+                    )
+                    Write-Host "$($a.ToAnsiControlSequenceString())"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
                     $this.PlayerNameDrawDirty = $false
                 }
                 If($this.PlayerHpDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
+                    [String]$a = ''
+
+                    Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        Default {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+                    }
+
+                    Write-Host "$($a)"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
                     $this.PlayerHpDrawDirty = $false
                 }
                 If($this.PlayerMpDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
+                    Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        Default {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+                    }
+
+                    Write-Host "$($a)"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
                     $this.PlayerMpDrawDirty = $false
                 }
                 If($this.PlayerGoldDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
+                    [ATString]$p1 = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [Player]::GoldDrawColor,
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [StatusWindow]::PlayerGoldDrawCoordinates
+                        ),
+                        "$($Script:ThePlayer.CurrentGold)",
+                        $false
+                    )
+                    [ATString]$p2 = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [CCTextDefault24]::new(),
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinatesNone]::new()
+                        ),
+                        'G',
+                        $true
+                    )
+
+                    Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
 
             { $_ -EQ $Script:OsCheckWindows } {
                 If($this.PlayerNameDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
+                    [ATString]$a = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            $Script:ThePlayer.NameDrawColor,
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [StatusWindow]::PlayerNameDrawCoordinates
+                        ),
+                        $Script:ThePlayer.Name,
+                        $true
+                    )
+                    Write-Host "$($a.ToAnsiControlSequenceString())"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
                     $this.PlayerNameDrawDirty = $false
                 }
                 If($this.PlayerHpDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
+                    [String]$a = ''
+
+                    Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        Default {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerHpDrawCoordinates
+                                ),
+                                'H ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+                    }
+
+                    Write-Host "$($a)"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
                     $this.PlayerHpDrawDirty = $false
                 }
                 If($this.PlayerMpDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
+                    Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorCaution,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorDanger,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecoration]::new($true),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+
+                        Default {
+                            [ATString]$p1 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [StatusWindow]::PlayerMpDrawCoordinates
+                                ),
+                                'M ',
+                                $false
+                            )
+                            [ATString]$p2 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+                                $false
+                            )
+                            [ATString]$p3 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                '/ ',
+                                $false
+                            )
+                            [ATString]$p4 = [ATString]::new(
+                                [ATStringPrefix]::new(
+                                    [BattleEntityProperty]::StatNumDrawColorSafe,
+                                    [ATBackgroundColor24None]::new(),
+                                    [ATDecorationNone]::new(),
+                                    [ATCoordinatesNone]::new()
+                                ),
+                                "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+                                $true
+                            )
+
+                            $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                        }
+                    }
+
+                    Write-Host "$($a)"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
                     $this.PlayerMpDrawDirty = $false
                 }
                 If($this.PlayerGoldDrawDirty) {
-                    Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
+                    [ATString]$p1 = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [Player]::GoldDrawColor,
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [StatusWindow]::PlayerGoldDrawCoordinates
+                        ),
+                        "$($Script:ThePlayer.CurrentGold)",
+                        $false
+                    )
+                    [ATString]$p2 = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [CCTextDefault24]::new(),
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinatesNone]::new()
+                        ),
+                        'G',
+                        $true
+                    )
+
+                    Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+
+                    # Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
