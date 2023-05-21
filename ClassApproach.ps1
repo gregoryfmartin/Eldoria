@@ -13404,6 +13404,971 @@ Class InventoryWindow : WindowBase {
     }
 }
 
+Class BWPlayerStatusWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 1
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 17
+    Static [Int]$WindowBRColumn = 19
+
+    Static [String]$WindowBorderHorizontal = '*-----------------*'
+    Static [String]$WindowBorderVertical   = '*'
+
+    Static [String]$FullLineBlankActual = '                 '
+
+    [ATCoordinates]$NameDrawCoordinates   = [ATCoordinatesNone]::new()
+    [ATCoordinates]$HpDrawCoordinates     = [ATCoordinatesNone]::new()
+    [ATCoordinates]$MpDrawCoordinates     = [ATCoordinatesNone]::new()
+    [ATCoordinates]$StatL1DrawCoordinates = [ATCoordinatesNone]::new() # Attack/Defense
+    [ATCoordinates]$StatL2DrawCoordinates = [ATCoordinatesNone]::new() # MAT/MDF
+    [ATCoordinates]$StatL3DrawCoordinates = [ATCoordinatesNone]::new() # SPD/AGL
+    [ATCoordinates]$StatL4DrawCoordinates = [ATCoordinatesNone]::new() # LCK
+    
+    [Boolean]$NameDrawDirty   = $true
+    [Boolean]$HpDrawDirty     = $true
+    [Boolean]$MpDrawDirty     = $true
+    [Boolean]$StatL1DrawDirty = $true
+    [Boolean]$StatL2DrawDirty = $true
+    [Boolean]$StatL3DrawDirty = $true
+    [Boolean]$StatL4DrawDirty = $true
+
+    [ATString]$FullLineBlank      = [ATStringNone]::new()
+    [ATString]$NameDrawString     = [ATStringNone]::new()
+    [ATString[]]$HpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$MpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL1DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL2DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL3DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL4DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+
+    BWPlayerStatusWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([BWPlayerStatusWindow]::WindowLTRow, [BWPlayerStatusWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([BWPlayerStatusWindow]::WindowBRRow, [BWPlayerStatusWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [BWPlayerStatusWindow]::WindowBorderHorizontal,
+            [BWPlayerStatusWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+        
+        $this.FullLineBlank = [ATString]::new(
+            [ATStringPrefix]::new(
+                [ATForegroundColor24None]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            [BWPlayerStatusWindow]::FullLineBlankActual,
+            $true
+        )
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.NameDrawDirty -EQ $true) {
+            $this.CreateNameDrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.NameDrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.NameDrawString.ToAnsiControlSequenceString())"
+
+            $this.NameDrawDirty = $false
+        }
+        If($this.HpDrawDirty -EQ $true) {
+            $this.CreateHpDrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.HpDrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            $this.FullLineBlank.Prefix.Coordinates.Row++
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.HpDrawString[0].ToAnsiControlSequenceString())$($this.HpDrawString[1].ToAnsiControlSequenceString())$($this.HpDrawString[2].ToAnsiControlSequenceString())$($this.HpDrawString[3].ToAnsiControlSequenceString())"
+
+            $this.HpDrawDirty = $false
+        }
+        If($this.MpDrawDirty -EQ $true) {
+            $this.CreateMpDrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.MpDrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            $this.FullLineBlank.Prefix.Coordinates.Row++
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.MpDrawString[0].ToAnsiControlSequenceString())$($this.MpDrawString[1].ToAnsiControlSequenceString())$($this.MpDrawString[2].ToAnsiControlSequenceString())$($this.MpDrawString[3].ToAnsiControlSequenceString())"
+
+            $this.MpDrawDirty = $false
+        }
+        If($this.StatL1DrawDirty -EQ $true) {
+            $this.CreateStatL1DrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL1DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.StatL1DrawString[0].ToAnsiControlSequenceString())$($this.StatL1DrawString[1].ToAnsiControlSequenceString())$($this.StatL1DrawString[2].ToAnsiControlSequenceString())$($this.StatL1DrawString[3].ToAnsiControlSequenceString())$($this.StatL1DrawString[4].ToAnsiControlSequenceString())$($this.StatL1DrawString[5].ToAnsiControlSequenceString())"
+
+            $this.StatL1DrawDirty = $false
+        }
+        If($this.StatL2DrawDirty -EQ $true) {
+            $this.CreateStatL2DrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL2DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.StatL2DrawString[0].ToAnsiControlSequenceString())$($this.StatL2DrawString[1].ToAnsiControlSequenceString())$($this.StatL2DrawString[2].ToAnsiControlSequenceString())$($this.StatL2DrawString[3].ToAnsiControlSequenceString())$($this.StatL2DrawString[4].ToAnsiControlSequenceString())$($this.StatL2DrawString[5].ToAnsiControlSequenceString())"
+
+            $this.StatL2DrawDirty = $false
+        }
+        If($this.StatL3DrawDirty -EQ $true) {
+            $this.CreateStatL3DrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL3DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.StatL3DrawString[0].ToAnsiControlSequenceString())$($this.StatL3DrawString[1].ToAnsiControlSequenceString())$($this.StatL3DrawString[2].ToAnsiControlSequenceString())$($this.StatL3DrawString[3].ToAnsiControlSequenceString())$($this.StatL3DrawString[4].ToAnsiControlSequenceString())$($this.StatL3DrawString[5].ToAnsiControlSequenceString())"
+
+            $this.StatL3DrawDirty = $false
+        }
+        If($this.StatL4DrawDirty -EQ $true) {
+            $this.CreateStatL4DrawString()
+
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL4DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.StatL4DrawString[0].ToAnsiControlSequenceString())$($this.StatL4DrawString[1].ToAnsiControlSequenceString())$($this.StatL4DrawString[2].ToAnsiControlSequenceString())"
+
+            $this.StatL4DrawDirty = $false
+        }
+    }
+
+    [Void]CreateNameDrawString() {
+        $this.NameDrawString = [ATString]::new(
+            [ATStringPrefix]::new(
+                [ATForegroundColor24None]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.NameDrawCoordinates
+            ),
+            $Script:ThePlayer.Name,
+            $true
+        )
+    }
+
+    [Void]CreateHpDrawString() {
+        $this.HpDrawString[0] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.HpDrawCoordinates
+            ),
+            'H ',
+            $false
+        )
+        $this.HpDrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            Return [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            Return [BattleEntityProperty]::StatNumDrawColorDanger
+                        }
+
+                        Default {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                    }
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+            $false
+        )
+        $this.HpDrawString[2] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            '/ ',
+            $false
+        )
+        $this.HpDrawString[3] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            Return [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            Return [BattleEntityProperty]::StatNumDrawColorDanger
+                        }
+
+                        Default {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                    }
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+            $true
+        )
+    }
+
+    [Void]CreateMpDrawString() {
+        $this.MpDrawString[0] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.MpDrawCoordinates
+            ),
+            'M ',
+            $false
+        )
+        $this.MpDrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            Return [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            Return [BattleEntityProperty]::StatNumDrawColorDanger
+                        }
+
+                        Default {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                    }
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+            $false
+        )
+        $this.MpDrawString[2] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            '/ ',
+            $false
+        )
+        $this.MpDrawString[3] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
+                        ([StatNumberState]::Normal) {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+
+                        ([StatNumberState]::Caution) {
+                            Return [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+
+                        ([StatNumberState]::Danger) {
+                            Return [BattleEntityProperty]::StatNumDrawColorDanger
+                        }
+
+                        Default {
+                            Return [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                    }
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+            $true
+        )
+    }
+
+    [Void]CreateStatL1DrawString() {
+        [BattleEntityProperty]$AtkStat = $Script:ThePlayer.Stats[[StatId]::Attack]
+        [BattleEntityProperty]$DefStat = $Script:ThePlayer.Stats[[StatId]::Defense]
+
+        # Attack Portion - 0 = ' ATK '
+        $this.StatL1DrawString[0] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.StatL1DrawCoordinates
+            ),
+            ' ATK ',
+            $false
+        )
+
+        # Attack Portion - 1 = Sign Indicator
+        $this.StatL1DrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($AtkStat.AugmentTurnDuration -GT 0) {
+                        Switch($AtkStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($AtkStat.AugmentTurnDuration -GT 0) {
+                    If($AtkStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($AtkStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($AtkStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+
+        # Attack Portion - 2 = Attack Stat Value
+        $this.StatL1DrawString[2] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($AtkStat.AugmentTurnDuration -GT 0) {
+                        Switch($AtkStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [CCTextDefault24]::new()
+                            }
+                        }
+                    }
+
+                    Return [CCTextDefault24]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($AtkStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $AtkStat.Base
+                } Elseif($AtkStat.Base -GE 10) {
+                    $a = "$($AtkStat.Base)"
+                }
+
+                Return $a
+            },
+            $false
+        )
+
+        # Defense Portion - 3 = ' DEF '
+        $this.StatL1DrawString[3] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            ' DEF ',
+            $false
+        )
+
+        # Defense Portion - 4 Sign Indicator
+        $this.StatL1DrawString[4] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($DefStat.AugmentTurnDuration -GT 0) {
+                        Switch($DefStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($DefStat.AugmentTurnDuration -GT 0) {
+                    If($DefStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($DefStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($DefStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+
+        # Defense Portion - 5 Defense Stat Value
+        $this.StatL1DrawString[5] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($DefStat.AugmentTurnDuration -GT 0) {
+                        Switch($DefStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [CCTextDefault24]::new()
+                            }
+                        }
+                    }
+
+                    Return [CCTextDefault24]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($DefStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $DefStat.Base
+                } Elseif($DefStat.Base -GE 10) {
+                    $a = "$($DefStat.Base)"
+                }
+
+                Return $a
+            },
+            $true
+        )
+    }
+
+    [Void]CreateStatL2DrawString() {
+        [BattleEntityProperty]$MatStat = $Script:ThePlayer.Stats[[StatId]::MagicAttack]
+        [BattleEntityProperty]$MdfStat = $Script:ThePlayer.Stats[[StatId]::MagicDefense]
+
+        # Magic Attack Portion - 0 = ' MAT '
+        $this.StatL2DrawString[0] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.StatL2DrawCoordinates
+            ),
+            ' MAT ',
+            $false
+        )
+
+        # Magic Attack Portion - 1 = Sign Indicator
+        $this.StatL2DrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($MatStat.AugmentTurnDuration -GT 0) {
+                        Switch($MatStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($MatStat.AugmentTurnDuration -GT 0) {
+                    If($MatStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($MatStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($MatStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+
+        # Magic Attack Portion - 2 = Magic Attack Stat Value
+        $this.StatL2DrawString[2] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($MatStat.AugmentTurnDuration -GT 0) {
+                        Switch($MatStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [CCTextDefault24]::new()
+                            }
+                        }
+                    }
+
+                    Return [CCTextDefault24]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($MatStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $MatStat.Base
+                } Elseif($MatStat.Base -GE 10) {
+                    $a = "$($MatStat.Base)"
+                }
+
+                Return $a
+            },
+            $false
+        )
+
+        # Magic Defense Portion - 3 = ' MDF '
+        $this.StatL2DrawString[3] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            ' MDF ',
+            $false
+        )
+
+        # Magic Defense Portion - 4 Sign Indicator
+        $this.StatL2DrawString[4] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($MdfStat.AugmentTurnDuration -GT 0) {
+                        Switch($MdfStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($DMdfStat.AugmentTurnDuration -GT 0) {
+                    If($MdfStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($MdfStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($MdfStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+
+        # Magic Defense Portion - 5 Magic Defense Stat Value
+        $this.StatL2DrawString[5] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($MdfStat.AugmentTurnDuration -GT 0) {
+                        Switch($MdfStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [CCTextDefault24]::new()
+                            }
+                        }
+                    }
+
+                    Return [CCTextDefault24]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($MdfStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $MdfStat.Base
+                } Elseif($MdfStat.Base -GE 10) {
+                    $a = "$($MdfStat.Base)"
+                }
+
+                Return $a
+            },
+            $true
+        )
+    }
+
+    [Void]CreateStatL3DrawString() {
+        [BattleEntityProperty]$SpdStat = $Script:ThePlayer.Stats[[StatId]::Speed]
+        [BattleEntityProperty]$AccStat = $Script:ThePlayer.Stats[[StatId]::Accuracy]
+
+        # Speed Portion - 0 = ' SPD '
+        $this.StatL3DrawString[0] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.StatL3DrawCoordinates
+            ),
+            ' SPD ',
+            $false
+        )
+
+        # Speed Portion - 1 = Sign Indicator
+        $this.StatL3DrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($SpdStat.AugmentTurnDuration -GT 0) {
+                        Switch($SpdStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($SpdStat.AugmentTurnDuration -GT 0) {
+                    If($SpdStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($SpdStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($SpdStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+
+        # Speed Portion - 2 = Speed Stat Value
+        $this.StatL3DrawString[2] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($SpdStat.AugmentTurnDuration -GT 0) {
+                        Switch($SpdStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [CCTextDefault24]::new()
+                            }
+                        }
+                    }
+
+                    Return [CCTextDefault24]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($SpdStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $SpdStat.Base
+                } Elseif($SpdStat.Base -GE 10) {
+                    $a = "$($SpdStat.Base)"
+                }
+
+                Return $a
+            },
+            $false
+        )
+
+        # Accuracy Portion - 3 = ' ACC '
+        $this.StatL3DrawString[3] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            ' ACC ',
+            $false
+        )
+
+        # Accuracy Portion - 4 Sign Indicator
+        $this.StatL3DrawString[4] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($AccStat.AugmentTurnDuration -GT 0) {
+                        Switch($AccStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($AccStat.AugmentTurnDuration -GT 0) {
+                    If($AccStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($AccStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($AccStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+
+        # Accuracy Portion - 5 Accuracy Stat Value
+        $this.StatL3DrawString[5] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($AccStat.AugmentTurnDuration -GT 0) {
+                        Switch($AccStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [CCTextDefault24]::new()
+                            }
+                        }
+                    }
+
+                    Return [CCTextDefault24]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($AccStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $AccStat.Base
+                } Elseif($AccStat.Base -GE 10) {
+                    $a = "$($AccStat.Base)"
+                }
+
+                Return $a
+            },
+            $true
+        )
+    }
+
+    [Void]CreateStatL4DrawString() {
+        [BattleEntityProperty]$LckStat = $Script:ThePlayer.Stats[[StatId]::Luck]
+
+        $this.StatL4DrawString[0] = [ATString]::new(
+            [ATStringPrefix]::new(
+                [CCTextDefault24]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                $this.StatL4DrawCoordinates
+            ),
+            ' LCK ',
+            $false
+        )
+        $this.StatL4DrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($LckStat.AugmentTurnDuration -GT 0) {
+                        Switch($LckStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                If($LckStat.AugmentTurnDuration -GT 0) {
+                    If($LckStat.BaseAugmentValue -GT 0) {
+                        Return '+'
+                    } Elseif($LckStat.BaseAugmentValue -LT 0) {
+                        Return '-'
+                    }
+                } Elseif($LckStat.AugmentTurnDuration -LE 0) {
+                    Return ' '
+                }
+            },
+            $false
+        )
+        $this.StatL4DrawString[2] = [ATString]::new(
+            [ATStringPrefix]::new(
+                {
+                    If($LckStat.AugmentTurnDuration -GT 0) {
+                        Switch($LckStat.BaseAugmentValue) {
+                            { $_ -GT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawColorSafe
+                            }
+
+                            { $_ -LT 0 } {
+                                Return [BattleEntityProperty]::StatNumDrawDanger
+                            }
+
+                            Default {
+                                Return [ATForegroundColor24None]::new()
+                            }
+                        }
+                    }
+
+                    Return [ATForegroundColor24None]::new()
+                },
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            {
+                [String]$a = ''
+
+                If($LckStat.Base -LT 10) {
+                    $a = "{0:d2}" -F $LckStat.Base
+                } Elseif($LckStat.Base -GE 10) {
+                    $a = "$($LckStat.Base)"
+                }
+
+                Return $a
+            },
+            $true
+        )
+    }
+}
+
 Class GameCore {
     [Int]$TargetFrameRate
     [Single]$MsPerFrame
