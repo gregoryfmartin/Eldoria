@@ -13404,11 +13404,11 @@ Class InventoryWindow : WindowBase {
     }
 }
 
-Class BWPlayerStatusWindow : WindowBase {
-    Static [Int]$WindowLTRow    = 1
-    Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowBRRow    = 17
-    Static [Int]$WindowBRColumn = 19
+Class BattleEntityStatusWindow : WindowBase {
+    # Static [Int]$WindowLTRow    = 1
+    # Static [Int]$WindowLTColumn = 1
+    # Static [Int]$WindowBRRow    = 17
+    # Static [Int]$WindowBRColumn = 19
 
     Static [String]$WindowBorderHorizontal = '*-----------------*'
     Static [String]$WindowBorderVertical   = '*'
@@ -13422,6 +13422,11 @@ Class BWPlayerStatusWindow : WindowBase {
     [ATCoordinates]$StatL2DrawCoordinates = [ATCoordinatesNone]::new() # MAT/MDF
     [ATCoordinates]$StatL3DrawCoordinates = [ATCoordinatesNone]::new() # SPD/AGL
     [ATCoordinates]$StatL4DrawCoordinates = [ATCoordinatesNone]::new() # LCK
+
+    [Int]$WindowLTRow    = 0
+    [Int]$WindowLTColumn = 0
+    [Int]$WindowBRRow    = 0
+    [Int]$WindowBRColumn = 0
     
     [Boolean]$NameDrawDirty   = $true
     [Boolean]$HpDrawDirty     = $true
@@ -13440,9 +13445,11 @@ Class BWPlayerStatusWindow : WindowBase {
     [ATString[]]$StatL3DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$StatL4DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
 
-    BWPlayerStatusWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([BWPlayerStatusWindow]::WindowLTRow, [BWPlayerStatusWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([BWPlayerStatusWindow]::WindowBRRow, [BWPlayerStatusWindow]::WindowBRColumn)
+    [BattleEntity]$BERef = $null
+
+    BattleEntityStatusWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new($this.WindowLTRow, $this.WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new($this.WindowBRRow, $this.WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -13450,8 +13457,8 @@ Class BWPlayerStatusWindow : WindowBase {
             [CCWhite24]::new()
         )
         $this.BorderStrings = [String[]](
-            [BWPlayerStatusWindow]::WindowBorderHorizontal,
-            [BWPlayerStatusWindow]::WindowBorderVertical
+            [BattleEntityStatusWindow]::WindowBorderHorizontal,
+            [BattleEntityStatusWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
         
@@ -13462,7 +13469,7 @@ Class BWPlayerStatusWindow : WindowBase {
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            [BWPlayerStatusWindow]::FullLineBlankActual,
+            [BattleEntityStatusWindow]::FullLineBlankActual,
             $true
         )
     }
