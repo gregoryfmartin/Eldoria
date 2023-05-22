@@ -13474,6 +13474,45 @@ Class BattleEntityStatusWindow : WindowBase {
         )
     }
 
+    BattleEntityStatusWindow(
+        [Int]$LTRow,
+        [Int]$LTColumn,
+        [Int]$BRRow,
+        [Int]$BRColumn,
+        [BattleEntity]$BERef = $null
+    ): base() {
+        $this.WindowLTRow    = $LTRow
+        $this.WindowLTColumn = $LTColumn
+        $this.WindowBRRow    = $BRRow
+        $this.WindowBRColumn = $BRColumn
+        $this.LeftTop        = [ATCoordinates]::new($this.WindowLTRow, $this.WindowLTColumn)
+        $this.RightBottom    = [ATCoordinates]::new($this.WindowBRRow, $this.WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [BattleEntityStatusWindow]::WindowBorderHorizontal,
+            [BattleEntityStatusWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+        
+        $this.FullLineBlank = [ATString]::new(
+            [ATStringPrefix]::new(
+                [ATForegroundColor24None]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            [BattleEntityStatusWindow]::FullLineBlankActual,
+            $true
+        )
+
+        $this.BERef = $BERef
+    }
+
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
