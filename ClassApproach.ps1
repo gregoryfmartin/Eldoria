@@ -221,11 +221,11 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         [StatId]::Accuracy = [BattleEntityProperty]@{
             Base                = 9
             BasePre             = 0
-            BaseAugmentValue    = 0
+            BaseAugmentValue    = -5
             Max                 = 9
             MaxPre              = 0
             MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
+            AugmentTurnDuration = 5
             BaseAugmentActive   = $false
             MaxAugmentActive    = $false
             State               = [StatNumberState]::Normal
@@ -1698,11 +1698,13 @@ HASHTABLE CREATOR
 }
 #>
 Class BattleEntityProperty {
-    Static [Single]$StatNumThresholdCaution         = 0.6D
-    Static [Single]$StatNumThresholdDanger          = 0.2D
-    Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCAppleGreenLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorCaution = [CCAppleYellowLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
+    Static [Single]$StatNumThresholdCaution          = 0.6D
+    Static [Single]$StatNumThresholdDanger           = 0.2D
+    Static [ConsoleColor24]$StatNumDrawColorSafe     = [CCAppleGreenLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorCaution  = [CCAppleYellowLight24]::new()
+    Static [ConsoleColor24]$StatNumDrawColorDanger   = [CCAppleRedLight24]::new()
+    Static [ConsoleColor24]$StatAugDrawColorPositive = [CCAppleCyanLight24]::new()
+    Static [ConsoleColor24]$StatAugDrawColorNegative = [CCApplePurpleDark24]::new()
 
     [Int]$Base
     [Int]$BasePre
@@ -13996,12 +13998,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($AtkStat.AugmentTurnDuration -GT 0) {
             Switch($AtkStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $AtkDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $AtkDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $AtkStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $AtkDrawColor   = [BattleEntityProperty]::StatNumDrawDanger
+                    $AtkDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
                     $AtkStatSignStr = '-'
                 }
 
@@ -14023,12 +14025,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($DefStat.AugmentTurnDuration -GT 0) {
             Switch($DefStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $DefDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $DefDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $DefStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $DefDrawColor   = [BattleEntityProperty]::StatNumDrawDanger
+                    $DefDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
                     $DefStatSignStr = '-'
                 }
 
@@ -14133,12 +14135,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($MatStat.AugmentTurnDuration -GT 0) {
             Switch($MatStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $MatDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $MatDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $MatStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $MatDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $MatDrawColor = [BattleEntityProperty]::StatAugDrawColorNegative
                     $MatStatSignStr = '-'
                 }
 
@@ -14160,12 +14162,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($MdfStat.AugmentTurnDuration -GT 0) {
             Switch($MdfStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $MdfDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $MdfDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $MdfStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $MdfDrawColor   = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $MdfDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
                     $MdfStatSignStr = '-'
                 }
 
@@ -14270,12 +14272,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($SpdStat.AugmentTurnDuration -GT 0) {
             Switch($SpdStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $SpdDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $SpdDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $SpdStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $SpdDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $SpdDrawColor = [BattleEntityProperty]::StatAugDrawColorNegative
                     $SpdStatSignStr = '-'
                 }
 
@@ -14297,12 +14299,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($AccStat.AugmentTurnDuration -GT 0) {
             Switch($AccStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $AccDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $AccDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $AccStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $AccDrawColor   = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $AccDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
                     $AccStatSignStr = '-'
                 }
 
@@ -14403,12 +14405,12 @@ Class BattleEntityStatusWindow : WindowBase {
         If($LckStat.AugmentTurnDuration -GT 0) {
             Switch($LckStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
-                    $LckDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $LckDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
                     $LckStatSignStr = '+'
                 }
 
                 { $_ -LT 0 } {
-                    $LckDrawColor   = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $LckDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
                     $LckStatSignStr = '-'
                 }
 
