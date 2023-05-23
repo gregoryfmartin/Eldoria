@@ -11,20 +11,23 @@ using namespace System.Management.Automation.Host
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working' -PercentComplete -1
 
-[String]              $Script:OsCheckLinux             = 'OsLinux'
-[String]              $Script:OsCheckMac               = 'OsMac'
-[String]              $Script:OsCheckWindows           = 'OsWindows'
-[String]              $Script:OsCheckUnknown           = 'OsUnknown'
 #[Player]              $Script:ThePlayer                = [Player]::new('Steve', 250, 500, 25, 25, 5000, @('MTOMilk'))
-[StatusWindow]        $Script:TheStatusWindow          = [StatusWindow]::new()
-[CommandWindow]       $Script:TheCommandWindow         = [CommandWindow]::new()
-[SceneWindow]         $Script:TheSceneWindow           = [SceneWindow]::new()
-[MessageWindow]       $Script:TheMessageWindow         = [MessageWindow]::new()
-[InventoryWindow]     $Script:TheInventoryWindow       = $null
-[ATCoordinatesDefault]$Script:DefaultCursorCoordinates = [ATCoordinatesDefault]::new()
-[BufferManager]       $Script:TheBufferManager         = [BufferManager]::new()
-[GameCore]            $Script:TheGameCore              = [GameCore]::new()
 
+[String]                  $Script:OsCheckLinux              = 'OsLinux'
+[String]                  $Script:OsCheckMac                = 'OsMac'
+[String]                  $Script:OsCheckWindows            = 'OsWindows'
+[String]                  $Script:OsCheckUnknown            = 'OsUnknown'
+[StatusWindow]            $Script:TheStatusWindow           = [StatusWindow]::new()
+[CommandWindow]           $Script:TheCommandWindow          = [CommandWindow]::new()
+[SceneWindow]             $Script:TheSceneWindow            = [SceneWindow]::new()
+[MessageWindow]           $Script:TheMessageWindow          = [MessageWindow]::new()
+[InventoryWindow]         $Script:TheInventoryWindow        = $null
+[ATCoordinatesDefault]    $Script:DefaultCursorCoordinates  = [ATCoordinatesDefault]::new()
+[BattleEntityStatusWindow]$Script:ThePlayerBattleStatWindow = $null
+[BattleEntityStatusWindow]$Script:TheEnemyBattleStatWindow  = $null
+[BufferManager]           $Script:TheBufferManager          = [BufferManager]::new()
+[GameCore]                $Script:TheGameCore               = [GameCore]::new()
+[BattleEntity]            $Script:TheCurrentEnemy           = $null
 
 
 
@@ -104,11 +107,11 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         [StatId]::Attack = [BattleEntityProperty]@{
             Base                = 15
             BasePre             = 0
-            BaseAugmentValue    = 0
+            BaseAugmentValue    = 5
             Max                 = 15
             MaxPre              = 0
             MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
+            AugmentTurnDuration = 5
             BaseAugmentActive   = $false
             MaxAugmentActive    = $false
             State               = [StatNumberState]::Normal
@@ -258,11 +261,239 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         }
     }
     SpoilsEffect    = {}
-    ActionMarbleBag = [System.Collections.Generic.List[[ActionSlot]]]::new()
+    ActionMarbleBag = [List[[ActionSlot]]]::new()
     CurrentGold     = 500
     MapCoordinates  = [ATCoordinates]::new(0, 0)
     Inventory       = [List[MapTileObject]]::new()
     TargetOfFilter  = [List[String]]::new()
+}
+
+
+
+
+$Script:TheCurrentEnemy = [BattleEntity]@{
+    Name = 'Bad Guy'
+    Stats = @{
+        [StatId]::HitPoints = [BattleEntityProperty]@{
+            Base                = 500
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 500
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                    }
+                }
+            }
+        }
+        [StatId]::MagicPoints = [BattleEntityProperty]@{
+            Base                = 50
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 50
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                    }
+                }
+            }
+        }
+        [StatId]::Attack = [BattleEntityProperty]@{
+            Base                = 12
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 12
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return $Self.Base
+            }
+        }
+        [StatId]::Defense = [BattleEntityProperty]@{
+            Base                = 16
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 16
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicAttack = [BattleEntityProperty]@{
+            Base                = 6
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 6
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicDefense = [BattleEntityProperty]@{
+            Base                = 4
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 4
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Speed = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Luck = [BattleEntityProperty]@{
+            Base                = 5
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 5
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Accuracy = [BattleEntityProperty]@{
+            Base                = 9
+            BasePre             = 0
+            BaseAugmentValue    = 0
+            Max                 = 9
+            MaxPre              = 0
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 0
+            BaseAugmentActive   = $false
+            MaxAugmentActive    = $false
+            State               = [StatNumberState]::Normal
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+    }
+    ActionListing = @{
+        [ActionSlot]::A = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::B = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::C = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+        [ActionSlot]::D = [BattleAction]@{
+            Name   = ''
+            Type   = [BattleActionType]::None
+            Effect = {}
+        }
+    }
+    SpoilsEffect = {}
+    ActionMarbleBag = [List[[ActionSlot]]]::new()
 }
 
 
@@ -310,6 +541,7 @@ Enum GameStatePrimary {
     PlayerSetupScreen
     GamePlayScreen
     InventoryScreen
+    BattleScreen
     Cleanup
 }
 
@@ -796,11 +1028,29 @@ $Script:TheGlobalStateBlockTable = @{
         $Script:TheInventoryWindow.Draw()
         $Script:TheInventoryWindow.HandleInput()
     }
+    
+    [GameStatePrimary]::BattleScreen = {
+        If($null -EQ $Script:ThePlayerBattleStatWindow) {
+            $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
+        }
+        If($null -EQ $Script:TheEnemyBattleStatWindow) {
+            $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
+        }
+
+        $Script:ThePlayer.Update()
+        $Script:TheCurrentEnemy.Update()
+
+        $Script:ThePlayerBattleStatWindow.Draw()
+        $Script:TheEnemyBattleStatWindow.Draw()
+        
+        # FOR TESTING PURPOSES ONLY!
+        Read-Host
+    }
 
     [GameStatePrimary]::Cleanup = {}
 }
 
-[GameStatePrimary]$Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+# [GameStatePrimary]$Script:TheGlobalGameState         = [GameStatePrimary]::BattleScreen
 [GameStatePrimary]$Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
 
 # CLASS DEFINITIONS
@@ -1522,7 +1772,7 @@ Class BattleEntityProperty {
             }
             If($this.BaseAugmentActive -EQ $false) {
                 [Int]$t                 = $this.Base + $this.BaseAugmentValue
-                $t                      = [Math]::Clamp($t, 0, $this.Max)
+                $t                      = [Math]::Clamp($t, 0, [Int]::MaxValue)
                 $this.Base              = $t
                 $this.BaseAugmentActive = $true
             }
@@ -13410,8 +13660,8 @@ Class BattleEntityStatusWindow : WindowBase {
     # Static [Int]$WindowBRRow    = 17
     # Static [Int]$WindowBRColumn = 19
 
-    Static [String]$WindowBorderHorizontal = '*-----------------*'
-    Static [String]$WindowBorderVertical   = '*'
+    Static [String]$WindowBorderHorizontal = '*------------------*'
+    Static [String]$WindowBorderVertical   = '|'
 
     Static [String]$FullLineBlankActual = '                 '
 
@@ -13511,6 +13761,15 @@ Class BattleEntityStatusWindow : WindowBase {
         )
 
         $this.BERef = $BERef
+
+        # Update the element draw coordinates relative to the dimensions of the window
+        $this.NameDrawCoordinates   = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 2)
+        $this.HpDrawCoordinates     = [ATCoordinates]::new($this.LeftTop.Row + 2, $this.LeftTop.Column + 2)
+        $this.MpDrawCoordinates     = [ATCoordinates]::new($this.LeftTop.Row + 5, $this.LeftTop.Column + 2)
+        $this.StatL1DrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 9, $this.LeftTop.Column + 2)
+        $this.StatL2DrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 11, $this.LeftTop.Column + 2)
+        $this.StatL3DrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 13, $this.LeftTop.Column + 2)
+        $this.StatL4DrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 15, $this.LeftTop.Column + 2)
     }
 
     [Void]Draw() {
@@ -13593,12 +13852,32 @@ Class BattleEntityStatusWindow : WindowBase {
                 [ATDecorationNone]::new(),
                 $this.NameDrawCoordinates
             ),
-            $Script:ThePlayer.Name,
+            $this.BERef.Name,
             $true
         )
     }
 
     [Void]CreateHpDrawString() {
+        [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
+
+        Switch($this.BERef.Stats[[StatId]::HitPoints].State) {
+            ([StatNumberState]::Normal) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+
+            ([StatNumberState]::Caution) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorCaution
+            }
+
+            ([StatNumberState]::Danger) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+            }
+
+            Default {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+        }
+
         $this.HpDrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -13611,30 +13890,12 @@ Class BattleEntityStatusWindow : WindowBase {
         )
         $this.HpDrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
-                        ([StatNumberState]::Normal) {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-
-                        ([StatNumberState]::Caution) {
-                            Return [BattleEntityProperty]::StatNumDrawColorCaution
-                        }
-
-                        ([StatNumberState]::Danger) {
-                            Return [BattleEntityProperty]::StatNumDrawColorDanger
-                        }
-
-                        Default {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-                    }
-                },
+                $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+            "$($this.BERef.Stats[[StatId]::HitPoints].Base)",
             $false
         )
         $this.HpDrawString[2] = [ATString]::new(
@@ -13642,42 +13903,44 @@ Class BattleEntityStatusWindow : WindowBase {
                 [CCTextDefault24]::new(),
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
-                [ATCoordinatesNone]::new()
+                [ATCoordinates]::new($this.HpDrawCoordinates.Row + 2, $this.HpDrawCoordinates.Column + 6)
             ),
             '/ ',
             $false
         )
         $this.HpDrawString[3] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
-                        ([StatNumberState]::Normal) {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-
-                        ([StatNumberState]::Caution) {
-                            Return [BattleEntityProperty]::StatNumDrawColorCaution
-                        }
-
-                        ([StatNumberState]::Danger) {
-                            Return [BattleEntityProperty]::StatNumDrawColorDanger
-                        }
-
-                        Default {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-                    }
-                },
+                $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
+            "$($this.BERef.Stats[[StatId]::HitPoints].Max)",
             $true
         )
     }
 
     [Void]CreateMpDrawString() {
+        [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
+
+        Switch($this.BERef.Stats[[StatId]::MagicPoints].State) {
+            ([StatNumberState]::Normal) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+
+            ([StatNumberState]::Caution) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorCaution
+            }
+
+            ([StatNumberState]::Danger) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+            }
+
+            Default {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+        }
+
         $this.MpDrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -13690,30 +13953,12 @@ Class BattleEntityStatusWindow : WindowBase {
         )
         $this.MpDrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
-                        ([StatNumberState]::Normal) {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-
-                        ([StatNumberState]::Caution) {
-                            Return [BattleEntityProperty]::StatNumDrawColorCaution
-                        }
-
-                        ([StatNumberState]::Danger) {
-                            Return [BattleEntityProperty]::StatNumDrawColorDanger
-                        }
-
-                        Default {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-                    }
-                },
+                $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t",
+            "$($this.BERef.Stats[[StatId]::MagicPoints].Base)",
             $false
         )
         $this.MpDrawString[2] = [ATString]::new(
@@ -13721,44 +13966,86 @@ Class BattleEntityStatusWindow : WindowBase {
                 [CCTextDefault24]::new(),
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
-                [ATCoordinatesNone]::new()
+                [ATCoordinates]::new($this.MpDrawCoordinates.Row + 2, $this.MpDrawCoordinates.Column + 6)
             ),
             '/ ',
             $false
         )
         $this.MpDrawString[3] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
-                        ([StatNumberState]::Normal) {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-
-                        ([StatNumberState]::Caution) {
-                            Return [BattleEntityProperty]::StatNumDrawColorCaution
-                        }
-
-                        ([StatNumberState]::Danger) {
-                            Return [BattleEntityProperty]::StatNumDrawColorDanger
-                        }
-
-                        Default {
-                            Return [BattleEntityProperty]::StatNumDrawColorSafe
-                        }
-                    }
-                },
+                $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
+            "$($this.BERef.Stats[[StatId]::MagicPoints].Max)",
             $true
         )
     }
 
     [Void]CreateStatL1DrawString() {
-        [BattleEntityProperty]$AtkStat = $Script:ThePlayer.Stats[[StatId]::Attack]
-        [BattleEntityProperty]$DefStat = $Script:ThePlayer.Stats[[StatId]::Defense]
+        [BattleEntityProperty]$AtkStat = $this.BERef.Stats[[StatId]::Attack]
+        [BattleEntityProperty]$DefStat = $this.BERef.Stats[[StatId]::Defense]
+        [ConsoleColor24]$AtkDrawColor  = [CCTextDefault24]::new()
+        [ConsoleColor24]$DefDrawColor  = [CCTextDefault24]::new()
+        [String]$AtkStatSignStr        = ''
+        [String]$DefStatSignStr        = ''
+        [String]$AtkStatFmtStr         = ''
+        [String]$DefStatFmtStr         = ''
+
+        If($AtkStat.AugmentTurnDuration -GT 0) {
+            Switch($AtkStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $AtkDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $AtkStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $AtkDrawColor   = [BattleEntityProperty]::StatNumDrawDanger
+                    $AtkStatSignStr = '-'
+                }
+
+                Default {
+                    $AtkDrawColor   = [CCTextDefault24]::new()
+                    $AtkStatSignStr = ' '
+                }
+            }
+        } Else {
+            $AtkDrawColor = [CCTextDefault24]::new()
+            $AtkStatSignStr = ' '
+        }
+        If($AtkStat.Base -LT 10) {
+            $AtkStatFmtStr = "{0:d2}" -F $AtkStat.Base
+        } Elseif($AtkStat.Base -GE 10) {
+            $AtkStatFmtStr = "$($AtkStat.Base)"
+        }
+
+        If($DefStat.AugmentTurnDuration -GT 0) {
+            Switch($DefStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $DefDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $DefStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $DefDrawColor   = [BattleEntityProperty]::StatNumDrawDanger
+                    $DefStatSignStr = '-'
+                }
+
+                Default {
+                    $DefDrawColor = [CCTextDefault24]::new()
+                    $DefStatSignStr = ' '
+                }
+            }
+        } Else {
+            $DefDrawColor   = [CCTextDefault24]::new()
+            $DefStatSignStr = ' '
+        }
+        If($DefStat.Base -LT 10) {
+            $DefStatFmtStr = "{0:d2}" -F $DefStat.Base
+        } Elseif($DefStat.Base -GE 10) {
+            $DefStatFmtStr = "$($DefStat.Base)"
+        }
 
         # Attack Portion - 0 = ' ATK '
         $this.StatL1DrawString[0] = [ATString]::new(
@@ -13768,87 +14055,31 @@ Class BattleEntityStatusWindow : WindowBase {
                 [ATDecorationNone]::new(),
                 $this.StatL1DrawCoordinates
             ),
-            ' ATK ',
+            'ATK ',
             $false
         )
 
         # Attack Portion - 1 = Sign Indicator
         $this.StatL1DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($AtkStat.AugmentTurnDuration -GT 0) {
-                        Switch($AtkStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $AtkDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($AtkStat.AugmentTurnDuration -GT 0) {
-                    If($AtkStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($AtkStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($AtkStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $AtkStatSignStr,
             $false
         )
 
         # Attack Portion - 2 = Attack Stat Value
         $this.StatL1DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($AtkStat.AugmentTurnDuration -GT 0) {
-                        Switch($AtkStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [CCTextDefault24]::new()
-                            }
-                        }
-                    }
-
-                    Return [CCTextDefault24]::new()
-                },
+                $AtkDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($AtkStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $AtkStat.Base
-                } Elseif($AtkStat.Base -GE 10) {
-                    $a = "$($AtkStat.Base)"
-                }
-
-                Return $a
-            },
+            $AtkStatFmtStr,
             $false
         )
 
@@ -13867,87 +14098,91 @@ Class BattleEntityStatusWindow : WindowBase {
         # Defense Portion - 4 Sign Indicator
         $this.StatL1DrawString[4] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($DefStat.AugmentTurnDuration -GT 0) {
-                        Switch($DefStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $DefDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($DefStat.AugmentTurnDuration -GT 0) {
-                    If($DefStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($DefStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($DefStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $DefStatSignStr,
             $false
         )
 
         # Defense Portion - 5 Defense Stat Value
         $this.StatL1DrawString[5] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($DefStat.AugmentTurnDuration -GT 0) {
-                        Switch($DefStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [CCTextDefault24]::new()
-                            }
-                        }
-                    }
-
-                    Return [CCTextDefault24]::new()
-                },
+                $DefDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($DefStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $DefStat.Base
-                } Elseif($DefStat.Base -GE 10) {
-                    $a = "$($DefStat.Base)"
-                }
-
-                Return $a
-            },
+            $DefStatFmtStr,
             $true
         )
     }
 
     [Void]CreateStatL2DrawString() {
-        [BattleEntityProperty]$MatStat = $Script:ThePlayer.Stats[[StatId]::MagicAttack]
-        [BattleEntityProperty]$MdfStat = $Script:ThePlayer.Stats[[StatId]::MagicDefense]
+        [BattleEntityProperty]$MatStat = $this.BERef.Stats[[StatId]::MagicAttack]
+        [BattleEntityProperty]$MdfStat = $this.BERef.Stats[[StatId]::MagicDefense]
+        [ConsoleColor24]$MatDrawColor  = [CCTextDefault24]::new()
+        [ConsoleColor24]$MdfDrawColor  = [CCTextDefault24]::new()
+        [String]$MatStatSignStr        = ''
+        [String]$MdfStatSignStr        = ''
+        [String]$MatStatFmtStr         = ''
+        [String]$MdfStatFmtStr         = ''
+
+        If($MatStat.AugmentTurnDuration -GT 0) {
+            Switch($MatStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $MatDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $MatStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $MatDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $MatStatSignStr = '-'
+                }
+
+                Default {
+                    $MatDrawColor = [CCTextDefault24]::new()
+                    $MatStatSignStr = ' '
+                }
+            }
+        } Else {
+            $MatDrawColor   = [CCTextDefault24]::new()
+            $MatStatSignStr = ' '
+        }
+        If($MatStat.Base -LT 10) {
+            $MatStatFmtStr = "{0:d2}" -F $MatStat.Base
+        } Elseif($MatStat.Base -GE 10) {
+            $MatStatFmtStr = "$($MatStat.Base)"
+        }
+
+        If($MdfStat.AugmentTurnDuration -GT 0) {
+            Switch($MdfStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $MdfDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $MdfStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $MdfDrawColor   = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $MdfStatSignStr = '-'
+                }
+
+                Default {
+                    $MdfDrawColor   = [CCTextDefault24]::new()
+                    $MdfStatSignStr = ' '
+                }
+            }
+        } Else {
+            $MdfDrawColor   = [CCTextDefault24]::new()
+            $MdfStatSignStr = ' '
+        }
+        If($MdfStat.Base -LT 10) {
+            $MdfStatFmtStr = "{0:d2}" -F $MdfStat.Base
+        } Elseif($MdfStat.Base -GE 10) {
+            $MdfStatFmtStr = "$($MdfStat.Base)"
+        }
 
         # Magic Attack Portion - 0 = ' MAT '
         $this.StatL2DrawString[0] = [ATString]::new(
@@ -13957,87 +14192,31 @@ Class BattleEntityStatusWindow : WindowBase {
                 [ATDecorationNone]::new(),
                 $this.StatL2DrawCoordinates
             ),
-            ' MAT ',
+            'MAT ',
             $false
         )
 
         # Magic Attack Portion - 1 = Sign Indicator
         $this.StatL2DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($MatStat.AugmentTurnDuration -GT 0) {
-                        Switch($MatStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $MatDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($MatStat.AugmentTurnDuration -GT 0) {
-                    If($MatStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($MatStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($MatStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $MatStatSignStr,
             $false
         )
 
         # Magic Attack Portion - 2 = Magic Attack Stat Value
         $this.StatL2DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($MatStat.AugmentTurnDuration -GT 0) {
-                        Switch($MatStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [CCTextDefault24]::new()
-                            }
-                        }
-                    }
-
-                    Return [CCTextDefault24]::new()
-                },
+                $MatDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($MatStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $MatStat.Base
-                } Elseif($MatStat.Base -GE 10) {
-                    $a = "$($MatStat.Base)"
-                }
-
-                Return $a
-            },
+            $MatStatFmtStr,
             $false
         )
 
@@ -14056,87 +14235,91 @@ Class BattleEntityStatusWindow : WindowBase {
         # Magic Defense Portion - 4 Sign Indicator
         $this.StatL2DrawString[4] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($MdfStat.AugmentTurnDuration -GT 0) {
-                        Switch($MdfStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $MdfDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($DMdfStat.AugmentTurnDuration -GT 0) {
-                    If($MdfStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($MdfStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($MdfStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $MdfStatSignStr,
             $false
         )
 
         # Magic Defense Portion - 5 Magic Defense Stat Value
         $this.StatL2DrawString[5] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($MdfStat.AugmentTurnDuration -GT 0) {
-                        Switch($MdfStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [CCTextDefault24]::new()
-                            }
-                        }
-                    }
-
-                    Return [CCTextDefault24]::new()
-                },
+                $MdfDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($MdfStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $MdfStat.Base
-                } Elseif($MdfStat.Base -GE 10) {
-                    $a = "$($MdfStat.Base)"
-                }
-
-                Return $a
-            },
+            $MdfStatFmtStr,
             $true
         )
     }
 
     [Void]CreateStatL3DrawString() {
-        [BattleEntityProperty]$SpdStat = $Script:ThePlayer.Stats[[StatId]::Speed]
-        [BattleEntityProperty]$AccStat = $Script:ThePlayer.Stats[[StatId]::Accuracy]
+        [BattleEntityProperty]$SpdStat = $this.BERef.Stats[[StatId]::Speed]
+        [BattleEntityProperty]$AccStat = $this.BERef.Stats[[StatId]::Accuracy]
+        [ConsoleColor24]$SpdDrawColor  = [CCTextDefault24]::new()
+        [ConsoleColor24]$AccDrawColor  = [CCTextDefault24]::new()
+        [String]$SpdStatSignStr        = ''
+        [String]$AccStatSignStr        = ''
+        [String]$SpdStatFmtStr         = ''
+        [String]$AccStatFmtStr         = ''
+
+        If($SpdStat.AugmentTurnDuration -GT 0) {
+            Switch($SpdStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $SpdDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $SpdStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $SpdDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $SpdStatSignStr = '-'
+                }
+
+                Default {
+                    $SpdDrawColor   = [CCTextDefault24]::new()
+                    $SpdStatSignStr = ' '
+                }
+            }
+        } Else {
+            $SpdDrawColor   = [CCTextDefault24]::new()
+            $SpdStatSignStr = ' '
+        }
+        If($SpdStat.Base -LT 10) {
+            $SpdStatFmtStr = "{0:d2}" -F $SpdStat.Base
+        } Elseif($SpdStat.Base -GE 10) {
+            $SpdStatFmtStr = "$($SpdStat.Base)"
+        }
+
+        If($AccStat.AugmentTurnDuration -GT 0) {
+            Switch($AccStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $AccDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $AccStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $AccDrawColor   = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $AccStatSignStr = '-'
+                }
+
+                Default {
+                    $AccDrawColor   = [CCTextDefault24]::new()
+                    $AccStatSignStr = ' '
+                }
+            }
+        } Else {
+            $AccDrawColor   = [CCTextDefault24]::new()
+            $AccStatSignStr = ' '
+        }
+        If($AccStat.Base -LT 10) {
+            $AccStatFmtStr = "{0:d2}" -F $AccStat.Base
+        } Elseif($AccStat.Base -GE 10) {
+            $AccStatFmtStr = "$($AccStat.Base)"
+        }
 
         # Speed Portion - 0 = ' SPD '
         $this.StatL3DrawString[0] = [ATString]::new(
@@ -14146,87 +14329,31 @@ Class BattleEntityStatusWindow : WindowBase {
                 [ATDecorationNone]::new(),
                 $this.StatL3DrawCoordinates
             ),
-            ' SPD ',
+            'SPD ',
             $false
         )
 
         # Speed Portion - 1 = Sign Indicator
         $this.StatL3DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($SpdStat.AugmentTurnDuration -GT 0) {
-                        Switch($SpdStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $SpdDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($SpdStat.AugmentTurnDuration -GT 0) {
-                    If($SpdStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($SpdStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($SpdStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $SpdStatSignStr,
             $false
         )
 
         # Speed Portion - 2 = Speed Stat Value
         $this.StatL3DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($SpdStat.AugmentTurnDuration -GT 0) {
-                        Switch($SpdStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [CCTextDefault24]::new()
-                            }
-                        }
-                    }
-
-                    Return [CCTextDefault24]::new()
-                },
+                $SpdDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($SpdStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $SpdStat.Base
-                } Elseif($SpdStat.Base -GE 10) {
-                    $a = "$($SpdStat.Base)"
-                }
-
-                Return $a
-            },
+            $SpdStatFmtStr,
             $false
         )
 
@@ -14245,86 +14372,60 @@ Class BattleEntityStatusWindow : WindowBase {
         # Accuracy Portion - 4 Sign Indicator
         $this.StatL3DrawString[4] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($AccStat.AugmentTurnDuration -GT 0) {
-                        Switch($AccStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $AccDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($AccStat.AugmentTurnDuration -GT 0) {
-                    If($AccStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($AccStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($AccStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $AccStatSignStr,
             $false
         )
 
         # Accuracy Portion - 5 Accuracy Stat Value
         $this.StatL3DrawString[5] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($AccStat.AugmentTurnDuration -GT 0) {
-                        Switch($AccStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [CCTextDefault24]::new()
-                            }
-                        }
-                    }
-
-                    Return [CCTextDefault24]::new()
-                },
+                $AccDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($AccStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $AccStat.Base
-                } Elseif($AccStat.Base -GE 10) {
-                    $a = "$($AccStat.Base)"
-                }
-
-                Return $a
-            },
+            $AccStatFmtStr,
             $true
         )
     }
 
     [Void]CreateStatL4DrawString() {
-        [BattleEntityProperty]$LckStat = $Script:ThePlayer.Stats[[StatId]::Luck]
+        [BattleEntityProperty]$LckStat = $this.BERef.Stats[[StatId]::Luck]
+        [ConsoleColor24]$LckDrawColor  = [CCTextDefault24]::new()
+        [String]$LckStatSignStr        = ''
+        [String]$LckStatFmtStr         = ''
+
+        If($LckStat.AugmentTurnDuration -GT 0) {
+            Switch($LckStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $LckDrawColor   = [BattleEntityProperty]::StatNumDrawColorSafe
+                    $LckStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $LckDrawColor   = [BattleEntityProperty]::StatNumDrawColorDanger
+                    $LckStatSignStr = '-'
+                }
+
+                Default {
+                    $LckDrawColor   = [CCTextDefault24]::new()
+                    $LckStatSignStr = ' '
+                }
+            }
+        } Else {
+            $LckDrawColor   = [CCTextDefault24]::new()
+            $LckStatSignStr = ' '
+        }
+        If($LckStat.Base -LT 10) {
+            $LckStatFmtStr = "{0:d2}" -F $LckStat.Base
+        } Elseif($LckStat.Base -GE 10) {
+            $LckStatFmtStr = "$($LckStat.Base)"
+        }
 
         $this.StatL4DrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
@@ -14333,83 +14434,27 @@ Class BattleEntityStatusWindow : WindowBase {
                 [ATDecorationNone]::new(),
                 $this.StatL4DrawCoordinates
             ),
-            ' LCK ',
+            'LCK ',
             $false
         )
         $this.StatL4DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($LckStat.AugmentTurnDuration -GT 0) {
-                        Switch($LckStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $LckDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                If($LckStat.AugmentTurnDuration -GT 0) {
-                    If($LckStat.BaseAugmentValue -GT 0) {
-                        Return '+'
-                    } Elseif($LckStat.BaseAugmentValue -LT 0) {
-                        Return '-'
-                    }
-                } Elseif($LckStat.AugmentTurnDuration -LE 0) {
-                    Return ' '
-                }
-            },
+            $LckStatSignStr,
             $false
         )
         $this.StatL4DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
-                {
-                    If($LckStat.AugmentTurnDuration -GT 0) {
-                        Switch($LckStat.BaseAugmentValue) {
-                            { $_ -GT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawColorSafe
-                            }
-
-                            { $_ -LT 0 } {
-                                Return [BattleEntityProperty]::StatNumDrawDanger
-                            }
-
-                            Default {
-                                Return [ATForegroundColor24None]::new()
-                            }
-                        }
-                    }
-
-                    Return [ATForegroundColor24None]::new()
-                },
+                $LckDrawColor,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 [ATCoordinatesNone]::new()
             ),
-            {
-                [String]$a = ''
-
-                If($LckStat.Base -LT 10) {
-                    $a = "{0:d2}" -F $LckStat.Base
-                } Elseif($LckStat.Base -GE 10) {
-                    $a = "$($LckStat.Base)"
-                }
-
-                Return $a
-            },
+            $LckStatFmtStr,
             $true
         )
     }
@@ -14432,7 +14477,7 @@ Class GameCore {
         $this.LastFrameTime        = 0D
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
-        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::BattleScreen
     }
 
     [Void]Run() {
