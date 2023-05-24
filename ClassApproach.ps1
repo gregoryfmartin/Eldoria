@@ -13656,6 +13656,20 @@ Class InventoryWindow : WindowBase {
     }
 }
 
+<#
+Some things need noted about this class in particular.
+
+Despite the fact that this class follows the pattern presented by other window-derivatives, it presents an anti-pattern in the sense that the following variables: 
+
+WindowLTRow
+WindowLTColumn
+WindowBRRow
+WindowBRColumn
+
+Are demoted from Static to Instance Members. This was done because it's was undesirable to replicate the code for this window twice when the second instance would've
+been parameterized anyway to account for an arbitrary entity. The consequence of a single structure was that not only did the entity need parameterized, so too did the
+window geometries (or, at least the base measurements that assist in defining the window geometries).
+#>
 Class BattleEntityStatusWindow : WindowBase {
     # Static [Int]$WindowLTRow    = 1
     # Static [Int]$WindowLTColumn = 1
@@ -14460,6 +14474,10 @@ Class BattleEntityStatusWindow : WindowBase {
             $true
         )
     }
+}
+
+Class BattlePlayerActionWindow : WindowBase {
+    
 }
 
 Class GameCore {
