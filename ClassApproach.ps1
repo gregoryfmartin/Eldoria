@@ -13,21 +13,23 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 
 #[Player]              $Script:ThePlayer                = [Player]::new('Steve', 250, 500, 25, 25, 5000, @('MTOMilk'))
 
-[String]                  $Script:OsCheckLinux              = 'OsLinux'
-[String]                  $Script:OsCheckMac                = 'OsMac'
-[String]                  $Script:OsCheckWindows            = 'OsWindows'
-[String]                  $Script:OsCheckUnknown            = 'OsUnknown'
-[StatusWindow]            $Script:TheStatusWindow           = [StatusWindow]::new()
-[CommandWindow]           $Script:TheCommandWindow          = [CommandWindow]::new()
-[SceneWindow]             $Script:TheSceneWindow            = [SceneWindow]::new()
-[MessageWindow]           $Script:TheMessageWindow          = [MessageWindow]::new()
-[InventoryWindow]         $Script:TheInventoryWindow        = $null
-[ATCoordinatesDefault]    $Script:DefaultCursorCoordinates  = [ATCoordinatesDefault]::new()
-[BattleEntityStatusWindow]$Script:ThePlayerBattleStatWindow = $null
-[BattleEntityStatusWindow]$Script:TheEnemyBattleStatWindow  = $null
-[BufferManager]           $Script:TheBufferManager          = [BufferManager]::new()
-[GameCore]                $Script:TheGameCore               = [GameCore]::new()
-[BattleEntity]            $Script:TheCurrentEnemy           = $null
+[String]                   $Script:OsCheckLinux                 = 'OsLinux'
+[String]                   $Script:OsCheckMac                   = 'OsMac'
+[String]                   $Script:OsCheckWindows               = 'OsWindows'
+[String]                   $Script:OsCheckUnknown               = 'OsUnknown'
+[StatusWindow]             $Script:TheStatusWindow              = [StatusWindow]::new()
+[CommandWindow]            $Script:TheCommandWindow             = [CommandWindow]::new()
+[SceneWindow]              $Script:TheSceneWindow               = [SceneWindow]::new()
+[MessageWindow]            $Script:TheMessageWindow             = [MessageWindow]::new()
+[InventoryWindow]          $Script:TheInventoryWindow           = $null
+[ATCoordinatesDefault]     $Script:DefaultCursorCoordinates     = [ATCoordinatesDefault]::new()
+[BattleEntityStatusWindow] $Script:ThePlayerBattleStatWindow    = $null
+[BattleEntityStatusWindow] $Script:TheEnemyBattleStatWindow     = $null
+[BattlePlayerActionWindow] $Script:ThePlayerBattleActionWindow  = $null
+[BattleStatusMessageWindow]$Script:TheBattleStatusMessageWindow = $null
+[BufferManager]            $Script:TheBufferManager             = [BufferManager]::new()
+[GameCore]                 $Script:TheGameCore                  = [GameCore]::new()
+[BattleEntity]             $Script:TheCurrentEnemy              = $null
 
 
 
@@ -1036,12 +1038,20 @@ $Script:TheGlobalStateBlockTable = @{
         If($null -EQ $Script:TheEnemyBattleStatWindow) {
             $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
         }
+        If($null -EQ $Script:ThePlayerBattleActionWindow) {
+            $Script:ThePlayerBattleActionWindow = [BattlePlayerActionWindow]::new()
+        }
+        If($null -EQ $Script:TheBattleStatusMessageWindow) {
+            $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
+        }
 
         $Script:ThePlayer.Update()
         $Script:TheCurrentEnemy.Update()
 
         $Script:ThePlayerBattleStatWindow.Draw()
         $Script:TheEnemyBattleStatWindow.Draw()
+        $Script:ThePlayerBattleActionWindow.Draw()
+        $Script:TheBattleStatusMessageWindow.Draw()
         
         # FOR TESTING PURPOSES ONLY!
         Read-Host
@@ -14477,7 +14487,63 @@ Class BattleEntityStatusWindow : WindowBase {
 }
 
 Class BattlePlayerActionWindow : WindowBase {
-    
+    Static [Int]$WindowLTRow    = 18
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 24
+    Static [Int]$WindowBRColumn = 16
+
+    Static [String]$WindowBorderHorizontal = '*---------------*'
+    Static [String]$WindowBorderVertical   = '|'
+
+    BattlePlayerActionWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowLTRow, [BattlePlayerActionWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowBRRow, [BattlePlayerActionWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [BattlePlayerActionWindow]::WindowBorderHorizontal,
+            [BattlePlayerActionWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
+Class BattleStatusMessageWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 18
+    Static [Int]$WindowLTColumn = 19
+    Static [Int]$WindowBRRow    = 24
+    Static [Int]$WindowBRColumn = 80
+
+    Static [String]$WindowBorderHorizontal = '*-------------------------------------------------------------*'
+    Static [String]$WindowBorderVertical   = '|'
+
+    BattleStatusMessageWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([BattleStatusMessageWindow]::WindowLTRow, [BattleStatusMessageWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([BattleStatusMessageWindow]::WindowBRRow, [BattleStatusMessageWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [BattleStatusMessageWindow]::WindowBorderHorizontal,
+            [BattleStatusMessageWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
 }
 
 Class GameCore {
