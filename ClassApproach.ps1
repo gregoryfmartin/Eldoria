@@ -1054,9 +1054,9 @@ $Script:TheGlobalStateBlockTable = @{
 
         $Script:ThePlayerBattleStatWindow.Draw()
         $Script:TheEnemyBattleStatWindow.Draw()
+        $Script:TheBattleEnemyImageWindow.Draw()
         $Script:ThePlayerBattleActionWindow.Draw()
         $Script:TheBattleStatusMessageWindow.Draw()
-        $Script:TheBattleEnemyImageWindow.Draw()
         
         # FOR TESTING PURPOSES ONLY!
         Read-Host
