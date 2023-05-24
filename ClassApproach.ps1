@@ -27,6 +27,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [BattleEntityStatusWindow] $Script:TheEnemyBattleStatWindow     = $null
 [BattlePlayerActionWindow] $Script:ThePlayerBattleActionWindow  = $null
 [BattleStatusMessageWindow]$Script:TheBattleStatusMessageWindow = $null
+[BattleEnemyImageWindow]   $Script:TheBattleEnemyImageWindow    = $null
 [BufferManager]            $Script:TheBufferManager             = [BufferManager]::new()
 [GameCore]                 $Script:TheGameCore                  = [GameCore]::new()
 [BattleEntity]             $Script:TheCurrentEnemy              = $null
@@ -1044,6 +1045,9 @@ $Script:TheGlobalStateBlockTable = @{
         If($null -EQ $Script:TheBattleStatusMessageWindow) {
             $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
         }
+        If($null -EQ $Script:TheBattleEnemyImageWindow) {
+            $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
+        }
 
         $Script:ThePlayer.Update()
         $Script:TheCurrentEnemy.Update()
@@ -1052,6 +1056,7 @@ $Script:TheGlobalStateBlockTable = @{
         $Script:TheEnemyBattleStatWindow.Draw()
         $Script:ThePlayerBattleActionWindow.Draw()
         $Script:TheBattleStatusMessageWindow.Draw()
+        $Script:TheBattleEnemyImageWindow.Draw()
         
         # FOR TESTING PURPOSES ONLY!
         Read-Host
@@ -14537,6 +14542,36 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.BorderStrings = [String[]](
             [BattleStatusMessageWindow]::WindowBorderHorizontal,
             [BattleStatusMessageWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
+Class BattleEnemyImageWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 1
+    Static [Int]$WindowLTColumn = 43
+    Static [Int]$WindowBRRow    = 17
+    Static [Int]$WindowBRColumn = 80
+
+    Static [String]$WindowBorderHorizontal = '*-------------------------------------*'
+    Static [String]$WindowBorderVertical   = '|'
+
+    BattleEnemyImageWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([BattleEnemyImageWindow]::WindowLTRow, [BattleEnemyImageWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([BattleEnemyImageWindow]::WindowBRRow, [BattleEnemyImageWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [BattleEnemyImageWindow]::WindowBorderHorizontal,
+            [BattleEnemyImageWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
     }
