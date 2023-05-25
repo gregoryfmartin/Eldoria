@@ -243,24 +243,36 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
     ActionListing = @{
         [ActionSlot]::A = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
+            Name        = ''
+            Type        = [BattleActionType]::None
+            Effect      = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::B = [BattleAction]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::C = [BattleAction]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::D = [BattleAction]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
     }
     SpoilsEffect    = {}
@@ -478,21 +490,33 @@ $Script:TheCurrentEnemy = [BattleEntity]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::B = [BattleAction]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::C = [BattleAction]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::D = [BattleAction]@{
             Name   = ''
             Type   = [BattleActionType]::None
             Effect = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
     }
     SpoilsEffect = {}
@@ -589,6 +613,8 @@ Enum BattleActionType {
     MagicConfuse
     MagicSleep
     MagicAging
+    MagicHealing
+    MagicStatAugment
     None
 }
 
@@ -633,6 +659,292 @@ Enum ActionSlot {
     B
     C
     D
+}
+
+Enum AllActions {
+    Pound
+    KarateChop
+    DoubleSlap
+    CometPunch
+    MegaPunch
+    PayDay
+    FirePunch
+    IcePunch
+    ThunderPunch
+    Scratch
+    ViseGrip
+    Guillotine
+    RazorWind
+    SwordsDance
+    Cut
+    Gust
+    WingAttack
+    Whirlwind
+    Fly
+    Bind
+    Slam
+    VineWhip
+    Stomp
+    DoubleKick
+    MegaKick
+    JumpKick
+    RollingKick
+    SandAttack
+}
+
+# BATTLE ACTION DEFINITION TABLE
+$Script:TheBattleActionTable = @{
+    [AllActions]::Pound = [BattleAction]@{
+        Name        = 'Pound'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 35
+        EffectValue = 40
+        Chance      = 1.0F
+    }
+
+    [AllActions]::KarateChop = [BattleAction]@{
+        Name        = 'Karate Chop'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 25
+        EffectValue = 50
+        Chance      = 1.0F
+    }
+
+    [AllActions]::DoubleSlap = [BattleAction]@{
+        Name        = 'Double Slap'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 10
+        EffectValue = 15
+        Chance      = 0.85F
+    }
+
+    [AllActions]::CometPunch = [BattleAction]@{
+        Name        = 'Comet Punch'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 18
+        Chance      = 0.85F
+    }
+
+    [AllActions]::MegaPunch = [BattleAction]@{
+        Name        = 'Mega Punch'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 20
+        EffectValue = 80
+        Chance      = 0.85F
+    }
+
+    [AllActions]::PayDay = [BattleAction]@{
+        Name        = 'Pay Day'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 20
+        EffectValue = 40
+        Chance      = 1.0F
+    }
+    
+    [AllActions]::FirePunch = [BattleAction]@{
+        Name        = 'Fire Punch'
+        Type        = [BattleActionType]::ElementalFire
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 75
+        Chance      = 1.0F
+    }
+
+    [AllActions]::IcePunch = [BattleAction]@{
+        Name        = 'Ice Punch'
+        Type        = [BattleActionType]::ElementalIce
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 75
+        Chance      = 1.0F
+    }
+
+    [AllActions]::ThunderPunch = [BattleAction]@{
+        Name        = 'Thunder Punch'
+        Type        = [BattleActionType]::ElementalWind
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 75
+        Chance      = 1.0F
+    }
+
+    [AllActions]::Scratch = [BattleAction]@{
+        Name        = 'Scratch'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 35
+        EffectValue = 40
+        Chance      = 1.0F
+    }
+
+    [AllActions]::ViseGrip = [BattleAction]@{
+        Name        = 'Vise Grip'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 30
+        EffectValue = 55
+        Chance      = 1.0F
+    }
+
+    [AllActions]::Guillotine = [BattleAction]@{
+        Name        = 'Guillotine'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 5
+        EffectValue = 0
+        Chance      = 0.3F
+    }
+
+    [AllActions]::RazorWind = [BattleAction]@{
+        Name        = 'Razor Wind'
+        Type        = [BattleActionType]::ElementalWind
+        Effect      = {}
+        Uses        = 10
+        EffectValue = 80
+        Chance      = 1.0F
+    }
+
+    [AllActions]::SwordsDance = [BattleAction]@{
+        Name        = 'Swords Dance'
+        Type        = [BattleActionType]::MagicStatAugment
+        Effect      = {}
+        Uses        = 10
+        EffectValue = 0
+        Chance      = 1.0F
+    }
+
+    [AllActions]::Cut = [BattleAction]@{
+        Name        = 'Cut'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 30
+        EffectValue = 50
+        Chance      = 0.95F
+    }
+
+    [AllActions]::Gust = [BattleAction]@{
+        Name        = 'Gust'
+        Type        = [BattleActionType]::ElementalWind
+        Effect      = {}
+        Uses        = 35
+        EffectValue = 40
+        Chance      = 1.0F
+    }
+
+    [AllActions]::WingAttack = [BattleAction]@{
+        Name        = 'Wing Attack'
+        Type        = [BattleActionType]::ElementalWind
+        Effect      = {}
+        Uses        = 35
+        EffectValue = 60
+        Chance      = 1.0F
+    }
+
+    [AllActions]::Whirlwind = [BattleAction]@{
+        Name        = 'Whirlwind'
+        Type        = [BattleActionType]::ElementalWind
+        Effect      = {}
+        Uses        = 20
+        EffectValue = 0
+        Chance      = 1.0F
+    }
+
+    [AllActions]::Fly = [BattleAction]@{
+        Name        = 'Fly'
+        Type        = [BattleActionType]::ElementalWind
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 90
+        Chance      = 0.95F
+    }
+
+    [AllActions]::Bind = [BattleAction]@{
+        Name        = 'Bind'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 20
+        EffectValue = 15
+        Chance      = 0.85F
+    }
+
+    [AllActions]::Slam = [BattleAction]@{
+        Name        = 'Slam'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 20
+        EffectValue = 80
+        Chance      = 0.75F
+    }
+
+    [AllActions]::VineWhip = [BattleAction]@{
+        Name        = 'Vine Whip'
+        Type        = [BattleActionType]::ElementalEarth
+        Effect      = {}
+        Uses        = 25
+        EffectValue = 45
+        Chance      = 1.0F
+    }
+
+    [AllActions]::Stomp = [BattleAction]@{
+        Name        = 'Stomp'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 20
+        EffectValue = 65
+        Chance      = 1.0F
+    }
+
+    [AllActions]::DoubleKick = [BattleAction]@{
+        Name        = 'Double Kick'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 30
+        EffectValue = 30
+        Chance      = 1.0F
+    }
+
+    [AllActions]::MegaKick = [BattleAction]@{
+        Name        = 'Mega Kick'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 5
+        EffectValue = 120
+        Chance      = 0.75F
+    }
+
+    [AllActions]::JumpKick = [BattleAction]@{
+        Name        = 'Jump Kick'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 10
+        EffectValue = 100
+        Chance      = 0.95F
+    }
+
+    [AllActions]::RollingKick = [BattleAction]@{
+        Name        = 'Rolling Kick'
+        Type        = [BattleActionType]::Physical
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 60
+        Chance      = 0.85F
+    }
+
+    [AllActions]::SandAttack = [BattleAction]@{
+        Name        = 'Sand Attack'
+        Type        = [BattleActionType]::ElementalEarth
+        Effect      = {}
+        Uses        = 15
+        EffectValue = 0
+        Chance      = 1.0F
+    }
 }
 
 # COMMAND TABLE DEFINITION
@@ -1906,30 +2218,45 @@ Class BattleEntityProperty {
 HASHTABLE CREATOR
 
 [BattleAction]@{
-    Name   = ?
-    Type   = ?
-    Effect = ?
+    Name        = ?
+    Type        = ?
+    Effect      = ?
+    Uses        = ?
+    EffectValue = ?
+    Chance      = ?
 }
 #>
 Class BattleAction {
     [String]$Name
     [ScriptBlock]$Effect
     [BattleActionType]$Type
+    [Int]$Uses
+    [Int]$EffectValue
+    [Single]$Chance
 
     BattleAction() {
-        $this.Name   = ''
-        $this.Type   = [BattleActionType]::None
-        $this.Effect = $null
+        $this.Name        = ''
+        $this.Type        = [BattleActionType]::None
+        $this.Effect      = $null
+        $this.Uses        = 0
+        $this.EffectValue = 0
+        $this.Chance      = 0.0
     }
 
     BattleAction(
         [String]$Name,
         [BattleActionType]$Type,
-        [ScriptBlock]$Effect
+        [ScriptBlock]$Effect,
+        [Int]$Uses,
+        [Int]$EffectValue,
+        [Single]$Chance
     ) {
-        $this.Name   = $Name
-        $this.Type   = $Type
-        $this.Effect = $Effect
+        $this.Name        = $Name
+        $this.Type        = $Type
+        $this.Effect      = $Effect
+        $this.Uses        = $Uses
+        $this.EffectValue = $EffectValue
+        $this.Chance      = $Chance
     }
 }
 
@@ -2156,24 +2483,36 @@ FULL HASHTABLE CREATOR
     }
     ActionListing = @{
         [ActionSlot]::A = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
+            Name        = ''
+            Type        = [BattleActionType]::None
+            Effect      = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::B = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
+            Name        = ''
+            Type        = [BattleActionType]::None
+            Effect      = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::C = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
+            Name        = ''
+            Type        = [BattleActionType]::None
+            Effect      = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
         [ActionSlot]::D = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
+            Name        = ''
+            Type        = [BattleActionType]::None
+            Effect      = {}
+            Uses        = 0
+            EffectValue = 0
+            Chance      = 0.0
         }
     }
     SpoilsEffect = {}
