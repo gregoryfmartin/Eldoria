@@ -527,6 +527,7 @@ Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
 $Script:Rui = $(Get-Host).UI.RawUI
 
 [Boolean]$Script:GpsRestoredFromInvBackup = $true
+[Boolean]$Script:BattleCursorVisible      = $false
 
 # ENUMERATION DEFINITIONS
 
@@ -562,6 +563,7 @@ Enum CommonVirtualKeyCodes {
     DownArrow  = 40
     A          = 65
     D          = 68
+    Enter      = 13
 }
 
 Enum ItemRemovalStatus {
@@ -1333,6 +1335,10 @@ $Script:TheGlobalStateBlockTable = @{
     }
     
     [GameStatePrimary]::BattleScreen = {
+        If($Script:BattleCursorVisible -EQ $false) {
+            Write-Host "$([ATControlSequences]::CursorHide)"
+            $Script:BattleCursorVisible = $true
+        }
         If($null -EQ $Script:ThePlayerBattleStatWindow) {
             $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
         }
@@ -1358,8 +1364,10 @@ $Script:TheGlobalStateBlockTable = @{
         $Script:ThePlayerBattleActionWindow.Draw()
         $Script:TheBattleStatusMessageWindow.Draw()
         
+        $Script:ThePlayerBattleActionWindow.HandleInput()
+        
         # FOR TESTING PURPOSES ONLY!
-        Read-Host
+        # Read-Host
     }
 
     [GameStatePrimary]::Cleanup = {}
@@ -15008,6 +15016,94 @@ Class BattlePlayerActionWindow : WindowBase {
         $this.ActionBDrawCoordinates = [ATCoordinates]::new($this.ActionADrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
         $this.ActionCDrawCoordinates = [ATCoordinates]::new($this.ActionBDrawCoordinates.Row + 1, $this.ActionBDrawCoordinates.Column)
         $this.ActionDDrawCoordinates = [ATCoordinates]::new($this.ActionCDrawCoordinates.Row + 1, $this.ActionCDrawCoordinates.Column)
+
+        $this.CreateChevrons()
+    }
+
+    [Void]CreateChevrons() {
+        $this.Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionADrawCoordinates.Row, $this.ActionADrawCoordinates.Column - 2)
+                    ),
+                    [BattlePlayerActionWindow]::PlayerChevronCharacter,
+                    $true
+                ),
+                $true
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionBDrawCoordinates.Row, $this.ActionBDrawCoordinates.Column - 2)
+                    ),
+                    [BattlePlayerActionWindow]::PlayerChevronBlankCharacter,
+                    $true
+                ),
+                $false
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionCDrawCoordinates.Row, $this.ActionCDrawCoordinates.Column - 2)
+                    ),
+                    [BattlePlayerActionWindow]::PlayerChevronBlankCharacter,
+                    $true
+                ),
+                $false
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionDDrawCoordinates.Row, $this.ActionDDrawCoordinates.Column - 2)
+                    ),
+                    [BattlePlayerActionWindow]::PlayerChevronBlankCharacter,
+                    $true
+                ),
+                $false
+            )
+        )
+    }
+
+    [ATString]GetActiveChevron() {
+        Foreach($a in $this.Chevrons) {
+            If($a.Item2 -EQ $true) {
+                Return $a.Item1
+            }
+        }
+
+        $this.ActiveChevronIndex = 0
+        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+        Return $this.Chevrons[$this.ActiveChevronIndex].Item1
+    }
+
+    [Void]ResetChevronPosition() {
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
+        
+        $this.ActiveChevronIndex = 0
+
+        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
     }
 
     [Void]Draw() {
@@ -15124,6 +15220,67 @@ Class BattlePlayerActionWindow : WindowBase {
             Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
 
             $this.ActionDDrawDirty = $false
+        }
+        If($this.PlayerChevronDirty -EQ $true) {
+            Foreach($c in $this.Chevrons) {
+                Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            }
+            $this.PlayerChevronDirty = $false
+        }
+    }
+
+    [Void]HandleInput() {
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        Switch($keyCap.VirtualKeyCode) {
+            ([CommonVirtualKeyCodes]::Enter) {
+                # Do nothing for the time being
+            }
+
+            38 {
+                # Move the Chevron up (wraps on top)
+                If(($this.ActiveChevronIndex - 1) -LT 0) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex = 3
+                    
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
+                } Elseif(($this.ActiveChevronIndex - 1) -GE 0) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex--
+                    
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            40 {
+                # move the Chevron down (wraps on bottom)
+                If(($this.ActiveChevronIndex + 1) -GT 3) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex = 0
+                    
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
+                } Elseif(($this.ActiveChevronIndex + 1) -LE 3) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex++
+                    
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
         }
     }
 }
