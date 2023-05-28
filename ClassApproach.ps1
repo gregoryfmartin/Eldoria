@@ -242,38 +242,10 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         }
     }
     ActionListing = @{
-        [ActionSlot]::A = [BattleAction]@{
-            Name        = ''
-            Type        = [BattleActionType]::None
-            Effect      = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-        [ActionSlot]::B = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-        [ActionSlot]::C = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-        [ActionSlot]::D = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
+        [ActionSlot]::A = [BAPound]::new()
+        [ActionSlot]::B = [BAIcePunch]::new()
+        [ActionSlot]::C = [BAFirePunch]::new()
+        [ActionSlot]::D = [BAThunderPunch]::new()
     }
     SpoilsEffect    = {}
     ActionMarbleBag = [List[[ActionSlot]]]::new()
@@ -282,9 +254,6 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     Inventory       = [List[MapTileObject]]::new()
     TargetOfFilter  = [List[String]]::new()
 }
-
-
-
 
 $Script:TheCurrentEnemy = [BattleEntity]@{
     Name = 'Bad Guy'
@@ -609,6 +578,7 @@ Enum BattleActionType {
     ElementalWind
     ElementalLight
     ElementalDark
+    ElementalIce
     MagicPoison
     MagicConfuse
     MagicSleep
@@ -692,260 +662,278 @@ Enum AllActions {
     SandAttack
 }
 
-# BATTLE ACTION DEFINITION TABLE
-$Script:TheBattleActionTable = @{
-    [AllActions]::Pound = [BattleAction]@{
-        Name        = 'Pound'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 35
-        EffectValue = 40
-        Chance      = 1.0F
-    }
-
-    [AllActions]::KarateChop = [BattleAction]@{
-        Name        = 'Karate Chop'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 25
-        EffectValue = 50
-        Chance      = 1.0F
-    }
-
-    [AllActions]::DoubleSlap = [BattleAction]@{
-        Name        = 'Double Slap'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 10
-        EffectValue = 15
-        Chance      = 0.85F
-    }
-
-    [AllActions]::CometPunch = [BattleAction]@{
-        Name        = 'Comet Punch'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 18
-        Chance      = 0.85F
-    }
-
-    [AllActions]::MegaPunch = [BattleAction]@{
-        Name        = 'Mega Punch'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 20
-        EffectValue = 80
-        Chance      = 0.85F
-    }
-
-    [AllActions]::PayDay = [BattleAction]@{
-        Name        = 'Pay Day'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 20
-        EffectValue = 40
-        Chance      = 1.0F
-    }
-    
-    [AllActions]::FirePunch = [BattleAction]@{
-        Name        = 'Fire Punch'
-        Type        = [BattleActionType]::ElementalFire
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 75
-        Chance      = 1.0F
-    }
-
-    [AllActions]::IcePunch = [BattleAction]@{
-        Name        = 'Ice Punch'
-        Type        = [BattleActionType]::ElementalIce
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 75
-        Chance      = 1.0F
-    }
-
-    [AllActions]::ThunderPunch = [BattleAction]@{
-        Name        = 'Thunder Punch'
-        Type        = [BattleActionType]::ElementalWind
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 75
-        Chance      = 1.0F
-    }
-
-    [AllActions]::Scratch = [BattleAction]@{
-        Name        = 'Scratch'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 35
-        EffectValue = 40
-        Chance      = 1.0F
-    }
-
-    [AllActions]::ViseGrip = [BattleAction]@{
-        Name        = 'Vise Grip'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 30
-        EffectValue = 55
-        Chance      = 1.0F
-    }
-
-    [AllActions]::Guillotine = [BattleAction]@{
-        Name        = 'Guillotine'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 5
-        EffectValue = 0
-        Chance      = 0.3F
-    }
-
-    [AllActions]::RazorWind = [BattleAction]@{
-        Name        = 'Razor Wind'
-        Type        = [BattleActionType]::ElementalWind
-        Effect      = {}
-        Uses        = 10
-        EffectValue = 80
-        Chance      = 1.0F
-    }
-
-    [AllActions]::SwordsDance = [BattleAction]@{
-        Name        = 'Swords Dance'
-        Type        = [BattleActionType]::MagicStatAugment
-        Effect      = {}
-        Uses        = 10
-        EffectValue = 0
-        Chance      = 1.0F
-    }
-
-    [AllActions]::Cut = [BattleAction]@{
-        Name        = 'Cut'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 30
-        EffectValue = 50
-        Chance      = 0.95F
-    }
-
-    [AllActions]::Gust = [BattleAction]@{
-        Name        = 'Gust'
-        Type        = [BattleActionType]::ElementalWind
-        Effect      = {}
-        Uses        = 35
-        EffectValue = 40
-        Chance      = 1.0F
-    }
-
-    [AllActions]::WingAttack = [BattleAction]@{
-        Name        = 'Wing Attack'
-        Type        = [BattleActionType]::ElementalWind
-        Effect      = {}
-        Uses        = 35
-        EffectValue = 60
-        Chance      = 1.0F
-    }
-
-    [AllActions]::Whirlwind = [BattleAction]@{
-        Name        = 'Whirlwind'
-        Type        = [BattleActionType]::ElementalWind
-        Effect      = {}
-        Uses        = 20
-        EffectValue = 0
-        Chance      = 1.0F
-    }
-
-    [AllActions]::Fly = [BattleAction]@{
-        Name        = 'Fly'
-        Type        = [BattleActionType]::ElementalWind
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 90
-        Chance      = 0.95F
-    }
-
-    [AllActions]::Bind = [BattleAction]@{
-        Name        = 'Bind'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 20
-        EffectValue = 15
-        Chance      = 0.85F
-    }
-
-    [AllActions]::Slam = [BattleAction]@{
-        Name        = 'Slam'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 20
-        EffectValue = 80
-        Chance      = 0.75F
-    }
-
-    [AllActions]::VineWhip = [BattleAction]@{
-        Name        = 'Vine Whip'
-        Type        = [BattleActionType]::ElementalEarth
-        Effect      = {}
-        Uses        = 25
-        EffectValue = 45
-        Chance      = 1.0F
-    }
-
-    [AllActions]::Stomp = [BattleAction]@{
-        Name        = 'Stomp'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 20
-        EffectValue = 65
-        Chance      = 1.0F
-    }
-
-    [AllActions]::DoubleKick = [BattleAction]@{
-        Name        = 'Double Kick'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 30
-        EffectValue = 30
-        Chance      = 1.0F
-    }
-
-    [AllActions]::MegaKick = [BattleAction]@{
-        Name        = 'Mega Kick'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 5
-        EffectValue = 120
-        Chance      = 0.75F
-    }
-
-    [AllActions]::JumpKick = [BattleAction]@{
-        Name        = 'Jump Kick'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 10
-        EffectValue = 100
-        Chance      = 0.95F
-    }
-
-    [AllActions]::RollingKick = [BattleAction]@{
-        Name        = 'Rolling Kick'
-        Type        = [BattleActionType]::Physical
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 60
-        Chance      = 0.85F
-    }
-
-    [AllActions]::SandAttack = [BattleAction]@{
-        Name        = 'Sand Attack'
-        Type        = [BattleActionType]::ElementalEarth
-        Effect      = {}
-        Uses        = 15
-        EffectValue = 0
-        Chance      = 1.0F
-    }
+# BATTLE ACTION TYPE CHARACTER ADORNMENT TABLE
+$Script:BATAdornmentCharTable = @{
+    [BattleActionType]::Physical         = [Tuple[[String], [ConsoleColor24]]]::new("`u{2022}", [CCTextDefault24]::new())
+    [BattleActionType]::ElementalFire    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B6}", [CCAppleRedLight24]::new())
+    [BattleActionType]::ElementalWater   = [Tuple[[String], [ConsoleColor24]]]::new("`u{03C8}", [CCAppleBlueLight24]::new())
+    [BattleActionType]::ElementalEarth   = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B5}", [CCAppleBrownLight24]::new())
+    [BattleActionType]::ElementalWind    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03C6}", [CCAppleGreenLight24]::new())
+    [BattleActionType]::ElementalLight   = [Tuple[[String], [ConsoleColor24]]]::new("`u{03BC}", [CCAppleYellowLight24]::new())
+    [BattleActionType]::ElementalDark    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B4}", [CCApplePurpleDark24]::new())
+    [BattleActionType]::ElementalIce     = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B9}", [CCAppleCyanDark24]::new())
+    [BattleActionType]::MagicPoison      = [Tuple[[String], [ConsoleColor24]]]::new("`u{03BE}", [CCAppleIndigoLight24]::new())
+    [BattleActionType]::MagicConfuse     = [Tuple[[String], [ConsoleColor24]]]::new("`u{0398}", [CCAppleCyanDark24]::new())
+    [BattleActionType]::MagicSleep       = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B7}", [CCAppleGrey4Light24]::new())
+    [BattleActionType]::MagicAging       = [Tuple[[String], [ConsoleColor24]]]::new("`u{03C3}", [CCAppleGrey6Light24]::new())
+    [BattleActionType]::MagicHealing     = [Tuple[[String], [ConsoleColor24]]]::new("`u{20AA}", [CCAppleMintLight24]::new())
+    [BattleActionType]::MagicStatAugment = [Tuple[[String], [ConsoleColor24]]]::new("`u{20B9}", [CCAppleOrangeLight24]::new())
 }
+
+# BATTLE ACTION DEFINITION TABLE
+# $Script:TheBattleActionTable = @{
+#     [AllActions]::Pound = [BattleAction]@{
+#         Name        = 'Pound'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 35
+#         EffectValue = 40
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::KarateChop = [BattleAction]@{
+#         Name        = 'Karate Chop'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 25
+#         EffectValue = 50
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::DoubleSlap = [BattleAction]@{
+#         Name        = 'Double Slap'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 10
+#         EffectValue = 15
+#         Chance      = 0.85F
+#     }
+
+#     [AllActions]::CometPunch = [BattleAction]@{
+#         Name        = 'Comet Punch'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 18
+#         Chance      = 0.85F
+#     }
+
+#     [AllActions]::MegaPunch = [BattleAction]@{
+#         Name        = 'Mega Punch'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 20
+#         EffectValue = 80
+#         Chance      = 0.85F
+#     }
+
+#     [AllActions]::PayDay = [BattleAction]@{
+#         Name        = 'Pay Day'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 20
+#         EffectValue = 40
+#         Chance      = 1.0F
+#     }
+    
+#     [AllActions]::FirePunch = [BattleAction]@{
+#         Name        = 'Fire Punch'
+#         Type        = [BattleActionType]::ElementalFire
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 75
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::IcePunch = [BattleAction]@{
+#         Name        = 'Ice Punch'
+#         Type        = [BattleActionType]::ElementalIce
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 75
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::ThunderPunch = [BattleAction]@{
+#         Name        = 'Thunder Punch'
+#         Type        = [BattleActionType]::ElementalWind
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 75
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::Scratch = [BattleAction]@{
+#         Name        = 'Scratch'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 35
+#         EffectValue = 40
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::ViseGrip = [BattleAction]@{
+#         Name        = 'Vise Grip'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 30
+#         EffectValue = 55
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::Guillotine = [BattleAction]@{
+#         Name        = 'Guillotine'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 5
+#         EffectValue = 0
+#         Chance      = 0.3F
+#     }
+
+#     [AllActions]::RazorWind = [BattleAction]@{
+#         Name        = 'Razor Wind'
+#         Type        = [BattleActionType]::ElementalWind
+#         Effect      = {}
+#         Uses        = 10
+#         EffectValue = 80
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::SwordsDance = [BattleAction]@{
+#         Name        = 'Swords Dance'
+#         Type        = [BattleActionType]::MagicStatAugment
+#         Effect      = {}
+#         Uses        = 10
+#         EffectValue = 0
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::Cut = [BattleAction]@{
+#         Name        = 'Cut'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 30
+#         EffectValue = 50
+#         Chance      = 0.95F
+#     }
+
+#     [AllActions]::Gust = [BattleAction]@{
+#         Name        = 'Gust'
+#         Type        = [BattleActionType]::ElementalWind
+#         Effect      = {}
+#         Uses        = 35
+#         EffectValue = 40
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::WingAttack = [BattleAction]@{
+#         Name        = 'Wing Attack'
+#         Type        = [BattleActionType]::ElementalWind
+#         Effect      = {}
+#         Uses        = 35
+#         EffectValue = 60
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::Whirlwind = [BattleAction]@{
+#         Name        = 'Whirlwind'
+#         Type        = [BattleActionType]::ElementalWind
+#         Effect      = {}
+#         Uses        = 20
+#         EffectValue = 0
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::Fly = [BattleAction]@{
+#         Name        = 'Fly'
+#         Type        = [BattleActionType]::ElementalWind
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 90
+#         Chance      = 0.95F
+#     }
+
+#     [AllActions]::Bind = [BattleAction]@{
+#         Name        = 'Bind'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 20
+#         EffectValue = 15
+#         Chance      = 0.85F
+#     }
+
+#     [AllActions]::Slam = [BattleAction]@{
+#         Name        = 'Slam'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 20
+#         EffectValue = 80
+#         Chance      = 0.75F
+#     }
+
+#     [AllActions]::VineWhip = [BattleAction]@{
+#         Name        = 'Vine Whip'
+#         Type        = [BattleActionType]::ElementalEarth
+#         Effect      = {}
+#         Uses        = 25
+#         EffectValue = 45
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::Stomp = [BattleAction]@{
+#         Name        = 'Stomp'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 20
+#         EffectValue = 65
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::DoubleKick = [BattleAction]@{
+#         Name        = 'Double Kick'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 30
+#         EffectValue = 30
+#         Chance      = 1.0F
+#     }
+
+#     [AllActions]::MegaKick = [BattleAction]@{
+#         Name        = 'Mega Kick'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 5
+#         EffectValue = 120
+#         Chance      = 0.75F
+#     }
+
+#     [AllActions]::JumpKick = [BattleAction]@{
+#         Name        = 'Jump Kick'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 10
+#         EffectValue = 100
+#         Chance      = 0.95F
+#     }
+
+#     [AllActions]::RollingKick = [BattleAction]@{
+#         Name        = 'Rolling Kick'
+#         Type        = [BattleActionType]::Physical
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 60
+#         Chance      = 0.85F
+#     }
+
+#     [AllActions]::SandAttack = [BattleAction]@{
+#         Name        = 'Sand Attack'
+#         Type        = [BattleActionType]::ElementalEarth
+#         Effect      = {}
+#         Uses        = 15
+#         EffectValue = 0
+#         Chance      = 1.0F
+#     }
+# }
 
 # COMMAND TABLE DEFINITION
 $Script:TheCommandTable = @{
@@ -2032,6 +2020,13 @@ Class BattleEntityProperty {
     Static [ConsoleColor24]$StatNumDrawColorDanger   = [CCAppleRedLight24]::new()
     Static [ConsoleColor24]$StatAugDrawColorPositive = [CCAppleCyanLight24]::new()
     Static [ConsoleColor24]$StatAugDrawColorNegative = [CCApplePurpleDark24]::new()
+    Static [ConsoleColor24]$BATColorElementalFire    = [CCAppleRedLight24]::new()
+    Static [ConsoleColor24]$BATColorElementalWater   = [CCAppleBlueLight24]::new()
+    Static [ConsoleColor24]$BATColorElementalEarth   = [CCAppleBrownLight24]::new()
+    Static [ConsoleColor24]$BATColorElementalWind    = [CCAppleGreenDark24]::new()
+    Static [ConsoleColor24]$BATColorElementalLight   = [CCAppleYellowDark24]::new()
+    Static [ConsoleColor24]$BATColorElementalDark    = [CCApplePurpleLight24]::new()
+    Static [ConsoleColor24]$BATMagicColor            = [CCApplePinkLight24]::new()
 
     [Int]$Base
     [Int]$BasePre
@@ -2218,12 +2213,12 @@ Class BattleEntityProperty {
 HASHTABLE CREATOR
 
 [BattleAction]@{
-    Name        = ?
-    Type        = ?
-    Effect      = ?
-    Uses        = ?
-    EffectValue = ?
-    Chance      = ?
+    Name               = ?
+    Type               = ?
+    Effect             = ?
+    Uses               = ?
+    EffectValue        = ?
+    Chance             = ?
 }
 #>
 Class BattleAction {
@@ -2258,6 +2253,118 @@ Class BattleAction {
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
     }
+}
+
+Class BAPound : BattleAction {
+    BAPound() : base('Pound', [BattleActionType]::Physical, {}, 35, 40, 1.0) {}
+}
+
+Class BAKarateChop : BattleAction {
+    BAKarateChop() : base('Karate Chop', [BattleActionType]::Physical, {}, 25, 50, 1.0) {}
+}
+
+Class BADoubleSlap : BattleAction {
+    BADoubleSlap() : base('Double Slap', [BattleActionType]::Physical, {}, 10, 15, 0.85) {}
+}
+
+Class BACometPunch : BattleAction {
+    BACometPunch() : base('Comet Punch', [BattleActionType]::Physical, {}, 15, 18, 0.85) {}
+}
+
+Class BAMegaPunch : BattleAction {
+    BAMegaPunch() : base('Mega Punch', [BattleActionType]::Physical, {}, 20, 80, 0.85) {}
+}
+
+Class BAPayDay : BattleAction {
+    BAPayDay() : base('Pay Day', [BattleActionType]::Physical, {}, 20, 40, 1.0) {}
+}
+
+Class BAFirePunch : BattleAction {
+    BAFirePunch() : base('Fire Punch', [BattleActionType]::ElementalFire, {}, 15, 75, 1.0) {}
+}
+
+Class BAIcePunch : BattleAction {
+    BAIcePunch(): base('Ice Punch', [BattleActionType]::ElementalIce, {}, 15, 75, 1.0) {}
+}
+
+Class BAThunderPunch : BattleAction {
+    BAThunderPunch() : base('Thunder Punch', [BattleActionType]::ElementalWind, {}, 15, 75, 1.0) {}
+}
+
+Class BAScratch : BattleAction {
+    BAScratch() : base('Scratch', [BattleActionType]::Physical, {}, 35, 40, 1.0) {}
+}
+
+Class BAViseGrip : BattleAction {
+    BAViseGrip() : base('Vise Grip', [BattleActionType]::Physical, {}, 30, 55, 1.0) {}
+}
+
+Class BAGuillotine : BattleAction {
+    BAGuillotine() : base('Guillotine', [BattleActionType]::Physical, {}, 5, 0, 1.0) {}
+}
+
+Class BARazorWind : BattleAction {
+    BARazorWind() : base('Razor Wind', [BattleActionType]::ElementalWind, {}, 10, 80, 1.0) {}
+}
+
+Class BASwordsDance : BattleAction {
+    BASwordsDance() : base('Swords Dance', [BattleActionType]::MagicStatAugment, {}, 10, 0, 1.0) {}
+}
+
+Class BACut : BattleAction {
+    BACut() : base('Cut', [BattleActionType]::Physical, {}, 30, 50, 0.95) {}
+}
+
+Class BAGust : BattleAction {
+    BAGust() : base('Gust', [BattleActionType]::ElementalWind, {}, 35, 40, 1.0) {}
+}
+
+Class BAWingAttack : BattleAction {
+    BAWingAttack() : base('Wing Attack', [BattleActionType]::ElementalWind, {}, 35, 60, 1.0) {}
+}
+
+Class BAWhirlwind : BattleAction {
+    BAWhirlwind() : base('Whirlwind', [BattleActionType]::ElementalWind, {}, 20, 0, 1.0) {}
+}
+
+Class BAFly : BattleAction {
+    BAFly() : base('Fly', [BattleActionType]::ElementalWind, {}, 15, 90, 0.95) {}
+}
+
+Class BABind : BattleAction {
+    BABind() : base('Bind', [BattleActionType]::Physical, {}, 20, 15, 0.85) {}
+}
+
+Class BASlam : BattleAction {
+    BASlam() : base('Slam', [BattleActionType]::Physical, {}, 20, 80, 0.75) {}
+}
+
+Class BAVineWhip : BattleAction {
+    BAVineWhip() : base('Vine Whip', [BattleActionType]::ElementalEarth, {}, 25, 45, 1.0) {}
+}
+
+Class BAStomp : BattleAction {
+    BAStomp() : base('Stomp', [BattleActionType]::Physical, {}, 20, 65, 1.0) {}
+}
+
+Class BADoubleKick : BattleAction {
+    BADoubleKick() : base('Double Kick', [BattleActionType]::Physical, {}, 30, 30, 1.0) {}
+}
+
+Class BAMegaKick : BattleAction {
+    BAMegaKick() : base('Mega Kick', [BattleActionType]::Physical, {}, 5, 120, 0.75) {}
+}
+
+Class BAJumpKick : BattleAction {
+    BAJumpKick() : base('Jump Kick', [BattleActionType]::Physical, {}, 10, 100, 0.95) {}
+}
+
+Class BARollingKick : BattleAction {
+    BARollingKick() : base('Rolling Kick', [BattleActionType]::Physical, {}, 15, 60, 0.85) {}
+}
+
+Class BASandAttack : BattleAction {
+    BASandAttack() : base('Sand Attack', [BattleActionType]::ElementalEarth, {}, 15, 0, 1.0) {}
 }
 
 <#
@@ -2483,36 +2590,36 @@ FULL HASHTABLE CREATOR
     }
     ActionListing = @{
         [ActionSlot]::A = [BattleAction]@{
-            Name        = ''
-            Type        = [BattleActionType]::None
-            Effect      = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
+            Name               = ''
+            Type               = [BattleActionType]::None
+            Effect             = {}
+            Uses               = 0
+            EffectValue        = 0
+            Chance             = 0.0
         }
         [ActionSlot]::B = [BattleAction]@{
-            Name        = ''
-            Type        = [BattleActionType]::None
-            Effect      = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
+            Name               = ''
+            Type               = [BattleActionType]::None
+            Effect             = {}
+            Uses               = 0
+            EffectValue        = 0
+            Chance             = 0.0
         }
         [ActionSlot]::C = [BattleAction]@{
-            Name        = ''
-            Type        = [BattleActionType]::None
-            Effect      = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
+            Name               = ''
+            Type               = [BattleActionType]::None
+            Effect             = {}
+            Uses               = 0
+            EffectValue        = 0
+            Chance             = 0.0
         }
         [ActionSlot]::D = [BattleAction]@{
-            Name        = ''
-            Type        = [BattleActionType]::None
-            Effect      = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
+            Name               = ''
+            Type               = [BattleActionType]::None
+            Effect             = {}
+            Uses               = 0
+            EffectValue        = 0
+            Chance             = 0.0
         }
     }
     SpoilsEffect = {}
@@ -14830,14 +14937,57 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 }
 
+<#
+Because this class is intended to directly reference the player character, there's no need to hold a BattleEntity Reference.
+#>
 Class BattlePlayerActionWindow : WindowBase {
     Static [Int]$WindowLTRow    = 18
     Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowBRRow    = 24
-    Static [Int]$WindowBRColumn = 16
+    Static [Int]$WindowBRRow    = 23
+    Static [Int]$WindowBRColumn = 19
 
-    Static [String]$WindowBorderHorizontal = '*---------------*'
+    Static [String]$WindowBorderHorizontal = '*------------------*'
     Static [String]$WindowBorderVertical   = '|'
+
+    Static [String]$PlayerChevronCharacter      = '>'
+    Static [String]$PlayerChevronBlankCharacter = ' '
+
+    Static [ATString]$PlayerChevron = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCTextDefault24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinatesNone]::new()
+        ),
+        [BattlePlayerActionWindow]::PlayerChevronCharacter,
+        $true
+    )
+    Static [ATString]$PlayerChevronBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinatesNone]::new()
+        ),
+        [BattlePlayerActionWindow]::PlayerChevronBlankCharacter,
+        $true
+    )
+
+    [Boolean]$PlayerChevronDirty = $true
+    [Boolean]$ActiveItemBlinking = $false
+    [Boolean]$ActionADrawDirty   = $true
+    [Boolean]$ActionBDrawDirty   = $true
+    [Boolean]$ActionCDrawDirty   = $true
+    [Boolean]$ActionDDrawDirty   = $true
+
+    [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+
+    [Int]$ActiveChevronIndex = 0
+
+    [ATCoordinates]$ActionADrawCoordinates = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionBDrawCoordinates = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionCDrawCoordinates = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionDDrawCoordinates = [ATCoordinatesNone]::new()
 
     BattlePlayerActionWindow(): base() {
         $this.LeftTop     = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowLTRow, [BattlePlayerActionWindow]::WindowLTColumn)
@@ -14853,20 +15003,138 @@ Class BattlePlayerActionWindow : WindowBase {
             [BattlePlayerActionWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
+
+        $this.ActionADrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 3)
+        $this.ActionBDrawCoordinates = [ATCoordinates]::new($this.ActionADrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
+        $this.ActionCDrawCoordinates = [ATCoordinates]::new($this.ActionBDrawCoordinates.Row + 1, $this.ActionBDrawCoordinates.Column)
+        $this.ActionDDrawCoordinates = [ATCoordinates]::new($this.ActionCDrawCoordinates.Row + 1, $this.ActionCDrawCoordinates.Column)
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+
+        If($this.ActionADrawDirty -EQ $true) {
+            # This is the adornment character
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionADrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item1)",
+                $true
+            )
+
+            # This is the Action Name
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+
+            $this.ActionADrawDirty = $false
+        }
+        If($this.ActionBDrawDirty -EQ $true) {
+            # This is the adornment character
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionBDrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item1)",
+                $true
+            )
+
+            # This is the Action Name
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+
+            $this.ActionBDrawDirty = $false
+        }
+        If($this.ActionCDrawDirty -EQ $true) {
+            # This is the adornment character
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionCDrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item1)",
+                $true
+            )
+
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+
+            $this.ActionCDrawDirty = $false
+        }
+        If($this.ActionDDrawDirty -EQ $true) {
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionDDrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item1)",
+                $true
+            )
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+
+            $this.ActionDDrawDirty = $false
+        }
     }
 }
 
 Class BattleStatusMessageWindow : WindowBase {
     Static [Int]$WindowLTRow    = 18
-    Static [Int]$WindowLTColumn = 19
+    Static [Int]$WindowLTColumn = 22
     Static [Int]$WindowBRRow    = 24
     Static [Int]$WindowBRColumn = 80
 
-    Static [String]$WindowBorderHorizontal = '*-------------------------------------------------------------*'
+    Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
     Static [String]$WindowBorderVertical   = '|'
 
     BattleStatusMessageWindow(): base() {
