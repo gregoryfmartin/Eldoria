@@ -16229,22 +16229,6 @@ Class GameCore {
     [Void]Run() {
         While($this.GameRunning -EQ $true) {
             $this.Logic()
-            # "GameCore::Run - `t`tSetting LastFrameTime ($($this.LastFrameTime)) to CurrentFrameTime ($($this.CurrentFrameTime))." | Out-File -FilePath $Script:LogFileName -Append
-            # $this.LastFrameTime = $this.CurrentFrameTime
-
-            # "GameCore::Run - `t`tSetting CurrentFrameTime ($($this.CurrentFrameTime)) to the current time in ticks ($([DateTime]::Now.Ticks))." | Out-File -FilePath $Script:LogFileName -Append
-            # $this.CurrentFrameTime = [DateTime]::Now.Ticks
-
-            # "GameCore::Run - `t`tChecking to see if CurrentFrameTime ($($this.CurrentFrameTime)) minus LastFrameTime ($($this.LastFrameTime)) is GREATER THAN OR EQUAL TO MsPerFrame ($($this.MsPerFrame))." | Out-File -FilePath $Script:LogFileName -Append
-            # "GameCore::Run - `t`tThe equation is $($this.CurrentFrameTime) - $($this.LastFrameTime) >= $($this.MsPerFrame)" | Out-File -FilePath $Script:LogFileName -Append
-            # If(($this.CurrentFrameTime - $this.LastFrameTime) -GE $this.MsPerFrame) {
-            #     "GameCore::Run - `t`t`tThe value is GREATER THAN OR EQUAL TO MsPerFrame." | Out-File -FilePath $Script:LogFileName -Append
-            #     "GameCore::Run - `t`t`tSet FpsDelta to a new TimeSpan of CurrentFrameTime minus LastFrameTime." | Out-File -FilePath $Script:LogFileName -Append
-            #     $this.FpsDelta = [TimeSpan]::new($this.CurrentFrameTime - $this.LastFrameTime)
-
-            #     "GameCore::Run - `t`t`tCall the Logic method." | Out-File -FilePath $Script:LogFileName -Append
-            #     $this.Logic()
-            # }
         }
     }
 
