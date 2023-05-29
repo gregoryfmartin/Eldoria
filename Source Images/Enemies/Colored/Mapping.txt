@@ -1,0 +1,8 @@
+==========
+Bat
+
+Wings - Apple Gray 3 Dark (72, 72, 74)
+Body - Apple Gray 1 Dark (142, 142, 147)
+Eyes - Apple Red Dark (255, 69, 58)
+Talons - Apple Orange Dark (255, 159, 10)
+==========
