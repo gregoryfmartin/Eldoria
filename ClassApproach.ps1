@@ -15906,7 +15906,7 @@ Class BattlePlayerActionWindow : WindowBase {
         }
     }
 
-    [Void]HandleInput() {
+    [BattleAction]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
             13 {
@@ -15914,46 +15914,48 @@ Class BattlePlayerActionWindow : WindowBase {
                 # Write to the Battle Message Window the name of the technique used
                 Switch($this.ActiveChevronIndex) {
                     0 {
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
-                        )
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
 
-                        Return
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::A]
                     }
 
                     1 {
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
-                        )
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
 
-                        Return
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::B]
                     }
 
                     2 {
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
-                        )
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
 
-                        Return
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::C]
                     }
 
                     3 {
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
-                        )
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
 
-                        Return
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::D]
                     }
 
-                    Default {}
+                    Default {
+                        Return $null
+                    }
                 }
             }
 
@@ -16003,6 +16005,8 @@ Class BattlePlayerActionWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
             }
         }
+
+        Return $null
     }
 }
 
@@ -16307,6 +16311,31 @@ Class BattleManager {
             PhaseAExecution {
                 If($this.CanPhaseOneAct -EQ $true) {
                     # Called if the Phase One Entity is able to execute their action
+                    # We need to know specifically if this is the Player
+                    If($this.PhaseOneEntity -IS [Player]) {
+                        # This is the Player
+                        [BattleAction]$ToExecute = $null
+                        
+                        While($null -EQ $ToExecute) {
+                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
+                        }
+
+                        # Write the Action used to the Battle Message Log
+                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            "$($Script:ThePlayer.Name) uses $($ToExecute.Name)!",
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+
+                        # Execute the Action and capture the results (Self, Target)
+                        Invoke-Command $ToExecute.Effect -ArgumentList $Script:ThePlayer, $Script:TheCurrentEnemy
+
+                        # Write the Results to the Battle Message Log
+
+                        # Transition to PhaseBExecution
+                    } Else  {
+                        # This is the Enemy
+                    }
                 } Else {
                     # Called if the Phase One Entity is unable to execute their action
                 }
@@ -16315,8 +16344,27 @@ Class BattleManager {
             PhaseBExecution {
                 If($this.CanPhaseTwoAct -EQ $true) {
                     # Called if the Phase Two Entity is able to execute their action
+                    # We need to know specifically if this is the Player
+                    If($this.PhaseTwoEntity -IS [Player]) {
+                        # This is the Player
+                        [BattleAction]$ToExecute = $null
+                        
+                        While($null -EQ $ToExecute) {
+                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
+                        }
+
+                        # Write the Action used to the Battle Message Log
+
+                        # Execute the Action and capture the results
+
+                        # Write the Results to the Battle Message Log
+
+                        # Transition to PhaseBExecution
+                    } Else {
+                        # This is the Enemy
+                    }
                 } Else {
-                    # Called if the Phase One Entity is able to execute their action
+                    # Called if the Phase One Entity is unable to execute their action
                 }
             }
 
