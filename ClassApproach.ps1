@@ -665,6 +665,16 @@ Enum AllActions {
     SandAttack
 }
 
+Enum BattleManagerState {
+    TurnIncrement
+    PhaseOrdering
+    PhaseAExecution
+    PhaseBExecution
+    Calculation
+    BattleWon
+    BattleLost
+}
+
 # BATTLE ACTION TYPE CHARACTER ADORNMENT TABLE
 $Script:BATAdornmentCharTable = @{
     [BattleActionType]::Physical         = [Tuple[[String], [ConsoleColor24]]]::new("`u{2022}", [CCTextDefault24]::new())
@@ -1980,6 +1990,40 @@ Class ATStringNone : ATString {
     }
 }
 
+Class ATStringComposite {
+    [List[ATString]]$CompositeActual = [List[ATString]]::new()
+
+    ATStringComposite() {}
+
+    ATStringComposite(
+        [ATString[]]$Components
+    ) {
+        If($null -EQ $this.CompositeActual) {
+            $this.CompositeActual = [List[ATString]]::new()
+        }
+
+        Foreach($a in $Components) {
+            $this.CompositeActual.Add($a) | Out-Null
+        }
+    }
+
+    ATStringComposite(
+        [List[ATString]]$Components
+    ) {
+        $this.CompositeActual = $Components
+    }
+
+    [String]ToAnsiControlSequenceString() {
+        [String]$a = ''
+
+        Foreach($b in $this.CompositeActual) {
+            $a += $b.ToAnsiControlSequenceString()
+        }
+
+        Return $a
+    }
+}
+
 Class ATSceneImageString : ATString {
     Static [String]$SceneImageBlank = ' '
 
@@ -2029,13 +2073,13 @@ Class BattleEntityProperty {
     Static [ConsoleColor24]$StatNumDrawColorDanger   = [CCAppleRedLight24]::new()
     Static [ConsoleColor24]$StatAugDrawColorPositive = [CCAppleCyanLight24]::new()
     Static [ConsoleColor24]$StatAugDrawColorNegative = [CCApplePurpleDark24]::new()
-    Static [ConsoleColor24]$BATColorElementalFire    = [CCAppleRedLight24]::new()
-    Static [ConsoleColor24]$BATColorElementalWater   = [CCAppleBlueLight24]::new()
-    Static [ConsoleColor24]$BATColorElementalEarth   = [CCAppleBrownLight24]::new()
-    Static [ConsoleColor24]$BATColorElementalWind    = [CCAppleGreenDark24]::new()
-    Static [ConsoleColor24]$BATColorElementalLight   = [CCAppleYellowDark24]::new()
-    Static [ConsoleColor24]$BATColorElementalDark    = [CCApplePurpleLight24]::new()
-    Static [ConsoleColor24]$BATMagicColor            = [CCApplePinkLight24]::new()
+    # Static [ConsoleColor24]$BATColorElementalFire    = [CCAppleRedLight24]::new()
+    # Static [ConsoleColor24]$BATColorElementalWater   = [CCAppleBlueLight24]::new()
+    # Static [ConsoleColor24]$BATColorElementalEarth   = [CCAppleBrownLight24]::new()
+    # Static [ConsoleColor24]$BATColorElementalWind    = [CCAppleGreenDark24]::new()
+    # Static [ConsoleColor24]$BATColorElementalLight   = [CCAppleYellowDark24]::new()
+    # Static [ConsoleColor24]$BATColorElementalDark    = [CCApplePurpleLight24]::new()
+    # Static [ConsoleColor24]$BATMagicColor            = [CCApplePinkLight24]::new()
 
     [Int]$Base
     [Int]$BasePre
@@ -16202,6 +16246,87 @@ Class BattleEnemyImageWindow : WindowBase {
             $this.Image = $Script:TheCurrentEnemy.Image
             Write-Host "$($this.Image.ToAnsiControlSequenceString())"
             $this.ImageDirty = $false
+        }
+    }
+}
+
+Class BattleManager {
+    [BattleManagerState]$State = [BattleManagerState]::TurnIncrement
+
+    [Int]$TurnCounter = 0
+    [Int]$TurnLimit   = 0
+
+    [Boolean]$CanPhaseOneAct = $true
+    [Boolean]$CanPhaseTwoAct = $true
+
+    [BattleEntity]$PhaseOneEntity = $null
+    [BattleEntity]$PhaseTwoEntity = $null
+
+    BattleManager() {}
+
+    [Void]Update() {
+        Switch($this.State) {
+            TurnIncrement {
+                If($this.TurnLimit -GT 0) {
+                    If(($this.TurnCounter + 1) -GT $this.TurnLimit) {
+                        $this.State = [BattleManagerState]::BattleLost
+                        Return
+                    }
+
+                    $this.TurnCounter++
+                    $this.State = [BattleManagerState]::PhaseOrdering
+                    Return
+                }
+
+                $this.TurnCounter++
+                $this.State = [BattleManagerState]::PhaseOrdering
+                Return
+            }
+
+            PhaseOrdering {
+                [Single]$PlayerEffectiveSpeed = 0.0
+                [Single]$EnemyEffectiveSpeed  = 0.0
+
+                $PlayerEffectiveSpeed = $Script:ThePlayer.Stats[[StatId]::Speed].Base + ($(Get-Random -Minimum 0.0 -Maximum 1.0) * $Script:ThePlayer.Stats[[StatId]::Luck].Base)
+                $EnemyEffectiveSpeed  = $Script:TheCurrentEnemy.Stats[[StatId]::Speed].Base + ($(Get-Random -Minimum 0.0 -Maximum 1.0) * $Script:TheCurrentEnemy.Stats[[StatId]::Luck].Base)
+
+                [Single]$EsWinner = [Math]::Max($PlayerEffectiveSpeed, $EnemyEffectiveSpeed)
+
+                If($EsWinner -EQ $PlayerEffectiveSpeed) {
+                    $this.PhaseOneEntity = $Script:ThePlayer
+                    $this.PhaseTwoEntity = $Script:TheCurrentEnemy
+                } Elseif($EsWinner -EQ $EnemyEffectiveSpeed) {
+                    $this.PhaseOneEntity = $Script:TheCurrentEnemy
+                    $this.PhaseTwoEntity = $Script:ThePlayer
+                }
+
+                $this.State = PhaseAExecution
+                Return
+            }
+
+            PhaseAExecution {
+                If($this.CanPhaseOneAct -EQ $true) {
+                    # Called if the Phase One Entity is able to execute their action
+                } Else {
+                    # Called if the Phase One Entity is unable to execute their action
+                }
+            }
+
+            PhaseBExecution {
+                If($this.CanPhaseTwoAct -EQ $true) {
+                    # Called if the Phase Two Entity is able to execute their action
+                } Else {
+                    # Called if the Phase One Entity is able to execute their action
+                }
+            }
+
+            Calculation {}
+
+            BattleWon {}
+
+            BattleLost {}
+
+            Default {}
         }
     }
 }
