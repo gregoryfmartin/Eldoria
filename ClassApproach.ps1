@@ -675,6 +675,13 @@ Enum BattleManagerState {
     BattleLost
 }
 
+Enum BattleActionResultType {
+    Success
+    FailedAttackMissed
+    FailedAttackFailed
+    FailedElementalMatch
+}
+
 # BATTLE ACTION TYPE CHARACTER ADORNMENT TABLE
 $Script:BATAdornmentCharTable = @{
     [BattleActionType]::Physical         = [Tuple[[String], [ConsoleColor24]]]::new("`u{2022}", [CCTextDefault24]::new())
@@ -2305,6 +2312,27 @@ Class BattleAction {
         $this.Uses        = $Uses
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
+    }
+}
+
+Class BattleActionResult {
+    [BattleActionResultType]$Type
+    [BattleEntity]$Originator
+    [BattleEntity]$Target
+    [Int]$ActionEffectSum
+
+    BattleActionResult() {}
+
+    BattleActionResult(
+        [BattleActionResultType]$Type,
+        [BattleEntity]$OriginatorRef,
+        [BattleEntity]$TargetRef,
+        [Int]$ActionEffectSum
+    ) {
+        $this.Type            = $Type
+        $this.Originator      = $OriginatorRef
+        $this.Target          = $TargetRef
+        $this.ActionEffectSum = $ActionEffectSum
     }
 }
 
@@ -16314,7 +16342,8 @@ Class BattleManager {
                     # We need to know specifically if this is the Player
                     If($this.PhaseOneEntity -IS [Player]) {
                         # This is the Player
-                        [BattleAction]$ToExecute = $null
+                        [BattleAction]$ToExecute          = $null
+                        [BattleActionResult]$ActionResult = $null
                         
                         While($null -EQ $ToExecute) {
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
@@ -16322,17 +16351,129 @@ Class BattleManager {
 
                         # Write the Action used to the Battle Message Log
                         $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($Script:ThePlayer.Name) uses $($ToExecute.Name)!",
+                            "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
                             [CCTextDefault24]::new(),
                             [ATDecorationNone]::new()
                         )
 
                         # Execute the Action and capture the results (Self, Target)
-                        Invoke-Command $ToExecute.Effect -ArgumentList $Script:ThePlayer, $Script:TheCurrentEnemy
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity)
 
                         # Write the Results to the Battle Message Log
+                        Switch($ActionResult.Type) {
+                            Success {
+                                $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    "$(ToExecute.Name) was successful!",
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new()
+                                )
+
+                                Switch($ToExecute.Type) {
+                                    ([BattleActionType]::Physical) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalFire) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalWater) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalEarth) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalWind) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalLight) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalDark) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::ElementalIce) {
+                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                            "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                            [CCTextDefault24]::new(),
+                                            [ATDecorationNone]::new()
+                                        )
+                                    }
+
+                                    ([BattleActionType]::MagicPoison) {}
+
+                                    ([BattleActionType]::MagicConfuse) {}
+
+                                    ([BattleActionType]::MagicSleep) {}
+
+                                    ([BattleActionType]::MagicAging) {}
+
+                                    ([BattleActionType]::MagicHealing) {}
+
+                                    ([BattleActionType]::MagicStatAugment) {}
+                                }
+                            }
+
+                            FailedActionMissed {
+                                $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    "$(ToExecute.Name) missed!",
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new()
+                                )
+                            }
+
+                            FailedAttackFailed {
+                                $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    "$(ToExecute.Name) failed!",
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new()
+                                )
+                            }
+
+                            FailedElementalMatch {
+                                $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    "$(ToExecute.Name) matches the Root Element of $($this.PhaseTwoEntity)!",
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new()
+                                )
+                            }
+                        }
 
                         # Transition to PhaseBExecution
+                        $this.State = [BattleManagerState]::PhaseBExecution
                     } Else  {
                         # This is the Enemy
                     }
