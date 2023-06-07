@@ -2382,6 +2382,12 @@ Class BAPound : BattleAction {
                 $EffectiveDamage
             )
         } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::Success,
                 $Self,
@@ -2443,6 +2449,12 @@ Class BAScratch : BattleAction {
                 $EffectiveDamage
             )
         } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::Success,
                 $Self,
