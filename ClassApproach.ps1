@@ -31,7 +31,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [BufferManager]            $Script:TheBufferManager             = [BufferManager]::new()
 [GameCore]                 $Script:TheGameCore                  = [GameCore]::new()
 [EnemyBattleEntity]        $Script:TheCurrentEnemy              = $null
-
+[BattleManager]            $Script:TheBattleManager             = $null
 
 
 
@@ -248,250 +248,252 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         [ActionSlot]::D = [BAThunderPunch]::new()
     }
     SpoilsEffect    = {}
-    ActionMarbleBag = [List[[ActionSlot]]]::new()
+    ActionMarbleBag = @()
     CurrentGold     = 500
     MapCoordinates  = [ATCoordinates]::new(0, 0)
     Inventory       = [List[MapTileObject]]::new()
     TargetOfFilter  = [List[String]]::new()
 }
 
-$Script:TheCurrentEnemy = [EnemyBattleEntity]@{
-    Name = 'Bat'
-    Stats = @{
-        [StatId]::HitPoints = [BattleEntityProperty]@{
-            Base                = 500
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 500
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Switch($Self.Base) {
-                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-                        $Self.State = [StatNumberState]::Normal
-                    }
+$Script:TheCurrentEnemy = [EEBat]::new()
 
-                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-                        $Self.State = [StatNumberState]::Caution
-                    }
+# $Script:TheCurrentEnemy = [EnemyBattleEntity]@{
+#     Name = 'Bat'
+#     Stats = @{
+#         [StatId]::HitPoints = [BattleEntityProperty]@{
+#             Base                = 500
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 500
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
+                
+#                 Switch($Self.Base) {
+#                     { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+#                         $Self.State = [StatNumberState]::Normal
+#                     }
 
-                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-                        $Self.State = [StatNumberState]::Danger
-                    }
-                }
-            }
-        }
-        [StatId]::MagicPoints = [BattleEntityProperty]@{
-            Base                = 50
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 50
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Switch($Self.Base) {
-                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-                        $Self.State = [StatNumberState]::Normal
-                    }
+#                     { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+#                         $Self.State = [StatNumberState]::Caution
+#                     }
 
-                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-                        $Self.State = [StatNumberState]::Caution
-                    }
+#                     { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+#                         $Self.State = [StatNumberState]::Danger
+#                     }
+#                 }
+#             }
+#         }
+#         [StatId]::MagicPoints = [BattleEntityProperty]@{
+#             Base                = 50
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 50
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
+                
+#                 Switch($Self.Base) {
+#                     { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+#                         $Self.State = [StatNumberState]::Normal
+#                     }
 
-                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-                        $Self.State = [StatNumberState]::Danger
-                    }
-                }
-            }
-        }
-        [StatId]::Attack = [BattleEntityProperty]@{
-            Base                = 12
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 12
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                     { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+#                         $Self.State = [StatNumberState]::Caution
+#                     }
+
+#                     { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+#                         $Self.State = [StatNumberState]::Danger
+#                     }
+#                 }
+#             }
+#         }
+#         [StatId]::Attack = [BattleEntityProperty]@{
+#             Base                = 12
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 12
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return $Self.Base
-            }
-        }
-        [StatId]::Defense = [BattleEntityProperty]@{
-            Base                = 16
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 16
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                 Return $Self.Base
+#             }
+#         }
+#         [StatId]::Defense = [BattleEntityProperty]@{
+#             Base                = 16
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 16
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return
-            }
-        }
-        [StatId]::MagicAttack = [BattleEntityProperty]@{
-            Base                = 6
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 6
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                 Return
+#             }
+#         }
+#         [StatId]::MagicAttack = [BattleEntityProperty]@{
+#             Base                = 6
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 6
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return
-            }
-        }
-        [StatId]::MagicDefense = [BattleEntityProperty]@{
-            Base                = 4
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 4
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                 Return
+#             }
+#         }
+#         [StatId]::MagicDefense = [BattleEntityProperty]@{
+#             Base                = 4
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 4
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return
-            }
-        }
-        [StatId]::Speed = [BattleEntityProperty]@{
-            Base                = 9
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 9
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                 Return
+#             }
+#         }
+#         [StatId]::Speed = [BattleEntityProperty]@{
+#             Base                = 9
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 9
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return
-            }
-        }
-        [StatId]::Luck = [BattleEntityProperty]@{
-            Base                = 5
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 5
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                 Return
+#             }
+#         }
+#         [StatId]::Luck = [BattleEntityProperty]@{
+#             Base                = 5
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 5
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return
-            }
-        }
-        [StatId]::Accuracy = [BattleEntityProperty]@{
-            Base                = 9
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 9
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
+#                 Return
+#             }
+#         }
+#         [StatId]::Accuracy = [BattleEntityProperty]@{
+#             Base                = 9
+#             BasePre             = 0
+#             BaseAugmentValue    = 0
+#             Max                 = 9
+#             MaxPre              = 0
+#             MaxAugmentValue     = 0
+#             AugmentTurnDuration = 0
+#             BaseAugmentActive   = $false
+#             MaxAugmentActive    = $false
+#             State               = [StatNumberState]::Normal
+#             ValidateFunction    = {
+#                 Param(
+#                     [BattleEntityProperty]$Self
+#                 )
                 
-                Return
-            }
-        }
-    }
-    ActionListing = @{
-        [ActionSlot]::A = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-        [ActionSlot]::B = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-        [ActionSlot]::C = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-        [ActionSlot]::D = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-            Uses        = 0
-            EffectValue = 0
-            Chance      = 0.0
-        }
-    }
-    SpoilsEffect    = {}
-    ActionMarbleBag = [List[[ActionSlot]]]::new()
-    Image           = [EEIBat]::new()
-}
+#                 Return
+#             }
+#         }
+#     }
+#     ActionListing = @{
+#         [ActionSlot]::A = [BattleAction]@{
+#             Name   = ''
+#             Type   = [BattleActionType]::None
+#             Effect = {}
+#             Uses        = 0
+#             EffectValue = 0
+#             Chance      = 0.0
+#         }
+#         [ActionSlot]::B = [BattleAction]@{
+#             Name   = ''
+#             Type   = [BattleActionType]::None
+#             Effect = {}
+#             Uses        = 0
+#             EffectValue = 0
+#             Chance      = 0.0
+#         }
+#         [ActionSlot]::C = [BattleAction]@{
+#             Name   = ''
+#             Type   = [BattleActionType]::None
+#             Effect = {}
+#             Uses        = 0
+#             EffectValue = 0
+#             Chance      = 0.0
+#         }
+#         [ActionSlot]::D = [BattleAction]@{
+#             Name   = ''
+#             Type   = [BattleActionType]::None
+#             Effect = {}
+#             Uses        = 0
+#             EffectValue = 0
+#             Chance      = 0.0
+#         }
+#     }
+#     SpoilsEffect    = {}
+#     ActionMarbleBag = @([ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B)
+#     Image           = [EEIBat]::new()
+# }
 
 
 
@@ -528,6 +530,7 @@ Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
 $Script:Rui = $(Get-Host).UI.RawUI
 
 [Boolean]$Script:GpsRestoredFromInvBackup = $true
+[Boolean]$Script:GpsRestoredFromBatBackup = $false
 [Boolean]$Script:BattleCursorVisible      = $false
 
 # ENUMERATION DEFINITIONS
@@ -1327,6 +1330,24 @@ $Script:TheGlobalStateBlockTable = @{
 
             # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
+        } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
+            $Script:TheBufferManager.RestoreBufferAToActive()
+            
+            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+            # and I really don't feel like trying to figure out how to grab the buffer manually
+            $Script:GpsRestoredFromBatBackup             = $true
+            $Script:TheSceneWindow.SceneImageDirty       = $true
+            $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+            $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+            $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+            $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+            $Script:TheCommandWindow.CommandHistoryDirty = $true
+            $Script:TheMessageWindow.MessageADirty       = $true
+            $Script:TheMessageWindow.MessageBDirty       = $true
+            $Script:TheMessageWindow.MessageCDirty       = $true
+
+            # Write the sequence to show the cursor since it's hidden by the Inventory Screen
+            Write-Host "$([ATControlSequences]::CursorShow)"
         }
 
         # Update the Player
@@ -1353,36 +1374,42 @@ $Script:TheGlobalStateBlockTable = @{
     }
     
     [GameStatePrimary]::BattleScreen = {
-        If($Script:BattleCursorVisible -EQ $false) {
-            Write-Host "$([ATControlSequences]::CursorHide)"
-            $Script:BattleCursorVisible = $true
-        }
-        If($null -EQ $Script:ThePlayerBattleStatWindow) {
-            $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
-        }
-        If($null -EQ $Script:TheEnemyBattleStatWindow) {
-            $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
-        }
-        If($null -EQ $Script:ThePlayerBattleActionWindow) {
-            $Script:ThePlayerBattleActionWindow = [BattlePlayerActionWindow]::new()
-        }
-        If($null -EQ $Script:TheBattleStatusMessageWindow) {
-            $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
-        }
-        If($null -EQ $Script:TheBattleEnemyImageWindow) {
-            $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
+        If($null -EQ $Script:TheBattleManager) {
+            $Script:TheBattleManager = [BattleManager]::new()
         }
 
-        $Script:ThePlayer.Update()
-        $Script:TheCurrentEnemy.Update()
+        $Script:TheBattleManager.Update()
 
-        $Script:ThePlayerBattleStatWindow.Draw()
-        $Script:TheEnemyBattleStatWindow.Draw()
-        $Script:TheBattleEnemyImageWindow.Draw()
-        $Script:ThePlayerBattleActionWindow.Draw()
-        $Script:TheBattleStatusMessageWindow.Draw()
+        # If($Script:BattleCursorVisible -EQ $false) {
+        #     Write-Host "$([ATControlSequences]::CursorHide)"
+        #     $Script:BattleCursorVisible = $true
+        # }
+        # If($null -EQ $Script:ThePlayerBattleStatWindow) {
+        #     $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
+        # }
+        # If($null -EQ $Script:TheEnemyBattleStatWindow) {
+        #     $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
+        # }
+        # If($null -EQ $Script:ThePlayerBattleActionWindow) {
+        #     $Script:ThePlayerBattleActionWindow = [BattlePlayerActionWindow]::new()
+        # }
+        # If($null -EQ $Script:TheBattleStatusMessageWindow) {
+        #     $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
+        # }
+        # If($null -EQ $Script:TheBattleEnemyImageWindow) {
+        #     $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
+        # }
+
+        # $Script:ThePlayer.Update()
+        # $Script:TheCurrentEnemy.Update()
+
+        # $Script:ThePlayerBattleStatWindow.Draw()
+        # $Script:TheEnemyBattleStatWindow.Draw()
+        # $Script:TheBattleEnemyImageWindow.Draw()
+        # $Script:ThePlayerBattleActionWindow.Draw()
+        # $Script:TheBattleStatusMessageWindow.Draw()
         
-        $Script:ThePlayerBattleActionWindow.HandleInput()
+        # $Script:ThePlayerBattleActionWindow.HandleInput()
         
         # FOR TESTING PURPOSES ONLY!
         # Read-Host
@@ -2219,7 +2246,7 @@ Class BattleEntityProperty {
             Return -2
         }
 
-        [Int]$t    = $this.Base - $DecAmt
+        [Int]$t    = $this.Base + $DecAmt
         $t         = [Math]::Clamp($t, 0, $this.Max)
         $this.Base = $t
         
@@ -2337,7 +2364,32 @@ Class BattleActionResult {
 }
 
 Class BAPound : BattleAction {
-    BAPound() : base('Pound', [BattleActionType]::Physical, {}, 35, 40, 1.0) {}
+    BAPound() : base('Pound', [BattleActionType]::Physical, {
+        Param(
+            [BattleEntity]$Self,
+            [BattleEntity]$Target,
+            [BattleAction]$SelfAction
+        )
+
+        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
+        
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        } Else {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        }
+    }, 35, 40, 1.0) {}
 }
 
 Class BAKarateChop : BattleAction {
@@ -2373,7 +2425,32 @@ Class BAThunderPunch : BattleAction {
 }
 
 Class BAScratch : BattleAction {
-    BAScratch() : base('Scratch', [BattleActionType]::Physical, {}, 35, 40, 1.0) {}
+    BAScratch() : base('Scratch', [BattleActionType]::Physical, {
+        Param(
+            [BattleEntity]$Self,
+            [BattleEntity]$Target,
+            [BattleAction]$SelfAction
+        )
+
+        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
+        
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        } Else {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        }
+    }, 35, 40, 1.0) {}
 }
 
 Class BAViseGrip : BattleAction {
@@ -2721,7 +2798,7 @@ Class BattleEntity {
     [Hashtable]$Stats
     [Hashtable]$ActionListing
     [ScriptBlock]$SpoilsEffect
-    [List[ActionSlot]]$ActionMarbleBag
+    [ActionSlot[]]$ActionMarbleBag
     [ConsoleColor24]$NameDrawColor
 
     BattleEntity() {
@@ -2738,7 +2815,7 @@ Class BattleEntity {
         [Hashtable]$Stats,
         [Hashtable]$ActionListing,
         [ScriptBlock]$SpoilsEffect,
-        [List[ActionSlot]]$ActionMarbleBag,
+        [ActionSlot[]]$ActionMarbleBag,
         [ConsoleColor24]$NameDrawColor
     ) {
         $this.Name            = $Name
@@ -4641,6 +4718,223 @@ Class EEIBat : EEIInternalBase {
 
         $this.CreateImageATString($this.ColorMap)
         $this.ColorMap = $null
+    }
+}
+
+Class EEBat : EnemyBattleEntity {
+    EEBat() : base() {
+        $this.Name = 'Bat'
+
+        $this.Stats = @{
+            [StatId]::HitPoints = [BattleEntityProperty]@{
+                Base                = 500
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 500
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Switch($Self.Base) {
+                        { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                            $Self.State = [StatNumberState]::Normal
+                        }
+    
+                        { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                            $Self.State = [StatNumberState]::Caution
+                        }
+    
+                        { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                            $Self.State = [StatNumberState]::Danger
+                        }
+                    }
+                }
+            }
+            [StatId]::MagicPoints = [BattleEntityProperty]@{
+                Base                = 50
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 50
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Switch($Self.Base) {
+                        { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                            $Self.State = [StatNumberState]::Normal
+                        }
+    
+                        { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                            $Self.State = [StatNumberState]::Caution
+                        }
+    
+                        { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                            $Self.State = [StatNumberState]::Danger
+                        }
+                    }
+                }
+            }
+            [StatId]::Attack = [BattleEntityProperty]@{
+                Base                = 12
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 12
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return $Self.Base
+                }
+            }
+            [StatId]::Defense = [BattleEntityProperty]@{
+                Base                = 16
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 16
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return
+                }
+            }
+            [StatId]::MagicAttack = [BattleEntityProperty]@{
+                Base                = 6
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 6
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return
+                }
+            }
+            [StatId]::MagicDefense = [BattleEntityProperty]@{
+                Base                = 4
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 4
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return
+                }
+            }
+            [StatId]::Speed = [BattleEntityProperty]@{
+                Base                = 9
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 9
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return
+                }
+            }
+            [StatId]::Luck = [BattleEntityProperty]@{
+                Base                = 5
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 5
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return
+                }
+            }
+            [StatId]::Accuracy = [BattleEntityProperty]@{
+                Base                = 9
+                BasePre             = 0
+                BaseAugmentValue    = 0
+                Max                 = 9
+                MaxPre              = 0
+                MaxAugmentValue     = 0
+                AugmentTurnDuration = 0
+                BaseAugmentActive   = $false
+                MaxAugmentActive    = $false
+                State               = [StatNumberState]::Normal
+                ValidateFunction    = {
+                    Param(
+                        [BattleEntityProperty]$Self
+                    )
+                    
+                    Return
+                }
+            }
+        }
+
+        $this.ActionListing = @{
+            [ActionSlot]::A = [BAPound]::new()
+            [ActionSlot]::B = [BAScratch]::new()
+            [ActionSlot]::C = $null
+            [ActionSlot]::D = $null
+        }
+
+        $this.SpoilsEffect = {}
+
+        $this.ActionMarbleBag = @([ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B)
+
+        $this.Image = [EEIBat]::new()
     }
 }
 
@@ -16294,9 +16588,37 @@ Class BattleManager {
     [BattleEntity]$PhaseOneEntity = $null
     [BattleEntity]$PhaseTwoEntity = $null
 
-    BattleManager() {}
+    [ScriptBlock]$SpoilsAction = $null
+
+    BattleManager() {
+        If($Script:BattleCursorVisible -EQ $false) {
+            Write-Host "$([ATControlSequences]::CursorHide)"
+            $Script:BattleCursorVisible = $true
+        }
+        If($null -EQ $Script:ThePlayerBattleStatWindow) {
+            $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
+        }
+        If($null -EQ $Script:TheEnemyBattleStatWindow) {
+            $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
+        }
+        If($null -EQ $Script:ThePlayerBattleActionWindow) {
+            $Script:ThePlayerBattleActionWindow = [BattlePlayerActionWindow]::new()
+        }
+        If($null -EQ $Script:TheBattleStatusMessageWindow) {
+            $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
+        }
+        If($null -EQ $Script:TheBattleEnemyImageWindow) {
+            $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
+        }
+    }
 
     [Void]Update() {
+        $Script:ThePlayerBattleStatWindow.Draw()
+        $Script:TheEnemyBattleStatWindow.Draw()
+        $Script:TheBattleEnemyImageWindow.Draw()
+        $Script:ThePlayerBattleActionWindow.Draw()
+        $Script:TheBattleStatusMessageWindow.Draw()
+
         Switch($this.State) {
             TurnIncrement {
                 If($this.TurnLimit -GT 0) {
@@ -16332,7 +16654,10 @@ Class BattleManager {
                     $this.PhaseTwoEntity = $Script:ThePlayer
                 }
 
-                $this.State = PhaseAExecution
+                $this.PhaseOneEntity.Update()
+                $this.PhaseTwoEntity.Update()
+
+                $this.State = [BattleManagerState]::PhaseAExecution
                 Return
             }
 
@@ -16340,13 +16665,14 @@ Class BattleManager {
                 If($this.CanPhaseOneAct -EQ $true) {
                     # Called if the Phase One Entity is able to execute their action
                     # We need to know specifically if this is the Player
+                    [BattleAction]$ToExecute          = $null
+                    [BattleActionResult]$ActionResult = $null
+
                     If($this.PhaseOneEntity -IS [Player]) {
                         # This is the Player
-                        [BattleAction]$ToExecute          = $null
-                        [BattleActionResult]$ActionResult = $null
-                        
                         While($null -EQ $ToExecute) {
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
+                            $Script:ThePlayerBattleActionWindow.Draw()
                         }
 
                         # Write the Action used to the Battle Message Log
@@ -16357,249 +16683,127 @@ Class BattleManager {
                         )
 
                         # Execute the Action and capture the results (Self, Target)
-                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity)
-
-                        # Write the Results to the Battle Message Log
-                        Switch($ActionResult.Type) {
-                            Success {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) was successful!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
-
-                                Switch($ToExecute.Type) {
-                                    ([BattleActionType]::Physical) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalFire) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalWater) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalEarth) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalWind) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalLight) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalDark) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalIce) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::MagicPoison) {}
-
-                                    ([BattleActionType]::MagicConfuse) {}
-
-                                    ([BattleActionType]::MagicSleep) {}
-
-                                    ([BattleActionType]::MagicAging) {}
-
-                                    ([BattleActionType]::MagicHealing) {}
-
-                                    ([BattleActionType]::MagicStatAugment) {}
-                                }
-                            }
-
-                            FailedActionMissed {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) missed!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
-                            }
-
-                            FailedAttackFailed {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) failed!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
-                            }
-
-                            FailedElementalMatch {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) matches the Root Element of $($this.PhaseTwoEntity.Name)!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
-                            }
-                        }
-
-                        # Transition to PhaseBExecution
-                        $this.State = [BattleManagerState]::PhaseBExecution
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                     } Else  {
                         # This is the Enemy
-                        [BattleAction]$ToExecute          = $null
-                        [BattleActionResult]$ActionResult = $null
-
                         # Randomly select one of the Enemy's Actions from the Marble Bag
-                        [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
-                        $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
+                        [ActionSlot]$SelectedSlot = $($this.PhaseOneEntity.ActionMarbleBag | Get-Random)
+                        $ToExecute                = $this.PhaseOneEntity.ActionListing[$SelectedSlot]
                         
                         # Execute the Action
-                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity)
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
+                    }
 
-                        Switch($ActionResult.Type) {
-                            Success {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) was successful!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
+                    Switch($ActionResult.Type) {
+                        Success {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) was successful!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
 
-                                Switch($ToExecute.Type) {
-                                    ([BattleActionType]::Physical) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalFire) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalWater) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalEarth) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalWind) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalLight) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalDark) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::ElementalIce) {
-                                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                            "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                            [CCTextDefault24]::new(),
-                                            [ATDecorationNone]::new()
-                                        )
-                                    }
-
-                                    ([BattleActionType]::MagicPoison) {}
-
-                                    ([BattleActionType]::MagicConfuse) {}
-
-                                    ([BattleActionType]::MagicSleep) {}
-
-                                    ([BattleActionType]::MagicAging) {}
-
-                                    ([BattleActionType]::MagicHealing) {}
-
-                                    ([BattleActionType]::MagicStatAugment) {}
+                            Switch($ToExecute.Type) {
+                                ([BattleActionType]::Physical) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
                                 }
-                            }
 
-                            FailedActionMissed {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) missed!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
-                            }
+                                ([BattleActionType]::ElementalFire) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
 
-                            FailedAttackFailed {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) failed!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
-                            }
+                                ([BattleActionType]::ElementalWater) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
 
-                            FailedElementalMatch {
-                                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    "$(ToExecute.Name) matches the Root Element of $($this.PhaseOneEntity.Name)!",
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new()
-                                )
+                                ([BattleActionType]::ElementalEarth) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+
+                                ([BattleActionType]::ElementalWind) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+
+                                ([BattleActionType]::ElementalLight) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+
+                                ([BattleActionType]::ElementalDark) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+
+                                ([BattleActionType]::ElementalIce) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+
+                                ([BattleActionType]::MagicPoison) {}
+
+                                ([BattleActionType]::MagicConfuse) {}
+
+                                ([BattleActionType]::MagicSleep) {}
+
+                                ([BattleActionType]::MagicAging) {}
+
+                                ([BattleActionType]::MagicHealing) {}
+
+                                ([BattleActionType]::MagicStatAugment) {}
                             }
                         }
 
-                        # Transition to PhaseBExecution
-                        $this.State = [BattleManagerState]::PhaseBExecution
+                        FailedActionMissed {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) missed!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+                        }
+
+                        FailedAttackFailed {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) failed!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+                        }
+
+                        FailedElementalMatch {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) matches the Root Element of $($this.PhaseTwoEntity.Name)!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+                        }
                     }
                 } Else {
                     # Called if the Phase One Entity is unable to execute their action
@@ -16608,45 +16812,222 @@ Class BattleManager {
                         [CCTextDefault24]::new(),
                         [ATDecorationNone]::new()
                     )
-                    $this.State = [BattleManagerState]::PhaseBExecution
                 }
+
+                $this.State = [BattleManagerState]::PhaseBExecution
             }
 
             PhaseBExecution {
                 If($this.CanPhaseTwoAct -EQ $true) {
                     # Called if the Phase Two Entity is able to execute their action
                     # We need to know specifically if this is the Player
+                    [BattleAction]$ToExecute          = $null
+                    [BattleActionResult]$ActionResult = $null
+
                     If($this.PhaseTwoEntity -IS [Player]) {
                         # This is the Player
-                        [BattleAction]$ToExecute = $null
-                        
                         While($null -EQ $ToExecute) {
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
+                            $Script:ThePlayerBattleActionWindow.Draw()
                         }
 
                         # Write the Action used to the Battle Message Log
+                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new()
+                        )
 
-                        # Execute the Action and capture the results
-
-                        # Write the Results to the Battle Message Log
-
-                        # Transition to PhaseBExecution
+                        # Execute the Action and capture the results (Self, Target)
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                     } Else {
                         # This is the Enemy
+                        # Randomly select one of the Enemy's Actions from the Marble Bag
+                        [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
+                        $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
+                        
+                        # Execute the Action
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
+                    }
+
+                    Switch($ActionResult.Type) {
+                        Success {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) was successful!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+    
+                            Switch($ToExecute.Type) {
+                                ([BattleActionType]::Physical) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalFire) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalWater) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalEarth) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalWind) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalLight) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalDark) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::ElementalIce) {
+                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                        "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new()
+                                    )
+                                }
+    
+                                ([BattleActionType]::MagicPoison) {}
+    
+                                ([BattleActionType]::MagicConfuse) {}
+    
+                                ([BattleActionType]::MagicSleep) {}
+    
+                                ([BattleActionType]::MagicAging) {}
+    
+                                ([BattleActionType]::MagicHealing) {}
+    
+                                ([BattleActionType]::MagicStatAugment) {}
+                            }
+                        }
+    
+                        FailedActionMissed {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) missed!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+                        }
+    
+                        FailedAttackFailed {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) failed!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+                        }
+    
+                        FailedElementalMatch {
+                            $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                "$($ToExecute.Name) matches the Root Element of $($this.PhaseOneEntity.Name)!",
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new()
+                            )
+                        }
                     }
                 } Else {
-                    # Called if the Phase One Entity is unable to execute their action
+                    # Called if the Phase Two Entity is unable to execute their action
+                    $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        "$($this.PhaseTwoEntity.Name) is unable to act at this time!",
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new()
+                    )
                 }
+
+                $this.State = [BattleManagerState]::Calculation
             }
 
-            Calculation {}
+            Calculation {
+                # The Turn Limit is determined in the TurnIncrement state.
+                # This state will determine if the HP of one of the Entities has dipped to or below zero.
+                # As with the previous states, we need to know which one is the Player and which one is the Enemy
+                If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                    If($this.PhaseOneEntity -IS [Player]) {
+                        # This means the Player's HP has reached zero and has died
+                        $this.State = [BattleManagerState]::BattleLost
+                    } Else {
+                        # This means the Enemy's HP has reached zero and has died
+                        $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
+                        $this.State        = [BattleManagerState]::BattleWon
+                    }
+                } Elseif($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                    If($this.PhaseTwoEntity -IS [Player]) {
+                        # This means the Player's HP has reached zero and has died
+                        $this.State = [BattleManagerState]::BattleLost
+                    } Else {
+                        # This means the Enemy's HP has reached zero and has died
+                        $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
+                        $this.State        = [BattleManagerState]::BattleWon
+                    }
+                }
 
-            BattleWon {}
+                $this.State = [BattleManagerState]::TurnIncrement
+            }
+
+            BattleWon {
+                $Script:TheBattleStatusMessageWindow.WriteMessage(
+                    'You''ve won the battle!',
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new()
+                )
+
+                Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
+
+                Start-Sleep -Seconds 2
+
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+            }
 
             BattleLost {}
 
             Default {}
         }
+    }
+
+    [Void]Cleanup() {
+        $Script:BattleCursorVisible          = $false
+        $Script:ThePlayerBattleStatWindow    = $null
+        $Script:TheEnemyBattleStatWindow     = $null
+        $Script:ThePlayerBattleActionWindow  = $null
+        $Script:TheBattleStatusMessageWindow = $null
+        $Script:TheBattleEnemyImageWindow    = $null
     }
 }
 
