@@ -15288,6 +15288,7 @@ Class BattleEntityStatusWindow : WindowBase {
             $this.FullLineBlank.Prefix.Coordinates.Row++
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.HpDrawString[0].ToAnsiControlSequenceString())$($this.HpDrawString[1].ToAnsiControlSequenceString())$($this.HpDrawString[2].ToAnsiControlSequenceString())$($this.HpDrawString[3].ToAnsiControlSequenceString())"
+            $this.FullLineBlank.Prefix.Coordinates.Row--
 
             $this.HpDrawDirty = $false
         }
@@ -15299,7 +15300,8 @@ Class BattleEntityStatusWindow : WindowBase {
             $this.FullLineBlank.Prefix.Coordinates.Row++
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MpDrawString[0].ToAnsiControlSequenceString())$($this.MpDrawString[1].ToAnsiControlSequenceString())$($this.MpDrawString[2].ToAnsiControlSequenceString())$($this.MpDrawString[3].ToAnsiControlSequenceString())"
-
+            $this.FullLineBlank.Prefix.Coordinates.Row--
+            
             $this.MpDrawDirty = $false
         }
         If($this.StatL1DrawDirty -EQ $true) {
