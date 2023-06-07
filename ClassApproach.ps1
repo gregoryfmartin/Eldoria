@@ -2101,7 +2101,7 @@ HASHTABLE CREATOR
 #>
 Class BattleEntityProperty {
     Static [Single]$StatNumThresholdCaution          = 0.6D
-    Static [Single]$StatNumThresholdDanger           = 0.2D
+    Static [Single]$StatNumThresholdDanger           = 0.3D
     Static [ConsoleColor24]$StatNumDrawColorSafe     = [CCAppleGreenLight24]::new()
     Static [ConsoleColor24]$StatNumDrawColorCaution  = [CCAppleYellowLight24]::new()
     Static [ConsoleColor24]$StatNumDrawColorDanger   = [CCAppleRedLight24]::new()
@@ -2371,7 +2371,8 @@ Class BAPound : BattleAction {
             [BattleAction]$SelfAction
         )
 
-        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
         [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
         
         If(0 -NE $DecRes) {
