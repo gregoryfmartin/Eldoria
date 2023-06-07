@@ -2419,15 +2419,108 @@ Class BAPayDay : BattleAction {
 }
 
 Class BAFirePunch : BattleAction {
-    BAFirePunch() : base('Fire Punch', [BattleActionType]::ElementalFire, {}, 15, 75, 1.0) {}
+    BAFirePunch() : base('Fire Punch', [BattleActionType]::ElementalFire, {
+        Param(
+            [BattleEntity]$Self,
+            [BattleEntity]$Target,
+            [BattleAction]$SelfAction
+        )
+
+        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
+        
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        }
+    }, 15, 75, 1.0) {}
 }
 
 Class BAIcePunch : BattleAction {
-    BAIcePunch(): base('Ice Punch', [BattleActionType]::ElementalIce, {}, 15, 75, 1.0) {}
+    BAIcePunch(): base('Ice Punch', [BattleActionType]::ElementalIce, {
+        Param(
+            [BattleEntity]$Self,
+            [BattleEntity]$Target,
+            [BattleAction]$SelfAction
+        )
+
+        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
+        
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        }
+    }, 15, 75, 1.0) {}
 }
 
 Class BAThunderPunch : BattleAction {
-    BAThunderPunch() : base('Thunder Punch', [BattleActionType]::ElementalWind, {}, 15, 75, 1.0) {}
+    BAThunderPunch() : base('Thunder Punch', [BattleActionType]::ElementalWind, {
+        Param(
+            [BattleEntity]$Self,
+            [BattleEntity]$Target,
+            [BattleAction]$SelfAction
+        )
+
+        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
+        
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $EffectiveDamage
+            )
+        }
+    }, 15, 75, 1.0) {}
 }
 
 Class BAScratch : BattleAction {
@@ -15301,7 +15394,7 @@ Class BattleEntityStatusWindow : WindowBase {
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MpDrawString[0].ToAnsiControlSequenceString())$($this.MpDrawString[1].ToAnsiControlSequenceString())$($this.MpDrawString[2].ToAnsiControlSequenceString())$($this.MpDrawString[3].ToAnsiControlSequenceString())"
             $this.FullLineBlank.Prefix.Coordinates.Row--
-            
+
             $this.MpDrawDirty = $false
         }
         If($this.StatL1DrawDirty -EQ $true) {
@@ -16704,6 +16797,12 @@ Class BattleManager {
                         [ActionSlot]$SelectedSlot = $($this.PhaseOneEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseOneEntity.ActionListing[$SelectedSlot]
                         
+                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+
                         # Execute the Action
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                     }
@@ -16860,6 +16959,12 @@ Class BattleManager {
                         [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
                         
+                        $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new()
+                        )
+
                         # Execute the Action
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                     }
