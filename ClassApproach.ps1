@@ -2388,10 +2388,12 @@ Class BAPound : BattleAction {
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResultType]::FailedAttackMissed,
-            $Self,
-            $Target,
-            0
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackMissed,
+                $Self,
+                $Target,
+                0
+            )
         }
 
         $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
@@ -2506,10 +2508,12 @@ Class BAFirePunch : BattleAction {
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResultType]::FailedAttackMissed,
-            $Self,
-            $Target,
-            0
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackMissed,
+                $Self,
+                $Target,
+                0
+            )
         }
 
         $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
@@ -2686,10 +2690,12 @@ Class BAScratch : BattleAction {
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResultType]::FailedAttackMissed,
-            $Self,
-            $Target,
-            0
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackMissed,
+                $Self,
+                $Target,
+                0
+            )
         }
 
         $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
@@ -17025,6 +17031,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
 
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
@@ -17033,6 +17040,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17042,6 +17050,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17051,6 +17060,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17060,6 +17070,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17069,6 +17080,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17078,6 +17090,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17087,6 +17100,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17096,30 +17110,37 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicPoison) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicConfuse) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicSleep) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicAging) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicHealing) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicStatAugment) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
                             }
@@ -17132,6 +17153,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
 
                             Switch($ToExecute.Type) {
                                 # Physicals don't apply to Affinity Bonuses
@@ -17149,6 +17171,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17158,6 +17181,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17167,6 +17191,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17176,6 +17201,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17185,6 +17211,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17194,6 +17221,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17203,30 +17231,37 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicPoison) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicConfuse) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicSleep) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicAging) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicHealing) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicStatAugment) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
                             }
@@ -17239,6 +17274,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
 
                             Switch($ToExecute.Type) {
                                 # Physicals don't apply for Affinity Bonuses
@@ -17256,6 +17292,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17265,6 +17302,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17274,6 +17312,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17283,6 +17322,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17292,6 +17332,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17301,6 +17342,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17310,30 +17352,37 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicPoison) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicConfuse) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicSleep) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicAging) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicHealing) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicStatAugment) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
                             }
@@ -17346,6 +17395,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
 
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
@@ -17354,6 +17404,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17363,6 +17414,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17372,6 +17424,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17381,6 +17434,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17390,6 +17444,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17399,6 +17454,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17408,6 +17464,7 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
@@ -17417,30 +17474,37 @@ Class BattleManager {
                                         [CCTextDefault24]::new(),
                                         [ATDecorationNone]::new()
                                     )
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicPoison) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicConfuse) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicSleep) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicAging) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicHealing) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
 
                                 ([BattleActionType]::MagicStatAugment) {
+                                    Start-Sleep -Seconds 3
                                     Break
                                 }
                             }
@@ -17453,6 +17517,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
                             Break
                         }
 
@@ -17462,6 +17527,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
                             Break
                         }
 
@@ -17471,6 +17537,7 @@ Class BattleManager {
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new()
                             )
+                            Start-Sleep -Seconds 3
                             Break
                         }
                     }
@@ -17481,6 +17548,7 @@ Class BattleManager {
                         [CCTextDefault24]::new(),
                         [ATDecorationNone]::new()
                     )
+                    Start-Sleep -Seconds 3
                 }
 
                 $this.State = [BattleManagerState]::PhaseBExecution
