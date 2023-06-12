@@ -16678,6 +16678,8 @@ Class BattleStatusMessageWindow : WindowBase {
     Static [ATCoordinates]$MessageDDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$MessageEDrawCoordinates = [ATCoordinatesNone]::new()
 
+    Static [Single]$MessageSleepTime = 0.2
+
     [ATString[]]$MessageHistory
     [ATString]$MessageBlank = [ATString]::new(
         [ATStringPrefix]::new(
@@ -16781,6 +16783,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
 
             $this.MessageEDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageDDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
@@ -16789,6 +16792,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
 
             $this.MessageDDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageCDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
@@ -16797,6 +16801,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
             $this.MessageCDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageBDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
@@ -16805,6 +16810,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
             $this.MessageBDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageADirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
@@ -16813,6 +16819,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             $this.MessageADirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
     }
 
