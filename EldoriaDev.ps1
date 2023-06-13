@@ -2028,10 +2028,34 @@ Class ATStringNone : ATString {
     }
 }
 
+Class ATStringCompositeSc : ATString {
+    ATStringCompositeSc(
+        [ConsoleColor24]$ForegroundColor,
+        [ATDecoration]$Decoration,
+        [String]$Data
+    ): base() {
+        $this.Prefix = [ATStringPrefix]::new(
+            [ATForegroundColor24]::new($ForegroundColor),
+            [ATBackgroundColor24None]::new(),
+            $Decoration,
+            [ATCoordinatesNone]::new()
+        )
+        # $this.Prefix.ForegroundColor = [ATForegroundColor24]::new($ForegroundColor)
+        # $this.Prefix.Decorations     = $Decoration
+        $this.UserData               = $Data
+    }
+}
+
 Class ATStringComposite {
     [List[ATString]]$CompositeActual = [List[ATString]]::new()
 
-    ATStringComposite() {}
+    ATStringComposite() {
+        If($null -EQ $this.CompositeActual) {
+            $this.CompositeActual = [List[ATString]]::new()
+        }
+
+        $this.CompositeActual.Add([ATStringNone]::new()) | Out-Null
+    }
 
     ATStringComposite(
         [ATString[]]$Components
@@ -2057,6 +2081,7 @@ Class ATStringComposite {
         Foreach($b in $this.CompositeActual) {
             $a += $b.ToAnsiControlSequenceString()
         }
+        # "$a" | Out-File '.\Sample.txt' -Append
 
         Return $a
     }
@@ -16680,6 +16705,8 @@ Class BattleStatusMessageWindow : WindowBase {
 
     Static [Single]$MessageSleepTime = 0.2
 
+    [ATStringComposite[]]$MessageHistoryComposite
+
     [ATString[]]$MessageHistory
     [ATString]$MessageBlank = [ATString]::new(
         [ATStringPrefix]::new(
@@ -16718,6 +16745,20 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleStatusMessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageBDrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageBDrawCoordinates.Column)
         [BattleStatusMessageWindow]::MessageDDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageCDrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageCDrawCoordinates.Column)
         [BattleStatusMessageWindow]::MessageEDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageDDrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageDDrawCoordinates.Column)
+
+        $this.MessageHistoryComposite = @(
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new()
+        )
+
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
 
         $this.MessageHistory = @(
             [ATString]::new(
@@ -16780,7 +16821,9 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
+            # "E: $([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())" | Out-File '.\Sample.txt' -Append
+            Write-Host "$([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
 
             $this.MessageEDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
@@ -16789,7 +16832,9 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
+            # "D: $([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())" | Out-File '.\Sample.txt' -Append
+            Write-Host "$([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
 
             $this.MessageDDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
@@ -16798,7 +16843,8 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            Write-Host "$([BattleStatusMessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
             $this.MessageCDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
@@ -16807,7 +16853,8 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            Write-Host "$([BattleStatusMessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
             $this.MessageBDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
@@ -16816,7 +16863,8 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            Write-Host "$([BattleStatusMessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             $this.MessageADirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
@@ -16854,6 +16902,37 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor = $ForegroundColor
         $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations     = $Decoration
 
+        $this.MessageADirty = $true
+        $this.MessageBDirty = $true
+        $this.MessageCDirty = $true
+        $this.MessageDDirty = $true
+        $this.MessageEDirty = $true
+    }
+
+    [Void]WriteCompositeMessage(
+        [ATString[]]$ATComposite
+    ) {
+        # Assign to A
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual)
+        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
+
+        # Assign to B
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual)
+        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
+
+        # Assign to C
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual)
+        
+        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
+
+        # Assign to D
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual)
+        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
+
+        # Assign to E
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef] = [ATStringComposite]::new($ATComposite)
+        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
+        
         $this.MessageADirty = $true
         $this.MessageBDirty = $true
         $this.MessageCDirty = $true
@@ -16985,6 +17064,8 @@ Class BattleManager {
                     $this.PhaseTwoEntity = $Script:ThePlayer
                 }
 
+                # TODO: Inform of the ordering
+
                 $this.PhaseOneEntity.Update()
                 $this.PhaseTwoEntity.Update()
 
@@ -17007,10 +17088,64 @@ Class BattleManager {
                         }
 
                         # Write the Action used to the Battle Message Log
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                        #     @(
+                        #         [ATString]::new(
+                        #             [ATStringPrefix]::new(
+                        #                 $this.PhaseOneEntity.NameDrawColor,
+                        #                 [ATBackgroundColor24None]::new(),
+                        #                 [ATDecorationNone]::new(),
+                        #                 [ATCoordinatesNone]::new()
+                        #             ),
+                        #             $this.PhaseOneEntity.Name,
+                        #             $true
+                        #         ),
+                        #         [ATString]::new(
+                        #             [ATStringPrefix]::new(
+                        #                 [CCTextDefault24]::new(),
+                        #                 [ATBackgroundColor24None]::new(),
+                        #                 [ATDecorationNone]::new(),
+                        #                 [ATCoordinatesNone]::new()
+                        #             ),
+                        #             ' uses ',
+                        #             $true
+                        #         ),
+                        #         [ATString]::new(
+                        #             [ATStringPrefix]::new(
+                        #                 $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                        #                 [ATBackgroundColor24None]::new(),
+                        #                 [ATDecorationNone]::new(),
+                        #                 [ATCoordinatesNone]::new()
+                        #             ),
+                        #             $ToExecute.Name,
+                        #             $true
+                        #         )
+                        #     )
+                        # )
+                        # Write-Host "$([ATStringCompositeSc]::new($this.PhaseOneEntity.NameDrawColor, [ATDecorationNone]::new(), $this.PhaseOneEntity.Name).ToAnsiControlSequenceString())"
+                        $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    $this.PhaseOneEntity.NameDrawColor,
+                                    [ATDecorationNone]::new(),
+                                    $this.PhaseOneEntity.Name
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' uses '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                    [ATDecorationNone]::new(),
+                                    $ToExecute.Name
+                                )
+                            )
                         )
 
                         # Execute the Action and capture the results (Self, Target)
@@ -17021,10 +17156,64 @@ Class BattleManager {
                         [ActionSlot]$SelectedSlot = $($this.PhaseOneEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseOneEntity.ActionListing[$SelectedSlot]
                         
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                        #     @(
+                        #         [ATString]::new(
+                        #             [ATStringPrefix]::new(
+                        #                 $this.PhaseOneEntity.NameDrawColor,
+                        #                 [ATBackgroundColor24None]::new(),
+                        #                 [ATDecorationNone]::new(),
+                        #                 [ATCoordinatesNone]::new()
+                        #             ),
+                        #             $this.PhaseOneEntity.Name,
+                        #             $true
+                        #         ),
+                        #         [ATString]::new(
+                        #             [ATStringPrefix]::new(
+                        #                 [CCTextDefault24]::new(),
+                        #                 [ATBackgroundColor24None]::new(),
+                        #                 [ATDecorationNone]::new(),
+                        #                 [ATCoordinatesNone]::new()
+                        #             ),
+                        #             ' uses ',
+                        #             $true
+                        #         ),
+                        #         [ATString]::new(
+                        #             [ATStringPrefix]::new(
+                        #                 $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                        #                 [ATBackgroundColor24None]::new(),
+                        #                 [ATDecorationNone]::new(),
+                        #                 [ATCoordinatesNone]::new()
+                        #             ),
+                        #             $ToExecute.Name,
+                        #             $true
+                        #         )
+                        #     )
+                        # )
+                        # Write-Host "$([ATStringCompositeSc]::new($this.PhaseOneEntity.NameDrawColor, [ATDecorationNone]::new(), $this.PhaseOneEntity.Name).ToAnsiControlSequenceString())"
+                        $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    $this.PhaseOneEntity.NameDrawColor,
+                                    [ATDecorationNone]::new(),
+                                    $this.PhaseOneEntity.Name
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' uses '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                    [ATDecorationNone]::new(),
+                                    $ToExecute.Name
+                                )
+                            )
                         )
 
                         # Execute the Action
@@ -17033,81 +17222,450 @@ Class BattleManager {
 
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful, and scored a CRITICAL!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            #     @(
+                            #         [ATString]::new(
+                            #             [ATStringPrefix]::new(
+                            #                 $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                            #                 [ATBackgroundColor24None]::new(),
+                            #                 [ATDecorationNone]::new(),
+                            #                 [ATCoordinatesNone]::new()
+                            #             ),
+                            #             $ToExecute.Name,
+                            #             $true
+                            #         ),
+                            #         [ATString]::new(
+                            #             [ATStringPrefix]::new(
+                            #                 [CCTextDefault24]::new(),
+                            #                 [ATBackgroundColor24None]::new(),
+                            #                 [ATDecorationNone]::new(),
+                            #                 [ATCoordinatesNone]::new()
+                            #             ),
+                            #             ' was successful, and scored a ',
+                            #             $true
+                            #         ),
+                            #         [ATString]::new(
+                            #             [ATStringPrefix]::new(
+                            #                 [CCAppleYellowLight24]::new(),
+                            #                 [ATBackgroundColor24None]::new(),
+                            #                 [ATDecoration]::new($true),
+                            #                 [ATCoordinatesNone]::new()
+                            #             ),
+                            #             'CRITICAL!',
+                            #             $true
+                            #         )
+                            #     )
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful, and scored a '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'CRITICAL!'
+                                    )
+                                )
                             )
 
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                    #     @(
+                                    #         [ATString]::new(
+                                    #             [ATStringPrefix]::new(
+                                    #                 $this.PhaseOneEntity.NameDrawColor,
+                                    #                 [ATBackgroundColor24None]::new(),
+                                    #                 [ATDecorationNone]::new(),
+                                    #                 [ATCoordinatesNone]::new()
+                                    #             ),
+                                    #             $this.PhaseOneEntity.Name,
+                                    #             $true
+                                    #         ),
+                                    #         [ATString]::new(
+                                    #             [ATStringPrefix]::new(
+                                    #                 [CCTextDefault24]::new(),
+                                    #                 [ATBackgroundColor24None]::new(),
+                                    #                 [ATDecorationNone]::new(),
+                                    #                 [ATCoordinatesNone]::new()
+                                    #             ),
+                                    #             ' hit ',
+                                    #             $true
+                                    #         ),
+                                    #         [ATString]::new(
+                                    #             [ATStringPrefix]::new(
+                                    #                 $this.PhaseTwoEntity.NameDrawColor,
+                                    #                 [ATBackgroundColor24None]::new(),
+                                    #                 [ATDecorationNone]::new(),
+                                    #                 [ATCoordinatesNone]::new()
+                                    #             ),
+                                    #             $this.PhaseTwoEntity.Name,
+                                    #             $true
+                                    #         ),
+                                    #         [ATString]::new(
+                                    #             [ATStringPrefix]::new(
+                                    #                 [CCTextDefault24]::new(),
+                                    #                 [ATBackgroundColor24None]::new(),
+                                    #                 [ATDecorationNone]::new(),
+                                    #                 [ATCoordinatesNone]::new()
+                                    #             ),
+                                    #             ' for ',
+                                    #             $true
+                                    #         )
+                                    #     )
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' hit '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17140,10 +17698,29 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithAffinityBonus) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful, and scored an AFFINITY BONUS!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful, and scored an AFFINITY BONUS!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful, and scored an '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'AFFINITY BONUS!'
+                                    )
+                                )
                             )
 
                             Switch($ToExecute.Type) {
@@ -17157,64 +17734,302 @@ Class BattleManager {
                                 # }
 
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17247,10 +18062,39 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithCritAndAffinityBonus) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful, and scored a CRITICAL and AFFINITY BONUS!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL and AFFINITY BONUS!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful, and scored a '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'CRITICAL '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'and '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'AFFINITY BONUS!'
+                                    )
+                                )
                             )
 
                             Switch($ToExecute.Type) {
@@ -17264,64 +18108,302 @@ Class BattleManager {
                                 # }
 
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17354,81 +18436,367 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::Success) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful!'
+                                    )
+                                )
                             )
 
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' hit '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17461,38 +18829,80 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::FailedAttackMissed) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) missed!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) missed!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' missed!'
+                                    )
+                                )
                             )
                             Break
                         }
 
                         ([BattleActionResultType]::FailedAttackFailed) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) failed!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) failed!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' failed!'
+                                    )
+                                )
                             )
                             Break
                         }
 
                         ([BattleActionResultType]::FailedElementalMatch) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) matches the Root Element of $($this.PhaseTwoEntity.Name)!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
-                            )
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) matches the Root Element of $($this.PhaseTwoEntity.Name)!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
                             Break
                         }
                     }
                 } Else {
                     # Called if the Phase One Entity is unable to execute their action
-                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        "$($this.PhaseOneEntity.Name) is unable to act at this time!",
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new()
+                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                    #     "$($this.PhaseOneEntity.Name) is unable to act at this time!",
+                    #     [CCTextDefault24]::new(),
+                    #     [ATDecorationNone]::new()
+                    # )
+                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                $this.PhaseOneEntity.NameDrawColor,
+                                [ATDecorationNone]::new(),
+                                $this.PhaseOneEntity.Name
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                ' is unable to act at this time!'
+                            )
+                        )
                     )
                 }
 
@@ -17514,10 +18924,29 @@ Class BattleManager {
                         }
 
                         # Write the Action used to the Battle Message Log
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    $this.PhaseTwoEntity.NameDrawColor,
+                                    [ATDecorationNone]::new(),
+                                    $this.PhaseTwoEntity.Name
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' uses '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                    [ATDecorationNone]::new(),
+                                    $ToExecute.Name
+                                )
+                            )
                         )
 
                         # Execute the Action and capture the results (Self, Target)
@@ -17528,10 +18957,29 @@ Class BattleManager {
                         [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
                         
-                        $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                        #     "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
+                        #     [CCTextDefault24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    $this.PhaseTwoEntity.NameDrawColor,
+                                    [ATDecorationNone]::new(),
+                                    $this.PhaseTwoEntity.Name
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' uses '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                    [ATDecorationNone]::new(),
+                                    $ToExecute.Name
+                                )
+                            )
                         )
 
                         # Execute the Action
@@ -17540,81 +18988,372 @@ Class BattleManager {
 
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful, and scored a CRITICAL!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful, and scored a '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'CRITICAL!'
+                                    )
+                                )
                             )
     
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' hit '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17647,10 +19386,29 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithAffinityBonus) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful, and scored an AFFINITY BONUS!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful, and scored an AFFINITY BONUS!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful, and scored an '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'AFFINITY BONUS!'
+                                    )
+                                )
                             )
     
                             Switch($ToExecute.Type) {
@@ -17663,64 +19421,302 @@ Class BattleManager {
                                 # }
     
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17753,10 +19749,39 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithCritAndAffinityBonus) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful, and scored a CRITICAL and AFFINITY BONUS!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL and AFFINITY BONUS!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful, and scored a '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'CRITICAL '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'and '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowLight24]::new(),
+                                        [ATDecoration]::new($true),
+                                        'AFFINITY BONUS!'
+                                    )
+                                )
                             )
     
                             Switch($ToExecute.Type) {
@@ -17769,64 +19794,302 @@ Class BattleManager {
                                 # }
     
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17859,81 +20122,367 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::Success) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) was successful!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) was successful!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' was successful!'
+                                    )
+                                )
                             )
     
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' hit '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalFire) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' burned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' soaked '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' stoned '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' sheared '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast holy power on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast unholy power on  '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                        "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new()
+                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
+                                    #     [CCTextDefault24]::new(),
+                                    #     [ATDecorationNone]::new()
+                                    # )
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseTwoEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseTwoEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' cast ice powers on '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $this.PhaseOneEntity.NameDrawColor,
+                                                [ATDecorationNone]::new(),
+                                                $this.PhaseOneEntity.Name
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' for '
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                                [ATDecorationNone]::new(),
+                                                $ActionResult.ActionEffectSum
+                                            ),
+                                            [ATStringCompositeSc]::new(
+                                                [CCTextDefault24]::new(),
+                                                [ATDecorationNone]::new(),
+                                                ' damage.'
+                                            )
+                                        )
                                     )
                                     Break
                                 }
@@ -17966,38 +20515,80 @@ Class BattleManager {
                         }
     
                         ([BattleActionResultType]::FailedAttackMissed) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) missed!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) missed!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' missed!'
+                                    )
+                                )
                             )
                             Break
                         }
     
                         ([BattleActionResultType]::FailedAttackFailed) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) failed!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) failed!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
+                                        [ATDecorationNone]::new(),
+                                        $ToExecute.Name
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' failed!'
+                                    )
+                                )
                             )
                             Break
                         }
     
                         ([BattleActionResultType]::FailedElementalMatch) {
-                            $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                "$($ToExecute.Name) matches the Root Element of $($this.PhaseOneEntity.Name)!",
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new()
-                            )
+                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                            #     "$($ToExecute.Name) matches the Root Element of $($this.PhaseOneEntity.Name)!",
+                            #     [CCTextDefault24]::new(),
+                            #     [ATDecorationNone]::new()
+                            # )
                             Break
                         }
                     }
                 } Else {
                     # Called if the Phase Two Entity is unable to execute their action
-                    $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        "$($this.PhaseTwoEntity.Name) is unable to act at this time!",
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new()
+                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                    #     "$($this.PhaseTwoEntity.Name) is unable to act at this time!",
+                    #     [CCTextDefault24]::new(),
+                    #     [ATDecorationNone]::new()
+                    # )
+                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                $this.PhaseTwoEntity.NameDrawColor,
+                                [ATDecorationNone]::new(),
+                                $this.PhaseTwoEntity.Name
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                ' is unable to act at this time!'
+                            )
+                        )
                     )
                 }
 
@@ -18032,10 +20623,17 @@ Class BattleManager {
             }
 
             BattleWon {
-                $Script:TheBattleStatusMessageWindow.WriteMessage(
-                    'You''ve won the battle!',
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheBattleStatusMessageWindow.WriteMessage(
+                #     'You''ve won the battle!',
+                #     [CCTextDefault24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        'You''ve won the battle!'
+                    )
                 )
 
                 Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
