@@ -16707,7 +16707,7 @@ Class BattleStatusMessageWindow : WindowBase {
 
     [ATStringComposite[]]$MessageHistoryComposite
 
-    [ATString[]]$MessageHistory
+    # [ATString[]]$MessageHistory
     [ATString]$MessageBlank = [ATString]::new(
         [ATStringPrefix]::new(
             [ATForegroundColor24None]::new(),
@@ -16760,58 +16760,58 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
 
-        $this.MessageHistory = @(
-            [ATString]::new(
-                [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
-                    [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
-                    [BattleStatusMessageWindow]::MessageADrawCoordinates
-                ),
-                '',
-                $true
-            ),
-            [ATString]::new(
-                [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
-                    [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
-                    [BattleStatusMessageWindow]::MessageBDrawCoordinates
-                ),
-                '',
-                $true
-            ),
-            [ATString]::new(
-                [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
-                    [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
-                    [BattleStatusMessageWindow]::MessageCDrawCoordinates
-                ),
-                '',
-                $true
-            ),
-            [ATString]::new(
-                [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
-                    [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
-                    [BattleStatusMessageWindow]::MessageDDrawCoordinates
-                ),
-                '',
-                $true
-            ),
-            [ATString]::new(
-                [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
-                    [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
-                    [BattleStatusMessageWindow]::MessageEDrawCoordinates
-                ),
-                '',
-                $true
-            )
-        )
+        # $this.MessageHistory = @(
+        #     [ATString]::new(
+        #         [ATStringPrefix]::new(
+        #             [CCTextDefault24]::new(),
+        #             [ATBackgroundColor24None]::new(),
+        #             [ATDecorationNone]::new(),
+        #             [BattleStatusMessageWindow]::MessageADrawCoordinates
+        #         ),
+        #         '',
+        #         $true
+        #     ),
+        #     [ATString]::new(
+        #         [ATStringPrefix]::new(
+        #             [CCTextDefault24]::new(),
+        #             [ATBackgroundColor24None]::new(),
+        #             [ATDecorationNone]::new(),
+        #             [BattleStatusMessageWindow]::MessageBDrawCoordinates
+        #         ),
+        #         '',
+        #         $true
+        #     ),
+        #     [ATString]::new(
+        #         [ATStringPrefix]::new(
+        #             [CCTextDefault24]::new(),
+        #             [ATBackgroundColor24None]::new(),
+        #             [ATDecorationNone]::new(),
+        #             [BattleStatusMessageWindow]::MessageCDrawCoordinates
+        #         ),
+        #         '',
+        #         $true
+        #     ),
+        #     [ATString]::new(
+        #         [ATStringPrefix]::new(
+        #             [CCTextDefault24]::new(),
+        #             [ATBackgroundColor24None]::new(),
+        #             [ATDecorationNone]::new(),
+        #             [BattleStatusMessageWindow]::MessageDDrawCoordinates
+        #         ),
+        #         '',
+        #         $true
+        #     ),
+        #     [ATString]::new(
+        #         [ATStringPrefix]::new(
+        #             [CCTextDefault24]::new(),
+        #             [ATBackgroundColor24None]::new(),
+        #             [ATDecorationNone]::new(),
+        #             [BattleStatusMessageWindow]::MessageEDrawCoordinates
+        #         ),
+        #         '',
+        #         $true
+        #     )
+        # )
     }
 
     [Void]Draw() {
@@ -16871,43 +16871,43 @@ Class BattleStatusMessageWindow : WindowBase {
         }
     }
 
-    [Void]WriteMessage(
-        [String]$Message,
-        [ATForegroundColor24]$ForegroundColor,
-        [ATDecoration]$Decoration
-    ) {
-        # This is ordered a bit different than the legacy Message Window, start with A and work the way up
-        # Assign to A
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].UserData
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.Decorations
+    # [Void]WriteMessage(
+    #     [String]$Message,
+    #     [ATForegroundColor24]$ForegroundColor,
+    #     [ATDecoration]$Decoration
+    # ) {
+    #     # This is ordered a bit different than the legacy Message Window, start with A and work the way up
+    #     # Assign to A
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].UserData
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.Decorations
 
-        # Assign to B
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].UserData
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.Decorations
+    #     # Assign to B
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].UserData
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.Decorations
 
-        # Assign to C
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].UserData
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.ForegroundColor
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.Decorations
+    #     # Assign to C
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].UserData
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.ForegroundColor
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.Decorations
 
-        # Assign to D
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].UserData
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations
+    #     # Assign to D
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].UserData
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations
 
-        # Assign to E
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].UserData               = $Message
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor = $ForegroundColor
-        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations     = $Decoration
+    #     # Assign to E
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].UserData               = $Message
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor = $ForegroundColor
+    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations     = $Decoration
 
-        $this.MessageADirty = $true
-        $this.MessageBDirty = $true
-        $this.MessageCDirty = $true
-        $this.MessageDDirty = $true
-        $this.MessageEDirty = $true
-    }
+    #     $this.MessageADirty = $true
+    #     $this.MessageBDirty = $true
+    #     $this.MessageCDirty = $true
+    #     $this.MessageDDirty = $true
+    #     $this.MessageEDirty = $true
+    # }
 
     [Void]WriteCompositeMessage(
         [ATString[]]$ATComposite
@@ -16986,6 +16986,43 @@ Class BattleEnemyImageWindow : WindowBase {
     }
 }
 
+Class BattlePhaseIndicator {
+    [ATStringComposite]$IndicatorStringActual = [ATStringComposite]::new()
+    
+    [ATCoordinates]$IndicatorDrawLocation = [ATCoordinatesNone]::new()
+
+    [Boolean]$IndicatorDrawDirty = $true
+
+    BattlePhaseIndicator() {
+        $this.IndicatorDrawLocation = [ATCoordinates]::new(
+            24,
+            1
+        )
+    }
+
+    [Void]Draw(
+        [BattleEntity]$ActingEntity
+    ) {
+        If($this.IndicatorDrawDirty -EQ $true) {
+            $this.IndicatorStringActual.CompositeActual = @(
+                [ATStringCompositeSc]::new(
+                    [CCApplePinkLight24]::new(),
+                    [ATDecorationNone]::new(),
+                    'Now Acting: '
+                ),
+                [ATStringCompositeSc]::new(
+                    $ActingEntity.NameDrawColor,
+                    [ATDecorationNone]::new(),
+                    $ActingEntity.Name
+                )
+            )
+            Write-Host "$($this.IndicatorDrawLocation.ToAnsiControlSequenceString())$($this.IndicatorStringActual.ToAnsiControlSequenceString())"
+            $Script:Rui.CursorPosition = $([ATCoordinates]::new(0, 0)).ToAutomationCoordinates()
+            $this.IndicatorDrawDirty = $true
+        }
+    }
+}
+
 Class BattleManager {
     [BattleManagerState]$State = [BattleManagerState]::TurnIncrement
 
@@ -16999,6 +17036,8 @@ Class BattleManager {
     [BattleEntity]$PhaseTwoEntity = $null
 
     [ScriptBlock]$SpoilsAction = $null
+
+    [BattlePhaseIndicator]$PhaseIndicator = $null
 
     BattleManager() {
         If($Script:BattleCursorVisible -EQ $false) {
@@ -17020,6 +17059,9 @@ Class BattleManager {
         If($null -EQ $Script:TheBattleEnemyImageWindow) {
             $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
         }
+        If($null -EQ $this.PhaseIndicator) {
+            $this.PhaseIndicator = [BattlePhaseIndicator]::new()
+        }
     }
 
     [Void]Update() {
@@ -17028,6 +17070,7 @@ Class BattleManager {
         $Script:TheBattleEnemyImageWindow.Draw()
         $Script:ThePlayerBattleActionWindow.Draw()
         $Script:TheBattleStatusMessageWindow.Draw()
+        $Script:Rui.CursorPosition = $([ATCoordinates]::new(0, 0)).ToAutomationCoordinates()
 
         Switch($this.State) {
             TurnIncrement {
@@ -17074,6 +17117,10 @@ Class BattleManager {
             }
 
             PhaseAExecution {
+                # Update the Phase Indicator
+                $this.PhaseIndicator.IndicatorDrawDirty = $true
+                $this.PhaseIndicator.Draw($this.PhaseOneEntity)
+
                 If($this.CanPhaseOneAct -EQ $true) {
                     # Called if the Phase One Entity is able to execute their action
                     # We need to know specifically if this is the Player
@@ -18910,6 +18957,10 @@ Class BattleManager {
             }
 
             PhaseBExecution {
+                # Update the Phase Indicator
+                $this.PhaseIndicator.IndicatorDrawDirty = $true
+                $this.PhaseIndicator.Draw($this.PhaseTwoEntity)
+
                 If($this.CanPhaseTwoAct -EQ $true) {
                     # Called if the Phase Two Entity is able to execute their action
                     # We need to know specifically if this is the Player
