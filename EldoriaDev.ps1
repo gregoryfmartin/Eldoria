@@ -2044,6 +2044,20 @@ Class ATStringCompositeSc : ATString {
         # $this.Prefix.Decorations     = $Decoration
         $this.UserData               = $Data
     }
+
+    ATStringCompositeSc(
+        [ATForegroundColor24]$ForegroundColor,
+        [ATDecoration]$Decoration,
+        [String]$Data
+    ): base() {
+        $this.Prefix = [ATStringPrefix]::new(
+            $ForegroundColor,
+            [ATBackgroundColor24None]::new(),
+            $Decoration,
+            [ATCoordinatesNone]::new()
+        )
+        $this.UserData = $Data
+    }
 }
 
 Class ATStringComposite {
@@ -16987,7 +17001,10 @@ Class BattleEnemyImageWindow : WindowBase {
 }
 
 Class BattlePhaseIndicator {
+    # The blank should be 14 characters
+
     [ATStringComposite]$IndicatorStringActual = [ATStringComposite]::new()
+    [ATStringComposite]$IndicatorStringBlank  = [ATStringComposite]::new()
     
     [ATCoordinates]$IndicatorDrawLocation = [ATCoordinatesNone]::new()
 
@@ -17004,11 +17021,23 @@ Class BattlePhaseIndicator {
         [BattleEntity]$ActingEntity
     ) {
         If($this.IndicatorDrawDirty -EQ $true) {
+            $this.IndicatorStringBlank.CompositeActual = @(
+                [ATStringCompositeSc]::new(
+                    [CCApplePinkLight24]::new(),
+                    [ATDecorationNone]::new(),
+                    'Turn: '
+                ),
+                [ATStringCompositeSc]::new(
+                    [ATForegroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    '              '
+                )
+            )
             $this.IndicatorStringActual.CompositeActual = @(
                 [ATStringCompositeSc]::new(
                     [CCApplePinkLight24]::new(),
                     [ATDecorationNone]::new(),
-                    'Now Acting: '
+                    'Turn: '
                 ),
                 [ATStringCompositeSc]::new(
                     $ActingEntity.NameDrawColor,
@@ -17016,6 +17045,7 @@ Class BattlePhaseIndicator {
                     $ActingEntity.Name
                 )
             )
+            Write-Host "$($this.IndicatorDrawLocation.ToAnsiControlSequenceString())$($this.IndicatorStringBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.IndicatorDrawLocation.ToAnsiControlSequenceString())$($this.IndicatorStringActual.ToAnsiControlSequenceString())"
             $Script:Rui.CursorPosition = $([ATCoordinates]::new(0, 0)).ToAutomationCoordinates()
             $this.IndicatorDrawDirty = $true
