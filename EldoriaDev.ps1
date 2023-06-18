@@ -15532,7 +15532,7 @@ Class BattleEntityStatusWindow : WindowBase {
     [Boolean]$StatL4DrawDirty = $true
 
     [ATString]$FullLineBlank      = [ATStringNone]::new()
-    [ATString]$NameDrawString     = [ATStringNone]::new()
+    [ATString[]]$NameDrawString     = @([ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$HpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$MpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$StatL1DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
@@ -15625,7 +15625,7 @@ Class BattleEntityStatusWindow : WindowBase {
 
             $this.FullLineBlank.Prefix.Coordinates = $this.NameDrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.NameDrawString.ToAnsiControlSequenceString())"
+            Write-Host "$($this.NameDrawString[0].ToAnsiControlSequenceString())$($this.NameDrawString[1].ToAnsiControlSequenceString())"
 
             $this.NameDrawDirty = $false
         }
@@ -15692,14 +15692,24 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 
     [Void]CreateNameDrawString() {
-        $this.NameDrawString = [ATString]::new(
+        $this.NameDrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
-                [ATForegroundColor24None]::new(),
+                $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item2,
                 [ATBackgroundColor24None]::new(),
                 [ATDecorationNone]::new(),
                 $this.NameDrawCoordinates
             ),
-            $this.BERef.Name,
+            $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item1,
+            $true
+        )
+        $this.NameDrawString[1] = [ATString]::new(
+            [ATStringPrefix]::new(
+                $this.BERef.NameDrawColor,
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            " $($this.BERef.Name)",
             $true
         )
     }
