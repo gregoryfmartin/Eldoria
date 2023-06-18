@@ -16891,7 +16891,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Write-Host "$([BattleStatusMessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             $this.MessageADirty = $false
-            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime + 0.4)
         }
     }
 
