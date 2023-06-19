@@ -687,6 +687,7 @@ Enum BattleActionResultType {
     FailedAttackMissed
     FailedAttackFailed
     FailedElementalMatch
+    FailedNoUsesRemaining
 }
 
 # BATTLE ACTION TYPE CHARACTER ADORNMENT TABLE
@@ -2356,16 +2357,20 @@ Class BattleAction {
     [ScriptBlock]$Effect
     [BattleActionType]$Type
     [Int]$Uses
+    [Int]$UsesMax
     [Int]$EffectValue
     [Single]$Chance
+    [String]$Description
 
     BattleAction() {
         $this.Name        = ''
         $this.Type        = [BattleActionType]::None
         $this.Effect      = $null
         $this.Uses        = 0
+        $this.UsesMax     = 0
         $this.EffectValue = 0
         $this.Chance      = 0.0
+        $this.Description = ''
     }
 
     BattleAction(
@@ -2380,8 +2385,30 @@ Class BattleAction {
         $this.Type        = $Type
         $this.Effect      = $Effect
         $this.Uses        = $Uses
+        $this.UsesMax     = 0
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
+        $this.Description = ''
+    }
+
+    BattleAction(
+        [String]$Name,
+        [String]$Description,
+        [BattleActionType]$Type,
+        [ScriptBlock]$Effect,
+        [Int]$Uses,
+        [Int]$UsesMax,
+        [Int]$EffectValue,
+        [Single]$Chance
+    ) {
+        $this.Name        = $Name
+        $this.Type        = $Type
+        $this.Effect      = $Effect
+        $this.Uses        = $Uses
+        $this.UsesMax     = $UsesMax
+        $this.EffectValue = $EffectValue
+        $this.Chance      = $Chance
+        $this.Description = $Description
     }
 }
 
@@ -2406,6 +2433,699 @@ Class BattleActionResult {
     }
 }
 
+###############################################################################
+# BEGIN BATTLE ACTIONS THAT ARE ACTUALLY GOING TO BE USED IN THE GAME
+###############################################################################
+
+Class BAPunch : BattleAction {
+    BAPunch() : base() {
+        $this.Name        = 'Punch'
+        $this.Description = 'A punch. Just like dad taught you.'
+        $this.Type        = [BattleActionType]::Physical
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+                
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor     = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+    
+                # Because this is a Physical attack, there's no need to calculate Affinity damage
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+        
+                # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+                # [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+                
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+        
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        # Crit with no Affinity Bonus
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        # Affinity with no Crit Bonus
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        # Crit and Affinity Bonus Applied
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+        
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 30
+        $this.UsesMax     = 30
+        $this.EffectValue = 50
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAKick : BattleAction {
+    BAKick() : base() {
+        $this.Name        = 'Kick'
+        $this.Description = 'A kick. Don''t stub your toe.'
+        $this.Type        = [BattleActionType]::Physical
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+            
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+            
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+            
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+            
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+            
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+            
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+            
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 30
+        $this.UsesMax     = 30
+        $this.EffectValue = 50
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAKarateChop : BattleAction {
+    BAKarateChop() : base() {
+        $this.Name        = 'Karate Chop'
+        $this.Description = 'Test your might!'
+        $this.Type        = [BattleActionType]::Physical
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+            
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+            
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+            
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+            
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+            
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+            
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+            
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 20
+        $this.MaxUses     = 20
+        $this.EffectValue = 60
+        $this.Chance      = 0.8
+    }
+}
+
+Class BAKarateKick : BattleAction {
+    BAKarateKick() : base() {
+        $this.Name        = 'Karate Kick'
+        $this.Description = 'I hope your shins are fit.'
+        $this.Type        = [BattleActionType]::Physical
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+            
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+            
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+            
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+            
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+            
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+            
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+            
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 20
+        $this.UsesMax     = 20
+        $this.EffectValue = 65
+        $this.Chance      = 0.75
+    }
+}
+
+Class BABash : BattleAction {
+    BABash() : base() {
+        $this.Name        = 'Bash'
+        $this.Description = 'HULK SMASH!'
+        $this.Type        = [BattleActionType]::Physical
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+            
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+            
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+            
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+            
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+            
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+            
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+            
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 20
+        $this.UsesMax     = 20
+        $this.EffectValue = 75
+        $this.Chance      = 0.7
+    }
+}
+
+Class BABite : BattleAction {
+    BABite() : base() {
+        $this.Name        = 'Bite'
+        $this.Description = 'When fists fail, teeth do just fine.'
+        $this.Type        = [BattleActionType]::Physical
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+            
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+            
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+            
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+            
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+            
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+            
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+            
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 30
+        $this.UsesMax     = 30
+        $this.EffectValue = 40
+        $this.Chance      = 0.9
+    }
+}
+
+###############################################################################
+# END BATTLE ACTIONS THAT ARE ACTUALLY GOING TO BE USED IN THE GAME
+###############################################################################
+
 Class BAPound : BattleAction {
     BAPound() : base('Pound', [BattleActionType]::Physical, {
         Param(
@@ -2414,100 +3134,110 @@ Class BAPound : BattleAction {
             [BattleAction]$SelfAction
         )
 
-        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
-        If($ExecuteChance -GT $SelfAction.Chance) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                0
-            )
-        }
+        If($SelfAction.Uses -GT 0) {
+            $SelfAction.Uses--
 
-        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
-        If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackMissed,
-                $Self,
-                $Target,
-                0
-            )
-        }
-
-        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
-            $SelfAction.EffectValue * (
-                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
-                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
-            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
-        ))
-        $EffectiveDamageCritFactor     = 1.0
-        $EffectiveDamageAffinityFactor = 1.0
-
-        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
-        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
-            $EffectiveDamageCritFactor = 1.5
-        }
-
-        # Because this is a Physical attack, there's no need to calculate Affinity damage
-        $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-
-        # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
-        # [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
-        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-        
-        If(0 -NE $DecRes) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
-        } Else {
-            If($Target -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+            If($ExecuteChance -GT $SelfAction.Chance) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedAttackFailed,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+    
+            # I just realized that with this equation, the accuracy rating of Self isn't factored into this.
+            $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+            $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+            If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedAttackMissed,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+    
+            $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                $SelfAction.EffectValue * (
+                    ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                    (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+            ))
+            $EffectiveDamageCritFactor     = 1.0
+            $EffectiveDamageAffinityFactor = 1.0
+    
+            $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+            If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                $EffectiveDamageCritFactor = 1.5
+            }
+    
+            # Because this is a Physical attack, there's no need to calculate Affinity damage
+            $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+    
+            # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
+            # [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
+            [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+            If(0 -NE $DecRes) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedAttackFailed,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
             } Else {
-                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                If($Target -IS [Player]) {
+                    $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                } Else {
+                    $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                }
+    
+                If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                    # Crit with no Affinity Bonus
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::SuccessWithCritical,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                    # Affinity with no Crit Bonus
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::SuccessWithAffinityBonus,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                    # Crit and Affinity Bonus Applied
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+    
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::Success,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
             }
-
-            If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                # Crit with no Affinity Bonus
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritical,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                # Affinity with no Crit Bonus
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                # Crit and Affinity Bonus Applied
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            }
-
+        } Else {
+            # There are no more uses for this action remaining
+            # NOTE: THE CODE SHOULDN'T EVER REACH THIS POINT, BUT IT'S INCLUDED IN THE CASE THAT IT IS
             Return [BattleActionResult]::new(
-                [BattleActionResultType]::Success,
+                [BattleActionResultType]::FailedNoUsesRemaining,
                 $Self,
                 $Target,
-                $FinalDamage
+                0
             )
         }
     }, 35, 40, 1.0) {}
-}
-
-Class BAKarateChop : BattleAction {
-    BAKarateChop() : base('Karate Chop', [BattleActionType]::Physical, {}, 25, 50, 1.0) {}
 }
 
 Class BADoubleSlap : BattleAction {
