@@ -5299,7 +5299,7 @@ Class BAMortarToss : BattleAction {
                 [BattleAction]$SelfAction
             )
 
-            # TODO: RETURN AND ADD ADDITIONAL EFFECT
+            # TODO             : RETURN AND ADD ADDITIONAL EFFECT
             # Additional Effect: 50% chance to inflict Burn for 2-6 turns
             
             If($SelfAction.Uses -GT 0) {
