@@ -6149,7 +6149,7 @@ Class BattleEntity {
         $this.ActionListing   = @{}
         $this.SpoilsEffect    = $null
         $this.ActionMarbleBag = $null
-        $this.NameDrawColor   = [CCAppleBlueLight24]::new()
+        $this.NameDrawColor   = [CCTextDefault24]::new()
         $this.Affinity        = [BattleActionType]::None
     }
 
