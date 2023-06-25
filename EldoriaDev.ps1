@@ -243,7 +243,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
     ActionListing = @{
         [ActionSlot]::A = [BAPunch]::new()
-        [ActionSlot]::B = [BAIcePunch]::new()
+        [ActionSlot]::B = [BAKick]::new()
         [ActionSlot]::C = [BAFirePunch]::new()
         [ActionSlot]::D = [BAThunderPunch]::new()
     }
@@ -2663,7 +2663,7 @@ Class BAKick : BattleAction {
                 )
             }
         }
-        $this.Uses        = 30
+        $this.Uses        = 1
         $this.UsesMax     = 30
         $this.EffectValue = 50
         $this.Chance      = 1.0
@@ -19529,8 +19529,6 @@ Class BattlePlayerActionWindow : WindowBase {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
-                            $this.ActionADrawDirty = $true
-
                             Return $null
                         }
 
@@ -19546,8 +19544,6 @@ Class BattlePlayerActionWindow : WindowBase {
                         If($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -LE 0) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
-
-                            $this.ActionBDrawDirty = $true
 
                             Return $null
                         }
@@ -19565,8 +19561,6 @@ Class BattlePlayerActionWindow : WindowBase {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
-                            $this.ActionCDrawDirty = $true
-
                             Return $null
                         }
 
@@ -19582,8 +19576,6 @@ Class BattlePlayerActionWindow : WindowBase {
                         If($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -LE 0) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
-
-                            $this.ActionDDrawDirty = $true
 
                             Return $null
                         }
@@ -19645,6 +19637,13 @@ Class BattlePlayerActionWindow : WindowBase {
         }
 
         Return $null
+    }
+
+    [Void]SetAllActionDrawDirty() {
+        $this.ActionADrawDirty = $true
+        $this.ActionBDrawDirty = $true
+        $this.ActionCDrawDirty = $true
+        $this.ActionDDrawDirty = $true
     }
 }
 
@@ -20112,9 +20111,10 @@ Class BattleManager {
 
                     If($this.PhaseOneEntity -IS [Player]) {
                         # This is the Player
+                        $Script:ThePlayerBattleActionWindow.SetAllActionDrawDirty()
                         While($null -EQ $ToExecute) {
-                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                             $Script:ThePlayerBattleActionWindow.Draw()
+                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                         }
 
                         # Write the Action used to the Battle Message Log
@@ -21952,9 +21952,10 @@ Class BattleManager {
 
                     If($this.PhaseTwoEntity -IS [Player]) {
                         # This is the Player
+                        $Script:ThePlayerBattleActionWindow.SetAllActionDrawDirty()
                         While($null -EQ $ToExecute) {
-                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                             $Script:ThePlayerBattleActionWindow.Draw()
+                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                         }
 
                         # Write the Action used to the Battle Message Log
