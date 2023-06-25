@@ -2,6 +2,7 @@ using namespace System
 using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
+using namespace System.Media
 
 # LOGGING FILE CREATION
 # [String]$Script:LogFileName = '.\Log.log'
@@ -17,6 +18,11 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]                   $Script:OsCheckMac                   = 'OsMac'
 [String]                   $Script:OsCheckWindows               = 'OsWindows'
 [String]                   $Script:OsCheckUnknown               = 'OsUnknown'
+[String]                   $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
+[String]                   $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
+[String]                   $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
+[String]                   $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
+[String]                   $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
 [StatusWindow]             $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]            $Script:TheCommandWindow             = [CommandWindow]::new()
 [SceneWindow]              $Script:TheSceneWindow               = [SceneWindow]::new()
@@ -32,7 +38,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [GameCore]                 $Script:TheGameCore                  = [GameCore]::new()
 [EnemyBattleEntity]        $Script:TheCurrentEnemy              = $null
 [BattleManager]            $Script:TheBattleManager             = $null
-
+[SoundPlayer]              $Script:TheSfxMachine                = [SoundPlayer]::new()
 
 
 
@@ -522,9 +528,23 @@ Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Working' -
 [SIFieldSouthWestRoad]    $Script:FieldSouthWestRoadImage     = [SIFieldSouthWestRoad]::new()
 [SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
 
+Write-Progress -Activity 'Loading SFX                ' -Id 4 -Status 'Loading...' -PercentComplete -1
+
+$Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
+$Script:TheSfxMachine.Load()
+$Script:TheSfxMachine.SoundLocation = $Script:SfxUiSelectionValid
+$Script:TheSfxMachine.Load()
+$Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
+$Script:TheSfxMachine.Load()
+$Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
+$Script:TheSfxMachine.Load()
+$Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
+$Script:TheSfxMachine.Load()
+
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Completed
 Write-Progress -Activity 'Creating Maps              ' -Id 2 -Completed
 Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
+Write-Progress -Activity 'Loading SFX                ' -Id 4 -Completed
 
 #$Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
@@ -19516,8 +19536,18 @@ Class BattlePlayerActionWindow : WindowBase {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
             13 {
-                # TEST
-                # Write to the Battle Message Window the name of the technique used
+                # Play a SFX
+                Try {
+                    $Script:TheSfxMachine.SoundLocation = $Script:SfxUiSelectionValid
+                    $Script:TheSfxMachine.PlaySync()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
                 Switch($this.ActiveChevronIndex) {
                     0 {
                         # $Script:TheBattleStatusMessageWindow.WriteMessage(
@@ -19591,6 +19621,19 @@ Class BattlePlayerActionWindow : WindowBase {
 
             38 {
                 # Move the Chevron up (wraps on top)
+
+                # Play a SFX
+                Try {
+                    $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
+                    $Script:TheSfxMachine.PlaySync()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
                 If(($this.ActiveChevronIndex - 1) -LT 0) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
@@ -19614,6 +19657,19 @@ Class BattlePlayerActionWindow : WindowBase {
 
             40 {
                 # move the Chevron down (wraps on bottom)
+
+                # Play a SFX
+                Try {
+                    $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
+                    $Script:TheSfxMachine.PlaySync()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
                 If(($this.ActiveChevronIndex + 1) -GT 3) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
@@ -20362,6 +20418,11 @@ Class BattleManager {
                                     #         )
                                     #     )
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -21493,6 +21554,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -21864,6 +21930,11 @@ Class BattleManager {
                             #     [CCTextDefault24]::new(),
                             #     [ATDecorationNone]::new()
                             # )
+                            Try {
+                                $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
+                                $Script:TheSfxMachine.PlaySync()
+                            } Catch {}
+
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -21887,6 +21958,11 @@ Class BattleManager {
                             #     [CCTextDefault24]::new(),
                             #     [ATDecorationNone]::new()
                             # )
+                            Try {
+                                $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
+                                $Script:TheSfxMachine.PlaySync()
+                            } Catch {}
+
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -21920,6 +21996,11 @@ Class BattleManager {
                     #     [CCTextDefault24]::new(),
                     #     [ATDecorationNone]::new()
                     # )
+                    Try {
+                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
+                        $Script:TheSfxMachine.PlaySync()
+                    } Catch {}
+
                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                         @(
                             [ATStringCompositeSc]::new(
@@ -22055,6 +22136,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -23184,6 +23270,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -23555,6 +23646,11 @@ Class BattleManager {
                             #     [CCTextDefault24]::new(),
                             #     [ATDecorationNone]::new()
                             # )
+                            Try {
+                                $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
+                                $Script:TheSfxMachine.PlaySync()
+                            } Catch {}
+
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -23578,6 +23674,11 @@ Class BattleManager {
                             #     [CCTextDefault24]::new(),
                             #     [ATDecorationNone]::new()
                             # )
+                            Try {
+                                $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
+                                $Script:TheSfxMachine.PlaySync()
+                            } Catch {}
+
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -23611,6 +23712,11 @@ Class BattleManager {
                     #     [CCTextDefault24]::new(),
                     #     [ATDecorationNone]::new()
                     # )
+                    Try {
+                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
+                        $Script:TheSfxMachine.PlaySync()
+                    } Catch {}
+
                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                         @(
                             [ATStringCompositeSc]::new(
