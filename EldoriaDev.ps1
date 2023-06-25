@@ -242,7 +242,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         }
     }
     ActionListing = @{
-        [ActionSlot]::A = [BAPound]::new()
+        [ActionSlot]::A = [BAPunch]::new()
         [ActionSlot]::B = [BAIcePunch]::new()
         [ActionSlot]::C = [BAFirePunch]::new()
         [ActionSlot]::D = [BAThunderPunch]::new()
@@ -2550,7 +2550,7 @@ Class BAPunch : BattleAction {
                 )
             }
         }
-        $this.Uses        = 30
+        $this.Uses        = 1
         $this.UsesMax     = 30
         $this.EffectValue = 50
         $this.Chance      = 1.0
@@ -19408,9 +19408,9 @@ Class BattlePlayerActionWindow : WindowBase {
             # This is the Action Name
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)",
@@ -19437,9 +19437,9 @@ Class BattlePlayerActionWindow : WindowBase {
             # This is the Action Name
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)",
@@ -19465,9 +19465,9 @@ Class BattlePlayerActionWindow : WindowBase {
 
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)",
@@ -19491,9 +19491,9 @@ Class BattlePlayerActionWindow : WindowBase {
             )
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    [CCTextDefault24]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    [ATDecorationNone]::new(),
+                    ($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)",
@@ -19525,6 +19525,14 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
+                        If($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -LE 0) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 / 2), 250)
+
+                            $this.ActionADrawDirty = $true
+
+                            Return $null
+                        }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::A]
                     }
@@ -19535,6 +19543,14 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
+                        If($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -LE 0) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 / 2), 250)
+
+                            $this.ActionBDrawDirty = $true
+
+                            Return $null
+                        }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::B]
                     }
@@ -19545,6 +19561,14 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
+                        If($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -LE 0) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 / 2), 250)
+
+                            $this.ActionCDrawDirty = $true
+
+                            Return $null
+                        }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::C]
                     }
@@ -19555,6 +19579,14 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
+                        If($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -LE 0) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 / 2), 250)
+
+                            $this.ActionDDrawDirty = $true
+
+                            Return $null
+                        }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::D]
                     }
