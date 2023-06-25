@@ -5862,10 +5862,6 @@ Class BARollingKick : BattleAction {
     BARollingKick() : base('Rolling Kick', [BattleActionType]::Physical, {}, 15, 60, 0.85) {}
 }
 
-Class BASandAttack : BattleAction {
-    BASandAttack() : base('Sand Attack', [BattleActionType]::ElementalEarth, {}, 15, 0, 1.0) {}
-}
-
 <#
 HASHTABLE CREATOR
 
