@@ -23,6 +23,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]                   $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
 [String]                   $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
 [String]                   $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
+[String]                   $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
 [StatusWindow]             $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]            $Script:TheCommandWindow             = [CommandWindow]::new()
 [SceneWindow]              $Script:TheSceneWindow               = [SceneWindow]::new()
@@ -250,8 +251,8 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     ActionListing = @{
         [ActionSlot]::A = [BAPunch]::new()
         [ActionSlot]::B = [BAKick]::new()
-        [ActionSlot]::C = [BAFirePunch]::new()
-        [ActionSlot]::D = [BAThunderPunch]::new()
+        [ActionSlot]::C = [BAFlamePunch]::new()
+        [ActionSlot]::D = [BAMortarToss]::new()
     }
     SpoilsEffect    = {}
     ActionMarbleBag = @()
@@ -539,6 +540,8 @@ $Script:TheSfxMachine.Load()
 $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
 $Script:TheSfxMachine.Load()
 $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
+$Script:TheSfxMachine.Load()
+$Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
 $Script:TheSfxMachine.Load()
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Completed
@@ -2654,6 +2657,7 @@ Class BAKick : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -2767,6 +2771,7 @@ Class BAKarateChop : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -2880,6 +2885,7 @@ Class BAKarateKick : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -2993,6 +2999,7 @@ Class BABash : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3106,6 +3113,7 @@ Class BABite : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3219,6 +3227,7 @@ Class BAScratch : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3332,6 +3341,7 @@ Class BADoubleScratch : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3379,9 +3389,6 @@ Class BAHeadbutt : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO             : ADD ADDITIONAL EFFECTS INTO THIS ONE
-            # ADDITIONAL EFFECT: 10% damage is reflected to Self, 1% chance to insta-kill Target
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -3448,6 +3455,7 @@ Class BAHeadbutt : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3561,6 +3569,7 @@ Class BADropKick : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3608,9 +3617,6 @@ Class BAThrow : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO  : RETURN TO CHANGE THE FUNCTIONALITY OF THIS EFFECT
-            # Effect: Select a random item that's not a Key Item from the Player's inventory and throw it at the Target.
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -3677,6 +3683,7 @@ Class BAThrow : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3790,6 +3797,7 @@ Class BAPeck : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -3903,6 +3911,7 @@ Class BATalonStab : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4016,6 +4025,7 @@ Class BASwordSlash : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4129,6 +4139,7 @@ Class BASwordStab : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4242,6 +4253,7 @@ Class BAAxeSlash : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4355,6 +4367,7 @@ Class BAAxeCleave : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4468,6 +4481,7 @@ Class BAAxeThrow : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4581,6 +4595,7 @@ Class BAKnifeStab : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4694,6 +4709,7 @@ Class BAKnifeThrow : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4807,6 +4823,7 @@ Class BAClubSwing : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4854,9 +4871,6 @@ Class BAHomerunHit : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO: RETURN AND ADD ADDITIONAL EFFECT
-            # Additional Effect: 2% chance of insta-kill to Target
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -4923,6 +4937,7 @@ Class BAHomerunHit : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -4970,9 +4985,6 @@ Class BAFlamePunch : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO: RETURN TO ADD ADDITIONAL EFFECT
-            # Additional Effect: 15% chance to inflict Burn for 1-3 turns
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -5012,6 +5024,18 @@ Class BAFlamePunch : BattleAction {
                     $EffectiveDamageCritFactor = 1.5
                 }
             
+                Switch($Target.Affinity) {
+                    { $_ -EQ $SelfAction.Type } {
+                        $EffectiveDamageAffinityFactor = -0.75
+                        Break
+                    }
+            
+                    ([BattleActionType]::ElementalIce) {
+                        $EffectiveDamageAffinityFactor = 1.6
+                        Break
+                    }
+                }
+            
                 $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
             
                 [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
@@ -5039,6 +5063,7 @@ Class BAFlamePunch : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -5086,9 +5111,6 @@ Class BAFlameKick : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO: RETURN AND ADD ADDITIONAL EFFECT
-            # Additional Effect: 19% chance to inflict Burn for 1-3 turns
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -5128,6 +5150,18 @@ Class BAFlameKick : BattleAction {
                     $EffectiveDamageCritFactor = 1.5
                 }
             
+                Switch($Target.Affinity) {
+                    { $_ -EQ $SelfAction.Type } {
+                        $EffectiveDamageAffinityFactor = -0.75
+                        Break
+                    }
+            
+                    ([BattleActionType]::ElementalIce) {
+                        $EffectiveDamageAffinityFactor = 1.6
+                        Break
+                    }
+                }
+            
                 $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
             
                 [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
@@ -5155,6 +5189,7 @@ Class BAFlameKick : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -5202,9 +5237,6 @@ Class BAFireball : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO: RETURN AND ADD ADDITIONAL EFFECT
-            # Additional Effect: 30% chance to inflict Burn for 1-5 turns
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -5244,6 +5276,18 @@ Class BAFireball : BattleAction {
                     $EffectiveDamageCritFactor = 1.5
                 }
             
+                Switch($Target.Affinity) {
+                    { $_ -EQ $SelfAction.Type } {
+                        $EffectiveDamageAffinityFactor = -0.75
+                        Break
+                    }
+            
+                    ([BattleActionType]::ElementalIce) {
+                        $EffectiveDamageAffinityFactor = 1.6
+                        Break
+                    }
+                }
+            
                 $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
             
                 [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
@@ -5271,6 +5315,7 @@ Class BAFireball : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -5318,9 +5363,6 @@ Class BAMortarToss : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
-
-            # TODO             : RETURN AND ADD ADDITIONAL EFFECT
-            # Additional Effect: 50% chance to inflict Burn for 2-6 turns
             
             If($SelfAction.Uses -GT 0) {
                 $SelfAction.Uses--
@@ -5360,6 +5402,18 @@ Class BAMortarToss : BattleAction {
                     $EffectiveDamageCritFactor = 1.5
                 }
             
+                Switch($Target.Affinity) {
+                    { $_ -EQ $SelfAction.Type } {
+                        $EffectiveDamageAffinityFactor = -0.75
+                        Break
+                    }
+            
+                    ([BattleActionType]::ElementalIce) {
+                        $EffectiveDamageAffinityFactor = 1.6
+                        Break
+                    }
+                }
+            
                 $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
             
                 [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
@@ -5387,6 +5441,7 @@ Class BAMortarToss : BattleAction {
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
                         Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
                             $Target,
                             $FinalDamage
@@ -19625,7 +19680,7 @@ Class BattlePlayerActionWindow : WindowBase {
                 # Play a SFX
                 Try {
                     $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
-                    $Script:TheSfxMachine.PlaySync()
+                    $Script:TheSfxMachine.Play()
                 } Catch [ServiceProcess.TimeoutException] {
                     Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
                 } Catch [IO.FileNotFoundException] {
@@ -19661,7 +19716,7 @@ Class BattlePlayerActionWindow : WindowBase {
                 # Play a SFX
                 Try {
                     $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
-                    $Script:TheSfxMachine.PlaySync()
+                    $Script:TheSfxMachine.Play()
                 } Catch [ServiceProcess.TimeoutException] {
                     Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
                 } Catch [IO.FileNotFoundException] {
@@ -20466,6 +20521,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -20830,6 +20890,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -21204,6 +21269,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -21602,6 +21672,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -22184,6 +22259,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -22547,6 +22627,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -22920,6 +23005,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -23318,6 +23408,11 @@ Class BattleManager {
                                     #     [CCTextDefault24]::new(),
                                     #     [ATDecorationNone]::new()
                                     # )
+                                    Try {
+                                        $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
+                                        $Script:TheSfxMachine.PlaySync()
+                                    } Catch {}
+
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
