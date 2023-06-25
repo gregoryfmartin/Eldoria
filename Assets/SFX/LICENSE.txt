@@ -1,0 +1,12 @@
+ LICENSE (29th June 2021)
+-------------------------------
+
+"Retro SFX" is an audio pack created by Andrea Baroni for Cyberleaf Studio.
+Audio assets included in the package may be used without attribution in commercial and non-commercial projects of any kind.
+
+The audio assets may not be redistributed or remixed in whole or in part. They may not be resold elsewhere as an asset or part of an asset pack, unless explicitly approved by the author.
+
+If you want to attribute the audio assets (which is greatly appreciated), please clearly include the names "Andrea Baroni", "bluegestalt" or "Cyberleaf Studio". And you can also include the website "andreabaroni.com".
+
+
+For any questions, customisations or if something is not clear, you can get in touch via my website: https://andreabaroni.com or my email cyberleafstudio@gmail.com
