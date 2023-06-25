@@ -2550,7 +2550,7 @@ Class BAPunch : BattleAction {
                 )
             }
         }
-        $this.Uses        = 1
+        $this.Uses        = 30
         $this.UsesMax     = 30
         $this.EffectValue = 50
         $this.Chance      = 1.0
@@ -2663,7 +2663,7 @@ Class BAKick : BattleAction {
                 )
             }
         }
-        $this.Uses        = 1
+        $this.Uses        = 30
         $this.UsesMax     = 30
         $this.EffectValue = 50
         $this.Chance      = 1.0
