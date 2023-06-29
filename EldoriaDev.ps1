@@ -18505,16 +18505,18 @@ Class BattleEntityStatusWindow : WindowBase {
     [Int]$WindowBRRow    = 0
     [Int]$WindowBRColumn = 0
     
-    [Boolean]$NameDrawDirty   = $true
-    [Boolean]$HpDrawDirty     = $true
-    [Boolean]$MpDrawDirty     = $true
-    [Boolean]$StatL1DrawDirty = $true
-    [Boolean]$StatL2DrawDirty = $true
-    [Boolean]$StatL3DrawDirty = $true
-    [Boolean]$StatL4DrawDirty = $true
+    [Boolean]$NameDrawDirty           = $true
+    [Boolean]$HpDrawDirty             = $true
+    [Boolean]$MpDrawDirty             = $true
+    [Boolean]$StatL1DrawDirty         = $true
+    [Boolean]$StatL2DrawDirty         = $true
+    [Boolean]$StatL3DrawDirty         = $true
+    [Boolean]$StatL4DrawDirty         = $true
+    [Boolean]$EntityBattlePhaseActive = $false
+    [Boolean]$HasSetEntityActive      = $false
 
     [ATString]$FullLineBlank      = [ATStringNone]::new()
-    [ATString[]]$NameDrawString     = @([ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$NameDrawString   = @([ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$HpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$MpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
     [ATString[]]$StatL1DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
@@ -18600,6 +18602,36 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 
     [Void]Draw() {
+        If($this.EntityBattlePhaseActive -EQ $true -AND $this.HasSetEntityActive -EQ $false) {
+            $this.BorderDrawColors = [ConsoleColor24[]](
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new()
+            )
+            $this.BorderDrawDirty = [Boolean[]](
+                $true,
+                $true,
+                $true,
+                $true
+            )
+            $this.HasSetEntityActive = $true
+        } Elseif($this.EntityBattlePhaseActive -EQ $false) {
+            $this.BorderDrawColors = [ConsoleColor24[]](
+                [CCWhite24]::new(),
+                [CCWhite24]::new(),
+                [CCWhite24]::new(),
+                [CCWhite24]::new()
+            )
+            $this.BorderDrawDirty = [Boolean[]](
+                $true,
+                $true,
+                $true,
+                $true
+            )
+            $this.HasSetEntityActive = $false
+        }
+
         ([WindowBase]$this).Draw()
 
         If($this.NameDrawDirty -EQ $true) {
@@ -20209,6 +20241,17 @@ Class BattleManager {
                 # Update the Phase Indicator
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseOneEntity)
+
+                # Attempt to test the border color change for the status window
+                If($this.PhaseOneEntity -IS [Player]) {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
+                } Else {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $false
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $true
+                }
+                $Script:ThePlayerBattleStatWindow.Draw()
+                $Script:TheEnemyBattleStatWindow.Draw()
 
                 If($this.CanPhaseOneAct -EQ $true) {
                     # Called if the Phase One Entity is able to execute their action
@@ -22095,6 +22138,17 @@ Class BattleManager {
                 # Update the Phase Indicator
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseTwoEntity)
+
+                # Attempt to test the border color change for the status window
+                If($this.PhaseTwoEntity -IS [Player]) {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
+                } Else {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $false
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $true
+                }
+                $Script:ThePlayerBattleStatWindow.Draw()
+                $Script:TheEnemyBattleStatWindow.Draw()
 
                 If($this.CanPhaseTwoAct -EQ $true) {
                     # Called if the Phase Two Entity is able to execute their action
