@@ -1431,7 +1431,7 @@ $Script:TheGlobalStateBlockTable = @{
             # $Script:TheBgmMachine.SoundLocation = $Script:BgmBattleThemeA
             # $Script:TheBgmMachine.PlayLooping()
             $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-            $Script:TheBgmMPlayer.Volume = 0.2
+            $Script:TheBgmMPlayer.Volume = 0.15
             $Script:TheBgmMPlayer.Play()
             $Script:IsBattleBgmPlaying = $true
         }
