@@ -15957,20 +15957,38 @@ Class MTOMilk : MapTileObject {
                     # Attempt to decrement the Player's Hp by the Hp Bonus
                     If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
                         # Decrement was successful; write a message to the Message Window
-                        $Script:TheMessageWindow.WriteMessage(
-                            'Now that wasn''t very smart, was it?',
-                            [CCAppleOrangeLight24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     'Now that wasn''t very smart, was it?',
+                        #     [CCAppleOrangeLight24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Now that wasn''t very smart, was it?'
+                                )
+                            )
                         )
 
                         # Remove the milk from the Player's Inventory
                         $Source.RemoveInventoryItemByName($Self.Name)
                     } Else {
                         # Decrement failed; write a message to the Message Window
-                        $Script:TheMessageWindow.WriteMessage(
-                            'There''s no need to drink this now.',
-                            [CCAppleYellowLight24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     'There''s no need to drink this now.',
+                        #     [CCAppleYellowLight24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'There''s no need to drink this now.'
+                                )
+                            )
                         )
                     }
                 } Else {
@@ -15978,20 +15996,38 @@ Class MTOMilk : MapTileObject {
                     # Attempt to increment the Player's HP by the Hp Bonus
                     If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
                         # Increment was successful; write a message to the Message Window
-                        $Script:TheMessageWindow.WriteMessage(
-                            'Hmmm. Delicious cow juice.',
-                            [CCAppleGreenLight24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     'Hmmm. Delicious cow juice.',
+                        #     [CCAppleGreenLight24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Hmmm. Delicious cow juice.'
+                                )
+                            )
                         )
 
                         # Remove the milk from the Player's Inventory
                         $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
                     } Else {
                         # Increment wasn't successful; write a message to the Message Window
-                        $Script:TheMessageWindow.WriteMessage(
-                            'There''s no need to drink this now.',
-                            [CCAppleYellowLight24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     'There''s no need to drink this now.',
+                        #     [CCAppleYellowLight24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'There''s no need to drink this now.'
+                                )
+                            )
                         )
                     }
                 }
@@ -17508,10 +17544,19 @@ Class CommandWindow : WindowBase {
             }
         }
 
-        $Script:TheMessageWindow.WriteMessage(
-            'I can see the following things here:',
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+        # $Script:TheMessageWindow.WriteMessage(
+        #     'I can see the following things here:',
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $Script:TheMessageWindow.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ''
+                )
+            )
         )
         $Script:TheMessageWindow.WriteMessage(
             $c,
