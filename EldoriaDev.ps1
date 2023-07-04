@@ -1174,10 +1174,39 @@ $Script:TheCommandTable = @{
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        $Script:TheMessageWindow.WriteMessage(
-                            "Can't use a(n) $($a0) on a $($a1).",
-                            [CCAppleRedDark24]::new(),
-                            [ATDecoration]::new($true)
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     "Can't use a(n) $($a0) on a $($a1).",
+                        #     [CCAppleRedDark24]::new(),
+                        #     [ATDecoration]::new($true)
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Can''t use a(n) '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleYellowDark24]::new(),
+                                    [ATDecoration]::new($true),
+                                    $a0
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' on a(n) '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleYellowDark24]::new(),
+                                    [ATDecoration]::new($true),
+                                    $a1
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    '.'
+                                )
+                            )
                         )
                     }
                 } Else {
@@ -1190,20 +1219,48 @@ $Script:TheCommandTable = @{
                         }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        $Script:TheMessageWindow.WriteMessage(
-                            'Whatever you typed doesn''t make any sense.',
-                            [CCAppleRedDark24]::new(),
-                            [ATDecoration]::new($true)
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     'Whatever you typed doesn''t make any sense.',
+                        #     [CCAppleRedDark24]::new(),
+                        #     [ATDecoration]::new($true)
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Whatever you typed doesn''t make any sense.'
+                                )
+                            )
                         )
                     }
                 }
             } Else {
                 # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteMessage(
-                    "You don't seem to have any $($a0) in your pocket(s).",
-                    [CCAppleYellowLight24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "You don't seem to have any $($a0) in your pocket(s).",
+                #     [CCAppleYellowLight24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            'You don''t seem to have any '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' in your pocket(s).'
+                        )
+                    )
                 )
 
                 Return
@@ -1212,16 +1269,54 @@ $Script:TheCommandTable = @{
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                $Script:TheMessageWindow.WriteMessage(
-                    "You need to tell me what you want to use the $($a0) on.",
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "You need to tell me what you want to use the $($a0) on.",
+                #     [CCAppleYellowDark24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            'You need to tell me what you want to use the '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' on.'
+                        )
+                    )
                 )
             } Else {
-                $Script:TheMessageWindow.WriteMessage(
-                    "I have no idea how to use a(n) $($a0).",
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "I have no idea how to use a(n) $($a0).",
+                #     [CCAppleYellowDark24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            'I have no idea how to use a(n) '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            '.'
+                        )
+                    )
                 )
             }
         }
@@ -1244,10 +1339,39 @@ $Script:TheCommandTable = @{
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        $Script:TheMessageWindow.WriteMessage(
-                            "Can't use a(n) $($a0) on a $($a1).",
-                            [CCAppleRedDark24]::new(),
-                            [ATDecoration]::new($true)
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     "Can't use a(n) $($a0) on a $($a1).",
+                        #     [CCAppleRedDark24]::new(),
+                        #     [ATDecoration]::new($true)
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Can''t use a(n) '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleYellowDark24]::new(),
+                                    [ATDecoration]::new($true),
+                                    $a0
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' on a(n) '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleYellowDark24]::new(),
+                                    [ATDecoration]::new($true),
+                                    $a1
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    '.'
+                                )
+                            )
                         )
                     }
                 } Else {
@@ -1260,20 +1384,48 @@ $Script:TheCommandTable = @{
                         }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        $Script:TheMessageWindow.WriteMessage(
-                            'Whatever you typed doesn''t make any sense.',
-                            [CCAppleRedDark24]::new(),
-                            [ATDecoration]::new($true)
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     'Whatever you typed doesn''t make any sense.',
+                        #     [CCAppleRedDark24]::new(),
+                        #     [ATDecoration]::new($true)
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Whatever you typed doesn''t make any sense.'
+                                )
+                            )
                         )
                     }
                 }
             } Else {
                 # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteMessage(
-                    "You don't seem to have any $($a0) in your pocket(s).",
-                    [CCAppleYellowLight24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "You don't seem to have any $($a0) in your pocket(s).",
+                #     [CCAppleYellowLight24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            'You don''t seem to have any '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' in your pocket(s).'
+                        )
+                    )
                 )
 
                 Return
@@ -1282,16 +1434,54 @@ $Script:TheCommandTable = @{
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                $Script:TheMessageWindow.WriteMessage(
-                    "You need to tell me what you want to use the $($a0) on.",
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "You need to tell me what you want to use the $($a0) on.",
+                #     [CCAppleYellowDark24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            'You need to tell me what you want to use the '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' on.'
+                        )
+                    )
                 )
             } Else {
-                $Script:TheMessageWindow.WriteMessage(
-                    "I have no idea how to use a(n) $($a0).",
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "I have no idea how to use a(n) $($a0).",
+                #     [CCAppleYellowDark24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            'I have no idea how to use a(n) '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            '.'
+                        )
+                    )
                 )
             }
         }
@@ -1304,10 +1494,19 @@ $Script:TheCommandTable = @{
 
         If($args.Length -GE 1) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            $Script:TheMessageWindow.WriteMessage(
-                'Can''t drop all those items at once, bruh.',
-                [CCAppleYellowDark24]::new(),
-                [ATDecorationNone]::new()
+            # $Script:TheMessageWindow.WriteMessage(
+            #     'Can''t drop all those items at once, bruh.',
+            #     [CCAppleYellowDark24]::new(),
+            #     [ATDecorationNone]::new()
+            # )
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        'Can''t dop all those items at once, bruh.'
+                    )
+                )
             )
 
             Return
@@ -1318,29 +1517,76 @@ $Script:TheCommandTable = @{
                 If($Script:ThePlayer.IsItemInInventory($a0)) {
                     If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-                        $Script:TheMessageWindow.WriteMessage(
-                            "Dropped $($a0) from your inventory.",
-                            [CCAppleYellowDark24]::new(),
-                            [ATDecorationNone]::new()
+                        # $Script:TheMessageWindow.WriteMessage(
+                        #     "Dropped $($a0) from your inventory.",
+                        #     [CCAppleYellowDark24]::new(),
+                        #     [ATDecorationNone]::new()
+                        # )
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'Dropped '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleYellowDark24]::new(),
+                                    [ATDecoration]::new($true),
+                                    $a0
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCTextDefault24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' from your inventory.'
+                                )
+                            )
                         )
                     } Else {
                         Exit
                     }
                 } Else {
                     $Script:TheCommandWindow.UpdateCommandHistory($false)
-                    $Script:TheMessageWindow.WriteMessage(
-                        "There ain't no $($a0) in your pockets gov'.",
-                        [CCAppleYellowDark24]::new(),
-                        [ATDecorationNone]::new()
+                    # $Script:TheMessageWindow.WriteMessage(
+                    #     "There ain't no $($a0) in your pockets gov'.",
+                    #     [CCAppleYellowDark24]::new(),
+                    #     [ATDecorationNone]::new()
+                    # )
+                    $Script:TheMessageWindow.WriteMessageComposite(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                'There ain''t no '
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleYellowDark24]::new(),
+                                [ATDecoration]::new($true),
+                                $a0
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                ' in your pockets guv''.'
+                            )
+                        )
                     )
                 }
             }
         } Elseif($PSBoundParameters.Count -LE 0) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            $Script:TheMessageWindow.WriteMessage(
-                'I don''t know what to drop...',
-                [CCAppleRedDark24]::new(),
-                [ATDecoration]::new($true)
+            # $Script:TheMessageWindow.WriteMessage(
+            #     'I don''t know what to drop...',
+            #     [CCAppleRedDark24]::new(),
+            #     [ATDecoration]::new($true)
+            # )
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        'I don''t know what to drop...'
+                    )
+                )
             )
         }
     }
@@ -15591,10 +15837,39 @@ Class MTOTree : MapTileObject {
 
         Switch($Source.PSTypeNames[0]) {
             'MTORope' {
-                $Script:TheMessageWindow.WriteMessage(
-                    'I''ve tied the Rope to the Tree',
-                    [CCAppleIndigoDark24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     'I''ve tied the Rope to the Tree',
+                #     [CCAppleIndigoDark24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'I''ve tied the '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            'Rope'
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' to the '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            'Tree'
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            '.'
+                        )
+                    )
                 )
 
                 <#
@@ -17420,7 +17695,8 @@ Class MessageWindow : WindowBase {
 
     Static [ATString]$MessageWindowBlank = [ATStringNone]::new()
 
-    [ATString[]]$MessageHistory
+    # [ATString[]]$MessageHistory
+    [ATStringComposite[]]$MessageHistory
 
     [Boolean]$MessageADirty = $false
     [Boolean]$MessageBDirty = $false
@@ -17458,38 +17734,48 @@ Class MessageWindow : WindowBase {
             $true
         )
 
-        $this.MessageHistory = New-Object 'ATString[]' 3
+        $this.MessageHistory = @(
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new()
+        )
 
-        $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATString]::new(
-            [ATStringPrefix]::new(
-                [CCTextDefault24]::new(),
-                [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
-                [MessageWindow]::MessageADrawCoordinates
-            ),
-            [MessageWindow]::MessageWindowBlank.UserData,
-            $true
-        )
-        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = [ATString]::new(
-            [ATStringPrefix]::new(
-                [CCTextDefault24]::new(),
-                [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
-                [MessageWindow]::MessageBDrawCoordinates
-            ),
-            [MessageWindow]::MessageWindowBlank.UserData,
-            $true
-        )
-        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
-            [ATStringPrefix]::new(
-                [CCTextDefault24]::new(),
-                [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
-                [MessageWindow]::MessageCDrawCoordinates
-            ),
-            [MessageWindow]::MessageWindowBlank.UserData,
-            $true
-        )
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
+
+        # $this.MessageHistory = New-Object 'ATString[]' 3
+
+        # $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATString]::new(
+        #     [ATStringPrefix]::new(
+        #         [CCTextDefault24]::new(),
+        #         [ATBackgroundColor24None]::new(),
+        #         [ATDecorationNone]::new(),
+        #         [MessageWindow]::MessageADrawCoordinates
+        #     ),
+        #     [MessageWindow]::MessageWindowBlank.UserData,
+        #     $true
+        # )
+        # $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = [ATString]::new(
+        #     [ATStringPrefix]::new(
+        #         [CCTextDefault24]::new(),
+        #         [ATBackgroundColor24None]::new(),
+        #         [ATDecorationNone]::new(),
+        #         [MessageWindow]::MessageBDrawCoordinates
+        #     ),
+        #     [MessageWindow]::MessageWindowBlank.UserData,
+        #     $true
+        # )
+        # $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
+        #     [ATStringPrefix]::new(
+        #         [CCTextDefault24]::new(),
+        #         [ATBackgroundColor24None]::new(),
+        #         [ATDecorationNone]::new(),
+        #         [MessageWindow]::MessageCDrawCoordinates
+        #     ),
+        #     [MessageWindow]::MessageWindowBlank.UserData,
+        #     $true
+        # )
     }
 
     [Void]Draw() {
@@ -17498,7 +17784,9 @@ Class MessageWindow : WindowBase {
         If($this.MessageADirty -EQ $true) {
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+
+            Write-Host "$([MessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())""$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             $this.MessageADirty = $false
         }
@@ -17506,7 +17794,9 @@ Class MessageWindow : WindowBase {
         If($this.MessageBDirty -EQ $true) {
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+
+            Write-Host "$([MessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())""$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
             $this.MessageBDirty = $false
         }
@@ -17514,7 +17804,9 @@ Class MessageWindow : WindowBase {
         If($this.MessageCDirty -EQ $true) {
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-            Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+
+            Write-Host "$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())""$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
             $this.MessageCDirty = $false
         }
@@ -17549,85 +17841,285 @@ Class MessageWindow : WindowBase {
         $this.MessageCDirty = $true
     }
 
-    [Void]WriteBadCommandMessage([String]$Command) {
-        $this.WriteMessage(
-            "$($Command) isn't a valid command.",
-            [CCAppleRedDark24]::new(),
-            [ATDecoration]::new($true)
+    [Void]WriteMessageComposite(
+        [ATString[]]$Composite
+    ) {
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual)
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual)
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($Composite)
+
+        $this.MessageADirty = $true
+        $this.MessageBDirty = $true
+        $this.MessageCDirty = $true
+    }
+
+    [Void]WriteBadCommandMessage(
+        [String]$Command
+    ) {
+        # $this.WriteMessage(
+        #     "$($Command) isn't a valid command.",
+        #     [CCAppleRedDark24]::new(),
+        #     [ATDecoration]::new($true)
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleRedDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' isn''t a valid command.'
+                )
+            )
         )
     }
 
-    [Void]WriteBadArg0Message([String]$Command, [String]$Arg0) {
-        $this.WriteMessage(
-            "We can't $($Command) with a(n) $($Arg0).",
-            [CCAppleYellowDark24]::new(),
-            [ATDecorationNone]::new()
+    [Void]WriteBadArg0Message(
+        [String]$Command,
+        [String]$Arg0
+    ) {
+        # $this.WriteMessage(
+        #     "We can't $($Command) with a(n) $($Arg0).",
+        #     [CCAppleYellowDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'We can''t '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' with a(n) '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $Arg0
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    '.'
+                )
+            )
         )
     }
 
-    [Void]WriteBadArg1Message([String]$Command, [String]$Arg0, [String]$Arg1) {
-        $this.WriteMessage(
-            "We can't $($Command) with a(n) $(Arg0) and a(n) $($Arg1).",
-            [CCAppleYellowDark24]::new(),
-            [ATDecorationNone]::new()
+    [Void]WriteBadArg1Message(
+        [String]$Command,
+        [String]$Arg0,
+        [String]$Arg1
+    ) {
+        # $this.WriteMessage(
+        #     "We can't $($Command) with a(n) $(Arg0) and a(n) $($Arg1).",
+        #     [CCAppleYellowDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'We can''t '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' with a(n) '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $Arg0
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' and a(n) '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $Arg1
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    '.'
+                )
+            )
         )
     }
 
     [Void]WriteSomethingBadMessage() {
-        $this.WriteMessage(
-            'I''m God, and even I don''t know what just happened...',
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+        # $this.WriteMessage(
+        #     'I''m God, and even I don''t know what just happened...',
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'I''m God, and I don''t know what just happened...'
+                )
+            )
         )
     }
 
     [Void]WriteInvisibleWallEncounteredMessage() {
-        $this.WriteMessage(
-            'The invisible wall blocks your path...',
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+        # $this.WriteMessage(
+        #     'The invisible wall blocks your path...',
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'The invisible wall blocks your path...'
+                )
+            )
         )
     }
 
     [Void]WriteYouShallNotPassMessage() {
-        $this.WriteMessage(
-            'The path you asked for is impossible...',
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+        # $this.WriteMessage(
+        #     'The path you asked for is impossible...',
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'The path you asked for is impossible...'
+                )
+            )
         )
     }
 
     [Void]WriteMapNoItemsFoundMessage() {
-        $this.WriteMessage(
-            'There''s nothing of interest here.',
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+        # $this.WriteMessage(
+        #     'There''s nothing of interest here.',
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'There''s nothing of interest here.'
+                )
+            )
         )
     }
 
-    [Void]WriteMapInvalidItemMessage([String]$ItemName) {
-        $this.WriteMessage(
-            "There's no $($ItemName) here.",
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+    [Void]WriteMapInvalidItemMessage(
+        [String]$ItemName
+    ) {
+        # $this.WriteMessage(
+        #     "There's no $($ItemName) here.",
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'There''s no '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $ItemName
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' here.'
+                )
+            )
         )
     }
 
-    [Void]WriteItemTakenMessage([String]$ItemName) {
-        $this.WriteMessage(
-            "I've taken the $($ItemName) and put it in my pocket.",
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+    [Void]WriteItemTakenMessage(
+        [String]$ItemName
+    ) {
+        # $this.WriteMessage(
+        #     "I've taken the $($ItemName) and put it in my pocket.",
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'I''ve taken the '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $ItemName
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' and put it in my pocket.'
+                )
+            )
         )
     }
 
     [Void]WriteItemCantTakeMessage(
         [String]$ItemName
     ) {
-        $this.WriteMessage(
-            "It's not possible to take the $($ItemName).",
-            [CCAppleIndigoDark24]::new(),
-            [ATDecorationNone]::new()
+        # $this.WriteMessage(
+        #     "It's not possible to take the $($ItemName).",
+        #     [CCAppleIndigoDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'It''s not possible to take the '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]::new($true),
+                    $ItemName
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    '.'
+                )
+            )
         )
     }
 }
@@ -24035,7 +24527,7 @@ Class GameCore {
         $this.LastFrameTime        = 0D
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
-        $Script:TheGlobalGameState = [GameStatePrimary]::BattleScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
     }
 
     [Void]Run() {
