@@ -2340,9 +2340,8 @@ Class ATStringCompositeSc : ATString {
             $Decoration,
             [ATCoordinatesNone]::new()
         )
-        # $this.Prefix.ForegroundColor = [ATForegroundColor24]::new($ForegroundColor)
-        # $this.Prefix.Decorations     = $Decoration
-        $this.UserData               = $Data
+        $this.UserData   = $Data
+        $this.UseATReset = $true
     }
 
     ATStringCompositeSc(
@@ -2356,7 +2355,8 @@ Class ATStringCompositeSc : ATString {
             $Decoration,
             [ATCoordinatesNone]::new()
         )
-        $this.UserData = $Data
+        $this.UserData   = $Data
+        $this.UseATReset = $true
     }
 }
 
@@ -17554,21 +17554,39 @@ Class CommandWindow : WindowBase {
                 [ATStringCompositeSc]::new(
                     [CCTextDefault24]::new(),
                     [ATDecorationNone]::new(),
-                    ''
+                    'I can see the following things here:'
                 )
             )
         )
-        $Script:TheMessageWindow.WriteMessage(
-            $c,
-            [CCApplePinkDark24]::new(),
-            [ATDecorationNone]::new()
+        # $Script:TheMessageWindow.WriteMessage(
+        #     $c,
+        #     [CCApplePinkDark24]::new(),
+        #     [ATDecorationNone]::new()
+        # )
+        $Script:TheMessageWindow.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecorationNone]::new(),
+                    $c
+                )
+            )
         )
 
         If($y -EQ $true) {
-            $Script:TheMessageWindow.WriteMessage(
-                $f,
-                [CCApplePinkDark24]::new(),
-                [ATDecorationNone]::new()
+            # $Script:TheMessageWindow.WriteMessage(
+            #     $f,
+            #     [CCApplePinkDark24]::new(),
+            #     [ATDecorationNone]::new()
+            # )
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        $f
+                    )
+                )
             )
         }
     }
@@ -17579,10 +17597,19 @@ Class CommandWindow : WindowBase {
         Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
             If($a.Name -IEQ $ItemName) {
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-                $Script:TheMessageWindow.WriteMessage(
-                    "$($a.ExamineString)",
-                    [CCAppleMintDark24]::new(),
-                    [ATDecorationNone]::new()
+                # $Script:TheMessageWindow.WriteMessage(
+                #     "$($a.ExamineString)",
+                #     [CCAppleMintDark24]::new(),
+                #     [ATDecorationNone]::new()
+                # )
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleMintDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            $a.ExamineString
+                        )
+                    )
                 )
                 Return
             }
@@ -17827,31 +17854,34 @@ Class MessageWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.MessageADirty -EQ $true) {
-            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
+            # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
-            Write-Host "$([MessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())""$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            Write-Host "$([MessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             $this.MessageADirty = $false
         }
 
         If($this.MessageBDirty -EQ $true) {
-            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
+            # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
-            Write-Host "$([MessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())""$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            Write-Host "$([MessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
             $this.MessageBDirty = $false
         }
 
         If($this.MessageCDirty -EQ $true) {
-            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
+            # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
             # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
-            Write-Host "$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())""$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            Write-Host "$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
             $this.MessageCDirty = $false
         }
@@ -24665,11 +24695,11 @@ $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 # $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
 # $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 # $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
