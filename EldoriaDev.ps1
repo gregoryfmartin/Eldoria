@@ -1213,9 +1213,31 @@ $Script:TheCommandTable = @{
                     If($a1 -IEQ 'self') {
                         [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
 
+                        # This code is problematic if the filter has no items in it
                         If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0])) {
                             $Script:TheCommandWindow.UpdateCommandHistory($true)
                             Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
+                        } Else {
+                            $Script:TheCommandWindow.UpdateCommandHistory($false)
+                            $Script:TheMessageWindow.WriteMessageComposite(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleRedDark24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'I can''t use '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowDark24]::new(),
+                                        [ATDecoration]::new($true),
+                                        $a0
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleRedDark24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' on myself.'
+                                    )
+                                )
+                            )
                         }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1381,6 +1403,27 @@ $Script:TheCommandTable = @{
                         If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0])) {
                             $Script:TheCommandWindow.UpdateCommandHistory($true)
                             Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
+                        } Else {
+                            $Script:TheCommandWindow.UpdateCommandHistory($false)
+                            $Script:TheMessageWindow.WriteMessageComposite(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleRedDark24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'I can''t use '
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleYellowDark24]::new(),
+                                        [ATDecoration]::new($true),
+                                        $a0
+                                    ),
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleRedDark24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        ' on myself.'
+                                    )
+                                )
+                            )
                         }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
