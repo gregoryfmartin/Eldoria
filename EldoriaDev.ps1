@@ -1228,7 +1228,12 @@ $Script:TheCommandTable = @{
                                     ),
                                     [ATStringCompositeSc]::new(
                                         [CCAppleYellowDark24]::new(),
-                                        [ATDecoration]::new($true),
+                                        [ATDecoration]@{
+                                            Blink      = $true
+                                            Italic     = $true
+                                            Underline  = $true
+                                            Strikethru = $false
+                                        },
                                         $a0
                                     ),
                                     [ATStringCompositeSc]::new(
@@ -1922,6 +1927,9 @@ Class ATControlSequences {
     Static [String]$ForegroundColor24Prefix = "`e[38;2;"
     Static [String]$BackgroundColor24Prefix = "`e[48;2;"
     Static [String]$DecorationBlink         = "`e[5m"
+    Static [String]$DecorationItalic        = "`e[3m"
+    Static [String]$DecorationUnderline     = "`e[4m"
+    Static [String]$DecorationStrikethru    = "`e[9m"
     Static [String]$ModifierReset           = "`e[0m"
     Static [String]$CursorHide              = "`e[?25l"
     Static [String]$CursorShow              = "`e[?25h"
@@ -1990,6 +1998,16 @@ Defines a collection of potential ANSI Buffer Cell decorators.
 #>
 Class ATDecoration {
     [ValidateNotNullOrEmpty()][Boolean]$Blink
+    [ValidateNotNullOrEmpty()][Boolean]$Italic
+    [ValidateNotNullOrEmpty()][Boolean]$Underline
+    [ValidateNotNullOrEmpty()][Boolean]$Strikethru
+
+    ATDecoration() {
+        $this.Blink      = $false
+        $this.Italic     = $false
+        $this.Underline  = $false
+        $this.Strikethru = $false
+    }
 
     ATDecoration(
         [Boolean]$Blink
@@ -2007,8 +2025,17 @@ Class ATDecoration {
     [String]ToAnsiControlSequenceString() {
         [String]$a = ''
 
-        If($this.Blink) {
+        If($this.Blink -EQ $true) {
             $a += [ATControlSequences]::DecorationBlink
+        }
+        If($this.Italic -EQ $true) {
+            $a += [ATControlSequences]::DecorationItalic
+        }
+        If($this.Underline -EQ $true) {
+            $a += [ATControlSequences]::DecorationUnderline
+        }
+        If($this.Strikethru -EQ $true) {
+            $a += [ATControlSequences]::DecorationStrikethru
         }
 
         Return $a
