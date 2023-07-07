@@ -18837,6 +18837,11 @@ Class InventoryWindow : WindowBase {
         } Else {
             $this.NumPages = [Math]::Ceiling($pp)
         }
+
+        # POTENTIAL BUG FIX
+        If($this.CurrentPage -GT $this.NumPages) {
+            $this.CurrentPage = $this.NumPages
+        }
     }
 
     [Void]TurnPageForward() {
@@ -19086,7 +19091,7 @@ Class InventoryWindow : WindowBase {
                     }
 
                     { $_ -GT 1 } {
-                        [Int]$a               = ((10 * ($this.CurrentPage - 1)) + $this.ActiveIChevronIndex) - 1
+                        [Int]$a               = ((10 * ($this.CurrentPage - 1)) + $this.ActiveIChevronIndex)
                         [ItemRemovalStatus]$b = $Script:ThePlayer.RemoveInventoryItemByIndex($a)
                         If($b -EQ [ItemRemovalStatus]::Success) {
                             [Console]::Beep(493.9, 250)
@@ -24715,29 +24720,29 @@ $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
 # $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
 # $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
 # $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
