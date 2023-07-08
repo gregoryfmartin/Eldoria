@@ -15921,7 +15921,11 @@ Class MTOTree : MapTileObject {
                         ),
                         [ATStringCompositeSc]::new(
                             [CCAppleYellowDark24]::new(),
-                            [ATDecoration]::new($true),
+                            [ATDecoration]@{
+                                Blink     = $true
+                                Italic    = $true
+                                Underline = $true
+                            },
                             'Rope'
                         ),
                         [ATStringCompositeSc]::new(
@@ -15931,7 +15935,11 @@ Class MTOTree : MapTileObject {
                         ),
                         [ATStringCompositeSc]::new(
                             [CCAppleYellowDark24]::new(),
-                            [ATDecoration]::new($true),
+                            [ATDecoration]@{
+                                Blink     = $true
+                                Italic    = $true
+                                Underline = $true
+                            },
                             'Tree'
                         ),
                         [ATStringCompositeSc]::new(
@@ -17759,7 +17767,9 @@ Class CommandWindow : WindowBase {
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations     = [ATDecorationNone]::new()
         } Else {
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryError
-            $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations = [ATDecoration]::new($true)
+            $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations = [ATDecoration]@{
+                Blink = $true
+            }
         }
 
         $this.CommandActual.UserData = ''
@@ -18010,7 +18020,9 @@ Class MessageWindow : WindowBase {
             @(
                 [ATStringCompositeSc]::new(
                     [CCAppleRedDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
                     $Command
                 ),
                 [ATStringCompositeSc]::new(
@@ -18040,7 +18052,9 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
                     $Command
                 ),
                 [ATStringCompositeSc]::new(
@@ -18050,7 +18064,11 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink     = $true
+                        Italic    = $true
+                        Underline = $true
+                    },
                     $Arg0
                 ),
                 [ATStringCompositeSc]::new(
@@ -18081,7 +18099,9 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
                     $Command
                 ),
                 [ATStringCompositeSc]::new(
@@ -18091,7 +18111,11 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink     = $true
+                        Italic    = $true
+                        Underline = $true
+                    },
                     $Arg0
                 ),
                 [ATStringCompositeSc]::new(
@@ -18101,7 +18125,11 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink     = $true
+                        Italic    = $true
+                        Underline = $true
+                    },
                     $Arg1
                 ),
                 [ATStringCompositeSc]::new(
@@ -18198,7 +18226,9 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
                     $ItemName
                 ),
                 [ATStringCompositeSc]::new(
@@ -18227,7 +18257,9 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
                     $ItemName
                 ),
                 [ATStringCompositeSc]::new(
@@ -18256,7 +18288,9 @@ Class MessageWindow : WindowBase {
                 ),
                 [ATStringCompositeSc]::new(
                     [CCAppleYellowDark24]::new(),
-                    [ATDecoration]::new($true),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
                     $ItemName
                 ),
                 [ATStringCompositeSc]::new(
@@ -18487,7 +18521,9 @@ Class InventoryWindow : WindowBase {
 
             # Try to make the "active" Item Label blink
             If($this.ActiveItemBlinking -EQ $false) {
-                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                    Blink = $true
+                }
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
 
                 $this.ItemsListDirty     = $true
@@ -18555,7 +18591,10 @@ Class InventoryWindow : WindowBase {
                     [ATStringPrefix]::new(
                         [CCAppleYellowLight24]::new(),
                         [ATBackgroundColor24None]::new(),
-                        [ATDecoration]::new($true),
+                        [ATDecoration]@{
+                            Blink  = $true
+                            Italic = $true
+                        },
                         [ATCoordinates]::new(17, 4)
                     ),
                     ($this.PageRefs[$this.ActiveIChevronIndex].KeyItem -EQ $true ? 'KEY ITEM': ''),
@@ -18998,7 +19037,9 @@ Class InventoryWindow : WindowBase {
         $this.ActiveIChevronIndex                                          = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
-        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+            Blink = $true
+        }
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
 
         $this.PlayerChevronDirty = $true
@@ -19024,7 +19065,9 @@ Class InventoryWindow : WindowBase {
                     $this.ActiveIChevronIndex--
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
@@ -19043,7 +19086,9 @@ Class InventoryWindow : WindowBase {
                     $this.ActiveIChevronIndex++
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
@@ -19063,7 +19108,9 @@ Class InventoryWindow : WindowBase {
 
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
@@ -19082,7 +19129,9 @@ Class InventoryWindow : WindowBase {
                     $this.ActiveIChevronIndex -= 5
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]::new($true)
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
 
@@ -24677,7 +24726,7 @@ Class GameCore {
         $this.LastFrameTime        = 0D
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
-        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::BattleScreen
     }
 
     [Void]Run() {
