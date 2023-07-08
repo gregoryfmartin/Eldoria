@@ -24726,7 +24726,7 @@ Class GameCore {
         $this.LastFrameTime        = 0D
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
-        $Script:TheGlobalGameState = [GameStatePrimary]::BattleScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
     }
 
     [Void]Run() {
