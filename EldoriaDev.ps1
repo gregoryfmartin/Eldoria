@@ -270,7 +270,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     Affinity        = [BattleActionType]::ElementalFire
 }
 
-$Script:TheCurrentEnemy = [EEBat]::new()
+# $Script:TheCurrentEnemy = [EEBat]::new()
 
 # $Script:TheCurrentEnemy = [EnemyBattleEntity]@{
 #     Name = 'Bat'
@@ -732,6 +732,18 @@ Enum BattleActionResultType {
     FailedAttackFailed
     FailedElementalMatch
     FailedNoUsesRemaining
+}
+
+$Script:BattleEncounterRegionTable = @{
+    0 = @(
+        'EEBat',
+        'EENightwing',
+        'EEWingblight',
+        'EEDarkfang',
+        'EENocturna',
+        'EEBloodswoop',
+        'EEDuskbane'
+    )
 }
 
 # BATTLE ACTION TYPE CHARACTER ADORNMENT TABLE
@@ -6913,6 +6925,7 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Row++
                 }
 
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 Return
@@ -6926,6 +6939,7 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Row++
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
 
@@ -6951,6 +6965,7 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Row--
                 }
 
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 Return
@@ -6963,6 +6978,7 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Row--
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
 
@@ -6989,6 +7005,7 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Column++
                 }
 
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 Return
@@ -7002,6 +7019,7 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Column++
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
 
@@ -7027,6 +7045,7 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Column--
                 }
 
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 Return
@@ -7039,6 +7058,7 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Column--
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
 
@@ -8624,6 +8644,43 @@ Class EEBat : EnemyBattleEntity {
         $this.Affinity = [BattleActionType]::ElementalIce
 
         $this.Image = [EEIBat]::new()
+    }
+}
+
+
+Class EENightwing : EEBat {
+    EENightwing() : base() {
+        $this.Name = 'Nightwing'
+    }
+}
+
+Class EEWingblight : EEBat {
+    EEWingblight() : base() {
+        $this.Name = 'Wingblight'
+    }
+}
+
+Class EEDarkfang : EEBat {
+    EEDarkfang() : base() {
+        $this.Name = 'Darkfang'
+    }
+}
+
+Class EENocturna : EEBat {
+    EENocturna() : base() {
+        $this.Name = 'Nocturna'
+    }
+}
+
+Class EEBloodswoop : EEBat {
+    EEBloodswoop() : base() {
+        $this.Name = 'Bloodswoop'
+    }
+}
+
+Class EEDuskbane : EEBat {
+    EEDuskbane() : base() {
+        $this.Name = 'Duskbane'
     }
 }
 
@@ -15826,6 +15883,23 @@ Class MapTile {
     [SceneImage]$BackgroundImage
     [List[MapTileObject]]$ObjectListing
     [Boolean[]]$Exits
+    [Boolean]$BattleAllowed
+    [Double]$EncounterRate
+    [Int]$RegionCode
+
+    MapTile() {
+        $this.BackgroundImage = [SIEmpty]::new()
+        $this.ObjectListing   = [List[MapTileObject]]::new()
+        $this.Exits = @(
+            $false,
+            $false,
+            $false,
+            $false
+        )
+        $this.BattleAllowed = $false
+        $this.EncounterRate = 0.5
+        $this.RegionCode    = 0
+    }
 
     MapTile(
         [SceneImage]$BackgroundImage,
@@ -15835,8 +15909,31 @@ Class MapTile {
         $this.BackgroundImage = $BackgroundImage
         $this.ObjectListing   = [List[MapTileObject]]::new()
         $this.Exits           = $Exits
+        $this.BattleAllowed   = $false
+        $this.EncounterRate   = 0.5
+        $this.RegionCode      = 0
 
         Foreach($a In $ObjectListing) {
+            $this.ObjectListing.Add($a) | Out-Null
+        }
+    }
+
+    MapTile(
+        [SceneImage]$BackgroundImage,
+        [MapTileObject[]]$ObjectListing,
+        [Boolean[]]$Exits,
+        [Boolean]$BattleAllowed,
+        [Double]$EncounterRate,
+        [Int]$RegionCode
+    ) {
+        $this.BackgroundImage = $BackgroundImage
+        $this.ObjectListing   = [List[MapTileObject]]::new()
+        $this.Exits           = $Exits
+        $this.BattleAllowed   = $BattleAllowed
+        $this.EncounterRate   = $EncounterRate
+        $this.RegionCode      = $RegionCode
+        
+        Foreach($a in $ObjectListing) {
             $this.ObjectListing.Add($a) | Out-Null
         }
     }
@@ -15859,6 +15956,19 @@ Class MapTile {
         }
 
         Return $null
+    }
+
+    [Void]BattleStep() {
+        If($this.BattleAllowed -EQ $true) {
+            [Double]$BattleChance = Get-Random -Minimum 0.0 -Maximum 1.0
+            If($BattleChance -GT $this.EncounterRate) {
+                # $b = $Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random
+                # $b | Out-File 'BattleEncounterChances.txt'
+                $Script:TheCurrentEnemy = New-Object -TypeName $($Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random)
+                $Script:TheCurrentEnemy | Out-File 'BattleEncounterChances.txt' -Append
+                $Script:TheGlobalGameState = [GameStatePrimary]::BattleScreen
+            }
+        }
     }
 }
 
@@ -24840,7 +24950,10 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
         $false,
         $true,
         $false
-    )
+    ),
+    $true,
+    0.5,
+    0
 )
 $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
     $Script:FieldNorthWestRoadImage,
@@ -24852,7 +24965,10 @@ $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
         $false,
         $false,
         $true
-    )
+    ),
+    $true,
+    0.5,
+    0
 )
 $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
     $Script:FieldSouthEastRoadImage,
@@ -24864,7 +24980,10 @@ $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
         $true,
         $true,
         $false
-    )
+    ),
+    $true,
+    0.5,
+    0
 )
 $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
     $Script:FieldSouthWestRoadImage,
@@ -24876,8 +24995,14 @@ $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
         $true,
         $false,
         $true
-    )
+    ),
+    $true,
+    0.5,
+    0
 )
+
+# $aabb = New-Object -TypeName 'EEBat'
+# $aabb | Out-File -Path 'TypeData.txt'
 
 $Script:TheGameCore.Run()
 
