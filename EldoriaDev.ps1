@@ -45,6 +45,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [SoundPlayer]              $Script:TheSfxMachine                = [SoundPlayer]::new()
 [SoundPlayer]              $Script:TheBgmMachine                = [SoundPlayer]::new()
 [Boolean]                  $Script:IsBattleBgmPlaying           = $false
+[Boolean]                  $Script:HasBattleIntroPlayed         = $false
 
 [System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer = [System.Windows.Media.MediaPlayer]::new()
 [System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer = [System.Windows.Media.MediaPlayer]::new()
@@ -1729,6 +1730,28 @@ $Script:TheGlobalStateBlockTable = @{
     }
     
     [GameStatePrimary]::BattleScreen = {
+        If($Script:HasBattleIntroPlayed -EQ $false) {
+            If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
+                # The screen should've already been wiped at this point, so we can commence with the animation sequence
+                [ATString]$Banner = [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleMintLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new(7, 40 - (15 / 2))
+                    ),
+                    'BATTLE COMMENCE',
+                    $true
+                )
+                Write-Host "$($Banner.ToAnsiControlSequenceString())"
+                $Script:TheSfxMachine.SoundLocation = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
+                $Script:TheSfxMachine.Play()
+                Start-Sleep -Seconds 1.75
+                Clear-Host
+            }
+            $Script:HasBattleIntroPlayed = $true
+        }
+
         If($null -EQ $Script:TheBattleManager) {
             $Script:TheBattleManager = [BattleManager]::new()
         }
@@ -1737,7 +1760,7 @@ $Script:TheGlobalStateBlockTable = @{
             # $Script:TheBgmMachine.SoundLocation = $Script:BgmBattleThemeA
             # $Script:TheBgmMachine.PlayLooping()
             $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-            $Script:TheBgmMPlayer.Volume = 0.15
+            $Script:TheBgmMPlayer.Volume = 0.18
             $Script:TheBgmMPlayer.Play()
             $Script:IsBattleBgmPlaying = $true
         }
