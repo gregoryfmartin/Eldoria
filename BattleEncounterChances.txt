@@ -9,3 +9,25 @@ NameDrawColor   : CCTextDefault24
 Affinity        : ElementalIce
 
 
+
+Image           : EEIBat
+Name            : Nightwing
+Stats           : {[Accuracy, BattleEntityProperty], [Luck, BattleEntityProperty], [Speed, BattleEntityProperty], [MagicDefense, BattleEntityProperty]…}
+ActionListing   : {[D, ], [C, ], [B, BAScratch], [A, BAPound]}
+SpoilsEffect    : 
+ActionMarbleBag : {A, A, A, A…}
+NameDrawColor   : CCTextDefault24
+Affinity        : ElementalIce
+
+
+
+Image           : EEIBat
+Name            : Nocturna
+Stats           : {[Accuracy, BattleEntityProperty], [Luck, BattleEntityProperty], [Speed, BattleEntityProperty], [MagicDefense, BattleEntityProperty]…}
+ActionListing   : {[D, ], [C, ], [B, BAScratch], [A, BAPound]}
+SpoilsEffect    : 
+ActionMarbleBag : {A, A, A, A…}
+NameDrawColor   : CCTextDefault24
+Affinity        : ElementalIce
+
+

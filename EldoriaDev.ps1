@@ -276,17 +276,17 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 #     Name = 'Bat'
 #     Stats = @{
 #         [StatId]::HitPoints = [BattleEntityProperty]@{
-#             Base                = 500
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 500
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
+# Base                = 500
+# BasePre             = 0
+# BaseAugmentValue    = 0
+# Max                 = 500
+# MaxPre              = 0
+# MaxAugmentValue     = 0
+# AugmentTurnDuration = 0
+# BaseAugmentActive   = $false
+# MaxAugmentActive    = $false
+# State               = [StatNumberState]::Normal
+# ValidateFunction    = {
 #                 Param(
 #                     [BattleEntityProperty]$Self
 #                 )
@@ -15962,11 +15962,14 @@ Class MapTile {
         If($this.BattleAllowed -EQ $true) {
             [Double]$BattleChance = Get-Random -Minimum 0.0 -Maximum 1.0
             If($BattleChance -GT $this.EncounterRate) {
-                # $b = $Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random
-                # $b | Out-File 'BattleEncounterChances.txt'
                 $Script:TheCurrentEnemy = New-Object -TypeName $($Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random)
-                $Script:TheCurrentEnemy | Out-File 'BattleEncounterChances.txt' -Append
-                $Script:TheGlobalGameState = [GameStatePrimary]::BattleScreen
+
+                # Copy the active buffer to the A back buffer
+                $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+
+                # Change state
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState         = [GameStatePrimary]::BattleScreen
             }
         }
     }
