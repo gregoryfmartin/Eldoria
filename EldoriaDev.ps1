@@ -1673,6 +1673,10 @@ $Script:TheGlobalStateBlockTable = @{
         If($null -NE $Script:TheInventoryWindow) {
             $Script:TheInventoryWindow = $null
         }
+        If($null -NE $Script:TheBattleManager) {
+            $Script:TheBattleManager.Cleanup()
+            $Script:TheBattleManager = $null
+        }
 
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
@@ -1693,8 +1697,6 @@ $Script:TheGlobalStateBlockTable = @{
             # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
-            $Script:TheBattleManager.Cleanup()
-            $Script:TheBattleManager = $null
             $Script:TheBufferManager.RestoreBufferAToActive()
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
@@ -1762,6 +1764,10 @@ $Script:TheGlobalStateBlockTable = @{
 
         If($null -EQ $Script:TheBattleManager) {
             $Script:TheBattleManager = [BattleManager]::new()
+        }
+
+        If($Script:GpsRestoredFromBatBackup -EQ $true) {
+            $Script:GpsRestoredFromBatBackup = $false
         }
 
         If($Script:IsBattleBgmPlaying -EQ $false) {
