@@ -21241,7 +21241,7 @@ Class BattleManager {
             }
 
             PhaseAExecution {
-                If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0 -OR $this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     $this.State = [BattleManagerState]::Calculation
                     Break
                 }
@@ -23161,7 +23161,7 @@ Class BattleManager {
             }
 
             PhaseBExecution {
-                If($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                If($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0 -OR $this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     $this.State = [BattleManagerState]::Calculation
                     Break
                 }
