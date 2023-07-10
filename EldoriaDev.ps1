@@ -26,6 +26,9 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]                   $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
 [String]                   $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
 [String]                   $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
+[String]                   $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
+[String]                   $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
+[String]                   $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
 [String]                   $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
 [StatusWindow]             $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]            $Script:TheCommandWindow             = [CommandWindow]::new()
@@ -46,6 +49,8 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [SoundPlayer]              $Script:TheBgmMachine                = [SoundPlayer]::new()
 [Boolean]                  $Script:IsBattleBgmPlaying           = $false
 [Boolean]                  $Script:HasBattleIntroPlayed         = $false
+[Boolean]                  $Script:HasBattleWonChimePlayed      = $false
+[Boolean]                  $Script:HasBattleLostChimePlayed     = $false
 
 [System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer = [System.Windows.Media.MediaPlayer]::new()
 [System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer = [System.Windows.Media.MediaPlayer]::new()
@@ -55,10 +60,10 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     Name = 'Steve'
     Stats = @{
         [StatId]::HitPoints = [BattleEntityProperty]@{
-            Base                = 200
+            Base                = 1000
             BasePre             = 0
             BaseAugmentValue    = 0
-            Max                 = 200
+            Max                 = 1000
             MaxPre              = 0
             MaxAugmentValue     = 0
             AugmentTurnDuration = 0
@@ -715,6 +720,7 @@ Enum AllActions {
 }
 
 Enum BattleManagerState {
+    HealthCheck
     TurnIncrement
     PhaseOrdering
     PhaseAExecution
@@ -1687,6 +1693,8 @@ $Script:TheGlobalStateBlockTable = @{
             # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
+            $Script:TheBattleManager.Cleanup()
+            $Script:TheBattleManager = $null
             $Script:TheBufferManager.RestoreBufferAToActive()
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
@@ -1744,7 +1752,7 @@ $Script:TheGlobalStateBlockTable = @{
                     $true
                 )
                 Write-Host "$($Banner.ToAnsiControlSequenceString())"
-                $Script:TheSfxMachine.SoundLocation = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
+                $Script:TheSfxMachine.SoundLocation = $Script:SfxBattleIntro
                 $Script:TheSfxMachine.Play()
                 Start-Sleep -Seconds 1.75
                 Clear-Host
@@ -21101,6 +21109,11 @@ Class BattleManager {
             }
 
             PhaseAExecution {
+                If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                    $this.State = [BattleManagerState]::Calculation
+                    Break
+                }
+
                 # Update the Phase Indicator
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseOneEntity)
@@ -23016,6 +23029,11 @@ Class BattleManager {
             }
 
             PhaseBExecution {
+                If($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                    $this.State = [BattleManagerState]::Calculation
+                    Break
+                }
+
                 # Update the Phase Indicator
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseTwoEntity)
@@ -24777,7 +24795,7 @@ Class BattleManager {
                     )
                 }
 
-                $this.State = [BattleManagerState]::Calculation
+                $this.State = [BattleManagerState]::TurnIncrement
             }
 
             Calculation {
@@ -24788,19 +24806,23 @@ Class BattleManager {
                     If($this.PhaseOneEntity -IS [Player]) {
                         # This means the Player's HP has reached zero and has died
                         $this.State = [BattleManagerState]::BattleLost
+                        Break
                     } Else {
                         # This means the Enemy's HP has reached zero and has died
                         $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
                         $this.State        = [BattleManagerState]::BattleWon
+                        Break
                     }
                 } Elseif($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseTwoEntity -IS [Player]) {
                         # This means the Player's HP has reached zero and has died
                         $this.State = [BattleManagerState]::BattleLost
+                        Break
                     } Else {
                         # This means the Enemy's HP has reached zero and has died
                         $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
                         $this.State        = [BattleManagerState]::BattleWon
+                        Break
                     }
                 }
 
@@ -24808,28 +24830,61 @@ Class BattleManager {
             }
 
             BattleWon {
+                $Script:TheBgmMPlayer.Stop()
+                If($Script:HasBattleWonChimePlayed -EQ $false) {
+                    $Script:TheSfxMachine.SoundLocation = $Script:SfxBattlePlayerWin
+                    $Script:TheSfxMachine.Play()
+                    $Script:HasBattleWonChimePlayed = $true
+                }
+
                 # $Script:TheBattleStatusMessageWindow.WriteMessage(
                 #     'You''ve won the battle!',
                 #     [CCTextDefault24]::new(),
-                #     [ATDecorationNone]::new()
+                #     [ATDeco   rationNone]::new()
                 # )
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        'You''ve won the battle!'
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'You''ve won the battle!'
+                        )
                     )
                 )
 
-                Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
+                # TODO: Write spoils to the message log
 
                 Start-Sleep -Seconds 2
+
+                Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
+
+                Start-Sleep -Seconds 10
 
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
             }
 
-            BattleLost {}
+            BattleLost {
+                $Script:TheBgmMPlayer.Stop()
+                If($Script:HasBattleLostChimePlayed -EQ $false) {
+                    $Script:TheSfxMachine.SoundLocation = $Script:SfxBattlePlayerLose
+                    $Script:TheSfxMachine.Play()
+                    $Script:HasBattleLostChimePlayed = $true
+                }
+
+                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'You''ve lost the battle.'
+                        )
+                    )
+                )
+
+                Start-Sleep -Seconds 5
+                Exit
+            }
 
             Default {}
         }
@@ -24842,6 +24897,10 @@ Class BattleManager {
         $Script:ThePlayerBattleActionWindow  = $null
         $Script:TheBattleStatusMessageWindow = $null
         $Script:TheBattleEnemyImageWindow    = $null
+        $Script:HasBattleIntroPlayed         = $false
+        $Script:IsBattleBgmPlaying           = $false
+        $Script:HasBattleWonChimePlayed      = $false
+        $Script:HasBattleLostChimePlayed     = $false
     }
 }
 
