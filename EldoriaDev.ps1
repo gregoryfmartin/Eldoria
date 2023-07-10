@@ -265,7 +265,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         [ActionSlot]::A = [BAPunch]::new()
         [ActionSlot]::B = [BAKick]::new()
         [ActionSlot]::C = [BAFlamePunch]::new()
-        [ActionSlot]::D = [BAMortarToss]::new()
+        [ActionSlot]::D = [BAIKill]::new()
     }
     SpoilsEffect    = {}
     ActionMarbleBag = @()
@@ -5864,6 +5864,132 @@ Class BAMortarToss : BattleAction {
         $this.UsesMax     = 15
         $this.EffectValue = 100
         $this.Chance      = 0.7
+    }
+}
+
+Class BAIKill : BattleAction {
+    BAIKill() : base() {
+        $this.Name        = 'IKill'
+        $this.Description = 'Insta death'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {
+            Param(
+                [BattleEntity]$Self,
+                [BattleEntity]$Target,
+                [BattleAction]$SelfAction
+            )
+            
+            If($SelfAction.Uses -GT 0) {
+                $SelfAction.Uses--
+            
+                $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+                If($ExecuteChance -GT $SelfAction.Chance) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+                $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+                If($EvRandFactor -LE $TargetEffectiveEvasion) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackMissed,
+                        $Self,
+                        $Target,
+                        0
+                    )
+                }
+            
+                $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+                    $SelfAction.EffectValue * (
+                        ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                        (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+                    ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+                ))
+                $EffectiveDamageCritFactor = 1.0
+                $EffectiveDamageAffinityFactor = 1.0
+            
+                $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+                If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+                    $EffectiveDamageCritFactor = 1.5
+                }
+            
+                Switch($Target.Affinity) {
+                    { $_ -EQ $SelfAction.Type } {
+                        $EffectiveDamageAffinityFactor = -0.75
+                        Break
+                    }
+            
+                    ([BattleActionType]::ElementalIce) {
+                        $EffectiveDamageAffinityFactor = 1.6
+                        Break
+                    }
+                }
+            
+                $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+            
+                [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+            
+                If(0 -NE $DecRes) {
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::FailedAttackFailed,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                } Else {
+                    If($Target -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+                    }
+            
+                    If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritical,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                        Return [BattleActionResult]::new(
+                            [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                            $Self,
+                            $Target,
+                            $FinalDamage
+                        )
+                    }
+            
+                    Return [BattleActionResult]::new(
+                        [BattleActionResultType]::Success,
+                        $Self,
+                        $Target,
+                        $FinalDamage
+                    )
+                }
+            } Else {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    $Self,
+                    $Target,
+                    0
+                )
+            }
+        }
+        $this.Uses        = 100
+        $this.UsesMax     = 100
+        $this.EffectValue = 50000
+        $this.Chance      = 1.0
     }
 }
 
@@ -24832,8 +24958,12 @@ Class BattleManager {
             BattleWon {
                 $Script:TheBgmMPlayer.Stop()
                 If($Script:HasBattleWonChimePlayed -EQ $false) {
-                    $Script:TheSfxMachine.SoundLocation = $Script:SfxBattlePlayerWin
-                    $Script:TheSfxMachine.Play()
+                    Try {
+                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
+                        # $Script:TheSfxMachine.PlaySync()
+                        $Script:TheSfxMPlayer.Open($Script:SfxBattlePlayerWin)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
                     $Script:HasBattleWonChimePlayed = $true
                 }
 
@@ -24851,14 +24981,23 @@ Class BattleManager {
                         )
                     )
                 )
+                $Script:TheBattleStatusMessageWindow.Draw()
+                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'Press any key to exit.'
+                        )
+                    )
+                )
+                $Script:TheBattleStatusMessageWindow.Draw()
+                
+                $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
 
                 # TODO: Write spoils to the message log
 
-                Start-Sleep -Seconds 2
-
                 Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
-
-                Start-Sleep -Seconds 10
 
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
