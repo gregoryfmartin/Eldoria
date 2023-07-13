@@ -1774,7 +1774,7 @@ $Script:TheGlobalStateBlockTable = @{
             # $Script:TheBgmMachine.SoundLocation = $Script:BgmBattleThemeA
             # $Script:TheBgmMachine.PlayLooping()
             $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-            $Script:TheBgmMPlayer.Volume = 0.18
+            $Script:TheBgmMPlayer.Volume = 0.5
             $Script:TheBgmMPlayer.Play()
             $Script:IsBattleBgmPlaying = $true
         }
@@ -16688,8 +16688,10 @@ Class StatusWindow : WindowBase {
     Static [Int]$WindowRBRow          = 10
     Static [Int]$WindowRBColumn       = 19
 
-    Static  [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
-    Static  [String]$WindowBorderVertical   = '|'
+    Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
+    Static [String]$WindowBorderVertical   = '|'
+    
+    Static [String]$LineBlank = '                '
 
     Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
@@ -16702,6 +16704,8 @@ Class StatusWindow : WindowBase {
     [Boolean]$PlayerMpDrawDirty
     [Boolean]$PlayerGoldDrawDirty
     # [Boolean]$PlayerAilDrawDirty
+
+    [ATString]$LineBlankActual = [ATStringNone]::new()
 
     StatusWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating Status Window' -PercentComplete -1
@@ -16723,6 +16727,17 @@ Class StatusWindow : WindowBase {
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
         # $this.PlayerAilDrawDirty  = $true
+        
+        $this.LineBlankActual = [ATString]::new(
+            [ATStringPrefix]::new(
+                [ATForegroundColor24None]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            [StatusWindow]::LineBlank,
+            $true
+        )
     }
 
     [Void]Draw() {
@@ -16731,6 +16746,7 @@ Class StatusWindow : WindowBase {
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 If($this.PlayerNameDrawDirty) {
+                    $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
                     [ATString]$a = [ATString]::new(
                         [ATStringPrefix]::new(
                             $Script:ThePlayer.NameDrawColor,
@@ -16741,6 +16757,7 @@ Class StatusWindow : WindowBase {
                         $Script:ThePlayer.Name,
                         $true
                     )
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
 
                     # Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
@@ -16749,6 +16766,7 @@ Class StatusWindow : WindowBase {
                 If($this.PlayerHpDrawDirty) {
                     [String]$a = ''
 
+                    $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerHpDrawCoordinates
                     Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
                         ([StatNumberState]::Normal) {
                             [ATString]$p1 = [ATString]::new(
@@ -16931,6 +16949,7 @@ Class StatusWindow : WindowBase {
                         }
                     }
 
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
 
                     # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
@@ -24999,7 +25018,7 @@ Class BattleManager {
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
                 
-                $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
 
                 # TODO: Write spoils to the message log
 
