@@ -16950,6 +16950,8 @@ Class StatusWindow : WindowBase {
                     }
 
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
+                    $this.LineBlankActual.Prefix.Coordinates.Row++
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSeuenceString())"
                     Write-Host "$($a)"
 
                     # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
@@ -17184,6 +17186,8 @@ Class StatusWindow : WindowBase {
                         $Script:ThePlayer.Name,
                         $true
                     )
+                    $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
 
                     # Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
@@ -17374,6 +17378,10 @@ Class StatusWindow : WindowBase {
                         }
                     }
 
+                    $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawCoordinates.Row, [StatusWindow]::PlayerHpDrawCoordinates.Column)
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
+                    $this.LineBlankActual.Prefix.Coordinates.Row++
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
 
                     # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
@@ -17562,6 +17570,10 @@ Class StatusWindow : WindowBase {
                         }
                     }
 
+                    $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerMpDrawCoordinates.Row, [StatusWindow]::PlayerHpDrawCoordinates.Column)
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
+                    $this.LineBlankActual.Prefix.Coordinates.Row++
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
 
                     # Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
@@ -17589,6 +17601,8 @@ Class StatusWindow : WindowBase {
                         $true
                     )
 
+                    $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawCoordinates.Row, [StatusWindow]::PlayerGoldDrawCoordinates.Column)
+                    Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
 
                     # Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
