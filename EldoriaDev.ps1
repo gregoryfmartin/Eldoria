@@ -25026,13 +25026,16 @@ Class BattleManager {
                         [ATStringCompositeSc]::new(
                             [CCTextDefault24]::new(),
                             [ATDecorationNone]::new(),
-                            'Press any key to exit.'
+                            'Press ''Enter'' to exit.'
                         )
                     )
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
                 
-                $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                While($a.VirtualKeyCode -NE 13) {
+                    $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                }
 
                 # TODO: Write spoils to the message log
 
