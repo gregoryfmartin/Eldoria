@@ -60,7 +60,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     Name = 'Steve'
     Stats = @{
         [StatId]::HitPoints = [BattleEntityProperty]@{
-            Base                = 1000
+            Base                = 1
             BasePre             = 0
             BaseAugmentValue    = 0
             Max                 = 1000
@@ -25062,8 +25062,22 @@ Class BattleManager {
                         )
                     )
                 )
+                $Script:TheBattleStatusMessageWindow.Draw()
+                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleRedDark24]::new(),
+                            [ATDecoration]@{
+                                Blink = $true
+                            },
+                            'GAME OVER'
+                        )
+                    )
+                )
+                $Script:TheBattleStatusMessageWindow.Draw()
 
                 Start-Sleep -Seconds 5
+                Clear-Host
                 Exit
             }
 
