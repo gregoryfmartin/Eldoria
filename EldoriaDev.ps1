@@ -60,7 +60,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     Name = 'Steve'
     Stats = @{
         [StatId]::HitPoints = [BattleEntityProperty]@{
-            Base                = 1
+            Base                = 1000
             BasePre             = 0
             BaseAugmentValue    = 0
             Max                 = 1000
@@ -1754,8 +1754,12 @@ $Script:TheGlobalStateBlockTable = @{
                     $true
                 )
                 Write-Host "$($Banner.ToAnsiControlSequenceString())"
-                $Script:TheSfxMachine.SoundLocation = $Script:SfxBattleIntro
-                $Script:TheSfxMachine.Play()
+                # $Script:TheSfxMachine.SoundLocation = $Script:SfxBattleIntro
+                # $Script:TheSfxMachine.Play()
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxBattleIntro)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
                 Start-Sleep -Seconds 1.75
                 Clear-Host
             }
