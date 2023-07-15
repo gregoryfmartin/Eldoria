@@ -7092,9 +7092,9 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Row++
                 }
 
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 Return
             } Else {
                 $a = $Script:CurrentMap.MapHeight - 1
@@ -7106,9 +7106,9 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Row++
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
 
                     Return
                 }
@@ -7132,9 +7132,9 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Row--
                 }
 
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 Return
             } Else {
                 $a = 0
@@ -7145,9 +7145,9 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Row--
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
 
                     Return
                 }
@@ -7172,9 +7172,9 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Column++
                 }
 
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 Return
             } Else {
                 $a = $Script:CurrentMap.MapWidth - 1
@@ -7186,9 +7186,9 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Column++
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
 
                     Return
                 }
@@ -7212,9 +7212,9 @@ Class Player : BattleEntity {
                     $this.MapCoordinates.Column--
                 }
 
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
+                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                 Return
             } Else {
                 $a = 0
@@ -7225,9 +7225,9 @@ Class Player : BattleEntity {
                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
                 } Else {
                     $this.MapCoordinates.Column--
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
 
                     Return
                 }
@@ -8804,7 +8804,40 @@ Class EEBat : EnemyBattleEntity {
             [ActionSlot]::D = $null
         }
 
-        $this.SpoilsEffect = {}
+        $this.SpoilsEffect = {
+            Param(
+                [BattleEntity]$Player,
+                [BattleEntity]$Opponent
+            )
+
+            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                @(
+                    [ATStringCompositeSc]::new(
+                        $Opponent.NameDrawColor,
+                        [ATDecorationNone]::new(),
+                        $Opponent.Name
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' dropped '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        '50'
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' gold.'
+                    )
+                )
+            )
+            $Script:TheBattleStatusMessageWindow.Draw()
+            
+            ([Player]$Player).CurrentGold += 50
+        }
 
         $this.ActionMarbleBag = @([ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B)
 
@@ -25025,6 +25058,19 @@ Class BattleManager {
                     )
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
+                
+                # TODO: Write spoils to the message log
+
+                If($this.PhaseOneEntity -IS [Player]) {
+                    $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
+                    Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity
+                    # Start-Job $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget | Wait-Job
+                } Elseif($this.PhaseTwoEntity -IS [Player]) {
+                    $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
+                    Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity
+                    # Start-Job $this.SpoilsAction -ArgumentList $this.PhaseTwoTarget, $this.PhaseOneTarget | Wait-Job
+                }
+
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                     @(
                         [ATStringCompositeSc]::new(
@@ -25041,9 +25087,7 @@ Class BattleManager {
                     $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
                 }
 
-                # TODO: Write spoils to the message log
-
-                Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
+                # Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
 
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
