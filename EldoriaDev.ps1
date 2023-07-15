@@ -2335,6 +2335,201 @@ Class CCPantonePottingSoil24 : ConsoleColor24 {
     CCPantonePottingSoil24(): base(33, 22, 18) {}
 }
 
+<# COLOR VARIATIONS RECENTLY UPDATED FROM APPLE'S DOCUMENTATION #>
+<# https://developer.apple.com/design/human-interface-guidelines/color#Specifications #>
+
+Class CCAppleIosRedLight24 : ConsoleColor24 {
+    CCAppleIosRedLight24(): base(255, 59, 48) {}
+}
+
+Class CCAppleIosRedDark24 : ConsoleColor24 {
+    CCAppleIosRedDark24(): base(255, 69, 58) {}
+}
+
+Class CCAppleIosRedALight24 : ConsoleColor24 {
+    CCAppleIosRedALight24(): base(215, 0, 21) {}
+}
+
+Class CCAppleIosRedADark24 : ConsoleColor24 {
+    CCAppleIosRedADark24(): base(255, 105, 97) {}
+}
+
+Class CCAppleIosOrangeLight24 : ConsoleColor24 {
+    CCAppleIosOrangeLight24(): base(255, 149, 0) {}
+}
+
+Class CCAppleIosOrangeDark24 : ConsoleColor24 {
+    CCAppleIosOrangeDark24(): base(255, 159, 10) {}
+}
+
+Class CCAppleIosOrangeALight24 : ConsoleColor24 {
+    CCAppleIosOrangeALight24(): base(201, 52, 0) {}
+}
+
+Class CCAppleIosOrangeADark24 : ConsoleColor24 {
+    CCAppleIosOrangeADark24(): base(255, 179, 64) {}
+}
+
+Class CCAppleIosYellowLight24 : ConsoleColor24 {
+    CCAppleIosYellowLight24(): base(255, 204, 0) {}
+}
+
+Class CCAppleIosYellowDark24 : ConsoleColor24 {
+    CCAppleIosYellowDark24(): base(255, 214, 10) {}
+}
+
+Class CCAppleIosYellowALight24 : ConsoleColor24 {
+    CCAppleIosYellowALight24(): base(178, 80, 0) {}
+}
+
+Class CCAppleIosYellowADark24 : ConsoleColor24 {
+    CCAppleIosYellowADark24(): base(255, 212, 38) {}
+}
+
+Class CCAppleIosGreenLight24 : ConsoleColor24 {
+    CCAppleIosGreenLight24(): base(52, 199, 89) {}
+}
+
+Class CCAppleIosGreenDark24 : ConsoleColor24 {
+    CCAppleIosGreenDark24(): base(48, 209, 88) {}
+}
+
+Class CCAppleIosGreenALight24 : ConsoleColor24 {
+    CCAppleIosGreenALight24(): base(36, 138, 61) {}
+}
+
+Class CCAppleIosGreenADark24 : ConsoleColor24 {
+    CCAppleIosGreenADark24(): base(48, 219, 91) {}
+}
+
+Class CCAppleIosMintLight24 : ConsoleColor24 {
+    CCAppleIosMintLight24(): base(0, 199, 190) {}
+}
+
+Class CCAppleIosMintDark24 : ConsoleColor24 {
+    CCAppleIosMintDark24(): base(99, 230, 226) {}
+}
+
+Class CCAppleIosMintALight24 : ConsoleColor24 {
+    CCAppleIosMintALight24(): base(12, 129, 123) {}
+}
+
+Class CCAppleIosMintADark24 : ConsoleColor24 {
+    CCAppleIosMintADark24(): base(102, 212, 207) {}
+}
+
+Class CCAppleIosTealLight24 : ConsoleColor24 {
+    CCAppleIosTealLight24(): base(48, 176, 199) {}
+}
+
+Class CCAppleIosTealDark24 : ConsoleColor24 {
+    CCAppleIosTealDark24(): base(64, 200, 224) {}
+}
+
+Class CCAppleIosTealALight24 : ConsoleColor24 {
+    CCAppleIosTealALight24(): base(0, 130, 153) {}
+}
+
+Class CCAppleIosTealADark24 : ConsoleColor24 {
+    CCAppleIosTealADark24(): base(93, 230, 255) {}
+}
+
+Class CCAppleIosCyanLight24 : ConsoleColor24 {
+    CCAppleIosCyanLight24(): base(50, 173, 230) {}
+}
+
+Class CCAppleIosCyanDark24 : ConsoleColor24 {
+    CCAppleIosCyanDark24(): base(100, 210, 255) {}
+}
+
+Class CCAppleIosCyanALight24 : ConsoleColor24 {
+    CCAppleIosCyanALight24(): base(0, 113, 164) {}
+}
+
+Class CCAppleIosCyanADark24 : ConsoleColor24 {
+    CCAppleIosCyanADark24(): base(112, 215, 255) {}
+}
+
+Class CCAppleIosBlueLight24 : ConsoleColor24 {
+    CCAppleIosBlueLight24(): base(0, 122, 255) {}
+}
+
+Class CCAppleIosBlueDark24 : ConsoleColor24 {
+    CCAppleIosBlueDark24(): base(10, 132, 255) {}
+}
+
+Class CCAppleIosBlueALight24 : ConsoleColor24 {
+    CCAppleIosBlueALight24(): base(0, 64, 221) {}
+}
+
+Class CCAppleIosBlueADark24 : ConsoleColor24 {
+    CCAppleIosBlueADark24(): base(64, 156, 255) {}
+}
+
+Class CCAppleIosIndigoLight24 : ConsoleColor24 {
+    CCAppleIosIndigoLight24(): base(88, 86, 214) {}
+}
+
+Class CCAppleIosIndigoDark24 : ConsoleColor24 {
+    CCAppleIosIndigoDark24(): base(94, 92, 230) {}
+}
+
+Class CCAppleIosIndigoALight24 : ConsoleColor24 {
+    CCAppleIosIndigoALight24(): base(54, 52, 163) {}
+}
+
+Class CCAppleIosIndigoADark24 : ConsoleColor24 {
+    CCAppleIosIndigoADark24(): base(125, 122, 255) {}
+}
+
+Class CCAppleIosPurpleLight24 : ConsoleColor24 {
+    CCAppleIosPurpleLight24(): base(175, 82, 222) {}
+}
+
+Class CCAppleIosPurpleDark24 : ConsoleColor24 {
+    CCAppleIosPurpleDark24(): base(191, 90, 242) {}
+}
+
+Class CCAppleIosPurpleALight24 : ConsoleColor24 {
+    CCAppleIosPurpleALight24(): base(137, 68, 171) {}
+}
+
+Class CCAppleIosPurpleADark24 : ConsoleColor24 {
+    CCAppleIosPurpleADark24(): base(218, 143, 255) {}
+}
+
+Class CCAppleIosPinkLight24 : ConsoleColor24 {
+    CCAppleIosPinkLight24(): base(255, 45, 85) {}
+}
+
+Class CCAppleIosPinkDark24 : ConsoleColor24 {
+    CCAppleIosPinkDark24(): base(255, 55, 95) {}
+}
+
+Class CCAppleIosPinkALight24 : ConsoleColor24 {
+    CCAppleIosPinkALight24(): base(211, 15, 69) {}
+}
+
+Class CCAppleIosPinkADark24 : ConsoleColor24 {
+    CCAppleIosPinkADark24(): base(255, 100, 130) {}
+}
+
+Class CCAppleIosBrownLight24 : ConsoleColor24 {
+    CCAppleIosBrownLight24(): base(162, 132, 94) {}
+}
+
+Class CCAppleIosBrownDark24 : ConsoleColor24 {
+    CCAppleIosBrownDark24(): base(172, 142, 104) {}
+}
+
+Class CCAppleIosBrownALight24 : ConsoleColor24 {
+    CCAppleIosBrownALight24(): base(127, 101, 69) {}
+}
+
+Class CCAppleIosBrownADark24 : ConsoleColor24 {
+    CCAppleIosBrownADark24(): base(181, 148, 105) {}
+}
+
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
