@@ -6,3 +6,30 @@ Body - Apple Gray 1 Dark (142, 142, 147)
 Eyes - Apple Red Dark (255, 69, 58)
 Talons - Apple Orange Dark (255, 159, 10)
 ==========
+
+==========
+Nightwing
+
+Wings - Apple Purple Dark (191, 90, 242)
+Body - Apple Indigo Dark (94, 92, 230)
+Eyes - Apple Red Dark (255, 69, 58)
+Talons - Apple Orange Dark (255, 159, 10)
+==========
+
+==========
+Wingblight
+
+Wings - Apple Purple Dark (191, 90, 242)
+Body - Apple Pink Dark (255, 55, 95)
+Eyes - Apple Grey 6 Light (242, 242, 247)
+Talons - Apple Orange Dark (255, 159, 10)
+==========
+
+==========
+Darkfang
+
+Wings - Apple Grey 4 Dark (58, 58, 60)
+Body - Apple Grey 6 Dark (28, 28, 30)
+Eyes - Apple Indigo Light (88, 86, 214)
+Talons - Apple Red Dark (255, 69, 58)
+==========
