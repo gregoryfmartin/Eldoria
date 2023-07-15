@@ -6654,6 +6654,7 @@ ActionListing   - A Hashtable of the format [ActionSlot], [BattleAction]. This p
 SpoilsEffect    - A ScriptBlock that's run when the BattleEntity loses a combat sequence. This is meant to apply to Enemies.
 ActionMarbleBag - A List of fixed size (10) that helps determine the chance of an Action from the ActionListing being selected by the AI.
 NameDrawColor   - The foreground color to use while drawing the Name property to a window.
+Affinity        - The base Affinity of the entity.
 #>
 Class BattleEntity {
     [String]$Name
@@ -6699,15 +6700,146 @@ Class BattleEntity {
     }
 }
 
+<#
+Image       - The image to display in the image window during a battle.
+SpoilsGold  - The amount of Gold to confer to the Player should they win in a battle
+SpoilsItems - A collection of items that are conferred to the Player should they win in a battle
+#>
 Class EnemyBattleEntity : BattleEntity {
-    [EnemyEntityImage]$Image = $null
+    [EnemyEntityImage]$Image      = $null
+    [Int]$SpoilsGold              = 0
+    [MapTileObject[]]$SpoilsItems = @()
 
-    EnemyBattleEntity(): base() {}
+    EnemyBattleEntity(): base() {
+        $this.SpoilsEffect = {
+            Param(
+                [Player]$Player,
+                [EnemyBattleEntity]$Opponent
+            )
+
+            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                @(
+                    [ATStringCompositeSc]::new(
+                        $Opponent.NameDrawColor,
+                        [ATDecorationNone]::new(),
+                        $Opponent.Name
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' dropped '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        $Opponent.SpoilsGold
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' gold.'
+                    )
+                )
+            )
+            $Script:TheBattleStatusMessageWindow.Draw()
+            $Player.CurrentGold += $Opponent.SpoilsGold
+            
+            If($Opponent.SpoilsItems.Length -GT 0) {
+                [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
+                
+                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'Also found '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            $ItemNames
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            '.'
+                        )
+                    )
+                )
+                $Script:TheBattleStatusMessageWindow.Draw()
+                Foreach($a in $Opponent.SpoilsItems) {
+                    $Player.Inventory.Add($a) | Out-Null
+                }
+            }
+        }
+    }
     
     EnemyBattleEntity(
         [EnemyEntityImage]$Image
     ) : base() {
         $this.Image = $Image
+
+        $this.SpoilsEffect = {
+            Param(
+                [Player]$Player,
+                [EnemyBattleEntity]$Opponent
+            )
+
+            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                @(
+                    [ATStringCompositeSc]::new(
+                        $Opponent.NameDrawColor,
+                        [ATDecorationNone]::new(),
+                        $Opponent.Name
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' dropped '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        $Opponent.SpoilsGold
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' gold.'
+                    )
+                )
+            )
+            $Script:TheBattleStatusMessageWindow.Draw()
+            $Player.CurrentGold += $Opponent.SpoilsGold
+            
+            If($Opponent.SpoilsItems.Length -GT 0) {
+                [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
+                
+                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'Also found '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            $ItemNames
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            '.'
+                        )
+                    )
+                )
+                $Script:TheBattleStatuMessageWindow.Draw()
+                Foreach($a in $Opponent.SpoilsItems) {
+                    $Player.Inventory.Add($a) | Out-Null
+                }
+            }
+        }
     }
 }
 
@@ -8804,46 +8936,17 @@ Class EEBat : EnemyBattleEntity {
             [ActionSlot]::D = $null
         }
 
-        $this.SpoilsEffect = {
-            Param(
-                [BattleEntity]$Player,
-                [BattleEntity]$Opponent
-            )
-
-            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                @(
-                    [ATStringCompositeSc]::new(
-                        $Opponent.NameDrawColor,
-                        [ATDecorationNone]::new(),
-                        $Opponent.Name
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        ' dropped '
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCAppleYellowDark24]::new(),
-                        [ATDecorationNone]::new(),
-                        '50'
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        ' gold.'
-                    )
-                )
-            )
-            $Script:TheBattleStatusMessageWindow.Draw()
-            
-            ([Player]$Player).CurrentGold += 50
-        }
-
         $this.ActionMarbleBag = @([ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B)
 
         $this.Affinity = [BattleActionType]::ElementalIce
 
         $this.Image = [EEIBat]::new()
+
+        $this.SpoilsGold = 50
+
+        $this.SpoilsItems = @(
+            [MTOMilk]::new()
+        )
     }
 }
 
@@ -8856,19 +8959,22 @@ Class EENightwing : EEBat {
 
 Class EEWingblight : EEBat {
     EEWingblight() : base() {
-        $this.Name = 'Wingblight'
+        $this.Name        = 'Wingblight'
+        $this.SpoilsItems = @()
     }
 }
 
 Class EEDarkfang : EEBat {
     EEDarkfang() : base() {
-        $this.Name = 'Darkfang'
+        $this.Name        = 'Darkfang'
+        $this.SpoilsItems = @()
     }
 }
 
 Class EENocturna : EEBat {
     EENocturna() : base() {
-        $this.Name = 'Nocturna'
+        $this.Name        = 'Nocturna'
+        $this.SpoilsItems = @()
     }
 }
 
@@ -8880,7 +8986,8 @@ Class EEBloodswoop : EEBat {
 
 Class EEDuskbane : EEBat {
     EEDuskbane() : base() {
-        $this.Name = 'Duskbane'
+        $this.Name        = 'Duskbane'
+        $this.SpoilsItems = @()
     }
 }
 
@@ -25063,11 +25170,11 @@ Class BattleManager {
 
                 If($this.PhaseOneEntity -IS [Player]) {
                     $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
-                    Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity
+                    Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseOneEntity), ([EnemyBattleEntity]$this.PhaseTwoEntity)
                     # Start-Job $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget | Wait-Job
                 } Elseif($this.PhaseTwoEntity -IS [Player]) {
                     $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
-                    Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity
+                    Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseTwoEntity), ([EnemyBattleEntity]$this.PhaseOneEntity)
                     # Start-Job $this.SpoilsAction -ArgumentList $this.PhaseTwoTarget, $this.PhaseOneTarget | Wait-Job
                 }
 
