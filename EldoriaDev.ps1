@@ -2530,6 +2530,86 @@ Class CCAppleIosBrownADark24 : ConsoleColor24 {
     CCAppleIosBrownADark24(): base(181, 148, 105) {}
 }
 
+Class CCAppleIosGreyLight24 : ConsoleColor24 {
+    CCAppleIosGreyLight24(): base(142, 142, 147) {}
+}
+
+Class CCAppleIosGreyDark24 : ConsoleColor24 {
+    CCAppleIosGreyDark24(): base(142, 142, 147) {}
+}
+
+Class CCAppleIosGreyALight24 : ConsoleColor24 {
+    CCAppleIosGreyALight24(): base(108, 108, 112) {}
+}
+
+Class CCAppleIosGreyADark24 : ConsoleColor24 {
+    CCAppleIosGreyADark24(): base(174, 174, 178) {}
+}
+
+Class CCAppleIosGrey2Light24 : ConsoleColor24 {
+    CCAppleIosGrey2Light24(): base(174, 174, 178) {}
+}
+
+Class CCAppleIosGrey2Dark24 : ConsoleColor24 {
+    CCAppleIosGrey2Dark24(): base(99, 99, 102) {}
+}
+
+Class CCAppleIosGrey2ALight24 : ConsoleColor24 {
+    CCAppleIosGrey2ALight24(): base(142, 142, 147) {}
+}
+
+Class CCAppleIosGrey2ADark24 : ConsoleColor24 {
+    CCAppleIosGrey2ADark24(): base(124, 124, 128) {}
+}
+
+Class CCAppleIosGrey3Light24 : ConsoleColor24 {
+    CCAppleIosGrey3Light24(): base(199, 199, 204) {}
+}
+
+Class CCAppleIosGrey3Dark24 : ConsoleColor24 {
+    CCAppleIosGrey3Dark24(): base(72, 72, 74) {}
+}
+
+Class CCAppleIosGrey4ALight24 : ConsoleColor24 {
+    CCAppleIosGrey4ALight24(): base(188, 188, 192) {}
+}
+
+Class CCAppleIosGrey4ADark24 : ConsoleColor24 {
+    CCAppleIosGrey4ADark24(): base(68, 68, 70) {}
+}
+
+Class CCAppleIosGrey5Light24 : ConsoleColor24 {
+    CCAppleIosGrey5Light24(): base(229, 229, 234) {}
+}
+
+Class CCAppleIosGrey5Dark24 : ConsoleColor24 {
+    CCAppleIosGrey5Dark24(): base(44, 44, 46) {}
+}
+
+Class CCAppleIosGrey5ALight24 : ConsoleColor24 {
+    CCAppleIosGrey5ALight24(): base(216, 216, 220) {}
+}
+
+Class CCAppleIosGrey5ADark24 : ConsoleColor24 {
+    CCAppleIosGrey5ADark24(): base(54, 54, 56) {}
+}
+
+Class CCAppleIosGrey6Light24 : ConsoleColor24 {
+    CCAppleIosGrey6Light24(): base(242, 242, 247) {}
+}
+
+Class CCAppleIosGrey6Dark24 : ConsoleColor24 {
+    CCAppleIosGrey6Dark24(): base(28, 28, 30) {}
+}
+
+Class CCAppleIosGrey6ALight24 : ConsoleColor24 {
+    CCAppleIosGrey6ALight24(): base(235, 235, 240) {}
+}
+
+Class CCAppleIosGrey6ADark24 : ConsoleColor24 {
+    CCAppleIosGrey6ADark24(): base(36, 36, 38) {}
+}
+
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
