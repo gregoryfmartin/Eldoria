@@ -2738,6 +2738,22 @@ Class CCAppleVBlueADark24 : ConsoleColor24 {
     CCAppleVBlueADark24(): base(64, 156, 255) {}
 }
 
+Class CCAppleVIndigoLight24 : ConsoleColor24 {
+    CCAppleVIndigoLight24(): base(84, 82, 204) {}
+}
+
+Class CCAppleVIndigoDark24 : ConsoleColor24 {
+    CCAppleVIndigoDark24(): base(99, 97, 242) {}
+}
+
+Class CCAppleVIndigoALight24 : ConsoleColor24 {
+    CCAppleVIndigoALight24(): base(54, 52, 163) {}
+}
+
+Class CCAppleVIndigoADark24 : ConsoleColor24 {
+    CCAppleVIndigoADark24(): base(125, 122, 255) {}
+}
+
 
 
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
