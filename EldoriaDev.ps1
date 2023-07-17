@@ -2754,7 +2754,65 @@ Class CCAppleVIndigoADark24 : ConsoleColor24 {
     CCAppleVIndigoADark24(): base(125, 122, 255) {}
 }
 
+Class CCAppleVPurpleLight24 : ConsoleColor24 {
+    CCAppleVPurpleLight24(): base(159, 75, 201) {}
+}
 
+Class CCAppleVPurpleDark24 : ConsoleColor24 {
+    CCAppleVPurpleDark24(): base(204, 101, 255) {}
+}
+
+Class CCAppleVPurpleALight24 : ConsoleColor24 {
+    CCAppleVPurpleALight24(): base(173, 68, 171) {}
+}
+
+Class CCAppleVPurpleADark24 : ConsoleColor24 {
+    CCAppleVPurpleADark24(): base(218, 143, 255) {}
+}
+
+Class CCAppleVPinkLight24 : ConsoleColor24 {
+    CCAppleVPinkLight24(): base(245, 35, 75) {}
+}
+
+Class CCAppleVPinkDark24 : ConsoleColor24 {
+    CCAppleVPinkDark24(): base(255, 65, 105) {}
+}
+
+Class CCAppleVPinkALight24 : ConsoleColor24 {
+    CCAppleVPinkALight24(): base(193, 16, 50) {}
+}
+
+Class CCAppleVPinkADark24 : ConsoleColor24 {
+    CCAppleVPinkADark24(): base(255, 58, 95) {}
+}
+
+Class CCAppleVBrownLight24 : ConsoleColor24 {
+    CCAppleVBrownLight24(): base(152, 122, 84) {}
+}
+
+Class CCAppleVBrownDark24 : ConsoleColor24 {
+    CCAppleVBrownDark24(): base(182, 152, 114) {}
+}
+
+Class CCAppleVBrownALight24 : ConsoleColor24 {
+    CCAppleVBrownALight24(): base(119, 93, 59) {}
+}
+
+Class CCAppleVGreyLight24 : ConsoleColor24 {
+    CCAppleVGreyLight24(): base(132, 132, 137) {}
+}
+
+Class CCAppleVGreyDark24 : ConsoleColor24 {
+    CCAppleVGreyDark24(): base(162, 162, 167) {}
+}
+
+Class CCAppleVGreyALight24 : ConsoleColor24 {
+    CCAppleVGreyALight24(): base(97, 97, 101) {}
+}
+
+Class CCAppleVGreyADark24 : ConsoleColor24 {
+    CCAppleVGreyADark24(): base(152, 152, 157) {}
+}
 
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
