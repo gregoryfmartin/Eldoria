@@ -33,3 +33,30 @@ Body - Apple Grey 6 Dark (28, 28, 30)
 Eyes - Apple Indigo Light (88, 86, 214)
 Talons - Apple Red Dark (255, 69, 58)
 ==========
+
+==========
+Nocturna
+
+Wings - Apple Vibrant Mint ALight (11, 117, 112)
+Body - Apple Vibrant Purple ALight (173, 68, 171)
+Eyes - Apple Vibrant Pink ADark (255, 58, 95)
+Talons - Apple Vibrant Grey ALight (97, 97, 101)
+==========
+
+==========
+Bloodswoop
+
+Wings - Apple Vibrant Red Light (255, 49, 38)
+Body - Apple Orange ALight (201, 52, 0)
+Eyes - Apple Vibrant Yellow ADark (255, 212, 38)
+Talons - Apple Vibrant Red ALight (255, 69, 58)
+==========
+
+==========
+Duskbane
+
+Wings - Apple Vibrant Indigo ALight (54, 52, 163)
+Body - Apple Grey 6 ADark (36, 36, 38)
+Eyes - Apple Vibrant Pink Light (245, 35, 75)
+Talons - Apple Vibrant Grey ADark (152, 152, 157)
+==========
