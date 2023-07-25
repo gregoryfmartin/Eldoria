@@ -6438,8 +6438,10 @@ Class BAIKill : BattleAction {
                     )
                 } Else {
                     If($Target -IS [Player]) {
+                        $Script:ThePlayer.Update()
                         $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
                     } Else {
+                        $Script:TheCurrentEnemy.Update()
                         $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
                     }
             
@@ -28981,6 +28983,11 @@ Class BattleManager {
                 # The Turn Limit is determined in the TurnIncrement state.
                 # This state will determine if the HP of one of the Entities has dipped to or below zero.
                 # As with the previous states, we need to know which one is the Player and which one is the Enemy
+                $a = $this.PhaseOneEntity.Stats[[StatId]::HitPoints].State
+                $b = $this.PhaseTwoEntity.Stats[[StatId]::HitPoints].State
+
+                # By this point, the state appears to be correct
+
                 If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseOneEntity -IS [Player]) {
                         # This means the Player's HP has reached zero and has died
@@ -29006,6 +29013,7 @@ Class BattleManager {
                 }
 
                 $this.State = [BattleManagerState]::TurnIncrement
+                Break
             }
 
             BattleWon {
@@ -29068,6 +29076,7 @@ Class BattleManager {
 
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+                Break
             }
 
             BattleLost {
