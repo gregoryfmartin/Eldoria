@@ -6438,10 +6438,10 @@ Class BAIKill : BattleAction {
                     )
                 } Else {
                     If($Target -IS [Player]) {
-                        $Script:ThePlayer.Update()
+                        # $Script:ThePlayer.Update()
                         $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
                     } Else {
-                        $Script:TheCurrentEnemy.Update()
+                        # $Script:TheCurrentEnemy.Update()
                         $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
                     }
             
@@ -25238,6 +25238,9 @@ Class BattleManager {
     }
 
     [Void]Update() {
+        $Script:ThePlayer.Update()
+        $Script:TheCurrentEnemy.Update()
+        
         $Script:ThePlayerBattleStatWindow.Draw()
         $Script:TheEnemyBattleStatWindow.Draw()
         $Script:TheBattleEnemyImageWindow.Draw()
@@ -25280,10 +25283,8 @@ Class BattleManager {
                     $this.PhaseTwoEntity = $Script:ThePlayer
                 }
 
-                # TODO: Inform of the ordering
-
-                $this.PhaseOneEntity.Update()
-                $this.PhaseTwoEntity.Update()
+                # $this.PhaseOneEntity.Update()
+                # $this.PhaseTwoEntity.Update()
 
                 $this.State = [BattleManagerState]::PhaseAExecution
                 Return
