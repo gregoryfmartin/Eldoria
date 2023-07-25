@@ -28984,10 +28984,6 @@ Class BattleManager {
                 # The Turn Limit is determined in the TurnIncrement state.
                 # This state will determine if the HP of one of the Entities has dipped to or below zero.
                 # As with the previous states, we need to know which one is the Player and which one is the Enemy
-                $a = $this.PhaseOneEntity.Stats[[StatId]::HitPoints].State
-                $b = $this.PhaseTwoEntity.Stats[[StatId]::HitPoints].State
-
-                # By this point, the state appears to be correct
 
                 If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseOneEntity -IS [Player]) {
