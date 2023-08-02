@@ -746,6 +746,7 @@ Enum BattleActionResultType {
     FailedAttackFailed
     FailedElementalMatch
     FailedNoUsesRemaining
+    FailedNotEnoughMp
 }
 
 $Script:BattleEncounterRegionTable = @{
@@ -3252,20 +3253,22 @@ Class BattleEntityProperty {
 HASHTABLE CREATOR
 
 [BattleAction]@{
-    Name               = ?
-    Type               = ?
-    Effect             = ?
-    Uses               = ?
-    EffectValue        = ?
-    Chance             = ?
+    Name        = ?
+    Type        = ?
+    Effect      = ?
+    MpCost      = ?
+    EffectValue = ?
+    Chance      = ?
+    Description = ?
 }
 #>
 Class BattleAction {
     [String]$Name
     [ScriptBlock]$Effect
     [BattleActionType]$Type
-    [Int]$Uses
-    [Int]$UsesMax
+    # [Int]$Uses
+    # [Int]$UsesMax
+    [Int]$MpCost
     [Int]$EffectValue
     [Single]$Chance
     [String]$Description
@@ -3274,8 +3277,8 @@ Class BattleAction {
         $this.Name        = ''
         $this.Type        = [BattleActionType]::None
         $this.Effect      = $null
-        $this.Uses        = 0
-        $this.UsesMax     = 0
+        # $this.Uses        = 0
+        # $this.UsesMax     = 0
         $this.EffectValue = 0
         $this.Chance      = 0.0
         $this.Description = ''
@@ -3292,8 +3295,8 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
-        $this.Uses        = $Uses
-        $this.UsesMax     = 0
+        # $this.Uses        = $Uses
+        # $this.UsesMax     = 0
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
         $this.Description = ''
@@ -3312,8 +3315,26 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
-        $this.Uses        = $Uses
-        $this.UsesMax     = $UsesMax
+        # $this.Uses        = $Uses
+        # $this.UsesMax     = $UsesMax
+        $this.EffectValue = $EffectValue
+        $this.Chance      = $Chance
+        $this.Description = $Description
+    }
+
+    BattleAction(
+        [String]$Name,
+        [String]$Description,
+        [BattleActionType]$Type,
+        [ScriptBlock]$Effect,
+        [Int]$MpCost,
+        [Int]$EffectValue,
+        [Single]$Chance
+    ) {
+        $this.Name        = $Name
+        $this.Type        = $Type
+        $this.Effect      = $Effect
+        $this.MpCost      = $MpCost
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
         $this.Description = $Description
@@ -3357,8 +3378,27 @@ Class BAPunch : BattleAction {
                 [BattleAction]$SelfAction
             )
 
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
+
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
 
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -3451,15 +3491,14 @@ Class BAPunch : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 50
         $this.Chance      = 1.0
     }
@@ -3476,9 +3515,28 @@ Class BAKick : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -3565,15 +3623,14 @@ Class BAKick : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 50
         $this.Chance      = 1.0
     }
@@ -3590,9 +3647,28 @@ Class BAKarateChop : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * 1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -3679,15 +3755,14 @@ Class BAKarateChop : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.MaxUses     = 20
+        $this.MpCost      = 0
         $this.EffectValue = 60
         $this.Chance      = 0.8
     }
@@ -3704,9 +3779,28 @@ Class BAKarateKick : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -3793,15 +3887,14 @@ Class BAKarateKick : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.UsesMax     = 20
+        $this.MpCost      = 0
         $this.EffectValue = 65
         $this.Chance      = 0.75
     }
@@ -3818,9 +3911,28 @@ Class BABash : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -3907,15 +4019,14 @@ Class BABash : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.UsesMax     = 20
+        $this.MpCost      = 0
         $this.EffectValue = 75
         $this.Chance      = 0.7
     }
@@ -3932,9 +4043,28 @@ Class BABite : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4021,15 +4151,14 @@ Class BABite : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 40
         $this.Chance      = 0.9
     }
@@ -4046,9 +4175,28 @@ Class BAScratch : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4135,15 +4283,14 @@ Class BAScratch : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 45
         $this.Chance      = 1.0
     }
@@ -4160,9 +4307,28 @@ Class BADoubleScratch : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4249,15 +4415,14 @@ Class BADoubleScratch : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 15
-        $this.UsesMax     = 15
+        $this.MpCost      = 0
         $this.EffectValue = 85
         $this.Chance      = 0.75
     }
@@ -4274,9 +4439,28 @@ Class BAHeadbutt : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4363,15 +4547,14 @@ Class BAHeadbutt : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 10
-        $this.UsesMax     = 10
+        $this.MpCost      = 0
         $this.EffectValue = 160
         $this.Chance      = 0.4
     }
@@ -4388,9 +4571,28 @@ Class BADropKick : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4477,15 +4679,14 @@ Class BADropKick : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 15
-        $this.UsesMax     = 15
+        $this.MpCost      = 0
         $this.EffectValue = 120
         $this.Chance      = 0.3
     }
@@ -4502,9 +4703,28 @@ Class BAThrow : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4591,15 +4811,14 @@ Class BAThrow : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = [Int]::MaxValue
-        $this.UsesMax     = [Int]::MaxValue
+        $this.MpCost      = 0
         $this.EffectValue = 0
         $this.Chance      = 0.9
     }
@@ -4616,9 +4835,28 @@ Class BAPeck : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4705,15 +4943,14 @@ Class BAPeck : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 40
-        $this.UsesMax     = 40
+        $this.MpCost      = 0
         $this.EffectValue = 20
         $this.Chance      = 1.0
     }
@@ -4730,9 +4967,28 @@ Class BATalonStab : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4819,15 +5075,14 @@ Class BATalonStab : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 40
-        $this.UsesMax     = 40
+        $this.MpCost      = 0
         $this.EffectValue = 70
         $this.Chance      = 1.0
     }
@@ -4844,9 +5099,28 @@ Class BASwordSlash : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -4933,15 +5207,14 @@ Class BASwordSlash : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 60
         $this.Chance      = 1.0
     }
@@ -4958,9 +5231,28 @@ Class BASwordStab : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5047,15 +5339,14 @@ Class BASwordStab : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.UsesMax     = 20
+        $this.MpCost      = 0
         $this.EffectValue = 80
         $this.Chance      = 0.7
     }
@@ -5072,9 +5363,28 @@ Class BAAxeSlash : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5161,15 +5471,14 @@ Class BAAxeSlash : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 70
         $this.Chance      = 1.0
     }
@@ -5186,9 +5495,28 @@ Class BAAxeCleave : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5275,15 +5603,14 @@ Class BAAxeCleave : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 10
-        $this.UsesMax     = 10
+        $this.MpCost      = 0
         $this.EffectValue = 90
         $this.Chance      = 0.8
     }
@@ -5300,9 +5627,28 @@ Class BAAxeThrow : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5389,15 +5735,14 @@ Class BAAxeThrow : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 5
-        $this.UsesMax     = 5
+        $this.MpCost      = 0
         $this.EffectValue = 180
         $this.Chance      = 0.3
     }
@@ -5414,9 +5759,28 @@ Class BAKnifeStab : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5503,15 +5867,14 @@ Class BAKnifeStab : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 40
         $this.Chance      = 0.9
     }
@@ -5528,9 +5891,28 @@ Class BAKnifeThrow : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5617,15 +5999,14 @@ Class BAKnifeThrow : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.UsesMax     = 20
+        $this.MpCost      = 0
         $this.EffectValue = 80
         $this.Chance      = 0.3
     }
@@ -5642,9 +6023,28 @@ Class BAClubSwing : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5731,15 +6131,14 @@ Class BAClubSwing : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 30
-        $this.UsesMax     = 30
+        $this.MpCost      = 0
         $this.EffectValue = 70
         $this.Chance      = 0.7
     }
@@ -5756,9 +6155,28 @@ Class BAHomerunHit : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5845,15 +6263,14 @@ Class BAHomerunHit : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 5
-        $this.UsesMax     = 5
+        $this.MpCost      = 0
         $this.EffectValue = 200
         $this.Chance      = 0.1
     }
@@ -5870,9 +6287,28 @@ Class BAFlamePunch : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -5971,15 +6407,14 @@ Class BAFlamePunch : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 25
-        $this.UsesMax     = 25
+        $this.MpCost      = 5
         $this.EffectValue = 75
         $this.Chance      = 1.0
     }
@@ -5996,9 +6431,28 @@ Class BAFlameKick : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -6097,15 +6551,14 @@ Class BAFlameKick : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.UsesMax     = 20
+        $this.MpCost      = 5
         $this.EffectValue = 85
         $this.Chance      = 0.9
     }
@@ -6122,9 +6575,28 @@ Class BAFireball : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -6223,15 +6695,14 @@ Class BAFireball : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 20
-        $this.UsesMax     = 20
+        $this.MpCost      = 7
         $this.EffectValue = 80
         $this.Chance      = 0.75
     }
@@ -6248,9 +6719,28 @@ Class BAMortarToss : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -6349,15 +6839,14 @@ Class BAMortarToss : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 15
-        $this.UsesMax     = 15
+        $this.MpCost      = 9
         $this.EffectValue = 100
         $this.Chance      = 0.7
     }
@@ -6374,9 +6863,28 @@ Class BAIKill : BattleAction {
                 [BattleEntity]$Target,
                 [BattleAction]$SelfAction
             )
+
+            [Boolean]$CanExecute   = $false
+            [Boolean]$ReduceSelfMp = $false
+
+            If($SelfAction.MpCost -GT 0) {
+                If($Self.Stats[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+                    $CanExecute   = $true
+                    $ReduceSelfMp = $true
+                }
+            } Elseif($SelfAction.MpCost -LE 0) {
+                $CanExecute = $true
+            }
             
-            If($SelfAction.Uses -GT 0) {
-                $SelfAction.Uses--
+            If($CanExecute -EQ $true) {
+                If($ReduceSelfMp -EQ $true) {
+                    [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+                    If($Self -IS [Player]) {
+                        $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+                    } Else {
+                        $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+                    }
+                }
             
                 $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
                 If($ExecuteChance -GT $SelfAction.Chance) {
@@ -6477,15 +6985,14 @@ Class BAIKill : BattleAction {
                 }
             } Else {
                 Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedNoUsesRemaining,
+                    [BattleActionResultType]::FailedNotEnoughMp,
                     $Self,
                     $Target,
                     0
                 )
             }
         }
-        $this.Uses        = 100
-        $this.UsesMax     = 100
+        $this.MpCost      = 0
         $this.EffectValue = 50000
         $this.Chance      = 1.0
     }
@@ -24557,9 +25064,9 @@ Class BattlePlayerActionWindow : WindowBase {
             # This is the Action Name
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
+                    [CCTextDefault24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
+                    [ATDecorationNone]::new(),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)",
@@ -24586,9 +25093,9 @@ Class BattlePlayerActionWindow : WindowBase {
             # This is the Action Name
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
+                    [CCTextDefault24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
+                    [ATDecorationNone]::new(),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)",
@@ -24614,9 +25121,9 @@ Class BattlePlayerActionWindow : WindowBase {
 
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
+                    [CCTextDefault24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
+                    [ATDecorationNone]::new(),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)",
@@ -24640,9 +25147,9 @@ Class BattlePlayerActionWindow : WindowBase {
             )
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -GT 0) ? [CCTextDefault24]::new() : [CCAppleRedLight24]::new(),
+                    [CCTextDefault24]::new(),
                     [ATBackgroundColor24None]::new(),
-                    ($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -GT 0) ? [ATDecorationNone]::new() : [ATDecoration]::new($true),
+                    [ATDecorationNone]::new(),
                     [ATCoordinatesNone]::new()
                 ),
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)",
@@ -24686,12 +25193,18 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -LE 0) {
+                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -LE 0) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::A]
                     }
@@ -24702,12 +25215,18 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -LE 0) {
+                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -LE 0) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::B]
                     }
@@ -24718,12 +25237,18 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -LE 0) {
+                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -LE 0) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::C]
                     }
@@ -24734,12 +25259,18 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -LE 0) {
+                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -LE 0) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
 
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::D]
                     }
@@ -25388,6 +25919,7 @@ Class BattleManager {
 
                         # Execute the Action and capture the results (Self, Target)
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
+                        $Script:ThePlayerBattleStatWindow.Draw()
                     } Else  {
                         # This is the Enemy
                         # Randomly select one of the Enemy's Actions from the Marble Bag
@@ -25456,6 +25988,7 @@ Class BattleManager {
 
                         # Execute the Action
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
+                        $Script:TheEnemyBattleStatWindow.Draw()
                     }
 
                     Switch($ActionResult.Type) {
@@ -27273,6 +27806,7 @@ Class BattleManager {
 
                         # Execute the Action and capture the results (Self, Target)
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
+                        $Script:ThePlayerBattleStatWindow.Draw()
                     } Else {
                         # This is the Enemy
                         # Randomly select one of the Enemy's Actions from the Marble Bag
@@ -27306,6 +27840,7 @@ Class BattleManager {
 
                         # Execute the Action
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
+                        $Script:TheEnemyBattleStatWindow.Draw()
                     }
 
                     Switch($ActionResult.Type) {
