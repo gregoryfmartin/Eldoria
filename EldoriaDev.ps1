@@ -101,7 +101,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
             }
         }
         [StatId]::MagicPoints = [BattleEntityProperty]@{
-            Base                = 50
+            Base                = 5
             BasePre             = 0
             BaseAugmentValue    = 0
             Max                 = 50
@@ -1782,14 +1782,12 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:GpsRestoredFromBatBackup = $false
         }
 
-        If($Script:IsBattleBgmPlaying -EQ $false) {
-            # $Script:TheBgmMachine.SoundLocation = $Script:BgmBattleThemeA
-            # $Script:TheBgmMachine.PlayLooping()
-            $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-            $Script:TheBgmMPlayer.Volume = 0.5
-            $Script:TheBgmMPlayer.Play()
-            $Script:IsBattleBgmPlaying = $true
-        }
+        # If($Script:IsBattleBgmPlaying -EQ $false) {
+        #     $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
+        #     $Script:TheBgmMPlayer.Volume = 0.5
+        #     $Script:TheBgmMPlayer.Play()
+        #     $Script:IsBattleBgmPlaying = $true
+        # }
 
         $Script:TheBattleManager.Update()
 
@@ -25193,12 +25191,19 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+
+                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
                         # If($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -LE 0) {
                         #     [Console]::Beep(493.9, 250)
                         #     [Console]::Beep((493.9 / 2), 250)
@@ -25215,12 +25220,19 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+
+                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
                         # If($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -LE 0) {
                         #     [Console]::Beep(493.9, 250)
                         #     [Console]::Beep((493.9 / 2), 250)
@@ -25237,12 +25249,19 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+
+                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
                         # If($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -LE 0) {
                         #     [Console]::Beep(493.9, 250)
                         #     [Console]::Beep((493.9 / 2), 250)
@@ -25259,12 +25278,19 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [CCTextDefault24]::new(),
                         #     [ATDecorationNone]::new()
                         # )
-                        If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 / 2), 250)
 
                             Return $null
                         }
+
+                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
+                        #     [Console]::Beep(493.9, 250)
+                        #     [Console]::Beep((493.9 / 2), 250)
+
+                        #     Return $null
+                        # }
                         # If($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -LE 0) {
                         #     [Console]::Beep(493.9, 250)
                         #     [Console]::Beep((493.9 / 2), 250)
