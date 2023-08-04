@@ -30,6 +30,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]                   $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
 [String]                   $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
 [String]                   $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
+[String]                   $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
 [StatusWindow]             $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]            $Script:TheCommandWindow             = [CommandWindow]::new()
 [SceneWindow]              $Script:TheSceneWindow               = [SceneWindow]::new()
@@ -25171,18 +25172,18 @@ Class BattlePlayerActionWindow : WindowBase {
         Switch($keyCap.VirtualKeyCode) {
             13 {
                 # Play a SFX
-                Try {
-                    # $Script:TheSfxMachine.SoundLocation = $Script:SfxUiSelectionValid
-                    # $Script:TheSfxMachine.PlaySync()
-                    $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
-                    $Script:TheSfxMPlayer.Play()
-                } Catch [ServiceProcess.TimeoutException] {
-                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
-                } Catch [IO.FileNotFoundException] {
-                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
-                } Catch [InvalidOperationException] {
-                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
-                }
+                # Try {
+                #     # $Script:TheSfxMachine.SoundLocation = $Script:SfxUiSelectionValid
+                #     # $Script:TheSfxMachine.PlaySync()
+                #     $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
+                #     $Script:TheSfxMPlayer.Play()
+                # } Catch [ServiceProcess.TimeoutException] {
+                #     Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                # } Catch [IO.FileNotFoundException] {
+                #     Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                # } Catch [InvalidOperationException] {
+                #     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                # }
 
                 Switch($this.ActiveChevronIndex) {
                     0 {
@@ -25192,8 +25193,23 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [ATDecorationNone]::new()
                         # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
-                            [Console]::Beep(493.9, 250)
-                            [Console]::Beep((493.9 / 2), 250)
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleVYellowADark24]::new(),
+                                        [ATDecoration]@{
+                                            Blink = $true
+                                        },
+                                        'Not enough MP!'
+                                    )
+                                )
+                            )
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -25221,8 +25237,23 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [ATDecorationNone]::new()
                         # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
-                            [Console]::Beep(493.9, 250)
-                            [Console]::Beep((493.9 / 2), 250)
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleVYellowADark24]::new(),
+                                        [ATDecoration]@{
+                                            Blink = $true
+                                        },
+                                        'Not enough MP!'
+                                    )
+                                )
+                            )
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -25250,8 +25281,23 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [ATDecorationNone]::new()
                         # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
-                            [Console]::Beep(493.9, 250)
-                            [Console]::Beep((493.9 / 2), 250)
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleVYellowADark24]::new(),
+                                        [ATDecoration]@{
+                                            Blink = $true
+                                        },
+                                        'Not enough MP!'
+                                    )
+                                )
+                            )
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -25279,8 +25325,23 @@ Class BattlePlayerActionWindow : WindowBase {
                         #     [ATDecorationNone]::new()
                         # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
-                            [Console]::Beep(493.9, 250)
-                            [Console]::Beep((493.9 / 2), 250)
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCAppleVYellowADark24]::new(),
+                                        [ATDecoration]@{
+                                            Blink = $true
+                                        },
+                                        'Not enough MP!'
+                                    )
+                                )
+                            )
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
