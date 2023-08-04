@@ -24282,6 +24282,7 @@ Class BattleEntityStatusWindow : WindowBase {
 
     [Void]CreateHpDrawString() {
         [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
+        [ATDecoration]$NumDecor       = [ATDecorationNone]::new()
 
         Switch($this.BERef.Stats[[StatId]::HitPoints].State) {
             ([StatNumberState]::Normal) {
@@ -24294,6 +24295,9 @@ Class BattleEntityStatusWindow : WindowBase {
 
             ([StatNumberState]::Danger) {
                 $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                $NumDecor     = [ATDecoration]@{
+                    Blink = $true
+                }
             }
 
             Default {
@@ -24315,7 +24319,7 @@ Class BattleEntityStatusWindow : WindowBase {
             [ATStringPrefix]::new(
                 $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
+                $NumDecor,
                 [ATCoordinatesNone]::new()
             ),
             "$($this.BERef.Stats[[StatId]::HitPoints].Base)",
@@ -24335,7 +24339,7 @@ Class BattleEntityStatusWindow : WindowBase {
             [ATStringPrefix]::new(
                 $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
+                $NumDecor,
                 [ATCoordinatesNone]::new()
             ),
             "$($this.BERef.Stats[[StatId]::HitPoints].Max)",
@@ -24345,6 +24349,7 @@ Class BattleEntityStatusWindow : WindowBase {
 
     [Void]CreateMpDrawString() {
         [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
+        [ATDecoration]$NumDecor       = [ATDecorationNone]::new()
 
         Switch($this.BERef.Stats[[StatId]::MagicPoints].State) {
             ([StatNumberState]::Normal) {
@@ -24357,6 +24362,9 @@ Class BattleEntityStatusWindow : WindowBase {
 
             ([StatNumberState]::Danger) {
                 $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                $NumDecor     = [ATDecoration]@{
+                    Blink = $true
+                }
             }
 
             Default {
@@ -24378,7 +24386,7 @@ Class BattleEntityStatusWindow : WindowBase {
             [ATStringPrefix]::new(
                 $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
+                $NumDecor,
                 [ATCoordinatesNone]::new()
             ),
             "$($this.BERef.Stats[[StatId]::MagicPoints].Base)",
@@ -24398,7 +24406,7 @@ Class BattleEntityStatusWindow : WindowBase {
             [ATStringPrefix]::new(
                 $NumDrawColor,
                 [ATBackgroundColor24None]::new(),
-                [ATDecorationNone]::new(),
+                $NumDecor,
                 [ATCoordinatesNone]::new()
             ),
             "$($this.BERef.Stats[[StatId]::MagicPoints].Max)",
