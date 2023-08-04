@@ -6,15 +6,9 @@ using namespace System.Media
 
 Add-Type -AssemblyName PresentationCore
 
-# LOGGING FILE CREATION
-# [String]$Script:LogFileName = '.\Log.log'
-# 'WELCOME TO THE DANGER ZONE!!!' | Out-File -FilePath $Script:LogFileName
-
 # GLOBAL VARIABLE DEFINITIONS
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working' -PercentComplete -1
-
-#[Player]              $Script:ThePlayer                = [Player]::new('Steve', 250, 500, 25, 25, 5000, @('MTOMilk'))
 
 [String]                   $Script:OsCheckLinux                 = 'OsLinux'
 [String]                   $Script:OsCheckMac                   = 'OsMac'
@@ -284,251 +278,6 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     Affinity        = [BattleActionType]::ElementalFire
 }
 
-# $Script:TheCurrentEnemy = [EEBat]::new()
-
-# $Script:TheCurrentEnemy = [EnemyBattleEntity]@{
-#     Name = 'Bat'
-#     Stats = @{
-#         [StatId]::HitPoints = [BattleEntityProperty]@{
-# Base                = 500
-# BasePre             = 0
-# BaseAugmentValue    = 0
-# Max                 = 500
-# MaxPre              = 0
-# MaxAugmentValue     = 0
-# AugmentTurnDuration = 0
-# BaseAugmentActive   = $false
-# MaxAugmentActive    = $false
-# State               = [StatNumberState]::Normal
-# ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Switch($Self.Base) {
-#                     { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-#                         $Self.State = [StatNumberState]::Normal
-#                     }
-
-#                     { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-#                         $Self.State = [StatNumberState]::Caution
-#                     }
-
-#                     { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-#                         $Self.State = [StatNumberState]::Danger
-#                     }
-#                 }
-#             }
-#         }
-#         [StatId]::MagicPoints = [BattleEntityProperty]@{
-#             Base                = 50
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 50
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Switch($Self.Base) {
-#                     { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-#                         $Self.State = [StatNumberState]::Normal
-#                     }
-
-#                     { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-#                         $Self.State = [StatNumberState]::Caution
-#                     }
-
-#                     { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-#                         $Self.State = [StatNumberState]::Danger
-#                     }
-#                 }
-#             }
-#         }
-#         [StatId]::Attack = [BattleEntityProperty]@{
-#             Base                = 12
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 12
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return $Self.Base
-#             }
-#         }
-#         [StatId]::Defense = [BattleEntityProperty]@{
-#             Base                = 16
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 16
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return
-#             }
-#         }
-#         [StatId]::MagicAttack = [BattleEntityProperty]@{
-#             Base                = 6
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 6
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return
-#             }
-#         }
-#         [StatId]::MagicDefense = [BattleEntityProperty]@{
-#             Base                = 4
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 4
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return
-#             }
-#         }
-#         [StatId]::Speed = [BattleEntityProperty]@{
-#             Base                = 9
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 9
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return
-#             }
-#         }
-#         [StatId]::Luck = [BattleEntityProperty]@{
-#             Base                = 5
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 5
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return
-#             }
-#         }
-#         [StatId]::Accuracy = [BattleEntityProperty]@{
-#             Base                = 9
-#             BasePre             = 0
-#             BaseAugmentValue    = 0
-#             Max                 = 9
-#             MaxPre              = 0
-#             MaxAugmentValue     = 0
-#             AugmentTurnDuration = 0
-#             BaseAugmentActive   = $false
-#             MaxAugmentActive    = $false
-#             State               = [StatNumberState]::Normal
-#             ValidateFunction    = {
-#                 Param(
-#                     [BattleEntityProperty]$Self
-#                 )
-                
-#                 Return
-#             }
-#         }
-#     }
-#     ActionListing = @{
-#         [ActionSlot]::A = [BattleAction]@{
-#             Name   = ''
-#             Type   = [BattleActionType]::None
-#             Effect = {}
-#             Uses        = 0
-#             EffectValue = 0
-#             Chance      = 0.0
-#         }
-#         [ActionSlot]::B = [BattleAction]@{
-#             Name   = ''
-#             Type   = [BattleActionType]::None
-#             Effect = {}
-#             Uses        = 0
-#             EffectValue = 0
-#             Chance      = 0.0
-#         }
-#         [ActionSlot]::C = [BattleAction]@{
-#             Name   = ''
-#             Type   = [BattleActionType]::None
-#             Effect = {}
-#             Uses        = 0
-#             EffectValue = 0
-#             Chance      = 0.0
-#         }
-#         [ActionSlot]::D = [BattleAction]@{
-#             Name   = ''
-#             Type   = [BattleActionType]::None
-#             Effect = {}
-#             Uses        = 0
-#             EffectValue = 0
-#             Chance      = 0.0
-#         }
-#     }
-#     SpoilsEffect    = {}
-#     ActionMarbleBag = @([ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B)
-#     Image           = [EEIBat]::new()
-# }
-
-
-
-
-
-
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete' -PercentComplete -1
 
 Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Working' -PercentComplete -1
@@ -550,41 +299,9 @@ Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Working' -
 [SIFieldSouthWestRoad]    $Script:FieldSouthWestRoadImage     = [SIFieldSouthWestRoad]::new()
 [SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
 
-Write-Progress -Activity 'Loading SFX                ' -Id 4 -Status 'Loading...' -PercentComplete -1
-
-# $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
-# $Script:TheSfxMachine.Load()
-# $Script:TheSfxMachine.SoundLocation = $Script:SfxUiSelectionValid
-# $Script:TheSfxMachine.Load()
-# $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
-# $Script:TheSfxMachine.Load()
-# $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
-# $Script:TheSfxMachine.Load()
-# $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
-# $Script:TheSfxMachine.Load()
-# $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-# $Script:TheSfxMachine.Load()
-
-# $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
-# $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
-# $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
-# $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
-# $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
-# $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
-
-Write-Progress -Activity 'Loading BGM                ' -Id 5 -Status 'Loading...' -PercentComplete -1
-
-# $Script:TheBgmMachine.SoundLocation = $Script:BgmBattleThemeA
-# $Script:TheBgmMachine.Load()
-# $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Completed
 Write-Progress -Activity 'Creating Maps              ' -Id 2 -Completed
 Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
-Write-Progress -Activity 'Loading SFX                ' -Id 4 -Completed
-Write-Progress -Activity 'Loading BGM                ' -Id 5 -Completed
-
-#$Script:TheSceneWindow.Image = $Script:FieldNorthRoadImage
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
@@ -780,261 +497,6 @@ $Script:BATAdornmentCharTable = @{
     [BattleActionType]::MagicStatAugment = [Tuple[[String], [ConsoleColor24]]]::new("`u{20B9}", [CCAppleOrangeLight24]::new())
 }
 
-# BATTLE ACTION DEFINITION TABLE
-# $Script:TheBattleActionTable = @{
-#     [AllActions]::Pound = [BattleAction]@{
-#         Name        = 'Pound'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 35
-#         EffectValue = 40
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::KarateChop = [BattleAction]@{
-#         Name        = 'Karate Chop'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 25
-#         EffectValue = 50
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::DoubleSlap = [BattleAction]@{
-#         Name        = 'Double Slap'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 10
-#         EffectValue = 15
-#         Chance      = 0.85F
-#     }
-
-#     [AllActions]::CometPunch = [BattleAction]@{
-#         Name        = 'Comet Punch'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 18
-#         Chance      = 0.85F
-#     }
-
-#     [AllActions]::MegaPunch = [BattleAction]@{
-#         Name        = 'Mega Punch'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 20
-#         EffectValue = 80
-#         Chance      = 0.85F
-#     }
-
-#     [AllActions]::PayDay = [BattleAction]@{
-#         Name        = 'Pay Day'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 20
-#         EffectValue = 40
-#         Chance      = 1.0F
-#     }
-    
-#     [AllActions]::FirePunch = [BattleAction]@{
-#         Name        = 'Fire Punch'
-#         Type        = [BattleActionType]::ElementalFire
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 75
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::IcePunch = [BattleAction]@{
-#         Name        = 'Ice Punch'
-#         Type        = [BattleActionType]::ElementalIce
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 75
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::ThunderPunch = [BattleAction]@{
-#         Name        = 'Thunder Punch'
-#         Type        = [BattleActionType]::ElementalWind
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 75
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::Scratch = [BattleAction]@{
-#         Name        = 'Scratch'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 35
-#         EffectValue = 40
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::ViseGrip = [BattleAction]@{
-#         Name        = 'Vise Grip'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 30
-#         EffectValue = 55
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::Guillotine = [BattleAction]@{
-#         Name        = 'Guillotine'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 5
-#         EffectValue = 0
-#         Chance      = 0.3F
-#     }
-
-#     [AllActions]::RazorWind = [BattleAction]@{
-#         Name        = 'Razor Wind'
-#         Type        = [BattleActionType]::ElementalWind
-#         Effect      = {}
-#         Uses        = 10
-#         EffectValue = 80
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::SwordsDance = [BattleAction]@{
-#         Name        = 'Swords Dance'
-#         Type        = [BattleActionType]::MagicStatAugment
-#         Effect      = {}
-#         Uses        = 10
-#         EffectValue = 0
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::Cut = [BattleAction]@{
-#         Name        = 'Cut'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 30
-#         EffectValue = 50
-#         Chance      = 0.95F
-#     }
-
-#     [AllActions]::Gust = [BattleAction]@{
-#         Name        = 'Gust'
-#         Type        = [BattleActionType]::ElementalWind
-#         Effect      = {}
-#         Uses        = 35
-#         EffectValue = 40
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::WingAttack = [BattleAction]@{
-#         Name        = 'Wing Attack'
-#         Type        = [BattleActionType]::ElementalWind
-#         Effect      = {}
-#         Uses        = 35
-#         EffectValue = 60
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::Whirlwind = [BattleAction]@{
-#         Name        = 'Whirlwind'
-#         Type        = [BattleActionType]::ElementalWind
-#         Effect      = {}
-#         Uses        = 20
-#         EffectValue = 0
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::Fly = [BattleAction]@{
-#         Name        = 'Fly'
-#         Type        = [BattleActionType]::ElementalWind
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 90
-#         Chance      = 0.95F
-#     }
-
-#     [AllActions]::Bind = [BattleAction]@{
-#         Name        = 'Bind'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 20
-#         EffectValue = 15
-#         Chance      = 0.85F
-#     }
-
-#     [AllActions]::Slam = [BattleAction]@{
-#         Name        = 'Slam'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 20
-#         EffectValue = 80
-#         Chance      = 0.75F
-#     }
-
-#     [AllActions]::VineWhip = [BattleAction]@{
-#         Name        = 'Vine Whip'
-#         Type        = [BattleActionType]::ElementalEarth
-#         Effect      = {}
-#         Uses        = 25
-#         EffectValue = 45
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::Stomp = [BattleAction]@{
-#         Name        = 'Stomp'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 20
-#         EffectValue = 65
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::DoubleKick = [BattleAction]@{
-#         Name        = 'Double Kick'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 30
-#         EffectValue = 30
-#         Chance      = 1.0F
-#     }
-
-#     [AllActions]::MegaKick = [BattleAction]@{
-#         Name        = 'Mega Kick'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 5
-#         EffectValue = 120
-#         Chance      = 0.75F
-#     }
-
-#     [AllActions]::JumpKick = [BattleAction]@{
-#         Name        = 'Jump Kick'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 10
-#         EffectValue = 100
-#         Chance      = 0.95F
-#     }
-
-#     [AllActions]::RollingKick = [BattleAction]@{
-#         Name        = 'Rolling Kick'
-#         Type        = [BattleActionType]::Physical
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 60
-#         Chance      = 0.85F
-#     }
-
-#     [AllActions]::SandAttack = [BattleAction]@{
-#         Name        = 'Sand Attack'
-#         Type        = [BattleActionType]::ElementalEarth
-#         Effect      = {}
-#         Uses        = 15
-#         EffectValue = 0
-#         Chance      = 1.0F
-#     }
-# }
-
 # COMMAND TABLE DEFINITION
 $Script:TheCommandTable = @{
     'move' = {
@@ -1102,10 +564,8 @@ $Script:TheCommandTable = @{
     'inventory' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
 
-        # Copy the active buffer to the A back buffer
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
-        # Change state
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
@@ -1114,11 +574,9 @@ $Script:TheCommandTable = @{
 
     'i' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-        # Copy the active buffer to the A back buffer
+        
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
-        # Change state
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
@@ -1202,11 +660,6 @@ $Script:TheCommandTable = @{
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     "Can't use a(n) $($a0) on a $($a1).",
-                        #     [CCAppleRedDark24]::new(),
-                        #     [ATDecoration]::new($true)
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -1274,11 +727,6 @@ $Script:TheCommandTable = @{
                         }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     'Whatever you typed doesn''t make any sense.',
-                        #     [CCAppleRedDark24]::new(),
-                        #     [ATDecoration]::new($true)
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -1293,11 +741,6 @@ $Script:TheCommandTable = @{
             } Else {
                 # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "You don't seem to have any $($a0) in your pocket(s).",
-                #     [CCAppleYellowLight24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -1324,11 +767,6 @@ $Script:TheCommandTable = @{
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "You need to tell me what you want to use the $($a0) on.",
-                #     [CCAppleYellowDark24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -1349,11 +787,6 @@ $Script:TheCommandTable = @{
                     )
                 )
             } Else {
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "I have no idea how to use a(n) $($a0).",
-                #     [CCAppleYellowDark24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -1394,11 +827,6 @@ $Script:TheCommandTable = @{
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     "Can't use a(n) $($a0) on a $($a1).",
-                        #     [CCAppleRedDark24]::new(),
-                        #     [ATDecoration]::new($true)
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -1460,11 +888,6 @@ $Script:TheCommandTable = @{
                         }
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     'Whatever you typed doesn''t make any sense.',
-                        #     [CCAppleRedDark24]::new(),
-                        #     [ATDecoration]::new($true)
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -1479,11 +902,6 @@ $Script:TheCommandTable = @{
             } Else {
                 # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "You don't seem to have any $($a0) in your pocket(s).",
-                #     [CCAppleYellowLight24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -1510,11 +928,6 @@ $Script:TheCommandTable = @{
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
             If($Script:ThePlayer.IsItemInInventory($a0)) {
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "You need to tell me what you want to use the $($a0) on.",
-                #     [CCAppleYellowDark24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -1535,11 +948,6 @@ $Script:TheCommandTable = @{
                     )
                 )
             } Else {
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "I have no idea how to use a(n) $($a0).",
-                #     [CCAppleYellowDark24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -1570,11 +978,6 @@ $Script:TheCommandTable = @{
 
         If($args.Length -GE 1) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            # $Script:TheMessageWindow.WriteMessage(
-            #     'Can''t drop all those items at once, bruh.',
-            #     [CCAppleYellowDark24]::new(),
-            #     [ATDecorationNone]::new()
-            # )
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
                     [ATStringCompositeSc]::new(
@@ -1593,11 +996,6 @@ $Script:TheCommandTable = @{
                 If($Script:ThePlayer.IsItemInInventory($a0)) {
                     If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     "Dropped $($a0) from your inventory.",
-                        #     [CCAppleYellowDark24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -1622,11 +1020,6 @@ $Script:TheCommandTable = @{
                     }
                 } Else {
                     $Script:TheCommandWindow.UpdateCommandHistory($false)
-                    # $Script:TheMessageWindow.WriteMessage(
-                    #     "There ain't no $($a0) in your pockets gov'.",
-                    #     [CCAppleYellowDark24]::new(),
-                    #     [ATDecorationNone]::new()
-                    # )
                     $Script:TheMessageWindow.WriteMessageComposite(
                         @(
                             [ATStringCompositeSc]::new(
@@ -1650,11 +1043,6 @@ $Script:TheCommandTable = @{
             }
         } Elseif($PSBoundParameters.Count -LE 0) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-            # $Script:TheMessageWindow.WriteMessage(
-            #     'I don''t know what to drop...',
-            #     [CCAppleRedDark24]::new(),
-            #     [ATDecoration]::new($true)
-            # )
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
                     [ATStringCompositeSc]::new(
@@ -1703,7 +1091,6 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
 
-            # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
@@ -1721,11 +1108,9 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
 
-            # Write the sequence to show the cursor since it's hidden by the Inventory Screen
             Write-Host "$([ATControlSequences]::CursorShow)"
         }
 
-        # Update the Player
         $Script:ThePlayer.Update()
 
         $Script:TheStatusWindow.Draw()
@@ -1751,7 +1136,6 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::BattleScreen = {
         If($Script:HasBattleIntroPlayed -EQ $false) {
             If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
-                # The screen should've already been wiped at this point, so we can commence with the animation sequence
                 [ATString]$Banner = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCAppleMintLight24]::new(),
@@ -1763,8 +1147,6 @@ $Script:TheGlobalStateBlockTable = @{
                     $true
                 )
                 Write-Host "$($Banner.ToAnsiControlSequenceString())"
-                # $Script:TheSfxMachine.SoundLocation = $Script:SfxBattleIntro
-                # $Script:TheSfxMachine.Play()
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxBattleIntro)
                     $Script:TheSfxMPlayer.Play()
@@ -1783,54 +1165,12 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:GpsRestoredFromBatBackup = $false
         }
 
-        # If($Script:IsBattleBgmPlaying -EQ $false) {
-        #     $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-        #     $Script:TheBgmMPlayer.Volume = 0.5
-        #     $Script:TheBgmMPlayer.Play()
-        #     $Script:IsBattleBgmPlaying = $true
-        # }
-
         $Script:TheBattleManager.Update()
-
-        # If($Script:BattleCursorVisible -EQ $false) {
-        #     Write-Host "$([ATControlSequences]::CursorHide)"
-        #     $Script:BattleCursorVisible = $true
-        # }
-        # If($null -EQ $Script:ThePlayerBattleStatWindow) {
-        #     $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
-        # }
-        # If($null -EQ $Script:TheEnemyBattleStatWindow) {
-        #     $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
-        # }
-        # If($null -EQ $Script:ThePlayerBattleActionWindow) {
-        #     $Script:ThePlayerBattleActionWindow = [BattlePlayerActionWindow]::new()
-        # }
-        # If($null -EQ $Script:TheBattleStatusMessageWindow) {
-        #     $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
-        # }
-        # If($null -EQ $Script:TheBattleEnemyImageWindow) {
-        #     $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
-        # }
-
-        # $Script:ThePlayer.Update()
-        # $Script:TheCurrentEnemy.Update()
-
-        # $Script:ThePlayerBattleStatWindow.Draw()
-        # $Script:TheEnemyBattleStatWindow.Draw()
-        # $Script:TheBattleEnemyImageWindow.Draw()
-        # $Script:ThePlayerBattleActionWindow.Draw()
-        # $Script:TheBattleStatusMessageWindow.Draw()
-        
-        # $Script:ThePlayerBattleActionWindow.HandleInput()
-        
-        # FOR TESTING PURPOSES ONLY!
-        # Read-Host
     }
 
     [GameStatePrimary]::Cleanup = {}
 }
 
-# [GameStatePrimary]$Script:TheGlobalGameState         = [GameStatePrimary]::BattleScreen
 [GameStatePrimary]$Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
 
 # CLASS DEFINITIONS
@@ -3004,7 +2344,6 @@ Class ATStringComposite {
         Foreach($b in $this.CompositeActual) {
             $a += $b.ToAnsiControlSequenceString()
         }
-        # "$a" | Out-File '.\Sample.txt' -Append
 
         Return $a
     }
@@ -3028,29 +2367,6 @@ Class ATSceneImageString : ATString {
     }
 }
 
-<#
-HASHTABLE CREATOR
-
-[BattleEntityProperty]@{
-    Base                = ?
-    BasePre             = 0
-    BaseAugmentValue    = 0
-    Max                 = ?
-    MaxPre              = 0
-    MaxAugmentValue     = 0
-    AugmentTurnDuration = 0
-    BaseAugmentActive   = $false
-    MaxAugmentActive    = $false
-    State               = [StatNumberState]::Normal
-    ValidateFunction    = {
-        Param(
-            [BattleEntityProperty]$Self
-        )
-
-        Return
-    }
-}
-#>
 Class BattleEntityProperty {
     Static [Single]$StatNumThresholdCaution          = 0.6D
     Static [Single]$StatNumThresholdDanger           = 0.3D
@@ -3059,13 +2375,6 @@ Class BattleEntityProperty {
     Static [ConsoleColor24]$StatNumDrawColorDanger   = [CCAppleRedLight24]::new()
     Static [ConsoleColor24]$StatAugDrawColorPositive = [CCAppleCyanLight24]::new()
     Static [ConsoleColor24]$StatAugDrawColorNegative = [CCApplePurpleDark24]::new()
-    # Static [ConsoleColor24]$BATColorElementalFire    = [CCAppleRedLight24]::new()
-    # Static [ConsoleColor24]$BATColorElementalWater   = [CCAppleBlueLight24]::new()
-    # Static [ConsoleColor24]$BATColorElementalEarth   = [CCAppleBrownLight24]::new()
-    # Static [ConsoleColor24]$BATColorElementalWind    = [CCAppleGreenDark24]::new()
-    # Static [ConsoleColor24]$BATColorElementalLight   = [CCAppleYellowDark24]::new()
-    # Static [ConsoleColor24]$BATColorElementalDark    = [CCApplePurpleLight24]::new()
-    # Static [ConsoleColor24]$BATMagicColor            = [CCApplePinkLight24]::new()
 
     [Int]$Base
     [Int]$BasePre
@@ -3248,25 +2557,10 @@ Class BattleEntityProperty {
     }
 }
 
-<#
-HASHTABLE CREATOR
-
-[BattleAction]@{
-    Name        = ?
-    Type        = ?
-    Effect      = ?
-    MpCost      = ?
-    EffectValue = ?
-    Chance      = ?
-    Description = ?
-}
-#>
 Class BattleAction {
     [String]$Name
     [ScriptBlock]$Effect
     [BattleActionType]$Type
-    # [Int]$Uses
-    # [Int]$UsesMax
     [Int]$MpCost
     [Int]$EffectValue
     [Single]$Chance
@@ -3276,8 +2570,6 @@ Class BattleAction {
         $this.Name        = ''
         $this.Type        = [BattleActionType]::None
         $this.Effect      = $null
-        # $this.Uses        = 0
-        # $this.UsesMax     = 0
         $this.EffectValue = 0
         $this.Chance      = 0.0
         $this.Description = ''
@@ -3294,8 +2586,6 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
-        # $this.Uses        = $Uses
-        # $this.UsesMax     = 0
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
         $this.Description = ''
@@ -3314,8 +2604,6 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
-        # $this.Uses        = $Uses
-        # $this.UsesMax     = $UsesMax
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
         $this.Description = $Description
@@ -3437,8 +2725,6 @@ Class BAPunch : BattleAction {
                 # Because this is a Physical attack, there's no need to calculate Affinity damage
                 $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
         
-                # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
-                # [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
                 [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
                 
                 If(0 -NE $DecRes) {
@@ -3456,7 +2742,6 @@ Class BAPunch : BattleAction {
                     }
         
                     If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                        # Crit with no Affinity Bonus
                         Return [BattleActionResult]::new(
                             [BattleActionResultType]::SuccessWithCritical,
                             $Self,
@@ -3464,7 +2749,6 @@ Class BAPunch : BattleAction {
                             $FinalDamage
                         )
                     } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                        # Affinity with no Crit Bonus
                         Return [BattleActionResult]::new(
                             [BattleActionResultType]::SuccessWithAffinityBonus,
                             $Self,
@@ -3472,7 +2756,6 @@ Class BAPunch : BattleAction {
                             $FinalDamage
                         )
                     } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                        # Crit and Affinity Bonus Applied
                         Return [BattleActionResult]::new(
                             [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
                             $Self,
@@ -7001,386 +6284,6 @@ Class BAIKill : BattleAction {
 # END BATTLE ACTIONS THAT ARE ACTUALLY GOING TO BE USED IN THE GAME
 ###############################################################################
 
-Class BAPound : BattleAction {
-    BAPound() : base('Pound', [BattleActionType]::Physical, {
-        Param(
-            [BattleEntity]$Self,
-            [BattleEntity]$Target,
-            [BattleAction]$SelfAction
-        )
-
-        If($SelfAction.Uses -GT 0) {
-            $SelfAction.Uses--
-
-            $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
-            If($ExecuteChance -GT $SelfAction.Chance) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedAttackFailed,
-                    $Self,
-                    $Target,
-                    0
-                )
-            }
-    
-            # I just realized that with this equation, the accuracy rating of Self isn't factored into this.
-            $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-            $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
-            If($EvRandFactor -LE $TargetEffectiveEvasion) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedAttackMissed,
-                    $Self,
-                    $Target,
-                    0
-                )
-            }
-    
-            $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
-                $SelfAction.EffectValue * (
-                    ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
-                    (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
-                ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
-            ))
-            $EffectiveDamageCritFactor     = 1.0
-            $EffectiveDamageAffinityFactor = 1.0
-    
-            $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
-            If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
-                $EffectiveDamageCritFactor = 1.5
-            }
-    
-            # Because this is a Physical attack, there's no need to calculate Affinity damage
-            $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-    
-            # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
-            # [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
-            [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-            
-            If(0 -NE $DecRes) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::FailedAttackFailed,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Else {
-                If($Target -IS [Player]) {
-                    $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-                } Else {
-                    $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-                }
-    
-                If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                    # Crit with no Affinity Bonus
-                    Return [BattleActionResult]::new(
-                        [BattleActionResultType]::SuccessWithCritical,
-                        $Self,
-                        $Target,
-                        $FinalDamage
-                    )
-                } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                    # Affinity with no Crit Bonus
-                    Return [BattleActionResult]::new(
-                        [BattleActionResultType]::SuccessWithAffinityBonus,
-                        $Self,
-                        $Target,
-                        $FinalDamage
-                    )
-                } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                    # Crit and Affinity Bonus Applied
-                    Return [BattleActionResult]::new(
-                        [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
-                        $Self,
-                        $Target,
-                        $FinalDamage
-                    )
-                }
-    
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::Success,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            }
-        } Else {
-            # There are no more uses for this action remaining
-            # NOTE: THE CODE SHOULDN'T EVER REACH THIS POINT, BUT IT'S INCLUDED IN THE CASE THAT IT IS
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedNoUsesRemaining,
-                $Self,
-                $Target,
-                0
-            )
-        }
-    }, 35, 40, 1.0) {}
-}
-
-Class BADoubleSlap : BattleAction {
-    BADoubleSlap() : base('Double Slap', [BattleActionType]::Physical, {}, 10, 15, 0.85) {}
-}
-
-Class BACometPunch : BattleAction {
-    BACometPunch() : base('Comet Punch', [BattleActionType]::Physical, {}, 15, 18, 0.85) {}
-}
-
-Class BAMegaPunch : BattleAction {
-    BAMegaPunch() : base('Mega Punch', [BattleActionType]::Physical, {}, 20, 80, 0.85) {}
-}
-
-Class BAPayDay : BattleAction {
-    BAPayDay() : base('Pay Day', [BattleActionType]::Physical, {}, 20, 40, 1.0) {}
-}
-
-Class BAFirePunch : BattleAction {
-    BAFirePunch() : base('Fire Punch', [BattleActionType]::ElementalFire, {
-        Param(
-            [BattleEntity]$Self,
-            [BattleEntity]$Target,
-            [BattleAction]$SelfAction
-        )
-
-        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
-        If($ExecuteChance -GT $SelfAction.Chance) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                0
-            )
-        }
-
-        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
-        If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackMissed,
-                $Self,
-                $Target,
-                0
-            )
-        }
-
-        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
-            $SelfAction.EffectValue * (
-                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
-                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
-            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
-        ))
-        $EffectiveDamageCritFactor     = 1.0
-        $EffectiveDamageAffinityFactor = 1.0
-
-        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
-        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
-            $EffectiveDamageCritFactor = 1.5
-        }
-
-        # Calculate the Affinity Augment
-        Switch($Target.Affinity) {
-            { $_ -EQ $SelfAction.Type } {
-                $EffectiveDamageAffinityFactor = -0.75
-                Break
-            }
-
-            ([BattleActionType]::ElementalIce) {
-                $EffectiveDamageAffinityFactor = 1.6
-                Break
-            }
-        }
-
-        $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-
-        # [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
-        # [Int]$EffectiveDamage = ($Self.Stats[[StatId]::Attack].Base + $SelfAction.EffectValue) - $Target.Stats[[StatId]::Defense].Base
-        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-        
-        If(0 -NE $DecRes) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
-        } Else {
-            If($Target -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-            }
-
-            If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                # Crit with no Affinity Bonus
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritical,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                # Affinity with no Crit Bonus
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                # Crit and Affinity Bonus Applied
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            }
-
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::Success,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
-        }
-    }, 15, 75, 1.0) {}
-}
-
-Class BAIcePunch : BattleAction {
-    BAIcePunch(): base('Ice Punch', [BattleActionType]::ElementalIce, {
-        Param(
-            [BattleEntity]$Self,
-            [BattleEntity]$Target,
-            [BattleAction]$SelfAction
-        )
-
-        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
-        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
-        
-        If(0 -NE $DecRes) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                $EffectiveDamage
-            )
-        } Else {
-            If($Target -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-            }
-
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::Success,
-                $Self,
-                $Target,
-                $EffectiveDamage
-            )
-        }
-    }, 15, 75, 1.0) {}
-}
-
-Class BAThunderPunch : BattleAction {
-    BAThunderPunch() : base('Thunder Punch', [BattleActionType]::ElementalWind, {
-        Param(
-            [BattleEntity]$Self,
-            [BattleEntity]$Target,
-            [BattleAction]$SelfAction
-        )
-
-        [Int]$EffectiveDamage = $SelfAction.EffectValue - $Target.Stats[[StatId]::Defense].Base
-        [Int]$DecRes          = $Target.Stats[[StatId]::HitPoints].DecrementBase(($EffectiveDamage * -1))
-        
-        If(0 -NE $DecRes) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                $EffectiveDamage
-            )
-        } Else {
-            If($Target -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-            }
-
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::Success,
-                $Self,
-                $Target,
-                $EffectiveDamage
-            )
-        }
-    }, 15, 75, 1.0) {}
-}
-
-Class BAViseGrip : BattleAction {
-    BAViseGrip() : base('Vise Grip', [BattleActionType]::Physical, {}, 30, 55, 1.0) {}
-}
-
-Class BAGuillotine : BattleAction {
-    BAGuillotine() : base('Guillotine', [BattleActionType]::Physical, {}, 5, 0, 1.0) {}
-}
-
-Class BARazorWind : BattleAction {
-    BARazorWind() : base('Razor Wind', [BattleActionType]::ElementalWind, {}, 10, 80, 1.0) {}
-}
-
-Class BASwordsDance : BattleAction {
-    BASwordsDance() : base('Swords Dance', [BattleActionType]::MagicStatAugment, {}, 10, 0, 1.0) {}
-}
-
-Class BACut : BattleAction {
-    BACut() : base('Cut', [BattleActionType]::Physical, {}, 30, 50, 0.95) {}
-}
-
-Class BAGust : BattleAction {
-    BAGust() : base('Gust', [BattleActionType]::ElementalWind, {}, 35, 40, 1.0) {}
-}
-
-Class BAWingAttack : BattleAction {
-    BAWingAttack() : base('Wing Attack', [BattleActionType]::ElementalWind, {}, 35, 60, 1.0) {}
-}
-
-Class BAWhirlwind : BattleAction {
-    BAWhirlwind() : base('Whirlwind', [BattleActionType]::ElementalWind, {}, 20, 0, 1.0) {}
-}
-
-Class BAFly : BattleAction {
-    BAFly() : base('Fly', [BattleActionType]::ElementalWind, {}, 15, 90, 0.95) {}
-}
-
-Class BABind : BattleAction {
-    BABind() : base('Bind', [BattleActionType]::Physical, {}, 20, 15, 0.85) {}
-}
-
-Class BASlam : BattleAction {
-    BASlam() : base('Slam', [BattleActionType]::Physical, {}, 20, 80, 0.75) {}
-}
-
-Class BAVineWhip : BattleAction {
-    BAVineWhip() : base('Vine Whip', [BattleActionType]::ElementalEarth, {}, 25, 45, 1.0) {}
-}
-
-Class BAStomp : BattleAction {
-    BAStomp() : base('Stomp', [BattleActionType]::Physical, {}, 20, 65, 1.0) {}
-}
-
-Class BADoubleKick : BattleAction {
-    BADoubleKick() : base('Double Kick', [BattleActionType]::Physical, {}, 30, 30, 1.0) {}
-}
-
-Class BAMegaKick : BattleAction {
-    BAMegaKick() : base('Mega Kick', [BattleActionType]::Physical, {}, 5, 120, 0.75) {}
-}
-
-Class BAJumpKick : BattleAction {
-    BAJumpKick() : base('Jump Kick', [BattleActionType]::Physical, {}, 10, 100, 0.95) {}
-}
-
-Class BARollingKick : BattleAction {
-    BARollingKick() : base('Rolling Kick', [BattleActionType]::Physical, {}, 15, 60, 0.85) {}
-}
-
 <#
 HASHTABLE CREATOR
 
@@ -8151,22 +7054,6 @@ Class Player : BattleEntity {
         Return $null
     }
 
-    # [Boolean]RemoveInventoryItemByName(
-    #     [String]$ItemName
-    # ) {
-    #     $c = 0
-
-    #     Foreach($a in $this.Inventory) {
-    #         If($a.Name -IEQ $ItemName) {
-    #             $this.Inventory.RemoveAt($c)
-    #             Return $true
-    #         }
-    #         $c++
-    #     }
-
-    #     Return $false
-    # }
-
     [ItemRemovalStatus]RemoveInventoryItemByName(
         [String]$ItemName
     ) {
@@ -8371,735 +7258,6 @@ Class Player : BattleEntity {
         Return ($SourceItemClass -IN $this.TargetOfFilter)
     }
 }
-
-# Class Player {
-#     [String]$Name
-#     [Int]$CurrentHitPoints
-#     [Int]$MaxHitPoints
-#     [Int]$CurrentMagicPoints
-#     [Int]$MaxMagicPoints
-#     [Int]$CurrentGold
-#     [Int]$MaxGold
-#     [StatNumberState]$HitPointsState
-#     [StatNumberState]$MagicPointsState
-#     [ATCoordinates]$MapCoordinates
-#     [List[MapTileObject]]$Inventory
-#     [List[String]]$TargetOfFilter
-
-#     Static [Single]$StatNumThresholdCaution         = 0.6D
-#     Static [Single]$StatNumThresholdDanger          = 0.2D
-#     Static [ConsoleColor24]$StatNameDrawColor       = [CCAppleBlueLight24]::new()
-#     Static [ConsoleColor24]$StatNumDrawColorSafe    = [CCAppleGreenLight24]::new()
-#     Static [ConsoleColor24]$StatNumDrawColorCaution = [CCAppleYellowLight24]::new()
-#     Static [ConsoleColor24]$StatNumDrawColorDanger  = [CCAppleRedLight24]::new()
-#     Static [ConsoleColor24]$StatGoldDrawColor       = [CCAppleYellowDark24]::new()
-#     Static [ConsoleColor24]$AsideDrawColor          = [CCAppleIndigoLight24]::new()
-
-#     Player(
-#         [String]$Name,
-#         [Int]$CurrentHitPoints,
-#         [Int]$MaxHitPoints,
-#         [Int]$CurrentMagicPoints,
-#         [Int]$MaxMagicPoints,
-#         [Int]$CurrentGold,
-#         [Int]$MaxGold
-#     ) {
-#         $this.Name               = $Name
-#         $this.CurrentHitPoints   = $CurrentHitPoints
-#         $this.MaxHitPoints       = $MaxHitPoints
-#         $this.CurrentMagicPoints = $CurrentMagicPoints
-#         $this.MaxMagicPoints     = $MaxMagicPoints
-#         $this.CurrentGold        = $CurrentGold
-#         $this.MaxGold            = $MaxGold
-#         $this.HitPointsState     = [StatNumberState]::Normal
-#         $this.MagicPointsState   = [StatNumberState]::Normal
-#         $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
-#         $this.Inventory          = [List[MapTileObject]]::new()
-#         $this.TargetOfFilter     = [List[String]]::new()
-#     }
-
-#     Player(
-#         [String]$Name,
-#         [Int]$CurrentHitPoints,
-#         [Int]$MaxHitPoints,
-#         [Int]$CurrentMagicPoints,
-#         [Int]$MaxMagicPoints,
-#         [Int]$CurrentGold,
-#         [Int]$MaxGold,
-#         [String[]]$TargetOfFilter
-#     ) {
-#         $this.Name               = $Name
-#         $this.CurrentHitPoints   = $CurrentHitPoints
-#         $this.MaxHitPoints       = $MaxHitPoints
-#         $this.CurrentMagicPoints = $CurrentMagicPoints
-#         $this.MaxMagicPoints     = $MaxMagicPoints
-#         $this.CurrentGold        = $CurrentGold
-#         $this.MaxGold            = $MaxGold
-#         $this.HitPointsState     = [StatNumberState]::Normal
-#         $this.MagicPointsState   = [StatNumberState]::Normal
-#         $this.MapCoordinates     = [ATCoordinates]::new(0, 0)
-#         $this.Inventory          = [List[MapTileObject]]::new()
-#         $this.TargetOfFilter     = [List[String]]::new()
-
-#         Foreach($a in $TargetOfFilter) {
-#             $this.TargetOfFilter.Add($a) | Out-Null
-#         }
-#     }
-
-#     [String]GetFormattedNameString([ATCoordinates]$Coordinates) {
-#         [ATString]$p1 = [ATString]::new(
-#             [ATStringPrefix]::new(
-#                 [Player]::StatNameDrawColor,
-#                 [ATBackgroundColor24None]::new(),
-#                 [ATDecorationNone]::new(),
-#                 $Coordinates
-#             ),
-#             $this.Name,
-#             $true
-#         )
-
-#         Return "$($p1.ToAnsiControlSequenceString())"
-#     }
-
-#     [String]GetFormattedHitPointsString([ATCoordinates]$Coordinates) {
-#         [String]$a = ''
-
-#         $this.TestCurrentHpState()
-
-#         Switch($this.HitPointsState) {
-#             Normal {
-#                 [ATString]$p1 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         $Coordinates
-#                     ),
-#                     'H ',
-#                     $false
-#                 )
-#                 [ATString]$p2 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorSafe,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.CurrentHitPoints) `n`t",
-#                     $false
-#                 )
-#                 [ATString]$p3 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     '/ ',
-#                     $false
-#                 )
-#                 [ATString]$p4 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorSafe,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.MaxHitPoints)",
-#                     $true
-#                 )
-
-#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-#             }
-
-#             Caution {
-#                 [ATString]$p1 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         $Coordinates
-#                     ),
-#                     'H ',
-#                     $false
-#                 )
-#                 [ATString]$p2 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorCaution,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.CurrentHitPoints) `n`t",
-#                     $false
-#                 )
-#                 [ATString]$p3 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     '/ ',
-#                     $false
-#                 )
-#                 [ATString]$p4 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorCaution,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.MaxHitPoints)",
-#                     $true
-#                 )
-
-#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-#             }
-
-#             Danger {
-#                 [ATString]$p1 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         $Coordinates
-#                     ),
-#                     'H ',
-#                     $false
-#                 )
-#                 [ATString]$p2 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorDanger,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecoration]::new($true),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.CurrentHitPoints) `n`t",
-#                     $false
-#                 )
-#                 [ATString]$p3 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     '/ ',
-#                     $false
-#                 )
-#                 [ATString]$p4 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorDanger,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecoration]::new($true),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.MaxHitPoints)",
-#                     $true
-#                 )
-
-#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-#             }
-
-#             Default {}
-#         }
-
-#         Return $a
-#     }
-
-#     [String]GetFormattedMagicPointsString([ATCoordinates]$Coordinates) {
-#         [String]$a = ''
-
-#         $this.TestCurrentMpState()
-
-#         Switch($this.MagicPointsState) {
-#             Normal {
-#                 [ATString]$p1 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         $Coordinates
-#                     ),
-#                     'M ',
-#                     $false
-#                 )
-#                 [ATString]$p2 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorSafe,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.CurrentMagicPoints) `n`t",
-#                     $false
-#                 )
-#                 [ATString]$p3 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     '/ ',
-#                     $false
-#                 )
-#                 [ATString]$p4 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorSafe,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.MaxMagicPoints)",
-#                     $true
-#                 )
-
-#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-#             }
-
-#             Caution {
-#                 [ATString]$p1 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         $Coordinates
-#                     ),
-#                     'M ',
-#                     $false
-#                 )
-#                 [ATString]$p2 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorCaution,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.CurrentMagicPoints) `n`t",
-#                     $false
-#                 )
-#                 [ATString]$p3 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     '/ ',
-#                     $false
-#                 )
-#                 [ATString]$p4 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorCaution,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.MaxMagicPoints)",
-#                     $true
-#                 )
-
-#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-#             }
-
-#             Danger {
-#                 [ATString]$p1 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         $Coordinates
-#                     ),
-#                     'M ',
-#                     $false
-#                 )
-#                 [ATString]$p2 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorDanger,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecoration]::new($true),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.CurrentMagicPoints) `n`t",
-#                     $false
-#                 )
-#                 [ATString]$p3 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [CCTextDefault24]::new(),
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecorationNone]::new(),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     '/ ',
-#                     $false
-#                 )
-#                 [ATString]$p4 = [ATString]::new(
-#                     [ATStringPrefix]::new(
-#                         [Player]::StatNumDrawColorDanger,
-#                         [ATBackgroundColor24None]::new(),
-#                         [ATDecoration]::new($true),
-#                         [ATCoordinatesNone]::new()
-#                     ),
-#                     "$($this.MaxMagicPoints)",
-#                     $true
-#                 )
-
-#                 $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
-#             }
-
-#             Default {}
-#         }
-
-#         Return $a
-#     }
-
-#     [String]GetFormattedGoldString([ATCoordinates]$Coordinates) {
-#         [ATString]$p1 = [ATString]::new(
-#             [ATStringPrefix]::new(
-#                 [Player]::StatGoldDrawColor,
-#                 [ATBackgroundColor24None]::new(),
-#                 [ATDecorationNone]::new(),
-#                 $Coordinates
-#             ),
-#             "$($this.CurrentGold)",
-#             $false
-#         )
-#         [ATString]$p2 = [ATString]::new(
-#             [ATStringPrefix]::new(
-#                 [CCTextDefault24]::new(),
-#                 [ATBackgroundColor24None]::new(),
-#                 [ATDecorationNone]::new(),
-#                 [ATCoordinatesNone]::new()
-#             ),
-#             'G',
-#             $true
-#         )
-
-#         Return "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-#     }
-
-#     [Void]TestCurrentHpState() {
-#         Switch($this.CurrentHitPoints) {
-#             { $_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution) } {
-#                 $this.HitPointsState = [StatNumberState]::Normal
-#             }
-
-#             { ($_ -GT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdCaution)) } {
-#                 $this.HitPointsState = [StatNumberState]::Caution
-#             }
-
-#             { $_ -LT ($this.MaxHitPoints * [Player]::StatNumThresholdDanger) } {
-#                 $this.HitPointsState = [StatNumberState]::Danger
-#             }
-
-#             Default {}
-#         }
-#     }
-
-#     [Void]TestCurrentMpState() {
-#         Switch($this.CurrentMagicPoints) {
-#             { $_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution) } {
-#                 $this.MagicPointsState = [StatNumberState]::Normal
-#             }
-
-#             { ($_ -GT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger)) -AND ($_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdCaution)) } {
-#                 $this.MagicPointsState = [StatNumberState]::Caution
-#             }
-
-#             { $_ -LT ($this.MaxMagicPoints * [Player]::StatNumThresholdDanger) } {
-#                 $this.MagicPointsState = [StatNumberState]::Danger
-#             }
-
-#             Default {}
-#         }
-#     }
-
-#     [Boolean]IsItemInInventory(
-#         [String]$ItemName
-#     ) {
-#         Foreach($a in $this.Inventory) {
-#             If($a.Name -IEQ $ItemName) {
-#                 Return $true
-#             }
-#         }
-
-#         Return $false
-#     }
-
-#     [MapTileObject]GetItemReference(
-#         [String]$ItemName
-#     ) {
-#         Foreach($a in $this.Inventory) {
-#             If($a.Name -IEQ $ItemName) {
-#                 Return $a
-#             }
-#         }
-
-#         Return $null
-#     }
-
-#     # [Boolean]RemoveInventoryItemByName(
-#     #     [String]$ItemName
-#     # ) {
-#     #     $c = 0
-
-#     #     Foreach($a in $this.Inventory) {
-#     #         If($a.Name -IEQ $ItemName) {
-#     #             $this.Inventory.RemoveAt($c)
-#     #             Return $true
-#     #         }
-#     #         $c++
-#     #     }
-
-#     #     Return $false
-#     # }
-
-#     [ItemRemovalStatus]RemoveInventoryItemByName(
-#         [String]$ItemName
-#     ) {
-#         $c = 0
-
-#         Foreach($a in $this.Inventory) {
-#             If($a.Name -IEQ $ItemName) {
-#                 If($a.KeyItem -EQ $true) {
-#                     Return [ItemRemovalStatus]::FailKeyItem
-#                 }
-#                 $this.Inventory.RemoveAt($c)
-#                 Return [ItemRemovalStatus]::Success
-#             }
-#             $c++
-#         }
-
-#         Return [ItemRemovalStatus]::FailGeneral
-#     }
-
-#     [ItemRemovalStatus]RemoveInventoryItemByIndex(
-#         [Int]$Index
-#     ) {
-#         [MapTileObject]$a = $null
-
-#         Try {
-#             $a = $this.Inventory[$Index]
-#         } Catch {
-#             Return [ItemRemovalStatus]::FailGeneral
-#         }
-
-#         If($a.KeyItem -EQ $true) {
-#             Return [ItemRemovalStatus]::FailKeyItem
-#         }
-
-#         $this.Inventory.RemoveAt($Index)
-#         Return [ItemRemovalStatus]::Success
-#     }
-
-#     [Void]MapMoveNorth() {
-#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
-#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-#                 $a = $Script:CurrentMap.MapHeight - 1
-#                 $b = $this.MapCoordinates.Row + 1
-#                 $c = $a % $b
-
-#                 If($c -EQ $a) {
-#                     $this.MapCoordinates.Row = 0
-#                 } Else {
-#                     $this.MapCoordinates.Row++
-#                 }
-
-#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                 Return
-#             } Else {
-#                 $a = $Script:CurrentMap.MapHeight - 1
-#                 $b = $this.MapCoordinates.Row + 1
-#                 $c = $a % $b
-
-#                 If($c -EQ $a) {
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-#                 } Else {
-#                     $this.MapCoordinates.Row++
-#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-#                     Return
-#                 }
-#             }
-#         } Else {
-#             $Script:TheCommandWindow.UpdateCommandHistory($true)
-#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-#             Return
-#         }
-#     }
-
-#     [Void]MapMoveSouth() {
-#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
-#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-#                 $a = 0
-#                 $b = $this.MapCoordinates.Row - 1
-
-#                 If($b -LT $a) {
-#                     $this.MapCoordinates.Row = $Script:CurrentMap.MapHeight - 1
-#                 } Else {
-#                     $this.MapCoordinates.Row--
-#                 }
-
-#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                 Return
-#             } Else {
-#                 $a = 0
-#                 $b = $this.MapCoordinates.Row - 1
-
-#                 If($b -LT $a) {
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-#                 } Else {
-#                     $this.MapCoordinates.Row--
-#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-#                     Return
-#                 }
-#             }
-#         } Else {
-#             $Script:TheCommandWindow.UpdateCommandHistory($true)
-#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-#             Return
-#         }
-#     }
-
-#     [Void]MapMoveEast() {
-#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitEast] -EQ $true) {
-#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-#                 $a = $Script:CurrentMap.MapWidth - 1
-#                 $b = $this.MapCoordinates.Column + 1
-#                 $c = $a % $b
-
-#                 If($c -EQ $a) {
-#                     $this.MapCoordinates.Column = 0
-#                 } Else {
-#                     $this.MapCoordinates.Column++
-#                 }
-
-#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                 Return
-#             } Else {
-#                 $a = $Script:CurrentMap.MapWidth - 1
-#                 $b = $this.MapCoordinates.Column + 1
-#                 $c = $a % $b
-
-#                 If($c -EQ $a) {
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-#                 } Else {
-#                     $this.MapCoordinates.Column++
-#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-#                     Return
-#                 }
-#             }
-#         } Else {
-#             $Script:TheCommandWindow.UpdateCommandHistory($true)
-#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-#             Return
-#         }
-#     }
-
-#     [Void]MapMoveWest() {
-#         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitWest] -EQ $true) {
-#             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-#                 $a = 0
-#                 $b = $this.MapCoordinates.Column - 1
-
-#                 If($b -LT $a) {
-#                     $this.MapCoordinates.Column = $Script:CurrentMap.MapWidth - 1
-#                 } Else {
-#                     $this.MapCoordinates.Column--
-#                 }
-
-#                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                 Return
-#             } Else {
-#                 $a = 0
-#                 $b = $this.MapCoordinates.Column - 1
-
-#                 If($b -LT $a) {
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-#                     $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-#                 } Else {
-#                     $this.MapCoordinates.Column--
-#                     $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-#                     $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-#                     Return
-#                 }
-#             }
-#         } Else {
-#             $Script:TheCommandWindow.UpdateCommandHistory($true)
-#             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-#             Return
-#         }
-#     }
-
-#     [Boolean]ValidateSourceInFilter(
-#         [String]$SourceItemClass
-#     ) {
-#         Return ($SourceItemClass -IN $this.TargetOfFilter)
-#     }
-
-#     [Boolean]IncrementHitPoints(
-#         [Int]$IncAmt
-#     ) {
-#         # Check to see if the Current Hit Points are EQUAL TO the Max Hit Points
-#         If($this.CurrentHitPoints -EQ $this.MaxHitPoints) {
-#             Return $false
-#         }
-
-#         # Ensure that IncAmt is GREATER THAN zero; the clamping function below relies on it
-#         If($IncAmt -LE 0) {
-#             Return $false
-#         }
-
-#         # It can safely be assumed that the Player's Current Hit Points are LESS THAN the Max Hit Points; add the IncAmt, but clamp at max
-#         $a                     = $this.CurrentHitPoints += $IncAmt
-#         $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
-#         $this.CurrentHitPoints = $a
-
-#         # Notify the Status Window that the Player's Hit Point information is dirty
-#         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
-
-#         Return $true
-#     }
-
-#     [Boolean]DecrementHitPoints(
-#         [Int]$DecAmt
-#     ) {
-#         # Check to see if Current Hit Points are EQUAL TO zero
-#         If($this.CurrentHitPoints -EQ 0) {
-#             Return $false
-#         }
-
-#         # Ensure that DecAmt is LESS THAN zero; the clamping function below relies on it
-#         If($DecAmt -GE 0) {
-#             Return $false
-#         }
-
-#         # It can be safely assumed that the Player's Current Hit Points are GREATER THAN zero; add the DecAmt, but clamp at zero
-#         $a                     = $this.CurrentHitPoints += $DecAmt
-#         $a                     = [Math]::Clamp($a, 0, $this.MaxHitPoints)
-#         $this.CurrentHitPoints = $a
-
-#         # Notify the Status Window that the Player's Hit Point information is dirty
-#         $Script:TheStatusWindow.PlayerHpDrawDirty = $true
-
-#         Return $true
-#     }
-# }
 
 Class EnemyEntityImage {
     Static [Int]$Width  = 37
@@ -13302,7 +11460,7 @@ Class EEBat : EnemyBattleEntity {
         }
 
         $this.ActionListing = @{
-            [ActionSlot]::A = [BAPound]::new()
+            [ActionSlot]::A = [BAPunch]::new()
             [ActionSlot]::B = [BAScratch]::new()
             [ActionSlot]::C = $null
             [ActionSlot]::D = $null
@@ -20705,11 +18863,6 @@ Class MTOTree : MapTileObject {
 
         Switch($Source.PSTypeNames[0]) {
             'MTORope' {
-                # $Script:TheMessageWindow.WriteMessage(
-                #     'I''ve tied the Rope to the Tree',
-                #     [CCAppleIndigoDark24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -20832,12 +18985,6 @@ Class MTOMilk : MapTileObject {
                     # It is - this will cause the Player's Hp to decrease
                     # Attempt to decrement the Player's Hp by the Hp Bonus
                     If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
-                        # Decrement was successful; write a message to the Message Window
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     'Now that wasn''t very smart, was it?',
-                        #     [CCAppleOrangeLight24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -20848,15 +18995,8 @@ Class MTOMilk : MapTileObject {
                             )
                         )
 
-                        # Remove the milk from the Player's Inventory
                         $Source.RemoveInventoryItemByName($Self.Name)
                     } Else {
-                        # Decrement failed; write a message to the Message Window
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     'There''s no need to drink this now.',
-                        #     [CCAppleYellowLight24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -20871,12 +19011,6 @@ Class MTOMilk : MapTileObject {
                     # The milk isn't spoiled - attempt to increment the Player's Hp by the Hp Bonus
                     # Attempt to increment the Player's HP by the Hp Bonus
                     If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
-                        # Increment was successful; write a message to the Message Window
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     'Hmmm. Delicious cow juice.',
-                        #     [CCAppleGreenLight24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -20887,15 +19021,8 @@ Class MTOMilk : MapTileObject {
                             )
                         )
 
-                        # Remove the milk from the Player's Inventory
                         $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
                     } Else {
-                        # Increment wasn't successful; write a message to the Message Window
-                        # $Script:TheMessageWindow.WriteMessage(
-                        #     'There''s no need to drink this now.',
-                        #     [CCAppleYellowLight24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheMessageWindow.WriteMessageComposite(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -21219,13 +19346,11 @@ Class StatusWindow : WindowBase {
     Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerMpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawRow, [StatusWindow]::PlayerStatDrawColumn)
-    # Static [ATCoordinates]$PlayerAilDrawCoordinates  = [ATCoordinates]::new(2, 11)
 
     [Boolean]$PlayerNameDrawDirty
     [Boolean]$PlayerHpDrawDirty
     [Boolean]$PlayerMpDrawDirty
     [Boolean]$PlayerGoldDrawDirty
-    # [Boolean]$PlayerAilDrawDirty
 
     [ATString]$LineBlankActual = [ATStringNone]::new()
 
@@ -21282,7 +19407,6 @@ Class StatusWindow : WindowBase {
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
                     $this.PlayerNameDrawDirty = $false
                 }
                 If($this.PlayerHpDrawDirty) {
@@ -21476,7 +19600,6 @@ Class StatusWindow : WindowBase {
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSeuenceString())"
                     Write-Host "$($a)"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
                     $this.PlayerHpDrawDirty = $false
                 }
                 If($this.PlayerMpDrawDirty) {
@@ -21664,7 +19787,6 @@ Class StatusWindow : WindowBase {
 
                     Write-Host "$($a)"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
                     $this.PlayerMpDrawDirty = $false
                 }
                 If($this.PlayerGoldDrawDirty) {
@@ -21691,7 +19813,6 @@ Class StatusWindow : WindowBase {
 
                     Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
@@ -21712,7 +19833,6 @@ Class StatusWindow : WindowBase {
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedNameString([StatusWindow]::PlayerNameDrawCoordinates)
                     $this.PlayerNameDrawDirty = $false
                 }
                 If($this.PlayerHpDrawDirty) {
@@ -21906,7 +20026,6 @@ Class StatusWindow : WindowBase {
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedHitPointsString([StatusWindow]::PlayerHpDrawCoordinates)
                     $this.PlayerHpDrawDirty = $false
                 }
                 If($this.PlayerMpDrawDirty) {
@@ -22098,7 +20217,6 @@ Class StatusWindow : WindowBase {
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedMagicPointsString([StatusWindow]::PlayerMpDrawCoordinates)
                     $this.PlayerMpDrawDirty = $false
                 }
                 If($this.PlayerGoldDrawDirty) {
@@ -22127,7 +20245,6 @@ Class StatusWindow : WindowBase {
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
 
-                    # Write-Host $Script:ThePlayer.GetFormattedGoldString([StatusWindow]::PlayerGoldDrawCoordinates)
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
@@ -22453,11 +20570,6 @@ Class CommandWindow : WindowBase {
             }
         }
 
-        # $Script:TheMessageWindow.WriteMessage(
-        #     'I can see the following things here:',
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $Script:TheMessageWindow.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -22467,11 +20579,6 @@ Class CommandWindow : WindowBase {
                 )
             )
         )
-        # $Script:TheMessageWindow.WriteMessage(
-        #     $c,
-        #     [CCApplePinkDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $Script:TheMessageWindow.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -22483,11 +20590,6 @@ Class CommandWindow : WindowBase {
         )
 
         If($y -EQ $true) {
-            # $Script:TheMessageWindow.WriteMessage(
-            #     $f,
-            #     [CCApplePinkDark24]::new(),
-            #     [ATDecorationNone]::new()
-            # )
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
                     [ATStringCompositeSc]::new(
@@ -22506,11 +20608,6 @@ Class CommandWindow : WindowBase {
         Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
             If($a.Name -IEQ $ItemName) {
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
-                # $Script:TheMessageWindow.WriteMessage(
-                #     "$($a.ExamineString)",
-                #     [CCAppleMintDark24]::new(),
-                #     [ATDecorationNone]::new()
-                # )
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -22678,7 +20775,6 @@ Class MessageWindow : WindowBase {
 
     Static [ATString]$MessageWindowBlank = [ATStringNone]::new()
 
-    # [ATString[]]$MessageHistory
     [ATStringComposite[]]$MessageHistory
 
     [Boolean]$MessageADirty = $false
@@ -22726,49 +20822,14 @@ Class MessageWindow : WindowBase {
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
-
-        # $this.MessageHistory = New-Object 'ATString[]' 3
-
-        # $this.MessageHistory[[MessageWindow]::MessageHistoryARef] = [ATString]::new(
-        #     [ATStringPrefix]::new(
-        #         [CCTextDefault24]::new(),
-        #         [ATBackgroundColor24None]::new(),
-        #         [ATDecorationNone]::new(),
-        #         [MessageWindow]::MessageADrawCoordinates
-        #     ),
-        #     [MessageWindow]::MessageWindowBlank.UserData,
-        #     $true
-        # )
-        # $this.MessageHistory[[MessageWindow]::MessageHistoryBRef] = [ATString]::new(
-        #     [ATStringPrefix]::new(
-        #         [CCTextDefault24]::new(),
-        #         [ATBackgroundColor24None]::new(),
-        #         [ATDecorationNone]::new(),
-        #         [MessageWindow]::MessageBDrawCoordinates
-        #     ),
-        #     [MessageWindow]::MessageWindowBlank.UserData,
-        #     $true
-        # )
-        # $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
-        #     [ATStringPrefix]::new(
-        #         [CCTextDefault24]::new(),
-        #         [ATBackgroundColor24None]::new(),
-        #         [ATDecorationNone]::new(),
-        #         [MessageWindow]::MessageCDrawCoordinates
-        #     ),
-        #     [MessageWindow]::MessageWindowBlank.UserData,
-        #     $true
-        # )
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
         If($this.MessageADirty -EQ $true) {
-            # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Coordinates
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             Write-Host "$([MessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
@@ -22776,10 +20837,8 @@ Class MessageWindow : WindowBase {
         }
 
         If($this.MessageBDirty -EQ $true) {
-            # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Coordinates
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
             Write-Host "$([MessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
@@ -22787,10 +20846,8 @@ Class MessageWindow : WindowBase {
         }
 
         If($this.MessageCDirty -EQ $true) {
-            # [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Coordinates
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
             Write-Host "$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
@@ -22810,17 +20867,6 @@ Class MessageWindow : WindowBase {
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
-
-        # $this.MessageHistory[[MessageWindow]::MessageHistoryCRef] = [ATString]::new(
-        #     [ATStringPrefix]::new(
-        #         $ForegroundColor,
-        #         [ATBackgroundColor24None]::new(),
-        #         [ATDecorationNone]::new(),
-        #         [MessageWindow]::MessageCDrawCoordinates
-        #     ),
-        #     $Message,
-        #     $true
-        # )
 
         $this.MessageADirty = $true
         $this.MessageBDirty = $true
@@ -22842,11 +20888,6 @@ Class MessageWindow : WindowBase {
     [Void]WriteBadCommandMessage(
         [String]$Command
     ) {
-        # $this.WriteMessage(
-        #     "$($Command) isn't a valid command.",
-        #     [CCAppleRedDark24]::new(),
-        #     [ATDecoration]::new($true)
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -22869,11 +20910,6 @@ Class MessageWindow : WindowBase {
         [String]$Command,
         [String]$Arg0
     ) {
-        # $this.WriteMessage(
-        #     "We can't $($Command) with a(n) $($Arg0).",
-        #     [CCAppleYellowDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -22916,11 +20952,6 @@ Class MessageWindow : WindowBase {
         [String]$Arg0,
         [String]$Arg1
     ) {
-        # $this.WriteMessage(
-        #     "We can't $($Command) with a(n) $(Arg0) and a(n) $($Arg1).",
-        #     [CCAppleYellowDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -22973,11 +21004,6 @@ Class MessageWindow : WindowBase {
     }
 
     [Void]WriteSomethingBadMessage() {
-        # $this.WriteMessage(
-        #     'I''m God, and even I don''t know what just happened...',
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -22990,11 +21016,6 @@ Class MessageWindow : WindowBase {
     }
 
     [Void]WriteInvisibleWallEncounteredMessage() {
-        # $this.WriteMessage(
-        #     'The invisible wall blocks your path...',
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -23007,11 +21028,6 @@ Class MessageWindow : WindowBase {
     }
 
     [Void]WriteYouShallNotPassMessage() {
-        # $this.WriteMessage(
-        #     'The path you asked for is impossible...',
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -23024,11 +21040,6 @@ Class MessageWindow : WindowBase {
     }
 
     [Void]WriteMapNoItemsFoundMessage() {
-        # $this.WriteMessage(
-        #     'There''s nothing of interest here.',
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -23043,11 +21054,6 @@ Class MessageWindow : WindowBase {
     [Void]WriteMapInvalidItemMessage(
         [String]$ItemName
     ) {
-        # $this.WriteMessage(
-        #     "There's no $($ItemName) here.",
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -23074,11 +21080,6 @@ Class MessageWindow : WindowBase {
     [Void]WriteItemTakenMessage(
         [String]$ItemName
     ) {
-        # $this.WriteMessage(
-        #     "I've taken the $($ItemName) and put it in my pocket.",
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -23105,11 +21106,6 @@ Class MessageWindow : WindowBase {
     [Void]WriteItemCantTakeMessage(
         [String]$ItemName
     ) {
-        # $this.WriteMessage(
-        #     "It's not possible to take the $($ItemName).",
-        #     [CCAppleIndigoDark24]::new(),
-        #     [ATDecorationNone]::new()
-        # )
         $this.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -23335,7 +21331,6 @@ Class InventoryWindow : WindowBase {
                     }
                 }
             } Elseif($this.NumPages -EQ 1) {
-                # Both of the paging chevrons need hidden at this point since there aren't any more pages in the book... currently.
                 If($this.PagingChevronLeftVisible -EQ $true) {
                     $this.PagingChevronLeftVisible = $false
                 }
@@ -23350,7 +21345,6 @@ Class InventoryWindow : WindowBase {
                 }
             }
 
-            # Try to make the "active" Item Label blink
             If($this.ActiveItemBlinking -EQ $false) {
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
                     Blink = $true
@@ -23735,7 +21729,6 @@ Class InventoryWindow : WindowBase {
             $this.NumPages = [Math]::Ceiling($pp)
         }
 
-        # POTENTIAL BUG FIX
         If($this.CurrentPage -GT $this.NumPages) {
             $this.CurrentPage = $this.NumPages
         }
@@ -23980,7 +21973,6 @@ Class InventoryWindow : WindowBase {
             }
 
             83 {
-                # This is the drop item functionality
                 Switch($this.CurrentPage) {
                     1 {
                         [ItemRemovalStatus]$a = $Script:ThePlayer.RemoveInventoryItemByIndex($this.ActiveIChevronIndex)
@@ -24034,11 +22026,6 @@ been parameterized anyway to account for an arbitrary entity. The consequence of
 window geometries (or, at least the base measurements that assist in defining the window geometries).
 #>
 Class BattleEntityStatusWindow : WindowBase {
-    # Static [Int]$WindowLTRow    = 1
-    # Static [Int]$WindowLTColumn = 1
-    # Static [Int]$WindowBRRow    = 17
-    # Static [Int]$WindowBRColumn = 19
-
     Static [String]$WindowBorderHorizontal = '*------------------*'
     Static [String]$WindowBorderVertical   = '|'
 
@@ -24143,7 +22130,6 @@ Class BattleEntityStatusWindow : WindowBase {
 
         $this.BERef = $BERef
 
-        # Update the element draw coordinates relative to the dimensions of the window
         $this.NameDrawCoordinates   = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 2)
         $this.HpDrawCoordinates     = [ATCoordinates]::new($this.LeftTop.Row + 2, $this.LeftTop.Column + 2)
         $this.MpDrawCoordinates     = [ATCoordinates]::new($this.LeftTop.Row + 5, $this.LeftTop.Column + 2)
@@ -24891,9 +22877,6 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 }
 
-<#
-Because this class is intended to directly reference the player character, there's no need to hold a BattleEntity Reference.
-#>
 Class BattlePlayerActionWindow : WindowBase {
     Static [Int]$WindowLTRow    = 18
     Static [Int]$WindowLTColumn = 1
@@ -25056,7 +23039,6 @@ Class BattlePlayerActionWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.ActionADrawDirty -EQ $true) {
-            # This is the adornment character
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item2,
@@ -25068,7 +23050,6 @@ Class BattlePlayerActionWindow : WindowBase {
                 $true
             )
 
-            # This is the Action Name
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
                     [CCTextDefault24]::new(),
@@ -25085,7 +23066,6 @@ Class BattlePlayerActionWindow : WindowBase {
             $this.ActionADrawDirty = $false
         }
         If($this.ActionBDrawDirty -EQ $true) {
-            # This is the adornment character
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item2,
@@ -25096,8 +23076,6 @@ Class BattlePlayerActionWindow : WindowBase {
                 "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item1)",
                 $true
             )
-
-            # This is the Action Name
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
                     [CCTextDefault24]::new(),
@@ -25114,7 +23092,6 @@ Class BattlePlayerActionWindow : WindowBase {
             $this.ActionBDrawDirty = $false
         }
         If($this.ActionCDrawDirty -EQ $true) {
-            # This is the adornment character
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item2,
@@ -25125,7 +23102,6 @@ Class BattlePlayerActionWindow : WindowBase {
                 "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item1)",
                 $true
             )
-
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
                     [CCTextDefault24]::new(),
@@ -25179,27 +23155,8 @@ Class BattlePlayerActionWindow : WindowBase {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
             13 {
-                # Play a SFX
-                # Try {
-                #     # $Script:TheSfxMachine.SoundLocation = $Script:SfxUiSelectionValid
-                #     # $Script:TheSfxMachine.PlaySync()
-                #     $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
-                #     $Script:TheSfxMPlayer.Play()
-                # } Catch [ServiceProcess.TimeoutException] {
-                #     Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
-                # } Catch [IO.FileNotFoundException] {
-                #     Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
-                # } Catch [InvalidOperationException] {
-                #     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
-                # }
-
                 Switch($this.ActiveChevronIndex) {
                     0 {
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
                             Try {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
@@ -25222,28 +23179,10 @@ Class BattlePlayerActionWindow : WindowBase {
                             Return $null
                         }
 
-                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::A].Uses -LE 0) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::A]
                     }
 
                     1 {
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
                             Try {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
@@ -25266,28 +23205,10 @@ Class BattlePlayerActionWindow : WindowBase {
                             Return $null
                         }
 
-                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::B].Uses -LE 0) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::B]
                     }
 
                     2 {
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
                             Try {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
@@ -25310,28 +23231,10 @@ Class BattlePlayerActionWindow : WindowBase {
                             Return $null
                         }
 
-                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::C].Uses -LE 0) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::C]
                     }
 
                     3 {
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($Script:ThePlayer.Name) uses $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         If(($Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
                             Try {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
@@ -25354,19 +23257,6 @@ Class BattlePlayerActionWindow : WindowBase {
                             Return $null
                         }
 
-                        # If(($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LE 0) -OR ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-                        # If($Script:ThePlayer.ActionListing[[ActionSlot]::D].Uses -LE 0) {
-                        #     [Console]::Beep(493.9, 250)
-                        #     [Console]::Beep((493.9 / 2), 250)
-
-                        #     Return $null
-                        # }
-
                         Return $Script:ThePlayer.ActionListing[[ActionSlot]::D]
                     }
 
@@ -25377,12 +23267,7 @@ Class BattlePlayerActionWindow : WindowBase {
             }
 
             38 {
-                # Move the Chevron up (wraps on top)
-
-                # Play a SFX
                 Try {
-                    # $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
-                    # $Script:TheSfxMachine.Play()
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
                 } Catch [ServiceProcess.TimeoutException] {
@@ -25415,12 +23300,7 @@ Class BattlePlayerActionWindow : WindowBase {
             }
 
             40 {
-                # move the Chevron down (wraps on bottom)
-
-                # Play a SFX
                 Try {
-                    # $Script:TheSfxMachine.SoundLocation = $Script:SfxUiChevronMove
-                    # $Script:TheSfxMachine.Play()
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
                 } Catch [ServiceProcess.TimeoutException] {
@@ -25490,7 +23370,6 @@ Class BattleStatusMessageWindow : WindowBase {
 
     [ATStringComposite[]]$MessageHistoryComposite
 
-    # [ATString[]]$MessageHistory
     [ATString]$MessageBlank = [ATString]::new(
         [ATStringPrefix]::new(
             [ATForegroundColor24None]::new(),
@@ -25542,59 +23421,6 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
-
-        # $this.MessageHistory = @(
-        #     [ATString]::new(
-        #         [ATStringPrefix]::new(
-        #             [CCTextDefault24]::new(),
-        #             [ATBackgroundColor24None]::new(),
-        #             [ATDecorationNone]::new(),
-        #             [BattleStatusMessageWindow]::MessageADrawCoordinates
-        #         ),
-        #         '',
-        #         $true
-        #     ),
-        #     [ATString]::new(
-        #         [ATStringPrefix]::new(
-        #             [CCTextDefault24]::new(),
-        #             [ATBackgroundColor24None]::new(),
-        #             [ATDecorationNone]::new(),
-        #             [BattleStatusMessageWindow]::MessageBDrawCoordinates
-        #         ),
-        #         '',
-        #         $true
-        #     ),
-        #     [ATString]::new(
-        #         [ATStringPrefix]::new(
-        #             [CCTextDefault24]::new(),
-        #             [ATBackgroundColor24None]::new(),
-        #             [ATDecorationNone]::new(),
-        #             [BattleStatusMessageWindow]::MessageCDrawCoordinates
-        #         ),
-        #         '',
-        #         $true
-        #     ),
-        #     [ATString]::new(
-        #         [ATStringPrefix]::new(
-        #             [CCTextDefault24]::new(),
-        #             [ATBackgroundColor24None]::new(),
-        #             [ATDecorationNone]::new(),
-        #             [BattleStatusMessageWindow]::MessageDDrawCoordinates
-        #         ),
-        #         '',
-        #         $true
-        #     ),
-        #     [ATString]::new(
-        #         [ATStringPrefix]::new(
-        #             [CCTextDefault24]::new(),
-        #             [ATBackgroundColor24None]::new(),
-        #             [ATDecorationNone]::new(),
-        #             [BattleStatusMessageWindow]::MessageEDrawCoordinates
-        #         ),
-        #         '',
-        #         $true
-        #     )
-        # )
     }
 
     [Void]Draw() {
@@ -25604,8 +23430,6 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
-            # "E: $([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())" | Out-File '.\Sample.txt' -Append
             Write-Host "$([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
 
             $this.MessageEDirty = $false
@@ -25615,8 +23439,6 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
-            # "D: $([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())" | Out-File '.\Sample.txt' -Append
             Write-Host "$([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
 
             $this.MessageDDirty = $false
@@ -25626,7 +23448,6 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
 
             $this.MessageCDirty = $false
@@ -25636,7 +23457,6 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
 
             $this.MessageBDirty = $false
@@ -25646,7 +23466,6 @@ Class BattleStatusMessageWindow : WindowBase {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
             
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
-            # Write-Host "$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
 
             $this.MessageADirty = $false
@@ -25654,67 +23473,14 @@ Class BattleStatusMessageWindow : WindowBase {
         }
     }
 
-    # [Void]WriteMessage(
-    #     [String]$Message,
-    #     [ATForegroundColor24]$ForegroundColor,
-    #     [ATDecoration]$Decoration
-    # ) {
-    #     # This is ordered a bit different than the legacy Message Window, start with A and work the way up
-    #     # Assign to A
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].UserData
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.Decorations
-
-    #     # Assign to B
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].UserData
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.Decorations
-
-    #     # Assign to C
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].UserData
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.ForegroundColor
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.Decorations
-
-    #     # Assign to D
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].UserData               = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].UserData
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.ForegroundColor = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].Prefix.Decorations     = $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations
-
-    #     # Assign to E
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].UserData               = $Message
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.ForegroundColor = $ForegroundColor
-    #     $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].Prefix.Decorations     = $Decoration
-
-    #     $this.MessageADirty = $true
-    #     $this.MessageBDirty = $true
-    #     $this.MessageCDirty = $true
-    #     $this.MessageDDirty = $true
-    #     $this.MessageEDirty = $true
-    # }
-
     [Void]WriteCompositeMessage(
         [ATString[]]$ATComposite
     ) {
-        # Assign to A
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual)
-        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
-
-        # Assign to B
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual)
-        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
-
-        # Assign to C
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual)
-        
-        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
-
-        # Assign to D
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual)
-        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
-
-        # Assign to E
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef] = [ATStringComposite]::new($ATComposite)
-        # $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
         
         $this.MessageADirty = $true
         $this.MessageBDirty = $true
@@ -25770,8 +23536,6 @@ Class BattleEnemyImageWindow : WindowBase {
 }
 
 Class BattlePhaseIndicator {
-    # The blank should be 14 characters
-
     [ATStringComposite]$IndicatorStringActual = [ATStringComposite]::new()
     [ATStringComposite]$IndicatorStringBlank  = [ATStringComposite]::new()
     
@@ -25909,9 +23673,6 @@ Class BattleManager {
                     $this.PhaseTwoEntity = $Script:ThePlayer
                 }
 
-                # $this.PhaseOneEntity.Update()
-                # $this.PhaseTwoEntity.Update()
-
                 $this.State = [BattleManagerState]::PhaseAExecution
                 Return
             }
@@ -25922,11 +23683,9 @@ Class BattleManager {
                     Break
                 }
 
-                # Update the Phase Indicator
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseOneEntity)
 
-                # Attempt to test the border color change for the status window
                 If($this.PhaseOneEntity -IS [Player]) {
                     $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
                     $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
@@ -25938,60 +23697,16 @@ Class BattleManager {
                 $Script:TheEnemyBattleStatWindow.Draw()
 
                 If($this.CanPhaseOneAct -EQ $true) {
-                    # Called if the Phase One Entity is able to execute their action
-                    # We need to know specifically if this is the Player
                     [BattleAction]$ToExecute          = $null
                     [BattleActionResult]$ActionResult = $null
 
                     If($this.PhaseOneEntity -IS [Player]) {
-                        # This is the Player
                         $Script:ThePlayerBattleActionWindow.SetAllActionDrawDirty()
                         While($null -EQ $ToExecute) {
                             $Script:ThePlayerBattleActionWindow.Draw()
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                         }
 
-                        # Write the Action used to the Battle Message Log
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
-                        # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                        #     @(
-                        #         [ATString]::new(
-                        #             [ATStringPrefix]::new(
-                        #                 $this.PhaseOneEntity.NameDrawColor,
-                        #                 [ATBackgroundColor24None]::new(),
-                        #                 [ATDecorationNone]::new(),
-                        #                 [ATCoordinatesNone]::new()
-                        #             ),
-                        #             $this.PhaseOneEntity.Name,
-                        #             $true
-                        #         ),
-                        #         [ATString]::new(
-                        #             [ATStringPrefix]::new(
-                        #                 [CCTextDefault24]::new(),
-                        #                 [ATBackgroundColor24None]::new(),
-                        #                 [ATDecorationNone]::new(),
-                        #                 [ATCoordinatesNone]::new()
-                        #             ),
-                        #             ' uses ',
-                        #             $true
-                        #         ),
-                        #         [ATString]::new(
-                        #             [ATStringPrefix]::new(
-                        #                 $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
-                        #                 [ATBackgroundColor24None]::new(),
-                        #                 [ATDecorationNone]::new(),
-                        #                 [ATCoordinatesNone]::new()
-                        #             ),
-                        #             $ToExecute.Name,
-                        #             $true
-                        #         )
-                        #     )
-                        # )
-                        # Write-Host "$([ATStringCompositeSc]::new($this.PhaseOneEntity.NameDrawColor, [ATDecorationNone]::new(), $this.PhaseOneEntity.Name).ToAnsiControlSequenceString())"
                         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -26012,55 +23727,12 @@ Class BattleManager {
                             )
                         )
 
-                        # Execute the Action and capture the results (Self, Target)
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                         $Script:ThePlayerBattleStatWindow.Draw()
                     } Else  {
-                        # This is the Enemy
-                        # Randomly select one of the Enemy's Actions from the Marble Bag
                         [ActionSlot]$SelectedSlot = $($this.PhaseOneEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseOneEntity.ActionListing[$SelectedSlot]
                         
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($this.PhaseOneEntity.Name) uses $($ToExecute.Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
-                        # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                        #     @(
-                        #         [ATString]::new(
-                        #             [ATStringPrefix]::new(
-                        #                 $this.PhaseOneEntity.NameDrawColor,
-                        #                 [ATBackgroundColor24None]::new(),
-                        #                 [ATDecorationNone]::new(),
-                        #                 [ATCoordinatesNone]::new()
-                        #             ),
-                        #             $this.PhaseOneEntity.Name,
-                        #             $true
-                        #         ),
-                        #         [ATString]::new(
-                        #             [ATStringPrefix]::new(
-                        #                 [CCTextDefault24]::new(),
-                        #                 [ATBackgroundColor24None]::new(),
-                        #                 [ATDecorationNone]::new(),
-                        #                 [ATCoordinatesNone]::new()
-                        #             ),
-                        #             ' uses ',
-                        #             $true
-                        #         ),
-                        #         [ATString]::new(
-                        #             [ATStringPrefix]::new(
-                        #                 $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
-                        #                 [ATBackgroundColor24None]::new(),
-                        #                 [ATDecorationNone]::new(),
-                        #                 [ATCoordinatesNone]::new()
-                        #             ),
-                        #             $ToExecute.Name,
-                        #             $true
-                        #         )
-                        #     )
-                        # )
-                        # Write-Host "$([ATStringCompositeSc]::new($this.PhaseOneEntity.NameDrawColor, [ATDecorationNone]::new(), $this.PhaseOneEntity.Name).ToAnsiControlSequenceString())"
                         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -26081,52 +23753,12 @@ Class BattleManager {
                             )
                         )
 
-                        # Execute the Action
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                         $Script:TheEnemyBattleStatWindow.Draw()
                     }
 
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
-                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                            #     @(
-                            #         [ATString]::new(
-                            #             [ATStringPrefix]::new(
-                            #                 $Script:BATAdornmentCharTable[$ToExecute.Type].Item2,
-                            #                 [ATBackgroundColor24None]::new(),
-                            #                 [ATDecorationNone]::new(),
-                            #                 [ATCoordinatesNone]::new()
-                            #             ),
-                            #             $ToExecute.Name,
-                            #             $true
-                            #         ),
-                            #         [ATString]::new(
-                            #             [ATStringPrefix]::new(
-                            #                 [CCTextDefault24]::new(),
-                            #                 [ATBackgroundColor24None]::new(),
-                            #                 [ATDecorationNone]::new(),
-                            #                 [ATCoordinatesNone]::new()
-                            #             ),
-                            #             ' was successful, and scored a ',
-                            #             $true
-                            #         ),
-                            #         [ATString]::new(
-                            #             [ATStringPrefix]::new(
-                            #                 [CCAppleYellowLight24]::new(),
-                            #                 [ATBackgroundColor24None]::new(),
-                            #                 [ATDecoration]::new($true),
-                            #                 [ATCoordinatesNone]::new()
-                            #             ),
-                            #             'CRITICAL!',
-                            #             $true
-                            #         )
-                            #     )
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -26149,58 +23781,7 @@ Class BattleManager {
 
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
-                                    # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                                    #     @(
-                                    #         [ATString]::new(
-                                    #             [ATStringPrefix]::new(
-                                    #                 $this.PhaseOneEntity.NameDrawColor,
-                                    #                 [ATBackgroundColor24None]::new(),
-                                    #                 [ATDecorationNone]::new(),
-                                    #                 [ATCoordinatesNone]::new()
-                                    #             ),
-                                    #             $this.PhaseOneEntity.Name,
-                                    #             $true
-                                    #         ),
-                                    #         [ATString]::new(
-                                    #             [ATStringPrefix]::new(
-                                    #                 [CCTextDefault24]::new(),
-                                    #                 [ATBackgroundColor24None]::new(),
-                                    #                 [ATDecorationNone]::new(),
-                                    #                 [ATCoordinatesNone]::new()
-                                    #             ),
-                                    #             ' hit ',
-                                    #             $true
-                                    #         ),
-                                    #         [ATString]::new(
-                                    #             [ATStringPrefix]::new(
-                                    #                 $this.PhaseTwoEntity.NameDrawColor,
-                                    #                 [ATBackgroundColor24None]::new(),
-                                    #                 [ATDecorationNone]::new(),
-                                    #                 [ATCoordinatesNone]::new()
-                                    #             ),
-                                    #             $this.PhaseTwoEntity.Name,
-                                    #             $true
-                                    #         ),
-                                    #         [ATString]::new(
-                                    #             [ATStringPrefix]::new(
-                                    #                 [CCTextDefault24]::new(),
-                                    #                 [ATBackgroundColor24None]::new(),
-                                    #                 [ATDecorationNone]::new(),
-                                    #                 [ATCoordinatesNone]::new()
-                                    #             ),
-                                    #             ' for ',
-                                    #             $true
-                                    #         )
-                                    #     )
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -26243,14 +23824,7 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -26293,11 +23867,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26336,11 +23905,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26379,11 +23943,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26422,11 +23981,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26465,11 +24019,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26508,11 +24057,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26578,11 +24122,6 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithAffinityBonus) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful, and scored an AFFINITY BONUS!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -26604,24 +24143,8 @@ Class BattleManager {
                             )
 
                             Switch($ToExecute.Type) {
-                                # Physicals don't apply to Affinity Bonuses
-                                # ([BattleActionType]::Physical) {
-                                #     $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                #         "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                #         [CCTextDefault24]::new(),
-                                #         [ATDecorationNone]::new()
-                                #     )
-                                # }
-
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -26664,11 +24187,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26707,11 +24225,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26750,11 +24263,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26793,11 +24301,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26836,11 +24339,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26879,11 +24377,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26949,11 +24442,6 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithCritAndAffinityBonus) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL and AFFINITY BONUS!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -26985,24 +24473,8 @@ Class BattleManager {
                             )
 
                             Switch($ToExecute.Type) {
-                                # Physicals don't apply for Affinity Bonuses
-                                # ([BattleActionType]::Physical) {
-                                #     $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                #         "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                #         [CCTextDefault24]::new(),
-                                #         [ATDecorationNone]::new()
-                                #     )
-                                # }
-
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -27045,11 +24517,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27088,11 +24555,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27131,11 +24593,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27174,11 +24631,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27217,11 +24669,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27260,11 +24707,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27330,11 +24772,6 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::Success) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -27352,14 +24789,7 @@ Class BattleManager {
 
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) hit $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -27402,14 +24832,7 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) burned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -27452,11 +24875,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) soaked $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27495,11 +24913,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) stoned $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27538,11 +24951,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) sheared $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27581,11 +24989,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast holy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27624,11 +25027,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast unholy power against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27667,11 +25065,6 @@ Class BattleManager {
                                 }
 
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseOneEntity.Name) cast ice powers against $($this.PhaseTwoEntity.Name) for $($ActionResult.ActionEffectSum) damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -27737,14 +25130,7 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::FailedAttackMissed) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) missed!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             Try {
-                                # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
-                                # $Script:TheSfxMachine.PlaySync()
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
@@ -27767,14 +25153,7 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::FailedAttackFailed) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) failed!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             Try {
-                                # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
-                                # $Script:TheSfxMachine.PlaySync()
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
@@ -27797,24 +25176,11 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::FailedElementalMatch) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) matches the Root Element of $($this.PhaseTwoEntity.Name)!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             Break
                         }
                     }
                 } Else {
-                    # Called if the Phase One Entity is unable to execute their action
-                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                    #     "$($this.PhaseOneEntity.Name) is unable to act at this time!",
-                    #     [CCTextDefault24]::new(),
-                    #     [ATDecorationNone]::new()
-                    # )
                     Try {
-                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
-                        # $Script:TheSfxMachine.PlaySync()
                         $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
                         $Script:TheSfxMPlayer.Play()
                     } Catch {}
@@ -27860,25 +25226,16 @@ Class BattleManager {
                 $Script:TheEnemyBattleStatWindow.Draw()
 
                 If($this.CanPhaseTwoAct -EQ $true) {
-                    # Called if the Phase Two Entity is able to execute their action
-                    # We need to know specifically if this is the Player
                     [BattleAction]$ToExecute          = $null
                     [BattleActionResult]$ActionResult = $null
 
                     If($this.PhaseTwoEntity -IS [Player]) {
-                        # This is the Player
                         $Script:ThePlayerBattleActionWindow.SetAllActionDrawDirty()
                         While($null -EQ $ToExecute) {
                             $Script:ThePlayerBattleActionWindow.Draw()
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                         }
 
-                        # Write the Action used to the Battle Message Log
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -27899,20 +25256,12 @@ Class BattleManager {
                             )
                         )
 
-                        # Execute the Action and capture the results (Self, Target)
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                         $Script:ThePlayerBattleStatWindow.Draw()
                     } Else {
-                        # This is the Enemy
-                        # Randomly select one of the Enemy's Actions from the Marble Bag
                         [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
                         
-                        # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                        #     "$($this.PhaseTwoEntity.Name) uses $($ToExecute.Name)!",
-                        #     [CCTextDefault24]::new(),
-                        #     [ATDecorationNone]::new()
-                        # )
                         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -27933,18 +25282,12 @@ Class BattleManager {
                             )
                         )
 
-                        # Execute the Action
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                         $Script:TheEnemyBattleStatWindow.Draw()
                     }
 
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -27967,14 +25310,7 @@ Class BattleManager {
     
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -28017,14 +25353,7 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -28067,11 +25396,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28110,11 +25434,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28153,11 +25472,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28196,11 +25510,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28239,11 +25548,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28282,11 +25586,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28352,11 +25651,6 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithAffinityBonus) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful, and scored an AFFINITY BONUS!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -28377,24 +25671,9 @@ Class BattleManager {
                                 )
                             )
     
-                            Switch($ToExecute.Type) {
-                                # ([BattleActionType]::Physical) {
-                                #     $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                #         "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                #         [CCTextDefault24]::new(),
-                                #         [ATDecorationNone]::new()
-                                #     )
-                                # }
-    
+                            Switch($ToExecute.Type) {    
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -28437,11 +25716,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28480,11 +25754,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28523,11 +25792,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28566,11 +25830,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28609,11 +25868,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28652,11 +25906,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28722,11 +25971,6 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::SuccessWithCritAndAffinityBonus) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful, and scored a CRITICAL and AFFINITY BONUS!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -28757,24 +26001,9 @@ Class BattleManager {
                                 )
                             )
     
-                            Switch($ToExecute.Type) {
-                                # ([BattleActionType]::Physical) {
-                                #     $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                #         "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                #         [CCTextDefault24]::new(),
-                                #         [ATDecorationNone]::new()
-                                #     )
-                                # }
-    
+                            Switch($ToExecute.Type) {    
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -28817,11 +26046,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28860,11 +26084,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28903,11 +26122,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28946,11 +26160,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -28989,11 +26198,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29032,11 +26236,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29102,11 +26301,6 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::Success) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) was successful!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -29124,14 +26318,7 @@ Class BattleManager {
     
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) hit $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaPhysicalStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -29174,14 +26361,7 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalFire) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) burned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     Try {
-                                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaFireStrikeA
-                                        # $Script:TheSfxMachine.PlaySync()
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
@@ -29224,11 +26404,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWater) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) soaked $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29267,11 +26442,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalEarth) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) stoned $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29310,11 +26480,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalWind) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) sheared $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29353,11 +26518,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalLight) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast holy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29396,11 +26556,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalDark) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast unholy power against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29439,11 +26594,6 @@ Class BattleManager {
                                 }
     
                                 ([BattleActionType]::ElementalIce) {
-                                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                                    #     "$($this.PhaseTwoEntity.Name) cast ice powers against $($this.PhaseOneEntity.Name) for $($ActionResult.ActionEffectSum) points of damage.",
-                                    #     [CCTextDefault24]::new(),
-                                    #     [ATDecorationNone]::new()
-                                    # )
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -29509,14 +26659,7 @@ Class BattleManager {
                         }
     
                         ([BattleActionResultType]::FailedAttackMissed) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) missed!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             Try {
-                                # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
-                                # $Script:TheSfxMachine.PlaySync()
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
@@ -29539,14 +26682,7 @@ Class BattleManager {
                         }
     
                         ([BattleActionResultType]::FailedAttackFailed) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) failed!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             Try {
-                                # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaMissFail
-                                # $Script:TheSfxMachine.PlaySync()
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
@@ -29569,24 +26705,11 @@ Class BattleManager {
                         }
     
                         ([BattleActionResultType]::FailedElementalMatch) {
-                            # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                            #     "$($ToExecute.Name) matches the Root Element of $($this.PhaseOneEntity.Name)!",
-                            #     [CCTextDefault24]::new(),
-                            #     [ATDecorationNone]::new()
-                            # )
                             Break
                         }
                     }
                 } Else {
-                    # Called if the Phase Two Entity is unable to execute their action
-                    # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                    #     "$($this.PhaseTwoEntity.Name) is unable to act at this time!",
-                    #     [CCTextDefault24]::new(),
-                    #     [ATDecorationNone]::new()
-                    # )
                     Try {
-                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
-                        # $Script:TheSfxMachine.PlaySync()
                         $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
                         $Script:TheSfxMPlayer.Play()
                     } Catch {}
@@ -29611,28 +26734,20 @@ Class BattleManager {
             }
 
             Calculation {
-                # The Turn Limit is determined in the TurnIncrement state.
-                # This state will determine if the HP of one of the Entities has dipped to or below zero.
-                # As with the previous states, we need to know which one is the Player and which one is the Enemy
-
                 If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseOneEntity -IS [Player]) {
-                        # This means the Player's HP has reached zero and has died
                         $this.State = [BattleManagerState]::BattleLost
                         Break
                     } Else {
-                        # This means the Enemy's HP has reached zero and has died
                         $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
                         $this.State        = [BattleManagerState]::BattleWon
                         Break
                     }
                 } Elseif($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseTwoEntity -IS [Player]) {
-                        # This means the Player's HP has reached zero and has died
                         $this.State = [BattleManagerState]::BattleLost
                         Break
                     } Else {
-                        # This means the Enemy's HP has reached zero and has died
                         $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
                         $this.State        = [BattleManagerState]::BattleWon
                         Break
@@ -29647,19 +26762,12 @@ Class BattleManager {
                 $Script:TheBgmMPlayer.Stop()
                 If($Script:HasBattleWonChimePlayed -EQ $false) {
                     Try {
-                        # $Script:TheSfxMachine.SoundLocation = $Script:SfxBaActionDisabled
-                        # $Script:TheSfxMachine.PlaySync()
                         $Script:TheSfxMPlayer.Open($Script:SfxBattlePlayerWin)
                         $Script:TheSfxMPlayer.Play()
                     } Catch {}
                     $Script:HasBattleWonChimePlayed = $true
                 }
 
-                # $Script:TheBattleStatusMessageWindow.WriteMessage(
-                #     'You''ve won the battle!',
-                #     [CCTextDefault24]::new(),
-                #     [ATDeco   rationNone]::new()
-                # )
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                     @(
                         [ATStringCompositeSc]::new(
@@ -29671,16 +26779,12 @@ Class BattleManager {
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
                 
-                # TODO: Write spoils to the message log
-
                 If($this.PhaseOneEntity -IS [Player]) {
                     $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
                     Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseOneEntity), ([EnemyBattleEntity]$this.PhaseTwoEntity)
-                    # Start-Job $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget | Wait-Job
                 } Elseif($this.PhaseTwoEntity -IS [Player]) {
                     $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
                     Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseTwoEntity), ([EnemyBattleEntity]$this.PhaseOneEntity)
-                    # Start-Job $this.SpoilsAction -ArgumentList $this.PhaseTwoTarget, $this.PhaseOneTarget | Wait-Job
                 }
 
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
@@ -29698,8 +26802,6 @@ Class BattleManager {
                 While($a.VirtualKeyCode -NE 13) {
                     $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
                 }
-
-                # Invoke-Command $this.SpoilsAction -ArgumentList $this.PhaseOneTarget, $this.PhaseTwoTarget
 
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
@@ -29829,14 +26931,6 @@ Function Test-GfmOs {
 # RUNNER
 Clear-Host
 
-#$Script:TheStatusWindow.Draw()
-#$Script:TheCommandWindow.Draw()
-#$Script:TheSceneWindow.Draw()
-#$Script:TheMessageWindow.Draw()
-#$Script:TheMessageWindow.WriteMessage('This is a sample message', [CCAppleGreenLight24]::new())
-#$Script:TheMessageWindow.WriteMessage('This is a another message', [CCAppleMintLight24]::new())
-#$Script:TheMessageWindow.WriteMessage('>> This is yet ANOTHER message', [CCAppleRedLight24]::new())
-
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
@@ -29942,26 +27036,4 @@ $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
     0
 )
 
-# $aabb = New-Object -TypeName 'EEBat'
-# $aabb | Out-File -Path 'TypeData.txt'
-
 $Script:TheGameCore.Run()
-
-#$Script:TheInventoryWindow.Draw()
-
-# While(1) {
-#     $Script:TheStatusWindow.Draw()
-#     $Script:TheCommandWindow.Draw()
-#     $Script:TheSceneWindow.Draw()
-#     $Script:TheMessageWindow.Draw()
-#     $Script:TheCommandWindow.HandleInput()
-# }
-
-#$(Get-Host).UI.RawUI.CursorPosition = [ATCoordinatesDefault]::new().ToAutomationCoordinates()
-# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 2); Write-Host '>' -NoNewline -ForegroundColor 12
-# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 4); Write-Host '>' -NoNewline -ForegroundColor 12
-# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 6); Write-Host '>' -NoNewline -ForegroundColor 12
-# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 8); Write-Host '>' -NoNewline -ForegroundColor 12
-# $(Get-Host).UI.RawUI.CursorPosition = [Coordinates]::new(5, 10); Write-Host '>' -NoNewline -ForegroundColor 12
-
-#Read-Host
