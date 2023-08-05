@@ -130,7 +130,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
             }
         }
         [StatId]::Attack = [BattleEntityProperty]@{
-            Base                = 15
+            Base                = 25
             BasePre             = 0
             BaseAugmentValue    = 5
             Max                 = 15
@@ -1163,6 +1163,13 @@ $Script:TheGlobalStateBlockTable = @{
 
         If($Script:GpsRestoredFromBatBackup -EQ $true) {
             $Script:GpsRestoredFromBatBackup = $false
+        }
+
+        If($Script:IsBattleBgmPlaying -EQ $false) {
+            $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
+            $Script:TheBgmMPlayer.Volume = 0.5
+            $Script:TheBgmMPlayer.Play()
+            $Script:IsBattleBgmPlaying = $true
         }
 
         $Script:TheBattleManager.Update()
@@ -26890,6 +26897,7 @@ Class GameCore {
 
     [Void]Logic() {
         Invoke-Command $Script:TheGlobalStateBlockTable[$Script:TheGlobalGameState]
+        $Script:Rui.FlushInputBuffer()
     }
 }
 
