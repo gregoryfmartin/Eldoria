@@ -131,12 +131,12 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
         }
         [StatId]::Attack = [BattleEntityProperty]@{
             Base                = 25
-            BasePre             = 0
+            BasePre             = 25
             BaseAugmentValue    = 5
             Max                 = 15
-            MaxPre              = 0
+            MaxPre              = 15
             MaxAugmentValue     = 0
-            AugmentTurnDuration = 5
+            AugmentTurnDuration = 2
             BaseAugmentActive   = $false
             MaxAugmentActive    = $false
             State               = [StatNumberState]::Normal
@@ -250,7 +250,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
             Max                 = 9
             MaxPre              = 0
             MaxAugmentValue     = 0
-            AugmentTurnDuration = 5
+            AugmentTurnDuration = 2
             BaseAugmentActive   = $false
             MaxAugmentActive    = $false
             State               = [StatNumberState]::Normal
@@ -1165,12 +1165,12 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:GpsRestoredFromBatBackup = $false
         }
 
-        If($Script:IsBattleBgmPlaying -EQ $false) {
-            $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-            $Script:TheBgmMPlayer.Volume = 0.5
-            $Script:TheBgmMPlayer.Play()
-            $Script:IsBattleBgmPlaying = $true
-        }
+        # If($Script:IsBattleBgmPlaying -EQ $false) {
+        #     $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
+        #     $Script:TheBgmMPlayer.Volume = 0.5
+        #     $Script:TheBgmMPlayer.Play()
+        #     $Script:IsBattleBgmPlaying = $true
+        # }
 
         $Script:TheBattleManager.Update()
     }
@@ -22882,6 +22882,16 @@ Class BattleEntityStatusWindow : WindowBase {
             $true
         )
     }
+
+    [Void]SetAllFlagsDirty() {
+        $this.NameDrawDirty   = $true
+        $this.HpDrawDirty     = $true
+        $this.MpDrawDirty     = $true
+        $this.StatL1DrawDirty = $true
+        $this.StatL2DrawDirty = $true
+        $this.StatL3DrawDirty = $true
+        $this.StatL4DrawDirty = $true
+    }
 }
 
 Class BattlePlayerActionWindow : WindowBase {
@@ -25208,6 +25218,23 @@ Class BattleManager {
                     )
                 }
 
+                Foreach($Stat in $this.PhaseOneEntity.Stats.Values) {
+                    If($Stat.AugmentTurnDuration -GT 0) {
+                        $Stat.AugmentTurnDuration--
+                        If($Stat.AugmentTurnDuration -EQ 0) {
+                            If($this.PhaseOneEntity -IS [Player]) {
+                                $Stat.Update()
+                                $Script:ThePlayerBattleStatWindow.SetAllFlagsDirty()
+                                $Script:ThePlayerBattleStatWindow.Draw()
+                            } Else {
+                                $Stat.Update()
+                                $Script:TheEnemyBattleStatWindow.SetAllFlagsDirty()
+                                $Script:TheEnemyBattleStatWindow.Draw()
+                            }
+                        }
+                    }
+                }
+
                 $this.State = [BattleManagerState]::PhaseBExecution
             }
 
@@ -26735,6 +26762,23 @@ Class BattleManager {
                             )
                         )
                     )
+                }
+
+                Foreach($Stat in $this.PhaseTwoEntity.Stats.Values) {
+                    If($Stat.AugmentTurnDuration -GT 0) {
+                        $Stat.AugmentTurnDuration--
+                        If($Stat.AugmentTurnDuration -EQ 0) {
+                            If($this.PhaseTwoEntity -IS [Player]) {
+                                $Stat.Update()
+                                $Script:ThePlayerBattleStatWindow.SetAllFlagsDirty()
+                                $Script:ThePlayerBattleStatWindow.Draw()
+                            } Else {
+                                $Stat.Update()
+                                $Script:TheEnemyBattleStatWindow.SetAllFlagsDirty()
+                                $Script:TheEnemyBattleStatWindow.Draw()
+                            }
+                        }
+                    }
                 }
 
                 $this.State = [BattleManagerState]::TurnIncrement
