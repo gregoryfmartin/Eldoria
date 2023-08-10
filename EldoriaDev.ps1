@@ -67,7 +67,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -77,7 +77,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
@@ -189,7 +189,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -199,7 +199,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
@@ -323,7 +323,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -333,7 +333,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
@@ -457,7 +457,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -467,7 +467,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
@@ -591,7 +591,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -601,7 +601,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
@@ -725,7 +725,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -735,7 +735,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
@@ -859,7 +859,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
-        If($Self[[StatId]::MagicPoints].Base -GT $SelfAction.MpCost) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
             $CanExecute = $true
             $ReduceSelfMp = $true
         }
@@ -869,7 +869,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     
     If($CanExecute -EQ $true) {
         If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost)
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
             If($Self -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
             } Else {
