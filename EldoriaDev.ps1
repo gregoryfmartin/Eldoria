@@ -178,7 +178,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalFireCalc    = {
+[ScriptBlock]$Script:BaElementalFireCalc = {
     Param(
         [BattleEntity]$Self,
         [BattleEntity]$Target,
@@ -312,7 +312,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalWaterCalc   = {
+[ScriptBlock]$Script:BaElementalWaterCalc = {
     Param(
         [BattleEntity]$Self,
         [BattleEntity]$Target,
@@ -446,7 +446,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalEarthCalc   = {
+[ScriptBlock]$Script:BaElementalEarthCalc = {
     Param(
         [BattleEntity]$Self,
         [BattleEntity]$Target,
@@ -580,7 +580,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalWindCalc    = {
+[ScriptBlock]$Script:BaElementalWindCalc = {
     Param(
         [BattleEntity]$Self,
         [BattleEntity]$Target,
@@ -714,7 +714,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalLightCalc   = {
+[ScriptBlock]$Script:BaElementalLightCalc = {
     Param(
         [BattleEntity]$Self,
         [BattleEntity]$Target,
@@ -848,7 +848,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalDarkCalc    = {
+[ScriptBlock]$Script:BaElementalDarkCalc = {
     Param(
         [BattleEntity]$Self,
         [BattleEntity]$Target,
@@ -982,13 +982,13 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
     }
 }
 
-[ScriptBlock] $Script:BaElementalIceCalc     = {}
-[ScriptBlock] $Script:BaMagicPoisonCalc      = {}
-[ScriptBlock] $Script:BaMagicConfuseCalc     = {}
-[ScriptBlock] $Script:BaMagicSleepCalc       = {}
-[ScriptBlock] $Script:BaMagicAgingCalc       = {}
-[ScriptBlock] $Script:BaMagicHealingCalc     = {}
-[ScriptBlock] $Script:BaMagicStatAugmentCalc = {}
+[ScriptBlock]$Script:BaElementalIceCalc     = {}
+[ScriptBlock]$Script:BaMagicPoisonCalc      = {}
+[ScriptBlock]$Script:BaMagicConfuseCalc     = {}
+[ScriptBlock]$Script:BaMagicSleepCalc       = {}
+[ScriptBlock]$Script:BaMagicAgingCalc       = {}
+[ScriptBlock]$Script:BaMagicHealingCalc     = {}
+[ScriptBlock]$Script:BaMagicStatAugmentCalc = {}
 
 [Player]$Script:ThePlayer = [Player]@{
     Name = 'Steve'
