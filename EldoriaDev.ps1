@@ -917,17 +917,17 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
                 $EffectiveDamageAffinityFactor = -0.75
                 Break
             }
-    
+
             ([BattleActionType]::ElementalLight) {
                 $EffectiveDamageAffinityFactor = 1.6
                 Break
             }
         }
-    
+
         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-    
+
         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-    
+
         If(0 -NE $DecRes) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackFailed,
@@ -3916,14 +3916,278 @@ Class BAIKill : BattleAction {
     }
 }
 
+Class BABlazeBurst : BattleAction {
+    BABlazeBurst() : base() {
+        $this.Name        = 'Blaze Burst'
+        $this.Description = 'A burst of flame that scorches the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 10
+        $this.EffectValue = 80
+        $this.Chance      = 0.8
+    }
+}
+
+Class BAFlamethrower : BattleAction {
+    BAFlamethrower() : base() {
+        $this.Name        = 'Flamethrower'
+        $this.Description = 'A stream of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 10
+        $this.EffectValue = 90
+        $this.Chance      = 0.7
+    }
+}
+
+Class BAEmberSlash : BattleAction {
+    BAEmberSlash() : base() {
+        $this.Name        = 'Ember Slash'
+        $this.Description = 'A slash of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAPyroblast : BattleAction {
+    BAPyroblast() : base() {
+        $this.Name        = 'Pyroblast'
+        $this.Description = 'A blast of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 110
+        $this.Chance      = 0.6
+    }
+}
+
+Class BAAshenNova : BattleAction {
+    BAAshenNova() : base() {
+        $this.Name        = 'Ashen Nova'
+        $this.Description = 'A nova of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BAIncenerate : BattleAction {
+    BAIncenerate() : base() {
+        $this.Name        = 'Incenerate'
+        $this.Description = 'A blast of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 20
+        $this.EffectValue = 120
+        $this.Chance      = 0.7
+    }
+}
+
+Class BACinderStorm : BattleAction {
+    BACinderStorm() : base() {
+        $this.Name        = 'Cinder Storm'
+        $this.Description = 'A storm of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 60
+        $this.Chance      = 0.9
+    }
+}
+
+Class BALavaSurge : BattleAction {
+    BALavaSurge() : base() {
+        $this.Name        = 'Lava Surge'
+        $this.Description = 'A surge of lava that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAFireCataclysm : BattleAction {
+    BAFireCataclysm() : base() {
+        $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalFire]) Cataclysm"
+        $this.Description = 'A cataclysm of fire that burns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalFire
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
 Class BAIcePunch : BattleAction {
     BAIcePunch() : base() {
         $this.Name        = 'Ice Punch'
-        $this.Description = 'Cold punch to the face!'
+        $this.Description = 'A punch of ice that freezes the enemy.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        $this.Effect      = {}
         $this.MpCost      = 5
-        $this.EffectValue = 75
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAFrostKick : BattleAction {
+    BAFrostKick() : base() {
+        $this.Name        = 'Frost Kick'
+        $this.Description = 'A kick of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAIcicleStrike : BattleAction {
+    BAIcicleStrike() : base() {
+        $this.Name        = 'Icicle Strike'
+        $this.Description = 'A strike of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAGlacialSpike : BattleAction {
+    BAGlacialSpike() : base() {
+        $this.Name        = 'Glacial Spike'
+        $this.Description = 'A spike of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAChillSlash : BattleAction {
+    BAChillSlash() : base() {
+        $this.Name        = 'Chill Slash'
+        $this.Description = 'A slash of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAIceBolt : BattleAction {
+    BAIceBolt() : base() {
+        $this.Name        = 'Ice Bolt'
+        $this.Description = 'A bolt of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAArcticBlast : BattleAction {
+    BAArcticBlast() : base() {
+        $this.Name        = 'Arctic Blast'
+        $this.Description = 'A blast of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAFrostWave : BattleAction {
+    BAFrostWave() : base() {
+        $this.Name        = 'Frost Wave'
+        $this.Description = 'A wave of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAArcticFury : BattleAction {
+    BAArcticFury() : base() {
+        $this.Name        = 'Arctic Fury'
+        $this.Description = 'A fury of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BAFrozenSpear : BattleAction {
+    BAFrozenSpear() : base() {
+        $this.Name        = 'Frozen Spear'
+        $this.Description = 'A spear of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAHailstorm : BattleAction {
+    BAHailstorm() : base() {
+        $this.Name        = 'Hailstorm'
+        $this.Description = 'A storm of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BAIcefallSlam : BattleAction {
+    BAIcefallSlam() : base() {
+        $this.Name        = 'Icefall Slam'
+        $this.Description = 'A slam of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAIceCataclysm : BattleAction {
+    BAIceCataclysm() : base() {
+        $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalIce]) Cataclysm"
+        $this.Description = 'A cataclysm of ice that freezes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalIce
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BAAquaJet : BattleAction {
+    BAAquaJet() : base() {
+        $this.Name        = 'Aqua Jet'
+        $this.Description = 'A jet of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
         $this.Chance      = 0.9
     }
 }
@@ -3931,266 +4195,6 @@ Class BAIcePunch : BattleAction {
 ###############################################################################
 # END BATTLE ACTIONS THAT ARE ACTUALLY GOING TO BE USED IN THE GAME
 ###############################################################################
-
-<#
-HASHTABLE CREATOR
-
-[BattleEntity]@{
-    Name            = ?
-    Stats           = @{
-        [StatId]::HitPoints    = [BattleEntityProperty]@{}
-        [StatId]::MagicPoints  = [BattleEntityProperty]@{}
-        [StatId]::Attack       = [BattleEntityProperty]@{}
-        [StatId]::Defense      = [BattleEntityProperty]@{}
-        [StatId]::MagicAttack  = [BattleEntityProperty]@{}
-        [StatId]::MagicDefense = [BattleEntityProperty]@{}
-        [StatId]::Speed        = [BattleEntityProperty]@{}
-        [StatId]::Luck         = [BattleEntityProperty]@{}
-        [StatId]::Accuracy     = [BattleEntityProperty]@{}
-    }
-    SpoilsEffect    = {}
-    ActionListing   = $null
-    ActionMarbleBag = $null
-}
-
-FULL HASHTABLE CREATOR
-[BattleEntity]@{
-    Name = 'Steve'
-    Stats = @{
-        [StatId]::HitPoints = [BattleEntityProperty]@{
-            Base                = 200
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 200
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Switch($Self.Base) {
-                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-                        $Self.State = [StatNumberState]::Normal
-                    }
-
-                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-                        $Self.State = [StatNumberState]::Caution
-                    }
-
-                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-                        $Self.State = [StatNumberState]::Danger
-                    }
-                }
-            }
-        }
-        [StatId]::MagicPoints = [BattleEntityProperty]@{
-            Base                = 50
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 50
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Switch($Self.Base) {
-                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-                        $Self.State = [StatNumberState]::Normal
-                    }
-
-                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-                        $Self.State = [StatNumberState]::Caution
-                    }
-
-                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-                        $Self.State = [StatNumberState]::Danger
-                    }
-                }
-            }
-        }
-        [StatId]::Attack = [BattleEntityProperty]@{
-            Base                = 15
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 15
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return $Self.Base
-            }
-        }
-        [StatId]::Defense = [BattleEntityProperty]@{
-            Base                = 8
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 8
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::MagicAttack = [BattleEntityProperty]@{
-            Base                = 6
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 6
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::MagicDefense = [BattleEntityProperty]@{
-            Base                = 4
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 4
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::Speed = [BattleEntityProperty]@{
-            Base                = 9
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 9
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::Luck = [BattleEntityProperty]@{
-            Base                = 5
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 5
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::Accuracy = [BattleEntityProperty]@{
-            Base                = 9
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 9
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-    }
-    ActionListing = @{
-        [ActionSlot]::A = [BattleAction]@{
-            Name               = ''
-            Type               = [BattleActionType]::None
-            Effect             = {}
-            Uses               = 0
-            EffectValue        = 0
-            Chance             = 0.0
-        }
-        [ActionSlot]::B = [BattleAction]@{
-            Name               = ''
-            Type               = [BattleActionType]::None
-            Effect             = {}
-            Uses               = 0
-            EffectValue        = 0
-            Chance             = 0.0
-        }
-        [ActionSlot]::C = [BattleAction]@{
-            Name               = ''
-            Type               = [BattleActionType]::None
-            Effect             = {}
-            Uses               = 0
-            EffectValue        = 0
-            Chance             = 0.0
-        }
-        [ActionSlot]::D = [BattleAction]@{
-            Name               = ''
-            Type               = [BattleActionType]::None
-            Effect             = {}
-            Uses               = 0
-            EffectValue        = 0
-            Chance             = 0.0
-        }
-    }
-    SpoilsEffect = {}
-    ActionMarbleBag = [System.Collections.Generic.List[[ActionSlot]]]::new()
-}
-#>
 
 <#
 Name            - The user-friendly name of the entity. This will be used for display in the various game windows.
@@ -4388,238 +4392,6 @@ Class EnemyBattleEntity : BattleEntity {
     }
 }
 
-<#
-HASHTABLE CREATOR
-
-[Player]@{
-    Name = 'Steve'
-    Stats = @{
-        [StatId]::HitPoints = [BattleEntityProperty]@{
-            Base                = 200
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 200
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Switch($Self.Base) {
-                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-                        $Self.State = [StatNumberState]::Normal
-                    }
-
-                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-                        $Self.State = [StatNumberState]::Caution
-                    }
-
-                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-                        $Self.State = [StatNumberState]::Danger
-                    }
-                }
-            }
-        }
-        [StatId]::MagicPoints = [BattleEntityProperty]@{
-            Base                = 50
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 50
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Switch($Self.Base) {
-                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
-                        $Self.State = [StatNumberState]::Normal
-                    }
-
-                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
-                        $Self.State = [StatNumberState]::Caution
-                    }
-
-                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
-                        $Self.State = [StatNumberState]::Danger
-                    }
-                }
-            }
-        }
-        [StatId]::Attack = [BattleEntityProperty]@{
-            Base                = 15
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 15
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return $Self.Base
-            }
-        }
-        [StatId]::Defense = [BattleEntityProperty]@{
-            Base                = 8
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 8
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::MagicAttack = [BattleEntityProperty]@{
-            Base                = 6
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 6
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::MagicDefense = [BattleEntityProperty]@{
-            Base                = 4
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 4
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::Speed = [BattleEntityProperty]@{
-            Base                = 9
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 9
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::Luck = [BattleEntityProperty]@{
-            Base                = 5
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 5
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-        [StatId]::Accuracy = [BattleEntityProperty]@{
-            Base                = 9
-            BasePre             = 0
-            BaseAugmentValue    = 0
-            Max                 = 9
-            MaxPre              = 0
-            MaxAugmentValue     = 0
-            AugmentTurnDuration = 0
-            BaseAugmentActive   = $false
-            MaxAugmentActive    = $false
-            State               = [StatNumberState]::Normal
-            ValidateFunction    = {
-                Param(
-                    [BattleEntityProperty]$Self
-                )
-                
-                Return
-            }
-        }
-    }
-    ActionListing = @{
-        [ActionSlot]::A = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-        }
-        [ActionSlot]::B = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-        }
-        [ActionSlot]::C = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-        }
-        [ActionSlot]::D = [BattleAction]@{
-            Name   = ''
-            Type   = [BattleActionType]::None
-            Effect = {}
-        }
-    }
-    SpoilsEffect    = {}
-    ActionMarbleBag = [System.Collections.Generic.List[[ActionSlot]]]::new()
-    CurrentGold     = 500
-    MapCoordinates  = [ATCoordinates]::new(0, 0)
-    Inventory       = [List[MapTileObject]]::new()
-    TargetOfFilter  = [List[String]]::new(@('MTOMilk'))
-}
-#>
 Class Player : BattleEntity {
     Static [ConsoleColor24]$AsideColor    = [CCAppleIndigoLight24]::new()
     Static [ConsoleColor24]$GoldDrawColor = [CCAppleYellowLight24]::new()
