@@ -4192,6 +4192,318 @@ Class BAAquaJet : BattleAction {
     }
 }
 
+Class BATidalSurge : BattleAction {
+    BATidalSurge() : base() {
+        $this.Name        = 'Tidal Surge'
+        $this.Description = 'A surge of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAWaterWhip : BattleAction {
+    BAWaterWhip() : base() {
+        $this.Name        = 'Water Whip'
+        $this.Description = 'A whip of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 5
+        $this.EffectValue = 80
+        $this.Chance      = 0.9
+    }
+}
+
+Class BAMistStrike : BattleAction {
+    BAMistStrike() : base() {
+        $this.Name        = 'Mist Strike'
+        $this.Description = 'A strike of mist that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAHydroSlash : BattleAction {
+    BAHydroSlash() : base() {
+        $this.Name        = 'Hydro Slash'
+        $this.Description = 'A slash of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAWavePunch : BattleAction {
+    BAWavePunch() : base() {
+        $this.Name        = 'Wave Punch'
+        $this.Description = 'A punch of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 15
+        $this.EffectValue = 100
+        $this.Chance      = 1.0
+    }
+}
+
+Class BAAquaticBolt : BattleAction {
+    BAAquaticBolt() : base() {
+        $this.Name        = 'Aquatic Bolt'
+        $this.Description = 'A bolt of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BAAquaSphere : BattleAction {
+    BAAquaSphere() : base() {
+        $this.Name        = 'Aqua Sphere'
+        $this.Description = 'A sphere of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BATidalCrush : BattleAction {
+    BATidalCrush() : base() {
+        $this.Name        = 'Tidal Crush'
+        $this.Description = 'A crush of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BATsunami : BattleAction {
+    BATsunami() : base() {
+        $this.Name        = 'Tsunami'
+        $this.Description = 'A tsunami of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BASeafoamBolt : BattleAction {
+    BASeafoamBolt() : base() {
+        $this.Name        = 'Seafoam Bolt'
+        $this.Description = 'A bolt of seafoam that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAAquaFist : BattleAction {
+    BAAquaFist() : base() {
+        $this.Name        = 'Aqua Fist'
+        $this.Description = 'A fist of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BATyphoon : BattleAction {
+    BATyphoon() : base() {
+        $this.Name        = 'Typhoon'
+        $this.Description = 'A typhoon of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BARaindance : BattleAction {
+    BARaindance() : base() {
+        $this.Name        = 'Raindance'
+        $this.Description = 'A raindance of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAWateryGrave : BattleAction {
+    BAWateryGrave() : base() {
+        $this.Name        = 'Watery Grave'
+        $this.Description = 'A watery grave of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BATempest : BattleAction {
+    BATempest() : base() {
+        $this.Name        = 'Tempest'
+        $this.Description = 'A tempest of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 400
+        $this.EffectValue = 2000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAWaterCataclysm : BattleAction {
+    BAWaterCataclysm() : base() {
+        $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalWater]) Cataclysm"
+        $this.Description = 'A cataclysm of water that drowns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWater
+        $this.Effect      = {}
+        $this.MpCost      = 400
+        $this.EffectValue = 2000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BATerraStrike : BattleAction {
+    BATerraStrike() : base() {
+        $this.Name        = 'Terra Strike'
+        $this.Description = 'A strike of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
+Class BAQuakeFist : BattleAction {
+    BAQuakeFist() : base() {
+        $this.Name        = 'Quake Fist'
+        $this.Description = 'A fist of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BABoulderBash : BattleAction {
+    BABoulderBash() : base() {
+        $this.Name        = 'Boulder Bash'
+        $this.Description = 'A boulder that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BATremor : BattleAction {
+    BATremor() : base() {
+        $this.Name        = 'Tremor'
+        $this.Description = 'A tremor of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAGraniteDust : BattleAction {
+    BAGraniteDust() : base() {
+        $this.Name        = 'Granite Dust'
+        $this.Description = 'A granite dust of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BARockslide : BattleAction {
+    BARockslide() : base() {
+        $this.Name        = 'Rockslide'
+        $this.Description = 'A rockslide of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BASinkhole : BattleAction {
+    BASinkhole() : base() {
+        $this.Name        = 'Sinkhole'
+        $this.Description = 'A sinkhole of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 400
+        $this.EffectValue = 2000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAGeoFence : BattleAction {
+    BAGeoFence() : base() {
+        $this.Name        = 'Geo Fence'
+        $this.Description = 'A geo fence of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 400
+        $this.EffectValue = 2000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAEarthCataclysm : BattleAction {
+    BAEarthCataclysm() : base() {
+        $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalEarth]) Cataclysm"
+        $this.Description = 'A cataclysm of earth that crushes the enemy.'
+        $this.Type        = [BattleActionType]::ElementalEarth
+        $this.Effect      = {}
+        $this.MpCost      = 400
+        $this.EffectValue = 2000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAGaleStrike : BattleAction {
+    BAGaleStrike() : base() {
+        $this.Name        = 'Gale Strike'
+        $this.Description = 'A strike of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 50
+        $this.EffectValue = 250
+        $this.Chance      = 0.5
+    }
+}
+
 ###############################################################################
 # END BATTLE ACTIONS THAT ARE ACTUALLY GOING TO BE USED IN THE GAME
 ###############################################################################
