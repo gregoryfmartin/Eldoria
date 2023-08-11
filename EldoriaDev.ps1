@@ -4504,6 +4504,282 @@ Class BAGaleStrike : BattleAction {
     }
 }
 
+Class BAZephyrSlash : BattleAction {
+    BAZephyrSlash() : base() {
+        $this.Name        = 'Zephyr Slash'
+        $this.Description = 'A slash of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BABreezeBlade : BattleAction {
+    BABreezeBlade() : base() {
+        $this.Name        = 'Breeze Blade'
+        $this.Description = 'A blade of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAThunderClap : BattleAction {
+    BAThunderClap() : base() {
+        $this.Name        = 'Thunder Clap'
+        $this.Description = 'A clap of thunder that stuns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BASkywardCut : BattleAction {
+    BASkywardCut() : base() {
+        $this.Name        = 'Skyward Cut'
+        $this.Description = 'A cut of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAGrandFlash : BattleAction {
+    BAGrandFlash() : base() {
+        $this.Name        = 'Grand Flash'
+        $this.Description = 'A flash of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BACyclone : BattleAction {
+    BACyclone() : base() {
+        $this.Name        = 'Cyclone'
+        $this.Description = 'A cyclone of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BALightningBolt : BattleAction {
+    BALightningBolt() : base() {
+        $this.Name        = 'Lightning Bolt'
+        $this.Description = 'A bolt of lightning that stuns the enemy.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAGaleflash : BattleAction {
+    BAGaleflash() : base() {
+        $this.Name        = 'Galeflash'
+        $this.Description = 'A flash of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BABreezyWind : BattleAction {
+    BABreezyWind() : base() {
+        $this.Name        = 'Breezy Wind'
+        $this.Description = 'A wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BALeafShield : BattleAction {
+    BALeafShield() : base() {
+        $this.Name        = 'Leaf Shield'
+        $this.Description = 'A shield of leaves that protects the user.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAWindCataclysm : BattleAction {
+    BAWindCataclysm() : base() {
+        $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalWind]) Cataclysm"
+        $this.Description = 'A cataclysm of wind that blows the enemy away.'
+        $this.Type        = [BattleActionType]::ElementalWind
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BARadiance : BattleAction {
+    BARadiance() : base() {
+        $this.Name        = 'Radiance'
+        $this.Description = 'A flash of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 100
+        $this.EffectValue = 500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAHolyNova : BattleAction {
+    BAHolyNova() : base() {
+        $this.Name        = 'Holy Nova'
+        $this.Description = 'A flash of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 200
+        $this.EffectValue = 1000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BADivineBeam : BattleAction {
+    BADivineBeam() : base() {
+        $this.Name        = 'Divine Beam'
+        $this.Description = 'A beam of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAPrismShock : BattleAction {
+    BAPrismShock() : base() {
+        $this.Name        = 'Prism Shock'
+        $this.Description = 'A shock of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAHaloStrike : BattleAction {
+    BAHaloStrike() : base() {
+        $this.Name        = 'Halo Strike'
+        $this.Description = 'A strike of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BALightbringer : BattleAction {
+    BALightbringer() : base() {
+        $this.Name        = 'Lightbringer'
+        $this.Description = 'A strike of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BASacredPulse : BattleAction {
+    BASacredPulse() : base() {
+        $this.Name        = 'Sacred Pulse'
+        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BADaybreaker : BattleAction {
+    BADaybreaker() : base() {
+        $this.Name        = 'Daybreaker'
+        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BAAngelicHymn : BattleAction {
+    BAAngelicHymn() : base() {
+        $this.Name        = 'Angelic Hymn'
+        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BABrilliance : BattleAction {
+    BABrilliance() : base() {
+        $this.Name        = 'Brilliance'
+        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 300
+        $this.EffectValue = 1500
+        $this.Chance      = 0.1
+    }
+}
+
+Class BASunfire : BattleAction {
+    BASunfire() : base() {
+        $this.Name        = 'Sunfire'
+        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 400
+        $this.EffectValue = 2000
+        $this.Chance      = 0.1
+    }
+}
+
+Class BALightCataclysm : BattleAction {
+    BALightCataclysm() : base() {
+        $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalLight]) Cataclysm"
+        $this.Description = 'A cataclysm of light that blinds the enemy.'
+        $this.Type        = [BattleActionType]::ElementalLight
+        $this.Effect      = {}
+        $this.MpCost      = 500
+        $this.EffectValue = 2500
+        $this.Chance      = 0.1
+    }
+}
+
 ###############################################################################
 # END BATTLE ACTIONS THAT ARE ACTUALLY GOING TO BE USED IN THE GAME
 ###############################################################################
