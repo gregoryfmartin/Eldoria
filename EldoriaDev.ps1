@@ -3919,7 +3919,7 @@ Class BAIKill : BattleAction {
 Class BABlazeBurst : BattleAction {
     BABlazeBurst() : base() {
         $this.Name        = 'Blaze Burst'
-        $this.Description = 'A burst of flame that scorches the enemy.'
+        $this.Description = 'Like an arc flash, only worse.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 10
@@ -3931,7 +3931,7 @@ Class BABlazeBurst : BattleAction {
 Class BAFlamethrower : BattleAction {
     BAFlamethrower() : base() {
         $this.Name        = 'Flamethrower'
-        $this.Description = 'A stream of fire that burns the enemy.'
+        $this.Description = 'Our inspiration was Elon.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 10
@@ -3943,7 +3943,7 @@ Class BAFlamethrower : BattleAction {
 Class BAEmberSlash : BattleAction {
     BAEmberSlash() : base() {
         $this.Name        = 'Ember Slash'
-        $this.Description = 'A slash of fire that burns the enemy.'
+        $this.Description = 'At least the wound is cauterized.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 5
@@ -3955,7 +3955,7 @@ Class BAEmberSlash : BattleAction {
 Class BAPyroblast : BattleAction {
     BAPyroblast() : base() {
         $this.Name        = 'Pyroblast'
-        $this.Description = 'A blast of fire that burns the enemy.'
+        $this.Description = 'Fireworks never looked so good.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 15
@@ -3967,7 +3967,7 @@ Class BAPyroblast : BattleAction {
 Class BAAshenNova : BattleAction {
     BAAshenNova() : base() {
         $this.Name        = 'Ashen Nova'
-        $this.Description = 'A nova of fire that burns the enemy.'
+        $this.Description = 'Reminds me of Pompeii. Only worse.' 
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 50
@@ -3979,7 +3979,7 @@ Class BAAshenNova : BattleAction {
 Class BAIncenerate : BattleAction {
     BAIncenerate() : base() {
         $this.Name        = 'Incenerate'
-        $this.Description = 'A blast of fire that burns the enemy.'
+        $this.Description = 'Kill it with fire, they said.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 20
@@ -3991,7 +3991,7 @@ Class BAIncenerate : BattleAction {
 Class BACinderStorm : BattleAction {
     BACinderStorm() : base() {
         $this.Name        = 'Cinder Storm'
-        $this.Description = 'A storm of fire that burns the enemy.'
+        $this.Description = 'Hot coal hail. Yum.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 5
@@ -4003,7 +4003,7 @@ Class BACinderStorm : BattleAction {
 Class BALavaSurge : BattleAction {
     BALavaSurge() : base() {
         $this.Name        = 'Lava Surge'
-        $this.Description = 'A surge of lava that burns the enemy.'
+        $this.Description = 'It''s like a surge of love, only the molten kind.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 15
@@ -4015,7 +4015,7 @@ Class BALavaSurge : BattleAction {
 Class BAFireCataclysm : BattleAction {
     BAFireCataclysm() : base() {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalFire]) Cataclysm"
-        $this.Description = 'A cataclysm of fire that burns the enemy.'
+        $this.Description = 'Firey death rains upon you.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = {}
         $this.MpCost      = 50
@@ -4027,7 +4027,7 @@ Class BAFireCataclysm : BattleAction {
 Class BAIcePunch : BattleAction {
     BAIcePunch() : base() {
         $this.Name        = 'Ice Punch'
-        $this.Description = 'A punch of ice that freezes the enemy.'
+        $this.Description = '.'
         $this.Type        = [BattleActionType]::ElementalIce
         $this.Effect      = {}
         $this.MpCost      = 5
