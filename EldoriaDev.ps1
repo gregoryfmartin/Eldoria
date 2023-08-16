@@ -2097,12 +2097,12 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:GpsRestoredFromBatBackup = $false
         }
 
-        # If($Script:IsBattleBgmPlaying -EQ $false) {
-        #     $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-        #     $Script:TheBgmMPlayer.Volume = 0.5
-        #     $Script:TheBgmMPlayer.Play()
-        #     $Script:IsBattleBgmPlaying = $true
-        # }
+        If($Script:IsBattleBgmPlaying -EQ $false) {
+            $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
+            $Script:TheBgmMPlayer.Volume = 0.5
+            $Script:TheBgmMPlayer.Play()
+            $Script:IsBattleBgmPlaying = $true
+        }
 
         $Script:TheBattleManager.Update()
     }
@@ -4732,7 +4732,7 @@ Class BAAngelicHymn : BattleAction {
     }
 }
 
-Class BABrilliance : BattleAction {
+Class BABrilliance : BattleAction { 
     BABrilliance() : base() {
         $this.Name        = 'Brilliance'
         $this.Description = 'A pulse of light that blinds the enemy.'
