@@ -4735,7 +4735,7 @@ Class BAAngelicHymn : BattleAction {
 Class BABrilliance : BattleAction { 
     BABrilliance() : base() {
         $this.Name        = 'Brilliance'
-        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Description = 'How I feel when I look at myself in the mirror.'
         $this.Type        = [BattleActionType]::ElementalLight
         $this.Effect      = {}
         $this.MpCost      = 300
@@ -4747,7 +4747,7 @@ Class BABrilliance : BattleAction {
 Class BASunfire : BattleAction {
     BASunfire() : base() {
         $this.Name        = 'Sunfire'
-        $this.Description = 'A pulse of light that blinds the enemy.'
+        $this.Description = 'Scorched Earth, mofo.'
         $this.Type        = [BattleActionType]::ElementalLight
         $this.Effect      = {}
         $this.MpCost      = 400
@@ -4759,7 +4759,7 @@ Class BASunfire : BattleAction {
 Class BALightCataclysm : BattleAction {
     BALightCataclysm() : base() {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalLight]) Cataclysm"
-        $this.Description = 'A cataclysm of light that blinds the enemy.'
+        $this.Description = 'Holy death rains down upon you.'
         $this.Type        = [BattleActionType]::ElementalLight
         $this.Effect      = {}
         $this.MpCost      = 500
