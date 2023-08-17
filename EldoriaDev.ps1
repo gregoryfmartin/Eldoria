@@ -3499,6 +3499,8 @@ Class BattleEntityProperty {
 Class BattleAction {
     [String]$Name
     [ScriptBlock]$Effect
+    [ScriptBlock]$PreCalc
+    [ScriptBlock]$PostCalc
     [BattleActionType]$Type
     [Int]$MpCost
     [Int]$EffectValue
@@ -3509,6 +3511,8 @@ Class BattleAction {
         $this.Name        = ''
         $this.Type        = [BattleActionType]::None
         $this.Effect      = $null
+        $this.PreCalc     = $null
+        $this.PostCalc    = $null
         $this.EffectValue = 0
         $this.Chance      = 0.0
         $this.Description = ''
@@ -3525,6 +3529,8 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
+        $this.PreCalc     = {}
+        $this.PostCalc    = {}
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
         $this.Description = ''
@@ -3543,6 +3549,8 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
+        $this.PreCalc     = {}
+        $this.PostCalc    = {}
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
         $this.Description = $Description
@@ -3560,6 +3568,8 @@ Class BattleAction {
         $this.Name        = $Name
         $this.Type        = $Type
         $this.Effect      = $Effect
+        $this.PreCalc     = {}
+        $this.PostCalc    = {}
         $this.MpCost      = $MpCost
         $this.EffectValue = $EffectValue
         $this.Chance      = $Chance
