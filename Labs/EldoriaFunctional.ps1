@@ -1597,3 +1597,50 @@ Function New-EldVtSceneImageString {
 }
 
 #endregion
+
+
+
+
+#region CONSTRUCT DEFINITIONS
+Function New-EldBattleEntityProperty {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange('Positive')]
+        [Int]$Base,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange('Positive')]
+        [Int]$BasePre,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange('Positive')]
+        [Int]$BaseAugmentValue,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange('Positive')]
+        [Int]$Max,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange('Positive')]
+        [Int]$MaxPre,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [ValidateRange('Positive')]
+        [Int]$MaxAugmentValue,
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [StatNumberState]$State,
+        [Parameter(Mandatory)]
+        [ValidateNotNull()]
+        [ScriptBlock]$ValidateFunction,
+        [Switch]$BaseAugmentActive,
+        [Switch]$MaxAugmentActive
+    )
+
+    Process {
+        $a = [System.ValueTuple[[Int], [Int], [Int], [Int], [Int], [Int], [Boolean], [Boolean], [StatNumberState], [ScriptBlock]]]::new()
+        
+    }
+}
