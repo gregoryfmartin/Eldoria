@@ -1399,6 +1399,13 @@ Enum BattleActionResultType {
     FailedNotEnoughMp
 }
 
+Enum StatusAilmentType {
+    Debuff
+    TurnPrevention
+    DamageOverTime
+    RandomTarget
+}
+
 $Script:BattleEncounterRegionTable = @{
     0 = @(
         'EEBat',
@@ -3496,6 +3503,16 @@ Class BattleEntityProperty {
     }
 }
 
+Class StatusAilment {
+    [String]$Name
+    [StatusAilmentType]$Type
+    [ConsoleColor24]$EntityNameColor
+    [Boolean]$IsApplied
+    [Int]$PhaseDuration
+    [Hashtable]$TargetProperties
+    [ScriptBlock]$Effect
+}
+
 Class BattleAction {
     [String]$Name
     [ScriptBlock]$Effect
@@ -3595,6 +3612,26 @@ Class BattleActionResult {
         $this.Originator      = $OriginatorRef
         $this.Target          = $TargetRef
         $this.ActionEffectSum = $ActionEffectSum
+    }
+}
+
+Class SAPoison : StatusAilment {
+    SAPoison() : base() {
+        $this.Name             = 'Poison'
+        $this.Type             = [StatusAilmentType]::DamageOverTime
+        $this.EntityNameColor  = [CCAppleVGreenLight24]::new()
+        $this.IsApplied        = $false
+        $this.PhaseDuration    = $(Get-Random -Minimum 3 -Maximum 5)
+        $this.TargetProperties = $null
+        $this.Effect           = {
+            Param(
+                [StatusAilment]$Self,
+                [BattleEntity]$Target
+            )
+
+            [Int]$EffectDamage = ($Target.Stats[[StatId]::HitPoints].Max * $(Get-Random -Minimum 0.03 -Maximum 0.05)) * -1
+            Return $Target.Stats[[StatId]::HitPoints].DecrementBase($EffectDamage)
+        }
     }
 }
 
@@ -4799,6 +4836,7 @@ Class BattleEntity {
     [ActionSlot[]]$ActionMarbleBag
     [ConsoleColor24]$NameDrawColor
     [BattleActionType]$Affinity
+    [StatusAilment]$Ailment
 
     BattleEntity() {
         $this.Name            = ''
@@ -4808,6 +4846,7 @@ Class BattleEntity {
         $this.ActionMarbleBag = $null
         $this.NameDrawColor   = [CCTextDefault24]::new()
         $this.Affinity        = [BattleActionType]::None
+        $this.Ailment         = $null
     }
 
     BattleEntity(
@@ -4826,6 +4865,7 @@ Class BattleEntity {
         $this.ActionMarbleBag = $ActionMarbleBag
         $this.NameDrawColor   = $NameDrawColor
         $this.Affinity        = $Affinity
+        $this.Ailment         = $null
     }
 
     [Void]Update() {
@@ -21709,6 +21749,45 @@ Class BattleManager {
                     $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $false
                     $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $true
                 }
+
+                # Let's see if the code to update the Status Ailment Effect being placed here
+                # works to any effect.
+                # First, we need to check and see if there are any active status ailments
+                If($null -NE $this.PhaseOneEntity.Ailment) {
+                    # Attempt to determine the type of the ailment
+                    Switch($this.PhaseOneEntity.Ailment.Type) {
+                        ([StatusAilmentType]::Debuff) {
+                            # We're not really concerned with these types here
+                            Break
+                        }
+
+                        ([StatusAilmentType]::TurnPrevention) {
+                            # Here, we can set the CanAct flag
+                            $this.CanPhaseOneAct = $false
+                            Break
+                        }
+
+                        ([StatusAilmentType]::DamageOverTime) {
+                            # Effect the DOT
+                            Switch($this.PhaseOneEntity.Ailment.PSTypeNames[0]) {
+                                'SAPoison' {
+                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                                        @(
+                                            [ATStringCompositeSc]::new(
+                                                []
+                                            )
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        ([StatusAilmentType]::RandomTarget) {}
+
+                        Default {}
+                    }
+                }
+
                 $Script:ThePlayerBattleStatWindow.Draw()
                 $Script:TheEnemyBattleStatWindow.Draw()
 
