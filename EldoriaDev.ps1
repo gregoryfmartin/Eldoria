@@ -4869,6 +4869,18 @@ Class BattleEntity {
     }
 
     [Void]Update() {
+        If($null -NE $this.Ailment) {
+            If($this.Ailment.IsApplied -EQ $false) {
+                If($null -NE $this.Ailment.TargetProperties -AND $this.Ailment.TargetProperties.Count -GE 1) {
+                    Foreach($a in $this.Ailment.TargetProperties.Keys) {
+                        $this.Stats[$a].BaseAugmentValue    = $this.Ailment.TargetProperties[$a]
+                        $this.Stats[$a].AugmentTurnDuration = $this.Ailment.PhaseDuration
+                    }
+                    $this.Ailment.IsApplied = $true
+                }
+            }
+        }
+
         Foreach($a in $this.Stats.Values) {
             $a.Update()
         }
@@ -21769,17 +21781,6 @@ Class BattleManager {
 
                         ([StatusAilmentType]::DamageOverTime) {
                             # Effect the DOT
-                            Switch($this.PhaseOneEntity.Ailment.PSTypeNames[0]) {
-                                'SAPoison' {
-                                    $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                                        @(
-                                            [ATStringCompositeSc]::new(
-                                                []
-                                            )
-                                        )
-                                    )
-                                }
-                            }
                         }
 
                         ([StatusAilmentType]::RandomTarget) {}
@@ -24974,6 +24975,39 @@ Class BattleManager {
             }
 
             Default {}
+        }
+    }
+
+    [Void]ProcessStatusAilment(
+        [BattleEntity]$Entity
+    ) {
+        If($null -NE $Entity.Ailment) {
+            Switch($Entity.Ailment.Type) {
+                ([StatusAilmentType]::Debuff) {
+                    Break
+                }
+
+                ([StatusAilmentType]::TurnPrevention) {
+                    If($Entity -EQ $this.PhaseOneEntity) {
+                        $this.CanPhaseOneAct = $true
+                    } Elseif($Entity -EQ $this.PhaseTwoEntity) {
+                        $this.CanPhaseTwoAct = $true
+                    }
+
+                    Break
+                }
+
+                ([StatusAilmentType]::DamageOverTime) {
+                    Invoke-Command $Entity.Ailment.Effect -ArgumentList $Entity
+                    Break
+                }
+
+                ([StatusAilmentType]::RandomTarget) {
+                    Break
+                }
+
+                Default {}
+            }
         }
     }
 
