@@ -10,51 +10,54 @@ Add-Type -AssemblyName PresentationCore
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working' -PercentComplete -1
 
-[String]                          $Script:OsCheckLinux                 = 'OsLinux'
-[String]                          $Script:OsCheckMac                   = 'OsMac'
-[String]                          $Script:OsCheckWindows               = 'OsWindows'
-[String]                          $Script:OsCheckUnknown               = 'OsUnknown'
-[String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
-[String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
-[String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
-[String]                          $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
-[String]                          $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
-[String]                          $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
-[String]                          $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
-[String]                          $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
-[String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
-[String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
-[String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
-[StatusWindow]                    $Script:TheStatusWindow              = [StatusWindow]::new()
-[CommandWindow]                   $Script:TheCommandWindow             = [CommandWindow]::new()
-[SceneWindow]                     $Script:TheSceneWindow               = [SceneWindow]::new()
-[MessageWindow]                   $Script:TheMessageWindow             = [MessageWindow]::new()
-[InventoryWindow]                 $Script:TheInventoryWindow           = $null
-[ATCoordinatesDefault]            $Script:DefaultCursorCoordinates     = [ATCoordinatesDefault]::new()
-[BattleEntityStatusWindow]        $Script:ThePlayerBattleStatWindow    = $null
-[BattleEntityStatusWindow]        $Script:TheEnemyBattleStatWindow     = $null
-[BattlePlayerActionWindow]        $Script:ThePlayerBattleActionWindow  = $null
-[BattleStatusMessageWindow]       $Script:TheBattleStatusMessageWindow = $null
-[BattleEnemyImageWindow]          $Script:TheBattleEnemyImageWindow    = $null
-[BufferManager]                   $Script:TheBufferManager             = [BufferManager]::new()
-[GameCore]                        $Script:TheGameCore                  = [GameCore]::new()
-[EnemyBattleEntity]               $Script:TheCurrentEnemy              = $null
-[BattleManager]                   $Script:TheBattleManager             = $null
-[SoundPlayer]                     $Script:TheSfxMachine                = [SoundPlayer]::new()
-[SoundPlayer]                     $Script:TheBgmMachine                = [SoundPlayer]::new()
-[Boolean]                         $Script:IsBattleBgmPlaying           = $false
-[Boolean]                         $Script:HasBattleIntroPlayed         = $false
-[Boolean]                         $Script:HasBattleWonChimePlayed      = $false
-[Boolean]                         $Script:HasBattleLostChimePlayed     = $false
-[EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
-[EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
-[EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
-[EEIDarkfang]                     $Script:EeiDarkfang                  = [EEIDarkfang]::new()
-[EEINocturna]                     $Script:EeiNocturna                  = [EEINocturna]::new()
-[EEIBloodswoop]                   $Script:EeiBloodswoop                = [EEIBloodswoop]::new()
-[EEIDuskbane]                     $Script:EeiDuskbane                  = [EEIDuskbane]::new()
-[System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer                = [System.Windows.Media.MediaPlayer]::new()
-[System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer                = [System.Windows.Media.MediaPlayer]::new()
+[String]                           $Script:OsCheckLinux                 = 'OsLinux'
+[String]                           $Script:OsCheckMac                   = 'OsMac'
+[String]                           $Script:OsCheckWindows               = 'OsWindows'
+[String]                           $Script:OsCheckUnknown               = 'OsUnknown'
+[String]                           $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
+[String]                           $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
+[String]                           $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
+[String]                           $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
+[String]                           $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
+[String]                           $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
+[String]                           $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
+[String]                           $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
+[String]                           $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
+[String]                           $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
+[String]                           $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
+[StatusWindow]                     $Script:TheStatusWindow              = [StatusWindow]::new()
+[CommandWindow]                    $Script:TheCommandWindow             = [CommandWindow]::new()
+[SceneWindow]                      $Script:TheSceneWindow               = [SceneWindow]::new()
+[MessageWindow]                    $Script:TheMessageWindow             = [MessageWindow]::new()
+[InventoryWindow]                  $Script:TheInventoryWindow           = $null
+[ATCoordinatesDefault]             $Script:DefaultCursorCoordinates     = [ATCoordinatesDefault]::new()
+[BattleEntityStatusWindow]         $Script:ThePlayerBattleStatWindow    = $null
+[BattleEntityStatusWindow]         $Script:TheEnemyBattleStatWindow     = $null
+[BattlePlayerActionWindow]         $Script:ThePlayerBattleActionWindow  = $null
+[BattleStatusMessageWindow]        $Script:TheBattleStatusMessageWindow = $null
+[BattleEnemyImageWindow]           $Script:TheBattleEnemyImageWindow    = $null
+[StatusHudWindow]                  $Script:TheStatusHudWindow           = $null
+[StatusTechniqueSelectionWindow]   $Script:TheStatusTechSelectionWindow = $null
+[StatusTechniqueInventoryWindow]   $Script:TheStatusTechInventoryWindow = $null
+[BufferManager]                    $Script:TheBufferManager             = [BufferManager]::new()
+[GameCore]                         $Script:TheGameCore                  = [GameCore]::new()
+[EnemyBattleEntity]                $Script:TheCurrentEnemy              = $null
+[BattleManager]                    $Script:TheBattleManager             = $null
+[SoundPlayer]                      $Script:TheSfxMachine                = [SoundPlayer]::new()
+[SoundPlayer]                      $Script:TheBgmMachine                = [SoundPlayer]::new()
+[Boolean]                          $Script:IsBattleBgmPlaying           = $false
+[Boolean]                          $Script:HasBattleIntroPlayed         = $false
+[Boolean]                          $Script:HasBattleWonChimePlayed      = $false
+[Boolean]                          $Script:HasBattleLostChimePlayed     = $false
+[EEIBat]                           $Script:EeiBat                       = [EEIBat]::new()
+[EEINightwing]                     $Script:EeiNightwing                 = [EEINightwing]::new()
+[EEIWingblight]                    $Script:EeiWingblight                = [EEIWingblight]::new()
+[EEIDarkfang]                      $Script:EeiDarkfang                  = [EEIDarkfang]::new()
+[EEINocturna]                      $Script:EeiNocturna                  = [EEINocturna]::new()
+[EEIBloodswoop]                    $Script:EeiBloodswoop                = [EEIBloodswoop]::new()
+[EEIDuskbane]                      $Script:EeiDuskbane                  = [EEIDuskbane]::new()
+[System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer                 = [System.Windows.Media.MediaPlayer]::new()
+[System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer                 = [System.Windows.Media.MediaPlayer]::new()
 
 [ScriptBlock]$Script:BaPhysicalCalc = {
     Param(
@@ -1251,6 +1254,7 @@ Enum GameStatePrimary {
     GamePlayScreen
     InventoryScreen
     BattleScreen
+    PlayerStatusScreen
     Cleanup
 }
 
@@ -2105,6 +2109,26 @@ $Script:TheGlobalStateBlockTable = @{
         }
 
         $Script:TheBattleManager.Update()
+    }
+
+    [GameStatePrimary]::PlayerStatusScreen = {
+        If($null -EQ $Script:TheStatusHudWindow) {
+            $Script:TheStatusHudWindow = [StatusHudWindow]::new()
+        }
+        If($null -EQ $Script:TheStatusTechSelectionWindow) {
+            $Script:TheStatusTechSelectionWindow = [StatusTechniqueSelectionWindow]::new()
+        }
+        If($null -EQ $Script:TheStatusTechInventoryWindow) {
+            $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
+        }
+
+        $Script:TheStatusHudWindow.Draw()
+        $Script:TheStatusTechSelectionWindow.Draw()
+        $Script:TheStatusTechInventoryWindow.Draw()
+
+        # FOR TESTING PUROSES ONLY
+        Write-Host "$([ATControlSequences]::CursorHide)"
+        $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
     }
 
     [GameStatePrimary]::Cleanup = {}
@@ -21551,6 +21575,96 @@ Class BattleEnemyImageWindow : WindowBase {
     }
 }
 
+Class StatusHudWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 1
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 5
+    Static [Int]$WindowBRColumn = 80
+
+    Static [String]$WindowBorderHorizontal = '*-------------------------------------------------------------------------------*'
+    Static [String]$WindowBorderVertical   = '|'
+
+    StatusHudWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([StatusHudWindow]::WindowLTRow, [StatusHudWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([StatusHudWindow]::WindowBRRow, [StatusHudWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [StatusHudWindow]::WindowBorderHorizontal,
+            [StatusHudWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
+Class StatusTechniqueSelectionWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 6
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 11
+    Static [Int]$WindowBRColumn = 19
+
+    Static [String]$WindowBorderHorizontal = '*------------------*'
+    Static [String]$WindowBorderVertical   = '|'
+
+    StatusTechniqueSelectionWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowLTRow, [StatusTechniqueSelectionWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowBRRow, [StatusTechniqueSelectionWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [StatusTechniqueSelectionWindow]::WindowBorderHorizontal,
+            [StatusTechniqueSelectionWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
+Class StatusTechniqueInventoryWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 6
+    Static [Int]$WindowLTColumn = 22
+    Static [Int]$WindowBRRow    = 18
+    Static [Int]$WindowBRColumn = 80
+
+    Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
+    Static [String]$WindowBorderVertical   = '|'
+
+    StatusTechniqueInventoryWindow(): base() {
+        $this.LeftTop     = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowLTRow, [StatusTechniqueInventoryWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowBRRow, [StatusTechniqueInventoryWindow]::WindowBRColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [StatusTechniqueInventoryWindow]::WindowBorderHorizontal,
+            [StatusTechniqueInventoryWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+}
+
 Class BattlePhaseIndicator {
     [ATStringComposite]$IndicatorStringActual = [ATStringComposite]::new()
     [ATStringComposite]$IndicatorStringBlank  = [ATStringComposite]::new()
@@ -24929,7 +25043,7 @@ Class GameCore {
         $this.LastFrameTime        = 0D
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
-        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
     }
 
     [Void]Run() {
