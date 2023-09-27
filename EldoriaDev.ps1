@@ -21855,6 +21855,46 @@ Class StatusTechniqueSelectionWindow : WindowBase {
     Static [String]$WindowBorderHorizontal = '*------------------*'
     Static [String]$WindowBorderVertical   = '|'
 
+    Static [String]$PlayerChevronCharacter      = '>'
+    Static [String]$PlayerChevronBlankCharacter = ' '
+    
+    Static [ATString]$PlayerChevron = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCTextDefault24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinatesNone]::new()
+        ),
+        [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+        $true
+    )
+    Static [ATString]$PlayerChevronBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinatesNone]::new()
+        ),
+        [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter,
+        $true
+    )
+
+    [Boolean]$PlayerChevronDirty = $true
+    [Boolean]$ActiveItemBlinking = $false
+    [Boolean]$ActionADrawDirty   = $true
+    [Boolean]$ActionBDrawDirty   = $true
+    [Boolean]$ActionCDrawDirty   = $true
+    [Boolean]$ActionDDrawDirty   = $true
+
+    [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+
+    [Int]$ActiveChevronIndex = 0
+
+    [ATCoordinates]$ActionADrawCoordinates = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionBDrawCoordinates = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionCDrawCoordinates = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionDDrawCoordinates = [ATCoordinatesNone]::new()
+
     StatusTechniqueSelectionWindow(): base() {
         $this.LeftTop     = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowLTRow, [StatusTechniqueSelectionWindow]::WindowLTColumn)
         $this.RightBottom = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowBRRow, [StatusTechniqueSelectionWindow]::WindowBRColumn)
@@ -21869,10 +21909,224 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             [StatusTechniqueSelectionWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
+
+        $this.ActionADrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 3)
+        $this.ActionBDrawCoordinates = [ATCoordinates]::new($this.ActionADrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
+        $this.ActionCDrawCoordinates = [ATCoordinates]::new($this.ActionBDrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
+        $this.ActionDDrawCoordinates = [ATCoordinates]::new($this.ActionCDrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
+
+        $this.CreateChevrons()
+    }
+
+    [Void]CreateChevrons() {
+        $this.Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionADrawCoordinates.Row, $this.ActionADrawCoordinates.Column - 2)
+                    ),
+                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    $true
+                ),
+                $true
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionBDrawCoordinates.Row, $this.ActionBDrawCoordinates.Column - 2)
+                    ),
+                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    $true
+                ),
+                $false
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionCDrawCoordinates.Row, $this.ActionCDrawCoordinates.Column - 2)
+                    ),
+                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    $true
+                ),
+                $false
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCAppleGreenLight24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinates]::new($this.ActionDDrawCoordinates.Row, $this.ActionDDrawCoordinates.Column - 2)
+                    ),
+                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    $true
+                ),
+                $false
+            )
+        )
+    }
+
+    [ATString]GetActiveChevron() {
+        Foreach($a in $this.Chevrons) {
+            If($a.Item2 -EQ $true) {
+                Return $a.Item1
+            }
+        }
+
+        $this.ActiveChevronIndex = 0
+        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+        Return $this.Chevrons[$this.ActiveChevronIndex].Item1
+    }
+
+    [Void]ResetChevronPosition() {
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
+        
+        $this.ActiveChevronIndex = 0
+
+        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+
+        If($this.ActionADrawDirty -EQ $true) {
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionADrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item1)",
+                $true
+            )
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            $this.ActionADrawDirty = $false
+        }
+        If($this.ActionBDrawDirty -EQ $true) {
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionBDrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item1)",
+                $true
+            )
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            $this.ActionBDrawDirty = $false
+        }
+        If($this.ActionCDrawDirty -EQ $true) {
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionCDrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item1)",
+                $true
+            )
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            $this.ActionCDrawDirty = $false
+        }
+        If($this.ActionDDrawDirty -EQ $true) {
+            [ATString]$p1 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item2,
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    $this.ActionDDrawCoordinates
+                ),
+                "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item1)",
+                $true
+            )
+            [ATString]$p2 = [ATString]::new(
+                [ATStringPrefix]::new(
+                    [CCTextDefault24]::new(),
+                    [ATBackgroundColor24None]::new(),
+                    [ATDecorationNone]::new(),
+                    [ATCoordinatesNone]::new()
+                ),
+                " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)",
+                $true
+            )
+
+            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            $this.ActionDDrawDirty = $false
+        }
+        If($this.PlayerChevronDirty -EQ $true) {
+            Foreach($c in $this.Chevrons) {
+                Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            }
+            $this.PlayerChevronDirty = $false
+        }
+    }
+
+    [Void]HandleInput() {
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        Switch($keyCap.VirtualKeyCode) {
+            
+        }
+    }
+
+    [Void]SetAllActionDrawDirty() {
+        $this.ActionADrawDirty = $true
+        $this.ActionBDrawDirty = $true
+        $this.ActionCDrawDirty = $true
+        $this.ActionDDrawDirty = $true
     }
 }
 
