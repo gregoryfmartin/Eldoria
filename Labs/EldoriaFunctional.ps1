@@ -10,6 +10,7 @@ Enum GameState {
     BattleScreen
     LoseScreen
     Cleanup
+    None
 }
 
 Enum BattleManagerState {
@@ -277,7 +278,9 @@ $Script:LegalCommands = @(
 )
 
 [GameState]$Script:CurrentGameState  = [GameState]::SplashScreenA
-[GameState]$Script:PreviousGameState = $null
+[GameState]$Script:PreviousGameState = [GameState]::None
+
+[Array]$Script:BattleEntityTable = @()
 
 #endregion
 
@@ -1640,7 +1643,8 @@ Function New-EldBattleEntityProperty {
     )
 
     Process {
-        $a = [System.ValueTuple[[Int], [Int], [Int], [Int], [Int], [Int], [Boolean], [Boolean], [StatNumberState], [ScriptBlock]]]::new()
-        
+        ### String Format Information
+        ###
+        ### GUID-of-Parent-Entity;GUID-of-This;Base;BasePre;BaseAugmentValue;Max;MaxPre;MaxAugmentValue;State;
     }
 }

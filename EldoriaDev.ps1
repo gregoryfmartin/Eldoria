@@ -10,54 +10,213 @@ Add-Type -AssemblyName PresentationCore
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working' -PercentComplete -1
 
-[String]                           $Script:OsCheckLinux                 = 'OsLinux'
-[String]                           $Script:OsCheckMac                   = 'OsMac'
-[String]                           $Script:OsCheckWindows               = 'OsWindows'
-[String]                           $Script:OsCheckUnknown               = 'OsUnknown'
-[String]                           $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
-[String]                           $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
-[String]                           $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
-[String]                           $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
-[String]                           $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
-[String]                           $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
-[String]                           $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
-[String]                           $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
-[String]                           $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
-[String]                           $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
-[String]                           $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
-[StatusWindow]                     $Script:TheStatusWindow              = [StatusWindow]::new()
-[CommandWindow]                    $Script:TheCommandWindow             = [CommandWindow]::new()
-[SceneWindow]                      $Script:TheSceneWindow               = [SceneWindow]::new()
-[MessageWindow]                    $Script:TheMessageWindow             = [MessageWindow]::new()
-[InventoryWindow]                  $Script:TheInventoryWindow           = $null
-[ATCoordinatesDefault]             $Script:DefaultCursorCoordinates     = [ATCoordinatesDefault]::new()
-[BattleEntityStatusWindow]         $Script:ThePlayerBattleStatWindow    = $null
-[BattleEntityStatusWindow]         $Script:TheEnemyBattleStatWindow     = $null
-[BattlePlayerActionWindow]         $Script:ThePlayerBattleActionWindow  = $null
-[BattleStatusMessageWindow]        $Script:TheBattleStatusMessageWindow = $null
-[BattleEnemyImageWindow]           $Script:TheBattleEnemyImageWindow    = $null
-[StatusHudWindow]                  $Script:TheStatusHudWindow           = $null
-[StatusTechniqueSelectionWindow]   $Script:TheStatusTechSelectionWindow = $null
-[StatusTechniqueInventoryWindow]   $Script:TheStatusTechInventoryWindow = $null
-[BufferManager]                    $Script:TheBufferManager             = [BufferManager]::new()
-[GameCore]                         $Script:TheGameCore                  = [GameCore]::new()
-[EnemyBattleEntity]                $Script:TheCurrentEnemy              = $null
-[BattleManager]                    $Script:TheBattleManager             = $null
-[SoundPlayer]                      $Script:TheSfxMachine                = [SoundPlayer]::new()
-[SoundPlayer]                      $Script:TheBgmMachine                = [SoundPlayer]::new()
-[Boolean]                          $Script:IsBattleBgmPlaying           = $false
-[Boolean]                          $Script:HasBattleIntroPlayed         = $false
-[Boolean]                          $Script:HasBattleWonChimePlayed      = $false
-[Boolean]                          $Script:HasBattleLostChimePlayed     = $false
-[EEIBat]                           $Script:EeiBat                       = [EEIBat]::new()
-[EEINightwing]                     $Script:EeiNightwing                 = [EEINightwing]::new()
-[EEIWingblight]                    $Script:EeiWingblight                = [EEIWingblight]::new()
-[EEIDarkfang]                      $Script:EeiDarkfang                  = [EEIDarkfang]::new()
-[EEINocturna]                      $Script:EeiNocturna                  = [EEINocturna]::new()
-[EEIBloodswoop]                    $Script:EeiBloodswoop                = [EEIBloodswoop]::new()
-[EEIDuskbane]                      $Script:EeiDuskbane                  = [EEIDuskbane]::new()
-[System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer                 = [System.Windows.Media.MediaPlayer]::new()
-[System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer                 = [System.Windows.Media.MediaPlayer]::new()
+[String]                          $Script:OsCheckLinux                 = 'OsLinux'
+[String]                          $Script:OsCheckMac                   = 'OsMac'
+[String]                          $Script:OsCheckWindows               = 'OsWindows'
+[String]                          $Script:OsCheckUnknown               = 'OsUnknown'
+[String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
+[String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
+[String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
+[String]                          $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
+[String]                          $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
+[String]                          $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
+[String]                          $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
+[String]                          $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
+[String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
+[String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
+[String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
+[StatusWindow]                    $Script:TheStatusWindow              = [StatusWindow]::new()
+[CommandWindow]                   $Script:TheCommandWindow             = [CommandWindow]::new()
+[SceneWindow]                     $Script:TheSceneWindow               = [SceneWindow]::new()
+[MessageWindow]                   $Script:TheMessageWindow             = [MessageWindow]::new()
+[InventoryWindow]                 $Script:TheInventoryWindow           = $null
+[ATCoordinatesDefault]            $Script:DefaultCursorCoordinates     = [ATCoordinatesDefault]::new()
+[BattleEntityStatusWindow]        $Script:ThePlayerBattleStatWindow    = $null
+[BattleEntityStatusWindow]        $Script:TheEnemyBattleStatWindow     = $null
+[BattlePlayerActionWindow]        $Script:ThePlayerBattleActionWindow  = $null
+[BattleStatusMessageWindow]       $Script:TheBattleStatusMessageWindow = $null
+[BattleEnemyImageWindow]          $Script:TheBattleEnemyImageWindow    = $null
+[StatusHudWindow]                 $Script:TheStatusHudWindow           = $null
+[StatusTechniqueSelectionWindow]  $Script:TheStatusTechSelectionWindow = $null
+[StatusTechniqueInventoryWindow]  $Script:TheStatusTechInventoryWindow = $null
+[BufferManager]                   $Script:TheBufferManager             = [BufferManager]::new()
+[GameCore]                        $Script:TheGameCore                  = [GameCore]::new()
+[EnemyBattleEntity]               $Script:TheCurrentEnemy              = $null
+[BattleManager]                   $Script:TheBattleManager             = $null
+[SoundPlayer]                     $Script:TheSfxMachine                = [SoundPlayer]::new()
+[SoundPlayer]                     $Script:TheBgmMachine                = [SoundPlayer]::new()
+[Boolean]                         $Script:IsBattleBgmPlaying           = $false
+[Boolean]                         $Script:HasBattleIntroPlayed         = $false
+[Boolean]                         $Script:HasBattleWonChimePlayed      = $false
+[Boolean]                         $Script:HasBattleLostChimePlayed     = $false
+[EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
+[EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
+[EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
+[EEIDarkfang]                     $Script:EeiDarkfang                  = [EEIDarkfang]::new()
+[EEINocturna]                     $Script:EeiNocturna                  = [EEINocturna]::new()
+[EEIBloodswoop]                   $Script:EeiBloodswoop                = [EEIBloodswoop]::new()
+[EEIDuskbane]                     $Script:EeiDuskbane                  = [EEIDuskbane]::new()
+[System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer                = [System.Windows.Media.MediaPlayer]::new()
+[System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer                = [System.Windows.Media.MediaPlayer]::new()
+[Double]                          $Script:AffinityMultNeg              = -0.75
+[Double]                          $Script:AffinityMultPos              = 1.6
+
+Enum GameStatePrimary {
+    SplashScreenA
+    SplashScreenB
+    TitleScreen
+    PlayerSetupScreen
+    GamePlayScreen
+    InventoryScreen
+    BattleScreen
+    PlayerStatusScreen
+    Cleanup
+}
+
+Enum GameStateSecondary {
+    Normal
+    Battle
+    Shop
+    Inn
+}
+
+Enum StatNumberState {
+    Normal
+    Caution
+    Danger
+}
+
+Enum CommonVirtualKeyCodes {
+    Escape     = 27
+    LeftArrow  = 37
+    RightArrow = 39
+    UpArrow    = 38
+    DownArrow  = 40
+    A          = 65
+    D          = 68
+    Enter      = 13
+}
+
+Enum ItemRemovalStatus {
+    Success
+    FailGeneral
+    FailKeyItem
+}
+
+Enum BattleActionType {
+    Physical
+    ElementalFire
+    ElementalWater
+    ElementalEarth
+    ElementalWind
+    ElementalLight
+    ElementalDark
+    ElementalIce
+    MagicPoison
+    MagicConfuse
+    MagicSleep
+    MagicAging
+    MagicHealing
+    MagicStatAugment
+    None
+}
+
+Enum HpIncrementResult {
+    FailHpFull
+    FailHpAddNegative
+    Success
+}
+
+Enum HpDecrementResult {
+    FailHpEmpty
+    FailHpSubtractPositive
+    Success
+}
+
+Enum MpIncrementResult {
+    FailMpFull
+    FailMpAddNegative
+    Success
+}
+
+Enum MpDecrementResult {
+    FailMpEmpty
+    FailMpSubtractPositive
+    Success
+}
+
+Enum StatId {
+    HitPoints
+    MagicPoints
+    Attack
+    Defense
+    MagicAttack
+    MagicDefense
+    Speed
+    Luck
+    Accuracy
+}
+
+Enum ActionSlot {
+    A
+    B
+    C
+    D
+}
+
+Enum AllActions {
+    Pound
+    KarateChop
+    DoubleSlap
+    CometPunch
+    MegaPunch
+    PayDay
+    FirePunch
+    IcePunch
+    ThunderPunch
+    Scratch
+    ViseGrip
+    Guillotine
+    RazorWind
+    SwordsDance
+    Cut
+    Gust
+    WingAttack
+    Whirlwind
+    Fly
+    Bind
+    Slam
+    VineWhip
+    Stomp
+    DoubleKick
+    MegaKick
+    JumpKick
+    RollingKick
+    SandAttack
+}
+
+Enum BattleManagerState {
+    HealthCheck
+    TurnIncrement
+    PhaseOrdering
+    PhaseAExecution
+    PhaseBExecution
+    Calculation
+    BattleWon
+    BattleLost
+}
+
+Enum BattleActionResultType {
+    Success
+    SuccessWithCritical
+    SuccessWithAffinityBonus
+    SuccessWithCritAndAffinityBonus
+    FailedAttackMissed
+    FailedAttackFailed
+    FailedElementalMatch
+    FailedNoUsesRemaining
+    FailedNotEnoughMp
+}
 
 [ScriptBlock]$Script:BaPhysicalCalc = {
     Param(
@@ -1243,165 +1402,6 @@ $Script:Rui = $(Get-Host).UI.RawUI
 [Boolean]$Script:GpsRestoredFromInvBackup = $true
 [Boolean]$Script:GpsRestoredFromBatBackup = $false
 [Boolean]$Script:BattleCursorVisible      = $false
-
-# ENUMERATION DEFINITIONS
-
-Enum GameStatePrimary {
-    SplashScreenA
-    SplashScreenB
-    TitleScreen
-    PlayerSetupScreen
-    GamePlayScreen
-    InventoryScreen
-    BattleScreen
-    PlayerStatusScreen
-    Cleanup
-}
-
-Enum GameStateSecondary {
-    Normal
-    Battle
-    Shop
-    Inn
-}
-
-Enum StatNumberState {
-    Normal
-    Caution
-    Danger
-}
-
-Enum CommonVirtualKeyCodes {
-    Escape     = 27
-    LeftArrow  = 37
-    RightArrow = 39
-    UpArrow    = 38
-    DownArrow  = 40
-    A          = 65
-    D          = 68
-    Enter      = 13
-}
-
-Enum ItemRemovalStatus {
-    Success
-    FailGeneral
-    FailKeyItem
-}
-
-Enum BattleActionType {
-    Physical
-    ElementalFire
-    ElementalWater
-    ElementalEarth
-    ElementalWind
-    ElementalLight
-    ElementalDark
-    ElementalIce
-    MagicPoison
-    MagicConfuse
-    MagicSleep
-    MagicAging
-    MagicHealing
-    MagicStatAugment
-    None
-}
-
-Enum HpIncrementResult {
-    FailHpFull
-    FailHpAddNegative
-    Success
-}
-
-Enum HpDecrementResult {
-    FailHpEmpty
-    FailHpSubtractPositive
-    Success
-}
-
-Enum MpIncrementResult {
-    FailMpFull
-    FailMpAddNegative
-    Success
-}
-
-Enum MpDecrementResult {
-    FailMpEmpty
-    FailMpSubtractPositive
-    Success
-}
-
-Enum StatId {
-    HitPoints
-    MagicPoints
-    Attack
-    Defense
-    MagicAttack
-    MagicDefense
-    Speed
-    Luck
-    Accuracy
-}
-
-Enum ActionSlot {
-    A
-    B
-    C
-    D
-}
-
-Enum AllActions {
-    Pound
-    KarateChop
-    DoubleSlap
-    CometPunch
-    MegaPunch
-    PayDay
-    FirePunch
-    IcePunch
-    ThunderPunch
-    Scratch
-    ViseGrip
-    Guillotine
-    RazorWind
-    SwordsDance
-    Cut
-    Gust
-    WingAttack
-    Whirlwind
-    Fly
-    Bind
-    Slam
-    VineWhip
-    Stomp
-    DoubleKick
-    MegaKick
-    JumpKick
-    RollingKick
-    SandAttack
-}
-
-Enum BattleManagerState {
-    HealthCheck
-    TurnIncrement
-    PhaseOrdering
-    PhaseAExecution
-    PhaseBExecution
-    Calculation
-    BattleWon
-    BattleLost
-}
-
-Enum BattleActionResultType {
-    Success
-    SuccessWithCritical
-    SuccessWithAffinityBonus
-    SuccessWithCritAndAffinityBonus
-    FailedAttackMissed
-    FailedAttackFailed
-    FailedElementalMatch
-    FailedNoUsesRemaining
-    FailedNotEnoughMp
-}
 
 $Script:BattleEncounterRegionTable = @{
     0 = @(
@@ -21578,11 +21578,22 @@ Class BattleEnemyImageWindow : WindowBase {
 Class StatusHudWindow : WindowBase {
     Static [Int]$WindowLTRow    = 1
     Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowBRRow    = 5
+    Static [Int]$WindowBRRow    = 3
     Static [Int]$WindowBRColumn = 80
 
     Static [String]$WindowBorderHorizontal = '*-------------------------------------------------------------------------------*'
     Static [String]$WindowBorderVertical   = '|'
+
+    Static [String]$LineBlankStr = '                                                                              '
+
+    Static [ATCoordinates]$StatLineDrawCoordinates      = [ATCoordinates]::new(2, 3)
+    Static [ATCoordinates]$StatSeparatorDrawCoordinates = [ATCoordinates]::new(2, 20)
+
+    [Boolean]$StatLineDrawDirty = $true
+
+    [ATStringComposite]$StatLineActual = [ATStringComposite]::new()
+
+    [ATString]$LineBlank = [ATStringNone]::new()
 
     StatusHudWindow(): base() {
         $this.LeftTop     = [ATCoordinates]::new([StatusHudWindow]::WindowLTRow, [StatusHudWindow]::WindowLTColumn)
@@ -21598,10 +21609,240 @@ Class StatusHudWindow : WindowBase {
             [StatusHudWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
+
+        $this.LineBlank.UserData = [StatusHudWindow]::LineBlankStr
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+
+        If($this.StatLineDrawDirty -EQ $true) {
+            $this.ComposeStatLineString()
+            $this.LineBlank.Prefix.Coordinates = [StatusHudWindow]::StatLineDrawCoordinates
+
+            Write-Host "$($this.LineBlank.ToAnsiControlSequenceString())"
+            Write-Host "$($this.StatLineActual.ToAnsiControlSequenceString())"
+
+            $this.StatLineDrawDirty = $false
+        }
+    }
+
+    [Void]ComposeStatLineString() {
+        [String]$AtkStatFmtStr = ''
+        [String]$DefStatFmtStr = ''
+        [String]$MatStatFmtStr = ''
+        [String]$MdfStatFmtStr = ''
+        [String]$SpdStatFmtStr = ''
+        [String]$AccStatFmtStr = ''
+        [String]$LckStatFmtStr = ''
+        [String]$AtkDispStr    = 'ATK:'
+        [String]$DefDispStr    = 'DEF:'
+        [String]$MatDispStr    = 'MAT:'
+        [String]$MdfDispStr    = 'MDF:'
+        [String]$SpdDispStr    = 'SPD:'
+        [String]$AccDispStr    = 'ACC:'
+        [String]$LckDispStr    = 'LCK:'
+
+        If($Script:ThePlayer.Stats[[StatId]::Attack].Base -LT 10) {
+            $AtkStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::Attack].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::Attack].Base -GE 10) {
+            $AtkStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::Attack].Base)"
+        }
+        If($Script:ThePlayer.Stats[[StatId]::Defense].Base -LT 10) {
+            $DefStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::Defense].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::Defense].Base -GE 10) {
+            $DefStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::Defense].Base)"
+        }
+        If($Script:ThePlayer.Stats[[StatId]::MagicAttack].Base -LT 10) {
+            $MatStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::MagicAttack].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::MagicAttack].Base -GE 10) {
+            $MatStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::MagicAttack].Base)"
+        }
+        If($Script:ThePlayer.Stats[[StatId]::MagicDefense].Base -LT 10) {
+            $MdfStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::MagicDefense].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::MagicDefense].Base -GE 10) {
+            $MdfStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::MagicDefense].Base)"
+        }
+        If($Script:ThePlayer.Stats[[StatId]::Speed].Base -LT 10) {
+            $SpdStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::Speed].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::Speed].Base -GE 10) {
+            $SpdStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::Speed].Base)"
+        }
+        If($Script:ThePlayer.Stats[[StatId]::Accuracy].Base -LT 10) {
+            $AccStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::Accuracy].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::Accuracy].Base -GE 10) {
+            $AccStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::Accuracy].Base)"
+        }
+        If($Script:ThePlayer.Stats[[StatId]::Luck].Base -LT 10) {
+            $LckStatFmtStr = "{0:d2}" -F $Script:ThePlayer.Stats[[StatId]::Luck].Base
+        } Elseif($Script:ThePlayer.Stats[[StatId]::Luck].Base -GE 10) {
+            $LckStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::Luck].Base)"
+        }
+
+        $this.StatLineActual = [ATStringComposite]::new(
+            @(
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        $Script:BATAdornmentCharTable[$Script:ThePlayer.Affinity].Item2,
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [StatusHudWindow]::StatLineDrawCoordinates
+                    ),
+                    "$($Script:BATAdornmentCharTable[$Script:ThePlayer.Affinity].Item1) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($Script:ThePlayer.Name)    ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($AtkDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($AtkStatFmtStr) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($DefDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($DefStatFmtStr) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($MatDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($MatStatFmtStr) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($MdfDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($MdfStatFmtStr) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($SpdDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($SpdStatFmtStr) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($AccDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($AccStatFmtStr) ",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($LckDispStr)",
+                    $false
+                ),
+                [ATString]::new(
+                    [ATStringPrefix]::new(
+                        [CCTextDefault24]::new(),
+                        [ATBackgroundColor24None]::new(),
+                        [ATDecorationNone]::new(),
+                        [ATCoordinatesNone]::new()
+                    ),
+                    "$($LckStatFmtStr)",
+                    $true
+                )
+            )
+        )
     }
 }
 
