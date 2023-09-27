@@ -21847,9 +21847,9 @@ Class StatusHudWindow : WindowBase {
 }
 
 Class StatusTechniqueSelectionWindow : WindowBase {
-    Static [Int]$WindowLTRow    = 6
+    Static [Int]$WindowLTRow    = 4
     Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowBRRow    = 11
+    Static [Int]$WindowBRRow    = 9
     Static [Int]$WindowBRColumn = 19
 
     Static [String]$WindowBorderHorizontal = '*------------------*'
@@ -21877,9 +21877,9 @@ Class StatusTechniqueSelectionWindow : WindowBase {
 }
 
 Class StatusTechniqueInventoryWindow : WindowBase {
-    Static [Int]$WindowLTRow    = 6
+    Static [Int]$WindowLTRow    = 4
     Static [Int]$WindowLTColumn = 22
-    Static [Int]$WindowBRRow    = 18
+    Static [Int]$WindowBRRow    = 16
     Static [Int]$WindowBRColumn = 80
 
     Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
