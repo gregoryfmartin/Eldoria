@@ -60,6 +60,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer                = [System.Windows.Media.MediaPlayer]::new()
 [Double]                          $Script:AffinityMultNeg              = -0.75
 [Double]                          $Script:AffinityMultPos              = 1.6
+[ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 
 Enum GameStatePrimary {
     SplashScreenA
@@ -162,6 +163,7 @@ Enum ActionSlot {
     B
     C
     D
+    None
 }
 
 Enum AllActions {
@@ -21944,7 +21946,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                         [ATDecorationNone]::new(),
                         [ATCoordinates]::new($this.ActionBDrawCoordinates.Row, $this.ActionBDrawCoordinates.Column - 2)
                     ),
-                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter,
                     $true
                 ),
                 $false
@@ -21959,7 +21961,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                         [ATDecorationNone]::new(),
                         [ATCoordinates]::new($this.ActionCDrawCoordinates.Row, $this.ActionCDrawCoordinates.Column - 2)
                     ),
-                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter,
                     $true
                 ),
                 $false
@@ -21974,7 +21976,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                         [ATDecorationNone]::new(),
                         [ATCoordinates]::new($this.ActionDDrawCoordinates.Row, $this.ActionDDrawCoordinates.Column - 2)
                     ),
-                    [StatusTechniqueSelectionWindow]::PlayerChevronCharacter,
+                    [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter,
                     $true
                 ),
                 $false
@@ -22118,7 +22120,93 @@ Class StatusTechniqueSelectionWindow : WindowBase {
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
-            
+            13 {
+                Switch($this.ActiveChevronIndex) {
+                    0 {
+                        # I don't know if it matters, at this point, if the slot is null or not
+                        # I think it may be enough to just know which slot was selected.
+                        $Script:StatusEsSelectedSlot = [ActionSlot]::A
+                    }
+
+                    1 {
+                        $Script:StatusEsSelectedSlot = [ActionSlot]::B
+                    }
+
+                    2 {
+                        $Script:StatusEsSelectedSlot = [ActionSlot]::C
+                    }
+
+                    3 {
+                        $Script:StatusEsSelectedSlot = [ActionSlot]::D
+                    }
+                }
+            }
+
+            38 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
+                If(($this.ActiveChevronIndex - 1) -LT 0) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex = 3
+
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
+                } Elseif(($this.ActiveChevronIndex - 1) -GE 0) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex--
+
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
+
+            40 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
+                If(($this.ActiveChevronIndex + 1) -GT 3) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex = 0
+
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
+                } Elseif(($this.ActiveChevronIndex + 1) -LE 3) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
+                    
+                    $this.ActiveChevronIndex++
+
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
+                }
+
+                $this.PlayerChevronDirty = $true
+            }
         }
     }
 
