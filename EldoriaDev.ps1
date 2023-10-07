@@ -21589,7 +21589,7 @@ Class StatusHudWindow : WindowBase {
     Static [String]$LineBlankStr = '                                                                              '
 
     Static [ATCoordinates]$StatLineDrawCoordinates      = [ATCoordinates]::new(2, 3)
-    Static [ATCoordinates]$StatSeparatorDrawCoordinates = [ATCoordinates]::new(2, 20)
+    Static [ATCoordinates]$StatSeparatorDrawCoordinates = [ATCoordinates]::new(2, ([StatusHudWindow]::WindowBRColumn - 48))
 
     [Boolean]$StatLineDrawDirty = $true
 
@@ -21700,7 +21700,7 @@ Class StatusHudWindow : WindowBase {
                         [ATDecorationNone]::new(),
                         [ATCoordinatesNone]::new()
                     ),
-                    "$($Script:ThePlayer.Name)    ",
+                    "$($Script:ThePlayer.Name)",
                     $false
                 ),
                 [ATString]::new(
@@ -21708,7 +21708,7 @@ Class StatusHudWindow : WindowBase {
                         [CCTextDefault24]::new(),
                         [ATBackgroundColor24None]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinatesNone]::new()
+                        [StatusHudWindow]::StatSeparatorDrawCoordinates
                     ),
                     "$($AtkDispStr)",
                     $false
