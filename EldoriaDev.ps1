@@ -22227,6 +22227,88 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
     Static [String]$WindowBorderVertical   = '|'
 
+    Static [String]$IChevronCharacter           = '>'
+    Static [String]$IChevronBlankCharacter      = ' '
+    Static [String]$PagingChevronRightCharacter = '>'
+    Static [String]$PagingChevronLeftCharacter  = '<'
+    Static [String]$PagingCheronBlankCharacter  = ' '
+    
+    Static [String]$DiLineHorizontalString = '----------------------------------------------------------'
+    Static [String]$ZpLineBlank            = '                                                          '
+
+    Static [ATString]$PagingChevronRight = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCAppleYellowLight24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(5, 78)
+        ),
+        [StatusTechniqueInventoryWindow]::PagingChevronRightCharacter,
+        $true
+    )
+    Static [ATString]$PagingChevronLeft = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCAppleYellowLight24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(5, 23)
+        ),
+        [StatusTechniqueInventoryWindow]::PagingChevronLeftCharacter,
+        $true
+    )
+    Static [ATString]$PagingChevronRightBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(5, 78)
+        ),
+        [StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter,
+        $true
+    )
+    Static [ATString]$PagingChevronLeftBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(5, 23)
+        ),
+        [StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter,
+        $true
+    )
+    Static [ATString]$DivLineHorizontal = [ATString]::new(
+        [ATStringPrefix]::new(
+            [CCTextDefault24]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinates]::new(13, 23)
+        ),
+        [StatusTechniqueInventoryWindow]::DivLineHorizontalString,
+        $true
+    )
+
+    Static [Boolean]$DebugMode = $false
+    
+    Static [String]$ZeroPagePrompt = 'You have no techniques in your inventory.'
+
+    [Boolean]$PlayerChevronDirty       = $true
+    [Boolean]$PagingChevronRightDirty  = $true
+    [Boolean]$PagingChevronLeftDirty   = $true
+    [Boolean]$ItemsListDirty           = $true
+    [Boolean]$CurrentPageDirty         = $true
+    [Boolean]$PlayerChevronisible      = $true
+    [Boolean]$PagingCheronRightVisible = $false
+    [Boolean]$PagingCheronLeftVisible  = $false
+    [Boolean]$ZeroPageActie            = $false
+    [Boolean]$BookDirty                = $true
+    [Boolean]$ActiveItemBlinking       = $false
+    [Boolean]$DivLineDirty             = $true
+    [Boolean]$ItemDescDirty            = $true
+    [Boolean]$ZpBlankedDirty           = $true
+    [Boolean]$ZpPromptDirty            = $true
+    
+    [Int]$ItemsPerPage
+
     StatusTechniqueInventoryWindow(): base() {
         $this.LeftTop     = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowLTRow, [StatusTechniqueInventoryWindow]::WindowLTColumn)
         $this.RightBottom = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowBRRow, [StatusTechniqueInventoryWindow]::WindowBRColumn)
