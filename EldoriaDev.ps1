@@ -22491,7 +22491,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [ATDecorationNone]::new(),
                             [ATCoordinates]::new($this.RightBottom.Row - 1, $this.LeftTop.Column + 2)
                         ),
-                        "PWR: $($this.PageRefs[$this.ActiveIChevronIndex].EffectValue)   MP COST: $("{0:d2}" -F $this.PageRefs[$this.ActiveIChevronIndex].MpCost)   CHANCE: $("{0:f1}" -F $this.PageRefs[$this.ActiveIChevronIndex].Chance)",
+                        "PWR: $($this.PageRefs[$this.ActiveIChevronIndex].EffectValue)   MP COST: $("{0:d2}" -F $this.PageRefs[$this.ActiveIChevronIndex].MpCost)   CHANCE: $("{0:f0}" -F ($this.PageRefs[$this.ActiveIChevronIndex].Chance * 100))%",
                         $true
                     )
                     Write-Host "$($b.ToAnsiControlSequenceString())"
@@ -26522,6 +26522,7 @@ $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 
+$Script:ThePlayer.ActionInventory.Add([BASwordStab]::new())
 $Script:ThePlayer.ActionInventory.Add([BAPunch]::new())
 $Script:ThePlayer.ActionInventory.Add([BAKick]::new())
 $Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new())
