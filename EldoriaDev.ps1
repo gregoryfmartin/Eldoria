@@ -22441,7 +22441,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
                         Blink = $true
                     }
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCAppleMintLight24]::new()
                     
                     $this.ItemsListDirty     = $true
                     $this.ActiveItemBlinking = $true
