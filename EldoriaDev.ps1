@@ -22245,7 +22245,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$PagingChevronLeftCharacter  = '<'
     Static [String]$PagingCheronBlankCharacter  = ' '
     
-    Static [String]$DiLineHorizontalString = '----------------------------------------------------------'
+    Static [String]$DivLineHorizontalString = '----------------------------------------------------------'
     Static [String]$ZpLineBlank            = '                                                          '
 
     Static [ATString]$PagingChevronRight = [ATString]::new(
@@ -23044,7 +23044,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
     [Void]ConfigureDivLine() {
         [StatusTechniqueInventoryWindow]::DivLineHorizontal.Prefix.Coordinates = [ATCoordinates]::new(
-            $this.RightBottom.Row - 3,
+            $this.RightBottom.Row - 4,
             $this.LeftTop.Column + 1
         )
     }
