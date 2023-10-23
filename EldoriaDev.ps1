@@ -3136,6 +3136,8 @@ Class CCAppleVGreyADark24 : ConsoleColor24 {
 
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
+Class CCListItemCurrentHighlight24 : CCAppleNPinkLight24 {}
+
 Class ATForegroundColor24None : ATForegroundColor24 {
     ATForegroundColor24None(): base([CCBlack24]::new()) {}
 
@@ -19393,7 +19395,7 @@ Class InventoryWindow : WindowBase {
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
                     Blink = $true
                 }
-                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
 
                 $this.ItemsListDirty     = $true
                 $this.ActiveItemBlinking = $true
@@ -22441,7 +22443,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
                         Blink = $true
                     }
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
                     
                     $this.ItemsListDirty     = $true
                     $this.ActiveItemBlinking = $true
