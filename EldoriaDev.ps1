@@ -22859,13 +22859,14 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
     [Void]WriteZeroInventoryPage() {
         If($this.ZpBlankedDirty -EQ $true) {
-            Foreach($a in 2..19) {
+            Foreach($a in 5..15) {
                 [ATString]$b = [ATString]::new(
                     [ATStringPrefix]::new(
                         [CCTextDefault24]::new(),
-                        [ATBackgroundColor24None]::new(),
+                        # [ATBackgroundColor24None]::new(),
+                        [CCAppleBlueDark24]::new(),
                         [ATDecorationNone]::new(),
-                        [ATCoordinates]::new($a, 2)
+                        [ATCoordinates]::new($a, ($this.LeftTop.Column + 1))
                     ),
                     [StatusTechniqueInventoryWindow]::ZpLineBlank,
                     $true
@@ -22881,8 +22882,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new(
-                        $this.Height / 2,
-                        ($this.Width / 2) - ([StatusTechniqueInventoryWindow]::ZeroPagePrompt.Length / 2)
+                        $this.LeftTop.Row + ($this.Height / 2),
+                        $this.LeftTop.Column + (($this.Width / 2) - ([StatusTechniqueInventoryWindow]::ZeroPagePrompt.Length / 2))
                     )
                 ),
                 [StatusTechniqueInventoryWindow]::ZeroPagePrompt,
