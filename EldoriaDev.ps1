@@ -22255,7 +22255,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [CCAppleYellowLight24]::new(),
             [ATBackgroundColor24None]::new(),
             [ATDecorationNone]::new(),
-            [ATCoordinates]::new(5, 78)
+            [ATCoordinatesNone]::new()
         ),
         [StatusTechniqueInventoryWindow]::PagingChevronRightCharacter,
         $true
@@ -22265,7 +22265,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [CCAppleYellowLight24]::new(),
             [ATBackgroundColor24None]::new(),
             [ATDecorationNone]::new(),
-            [ATCoordinates]::new(5, 23)
+            [ATCoordinatesNone]::new()
         ),
         [StatusTechniqueInventoryWindow]::PagingChevronLeftCharacter,
         $true
@@ -22275,7 +22275,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [ATForegroundColor24None]::new(),
             [ATBackgroundColor24None]::new(),
             [ATDecorationNone]::new(),
-            [ATCoordinates]::new(5, 78)
+            [ATCoordinatesNone]::new()
         ),
         [StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter,
         $true
@@ -22285,7 +22285,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [ATForegroundColor24None]::new(),
             [ATBackgroundColor24None]::new(),
             [ATDecorationNone]::new(),
-            [ATCoordinates]::new(5, 23)
+            [ATCoordinatesNone]::new()
         ),
         [StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter,
         $true
@@ -22295,7 +22295,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [CCTextDefault24]::new(),
             [ATBackgroundColor24None]::new(),
             [ATDecorationNone]::new(),
-            [ATCoordinates]::new(13, 23)
+            [ATCoordinatesNone]::new()
         ),
         [StatusTechniqueInventoryWindow]::DivLineHorizontalString,
         $true
@@ -22459,7 +22459,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [CCTextDefault24]::new(),
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new($this.RightBottom.Row - 2, $this.LeftTop.Column + 1)
+                            [ATCoordinates]::new($this.RightBottom.Row - 3, $this.LeftTop.Column + 1)
                         ),
                         [StatusTechniqueInventoryWindow]::DescLineBlank,
                         $true
@@ -22469,7 +22469,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [CCTextDefault24]::new(),
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new($this.RightBottom.Row - 2, $this.LeftTop.Column + 2)
+                            [ATCoordinates]::new($this.RightBottom.Row - 3, $this.LeftTop.Column + 2)
                         ),
                         $this.PageRefs[$this.ActiveIChevronIndex].Description,
                         $true
