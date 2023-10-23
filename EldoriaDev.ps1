@@ -22438,7 +22438,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     }
                 }
                 If($this.ActiveItemBlinking -EQ $false) {
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decoration = [ATDecoration]@{
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
                         Blink = $true
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
@@ -22457,7 +22457,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [CCTextDefault24]::new(),
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new(15, 4)
+                            [ATCoordinates]::new($this.RightBottom.Row - 2, $this.LeftTop.Column + 1)
                         ),
                         [StatusTechniqueInventoryWindow]::DescLineBlank,
                         $true
@@ -22467,7 +22467,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [CCTextDefault24]::new(),
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new(15, 4)
+                            [ATCoordinates]::new($this.RightBottom.Row - 2, $this.LeftTop.Column + 2)
                         ),
                         $this.PageRefs[$this.ActiveIChevronIndex].Description,
                         $true
@@ -22477,7 +22477,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [CCTextDefault24]::new(),
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new(16, 4)
+                            [ATCoordinates]::new($this.RightBottom.Row - 1, $this.LeftTop.Column + 1)
                         ),
                         [StatusTechniqueInventoryWindow]::DescLineBlank,
                         $true
@@ -22487,7 +22487,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                             [CCTextDefault24]::new(),
                             [ATBackgroundColor24None]::new(),
                             [ATDecorationNone]::new(),
-                            [ATCoordinates]::new(16, 4)
+                            [ATCoordinates]::new($this.RightBottom.Row - 1, $this.LeftTop.Column + 2)
                         ),
                         "PWR: $($this.PageRefs[$this.ActiveIChevronIndex].EffectValue) MP COST: $("{0:d2}" -F $this.PageRefs[$this.ActiveIChevronIndex].MpCost) CHANCE: $("{0:f1}" -F $this.PageRefs[$this.ActiveIChevronIndex].Chance)",
                         $true
@@ -26519,6 +26519,13 @@ $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+
+$Script:ThePlayer.ActionInventory.Add([BAPunch]::new())
+$Script:ThePlayer.ActionInventory.Add([BAKick]::new())
+$Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new())
+$Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new())
+$Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new())
+$Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new())
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
