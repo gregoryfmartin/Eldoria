@@ -26529,6 +26529,13 @@ $Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new())
 $Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new())
 $Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new())
 $Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new())
+$Script:ThePlayer.ActionInventory.Add([BASwordStab]::new())
+$Script:ThePlayer.ActionInventory.Add([BAPunch]::new())
+$Script:ThePlayer.ActionInventory.Add([BAKick]::new())
+$Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new())
+$Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new())
+$Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new())
+$Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new())
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
