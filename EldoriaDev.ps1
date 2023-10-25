@@ -23030,14 +23030,14 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Void]ConfigurePagingChevrons() {
         [StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates = [ATCoordinates]::new(
             $this.LeftTop.Row + 1,
-            $this.LeftTop.Column + 1
+            $this.RightBottom.Column - 1
         )
         [StatusTechniqueInventoryWindow]::PagingChevronRightBlank.Prefix.Coordinates = [ATCoordinates]::new(
             [StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates
         )
         [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates = [ATCoordinates]::new(
             $this.LeftTop.Row + 1,
-            $this.RightBottom.Column - 1
+            $this.LeftTop.Column + 1
         )
         [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.Prefix.Coordinates = [ATCoordinates]::new(
             [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates
