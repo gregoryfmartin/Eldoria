@@ -22305,22 +22305,22 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     
     Static [String]$ZeroPagePrompt = 'You have no techniques in your inventory.'
 
-    [Boolean]$PlayerChevronDirty       = $true
-    [Boolean]$PagingChevronRightDirty  = $true
-    [Boolean]$PagingChevronLeftDirty   = $true
-    [Boolean]$ItemsListDirty           = $true
-    [Boolean]$CurrentPageDirty         = $true
-    [Boolean]$PlayerChevronisible      = $true
-    [Boolean]$PagingCheronRightVisible = $false
-    [Boolean]$PagingCheronLeftVisible  = $false
-    [Boolean]$ZeroPageActive           = $false
-    [Boolean]$BookDirty                = $true
-    [Boolean]$ActiveItemBlinking       = $false
-    [Boolean]$DivLineDirty             = $true
-    [Boolean]$ItemDescDirty            = $true
-    [Boolean]$ZpBlankedDirty           = $true
-    [Boolean]$ZpPromptDirty            = $true
-    [Boolean]$IsActive                 = $true
+    [Boolean]$PlayerChevronDirty        = $true
+    [Boolean]$PagingChevronRightDirty   = $true
+    [Boolean]$PagingChevronLeftDirty    = $true
+    [Boolean]$ItemsListDirty            = $true
+    [Boolean]$CurrentPageDirty          = $true
+    [Boolean]$PlayerChevronisible       = $true
+    [Boolean]$PagingChevronRightVisible = $false
+    [Boolean]$PagingChevronLeftVisible  = $false
+    [Boolean]$ZeroPageActive            = $false
+    [Boolean]$BookDirty                 = $true
+    [Boolean]$ActiveItemBlinking        = $false
+    [Boolean]$DivLineDirty              = $true
+    [Boolean]$ItemDescDirty             = $true
+    [Boolean]$ZpBlankedDirty            = $true
+    [Boolean]$ZpPromptDirty             = $true
+    [Boolean]$IsActive                  = $true
     
     [Int]$ItemsPerPage            = 10
     [Int]$NumPages                = 1
@@ -22394,7 +22394,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         }
                         If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
                             Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
-                            $this.PagingChevronRightDitry = $false
+                            $this.PagingChevronRightDirty = $false
                         }
                     } Elseif($this.CurrentPage -GT 1 -AND $this.CurrentPage -LT $this.NumPages) {
                         If($this.PagingChevronLeftVisible -EQ $false) {
