@@ -23087,7 +23087,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         )
         [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates = [ATCoordinates]::new(
             $this.LeftTop.Row + 1,
-            $this.LeftTop.Column + 1
+            $this.LeftTop.Column + 2
         )
         [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.Prefix.Coordinates = [ATCoordinates]::new(
             [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates
