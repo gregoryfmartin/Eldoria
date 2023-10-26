@@ -2147,6 +2147,7 @@ $Script:TheGlobalStateBlockTable = @{
                 If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
                     $Script:TheStatusTechInventoryWindow.IsActive = $false
                 }
+                $Script:TheStatusTechSelectionWindow.Draw()
                 $Script:TheStatusTechSelectionWindow.HandleInput()
                 $Script:TheStatusTechSelectionWindow.Draw()
             }
@@ -2158,6 +2159,7 @@ $Script:TheGlobalStateBlockTable = @{
                 If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
                     $Script:TheStatusTechInventoryWindow.IsActive = $true
                 }
+                $Script:TheStatusTechInventoryWindow.Draw()
                 $Script:TheStatusTechInventoryWindow.HandleInput()
                 $Script:TheStatusTechInventoryWindow.Draw()
             }
