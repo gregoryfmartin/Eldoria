@@ -2159,6 +2159,8 @@ $Script:TheGlobalStateBlockTable = @{
                 If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
                     $Script:TheStatusTechInventoryWindow.IsActive = $true
                 }
+                $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
+                $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
                 $Script:TheStatusTechInventoryWindow.Draw()
                 $Script:TheStatusTechInventoryWindow.HandleInput()
                 $Script:TheStatusTechInventoryWindow.Draw()
@@ -22169,8 +22171,8 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 }
             } Else {
                 Foreach($c in $this.Chevrons) {
-                    $c.Item1.Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
-                    Write-Hosr "$($c.Item1.ToAnsiControlSequenceString())"
+                    $c.Item1.Prefix.ForegroundColor = [CCAppleNOrangeLight24]::new()
+                    Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
                 }
             }
             # Foreach($c in $this.Chevrons) {
