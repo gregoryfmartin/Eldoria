@@ -22298,7 +22298,9 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$PagingCheronBlankCharacter  = ' '
     
     Static [String]$DivLineHorizontalString = '----------------------------------------------------------'
-    Static [String]$ZpLineBlank            = '                                                          '
+    Static [String]$ZpLineBlank             = '                                                          '
+    
+    Static [String]$DescLineBlank = '                                                          '
 
     Static [ATString]$PagingChevronRight = [ATString]::new(
         [ATStringPrefix]::new(
