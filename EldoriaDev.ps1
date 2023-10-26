@@ -22364,7 +22364,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Boolean]$PagingChevronLeftDirty    = $true
     [Boolean]$ItemsListDirty            = $true
     [Boolean]$CurrentPageDirty          = $true
-    [Boolean]$PlayerChevronisible       = $true
+    [Boolean]$PlayerChevronVisible      = $true
     [Boolean]$PagingChevronRightVisible = $false
     [Boolean]$PagingChevronLeftVisible  = $false
     [Boolean]$ZeroPageActive            = $false
@@ -22726,7 +22726,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 2, $this.LeftTop.Column + 1)
+                    [ATCoordinates]::new($this.LeftTop.Row + 2, $this.LeftTop.Column + 2)
                 ),
                 '               ',
                 $true
@@ -22738,7 +22738,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 3, $this.LeftTop.Column + 1)
+                    [ATCoordinates]::new($this.LeftTop.Row + 3, $this.LeftTop.Column + 2)
                 ),
                 '               ',
                 $true
@@ -22750,7 +22750,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 4, $this.LeftTop.Column + 1)
+                    [ATCoordinates]::new($this.LeftTop.Row + 4, $this.LeftTop.Column + 2)
                 ),
                 '               ',
                 $true
@@ -22762,7 +22762,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 5, $this.LeftTop.Column + 1)
+                    [ATCoordinates]::new($this.LeftTop.Row + 5, $this.LeftTop.Column + 2)
                 ),
                 '               ',
                 $true
@@ -22774,7 +22774,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 6, $this.LeftTop.Column + 1)
+                    [ATCoordinates]::new($this.LeftTop.Row + 6, $this.LeftTop.Column + 2)
                 ),
                 '               ',
                 $true
@@ -22786,7 +22786,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 2, $this.RightBottom.Column - 17)
+                    [ATCoordinates]::new($this.LeftTop.Row + 2, $this.RightBottom.Column - 16)
                 ),
                 '               ',
                 $true
@@ -22798,7 +22798,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 3, $this.RightBottom.Column - 17)
+                    [ATCoordinates]::new($this.LeftTop.Row + 3, $this.RightBottom.Column - 16)
                 ),
                 '               ',
                 $true
@@ -22810,7 +22810,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 4, $this.RightBottom.Column - 17)
+                    [ATCoordinates]::new($this.LeftTop.Row + 4, $this.RightBottom.Column - 16)
                 ),
                 '               ',
                 $true
@@ -22822,7 +22822,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 5, $this.RightBottom.Column - 17)
+                    [ATCoordinates]::new($this.LeftTop.Row + 5, $this.RightBottom.Column - 16)
                 ),
                 '               ',
                 $true
@@ -22834,7 +22834,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATForegroundColor24None]::new(),
                     [ATBackgroundColor24None]::new(),
                     [ATDecorationNone]::new(),
-                    [ATCoordinates]::new($this.LeftTop.Row + 6, $this.RightBottom.Column - 17)
+                    [ATCoordinates]::new($this.LeftTop.Row + 6, $this.RightBottom.Column - 16)
                 ),
                 '               ',
                 $true
