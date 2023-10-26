@@ -61,6 +61,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [Double]                          $Script:AffinityMultNeg              = -0.75
 [Double]                          $Script:AffinityMultPos              = 1.6
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
+[StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
 
 Enum GameStatePrimary {
     SplashScreenA
@@ -218,6 +219,11 @@ Enum BattleActionResultType {
     FailedElementalMatch
     FailedNoUsesRemaining
     FailedNotEnoughMp
+}
+
+Enum StatusScreenMode {
+    EquippedTechSelection
+    TechInventorySelection
 }
 
 [ScriptBlock]$Script:BaPhysicalCalc = {
@@ -2115,6 +2121,10 @@ $Script:TheGlobalStateBlockTable = @{
     }
 
     [GameStatePrimary]::PlayerStatusScreen = {
+        # FOR TESTING PUROSES ONLY
+        Write-Host "$([ATControlSequences]::CursorHide)"
+        $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
+
         If($null -EQ $Script:TheStatusHudWindow) {
             $Script:TheStatusHudWindow = [StatusHudWindow]::new()
         }
@@ -2129,9 +2139,34 @@ $Script:TheGlobalStateBlockTable = @{
         $Script:TheStatusTechSelectionWindow.Draw()
         $Script:TheStatusTechInventoryWindow.Draw()
 
-        # FOR TESTING PUROSES ONLY
-        Write-Host "$([ATControlSequences]::CursorHide)"
-        $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
+        Switch($Script:StatusScreenMode) {
+            ([StatusScreenMode]::EquippedTechSelection) {
+                If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
+                    $Script:TheStatusTechSelectionWindow.IsActive = $true
+                }
+                If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
+                    $Script:TheStatusTechInventoryWindow.IsActive = $false
+                }
+                $Script:TheStatusTechSelectionWindow.HandleInput()
+                $Script:TheStatusTechSelectionWindow.Draw()
+            }
+
+            ([StatusScreenMode]::TechInventorySelection) {
+                If($Script:TheStatusTechSelectionWindow.IsActive -NE $false) {
+                    $Script:TheStatusTechSelectionWindow.IsActive = $false
+                }
+                If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
+                    $Script:TheStatusTechInventoryWindow.IsActive = $true
+                }
+                $Script:TheStatusTechInventoryWindow.HandleInput()
+                $Script:TheStatusTechInventoryWindow.Draw()
+            }
+
+            Default {
+                # Do nothing
+                # Because I'm a fucking genius
+            }
+        }
     }
 
     [GameStatePrimary]::Cleanup = {}
@@ -21901,6 +21936,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
     [Boolean]$ActionBDrawDirty   = $true
     [Boolean]$ActionCDrawDirty   = $true
     [Boolean]$ActionDDrawDirty   = $true
+    [Boolean]$IsActive           = $true
 
     [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
 
@@ -22124,9 +22160,20 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             $this.ActionDDrawDirty = $false
         }
         If($this.PlayerChevronDirty -EQ $true) {
-            Foreach($c in $this.Chevrons) {
-                Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            If($this.IsActive -EQ $true) {
+                Foreach($c in $this.Chevrons) {
+                    $c.Item1.Prefix.ForegroundColor = [CCAppleNGreenLight24]::new()
+                    Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+                }
+            } Else {
+                Foreach($c in $this.Chevrons) {
+                    $c.Item1.Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                    Write-Hosr "$($c.Item1.ToAnsiControlSequenceString())"
+                }
             }
+            # Foreach($c in $this.Chevrons) {
+            #     Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            # }
             $this.PlayerChevronDirty = $false
         }
     }
@@ -22154,6 +22201,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                         $Script:StatusEsSelectedSlot = [ActionSlot]::D
                     }
                 }
+                $Script:StatusScreenMode = [StatusScreenMode]::TechInventorySelection
             }
 
             38 {
@@ -22320,7 +22368,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Boolean]$ItemDescDirty             = $true
     [Boolean]$ZpBlankedDirty            = $true
     [Boolean]$ZpPromptDirty             = $true
-    [Boolean]$IsActive                  = $true
+    [Boolean]$IsActive                  = $false
     
     [Int]$ItemsPerPage            = 10
     [Int]$NumPages                = 1
