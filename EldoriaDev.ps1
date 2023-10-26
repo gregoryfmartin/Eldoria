@@ -22580,7 +22580,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 3, $this.LeftTop.Column + 1)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22593,7 +22593,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 4, $this.LeftTop.Column + 1)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22606,7 +22606,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 5, $this.LeftTop.Column + 1)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22619,7 +22619,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 6, $this.LeftTop.Column + 1)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22632,7 +22632,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 2, $this.RightBottom.Column - 17)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22645,7 +22645,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 3, $this.RightBottom.Column - 17)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22658,7 +22658,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 4, $this.RightBottom.Column - 17)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22671,7 +22671,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 5, $this.RightBottom.Column - 17)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
@@ -22684,7 +22684,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     [ATDecorationNone]::new(),
                     [ATCoordinates]::new($this.LeftTop.Row + 6, $this.RightBottom.Column - 17)
                 ),
-                [StatusTechniqueInventoryWindow]::IChevronCharacter,
+                [StatusTechniqueInventoryWindow]::IChevronBlankCharacter,
                 $true
             ),
             $false
