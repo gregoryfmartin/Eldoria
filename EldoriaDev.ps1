@@ -61,6 +61,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [Double]                          $Script:AffinityMultNeg              = -0.75
 [Double]                          $Script:AffinityMultPos              = 1.6
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
+[BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
 
 Enum GameStatePrimary {
@@ -103,6 +104,11 @@ Enum ItemRemovalStatus {
     Success
     FailGeneral
     FailKeyItem
+}
+
+Enum ActionInvRemovalStatus {
+    Success
+    Fail
 }
 
 Enum BattleActionType {
@@ -3650,6 +3656,20 @@ Class BattleAction {
         $this.Chance      = $Chance
         $this.Description = $Description
     }
+
+    BattleAction(
+        [BattleAction]$Copy
+    ) {
+        $this.Name        = $Copy.Name
+        $this.Type        = $Copy.Type
+        $this.Effect      = $Copy.Effect
+        $this.PreCalc     = $Copy.PreCalc
+        $this.PostCalc    = $Copy.PostCalc
+        $this.MpCost      = $Copy.MpCost
+        $this.EffectValue = $Copy.EffectValue
+        $this.Chance      = $Copy.Chance
+        $this.Description = $Copy.Description
+    }
 }
 
 Class BattleActionResult {
@@ -5127,11 +5147,35 @@ Class Player : BattleEntity {
         Return $false
     }
 
+    [Boolean]IsActionInInventory(
+        [String]$ActionName
+    ) {
+        Foreach($a in $this.ActionInventory) {
+            If($a.Name -IEQ $ActionName) {
+                Return $true
+            }
+        }
+
+        Return $false
+    }
+
     [MapTileObject]GetItemReference(
         [String]$ItemName
     ) {
         Foreach($a in $this.Inventory) {
             If($a.Name -IEQ $ItemName) {
+                Return $a
+            }
+        }
+
+        Return $null
+    }
+
+    [BattleAction]GetActionInvReference(
+        [String]$ActionName
+    ) {
+        Foreach($a in $this.ActionInventory) {
+            If($a.Name -IEQ $ActionName) {
                 Return $a
             }
         }
@@ -5175,6 +5219,37 @@ Class Player : BattleEntity {
 
         $this.Inventory.RemoveAt($Index)
         Return [ItemRemovalStatus]::Success
+    }
+
+    [ActionInvRemovalStatus]RemoveActionInvItemByName(
+        [String]$ActionName
+    ) {
+        $c = 0
+
+        Foreach($a in $this.ActionInventory) {
+            If($a.Name -IEQ $ActionName) {
+                $this.ActionInventory.RemoveAt($c)
+                Return [ActionInvRemovalStatus]::Success
+            }
+            $c++
+        }
+
+        Return [ActionInvRemovalStatus]::Fail
+    }
+
+    [ActionInvRemovalStatus]RemoveActionInItemByIndex(
+        [Int]$Index
+    ) {
+        [BattleAction]$a = $null
+
+        Try {
+            $a = $this.ActionInventory[$Index]
+        } Catch {
+            Return [ActionInvRemovalStatus]::Fail
+        }
+
+        $this.ActionInventory.RemoveAt($Index)
+        Return [ActionInvRemovalStatus]::Success
     }
 
     [Void]MapMoveNorth() {
@@ -5341,6 +5416,131 @@ Class Player : BattleEntity {
         [String]$SourceItemClass
     ) {
         Return ($SourceItemClass -IN $this.TargetOfFilter)
+    }
+}
+
+Class PlayerItemInventory {
+    [List[MapTileObject]]$Listing
+
+    [Boolean]IsItemInInventory(
+        [String]$ItemName
+    ) {
+        Foreach($a in $this.Listing) {
+            If($a.Name -IEQ $ItemName) {
+                Return $true
+            }
+        }
+
+        Return $false
+    }
+
+    [MapTileObject]GetItemReference(
+        [String]$ItemName
+    ) {
+        Foreach($a in $this.Inventory) {
+            If($a.Name -IEQ $ItemName) {
+                Return $a
+            }
+        }
+
+        Return $null
+    }
+
+    [ItemRemovalStatus]RemoveInventoryItemByName(
+        [String]$ItemName
+    ) {
+        [Int]$c = 0
+
+        Foreach($a in $this.Inventory) {
+            If($a.Name -IEQ $ItemName) {
+                If($a.KeyItem -EQ $true) {
+                    Return [ItemRemovalStatus]::FailKeyItem
+                }
+                $this.Listing.RemoveAt($c)
+                Return [ItemRemovalStatus]::Success
+            }
+            $c++
+        }
+
+        Return [ItemRemovalStatus]::FailGeneral
+    }
+
+    [ItemRemovalStatus]RemoveInventoryItemByIndex(
+        [Int]$Index
+    ) {
+        [MapTileObject]$a = $null
+
+        Try {
+            $a = $this.Listing[$Index]
+        } Catch {
+            Return [ItemRemovalStatus]::FailGeneral
+        }
+
+        If($a.KeyItem -EQ $true) {
+            Return [ItemRemovalStatus]::FailKeyItem
+        }
+
+        $this.Listing.RemoveAt($Index)
+        Return [ItemRemovalStatus]::Success
+    }
+}
+
+Class PlayerActionInventory {
+    [List[BattleAction]]$Listing
+
+    [Boolean]IsActionInInventory(
+        [String]$ActionName
+    ) {
+        Foreach($a in $this.Listing) {
+            If($a.Name -IEQ $ActionName) {
+                Return $true
+            }
+        }
+
+        Return $false
+    }
+
+    [BattleAction]GetActionReference(
+        [String]$ActionName
+    ) {
+        Foreach($a in $this.Listing) {
+            If($a.Name -IEQ $ActionName) {
+                Return $a
+            }
+        }
+
+        Return $null
+    }
+
+    [ActionInvRemovalStatus]RemoveActionByName(
+        [String]$ActionName
+    ) {
+        [Int]$c = 0
+
+        Foreach($a in $this.Listing) {
+            If($a.Name -IEQ $ActionName) {
+                $this.Listing.RemoveAt($c)
+                Return [ActionInvRemovalStatus]::Success
+            }
+            $c++
+        }
+
+        Return [ActionInvRemovalStatus]::Fail
+    }
+
+    [ActionInvRemovalStatus]RemoveActionByIndex(
+        [Int]$Index
+    ) {
+        [BattleAction]$a = $null
+
+        Try {
+            $a = $this.Listing[$Index]
+        } Catch {
+            Return [ActionInvRemovalStatus]::Fail
+        }
+
+        $this.Listing.RemoveAt($Index)
+        Return [ActionInvRemovalStatus]::Success
     }
 }
 
@@ -22987,6 +23187,22 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
+            13 {
+                # Get the item at the current Active IChevron Index and store it in the
+                # global variable
+                $Script:StatusIsSelected = $this.PageRefs[$this.ActiveIChevronIndex]
+
+                # Get a reference to the Action in the selected slot
+                [BattleAction]$EquippedAction = $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]
+
+                # Check the value of EquippedAction
+                If($null -EQ $EquippedAction) {
+                    # "Pop" the item from the list
+                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($this.PageRefs[$this.ActiveIChevronIndex])
+                    # [ActionInvRemovalStatus]$a = $Script:ThePlayer.RemoveActionInvItemByName($this.PageRefs[$this.])
+                }
+            }
+
             27 {
                 # TODO: Transition the game state back to the previous state
             }
