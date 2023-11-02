@@ -22534,6 +22534,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Boolean]$ZpBlankedDirty            = $true
     [Boolean]$ZpPromptDirty             = $true
     [Boolean]$IsActive                  = $false
+    [Boolean]$IsBlanked                 = $false
     
     [Int]$ItemsPerPage            = 10
     [Int]$NumPages                = 1
@@ -22575,6 +22576,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.IsActive -EQ $true) {
+            $this.IsBlanked = $false
             If($this.BookDirty -EQ $true) {
                 $this.CalculateNumPages()
                 $this.BookDirty = $false
@@ -22712,6 +22714,23 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     Write-Host "$($f.ToAnsiControlSequenceString())"
                     Write-Host "$($e.ToAnsiControlSequenceString())"
                 }
+            }
+        } Else {
+            If($this.IsBlanked -EQ $false) {
+                Foreach($Row in 5..15) {
+                    [ATString]$a = [ATString]::new(
+                        [ATStringPrefix]::new(
+                            [ATForegroundColor24None]::new(),
+                            [ATBackgroundColor24None]::new(),
+                            [ATDecorationNone]::new(),
+                            [ATCoordinates]::new($Row, ($this.LeftTop.Column + 1))
+                        ),
+                        [StatusTechniqueInventoryWindow]::ZpLineBlank,
+                        $true
+                    )
+                    Write-Host "$($a.ToAnsiControlSequenceString())"
+                }
+                $this.IsBlanked = $true
             }
         }
     }
