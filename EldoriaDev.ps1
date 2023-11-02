@@ -1384,7 +1384,7 @@ Enum StatusScreenMode {
     Inventory       = [List[MapTileObject]]::new()
     TargetOfFilter  = [List[String]]::new()
     Affinity        = [BattleActionType]::ElementalFire
-    ActionInventory = [List[BattleAction]]::new()
+    ActionInventory = [PlayerActionInventory]::new()
 }
 
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete' -PercentComplete -1
@@ -2127,7 +2127,6 @@ $Script:TheGlobalStateBlockTable = @{
     }
 
     [GameStatePrimary]::PlayerStatusScreen = {
-        # FOR TESTING PUROSES ONLY
         Write-Host "$([ATControlSequences]::CursorHide)"
         $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
 
@@ -2153,7 +2152,9 @@ $Script:TheGlobalStateBlockTable = @{
                 If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
                     $Script:TheStatusTechInventoryWindow.IsActive = $false
                 }
-                $Script:TheStatusTechSelectionWindow.Draw()
+                $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
+                $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
+                $Script:TheStatusTechInventoryWindow.Draw()
                 $Script:TheStatusTechSelectionWindow.HandleInput()
                 $Script:TheStatusTechSelectionWindow.Draw()
             }
@@ -5081,14 +5082,14 @@ Class Player : BattleEntity {
     [ATCoordinates]$MapCoordinates
     [List[MapTileObject]]$Inventory
     [List[String]]$TargetOfFilter
-    [List[BattleAction]]$ActionInventory
+    [PlayerActionInventory]$ActionInventory
 
     Player(): base() {
         $this.CurrentGold     = 0
         $this.MapCoordinates  = [ATCoordinates]::new(0, 0)
         $this.Inventory       = [List[MapTileObject]]::new()
         $this.TargetOfFilter  = [List[String]]::new()
-        $this.ActionInventory = [List[BattleAction]]::new()
+        $this.ActionInventory = [PlayerActionInventory]::new()
     }
 
     Player(
@@ -5101,7 +5102,7 @@ Class Player : BattleEntity {
         $this.MapCoordinates  = $MapCoordinates
         $this.Inventory       = $Inventory
         $this.TargetOfFilter  = [List[String]]::new()
-        $this.ActionInventory = [List[BattleAction]]::new()
+        $this.ActionInventory = [PlayerActionInventory]::new()
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
@@ -5128,7 +5129,7 @@ Class Player : BattleEntity {
         $this.MapCoordinates  = [ATCoordinates]::new(0, 0)
         $this.Inventory       = [List[MapTileObject]]::new()
         $this.TargetOfFilter  = [List[String]]::new()
-        $this.ActionInventory = [List[BattleAction]]::new()
+        $this.ActionInventory = [PlayerActionInventory]::new()
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
@@ -5147,35 +5148,11 @@ Class Player : BattleEntity {
         Return $false
     }
 
-    [Boolean]IsActionInInventory(
-        [String]$ActionName
-    ) {
-        Foreach($a in $this.ActionInventory) {
-            If($a.Name -IEQ $ActionName) {
-                Return $true
-            }
-        }
-
-        Return $false
-    }
-
     [MapTileObject]GetItemReference(
         [String]$ItemName
     ) {
         Foreach($a in $this.Inventory) {
             If($a.Name -IEQ $ItemName) {
-                Return $a
-            }
-        }
-
-        Return $null
-    }
-
-    [BattleAction]GetActionInvReference(
-        [String]$ActionName
-    ) {
-        Foreach($a in $this.ActionInventory) {
-            If($a.Name -IEQ $ActionName) {
                 Return $a
             }
         }
@@ -5219,37 +5196,6 @@ Class Player : BattleEntity {
 
         $this.Inventory.RemoveAt($Index)
         Return [ItemRemovalStatus]::Success
-    }
-
-    [ActionInvRemovalStatus]RemoveActionInvItemByName(
-        [String]$ActionName
-    ) {
-        $c = 0
-
-        Foreach($a in $this.ActionInventory) {
-            If($a.Name -IEQ $ActionName) {
-                $this.ActionInventory.RemoveAt($c)
-                Return [ActionInvRemovalStatus]::Success
-            }
-            $c++
-        }
-
-        Return [ActionInvRemovalStatus]::Fail
-    }
-
-    [ActionInvRemovalStatus]RemoveActionInItemByIndex(
-        [Int]$Index
-    ) {
-        [BattleAction]$a = $null
-
-        Try {
-            $a = $this.ActionInventory[$Index]
-        } Catch {
-            Return [ActionInvRemovalStatus]::Fail
-        }
-
-        $this.ActionInventory.RemoveAt($Index)
-        Return [ActionInvRemovalStatus]::Success
     }
 
     [Void]MapMoveNorth() {
@@ -5486,7 +5432,7 @@ Class PlayerItemInventory {
 }
 
 Class PlayerActionInventory {
-    [List[BattleAction]]$Listing
+    [List[BattleAction]]$Listing = [List[BattleAction]]::new()
 
     [Boolean]IsActionInInventory(
         [String]$ActionName
@@ -5541,6 +5487,19 @@ Class PlayerActionInventory {
 
         $this.Listing.RemoveAt($Index)
         Return [ActionInvRemovalStatus]::Success
+    }
+
+    [Boolean]Add(
+        [BattleAction]$ActionToAdd
+    ) {
+        [Boolean]$ActionAlreadyListed = $this.IsActionInInventory($ActionToAdd.Name)
+
+        If($ActionAlreadyListed -EQ $true) {
+            Return $false
+        }
+        $this.Listing.Add([BattleAction]::new($ActionToAdd))
+
+        Return $true
     }
 }
 
@@ -23043,7 +23002,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     }
 
     [Void]CalculateNumPages() {
-        $pp = $Script:ThePlayer.ActionInventory.Count / $this.ItemsPerPage
+        $pp = $Script:ThePlayer.ActionInventory.Listing.Count / $this.ItemsPerPage
         If($pp -LT 1) {
             $this.NumPages = 1
         } Else {
@@ -23087,9 +23046,9 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $re                  = 10
             
             Try {
-                $this.PageRefs = $Script:ThePlayer.ActionInventory.GetRange($rs, $re)
+                $this.PageRefs = $Script:ThePlayer.ActionInventory.Listing.GetRange($rs, $re)
             } Catch {
-                $this.PageRefs = $Script:ThePlayer.ActionInventory.GetRange($rs, ($Script:ThePlayer.ActionInventory.Count - $rs))
+                $this.PageRefs = $Script:ThePlayer.ActionInventory.Listing.GetRange($rs, ($Script:ThePlayer.ActionInventory.Listing.Count - $rs))
             }
 
             $this.CreateItemLabels()
@@ -23195,16 +23154,25 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 # Get a reference to the Action in the selected slot
                 [BattleAction]$EquippedAction = $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]
 
-                # Check the value of EquippedAction
+                # Check to see if the selected equipped slot is null or not
                 If($null -EQ $EquippedAction) {
-                    # "Pop" the item from the list
-                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($this.PageRefs[$this.ActiveIChevronIndex])
-                    # [ActionInvRemovalStatus]$a = $Script:ThePlayer.RemoveActionInvItemByName($this.PageRefs[$this.])
+                    # This is a "pop" action for the inventory item
+                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
+                    $Script:ThePlayer.ActionInventory.RemoveActionByName($Script:StatusIsSelected.Name)
+                } Else {
+                    # This is a "swap" action for the inventory item
+                    [Int]$RootCollectionIndex = $this.CurrentPage -EQ 1 ? $this.ActiveIChevronIndex : (($this.CurrentPage * $this.ItemsPerPage) + $this.ActiveIChevronIndex)
+                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
+                    $Script:ThePlayer.ActionInventory[$RootCollectionIndex] = [BattleAction]::new($EquippedAction)
                 }
+
+                # Change the mode
+                $Script:StatusScreenMode = [StatusScreenMode]::EquippedTechSelection
             }
 
             27 {
-                # TODO: Transition the game state back to the previous state
+                # Change the mode
+                $Script:StatusScreenMode = [StatusScreenMode]::EquippedTechSelection
             }
 
             38 {
@@ -26792,20 +26760,20 @@ $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 
-$Script:ThePlayer.ActionInventory.Add([BASwordStab]::new())
-$Script:ThePlayer.ActionInventory.Add([BAPunch]::new())
-$Script:ThePlayer.ActionInventory.Add([BAKick]::new())
-$Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new())
-$Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new())
-$Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new())
-$Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new())
-$Script:ThePlayer.ActionInventory.Add([BASwordStab]::new())
-$Script:ThePlayer.ActionInventory.Add([BAPunch]::new())
-$Script:ThePlayer.ActionInventory.Add([BAKick]::new())
-$Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new())
-$Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new())
-$Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new())
-$Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new())
+$Script:ThePlayer.ActionInventory.Add([BASwordStab]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAPunch]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAKick]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BASwordStab]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAPunch]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAKick]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
