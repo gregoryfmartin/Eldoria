@@ -2151,6 +2151,7 @@ $Script:TheGlobalStateBlockTable = @{
                 }
                 If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
                     $Script:TheStatusTechInventoryWindow.IsActive = $false
+                    $Script:TheStatusTechInventoryWindow.SetFlagsDirty()
                 }
                 $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
                 $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
@@ -23306,6 +23307,12 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $this.RightBottom.Row - 4,
             $this.LeftTop.Column + 1
         )
+    }
+
+    [Void]SetFlagsDirty() {
+        $this.BookDirty        = $true
+        $this.CurrentPageDirty = $true
+        $this.DivLineDirty     = $true
     }
 }
 
