@@ -2147,6 +2147,7 @@ $Script:TheGlobalStateBlockTable = @{
         Switch($Script:StatusScreenMode) {
             ([StatusScreenMode]::EquippedTechSelection) {
                 If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
+                    $Script:TheStatusTechSelectionWindow.SetAllActionDrawDirty()
                     $Script:TheStatusTechSelectionWindow.IsActive = $true
                 }
                 If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
@@ -23183,7 +23184,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     # This is a "swap" action for the inventory item
                     [Int]$RootCollectionIndex = $this.CurrentPage -EQ 1 ? $this.ActiveIChevronIndex : (($this.CurrentPage * $this.ItemsPerPage) + $this.ActiveIChevronIndex)
                     $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
-                    $Script:ThePlayer.ActionInventory[$RootCollectionIndex] = [BattleAction]::new($EquippedAction)
+                    $Script:ThePlayer.ActionInventory.Listing[$RootCollectionIndex] = [BattleAction]::new($EquippedAction)
                 }
 
                 # Change the mode
