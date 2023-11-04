@@ -22073,6 +22073,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
 
     Static [String]$PlayerChevronCharacter      = '>'
     Static [String]$PlayerChevronBlankCharacter = ' '
+    Static [String]$NameBlank = '               '
     
     Static [ATString]$PlayerChevron = [ATString]::new(
         [ATStringPrefix]::new(
@@ -22092,6 +22093,16 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             [ATCoordinatesNone]::new()
         ),
         [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter,
+        $true
+    )
+    Static [ATString]$BaNameBlank = [ATString]::new(
+        [ATStringPrefix]::new(
+            [ATForegroundColor24None]::new(),
+            [ATBackgroundColor24None]::new(),
+            [ATDecorationNone]::new(),
+            [ATCoordinatesNone]::new()
+        ),
+        [StatusTechniqueSelectionWindow]::NameBlank,
         $true
     )
 
@@ -22225,6 +22236,10 @@ Class StatusTechniqueSelectionWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.ActionADrawDirty -EQ $true) {
+            [StatusTechniqueSelectionWindow]::BaNameBlank.Prefix.Coordinates = [ATCoordinates]::new(
+                $this.ActionADrawCoordinates.Row,
+                $this.ActionADrawCoordinates.Column + 1
+            )
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item2,
@@ -22246,10 +22261,14 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 $true
             )
 
-            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionADrawDirty = $false
         }
         If($this.ActionBDrawDirty -EQ $true) {
+            [StatusTechniqueSelectionWindow]::BaNameBlank.Prefix.Coordinates = [ATCoordinates]::new(
+                $this.ActionBDrawCoordinates.Row,
+                $this.ActionBDrawCoordinates.Column + 1
+            )
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item2,
@@ -22271,10 +22290,14 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 $true
             )
 
-            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionBDrawDirty = $false
         }
         If($this.ActionCDrawDirty -EQ $true) {
+            [StatusTechniqueSelectionWindow]::BaNameBlank.Prefix.Coordinates = [ATCoordinates]::new(
+                $this.ActionCDrawCoordinates.Row,
+                $this.ActionCDrawCoordinates.Column + 1
+            )
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item2,
@@ -22296,10 +22319,14 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 $true
             )
 
-            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionCDrawDirty = $false
         }
         If($this.ActionDDrawDirty -EQ $true) {
+            [StatusTechniqueSelectionWindow]::BaNameBlank.Prefix.Coordinates = [ATCoordinates]::new(
+                $this.ActionDDrawCoordinates.Row,
+                $this.ActionDDrawCoordinates.Column + 1
+            )
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
                     $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item2,
@@ -22321,7 +22348,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 $true
             )
 
-            Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionDDrawDirty = $false
         }
         If($this.PlayerChevronDirty -EQ $true) {
@@ -23182,7 +23209,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     $Script:ThePlayer.ActionInventory.RemoveActionByName($Script:StatusIsSelected.Name)
                 } Else {
                     # This is a "swap" action for the inventory item
-                    [Int]$RootCollectionIndex = $this.CurrentPage -EQ 1 ? $this.ActiveIChevronIndex : (($this.CurrentPage * $this.ItemsPerPage) + $this.ActiveIChevronIndex)
+                    [Int]$RootCollectionIndex = $this.CurrentPage -EQ 1 ? $this.ActiveIChevronIndex : ((($this.CurrentPage - 1) * $this.ItemsPerPage) + $this.ActiveIChevronIndex)
                     $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
                     $Script:ThePlayer.ActionInventory.Listing[$RootCollectionIndex] = [BattleAction]::new($EquippedAction)
                 }
@@ -23314,6 +23341,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         $this.BookDirty        = $true
         $this.CurrentPageDirty = $true
         $this.DivLineDirty     = $true
+        $this.CurrentPage      = 1
     }
 }
 
@@ -26801,6 +26829,10 @@ $Script:ThePlayer.ActionInventory.Add([BAKarateChop]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BAKarateKick]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BAFlamePunch]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BAFlameKick]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BASeafoamBolt]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BATyphoon]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BATerraStrike]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BABoulderBash]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
