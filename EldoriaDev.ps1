@@ -22423,6 +22423,11 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 $Script:StatusScreenMode = [StatusScreenMode]::TechInventorySelection
             }
 
+            27 {
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+            }
+
             38 {
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
