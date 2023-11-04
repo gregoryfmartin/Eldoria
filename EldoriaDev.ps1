@@ -23224,6 +23224,17 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             38 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
                 If(($this.ActiveIChevronIndex -1) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
@@ -23244,6 +23255,17 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             40 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
@@ -23264,6 +23286,17 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             39 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+
                 If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
@@ -23284,6 +23317,17 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             37 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch [ServiceProcess.TimeoutException] {
+                    Write-Host 'Encountered a ServiceProcess.TimeoutException while trying to load the SFX file.'
+                } Catch [IO.FileNotFoundException] {
+                    Write-Host 'Encountered an IO.FileNotFoundException while trying to load the SFX file.'
+                } Catch [InvalidOperationException] {
+                    Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
+                }
+                
                 If(($this.ActiveIChevronIndex - 5) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
@@ -26833,6 +26877,10 @@ $Script:ThePlayer.ActionInventory.Add([BASeafoamBolt]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BATyphoon]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BATerraStrike]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BABoulderBash]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAIcicleStrike]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BAGaleStrike]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BARadiance]::new()) | Out-Null
+$Script:ThePlayer.ActionInventory.Add([BASunfire]::new()) | Out-Null
 
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
