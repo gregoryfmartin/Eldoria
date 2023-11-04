@@ -1416,6 +1416,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 [Boolean]$Script:GpsRestoredFromInvBackup = $true
 [Boolean]$Script:GpsRestoredFromBatBackup = $false
+[Boolean]$Script:GpsRestoredFromStaBackup = $false
 [Boolean]$Script:BattleCursorVisible      = $false
 
 $Script:BattleEncounterRegionTable = @{
@@ -2005,6 +2006,15 @@ $Script:TheCommandTable = @{
             )
         }
     }
+
+    'status' = {
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        
+        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        
+        $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
+    }
 }
 
 # GLOBAL STATE BLOCK TABLE DEFINITION
@@ -2049,6 +2059,23 @@ $Script:TheGlobalStateBlockTable = @{
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
             # and I really don't feel like trying to figure out how to grab the buffer manually
             $Script:GpsRestoredFromBatBackup             = $true
+            $Script:TheSceneWindow.SceneImageDirty       = $true
+            $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+            $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+            $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+            $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+            $Script:TheCommandWindow.CommandHistoryDirty = $true
+            $Script:TheMessageWindow.MessageADirty       = $true
+            $Script:TheMessageWindow.MessageBDirty       = $true
+            $Script:TheMessageWindow.MessageCDirty       = $true
+
+            Write-Host "$([ATControlSequences]::CursorShow)"
+        } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen -AND $Script:GpsRestoredFromStaBackup -EQ $false) {
+            $Script:TheBufferManager.RestoreBufferAToActive()
+            
+            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+            # and I really don't feel like trying to figure out how to grab the buffer manually
+            $Script:GpsRestoredFromStaBackup             = $true
             $Script:TheSceneWindow.SceneImageDirty       = $true
             $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
             $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
@@ -23327,7 +23354,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-                
+
                 If(($this.ActiveIChevronIndex - 5) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
@@ -26767,7 +26794,7 @@ Class GameCore {
         $this.LastFrameTime        = 0D
         $this.CurrentFrameTime     = 0D
         $this.FpsDelta             = [TimeSpan]::Zero
-        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
     }
 
     [Void]Run() {
