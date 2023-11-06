@@ -2035,6 +2035,15 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheBattleManager.Cleanup()
             $Script:TheBattleManager = $null
         }
+	If($null -NE $Script:TheStatusHudWindow) {
+	    $Script:TheStatusHudWindow = $null
+	}
+	If($null -NE $Script:TheStatusTechSelectionWindow) {
+	    $Script:TheStatusTechSelectionWindow = $null
+	}
+	If($null -NE $Script:TheStatusTechInventoryWindow) {
+	    $Script:TheStatusTechInventoryWindow = $null
+	}
 
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
@@ -2166,6 +2175,10 @@ $Script:TheGlobalStateBlockTable = @{
         If($null -EQ $Script:TheStatusTechInventoryWindow) {
             $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
         }
+
+	If($Script:GpsRestoredFromStaBackup -EQ $true) {
+	    $Script:GpsRestoredFromStaBackup = $false
+	}
 
         $Script:TheStatusHudWindow.Draw()
         $Script:TheStatusTechSelectionWindow.Draw()
