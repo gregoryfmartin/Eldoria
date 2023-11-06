@@ -1204,7 +1204,7 @@ Enum StatusScreenMode {
             }
         }
         [StatId]::MagicPoints = [BattleEntityProperty]@{
-            Base                = 5
+            Base                = 50
             BasePre             = 0
             BaseAugmentValue    = 0
             Max                 = 50
@@ -2008,6 +2008,15 @@ $Script:TheCommandTable = @{
     }
 
     'status' = {
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        
+        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        
+        $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
+    }
+    
+    'sta' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
