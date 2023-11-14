@@ -2015,7 +2015,7 @@ $Script:TheCommandTable = @{
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
     }
-    
+
     'sta' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
@@ -2044,15 +2044,15 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheBattleManager.Cleanup()
             $Script:TheBattleManager = $null
         }
-	If($null -NE $Script:TheStatusHudWindow) {
-	    $Script:TheStatusHudWindow = $null
-	}
-	If($null -NE $Script:TheStatusTechSelectionWindow) {
-	    $Script:TheStatusTechSelectionWindow = $null
-	}
-	If($null -NE $Script:TheStatusTechInventoryWindow) {
-	    $Script:TheStatusTechInventoryWindow = $null
-	}
+        If($null -NE $Script:TheStatusHudWindow) {
+            $Script:TheStatusHudWindow = $null
+        }
+        If($null -NE $Script:TheStatusTechSelectionWindow) {
+            $Script:TheStatusTechSelectionWindow = $null
+        }
+        If($null -NE $Script:TheStatusTechInventoryWindow) {
+            $Script:TheStatusTechInventoryWindow = $null
+        }
 
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
             $Script:TheBufferManager.RestoreBufferAToActive()
@@ -4124,7 +4124,7 @@ Class BAPyroblast : BattleAction {
 Class BAAshenNova : BattleAction {
     BAAshenNova() : base() {
         $this.Name        = 'Ashen Nova'
-        $this.Description = 'Reminds me of Pompeii. Only worse.' 
+        $this.Description = 'Reminds me of Pompeii. Only worse.'
         $this.Type        = [BattleActionType]::ElementalFire
         $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 50
