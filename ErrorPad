@@ -1,7 +1,0 @@
-10.25.2023
-Status Screen
-    StatusTechniqueInventoryWindow
-        Paging Chevrons aren't cleared properly when showing multi-page books (i.e. left chevron is shown on page 1; right chevron is shown on page N)
-        Technique descriptions aren't blanked before drawing
-        Technique stats aren't blanked before drawing
-        The fucking list IChevrons aren't being drawn

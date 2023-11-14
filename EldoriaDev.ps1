@@ -17012,6 +17012,18 @@ Class MapTileObject {
     }
 }
 
+<#
+[MapTile]$ATile = [MapTile]@{
+    BackgroundImage = @null
+    ObjectListing   = [List[MapTileObject]]::new()
+    Exits           = @($false, $false, $false, $false)
+    BattleAllowed   = $false
+    EncounterRate   = 0.0
+    RegionCode      = 0
+}
+$ATile.BackgroundImage = # Assign Scene Image instance here
+$ATile.ObjectListing.Add() | Out-Null # Add Map Tile Object instance here
+#>
 Class MapTile {
     Static [Int]$TileExitNorth = 0
     Static [Int]$TileExitSouth = 1
