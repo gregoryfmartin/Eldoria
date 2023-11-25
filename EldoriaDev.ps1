@@ -1456,6 +1456,16 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check to see if $a0 exists and if it actually has something in it
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If([String]::IsNullOrEmpty($a0) -EQ $true) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadArg0Message('move', '')
+
+                Return
+            }
+        }
+
         Switch($a0) {
             { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
                 $Script:ThePlayer.MapMoveNorth()
@@ -1471,6 +1481,13 @@ $Script:TheCommandTable = @{
 
             { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
                 $Script:ThePlayer.MapMoveWest()
+            }
+
+            Default {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadCommandMessage('move')
+
+                Return
             }
         }
     }
@@ -1480,6 +1497,16 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check to see if $a0 exists and if it actually has something in it
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If([String]::IsNullOrEmpty($a0) -EQ $true) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadArg0Message('m', '')
+
+                Return
+            }
+        }
+
         Switch($a0) {
             { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
                 $Script:ThePlayer.MapMoveNorth()
@@ -1496,6 +1523,13 @@ $Script:TheCommandTable = @{
             { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
                 $Script:ThePlayer.MapMoveWest()
             }
+
+            Default {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadCommandMessage('m')
+
+                Return
+            }
         }
     }
 
@@ -1503,12 +1537,26 @@ $Script:TheCommandTable = @{
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheCommandWindow.InvokeLookAction()
 
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'look',
+                $args
+            )
+        }
+
         Return
     }
 
     'l' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheCommandWindow.InvokeLookAction()
+
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'look',
+                $args
+            )
+        }
 
         Return
     }
@@ -3378,6 +3426,24 @@ Class ATStringCompositeSc : ATString {
         )
         $this.UserData   = $Data
         $this.UseATReset = $true
+    }
+
+    ATStringCompositeSc(
+        [ATForegroundColor24]$ForegroundColor,
+        [ATDecoration]$Decoration,
+        [String[]]$Array
+    ): base() {
+        $this.Prefix = [ATStringPrefix]::new(
+            $ForegroundColor,
+            [ATBackgroundColor24None]::new(),
+            $Decoration,
+            [ATCoordinatesNone]::new()
+        )
+        $this.UseATReset = $true
+        Foreach($a in $Array) {
+            $this.UserData += "$($a) "
+        }
+        $this.UserData = $this.UserData.Trim()
     }
 }
 
@@ -18804,6 +18870,7 @@ Class CommandWindow : WindowBase {
         If([String]::IsNullOrEmpty($this.CommandActual.UserData)) {
             Return
         } Else {
+            $cmdactSplit = $this.CommandActual.UserData.Trim()
             $cmdactSplit = -SPLIT $this.CommandActual.UserData
             $rootFound   = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
 
@@ -19431,6 +19498,35 @@ Class MessageWindow : WindowBase {
                     [CCTextDefault24]::new(),
                     [ATDecorationNone]::new(),
                     '.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteCmdExtraArgsWarning(
+        [String]$Command,
+        [String[]]$ExtraArgs
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleNPinkLight24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleNYellowLight24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' has garbage: '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleNYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $ExtraArgs
                 )
             )
         )
