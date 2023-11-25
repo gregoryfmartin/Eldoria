@@ -1564,6 +1564,13 @@ $Script:TheCommandTable = @{
     'inventory' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
 
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'inventory',
+                $args
+            )
+        }
+
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
@@ -1574,6 +1581,13 @@ $Script:TheCommandTable = @{
 
     'i' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'i',
+                $args
+            )
+        }
         
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
