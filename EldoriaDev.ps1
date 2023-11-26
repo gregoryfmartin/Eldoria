@@ -1662,6 +1662,14 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'examine',
+                $args
+            )
+        }
+
         # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
