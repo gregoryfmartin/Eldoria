@@ -1590,17 +1590,15 @@ $Script:TheCommandTable = @{
     }
 
     'inventory' = {
-        $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-        If($args.Length -GT 0) {
+        # Check for unbound arguments
+        If($null -NE $args) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'inventory',
                 $args
             )
         }
-
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
@@ -1608,17 +1606,15 @@ $Script:TheCommandTable = @{
     }
 
     'i' = {
-        $Script:TheCommandWindow.UpdateCommandHistory($true)
-
-        If($args.Length -GT 0) {
+        # Check for unbound arguments
+        If($null -NE $args) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
-                'i',
+                'inventory',
                 $args
             )
         }
-        
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
