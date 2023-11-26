@@ -1513,7 +1513,7 @@ $Script:TheCommandTable = @{
         # Check for unbound arguments
         If($null -NE $args) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
-                'm',
+                'move',
                 $args
             )
         }
@@ -1523,7 +1523,7 @@ $Script:TheCommandTable = @{
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadArg0Message('m', '')
+                $Script:TheMessageWindow.WriteBadArg0Message('move', '')
 
                 Return
             } Else {
@@ -1560,29 +1560,31 @@ $Script:TheCommandTable = @{
     }
 
     'look' = {
-        $Script:TheCommandWindow.UpdateCommandHistory($true)
-        $Script:TheCommandWindow.InvokeLookAction()
-
-        If($args.Length -GT 0) {
+        # Check for unbound arguments
+        If($null -NE $args) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'look',
                 $args
             )
         }
+
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        $Script:TheCommandWindow.InvokeLookAction()
 
         Return
     }
 
     'l' = {
-        $Script:TheCommandWindow.UpdateCommandHistory($true)
-        $Script:TheCommandWindow.InvokeLookAction()
-
-        If($args.Length -GT 0) {
+        # Check for unbound arguments
+        If($null -NE $args) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'look',
                 $args
             )
         }
+
+        $Script:TheCommandWindow.UpdateCommandHistory($true)
+        $Script:TheCommandWindow.InvokeLookAction()
 
         Return
     }
