@@ -1457,7 +1457,7 @@ $Script:TheCommandTable = @{
         )
 
         # Check for unbound arguments
-        If($null -NE $args) {
+        If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'move',
                 $args
@@ -1511,7 +1511,7 @@ $Script:TheCommandTable = @{
         )
 
         # Check for unbound arguments
-        If($null -NE $args) {
+        If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'move',
                 $args
@@ -1561,7 +1561,7 @@ $Script:TheCommandTable = @{
 
     'look' = {
         # Check for unbound arguments
-        If($null -NE $args) {
+        If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'look',
                 $args
@@ -1576,7 +1576,7 @@ $Script:TheCommandTable = @{
 
     'l' = {
         # Check for unbound arguments
-        If($null -NE $args) {
+        If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'look',
                 $args
@@ -1591,7 +1591,7 @@ $Script:TheCommandTable = @{
 
     'inventory' = {
         # Check for unbound arguments
-        If($null -NE $args) {
+        If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'inventory',
                 $args
@@ -1607,7 +1607,7 @@ $Script:TheCommandTable = @{
 
     'i' = {
         # Check for unbound arguments
-        If($null -NE $args) {
+        If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'inventory',
                 $args
@@ -1625,6 +1625,14 @@ $Script:TheCommandTable = @{
         Param(
             [String]$a0
         )
+
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'examine',
+                $args
+            )
+        }
 
         # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
