@@ -1472,34 +1472,36 @@ $Script:TheCommandTable = @{
                 $Script:TheMessageWindow.WriteBadArg0Message('move', '')
 
                 Return
+            } Else {
+                Switch($a0) {
+                    { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
+                        $Script:ThePlayer.MapMoveNorth()
+                    }
+        
+                    { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
+                        $Script:ThePlayer.MapMoveSouth()
+                    }
+        
+                    { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
+                        $Script:ThePlayer.MapMoveEast()
+                    }
+        
+                    { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
+                        $Script:ThePlayer.MapMoveWest()
+                    }
+        
+                    Default {
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        $Script:TheMessageWindow.WriteBadCommandMessage('move')
+        
+                        Return
+                    }
+                }
             }
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
-        }
-
-        Switch($a0) {
-            { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
-                $Script:ThePlayer.MapMoveNorth()
-            }
-
-            { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
-                $Script:ThePlayer.MapMoveSouth()
-            }
-
-            { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
-                $Script:ThePlayer.MapMoveEast()
-            }
-
-            { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
-                $Script:ThePlayer.MapMoveWest()
-            }
-
-            Default {
-                $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadCommandMessage('move')
-
-                Return
-            }
+            
+            Return
         }
     }
 
@@ -1511,44 +1513,49 @@ $Script:TheCommandTable = @{
         # Check for unbound arguments
         If($null -NE $args) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
-                'move',
+                'm',
                 $args
             )
         }
 
         # Check to see if $a0 exists and if it actually has something in it
+        # This check is safe to make since PSBoundParameters is always available where a Parameter block has been declared
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadArg0Message('m', '')
+                $Script:TheMessageWindow.WriteBadArg0Message('move', '')
 
                 Return
+            } Else {
+                Switch($a0) {
+                    { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
+                        $Script:ThePlayer.MapMoveNorth()
+                    }
+        
+                    { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
+                        $Script:ThePlayer.MapMoveSouth()
+                    }
+        
+                    { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
+                        $Script:ThePlayer.MapMoveEast()
+                    }
+        
+                    { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
+                        $Script:ThePlayer.MapMoveWest()
+                    }
+        
+                    Default {
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        $Script:TheMessageWindow.WriteBadCommandMessage('move')
+        
+                        Return
+                    }
+                }
             }
-        }
-
-        Switch($a0) {
-            { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
-                $Script:ThePlayer.MapMoveNorth()
-            }
-
-            { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
-                $Script:ThePlayer.MapMoveSouth()
-            }
-
-            { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
-                $Script:ThePlayer.MapMoveEast()
-            }
-
-            { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
-                $Script:ThePlayer.MapMoveWest()
-            }
-
-            Default {
-                $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadCommandMessage('m')
-
-                Return
-            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            Return
         }
     }
 
