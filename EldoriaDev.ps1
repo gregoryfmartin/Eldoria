@@ -1758,6 +1758,14 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'take',
+                $args
+            )
+        }
+
         # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
@@ -1765,10 +1773,14 @@ $Script:TheCommandTable = @{
                 $Script:TheMessageWindow.WriteBadArg0Message('take', '')
 
                 Return
+            } Else {
+                $Script:TheCommandWindow.InvokeGetAction($a0)
             }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            Return 
         }
-
-        $Script:TheCommandWindow.InvokeGetAction($a0)
 
         Return
     }
@@ -1778,17 +1790,29 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'take',
+                $args
+            )
+        }
+
         # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadArg0Message('t', '')
+                $Script:TheMessageWindow.WriteBadArg0Message('take', '')
 
                 Return
+            } Else {
+                $Script:TheCommandWindow.InvokeGetAction($a0)
             }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            Return 
         }
-
-        $Script:TheCommandWindow.InvokeGetAction($a0)
 
         Return
     }
