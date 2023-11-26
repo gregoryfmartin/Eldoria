@@ -1523,7 +1523,7 @@ $Script:TheCommandTable = @{
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadArg0Message('move', '')
+                $Script:TheMessageWindow.WriteBadArg0Message('m', '')
 
                 Return
             } Else {
@@ -1546,7 +1546,7 @@ $Script:TheCommandTable = @{
         
                     Default {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        $Script:TheMessageWindow.WriteBadCommandMessage('move')
+                        $Script:TheMessageWindow.WriteBadCommandMessage('m')
         
                         Return
                     }
