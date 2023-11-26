@@ -1464,6 +1464,8 @@ $Script:TheCommandTable = @{
 
                 Return
             }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
         }
 
         Switch($a0) {
@@ -1602,6 +1604,16 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check to see if $a0 exists and if it actually has something in it
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If([String]::IsNullOrEmpty($a0) -EQ $true) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadArg0Message('examine', '')
+
+                Return
+            }
+        }
+
         $Script:TheCommandWindow.InvokeExamineAction($a0)
 
         Return
@@ -1611,6 +1623,16 @@ $Script:TheCommandTable = @{
         Param(
             [String]$a0
         )
+
+        # Check to see if $a0 exists and if it actually has something in it
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If([String]::IsNullOrEmpty($a0) -EQ $true) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadArg0Message('exa', '')
+
+                Return
+            }
+        }
 
         $Script:TheCommandWindow.InvokeExamineAction($a0)
 
