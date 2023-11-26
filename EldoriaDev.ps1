@@ -1644,6 +1644,16 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check to see if $a0 exists and if it actually has something in it
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If([String]::IsNullOrEmpty($a0) -EQ $true) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadArg0Message('get', '')
+
+                Return
+            }
+        }
+
         $Script:TheCommandWindow.InvokeGetAction($a0)
 
         Return
@@ -1653,6 +1663,16 @@ $Script:TheCommandTable = @{
         Param(
             [String]$a0
         )
+
+        # Check to see if $a0 exists and if it actually has something in it
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If([String]::IsNullOrEmpty($a0) -EQ $true) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteBadArg0Message('g', '')
+
+                Return
+            }
+        }
 
         $Script:TheCommandWindow.InvokeGetAction($a0)
 
