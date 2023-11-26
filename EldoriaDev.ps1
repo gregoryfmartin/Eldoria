@@ -1456,7 +1456,16 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
+        # Check for unbound arguments
+        If($null -NE $args) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'move',
+                $args
+            )
+        }
+
         # Check to see if $a0 exists and if it actually has something in it
+        # This check is safe to make since PSBoundParameters is always available where a Parameter block has been declared
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1498,6 +1507,14 @@ $Script:TheCommandTable = @{
         Param(
             [String]$a0
         )
+
+        # Check for unbound arguments
+        If($null -NE $args) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'move',
+                $args
+            )
+        }
 
         # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
