@@ -1503,6 +1503,8 @@ $Script:TheCommandTable = @{
             
             Return
         }
+
+        Return
     }
 
     'm' = {
@@ -1557,6 +1559,8 @@ $Script:TheCommandTable = @{
             
             Return
         }
+
+        Return
     }
 
     'look' = {
@@ -1641,10 +1645,14 @@ $Script:TheCommandTable = @{
                 $Script:TheMessageWindow.WriteBadArg0Message('examine', '')
 
                 Return
+            } Else {
+                $Script:TheCommandWindow.InvokeExamineAction($a0)
             }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            Return
         }
-
-        $Script:TheCommandWindow.InvokeExamineAction($a0)
 
         Return
     }
@@ -1658,13 +1666,17 @@ $Script:TheCommandTable = @{
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteBadArg0Message('exa', '')
+                $Script:TheMessageWindow.WriteBadArg0Message('examine', '')
 
                 Return
+            } Else {
+                $Script:TheCommandWindow.InvokeExamineAction($a0)
             }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            
+            Return
         }
-
-        $Script:TheCommandWindow.InvokeExamineAction($a0)
 
         Return
     }
