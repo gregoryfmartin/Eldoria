@@ -2216,9 +2216,9 @@ $Script:TheCommandTable = @{
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
                     [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
+                        [CCAppleNYellowDark24]::new(),
                         [ATDecorationNone]::new(),
-                        'Can''t dop all those items at once, bruh.'
+                        'Can''t drop all those items at once, bruh.'
                     )
                 )
             )
@@ -2227,69 +2227,75 @@ $Script:TheCommandTable = @{
         }
 
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
-        }
-
-        If($PSBoundParameters.Count -EQ 1) {
-            If($PSBoundParameters.ContainsKey('a0')) {
-                If($Script:ThePlayer.IsItemInInventory($a0)) {
-                    If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
-                        $Script:TheCommandWindow.UpdateCommandHistory($true)
-                        $Script:TheMessageWindow.WriteMessageComposite(
-                            @(
-                                [ATStringCompositeSc]::new(
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new(),
-                                    'Dropped '
-                                ),
-                                [ATStringCompositeSc]::new(
-                                    [CCAppleYellowDark24]::new(),
-                                    [ATDecoration]::new($true),
-                                    $a0
-                                ),
-                                [ATStringCompositeSc]::new(
-                                    [CCTextDefault24]::new(),
-                                    [ATDecorationNone]::new(),
-                                    ' from your inventory.'
-                                )
-                            )
-                        )
-                    } Else {
-                        Exit
-                    }
-                } Else {
-                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+            If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+                If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
                     $Script:TheMessageWindow.WriteMessageComposite(
                         @(
                             [ATStringCompositeSc]::new(
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new(),
-                                'There ain''t no '
+                                'Dropped '
                             ),
                             [ATStringCompositeSc]::new(
-                                [CCAppleYellowDark24]::new(),
-                                [ATDecoration]::new($true),
-                                $a0
+                                [CCAppleNYellowDark24]::new(),
+                                [ATDecoration]@{
+                                    Blink = $true
+                                },
+                                "$($a0)"
                             ),
                             [ATStringCompositeSc]::new(
                                 [CCTextDefault24]::new(),
                                 [ATDecorationNone]::new(),
-                                ' in your pockets guv''.'
+                                ' from your inventory.'
                             )
                         )
                     )
+
+                    Return
+                } Else {
+                    # WARNING
+                    # At this point, this branch is considered a fatal error
+                    # There really should be a better way of handling this, however
+                    Exit
                 }
+            } Else {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'There ain''t no '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' in your pockets guv''.'
+                        )
+                    )
+                )
+
+                Return
             }
-        } Elseif($PSBoundParameters.Count -LE 0) {
+        } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
                     [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
+                        [CCAppleNRedDark24]::new(),
                         [ATDecorationNone]::new(),
-                        'I don''t know what to drop...'
+                        "$($Script:BadCommandRetorts | Get-Random)"
                     )
                 )
             )
+
+            Return
         }
     }
 
