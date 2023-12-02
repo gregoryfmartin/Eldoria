@@ -25,6 +25,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
 [String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
 [String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
+[String[]]                        $Script:BadCommandRetorts            = @()
 [StatusWindow]                    $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]                   $Script:TheCommandWindow             = [CommandWindow]::new()
 [SceneWindow]                     $Script:TheSceneWindow               = [SceneWindow]::new()
@@ -1387,6 +1388,22 @@ Enum StatusScreenMode {
     ActionInventory = [PlayerActionInventory]::new()
 }
 
+$Script:BadCommandRetorts = @(
+    'Huh?',
+    'Do what now?',
+    'Come again?',
+    'Pardon?',
+    'Y U no type rite?',
+    'Bruh...',
+    'Are you drunk?',
+    'Your commands are sus.',
+    'Git gud, scrub.',
+    'Did you RTFM?',
+    'git commit -am "Eye kant spell"',
+    'ceuwcnesckldsc',
+    '843214385321832904'
+)
+
 Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Complete' -PercentComplete -1
 
 Write-Progress -Activity 'Creating Maps              ' -Id 2 -Status 'Working' -PercentComplete -1
@@ -1823,7 +1840,15 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'use',
+                $args
+            )
+        }
+
+        If(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ($PSBoundParameters.ContainsKey('a1') -EQ $true)) {
             If($Script:ThePlayer.IsItemInInventory($a0)) {
                 If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
@@ -1937,7 +1962,7 @@ $Script:TheCommandTable = @{
 
                 Return
             }
-        } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
+        } Elseif(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
             If($Script:ThePlayer.IsItemInInventory($a0)) {
@@ -1981,6 +2006,17 @@ $Script:TheCommandTable = @{
                     )
                 )
             }
+        } Elseif(((-NOT $PSBoundParameters.ContainsKey('a0')) -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleNRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        "$($Script:BadCommandRetorts | Get-Random)"
+                    )
+                )
+            )
         }
     }
 
