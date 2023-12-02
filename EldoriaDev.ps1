@@ -2299,6 +2299,99 @@ $Script:TheCommandTable = @{
         }
     }
 
+    'd' = {
+        Param(
+            [String]$a0
+        )
+
+        If($args.Length -GE 1) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleNYellowDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        'Can''t drop all those items at once, bruh.'
+                    )
+                )
+            )
+
+            Return
+        }
+
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+            If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+                If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteMessageComposite(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                'Dropped '
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleNYellowDark24]::new(),
+                                [ATDecoration]@{
+                                    Blink = $true
+                                },
+                                "$($a0)"
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                ' from your inventory.'
+                            )
+                        )
+                    )
+
+                    Return
+                } Else {
+                    # WARNING
+                    # At this point, this branch is considered a fatal error
+                    # There really should be a better way of handling this, however
+                    Exit
+                }
+            } Else {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'There ain''t no '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleYellowDark24]::new(),
+                            [ATDecoration]::new($true),
+                            $a0
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' in your pockets guv''.'
+                        )
+                    )
+                )
+
+                Return
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleNRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        "$($Script:BadCommandRetorts | Get-Random)"
+                    )
+                )
+            )
+
+            Return
+        }
+    }
+
     'status' = {
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
