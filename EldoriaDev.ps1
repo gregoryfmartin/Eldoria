@@ -2226,6 +2226,9 @@ $Script:TheCommandTable = @{
             Return
         }
 
+        If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        }
+
         If($PSBoundParameters.Count -EQ 1) {
             If($PSBoundParameters.ContainsKey('a0')) {
                 If($Script:ThePlayer.IsItemInInventory($a0)) {
@@ -19130,6 +19133,15 @@ Class CommandWindow : WindowBase {
                 }
             } Else {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCAppleNRedDark24]::new(),
+                            [ATDecorationNone]::new(),
+                            "$($Script:BadCommandRetorts | Get-Random)"
+                        )
+                    )
+                )
                 Return
             }
         }
