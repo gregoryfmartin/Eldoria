@@ -1849,12 +1849,12 @@ $Script:TheCommandTable = @{
         }
 
         If(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ($PSBoundParameters.ContainsKey('a1') -EQ $true)) {
-            If($Script:ThePlayer.IsItemInInventory($a0)) {
-                If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
-                    [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+            If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1) -EQ $true) {
+                    [MapTileObject]$pi  = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
 
-                    If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                    If($mti.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
@@ -1894,7 +1894,7 @@ $Script:TheCommandTable = @{
                         [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
 
                         # This code is problematic if the filter has no items in it
-                        If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                        If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
                             $Script:TheCommandWindow.UpdateCommandHistory($true)
                             Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
                         } Else {
@@ -1931,7 +1931,7 @@ $Script:TheCommandTable = @{
                                 [ATStringCompositeSc]::new(
                                     [CCAppleRedDark24]::new(),
                                     [ATDecorationNone]::new(),
-                                    'Whatever you typed doesn''t make any sense.'
+                                    "$($Script:BadCommandRetorts | Get-Random)"
                                 )
                             )
                         )
@@ -1965,7 +1965,7 @@ $Script:TheCommandTable = @{
         } Elseif(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
-            If($Script:ThePlayer.IsItemInInventory($a0)) {
+            If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -2026,13 +2026,21 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        If($PSBoundParameters.ContainsKey('a0') -AND $PSBoundParameters.ContainsKey('a1')) {
-            If($Script:ThePlayer.IsItemInInventory($a0)) {
-                If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1)) {
-                    [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'use',
+                $args
+            )
+        }
+
+        If(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ($PSBoundParameters.ContainsKey('a1') -EQ $true)) {
+            If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+                If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1) -EQ $true) {
+                    [MapTileObject]$pi  = $Script:ThePlayer.GetItemReference($a0)
                     [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
 
-                    If($mti.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                    If($mti.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $mti.Effect -ArgumentList $mti, $pi
                     } Else {
@@ -2071,7 +2079,8 @@ $Script:TheCommandTable = @{
                     If($a1 -IEQ 'self') {
                         [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
 
-                        If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0])) {
+                        # This code is problematic if the filter has no items in it
+                        If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
                             $Script:TheCommandWindow.UpdateCommandHistory($true)
                             Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
                         } Else {
@@ -2085,7 +2094,12 @@ $Script:TheCommandTable = @{
                                     ),
                                     [ATStringCompositeSc]::new(
                                         [CCAppleYellowDark24]::new(),
-                                        [ATDecoration]::new($true),
+                                        [ATDecoration]@{
+                                            Blink      = $true
+                                            Italic     = $true
+                                            Underline  = $true
+                                            Strikethru = $false
+                                        },
                                         $a0
                                     ),
                                     [ATStringCompositeSc]::new(
@@ -2103,7 +2117,7 @@ $Script:TheCommandTable = @{
                                 [ATStringCompositeSc]::new(
                                     [CCAppleRedDark24]::new(),
                                     [ATDecorationNone]::new(),
-                                    'Whatever you typed doesn''t make any sense.'
+                                    "$($Script:BadCommandRetorts | Get-Random)"
                                 )
                             )
                         )
@@ -2134,10 +2148,10 @@ $Script:TheCommandTable = @{
 
                 Return
             }
-        } Elseif($PSBoundParameters.ContainsKey('a0') -AND (-NOT $PSBoundParameters.ContainsKey('a1'))) {
+        } Elseif(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
             $Script:TheCommandWindow.UpdateCommandHistory($false)
 
-            If($Script:ThePlayer.IsItemInInventory($a0)) {
+            If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
                 $Script:TheMessageWindow.WriteMessageComposite(
                     @(
                         [ATStringCompositeSc]::new(
@@ -2178,6 +2192,17 @@ $Script:TheCommandTable = @{
                     )
                 )
             }
+        } Elseif(((-NOT $PSBoundParameters.ContainsKey('a0')) -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleNRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        "$($Script:BadCommandRetorts | Get-Random)"
+                    )
+                )
+            )
         }
     }
 
