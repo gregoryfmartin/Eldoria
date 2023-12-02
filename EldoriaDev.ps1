@@ -2393,21 +2393,37 @@ $Script:TheCommandTable = @{
     }
 
     'status' = {
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'use',
+                $args
+            )
+        }
+
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
         
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
+        $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
     }
 
     'sta' = {
+        # Check for unbound arguments
+        If($args.Length -GT 0) {
+            $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+                'use',
+                $args
+            )
+        }
+
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
         
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
+        $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
     }
 }
 
