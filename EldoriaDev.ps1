@@ -19181,7 +19181,7 @@ Class CommandWindow : WindowBase {
             $cpx = $Script:Rui.CursorPosition.X
 
             If($cpx -GE 19) {
-                $this.InvokeCommandParser()
+                Break
             }
 
             Switch($keyCap.VirtualKeyCode) {
@@ -19220,7 +19220,17 @@ Class CommandWindow : WindowBase {
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
 
-        If([String]::IsNullOrEmpty($this.CommandActual.UserData)) {
+        If([String]::IsNullOrEmpty($this.CommandActual.UserData.Trim())) {
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleNRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        "$($Script:BadCommandRetorts | Get-Random)"
+                    )
+                )
+            )
+            $this.CommandActual.UserData = ''
             Return
         } Else {
             $cmdactSplit = $this.CommandActual.UserData.Trim()
