@@ -19253,7 +19253,15 @@ Class CommandWindow : WindowBase {
 
                     Default {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        # TODO: This is an exceptional case
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleNRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    "$($Script:BadCommandRetorts | Get-Random)"
+                                )
+                            )
+                        )
                     }
                 }
             } Else {
