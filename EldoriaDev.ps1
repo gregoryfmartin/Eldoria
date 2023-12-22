@@ -1431,7 +1431,7 @@ Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Completed
 
 $Script:Rui = $(Get-Host).UI.RawUI
 
-[Boolean]$Script:GpsRestoredFromInvBackup = $true
+[Boolean]$Script:GpsRestoredFromInvBackup = $false
 [Boolean]$Script:GpsRestoredFromBatBackup = $false
 [Boolean]$Script:GpsRestoredFromStaBackup = $false
 [Boolean]$Script:BattleCursorVisible      = $false
@@ -1619,7 +1619,8 @@ $Script:TheCommandTable = @{
             )
         }
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        Clear-Host
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
@@ -1635,7 +1636,8 @@ $Script:TheCommandTable = @{
             )
         }
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        Clear-Host
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
@@ -2420,7 +2422,8 @@ $Script:TheCommandTable = @{
 
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        Clear-Host
         
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
@@ -2456,24 +2459,31 @@ $Script:TheGlobalStateBlockTable = @{
         }
 
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
-            $Script:TheBufferManager.RestoreBufferAToActive()
+            # $Script:TheBufferManager.RestoreBufferAToActive()
+            Clear-Host
 
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
             # and I really don't feel like trying to figure out how to grab the buffer manually
             $Script:GpsRestoredFromInvBackup             = $true
             $Script:TheSceneWindow.SceneImageDirty       = $true
+            $Script:TheSceneWindow.SetBorderDirty()
             $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
             $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
             $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
             $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+            $Script:TheStatusWindow.SetBorderDirty()
             $Script:TheCommandWindow.CommandHistoryDirty = $true
+            $Script:TheCommandWindow.CommandDivDirty     = $true
+            $Script:TheCommandWindow.SetBorderDirty()
             $Script:TheMessageWindow.MessageADirty       = $true
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
+            $Script:TheMessageWindow.SetBorderDirty()
 
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
-            $Script:TheBufferManager.RestoreBufferAToActive()
+            # $Script:TheBufferManager.RestoreBufferAToActive()
+            Clear-Host
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
             # and I really don't feel like trying to figure out how to grab the buffer manually
@@ -2490,7 +2500,8 @@ $Script:TheGlobalStateBlockTable = @{
 
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen -AND $Script:GpsRestoredFromStaBackup -EQ $false) {
-            $Script:TheBufferManager.RestoreBufferAToActive()
+            # $Script:TheBufferManager.RestoreBufferAToActive()
+            Clear-Host
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
             # and I really don't feel like trying to figure out how to grab the buffer manually
@@ -17534,7 +17545,8 @@ Class MapTile {
                 $Script:TheCurrentEnemy = New-Object -TypeName $($Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random)
 
                 # Copy the active buffer to the A back buffer
-                $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+                # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+                Clear-Host
 
                 # Change state
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
@@ -17791,7 +17803,7 @@ Class BufferManager {
     }
 
     [Void]CopyActiveToBufferAWithWipe() {
-        $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        # $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
         Clear-Host
     }
 
@@ -17814,8 +17826,8 @@ Class BufferManager {
 
     [Void]RestoreBufferAToActive() {
         Clear-Host
-        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
-        $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
+        # $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
+        # $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
     }
 
     [Void]RestoreBufferBToActive() {
@@ -18050,6 +18062,18 @@ Class WindowBase {
         $this.Width  = $this.RightBottom.Column - $this.LeftTop.Column
         $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
     }
+
+    [Void]SetBorderDirty() {
+        $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]    = $true
+        $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $true
+        $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft]   = $true
+        $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight]  = $true
+    }
+
+    # Intended to be overridden in super classes
+    [Void]SetAllDrawDirty() {
+        $this.SetBorderDirty()
+    }
 }
 
 Class StatusWindow : WindowBase {
@@ -18111,6 +18135,15 @@ Class StatusWindow : WindowBase {
             [StatusWindow]::LineBlank,
             $true
         )
+    }
+
+    [Void]SetAllDrawDirty() {
+        ([WindowBase]$this).SetAllDrawDirty()
+
+        $this.PlayerNameDrawDirty = $true
+        $this.PlayerHpDrawDirty   = $true
+        $this.PlayerMpDrawDirty   = $true
+        $this.PlayerGoldDrawDirty = $true
     }
 
     [Void]Draw() {
