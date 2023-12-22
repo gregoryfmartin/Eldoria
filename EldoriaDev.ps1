@@ -40,7 +40,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [StatusHudWindow]                 $Script:TheStatusHudWindow           = $null
 [StatusTechniqueSelectionWindow]  $Script:TheStatusTechSelectionWindow = $null
 [StatusTechniqueInventoryWindow]  $Script:TheStatusTechInventoryWindow = $null
-[BufferManager]                   $Script:TheBufferManager             = [BufferManager]::new()
+# [BufferManager]                   $Script:TheBufferManager             = [BufferManager]::new()
 [GameCore]                        $Script:TheGameCore                  = [GameCore]::new()
 [EnemyBattleEntity]               $Script:TheCurrentEnemy              = $null
 [BattleManager]                   $Script:TheBattleManager             = $null
@@ -50,6 +50,7 @@ Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Working'
 [Boolean]                         $Script:HasBattleIntroPlayed         = $false
 [Boolean]                         $Script:HasBattleWonChimePlayed      = $false
 [Boolean]                         $Script:HasBattleLostChimePlayed     = $false
+[Boolean]                         $Script:HasGpsRefreshed              = $false
 [EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
 [EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
 [EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
@@ -2405,7 +2406,8 @@ $Script:TheCommandTable = @{
 
         $Script:TheCommandWindow.UpdateCommandHistory($true)
         
-        $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+        Clear-Host
         
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
@@ -2458,66 +2460,75 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheStatusTechInventoryWindow = $null
         }
 
-        If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
-            # $Script:TheBufferManager.RestoreBufferAToActive()
+        If($Script:HasGpsRefreshed -EQ $false) {
             Clear-Host
-
-            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
-            # and I really don't feel like trying to figure out how to grab the buffer manually
-            $Script:GpsRestoredFromInvBackup             = $true
-            $Script:TheSceneWindow.SceneImageDirty       = $true
-            $Script:TheSceneWindow.SetBorderDirty()
-            $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
-            $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
-            $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
-            $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
-            $Script:TheStatusWindow.SetBorderDirty()
-            $Script:TheCommandWindow.CommandHistoryDirty = $true
-            $Script:TheCommandWindow.CommandDivDirty     = $true
-            $Script:TheCommandWindow.SetBorderDirty()
-            $Script:TheMessageWindow.MessageADirty       = $true
-            $Script:TheMessageWindow.MessageBDirty       = $true
-            $Script:TheMessageWindow.MessageCDirty       = $true
-            $Script:TheMessageWindow.SetBorderDirty()
-
-            Write-Host "$([ATControlSequences]::CursorShow)"
-        } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
-            # $Script:TheBufferManager.RestoreBufferAToActive()
-            Clear-Host
-            
-            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
-            # and I really don't feel like trying to figure out how to grab the buffer manually
-            $Script:GpsRestoredFromBatBackup             = $true
-            $Script:TheSceneWindow.SceneImageDirty       = $true
-            $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
-            $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
-            $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
-            $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
-            $Script:TheCommandWindow.CommandHistoryDirty = $true
-            $Script:TheMessageWindow.MessageADirty       = $true
-            $Script:TheMessageWindow.MessageBDirty       = $true
-            $Script:TheMessageWindow.MessageCDirty       = $true
-
-            Write-Host "$([ATControlSequences]::CursorShow)"
-        } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen -AND $Script:GpsRestoredFromStaBackup -EQ $false) {
-            # $Script:TheBufferManager.RestoreBufferAToActive()
-            Clear-Host
-            
-            # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
-            # and I really don't feel like trying to figure out how to grab the buffer manually
-            $Script:GpsRestoredFromStaBackup             = $true
-            $Script:TheSceneWindow.SceneImageDirty       = $true
-            $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
-            $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
-            $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
-            $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
-            $Script:TheCommandWindow.CommandHistoryDirty = $true
-            $Script:TheMessageWindow.MessageADirty       = $true
-            $Script:TheMessageWindow.MessageBDirty       = $true
-            $Script:TheMessageWindow.MessageCDirty       = $true
-
-            Write-Host "$([ATControlSequences]::CursorShow)"
+            $Script:TheSceneWindow.SetAllDrawDirty()
+            $Script:TheStatusWindow.SetAllDrawDirty()
+            $Script:TheCommandWindow.SetAllDrawDirty()
+            $Script:TheMessageWindow.SetAllDrawDirty()
+            $Script:HasGpsRefresed = $true
         }
+
+        # If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
+        #     # $Script:TheBufferManager.RestoreBufferAToActive()
+        #     Clear-Host
+
+        #     # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+        #     # and I really don't feel like trying to figure out how to grab the buffer manually
+        #     $Script:GpsRestoredFromInvBackup             = $true
+        #     $Script:TheSceneWindow.SceneImageDirty       = $true
+        #     $Script:TheSceneWindow.SetBorderDirty()
+        #     $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+        #     $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+        #     $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+        #     $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+        #     $Script:TheStatusWindow.SetBorderDirty()
+        #     $Script:TheCommandWindow.CommandHistoryDirty = $true
+        #     $Script:TheCommandWindow.CommandDivDirty     = $true
+        #     $Script:TheCommandWindow.SetBorderDirty()
+        #     $Script:TheMessageWindow.MessageADirty       = $true
+        #     $Script:TheMessageWindow.MessageBDirty       = $true
+        #     $Script:TheMessageWindow.MessageCDirty       = $true
+        #     $Script:TheMessageWindow.SetBorderDirty()
+
+        #     Write-Host "$([ATControlSequences]::CursorShow)"
+        # } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
+        #     # $Script:TheBufferManager.RestoreBufferAToActive()
+        #     Clear-Host
+            
+        #     # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+        #     # and I really don't feel like trying to figure out how to grab the buffer manually
+        #     $Script:GpsRestoredFromBatBackup             = $true
+        #     $Script:TheSceneWindow.SceneImageDirty       = $true
+        #     $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+        #     $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+        #     $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+        #     $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+        #     $Script:TheCommandWindow.CommandHistoryDirty = $true
+        #     $Script:TheMessageWindow.MessageADirty       = $true
+        #     $Script:TheMessageWindow.MessageBDirty       = $true
+        #     $Script:TheMessageWindow.MessageCDirty       = $true
+
+        #     Write-Host "$([ATControlSequences]::CursorShow)"
+        # } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen -AND $Script:GpsRestoredFromStaBackup -EQ $false) {
+        #     # $Script:TheBufferManager.RestoreBufferAToActive()
+        #     Clear-Host
+            
+        #     # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+        #     # and I really don't feel like trying to figure out how to grab the buffer manually
+        #     $Script:GpsRestoredFromStaBackup             = $true
+        #     $Script:TheSceneWindow.SceneImageDirty       = $true
+        #     $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+        #     $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+        #     $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+        #     $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+        #     $Script:TheCommandWindow.CommandHistoryDirty = $true
+        #     $Script:TheMessageWindow.MessageADirty       = $true
+        #     $Script:TheMessageWindow.MessageBDirty       = $true
+        #     $Script:TheMessageWindow.MessageCDirty       = $true
+
+        #     Write-Host "$([ATControlSequences]::CursorShow)"
+        # }
 
         $Script:ThePlayer.Update()
 
@@ -2533,8 +2544,11 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheInventoryWindow = [InventoryWindow]::new()
         }
 
-        If($Script:GpsRestoredFromInvBackup -EQ $true) {
-            $Script:GpsRestoredFromInvBackup = $false
+        # If($Script:GpsRestoredFromInvBackup -EQ $true) {
+        #     $Script:GpsRestoredFromInvBackup = $false
+        # }
+        If($Script:HasGpsRefresed -EQ $true) {
+            $Script:HasGpsRefresed = $false
         }
 
         $Script:TheInventoryWindow.Draw()
@@ -19172,6 +19186,12 @@ Class CommandWindow : WindowBase {
         )
     }
 
+    [Void]SetAllDrawDirty() {
+        ([WindowBase]$this).SetAllDrawDirty()
+        $this.CommandDivDirty     = $true
+        $this.CommandHistoryDirty = $true
+    }
+
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
@@ -19509,7 +19529,7 @@ Class SceneWindow : WindowBase {
     [Boolean]$SceneImageDirty = $true
     [SceneImage]$Image        = [SIEmpty]::new()
 
-    SceneWindow(): base() {
+    SceneWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Scene Window' -PercentComplete -1
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
@@ -19526,6 +19546,11 @@ Class SceneWindow : WindowBase {
         $this.UpdateDimensions()
 
         [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new([SceneWindow]::ImageDrawRowOffset, [SceneWindow]::ImageDrawColumnOffset)
+    }
+
+    [Void]SetAllDrawDirty() {
+        ([WindowBase]$this).SetAllDrawDirty()
+        $this.SceneImageDirty = $true
     }
 
     [Void]Draw() {
@@ -19609,6 +19634,13 @@ Class MessageWindow : WindowBase {
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
+    }
+
+    [Void]SetAllDrawDirty() {
+        ([WindowBase]$this).SetAllDrawDirty()
+        $this.MessageADirty = $true
+        $this.MessageBDirty = $true
+        $this.MessageCDirty = $true
     }
 
     [Void]Draw() {
