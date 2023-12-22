@@ -2455,7 +2455,7 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheStatusTechInventoryWindow = $null
         }
 
-        If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen -AND $Script:GpsRestoredFromInvBackup -EQ $false) {
+        If(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen) -AND ($Script:GpsRestoredFromInvBackup -EQ $false)) {
             $Script:TheBufferManager.RestoreBufferAToActive()
 
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
@@ -2472,7 +2472,7 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageCDirty       = $true
 
             Write-Host "$([ATControlSequences]::CursorShow)"
-        } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen -AND $Script:GpsRestoredFromBatBackup -EQ $false) {
+        } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen) -AND ($Script:GpsRestoredFromBatBackup -EQ $false)) {
             $Script:TheBufferManager.RestoreBufferAToActive()
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
@@ -2489,7 +2489,7 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageCDirty       = $true
 
             Write-Host "$([ATControlSequences]::CursorShow)"
-        } Elseif($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen -AND $Script:GpsRestoredFromStaBackup -EQ $false) {
+        } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen) -AND ($Script:GpsRestoredFromStaBackup -EQ $false)) {
             $Script:TheBufferManager.RestoreBufferAToActive()
             
             # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
@@ -3734,7 +3734,7 @@ Class ATString {
     [String]ToAnsiControlSequenceString() {
         [String]$a = "$($this.Prefix.ToAnsiControlSequenceString())$($this.UserData)"
 
-        If($this.UseATReset) {
+        If($this.UseATReset -EQ $true) {
             $a += [ATControlSequences]::ModifierReset
         }
 
@@ -17890,7 +17890,7 @@ Class WindowBase {
                 [ATString]$bl = [ATStringNone]::new()
                 [ATString]$br = [ATStringNone]::new()
 
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] -EQ $true) {
                     $bt = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
@@ -17903,7 +17903,7 @@ Class WindowBase {
                     )
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] = $false
                 }
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] -EQ $true) {
                     $bb = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
@@ -17916,7 +17916,7 @@ Class WindowBase {
                     )
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $false
                 }
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] -EQ $true) {
                     $bl = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
@@ -17937,7 +17937,7 @@ Class WindowBase {
                     )
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
                 }
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] -EQ $true) {
                     $br = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight],
@@ -17969,7 +17969,7 @@ Class WindowBase {
                 [ATString]$bl = [ATStringNone]::new()
                 [ATString]$br = [ATStringNone]::new()
 
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] -EQ $true) {
                     $bt = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop],
@@ -17982,7 +17982,7 @@ Class WindowBase {
                     )
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] = $false
                 }
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] -EQ $true) {
                     $bb = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom],
@@ -17995,7 +17995,7 @@ Class WindowBase {
                     )
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $false
                 }
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] -EQ $true) {
                     $bl = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft],
@@ -18016,7 +18016,7 @@ Class WindowBase {
                     )
                     $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
                 }
-                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight]) {
+                If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] -EQ $true) {
                     $br = [ATString]::new(
                         [ATStringPrefix]::new(
                             $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight],
@@ -18118,7 +18118,7 @@ Class StatusWindow : WindowBase {
 
         Switch($(Test-GfmOs)) {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
-                If($this.PlayerNameDrawDirty) {
+                If($this.PlayerNameDrawDirty -EQ $true) {
                     $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
                     [ATString]$a = [ATString]::new(
                         [ATStringPrefix]::new(
@@ -18135,7 +18135,7 @@ Class StatusWindow : WindowBase {
 
                     $this.PlayerNameDrawDirty = $false
                 }
-                If($this.PlayerHpDrawDirty) {
+                If($this.PlayerHpDrawDirty -EQ $true) {
                     [String]$a = ''
 
                     $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerHpDrawCoordinates
@@ -18328,7 +18328,7 @@ Class StatusWindow : WindowBase {
 
                     $this.PlayerHpDrawDirty = $false
                 }
-                If($this.PlayerMpDrawDirty) {
+                If($this.PlayerMpDrawDirty -EQ $true) {
                     Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
                         ([StatNumberState]::Normal) {
                             [ATString]$p1 = [ATString]::new(
@@ -18515,7 +18515,7 @@ Class StatusWindow : WindowBase {
 
                     $this.PlayerMpDrawDirty = $false
                 }
-                If($this.PlayerGoldDrawDirty) {
+                If($this.PlayerGoldDrawDirty -EQ $true) {
                     [ATString]$p1 = [ATString]::new(
                         [ATStringPrefix]::new(
                             [Player]::GoldDrawColor,
@@ -18544,7 +18544,7 @@ Class StatusWindow : WindowBase {
             }
 
             { $_ -EQ $Script:OsCheckWindows } {
-                If($this.PlayerNameDrawDirty) {
+                If($this.PlayerNameDrawDirty -EQ $true) {
                     [ATString]$a = [ATString]::new(
                         [ATStringPrefix]::new(
                             $Script:ThePlayer.NameDrawColor,
@@ -18561,7 +18561,7 @@ Class StatusWindow : WindowBase {
 
                     $this.PlayerNameDrawDirty = $false
                 }
-                If($this.PlayerHpDrawDirty) {
+                If($this.PlayerHpDrawDirty -EQ $true) {
                     [String]$a = ''
 
                     Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
@@ -18754,7 +18754,7 @@ Class StatusWindow : WindowBase {
 
                     $this.PlayerHpDrawDirty = $false
                 }
-                If($this.PlayerMpDrawDirty) {
+                If($this.PlayerMpDrawDirty -EQ $true) {
                     Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
                         ([StatNumberState]::Normal) {
                             [ATString]$p1 = [ATString]::new(
@@ -18945,7 +18945,7 @@ Class StatusWindow : WindowBase {
 
                     $this.PlayerMpDrawDirty = $false
                 }
-                If($this.PlayerGoldDrawDirty) {
+                If($this.PlayerGoldDrawDirty -EQ $true) {
                     [ATString]$p1 = [ATString]::new(
                         [ATStringPrefix]::new(
                             [Player]::GoldDrawColor,
@@ -19220,7 +19220,7 @@ Class CommandWindow : WindowBase {
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
 
-        If([String]::IsNullOrEmpty($this.CommandActual.UserData.Trim())) {
+        If([String]::IsNullOrEmpty($this.CommandActual.UserData.Trim()) -EQ $true) {
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
                     [ATStringCompositeSc]::new(
@@ -19498,7 +19498,7 @@ Class SceneWindow : WindowBase {
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
-        If($this.SceneImageDirty) {
+        If($this.SceneImageDirty -EQ $true) {
             $this.Image = $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
             Write-Host "$($this.Image.ToAnsiControlSequenceString())"
             $this.SceneImageDirty = $false
@@ -20063,7 +20063,7 @@ Class InventoryWindow : WindowBase {
                 $this.DivLineDirty = $false
             }
 
-            If($this.PlayerChevronVisible -EQ $true -AND $this.PlayerChevronDirty -EQ $true) {
+            If(($this.PlayerChevronVisible -EQ $true) -AND ($this.PlayerChevronDirty -EQ $true)) {
                 Foreach($ic in $this.IChevrons) {
                     Write-Host "$($ic.Item1.ToAnsiControlSequenceString())"
                 }
@@ -20080,22 +20080,22 @@ Class InventoryWindow : WindowBase {
                     If($this.PagingChevronRightVisible -EQ $false) {
                         $this.PagingChevronRightVisible = $true
                     }
-                    If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
+                    If(($this.PagingChevronRightVisible -EQ $true) -AND ($this.PagingChevronRightDirty -EQ $true)) {
                         Write-Host "$([InventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
                         $this.PagingChevronRightDirty = $false
                     }
-                } Elseif($this.CurrentPage -GT 1 -AND $this.CurrentPage -LT $this.NumPages) {
+                } Elseif(($this.CurrentPage -GT 1) -AND ($this.CurrentPage -LT $this.NumPages)) {
                     If($this.PagingChevronLeftVisible -EQ $false) {
                         $this.PagingChevronLeftVisible = $true
                     }
                     If($this.PagingChevronRightVisible -EQ $false) {
                         $this.PagingChevronRightVisible = $true
                     }
-                    If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
+                    If(($this.PagingChevronRightVisible -EQ $true) -AND ($this.PagingChevronRightDirty -EQ $true)) {
                         Write-Host "$([InventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
                         $this.PagingChevronRightDirty = $false
                     }
-                    If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
+                    If(($this.PagingChevronLeftVisible -EQ $true) -AND ($this.PagingChevronLeftDirty -EQ $true)) {
                         Write-Host "$([InventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
                         $this.PagingChevronLeftDirty = $false
                     }
@@ -20108,7 +20108,7 @@ Class InventoryWindow : WindowBase {
                     If($this.PagingChevronLeftVisible -EQ $false) {
                         $this.PagingChevronLeftVisible = $true
                     }
-                    If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
+                    If(($this.PagingChevronLeftVisible -EQ $true) -AND ($this.PagingChevronLeftDirty -EQ $true)) {
                         Write-Host "$([InventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
                         $this.PagingChevronLeftDirty = $false
                     }
@@ -20923,7 +20923,7 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 
     [Void]Draw() {
-        If($this.EntityBattlePhaseActive -EQ $true -AND $this.HasSetEntityActive -EQ $false) {
+        If(($this.EntityBattlePhaseActive -EQ $true) -AND ($this.HasSetEntityActive -EQ $false)) {
             $this.BorderDrawColors = [ConsoleColor24[]](
                 [CCAppleYellowDark24]::new(),
                 [CCAppleYellowDark24]::new(),
@@ -23178,22 +23178,22 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         If($this.PagingChevronRightVisible -EQ $false) {
                             $this.PagingChevronRightVisible = $true
                         }
-                        If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
+                        If(($this.PagingChevronRightVisible -EQ $true) -AND ($this.PagingChevronRightDirty -EQ $true)) {
                             Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
                             $this.PagingChevronRightDirty = $false
                         }
-                    } Elseif($this.CurrentPage -GT 1 -AND $this.CurrentPage -LT $this.NumPages) {
+                    } Elseif(($this.CurrentPage -GT 1) -AND ($this.CurrentPage -LT $this.NumPages)) {
                         If($this.PagingChevronLeftVisible -EQ $false) {
                             $this.PagingChevronLeftVisible = $true
                         }
                         If($this.PagingChevronRightVisible -EQ $false) {
                             $this.PagingChevronRightVisible = $true
                         }
-                        If($this.PagingChevronRightVisible -EQ $true -AND $this.PagingChevronRightDirty -EQ $true) {
+                        If(($this.PagingChevronRightVisible -EQ $true) -AND ($this.PagingChevronRightDirty -EQ $true)) {
                             Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
                             $this.PagingChevronRightDirty = $false
                         }
-                        If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
+                        If(($this.PagingChevronLeftVisible -EQ $true) -AND ($this.PagingChevronLeftDirty -EQ $true)) {
                             Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
                             $this.PagingChevronLeftDirty = $false
                         }
@@ -23206,7 +23206,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         If($this.PagingChevronLeftVisible -EQ $false) {
                             $this.PagingChevronLeftVisible = $true
                         }
-                        If($this.PagingChevronLeftVisible -EQ $true -AND $this.PagingChevronLeftDirty -EQ $true) {
+                        If(($this.PagingChevronLeftVisible -EQ $true) -AND ($this.PagingChevronLeftDirty -EQ $true)) {
                             Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
                             $this.PagingChevronLeftDirty = $false
                         }
@@ -24074,7 +24074,7 @@ Class BattleManager {
             }
 
             PhaseAExecution {
-                If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0 -OR $this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                If(($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) -OR ($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0)) {
                     $this.State = [BattleManagerState]::Calculation
                     Break
                 }
@@ -25618,7 +25618,7 @@ Class BattleManager {
             }
 
             PhaseBExecution {
-                If($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0 -OR $this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                If(($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) -OR ($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0)) {
                     $this.State = [BattleManagerState]::Calculation
                     Break
                 }
