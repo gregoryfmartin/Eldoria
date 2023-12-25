@@ -240,12 +240,12 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute = $true
+            $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
@@ -273,7 +273,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -289,7 +289,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -362,12 +362,12 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute = $true
+            $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
@@ -395,7 +395,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -411,7 +411,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -496,12 +496,12 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute = $true
+            $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
@@ -529,7 +529,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -545,7 +545,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -630,7 +630,7 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
@@ -663,7 +663,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -679,7 +679,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -764,12 +764,12 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute = $true
+            $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
@@ -797,7 +797,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -813,7 +813,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -898,12 +898,12 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute = $true
+            $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
@@ -931,7 +931,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -947,7 +947,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -1032,12 +1032,12 @@ Enum StatusScreenMode {
         [BattleAction]$SelfAction
     )
     
-    [Boolean]$CanExecute = $false
+    [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
     
     If($SelfAction.MpCost -GT 0) {
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute = $true
+            $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
@@ -1065,7 +1065,7 @@ Enum StatusScreenMode {
         }
     
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor = Get-Random -Minimum 1 -Maximum 100
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
@@ -1081,7 +1081,7 @@ Enum StatusScreenMode {
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
-        $EffectiveDamageCritFactor = 1.0
+        $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
     
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
@@ -1168,7 +1168,7 @@ Enum StatusScreenMode {
 [ScriptBlock]$Script:BaMagicStatAugmentCalc = {}
 
 [Player]$Script:ThePlayer = [Player]@{
-    Name = 'Steve'
+    Name  = 'Steve'
     Stats = @{
         [StatId]::HitPoints = [BattleEntityProperty]@{
             Base                = 1000
@@ -1473,7 +1473,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'move',
@@ -1481,8 +1480,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
-        # This check is safe to make since PSBoundParameters is always available where a Parameter block has been declared
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1529,7 +1526,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'move',
@@ -1537,8 +1533,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
-        # This check is safe to make since PSBoundParameters is always available where a Parameter block has been declared
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1581,7 +1575,6 @@ $Script:TheCommandTable = @{
     }
 
     'look' = {
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'look',
@@ -1596,7 +1589,6 @@ $Script:TheCommandTable = @{
     }
 
     'l' = {
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'look',
@@ -1611,7 +1603,6 @@ $Script:TheCommandTable = @{
     }
 
     'inventory' = {
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'inventory',
@@ -1627,7 +1618,6 @@ $Script:TheCommandTable = @{
     }
 
     'i' = {
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'inventory',
@@ -1647,7 +1637,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'examine',
@@ -1655,7 +1644,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1679,7 +1667,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'examine',
@@ -1687,7 +1674,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1711,7 +1697,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'get',
@@ -1719,7 +1704,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1743,7 +1727,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'get',
@@ -1751,7 +1734,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1775,7 +1757,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'take',
@@ -1783,7 +1764,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1807,7 +1787,6 @@ $Script:TheCommandTable = @{
             [String]$a0
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'take',
@@ -1815,7 +1794,6 @@ $Script:TheCommandTable = @{
             )
         }
 
-        # Check to see if $a0 exists and if it actually has something in it
         If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
             If([String]::IsNullOrEmpty($a0) -EQ $true) {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
@@ -1840,7 +1818,6 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'use',
@@ -2026,7 +2003,6 @@ $Script:TheCommandTable = @{
             [String]$a1
         )
 
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'use',
@@ -2393,7 +2369,6 @@ $Script:TheCommandTable = @{
     }
 
     'status' = {
-        # Check for unbound arguments
         If($args.Length -GT 0) {
             $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
                 'use',
@@ -2402,9 +2377,7 @@ $Script:TheCommandTable = @{
         }
 
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-        
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-        
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
     }
@@ -2419,9 +2392,7 @@ $Script:TheCommandTable = @{
         }
 
         $Script:TheCommandWindow.UpdateCommandHistory($true)
-        
         $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-        
         $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
         $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
     }
@@ -2470,7 +2441,6 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageADirty       = $true
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
-
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen) -AND ($Script:GpsRestoredFromBatBackup -EQ $false)) {
             $Script:TheBufferManager.RestoreBufferAToActive()
@@ -2487,7 +2457,6 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageADirty       = $true
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
-
             Write-Host "$([ATControlSequences]::CursorShow)"
         } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen) -AND ($Script:GpsRestoredFromStaBackup -EQ $false)) {
             $Script:TheBufferManager.RestoreBufferAToActive()
@@ -2504,12 +2473,10 @@ $Script:TheGlobalStateBlockTable = @{
             $Script:TheMessageWindow.MessageADirty       = $true
             $Script:TheMessageWindow.MessageBDirty       = $true
             $Script:TheMessageWindow.MessageCDirty       = $true
-
             Write-Host "$([ATControlSequences]::CursorShow)"
         }
 
         $Script:ThePlayer.Update()
-
         $Script:TheStatusWindow.Draw()
         $Script:TheCommandWindow.Draw()
         $Script:TheSceneWindow.Draw()
@@ -2521,11 +2488,9 @@ $Script:TheGlobalStateBlockTable = @{
         If($null -EQ $Script:TheInventoryWindow) {
             $Script:TheInventoryWindow = [InventoryWindow]::new()
         }
-
         If($Script:GpsRestoredFromInvBackup -EQ $true) {
             $Script:GpsRestoredFromInvBackup = $false
         }
-
         $Script:TheInventoryWindow.Draw()
         $Script:TheInventoryWindow.HandleInput()
     }
@@ -2544,6 +2509,7 @@ $Script:TheGlobalStateBlockTable = @{
                     $true
                 )
                 Write-Host "$($Banner.ToAnsiControlSequenceString())"
+                Write-Host "$([ATControlSequences]::CursorHide)"
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxBattleIntro)
                     $Script:TheSfxMPlayer.Play()
@@ -2553,22 +2519,18 @@ $Script:TheGlobalStateBlockTable = @{
             }
             $Script:HasBattleIntroPlayed = $true
         }
-
         If($null -EQ $Script:TheBattleManager) {
             $Script:TheBattleManager = [BattleManager]::new()
         }
-
         If($Script:GpsRestoredFromBatBackup -EQ $true) {
             $Script:GpsRestoredFromBatBackup = $false
         }
-
         If($Script:IsBattleBgmPlaying -EQ $false) {
             $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
             $Script:TheBgmMPlayer.Volume = 0.5
             $Script:TheBgmMPlayer.Play()
             $Script:IsBattleBgmPlaying = $true
         }
-
         $Script:TheBattleManager.Update()
     }
 
@@ -2585,15 +2547,12 @@ $Script:TheGlobalStateBlockTable = @{
         If($null -EQ $Script:TheStatusTechInventoryWindow) {
             $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
         }
-
-	If($Script:GpsRestoredFromStaBackup -EQ $true) {
-	    $Script:GpsRestoredFromStaBackup = $false
-	}
-
+        If($Script:GpsRestoredFromStaBackup -EQ $true) {
+            $Script:GpsRestoredFromStaBackup = $false
+        }
         $Script:TheStatusHudWindow.Draw()
         $Script:TheStatusTechSelectionWindow.Draw()
         $Script:TheStatusTechInventoryWindow.Draw()
-
         Switch($Script:StatusScreenMode) {
             ([StatusScreenMode]::EquippedTechSelection) {
                 If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
@@ -2776,15 +2735,6 @@ Class ConsoleColor24 {
         $this.Green = $Green
         $this.Blue  = $Blue
     }
-
-    ConsoleColor24(
-        [PSCustomObject]$JsonData
-    ) {
-        $psoProps = $JsonData.PSObject.Properties
-        $this.Red   = [Int]$psoProps['Red'].Value
-        $this.Green = [Int]$psoProps['Green'].Value
-        $this.Blue  = [Int]$psoProps['Blue'].Value
-    }
 }
 
 Class ATControlSequences {
@@ -2823,12 +2773,6 @@ Class ATForegroundColor24 {
         $this.Color = $Color
     }
 
-    ATForegroundColor24(
-        [PSCustomObject]$JsonData
-    ) {
-        $this.Color = [ConsoleColor24]::new($JsonData)
-    }
-
     [String]ToAnsiControlSequenceString() {
         Return [ATControlSequences]::GenerateFG24String($this.Color)
     }
@@ -2844,12 +2788,6 @@ Class ATBackgroundColor24 {
         [ConsoleColor24]$Color
     ) {
         $this.Color = $Color
-    }
-
-    ATBackgroundColor24(
-        [PSObject]$JsonData
-    ) {
-        $this.Color = [ConsoleColor24]::new($JsonData)
     }
 
     [String]ToAnsiControlSequenceString() {
@@ -2877,13 +2815,6 @@ Class ATDecoration {
         [Boolean]$Blink
     ) {
         $this.Blink = $Blink
-    }
-
-    ATDecoration(
-        [PSObject]$JsonData
-    ) {
-        $psoProps = $JsonData.PSObject.Properties
-        $this.Blink = [Boolean]$psoProps['Blink'].Value
     }
 
     [String]ToAnsiControlSequenceString() {
@@ -2930,14 +2861,6 @@ Class ATCoordinates {
     ) {
         $this.Row    = $CopyFrom.Row
         $this.Column = $CopyFrom.Column
-    }
-
-    ATCoordinates(
-        [PSObject]$JsonData
-    ) {
-        $psoProps    = $JsonData.PSObject.Properties
-        $this.Row    = [Int]$psoProps['Row'].Value
-        $this.Column = [Int]$psoProps['Column'].Value
     }
 
     [String]ToAnsiControlSequenceString() {
@@ -2990,646 +2913,646 @@ Class CCRandom24 : ConsoleColor24 {
 }
 
 Class CCAppleRedLight24 : ConsoleColor24 {
-    CCAppleRedLight24(): base(255, 59, 48) {}
+    CCAppleRedLight24() : base(255, 59, 48) {}
 }
 
 Class CCAppleRedDark24 : ConsoleColor24 {
-    CCAppleRedDark24(): base(255, 69, 58) {}
+    CCAppleRedDark24() : base(255, 69, 58) {}
 }
 
 Class CCAppleOrangeLight24 : ConsoleColor24 {
-    CCAppleOrangeLight24(): base(255, 149, 0) {}
+    CCAppleOrangeLight24() : base(255, 149, 0) {}
 }
 
 Class CCAppleOrangeDark24 : ConsoleColor24 {
-    CCAppleOrangeDark24(): base(255, 159, 10) {}
+    CCAppleOrangeDark24() : base(255, 159, 10) {}
 }
 
 Class CCAppleYellowLight24 : ConsoleColor24 {
-    CCAppleYellowLight24(): base(255, 204, 0) {}
+    CCAppleYellowLight24() : base(255, 204, 0) {}
 }
 
 Class CCAppleYellowDark24 : ConsoleColor24 {
-    CCAppleYellowDark24(): base(255, 214, 10) {}
+    CCAppleYellowDark24() : base(255, 214, 10) {}
 }
 
 Class CCAppleGreenLight24 : ConsoleColor24 {
-    CCAppleGreenLight24(): base(52, 199, 89) {}
+    CCAppleGreenLight24() : base(52, 199, 89) {}
 }
 
 Class CCAppleGreenDark24 : ConsoleColor24 {
-    CCAppleGreenDark24(): base(48, 209, 88) {}
+    CCAppleGreenDark24() : base(48, 209, 88) {}
 }
 
 Class CCAppleMintLight24 : ConsoleColor24 {
-    CCAppleMintLight24(): base(0, 199, 190) {}
+    CCAppleMintLight24() : base(0, 199, 190) {}
 }
 
 Class CCAppleMintDark24 : ConsoleColor24 {
-    CCAppleMintDark24(): base(99, 230, 226) {}
+    CCAppleMintDark24() : base(99, 230, 226) {}
 }
 
 Class CCAppleTealLight24 : ConsoleColor24 {
-    CCAppleTealLight24(): base(48, 176, 199) {}
+    CCAppleTealLight24() : base(48, 176, 199) {}
 }
 
 Class CCAppleTealDark24 : ConsoleColor24 {
-    CCAppleTealDark24(): base(64, 200, 224) {}
+    CCAppleTealDark24() : base(64, 200, 224) {}
 }
 
 Class CCAppleCyanLight24 : ConsoleColor24 {
-    CCAppleCyanLight24(): base(50, 173, 230) {}
+    CCAppleCyanLight24() : base(50, 173, 230) {}
 }
 
 Class CCAppleCyanDark24 : ConsoleColor24 {
-    CCAppleCyanDark24(): base(100, 210, 255) {}
+    CCAppleCyanDark24() : base(100, 210, 255) {}
 }
 
 Class CCAppleBlueLight24 : ConsoleColor24 {
-    CCAppleBlueLight24(): base(0, 122, 255) {}
+    CCAppleBlueLight24() : base(0, 122, 255) {}
 }
 
 Class CCAppleBlueDark24 : ConsoleColor24 {
-    CCAppleBlueDark24(): base(10, 132, 255) {}
+    CCAppleBlueDark24() : base(10, 132, 255) {}
 }
 
 Class CCAppleIndigoLight24 : ConsoleColor24 {
-    CCAppleIndigoLight24(): base(88, 86, 214) {}
+    CCAppleIndigoLight24() : base(88, 86, 214) {}
 }
 
 Class CCAppleIndigoDark24 : ConsoleColor24 {
-    CCAppleIndigoDark24(): base(94, 92, 230) {}
+    CCAppleIndigoDark24() : base(94, 92, 230) {}
 }
 
 Class CCApplePurpleLight24 : ConsoleColor24 {
-    CCApplePurpleLight24(): base(175, 82, 222) {}
+    CCApplePurpleLight24() : base(175, 82, 222) {}
 }
 
 Class CCApplePurpleDark24 : ConsoleColor24 {
-    CCApplePurpleDark24(): base(191, 90, 242) {}
+    CCApplePurpleDark24() : base(191, 90, 242) {}
 }
 
 Class CCApplePinkLight24 : ConsoleColor24 {
-    CCApplePinkLight24(): base(255, 45, 85) {}
+    CCApplePinkLight24() : base(255, 45, 85) {}
 }
 
 Class CCApplePinkDark24 : ConsoleColor24 {
-    CCApplePinkDark24(): base(255, 55, 95) {}
+    CCApplePinkDark24() : base(255, 55, 95) {}
 }
 
 Class CCAppleBrownLight24 : ConsoleColor24 {
-    CCAppleBrownLight24(): base(162, 132, 94) {}
+    CCAppleBrownLight24() : base(162, 132, 94) {}
 }
 
 Class CCAppleBrownDark24 : ConsoleColor24 {
-    CCAppleBrownDark24(): base(172, 142, 104) {}
+    CCAppleBrownDark24() : base(172, 142, 104) {}
 }
 
 Class CCAppleGrey1Light24 : ConsoleColor24 {
-    CCAppleGrey1Light24(): base(142, 142, 147) {}
+    CCAppleGrey1Light24() : base(142, 142, 147) {}
 }
 
 Class CCAppleGrey1Dark24 : ConsoleColor24 {
-    CCAppleGrey1Dark24(): base(142, 142, 147) {}
+    CCAppleGrey1Dark24() : base(142, 142, 147) {}
 }
 
 Class CCAppleGrey2Light24 : ConsoleColor24 {
-    CCAppleGrey2Light24(): base(174, 174, 178) {}
+    CCAppleGrey2Light24() : base(174, 174, 178) {}
 }
 
 Class CCAppleGrey2Dark24 : ConsoleColor24 {
-    CCAppleGrey2Dark24(): base(99, 99, 102) {}
+    CCAppleGrey2Dark24() : base(99, 99, 102) {}
 }
 
 Class CCAppleGrey3Light24 : ConsoleColor24 {
-    CCAppleGrey3Light24(): base(199, 199, 204) {}
+    CCAppleGrey3Light24() : base(199, 199, 204) {}
 }
 
 Class CCAppleGrey3Dark24 : ConsoleColor24 {
-    CCAppleGrey3Dark24(): base(72, 72, 74) {}
+    CCAppleGrey3Dark24() : base(72, 72, 74) {}
 }
 
 Class CCAppleGrey4Light24 : ConsoleColor24 {
-    CCAppleGrey4Light24(): base(209, 209, 214) {}
+    CCAppleGrey4Light24() : base(209, 209, 214) {}
 }
 
 Class CCAppleGrey4Dark24 : ConsoleColor24 {
-    CCAppleGrey4Dark24(): base(58, 58, 60) {}
+    CCAppleGrey4Dark24() : base(58, 58, 60) {}
 }
 
 Class CCAppleGrey5Light24 : ConsoleColor24 {
-    CCAppleGrey5Light24(): base(229, 229, 234) {}
+    CCAppleGrey5Light24() : base(229, 229, 234) {}
 }
 
 Class CCAppleGrey5Dark24 : ConsoleColor24 {
-    CCAppleGrey5Dark24(): base(44, 44, 46) {}
+    CCAppleGrey5Dark24() : base(44, 44, 46) {}
 }
 
 Class CCAppleGrey6Light24 : ConsoleColor24 {
-    CCAppleGrey6Light24(): base(242, 242, 247) {}
+    CCAppleGrey6Light24() : base(242, 242, 247) {}
 }
 
 Class CCAppleGrey6Dark24 : ConsoleColor24 {
-    CCAppleGrey6Dark24(): base(28, 28, 30) {}
+    CCAppleGrey6Dark24() : base(28, 28, 30) {}
 }
 
 <#
 https://www.pantone.com/connect/14-4318-TCX
 #>
 Class CCPantoneSkyBlue24 : ConsoleColor24 {
-    CCPantoneSkyBlue24(): base(54, 73, 83) {}
+    CCPantoneSkyBlue24() : base(54, 73, 83) {}
 }
 <#
 https://www.pantone.com/connect/15-6322-TPX
 #>
 Class CCPantoneLightGrassGreen24 : ConsoleColor24 {
-    CCPantoneLightGrassGreen24(): base(49, 70, 53) {}
+    CCPantoneLightGrassGreen24() : base(49, 70, 53) {}
 }
 
 <#
 https://www.pantone.com/connect/19-1218-TCX
 #>
 Class CCPantonePottingSoil24 : ConsoleColor24 {
-    CCPantonePottingSoil24(): base(33, 22, 18) {}
+    CCPantonePottingSoil24() : base(33, 22, 18) {}
 }
 
 <# COLOR VARIATIONS RECENTLY UPDATED FROM APPLE'S DOCUMENTATION #>
 <# https://developer.apple.com/design/human-interface-guidelines/color#Specifications #>
 
 Class CCAppleNRedLight24 : ConsoleColor24 {
-    CCAppleNRedLight24(): base(255, 59, 48) {}
+    CCAppleNRedLight24() : base(255, 59, 48) {}
 }
 
 Class CCAppleNRedDark24 : ConsoleColor24 {
-    CCAppleNRedDark24(): base(255, 69, 58) {}
+    CCAppleNRedDark24() : base(255, 69, 58) {}
 }
 
 Class CCAppleNRedALight24 : ConsoleColor24 {
-    CCAppleNRedALight24(): base(215, 0, 21) {}
+    CCAppleNRedALight24() : base(215, 0, 21) {}
 }
 
 Class CCAppleNRedADark24 : ConsoleColor24 {
-    CCAppleNRedADark24(): base(255, 105, 97) {}
+    CCAppleNRedADark24() : base(255, 105, 97) {}
 }
 
 Class CCAppleNOrangeLight24 : ConsoleColor24 {
-    CCAppleNOrangeLight24(): base(255, 149, 0) {}
+    CCAppleNOrangeLight24() : base(255, 149, 0) {}
 }
 
 Class CCAppleNOrangeDark24 : ConsoleColor24 {
-    CCAppleNOrangeDark24(): base(255, 159, 10) {}
+    CCAppleNOrangeDark24() : base(255, 159, 10) {}
 }
 
 Class CCAppleNOrangeALight24 : ConsoleColor24 {
-    CCAppleNOrangeALight24(): base(201, 52, 0) {}
+    CCAppleNOrangeALight24() : base(201, 52, 0) {}
 }
 
 Class CCAppleNOrangeADark24 : ConsoleColor24 {
-    CCAppleNOrangeADark24(): base(255, 179, 64) {}
+    CCAppleNOrangeADark24() : base(255, 179, 64) {}
 }
 
 Class CCAppleNYellowLight24 : ConsoleColor24 {
-    CCAppleNYellowLight24(): base(255, 204, 0) {}
+    CCAppleNYellowLight24() : base(255, 204, 0) {}
 }
 
 Class CCAppleNYellowDark24 : ConsoleColor24 {
-    CCAppleNYellowDark24(): base(255, 214, 10) {}
+    CCAppleNYellowDark24() : base(255, 214, 10) {}
 }
 
 Class CCAppleNYellowALight24 : ConsoleColor24 {
-    CCAppleNYellowALight24(): base(178, 80, 0) {}
+    CCAppleNYellowALight24() : base(178, 80, 0) {}
 }
 
 Class CCAppleNYellowADark24 : ConsoleColor24 {
-    CCAppleNYellowADark24(): base(255, 212, 38) {}
+    CCAppleNYellowADark24() : base(255, 212, 38) {}
 }
 
 Class CCAppleNGreenLight24 : ConsoleColor24 {
-    CCAppleNGreenLight24(): base(52, 199, 89) {}
+    CCAppleNGreenLight24() : base(52, 199, 89) {}
 }
 
 Class CCAppleNGreenDark24 : ConsoleColor24 {
-    CCAppleNGreenDark24(): base(48, 209, 88) {}
+    CCAppleNGreenDark24() : base(48, 209, 88) {}
 }
 
 Class CCAppleNGreenALight24 : ConsoleColor24 {
-    CCAppleNGreenALight24(): base(36, 138, 61) {}
+    CCAppleNGreenALight24() : base(36, 138, 61) {}
 }
 
 Class CCAppleNGreenADark24 : ConsoleColor24 {
-    CCAppleNGreenADark24(): base(48, 219, 91) {}
+    CCAppleNGreenADark24() : base(48, 219, 91) {}
 }
 
 Class CCAppleNMintLight24 : ConsoleColor24 {
-    CCAppleNMintLight24(): base(0, 199, 190) {}
+    CCAppleNMintLight24() : base(0, 199, 190) {}
 }
 
 Class CCAppleNMintDark24 : ConsoleColor24 {
-    CCAppleNMintDark24(): base(99, 230, 226) {}
+    CCAppleNMintDark24() : base(99, 230, 226) {}
 }
 
 Class CCAppleNMintALight24 : ConsoleColor24 {
-    CCAppleNMintALight24(): base(12, 129, 123) {}
+    CCAppleNMintALight24() : base(12, 129, 123) {}
 }
 
 Class CCAppleNMintADark24 : ConsoleColor24 {
-    CCAppleNMintADark24(): base(102, 212, 207) {}
+    CCAppleNMintADark24() : base(102, 212, 207) {}
 }
 
 Class CCAppleNTealLight24 : ConsoleColor24 {
-    CCAppleNTealLight24(): base(48, 176, 199) {}
+    CCAppleNTealLight24() : base(48, 176, 199) {}
 }
 
 Class CCAppleNTealDark24 : ConsoleColor24 {
-    CCAppleNTealDark24(): base(64, 200, 224) {}
+    CCAppleNTealDark24() : base(64, 200, 224) {}
 }
 
 Class CCAppleNTealALight24 : ConsoleColor24 {
-    CCAppleNTealALight24(): base(0, 130, 153) {}
+    CCAppleNTealALight24() : base(0, 130, 153) {}
 }
 
 Class CCAppleNTealADark24 : ConsoleColor24 {
-    CCAppleNTealADark24(): base(93, 230, 255) {}
+    CCAppleNTealADark24() : base(93, 230, 255) {}
 }
 
 Class CCAppleNCyanLight24 : ConsoleColor24 {
-    CCAppleNCyanLight24(): base(50, 173, 230) {}
+    CCAppleNCyanLight24() : base(50, 173, 230) {}
 }
 
 Class CCAppleNCyanDark24 : ConsoleColor24 {
-    CCAppleNCyanDark24(): base(100, 210, 255) {}
+    CCAppleNCyanDark24() : base(100, 210, 255) {}
 }
 
 Class CCAppleNCyanALight24 : ConsoleColor24 {
-    CCAppleNCyanALight24(): base(0, 113, 164) {}
+    CCAppleNCyanALight24() : base(0, 113, 164) {}
 }
 
 Class CCAppleNCyanADark24 : ConsoleColor24 {
-    CCAppleNCyanADark24(): base(112, 215, 255) {}
+    CCAppleNCyanADark24() : base(112, 215, 255) {}
 }
 
 Class CCAppleNBlueLight24 : ConsoleColor24 {
-    CCAppleNBlueLight24(): base(0, 122, 255) {}
+    CCAppleNBlueLight24() : base(0, 122, 255) {}
 }
 
 Class CCAppleNBlueDark24 : ConsoleColor24 {
-    CCAppleNBlueDark24(): base(10, 132, 255) {}
+    CCAppleNBlueDark24() : base(10, 132, 255) {}
 }
 
 Class CCAppleNBlueALight24 : ConsoleColor24 {
-    CCAppleNBlueALight24(): base(0, 64, 221) {}
+    CCAppleNBlueALight24() : base(0, 64, 221) {}
 }
 
 Class CCAppleNBlueADark24 : ConsoleColor24 {
-    CCAppleNBlueADark24(): base(64, 156, 255) {}
+    CCAppleNBlueADark24() : base(64, 156, 255) {}
 }
 
 Class CCAppleNIndigoLight24 : ConsoleColor24 {
-    CCAppleNIndigoLight24(): base(88, 86, 214) {}
+    CCAppleNIndigoLight24() : base(88, 86, 214) {}
 }
 
 Class CCAppleNIndigoDark24 : ConsoleColor24 {
-    CCAppleNIndigoDark24(): base(94, 92, 230) {}
+    CCAppleNIndigoDark24() : base(94, 92, 230) {}
 }
 
 Class CCAppleNIndigoALight24 : ConsoleColor24 {
-    CCAppleNIndigoALight24(): base(54, 52, 163) {}
+    CCAppleNIndigoALight24() : base(54, 52, 163) {}
 }
 
 Class CCAppleNIndigoADark24 : ConsoleColor24 {
-    CCAppleNIndigoADark24(): base(125, 122, 255) {}
+    CCAppleNIndigoADark24() : base(125, 122, 255) {}
 }
 
 Class CCAppleNPurpleLight24 : ConsoleColor24 {
-    CCAppleNPurpleLight24(): base(175, 82, 222) {}
+    CCAppleNPurpleLight24() : base(175, 82, 222) {}
 }
 
 Class CCAppleNPurpleDark24 : ConsoleColor24 {
-    CCAppleNPurpleDark24(): base(191, 90, 242) {}
+    CCAppleNPurpleDark24() : base(191, 90, 242) {}
 }
 
 Class CCAppleNPurpleALight24 : ConsoleColor24 {
-    CCAppleNPurpleALight24(): base(137, 68, 171) {}
+    CCAppleNPurpleALight24() : base(137, 68, 171) {}
 }
 
-Class CCApplNPurpleADark24 : ConsoleColor24 {
-    CCApplNPurpleADark24(): base(218, 143, 255) {}
+Class CCAppleNPurpleADark24 : ConsoleColor24 {
+    CCAppleNPurpleADark24() : base(218, 143, 255) {}
 }
 
 Class CCAppleNPinkLight24 : ConsoleColor24 {
-    CCAppleNPinkLight24(): base(255, 45, 85) {}
+    CCAppleNPinkLight24() : base(255, 45, 85) {}
 }
 
 Class CCAppleNPinkDark24 : ConsoleColor24 {
-    CCAppleNPinkDark24(): base(255, 55, 95) {}
+    CCAppleNPinkDark24() : base(255, 55, 95) {}
 }
 
 Class CCAppleNPinkALight24 : ConsoleColor24 {
-    CCAppleNPinkALight24(): base(211, 15, 69) {}
+    CCAppleNPinkALight24() : base(211, 15, 69) {}
 }
 
 Class CCAppleNPinkADark24 : ConsoleColor24 {
-    CCAppleNPinkADark24(): base(255, 100, 130) {}
+    CCAppleNPinkADark24() : base(255, 100, 130) {}
 }
 
 Class CCAppleNBrownLight24 : ConsoleColor24 {
-    CCAppleNBrownLight24(): base(162, 132, 94) {}
+    CCAppleNBrownLight24() : base(162, 132, 94) {}
 }
 
 Class CCAppleNBrownDark24 : ConsoleColor24 {
-    CCAppleNBrownDark24(): base(172, 142, 104) {}
+    CCAppleNBrownDark24() : base(172, 142, 104) {}
 }
 
 Class CCAppleNBrownALight24 : ConsoleColor24 {
-    CCAppleNBrownALight24(): base(127, 101, 69) {}
+    CCAppleNBrownALight24() : base(127, 101, 69) {}
 }
 
 Class CCAppleNBrownADark24 : ConsoleColor24 {
-    CCAppleNBrownADark24(): base(181, 148, 105) {}
+    CCAppleNBrownADark24() : base(181, 148, 105) {}
 }
 
 Class CCAppleNGreyLight24 : ConsoleColor24 {
-    CCAppleNGreyLight24(): base(142, 142, 147) {}
+    CCAppleNGreyLight24() : base(142, 142, 147) {}
 }
 
 Class CCAppleNGreyDark24 : ConsoleColor24 {
-    CCAppleNGreyDark24(): base(142, 142, 147) {}
+    CCAppleNGreyDark24() : base(142, 142, 147) {}
 }
 
 Class CCAppleNGreyALight24 : ConsoleColor24 {
-    CCAppleNGreyALight24(): base(108, 108, 112) {}
+    CCAppleNGreyALight24() : base(108, 108, 112) {}
 }
 
 Class CCAppleNGreyADark24 : ConsoleColor24 {
-    CCAppleNGreyADark24(): base(174, 174, 178) {}
+    CCAppleNGreyADark24() : base(174, 174, 178) {}
 }
 
 Class CCAppleNGrey2Light24 : ConsoleColor24 {
-    CCAppleNGrey2Light24(): base(174, 174, 178) {}
+    CCAppleNGrey2Light24() : base(174, 174, 178) {}
 }
 
 Class CCAppleNGrey2Dark24 : ConsoleColor24 {
-    CCAppleNGrey2Dark24(): base(99, 99, 102) {}
+    CCAppleNGrey2Dark24() : base(99, 99, 102) {}
 }
 
 Class CCAppleNGrey2ALight24 : ConsoleColor24 {
-    CCAppleNGrey2ALight24(): base(142, 142, 147) {}
+    CCAppleNGrey2ALight24() : base(142, 142, 147) {}
 }
 
 Class CCAppleNGrey2ADark24 : ConsoleColor24 {
-    CCAppleNGrey2ADark24(): base(124, 124, 128) {}
+    CCAppleNGrey2ADark24() : base(124, 124, 128) {}
 }
 
 Class CCAppleNGrey3Light24 : ConsoleColor24 {
-    CCAppleNGrey3Light24(): base(199, 199, 204) {}
+    CCAppleNGrey3Light24() : base(199, 199, 204) {}
 }
 
 Class CCAppleNGrey3Dark24 : ConsoleColor24 {
-    CCAppleNGrey3Dark24(): base(72, 72, 74) {}
+    CCAppleNGrey3Dark24() : base(72, 72, 74) {}
 }
 
 Class CCAppleNGrey4ALight24 : ConsoleColor24 {
-    CCAppleNGrey4ALight24(): base(188, 188, 192) {}
+    CCAppleNGrey4ALight24() : base(188, 188, 192) {}
 }
 
 Class CCAppleNGrey4ADark24 : ConsoleColor24 {
-    CCAppleNGrey4ADark24(): base(68, 68, 70) {}
+    CCAppleNGrey4ADark24() : base(68, 68, 70) {}
 }
 
 Class CCAppleNGrey5Light24 : ConsoleColor24 {
-    CCAppleNGrey5Light24(): base(229, 229, 234) {}
+    CCAppleNGrey5Light24() : base(229, 229, 234) {}
 }
 
 Class CCAppleNGrey5Dark24 : ConsoleColor24 {
-    CCAppleNGrey5Dark24(): base(44, 44, 46) {}
+    CCAppleNGrey5Dark24() : base(44, 44, 46) {}
 }
 
 Class CCAppleNGrey5ALight24 : ConsoleColor24 {
-    CCAppleNGrey5ALight24(): base(216, 216, 220) {}
+    CCAppleNGrey5ALight24() : base(216, 216, 220) {}
 }
 
 Class CCAppleNGrey5ADark24 : ConsoleColor24 {
-    CCAppleNGrey5ADark24(): base(54, 54, 56) {}
+    CCAppleNGrey5ADark24() : base(54, 54, 56) {}
 }
 
 Class CCAppleNGrey6Light24 : ConsoleColor24 {
-    CCAppleNGrey6Light24(): base(242, 242, 247) {}
+    CCAppleNGrey6Light24() : base(242, 242, 247) {}
 }
 
 Class CCAppleNGrey6Dark24 : ConsoleColor24 {
-    CCAppleNGrey6Dark24(): base(28, 28, 30) {}
+    CCAppleNGrey6Dark24() : base(28, 28, 30) {}
 }
 
 Class CCAppleNGrey6ALight24 : ConsoleColor24 {
-    CCAppleNGrey6ALight24(): base(235, 235, 240) {}
+    CCAppleNGrey6ALight24() : base(235, 235, 240) {}
 }
 
 Class CCAppleNGrey6ADark24 : ConsoleColor24 {
-    CCAppleNGrey6ADark24(): base(36, 36, 38) {}
+    CCAppleNGrey6ADark24() : base(36, 36, 38) {}
 }
 
 Class CCAppleVRedLight24 : ConsoleColor24 {
-    CCAppleVRedLight24(): base(255, 49, 38) {}
+    CCAppleVRedLight24() : base(255, 49, 38) {}
 }
 
 Class CCAppleVRedDark24 : ConsoleColor24 {
-    CCAppleVRedDark24(): base(255, 79, 68) {}
+    CCAppleVRedDark24() : base(255, 79, 68) {}
 }
 
 Class CCAppleVRedALight24 : ConsoleColor24 {
-    CCAppleVRedALight24(): base(194, 6, 24) {}
+    CCAppleVRedALight24() : base(194, 6, 24) {}
 }
 
 Class CCAppleVRedADark24 : ConsoleColor24 {
-    CCAppleVRedADark24(): base(255, 65, 54) {}
+    CCAppleVRedADark24() : base(255, 65, 54) {}
 }
 
 Class CCAppleVOrangeLight24 : ConsoleColor24 {
-    CCAppleVOrangeLight24(): base(245, 139, 0) {}
+    CCAppleVOrangeLight24() : base(245, 139, 0) {}
 }
 
 Class CCAppleVOrangeDark24 : ConsoleColor24 {
-    CCAppleVOrangeDark24(): base(255, 169, 20) {}
+    CCAppleVOrangeDark24() : base(255, 169, 20) {}
 }
 
 Class CCAppleVOrangeALight24 : ConsoleColor24 {
-    CCAppleVOrangeALight24(): base(173, 58, 0) {}
+    CCAppleVOrangeALight24() : base(173, 58, 0) {}
 }
 
 Class CCAppleVOrangeADark24 : ConsoleColor24 {
-    CCAppleVOrangeADark24(): base(255, 179, 64) {}
+    CCAppleVOrangeADark24() : base(255, 179, 64) {}
 }
 
 Class CCAppleVYellowLight24 : ConsoleColor24 {
-    CCAppleVYellowLight24(): base(245, 194, 0) {}
+    CCAppleVYellowLight24() : base(245, 194, 0) {}
 }
 
 Class CCAppleVYellowDark24 : ConsoleColor24 {
-    CCAppleVYellowDark24(): base(255, 224, 20) {}
+    CCAppleVYellowDark24() : base(255, 224, 20) {}
 }
 
 Class CCAppleVYellowALight24 : ConsoleColor24 {
-    CCAppleVYellowALight24(): base(146, 81, 0) {}
+    CCAppleVYellowALight24() : base(146, 81, 0) {}
 }
 
 Class CCAppleVYellowADark24 : ConsoleColor24 {
-    CCAppleVYellowADark24(): base(255, 212, 38) {}
+    CCAppleVYellowADark24() : base(255, 212, 38) {}
 }
 
 Class CCAppleVGreenLight24 : ConsoleColor24 {
-    CCAppleVGreenLight24(): base(30, 195, 55) {}
+    CCAppleVGreenLight24() : base(30, 195, 55) {}
 }
 
 Class CCAppleVGreenDark24 : ConsoleColor24 {
-    CCAppleVGreenDark24(): base(60, 225, 85) {}
+    CCAppleVGreenDark24() : base(60, 225, 85) {}
 }
 
 Class CCAppleVGreenALight24 : ConsoleColor24 {
-    CCAppleVGreenALight24(): base(0, 112, 24) {}
+    CCAppleVGreenALight24() : base(0, 112, 24) {}
 }
 
 Class CCAppleVGreenADark24 : ConsoleColor24 {
-    CCAppleVGreenADark24(): base(49, 222, 75) {}
+    CCAppleVGreenADark24() : base(49, 222, 75) {}
 }
 
 Class CCAppleVMintLight24 : ConsoleColor24 {
-    CCAppleVMintLight24(): base(0, 189, 180) {}
+    CCAppleVMintLight24() : base(0, 189, 180) {}
 }
 
 Class CCAppleVMintDark24 : ConsoleColor24 {
-    CCAppleVMintDark24(): base(108, 224, 219) {}
+    CCAppleVMintDark24() : base(108, 224, 219) {}
 }
 
 Class CCAppleVMintALight24 : ConsoleColor24 {
-    CCAppleVMintALight24(): base(11, 117, 112) {}
+    CCAppleVMintALight24() : base(11, 117, 112) {}
 }
 
 Class CCAppleVMintADark24 : ConsoleColor24 {
-    CCAppleVMintADark24(): base(49, 222, 75) {}
+    CCAppleVMintADark24() : base(49, 222, 75) {}
 }
 
 Class CCAppleVTealLight24 : ConsoleColor24 {
-    CCAppleVTealLight24(): base(46, 167, 189) {}
+    CCAppleVTealLight24() : base(46, 167, 189) {}
 }
 
 Class CCAppleVTealDark24 : ConsoleColor24 {
-    CCAppleVTealDark24(): base(68, 212, 237) {}
+    CCAppleVTealDark24() : base(68, 212, 237) {}
 }
 
 Class CCAppleVTealALight24 : ConsoleColor24 {
-    CCAppleVTealALight24(): base(0, 119, 140) {}
+    CCAppleVTealALight24() : base(0, 119, 140) {}
 }
 
 Class CCAppleVTealADark24 : ConsoleColor24 {
-    CCAppleVTealADark24(): base(93, 230, 255) {}
+    CCAppleVTealADark24() : base(93, 230, 255) {}
 }
 
 Class CCAppleVCyanLight24 : ConsoleColor24 {
-    CCAppleVCyanLight24(): base(65, 175, 220) {}
+    CCAppleVCyanLight24() : base(65, 175, 220) {}
 }
 
 Class CCAppleVCyanDark24 : ConsoleColor24 {
-    CCAppleVCyanDark24(): base(90, 205, 250) {}
+    CCAppleVCyanDark24() : base(90, 205, 250) {}
 }
 
 Class CCAppleVCyanALight24 : ConsoleColor24 {
-    CCAppleVCyanALight24(): base(0, 103, 150) {}
+    CCAppleVCyanALight24() : base(0, 103, 150) {}
 }
 
 Class CCAppleVCyanADark24 : ConsoleColor24 {
-    CCAppleVCyanADark24(): base(112, 215, 255) {}
+    CCAppleVCyanADark24() : base(112, 215, 255) {}
 }
 
 Class CCAppleVBlueLight24 : ConsoleColor24 {
-    CCAppleVBlueLight24(): base(0, 122, 245) {}
+    CCAppleVBlueLight24() : base(0, 122, 245) {}
 }
 
 Class CCAppleVBlueDark24 : ConsoleColor24 {
-    CCAppleVBlueDark24(): base(20, 142, 255) {}
+    CCAppleVBlueDark24() : base(20, 142, 255) {}
 }
 
 Class CCAppleVBlueALight24 : ConsoleColor24 {
-    CCAppleVBlueALight24(): base(0, 64, 221) {}
+    CCAppleVBlueALight24() : base(0, 64, 221) {}
 }
 
 Class CCAppleVBlueADark24 : ConsoleColor24 {
-    CCAppleVBlueADark24(): base(64, 156, 255) {}
+    CCAppleVBlueADark24() : base(64, 156, 255) {}
 }
 
 Class CCAppleVIndigoLight24 : ConsoleColor24 {
-    CCAppleVIndigoLight24(): base(84, 82, 204) {}
+    CCAppleVIndigoLight24() : base(84, 82, 204) {}
 }
 
 Class CCAppleVIndigoDark24 : ConsoleColor24 {
-    CCAppleVIndigoDark24(): base(99, 97, 242) {}
+    CCAppleVIndigoDark24() : base(99, 97, 242) {}
 }
 
 Class CCAppleVIndigoALight24 : ConsoleColor24 {
-    CCAppleVIndigoALight24(): base(54, 52, 163) {}
+    CCAppleVIndigoALight24() : base(54, 52, 163) {}
 }
 
 Class CCAppleVIndigoADark24 : ConsoleColor24 {
-    CCAppleVIndigoADark24(): base(125, 122, 255) {}
+    CCAppleVIndigoADark24() : base(125, 122, 255) {}
 }
 
 Class CCAppleVPurpleLight24 : ConsoleColor24 {
-    CCAppleVPurpleLight24(): base(159, 75, 201) {}
+    CCAppleVPurpleLight24() : base(159, 75, 201) {}
 }
 
 Class CCAppleVPurpleDark24 : ConsoleColor24 {
-    CCAppleVPurpleDark24(): base(204, 101, 255) {}
+    CCAppleVPurpleDark24() : base(204, 101, 255) {}
 }
 
 Class CCAppleVPurpleALight24 : ConsoleColor24 {
-    CCAppleVPurpleALight24(): base(173, 68, 171) {}
+    CCAppleVPurpleALight24() : base(173, 68, 171) {}
 }
 
 Class CCAppleVPurpleADark24 : ConsoleColor24 {
-    CCAppleVPurpleADark24(): base(218, 143, 255) {}
+    CCAppleVPurpleADark24() : base(218, 143, 255) {}
 }
 
 Class CCAppleVPinkLight24 : ConsoleColor24 {
-    CCAppleVPinkLight24(): base(245, 35, 75) {}
+    CCAppleVPinkLight24() : base(245, 35, 75) {}
 }
 
 Class CCAppleVPinkDark24 : ConsoleColor24 {
-    CCAppleVPinkDark24(): base(255, 65, 105) {}
+    CCAppleVPinkDark24() : base(255, 65, 105) {}
 }
 
 Class CCAppleVPinkALight24 : ConsoleColor24 {
-    CCAppleVPinkALight24(): base(193, 16, 50) {}
+    CCAppleVPinkALight24() : base(193, 16, 50) {}
 }
 
 Class CCAppleVPinkADark24 : ConsoleColor24 {
-    CCAppleVPinkADark24(): base(255, 58, 95) {}
+    CCAppleVPinkADark24() : base(255, 58, 95) {}
 }
 
 Class CCAppleVBrownLight24 : ConsoleColor24 {
-    CCAppleVBrownLight24(): base(152, 122, 84) {}
+    CCAppleVBrownLight24() : base(152, 122, 84) {}
 }
 
 Class CCAppleVBrownDark24 : ConsoleColor24 {
-    CCAppleVBrownDark24(): base(182, 152, 114) {}
+    CCAppleVBrownDark24() : base(182, 152, 114) {}
 }
 
 Class CCAppleVBrownALight24 : ConsoleColor24 {
-    CCAppleVBrownALight24(): base(119, 93, 59) {}
+    CCAppleVBrownALight24() : base(119, 93, 59) {}
 }
 
 Class CCAppleVGreyLight24 : ConsoleColor24 {
-    CCAppleVGreyLight24(): base(132, 132, 137) {}
+    CCAppleVGreyLight24() : base(132, 132, 137) {}
 }
 
 Class CCAppleVGreyDark24 : ConsoleColor24 {
-    CCAppleVGreyDark24(): base(162, 162, 167) {}
+    CCAppleVGreyDark24() : base(162, 162, 167) {}
 }
 
 Class CCAppleVGreyALight24 : ConsoleColor24 {
-    CCAppleVGreyALight24(): base(97, 97, 101) {}
+    CCAppleVGreyALight24() : base(97, 97, 101) {}
 }
 
 Class CCAppleVGreyADark24 : ConsoleColor24 {
-    CCAppleVGreyADark24(): base(152, 152, 157) {}
+    CCAppleVGreyADark24() : base(152, 152, 157) {}
 }
 
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
@@ -3637,7 +3560,7 @@ Class CCTextDefault24 : CCAppleGrey5Light24 {}
 Class CCListItemCurrentHighlight24 : CCAppleNPinkLight24 {}
 
 Class ATForegroundColor24None : ATForegroundColor24 {
-    ATForegroundColor24None(): base([CCBlack24]::new()) {}
+    ATForegroundColor24None() : base([CCBlack24]::new()) {}
 
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -3653,7 +3576,7 @@ Class ATBackgroundColor24None : ATBackgroundColor24 {
 }
 
 Class ATCoordinatesNone : ATCoordinates {
-    ATCoordinatesNone(): base(0, 0) {}
+    ATCoordinatesNone() : base(0, 0) {}
 
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -3665,7 +3588,7 @@ Class ATCoordinatesDefault : ATCoordinates {
 }
 
 Class ATDecorationNone : ATDecoration {
-    ATDecorationNone(): base($false) {}
+    ATDecorationNone() : base($false) {}
 
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -3755,7 +3678,7 @@ Class ATStringCompositeSc : ATString {
         [ConsoleColor24]$ForegroundColor,
         [ATDecoration]$Decoration,
         [String]$Data
-    ): base() {
+    ) : base() {
         $this.Prefix = [ATStringPrefix]::new(
             [ATForegroundColor24]::new($ForegroundColor),
             [ATBackgroundColor24None]::new(),
@@ -3770,7 +3693,7 @@ Class ATStringCompositeSc : ATString {
         [ATForegroundColor24]$ForegroundColor,
         [ATDecoration]$Decoration,
         [String]$Data
-    ): base() {
+    ) : base() {
         $this.Prefix = [ATStringPrefix]::new(
             $ForegroundColor,
             [ATBackgroundColor24None]::new(),
@@ -3785,7 +3708,7 @@ Class ATStringCompositeSc : ATString {
         [ATForegroundColor24]$ForegroundColor,
         [ATDecoration]$Decoration,
         [String[]]$Array
-    ): base() {
+    ) : base() {
         $this.Prefix = [ATStringPrefix]::new(
             $ForegroundColor,
             [ATBackgroundColor24None]::new(),
@@ -3846,7 +3769,7 @@ Class ATSceneImageString : ATString {
     ATSceneImageString(
         [ATBackgroundColor24]$BackgroundColor,
         [ATCoordinates]$Coordinates
-    ): base() {
+    ) : base() {
         $this.Prefix = [ATStringPrefix]::new(
             [ATForegroundColor24None]::new(),
             $BackgroundColor,
@@ -3941,8 +3864,8 @@ Class BattleEntityProperty {
             }
         } Else {
             If($this.MaxAugmentActive -EQ $true) {
-                $this.Max    = $this.MaxPre
-                $this.MaxPre = 0
+                $this.Max              = $this.MaxPre
+                $this.MaxPre           = 0
                 $this.MaxAugmentActive = $false
             }
             If($this.BaseAugmentActive -EQ $true) {
@@ -3968,11 +3891,9 @@ Class BattleEntityProperty {
         If($IncAmt -LE 0) {
             Return -1
         }
-
         If($this.Base -EQ $this.Max) {
             Return -2
         }
-
         [Int]$t    = $this.Base + $IncAmt
         $t         = [Math]::Clamp($t, 0, $this.Max) # This should work regardless if BaseAugmentActive = true
         $this.Base = $t
@@ -3993,11 +3914,9 @@ Class BattleEntityProperty {
         If($DecAmt -GE 0) {
             Return -1
         }
-
         If($this.Base -LE 0) {
             Return -2
         }
-
         [Int]$t    = $this.Base + $DecAmt
         $t         = [Math]::Clamp($t, 0, $this.Max)
         $this.Base = $t
@@ -4017,7 +3936,6 @@ Class BattleEntityProperty {
         If($IncAmt -LE 0) {
             Return -1
         }
-
         $this.Max += $IncAmt
 
         Return 0
@@ -4035,11 +3953,9 @@ Class BattleEntityProperty {
         If($DecAmt -GE 0) {
             Return -1
         }
-
         [Int]$t   = $this.Max - $DecAmt
         $t        = [Math]::Clamp($t, 0, [Int]::MaxValue)
         $this.Max = $t
-        
         If($this.Max -LT $this.Base) {
             $this.Base = $this.Max
         }
@@ -5411,7 +5327,7 @@ Class EnemyBattleEntity : BattleEntity {
     [Int]$SpoilsGold              = 0
     [MapTileObject[]]$SpoilsItems = @()
 
-    EnemyBattleEntity(): base() {
+    EnemyBattleEntity() : base() {
         $this.SpoilsEffect = {
             Param(
                 [Player]$Player,
@@ -5444,7 +5360,6 @@ Class EnemyBattleEntity : BattleEntity {
             )
             $Script:TheBattleStatusMessageWindow.Draw()
             $Player.CurrentGold += $Opponent.SpoilsGold
-            
             If($Opponent.SpoilsItems.Length -GT 0) {
                 [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
                 
@@ -5512,7 +5427,6 @@ Class EnemyBattleEntity : BattleEntity {
             )
             $Script:TheBattleStatusMessageWindow.Draw()
             $Player.CurrentGold += $Opponent.SpoilsGold
-            
             If($Opponent.SpoilsItems.Length -GT 0) {
                 [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
                 
@@ -5554,7 +5468,7 @@ Class Player : BattleEntity {
     [List[String]]$TargetOfFilter
     [PlayerActionInventory]$ActionInventory
 
-    Player(): base() {
+    Player() : base() {
         $this.CurrentGold     = 0
         $this.MapCoordinates  = [ATCoordinates]::new(0, 0)
         $this.Inventory       = [List[MapTileObject]]::new()
@@ -5567,7 +5481,7 @@ Class Player : BattleEntity {
         [ATCoordinates]$MapCoordinates,
         [List[MapTileObject]]$Inventory,
         [String[]]$TargetOfFilter
-    ): base() {
+    ) : base() {
         $this.CurrentGold     = $CurrentGold
         $this.MapCoordinates  = $MapCoordinates
         $this.Inventory       = $Inventory
@@ -5587,19 +5501,17 @@ Class Player : BattleEntity {
         [Int]$MaxMp,
         [Int]$Gold,
         [String[]]$TargetOfFilter
-    ): base() {
-        $this.Name        = $Name
-        $this.CurrentGold = $Gold
-
+    ) : base() {
+        $this.Name                              = $Name
+        $this.CurrentGold                       = $Gold
         $this.Stats[[StatId]::HitPoints].Base   = $BaseHp
         $this.Stats[[StatId]::HitPoints].Max    = $MaxHp
         $this.Stats[[StatId]::MagicPoints].Base = $BaseMp
         $this.Stats[[StatId]::MagicPoints].Max  = $MaxMp
-
-        $this.MapCoordinates  = [ATCoordinates]::new(0, 0)
-        $this.Inventory       = [List[MapTileObject]]::new()
-        $this.TargetOfFilter  = [List[String]]::new()
-        $this.ActionInventory = [PlayerActionInventory]::new()
+        $this.MapCoordinates                    = [ATCoordinates]::new(0, 0)
+        $this.Inventory                         = [List[MapTileObject]]::new()
+        $this.TargetOfFilter                    = [List[String]]::new()
+        $this.ActionInventory                   = [PlayerActionInventory]::new()
 
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
@@ -5641,6 +5553,7 @@ Class Player : BattleEntity {
                     Return [ItemRemovalStatus]::FailKeyItem
                 }
                 $this.Inventory.RemoveAt($c)
+
                 Return [ItemRemovalStatus]::Success
             }
             $c++
@@ -5659,12 +5572,11 @@ Class Player : BattleEntity {
         } Catch {
             Return [ItemRemovalStatus]::FailGeneral
         }
-
         If($a.KeyItem -EQ $true) {
             Return [ItemRemovalStatus]::FailKeyItem
         }
-
         $this.Inventory.RemoveAt($Index)
+
         Return [ItemRemovalStatus]::Success
     }
 
@@ -5680,10 +5592,10 @@ Class Player : BattleEntity {
                 } Else {
                     $this.MapCoordinates.Row++
                 }
-
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+
                 Return
             } Else {
                 $a = $Script:CurrentMap.MapHeight - 1
@@ -5705,6 +5617,7 @@ Class Player : BattleEntity {
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($true)
             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+
             Return
         }
     }
@@ -5720,10 +5633,10 @@ Class Player : BattleEntity {
                 } Else {
                     $this.MapCoordinates.Row--
                 }
-
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+
                 Return
             } Else {
                 $a = 0
@@ -5744,6 +5657,7 @@ Class Player : BattleEntity {
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($true)
             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+
             Return
         }
     }
@@ -5760,10 +5674,10 @@ Class Player : BattleEntity {
                 } Else {
                     $this.MapCoordinates.Column++
                 }
-
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+
                 Return
             } Else {
                 $a = $Script:CurrentMap.MapWidth - 1
@@ -5785,6 +5699,7 @@ Class Player : BattleEntity {
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($true)
             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+
             Return
         }
     }
@@ -5800,10 +5715,10 @@ Class Player : BattleEntity {
                 } Else {
                     $this.MapCoordinates.Column--
                 }
-
                 $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
                 $Script:TheCommandWindow.UpdateCommandHistory($true)
                 $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+
                 Return
             } Else {
                 $a = 0
@@ -5824,6 +5739,7 @@ Class Player : BattleEntity {
         } Else {
             $Script:TheCommandWindow.UpdateCommandHistory($true)
             $Script:TheMessageWindow.WriteYouShallNotPassMessage()
+
             Return
         }
     }
@@ -5873,6 +5789,7 @@ Class PlayerItemInventory {
                     Return [ItemRemovalStatus]::FailKeyItem
                 }
                 $this.Listing.RemoveAt($c)
+
                 Return [ItemRemovalStatus]::Success
             }
             $c++
@@ -5891,12 +5808,11 @@ Class PlayerItemInventory {
         } Catch {
             Return [ItemRemovalStatus]::FailGeneral
         }
-
         If($a.KeyItem -EQ $true) {
             Return [ItemRemovalStatus]::FailKeyItem
         }
-
         $this.Listing.RemoveAt($Index)
+
         Return [ItemRemovalStatus]::Success
     }
 }
@@ -5936,6 +5852,7 @@ Class PlayerActionInventory {
         Foreach($a in $this.Listing) {
             If($a.Name -IEQ $ActionName) {
                 $this.Listing.RemoveAt($c)
+
                 Return [ActionInvRemovalStatus]::Success
             }
             $c++
@@ -5954,8 +5871,8 @@ Class PlayerActionInventory {
         } Catch {
             Return [ActionInvRemovalStatus]::Fail
         }
-
         $this.Listing.RemoveAt($Index)
+
         Return [ActionInvRemovalStatus]::Success
     }
 
@@ -6015,7 +5932,7 @@ Class EnemyEntityImage {
 }
 
 Class EEIEmpty : EnemyEntityImage {
-    EEIEmpty(): base() {}
+    EEIEmpty() : base() {}
 
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -6025,7 +5942,7 @@ Class EEIEmpty : EnemyEntityImage {
 Class EEIInternalBase : EnemyEntityImage {
     [ATBackgroundColor24[]]$ColorMap
 
-    EEIInternalBase(): base() {
+    EEIInternalBase() : base() {
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
     }
 }
@@ -9973,8 +9890,7 @@ Class EEIDuskbane : EEIInternalBase {
 
 Class EEBat : EnemyBattleEntity {
     EEBat() : base() {
-        $this.Name = 'Bat'
-
+        $this.Name  = 'Bat'
         $this.Stats = @{
             [StatId]::HitPoints = [BattleEntityProperty]@{
                 Base                = 500
@@ -10172,23 +10088,17 @@ Class EEBat : EnemyBattleEntity {
                 }
             }
         }
-
         $this.ActionListing = @{
             [ActionSlot]::A = [BAPunch]::new()
             [ActionSlot]::B = [BAScratch]::new()
             [ActionSlot]::C = $null
             [ActionSlot]::D = $null
         }
-
         $this.ActionMarbleBag = @([ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::A, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B, [ActionSlot]::B)
-
-        $this.Affinity = [BattleActionType]::ElementalIce
-
-        $this.Image = $Script:EeiBat
-
-        $this.SpoilsGold = 50
-
-        $this.SpoilsItems = @(
+        $this.Affinity        = [BattleActionType]::ElementalIce
+        $this.Image           = $Script:EeiBat
+        $this.SpoilsGold      = 50
+        $this.SpoilsItems     = @(
             [MTOMilk]::new()
         )
     }
@@ -10283,7 +10193,7 @@ Class SceneImage {
 }
 
 Class SIEmpty : SceneImage {
-    SIEmpty(): base() {}
+    SIEmpty() : base() {}
 
     [String]ToAnsiControlSequenceString() {
         Return ''
@@ -10293,7 +10203,7 @@ Class SIEmpty : SceneImage {
 Class SIInternalBase : SceneImage {
     [ATBackgroundColor24[]]$ColorMap
 
-    SIInternalBase(): base() {
+    SIInternalBase() : base() {
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
     }
 }
@@ -10301,20 +10211,18 @@ Class SIInternalBase : SceneImage {
 Class SIRandomNoise : SceneImage {
     [ATBackgroundColor24[]]$ColorMap
 
-    SIRandomNoise(): base() {
+    SIRandomNoise() : base() {
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
-
         For($a = 0; $a -LT $this.ColorMap.Count; $a++) {
             $this.ColorMap[$a] = [CCRandom24]::new()
         }
-
         $this.CreateSceneImageATString($this.ColorMap)
         $this.ColorMap = $null
     }
 }
 
 Class SIFieldNorthRoad : SIInternalBase {
-    SIFieldNorthRoad(): base() {
+    SIFieldNorthRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -11187,7 +11095,7 @@ Class SIFieldNorthRoad : SIInternalBase {
 }
 
 Class SIFieldNorthEastRoad : SIInternalBase {
-    SIFieldNorthEastRoad(): base() {
+    SIFieldNorthEastRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthEastRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -12060,7 +11968,7 @@ Class SIFieldNorthEastRoad : SIInternalBase {
 }
 
 Class SIFieldNorthWestRoad : SIInternalBase {
-    SIFieldNorthWestRoad(): base() {
+    SIFieldNorthWestRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -12933,7 +12841,7 @@ Class SIFieldNorthWestRoad : SIInternalBase {
 }
 
 Class SIFieldNorthEastWestRoad : SIInternalBase {
-    SIFieldNorthEastWestRoad(): base() {
+    SIFieldNorthEastWestRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthEastWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -13806,7 +13714,7 @@ Class SIFieldNorthEastWestRoad : SIInternalBase {
 }
 
 Class SIFieldSouthRoad : SIInternalBase {
-    SIFieldSouthRoad(): base() {
+    SIFieldSouthRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -14679,7 +14587,7 @@ Class SIFieldSouthRoad : SIInternalBase {
 }
 
 Class SIFieldSouthEastRoad : SIInternalBase {
-    SIFieldSouthEastRoad(): base() {
+    SIFieldSouthEastRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthEastRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -15552,7 +15460,7 @@ Class SIFieldSouthEastRoad : SIInternalBase {
 }
 
 Class SIFieldSouthWestRoad : SIInternalBase {
-    SIFieldSouthWestRoad(): base() {
+    SIFieldSouthWestRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -16425,7 +16333,7 @@ Class SIFieldSouthWestRoad : SIInternalBase {
 }
 
 Class SIFieldSouthEastWestRoad : SIInternalBase {
-    SIFieldSouthEastWestRoad(): base() {
+    SIFieldSouthEastWestRoad() : base() {
         Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldSouthEastWestRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
         $this.ColorMap[1]   = [CCAppleBlueLight24]::new()
@@ -17357,7 +17265,6 @@ Class MapTileObject {
         }
         $this.PlayerEffectString = ''
         $this.KeyItem            = $false
-
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
         }
@@ -17388,7 +17295,6 @@ Class MapTileObject {
         }
         $this.PlayerEffectString = $PlayerEffectString
         $this.KeyItem            = $false
-
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
         }
@@ -17420,7 +17326,6 @@ Class MapTileObject {
         }
         $this.PlayerEffectString = $PlayerEffectString
         $this.KeyItem            = $KeyItem
-
         Foreach($a in $TargetOfFilter) {
             $this.TargetOfFilter.Add($a) | Out-Null
         }
@@ -17481,7 +17386,6 @@ Class MapTile {
         $this.BattleAllowed   = $false
         $this.EncounterRate   = 0.5
         $this.RegionCode      = 0
-
         Foreach($a In $ObjectListing) {
             $this.ObjectListing.Add($a) | Out-Null
         }
@@ -17501,7 +17405,6 @@ Class MapTile {
         $this.BattleAllowed   = $BattleAllowed
         $this.EncounterRate   = $EncounterRate
         $this.RegionCode      = $RegionCode
-        
         Foreach($a in $ObjectListing) {
             $this.ObjectListing.Add($a) | Out-Null
         }
@@ -17532,11 +17435,7 @@ Class MapTile {
             [Double]$BattleChance = Get-Random -Minimum 0.0 -Maximum 1.0
             If($BattleChance -GT $this.EncounterRate) {
                 $Script:TheCurrentEnemy = New-Object -TypeName $($Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random)
-
-                # Copy the active buffer to the A back buffer
                 $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-
-                # Change state
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::BattleScreen
             }
@@ -17562,7 +17461,7 @@ Class Map {
         $this.MapWidth     = $MapWidth
         $this.MapHeight    = $MapHeight
         $this.BoundaryWrap = $BoundaryWrap
-        $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+        $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
     }
 
     [MapTile]GetTileAtPlayerCoordinates() {
@@ -17573,7 +17472,7 @@ Class Map {
 Class MTOTree : MapTileObject {
     [Boolean]$HasRopeTied
 
-    MTOTree(): base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
+    MTOTree() : base('Tree', 'tree', $false, 'It''s a tree. Looks like all the other ones.', {
         <#
         Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments:
         A reference to the object itself, and the source. AFAIK, this is because of how the ScriptBlock gets invoked. The $this reference
@@ -17637,10 +17536,8 @@ Class MTOTree : MapTileObject {
 
                 UPDATE: I have this functionality in place.
                 #>
-
                 $Self.HasRopeTied   = $true
                 $Self.ExamineString = 'A rope is tied to this tree. Wee.'
-
                 $Script:ThePlayer.RemoveInventoryItemByName($Source.Name)
             }
         }
@@ -17653,48 +17550,48 @@ Class MTOTree : MapTileObject {
 }
 
 Class MTOLadder : MapTileObject {
-    MTOLadder():  base('Ladder', 'ladder', $false, 'Used to climb things. Just don''t walk under one.', {}) {}
+    MTOLadder() :  base('Ladder', 'ladder', $false, 'Used to climb things. Just don''t walk under one.', {}) {}
 }
 
 Class MTORope : MapTileObject {
-    MTORope(): base('Rope', 'rope', $false, 'It''s not a snake. Hopefully.', {}) {}
+    MTORope() : base('Rope', 'rope', $false, 'It''s not a snake. Hopefully.', {}) {}
 }
 
 Class MTOStairs : MapTileObject {
-    MTOStairs(): base('Stairs', 'stairs', $false, 'A faithful ally for elevating one''s position.', {}) {}
+    MTOStairs() : base('Stairs', 'stairs', $false, 'A faithful ally for elevating one''s position.', {}) {}
 }
 
 Class MTOPole : MapTileObject {
-    MTOPole(): base('Pole', 'pole', $false, 'Not the north or the south one.', {}) {}
+    MTOPole() : base('Pole', 'pole', $false, 'Not the north or the south one.', {}) {}
 }
 
 Class MTOBacon : MapTileObject {
-    MTOBacon(): base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {}) {
+    MTOBacon() : base('Bacon', 'bacon', $false, 'Shredded swine flesh. Cholesterol never tasted so good.', {}) {
         $this.KeyItem = $true
     }
 }
 
 Class MTOApple : MapTileObject {
-    MTOApple(): base('Apple', 'apple', $true, 'A big, juicy, red apple. Worm not included.', {}) {}
+    MTOApple() : base('Apple', 'apple', $true, 'A big, juicy, red apple. Worm not included.', {}) {}
 }
 
 Class MTOStick : MapTileObject {
-    MTOStick(): base('Stick', 'stick', $false, 'Be careful not to poke your eye out with it.', {}) {}
+    MTOStick() : base('Stick', 'stick', $false, 'Be careful not to poke your eye out with it.', {}) {}
 }
 
 Class MTOYogurt : MapTileObject {
-    MTOYogurt(): base('Yogurt', 'yogurt', $false, 'For some reason, people enjoy this spoiled milk.', {}) {}
+    MTOYogurt() : base('Yogurt', 'yogurt', $false, 'For some reason, people enjoy this spoiled milk.', {}) {}
 }
 
 Class MTORock : MapTileObject {
-    MTORock(): base('Rock', 'rock', $false, 'A garden variety rock. Good for taunting raccoons with.', {}) {}
+    MTORock() : base('Rock', 'rock', $false, 'A garden variety rock. Good for taunting raccoons with.', {}) {}
 }
 
 Class MTOMilk : MapTileObject {
     [Int]$PlayerHpBonus
     [Boolean]$IsSpoiled
 
-    MTOMilk(): base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {
+    MTOMilk() : base('Milk', 'milk', $false, '2%. We don''t take kindly to whole milk ''round here.', {
         Param(
             [MTOMilk]$Self,
             [Object]$Source
@@ -17720,7 +17617,6 @@ Class MTOMilk : MapTileObject {
                                 )
                             )
                         )
-
                         $Source.RemoveInventoryItemByName($Self.Name)
                     } Else {
                         $Script:TheMessageWindow.WriteMessageComposite(
@@ -17746,7 +17642,6 @@ Class MTOMilk : MapTileObject {
                                 )
                             )
                         )
-
                         $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
                     } Else {
                         $Script:TheMessageWindow.WriteMessageComposite(
@@ -17763,10 +17658,9 @@ Class MTOMilk : MapTileObject {
             }
         }
     }) {
-        $a = $(Get-Random -Minimum 0 -Maximum 10)
+        $a                  = $(Get-Random -Minimum 0 -Maximum 10)
         $this.PlayerHpBonus = 75
         $this.IsSpoiled     = ($a -GE 6 ? $true : $false)
-
         If($this.IsSpoiled -EQ $true) {
             $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
             $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
@@ -18120,7 +18014,7 @@ Class StatusWindow : WindowBase {
             { ($_ -EQ $Script:OsCheckLinux) -OR ($_ -EQ $Script:OsCheckMac) } {
                 If($this.PlayerNameDrawDirty -EQ $true) {
                     $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
-                    [ATString]$a = [ATString]::new(
+                    [ATString]$a                             = [ATString]::new(
                         [ATStringPrefix]::new(
                             $Script:ThePlayer.NameDrawColor,
                             [ATBackgroundColor24None]::new(),
@@ -18132,7 +18026,6 @@ Class StatusWindow : WindowBase {
                     )
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
-
                     $this.PlayerNameDrawDirty = $false
                 }
                 If($this.PlayerHpDrawDirty -EQ $true) {
@@ -18181,7 +18074,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18226,7 +18118,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18271,7 +18162,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18316,7 +18206,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
                     }
@@ -18325,7 +18214,6 @@ Class StatusWindow : WindowBase {
                     $this.LineBlankActual.Prefix.Coordinates.Row++
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSeuenceString())"
                     Write-Host "$($a)"
-
                     $this.PlayerHpDrawDirty = $false
                 }
                 If($this.PlayerMpDrawDirty -EQ $true) {
@@ -18371,7 +18259,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18416,7 +18303,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18461,7 +18347,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18506,7 +18391,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
                     }
@@ -18536,9 +18420,7 @@ Class StatusWindow : WindowBase {
                         'G',
                         $true
                     )
-
                     Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
@@ -18558,7 +18440,6 @@ Class StatusWindow : WindowBase {
                     $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
-
                     $this.PlayerNameDrawDirty = $false
                 }
                 If($this.PlayerHpDrawDirty -EQ $true) {
@@ -18606,7 +18487,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18651,7 +18531,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18696,7 +18575,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18741,17 +18619,14 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
                     }
-
                     $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawCoordinates.Row, [StatusWindow]::PlayerHpDrawCoordinates.Column)
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     $this.LineBlankActual.Prefix.Coordinates.Row++
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
-
                     $this.PlayerHpDrawDirty = $false
                 }
                 If($this.PlayerMpDrawDirty -EQ $true) {
@@ -18797,7 +18672,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18842,7 +18716,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18887,7 +18760,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
 
@@ -18932,7 +18804,6 @@ Class StatusWindow : WindowBase {
                                 "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)",
                                 $true
                             )
-
                             $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
                         }
                     }
@@ -18942,7 +18813,6 @@ Class StatusWindow : WindowBase {
                     $this.LineBlankActual.Prefix.Coordinates.Row++
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a)"
-
                     $this.PlayerMpDrawDirty = $false
                 }
                 If($this.PlayerGoldDrawDirty -EQ $true) {
@@ -18966,11 +18836,9 @@ Class StatusWindow : WindowBase {
                         'G',
                         $true
                     )
-
                     $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawCoordinates.Row, [StatusWindow]::PlayerGoldDrawCoordinates.Column)
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-
                     $this.PlayerGoldDrawDirty = $false
                 }
             }
@@ -19026,8 +18894,8 @@ Class CommandWindow : WindowBase {
     CommandWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Command Window' -PercentComplete -1
 
-        $this.LeftTop     = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
+        $this.LeftTop          = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -19141,55 +19009,43 @@ Class CommandWindow : WindowBase {
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.CommandDivDirty -EQ $true) {
             Write-Host "$([CommandWindow]::CommandDiv.ToAnsiControlSequenceString())"
             $this.CommandDivDirty = $false
         }
-
         If($this.CommandHistoryDirty -EQ $true) {
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryDDrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryDRef].ToAnsiControlSequenceString())"
-
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryCDrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryCRef].ToAnsiControlSequenceString())"
-
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryBDrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryBRef].ToAnsiControlSequenceString())"
-
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryADrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryARef].ToAnsiControlSequenceString())"
-
             [CommandWindow]::CommandHistBlank.Prefix.Coordinates = [CommandWindow]::CommandHistoryEDrawCoordinates
             Write-Host "$([CommandWindow]::CommandHistBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.CommandHistory[[CommandWindow]::CommandHistoryERef].ToAnsiControlSequenceString())"
-
             $this.CommandHistoryDirty = $false
         }
     }
 
     [Void]HandleInput() {
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-
         $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
-
         While($keyCap.VirtualKeyCode -NE 13) {
             $cpx = $Script:Rui.CursorPosition.X
-
             If($cpx -GE 19) {
                 Break
             }
-
             Switch($keyCap.VirtualKeyCode) {
                 8 { # Backspace
                     $fpx = $Script:Rui.CursorPosition.X
                     If($fpx -GT $Script:DefaultCursorCoordinates.Row) {
                         Write-Host " `b" -NoNewLine
-
                         If($this.CommandActual.UserData.Length -GT 0) {
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
                         }
@@ -19197,7 +19053,6 @@ Class CommandWindow : WindowBase {
                         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
                     } Elseif($fpx -EQ $Script:DefaultCursorCoordinates.Row) {
                         Write-Host " `b" -NoNewline
-
                         If($this.CommandActual.UserData.Length -GT 0) {
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
                         }
@@ -19208,10 +19063,8 @@ Class CommandWindow : WindowBase {
                     $this.CommandActual.UserData += $keyCap.Character
                 }
             }
-
             $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         }
-
         $this.InvokeCommandParser()
     }
 
@@ -19219,7 +19072,6 @@ Class CommandWindow : WindowBase {
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-
         If([String]::IsNullOrEmpty($this.CommandActual.UserData.Trim()) -EQ $true) {
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
@@ -19231,12 +19083,12 @@ Class CommandWindow : WindowBase {
                 )
             )
             $this.CommandActual.UserData = ''
+
             Return
         } Else {
             $cmdactSplit = $this.CommandActual.UserData.Trim()
             $cmdactSplit = -SPLIT $this.CommandActual.UserData
             $rootFound   = $Script:TheCommandTable.GetEnumerator() | Where-Object { $_.Name -IEQ $cmdactSplit[0] }
-
             If($null -NE $rootFound) {
                 Switch($cmdactSplit.Length) {
                     1 {
@@ -19275,6 +19127,7 @@ Class CommandWindow : WindowBase {
                         )
                     )
                 )
+
                 Return
             }
         }
@@ -19304,7 +19157,6 @@ Class CommandWindow : WindowBase {
             $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
             Return
         }
-
         Foreach($d in $a) {
             If($z -EQ $a.Count - 1) {
                 $c += $d.Name
@@ -19314,7 +19166,6 @@ Class CommandWindow : WindowBase {
             $z++
         }
         $e = $c.Length
-
         If($e -GT $b) {
             $y = $true
             $c -MATCH '([\s,]+\w+){5}$' | Out-Null
@@ -19323,7 +19174,6 @@ Class CommandWindow : WindowBase {
                 $f = $matches[0].Remove(0, 2)
             }
         }
-
         $Script:TheMessageWindow.WriteMessageComposite(
             @(
                 [ATStringCompositeSc]::new(
@@ -19342,7 +19192,6 @@ Class CommandWindow : WindowBase {
                 )
             )
         )
-
         If($y -EQ $true) {
             $Script:TheMessageWindow.WriteMessageComposite(
                 @(
@@ -19371,10 +19220,10 @@ Class CommandWindow : WindowBase {
                         )
                     )
                 )
+
                 Return
             }
         }
-
         $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
 
@@ -19392,15 +19241,14 @@ Class CommandWindow : WindowBase {
 
             Return
         }
-
         Foreach($b in $a) {
             If($b.Name -IEQ $ItemName) {
                 If($b.CanAddToInventory -EQ $true) {
                     $Script:ThePlayer.Inventory.Add($b) | Out-Null
                     $c = $a.Remove($b) | Out-Null
-
                     If($c -EQ $false) {
                         Write-Error 'Failed to remove an item from the Map Tile!'
+
                         Exit
                     } Else {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
@@ -19416,7 +19264,6 @@ Class CommandWindow : WindowBase {
                 }
             }
         }
-
         $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
 
@@ -19429,21 +19276,16 @@ Class CommandWindow : WindowBase {
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor
-
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryARef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor
-
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor
-
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor
-
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
-
         If($CmdValid -EQ $true) {
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations     = [ATDecorationNone]::new()
@@ -19453,7 +19295,6 @@ Class CommandWindow : WindowBase {
                 Blink = $true
             }
         }
-
         $this.CommandActual.UserData = ''
         $this.CommandHistoryDirty    = $true
     }
@@ -19476,7 +19317,7 @@ Class SceneWindow : WindowBase {
     [Boolean]$SceneImageDirty = $true
     [SceneImage]$Image        = [SIEmpty]::new()
 
-    SceneWindow(): base() {
+    SceneWindow() : base() {
         Write-Progress -Activity 'Creating ''global'' variables' -Id 1 -Status 'Creating the Scene Window' -PercentComplete -1
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
@@ -19491,7 +19332,6 @@ Class SceneWindow : WindowBase {
             [SceneWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]::new([SceneWindow]::ImageDrawRowOffset, [SceneWindow]::ImageDrawColumnOffset)
     }
 
@@ -19551,12 +19391,10 @@ Class MessageWindow : WindowBase {
             [MessageWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(($this.RightBottom.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageCDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
         [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(([MessageWindow]::MessageBDrawCoordinates.Row - 1), ($this.LeftTop.Column + 1))
-
-        [MessageWindow]::MessageWindowBlank = [ATString]::new(
+        [MessageWindow]::MessageWindowBlank      = [ATString]::new(
             [ATStringPrefix]::new(
                 [ATForegroundColor24None]::new(),
                 [ATBackgroundColor24None]::new(),
@@ -19566,13 +19404,11 @@ Class MessageWindow : WindowBase {
             '                                                                             ',
             $true
         )
-
         $this.MessageHistory = @(
             [ATStringComposite]::new(),
             [ATStringComposite]::new(),
             [ATStringComposite]::new()
         )
-
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
@@ -19580,31 +19416,22 @@ Class MessageWindow : WindowBase {
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.MessageADirty -EQ $true) {
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-
             Write-Host "$([MessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
-
             $this.MessageADirty = $false
         }
-
         If($this.MessageBDirty -EQ $true) {
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-
             Write-Host "$([MessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
-
             $this.MessageBDirty = $false
         }
-
         If($this.MessageCDirty -EQ $true) {
             [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())"
-
             Write-Host "$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
-
             $this.MessageCDirty = $false
         }
     }
@@ -19613,18 +19440,15 @@ Class MessageWindow : WindowBase {
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
-
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
-
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
-
-        $this.MessageADirty = $true
-        $this.MessageBDirty = $true
-        $this.MessageCDirty = $true
+        $this.MessageADirty                                                              = $true
+        $this.MessageBDirty                                                              = $true
+        $this.MessageCDirty                                                              = $true
     }
 
     [Void]WriteMessageComposite(
@@ -19633,10 +19457,9 @@ Class MessageWindow : WindowBase {
         $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual)
         $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual)
         $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($Composite)
-
-        $this.MessageADirty = $true
-        $this.MessageBDirty = $true
-        $this.MessageCDirty = $true
+        $this.MessageADirty                                                       = $true
+        $this.MessageBDirty                                                       = $true
+        $this.MessageCDirty                                                       = $true
     }
 
     [Void]WriteBadCommandMessage(
@@ -19930,8 +19753,7 @@ Class InventoryWindow : WindowBase {
 
     Static [String]$DivLineHorizontalString = '----------------------------------------------------------------------------'
     Static [String]$ZpLineBlank             = '                                                                             '
-
-    Static [String]$DescLineBlank = '                                                                          '
+    Static [String]$DescLineBlank           = '                                                                          '
 
     Static [ATString]$PagingChevronRight = [ATString]::new(
         [ATStringPrefix]::new(
@@ -19985,10 +19807,8 @@ Class InventoryWindow : WindowBase {
         $true
     )
 
-    Static [Boolean]$DebugMode = $false
-
-    Static [Int]$MoronCounter = 0
-
+    Static [Boolean]$DebugMode     = $false
+    Static [Int]$MoronCounter      = 0
     Static [String]$ZeroPagePrompt = 'You have no items in your inventory.'
 
     [Boolean]$PlayerChevronDirty        = $true
@@ -20019,9 +19839,9 @@ Class InventoryWindow : WindowBase {
 
     [Int]$ActiveIChevronIndex = 0
 
-    InventoryWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([InventoryWindow]::WindowBRRow, [InventoryWindow]::WindowBRColumn)
+    InventoryWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([InventoryWindow]::WindowLTRow, [InventoryWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([InventoryWindow]::WindowBRRow, [InventoryWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -20033,24 +19853,19 @@ Class InventoryWindow : WindowBase {
             [InventoryWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         $this.PageRefs = [List[MapTileObject]]::new()
-
         $this.CreateIChevrons()
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.BookDirty -EQ $true) {
             $this.CalculateNumPages()
             $this.BookDirty = $false
         }
-
         If($this.CurrentPageDirty -EQ $true) {
             $this.PopulatePage()
         }
-
         If($this.ZeroPageActive -EQ $true) {
             If($this.MoronPageActive -EQ $true) {
                 $this.WriteMoronPage()
@@ -20062,14 +19877,12 @@ Class InventoryWindow : WindowBase {
                 Write-Host "$([InventoryWindow]::DivLineHorizontal.ToAnsiControlSequenceString())"
                 $this.DivLineDirty = $false
             }
-
             If(($this.PlayerChevronVisible -EQ $true) -AND ($this.PlayerChevronDirty -EQ $true)) {
                 Foreach($ic in $this.IChevrons) {
                     Write-Host "$($ic.Item1.ToAnsiControlSequenceString())"
                 }
                 $this.PlayerChevronDirty = $false
             }
-
             If($this.NumPages -GT 1) {
                 If($this.CurrentPage -EQ 1) {
                     If($this.PagingChevronLeftVisible -EQ $true) {
@@ -20127,23 +19940,19 @@ Class InventoryWindow : WindowBase {
                     Write-Host "$([InventoryWindow]::PagingChevronRightBlank.ToAnsiControlSequenceString())"
                 }
             }
-
             If($this.ActiveItemBlinking -EQ $false) {
-                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
                     Blink = $true
                 }
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
-
-                $this.ItemsListDirty     = $true
-                $this.ActiveItemBlinking = $true
+                $this.ItemsListDirty                                               = $true
+                $this.ActiveItemBlinking                                           = $true
             }
-
             If($this.ItemsListDirty -EQ $true) {
                 $this.WriteItemLabels()
                 Write-Host "$([ATControlSequences]::CursorHide)"
                 $this.ItemsListDirty = $false
             }
-
             If($this.ItemDescDirty -EQ $true) {
                 [ATString]$b = [ATString]::new(
                     [ATStringPrefix]::new(
@@ -20208,7 +20017,6 @@ Class InventoryWindow : WindowBase {
                     ($this.PageRefs[$this.ActiveIChevronIndex].KeyItem -EQ $true ? 'KEY ITEM': ''),
                     $true
                 )
-
                 Write-Host "$($b.ToAnsiControlSequenceString())"
                 Write-Host "$($d.ToAnsiControlSequenceString())"
                 Write-Host "$($f.ToAnsiControlSequenceString())"
@@ -20375,7 +20183,6 @@ Class InventoryWindow : WindowBase {
             )
             $c++ # FYI - This was intentional
         }
-
         $this.ResetIChevronPosition()
         $this.CreateItemLabelBlanks()
     }
@@ -20511,7 +20318,6 @@ Class InventoryWindow : WindowBase {
         } Else {
             $this.NumPages = [Math]::Ceiling($pp)
         }
-
         If($this.CurrentPage -GT $this.NumPages) {
             $this.CurrentPage = $this.NumPages
         }
@@ -20555,15 +20361,12 @@ Class InventoryWindow : WindowBase {
             $rs                   = [Math]::Clamp($rs, 0, [Int]::MaxValue)
             $re                   = 10
 
-
             Try {
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, $re)
             } Catch {
                 $this.PageRefs = $Script:ThePlayer.Inventory.GetRange($rs, ($Script:ThePlayer.Inventory.Count - $rs))
             }
-
             $this.CreateItemLabels()
-
             $this.ItemsListDirty   = $true
             $this.CurrentPageDirty = $false
         }
@@ -20580,16 +20383,15 @@ Class InventoryWindow : WindowBase {
 
     [ATString]GetActiveIChevron() {
         $this.ActiveIChevronIndex = 0
-
         Foreach($a in $this.IChevrons) {
             If($a.Item2 -EQ $true) {
                 Return $a.Item1
             }
             $this.ActiveIChevronIndex++
         }
-
-        $this.ActiveIChevronIndex = 0
+        $this.ActiveIChevronIndex                        = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
+
         Return $this.IChevrons[$this.ActiveIChevronIndex].Item1
     }
 
@@ -20624,7 +20426,6 @@ Class InventoryWindow : WindowBase {
                 [InventoryWindow]::ZeroPagePrompt,
                 $true
             )
-    
             Write-Host "$($a.ToAnsiControlSequenceString())"
             $this.ZpPromptDirty = $false
         }
@@ -20635,12 +20436,10 @@ Class InventoryWindow : WindowBase {
     [Void]ResetIChevronPosition() {
         $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [InventoryWindow]::IChevronBlankCharacter
-
         Try {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
         } Catch {}
-
         $this.ActiveIChevronIndex                                          = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -20648,10 +20447,9 @@ Class InventoryWindow : WindowBase {
             Blink = $true
         }
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
-
-        $this.PlayerChevronDirty = $true
-        $this.ActiveItemBlinking = $false
-        $this.ItemDescDirty      = $true
+        $this.PlayerChevronDirty                                           = $true
+        $this.ActiveItemBlinking                                           = $false
+        $this.ItemDescDirty                                                = $true
     }
 
     [Void]HandleInput() {
@@ -20668,7 +20466,6 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-
                     $this.ActiveIChevronIndex--
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -20677,7 +20474,6 @@ Class InventoryWindow : WindowBase {
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
-
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
@@ -20689,7 +20485,6 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-
                     $this.ActiveIChevronIndex++
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -20698,10 +20493,9 @@ Class InventoryWindow : WindowBase {
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
-
-                $this.PlayerChevronDirty = $true
-                $this.ActiveItemBlinking = $false
-                $this.ItemDescDirty      = $true
+                $this.PlayerChevronDirty                                               = $true
+                $this.ActiveItemBlinking                                               = $false
+                $this.ItemDescDirty                                                    = $true
             }
 
             39 {
@@ -20710,9 +20504,7 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-
                     $this.ActiveIChevronIndex += 5
-
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
@@ -20720,10 +20512,9 @@ Class InventoryWindow : WindowBase {
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
-
-                $this.PlayerChevronDirty = $true
-                $this.ActiveItemBlinking = $false
-                $this.ItemDescDirty      = $true
+                $this.PlayerChevronDirty                                               = $true
+                $this.ActiveItemBlinking                                               = $false
+                $this.ItemDescDirty                                                    = $true
             }
 
             37 {
@@ -20732,7 +20523,6 @@ Class InventoryWindow : WindowBase {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-
                     $this.ActiveIChevronIndex -= 5
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronCharacter
@@ -20741,10 +20531,9 @@ Class InventoryWindow : WindowBase {
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
                 }
-
-                $this.PlayerChevronDirty = $true
-                $this.ActiveItemBlinking = $false
-                $this.ItemDescDirty      = $true
+                $this.PlayerChevronDirty                                               = $true
+                $this.ActiveItemBlinking                                               = $false
+                $this.ItemDescDirty                                                    = $true
             }
 
             68 {
@@ -20762,7 +20551,6 @@ Class InventoryWindow : WindowBase {
                         If($a -EQ [ItemRemovalStatus]::Success) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 * 2), 250)
-
                             $this.BookDirty        = $true
                             $this.CurrentPageDirty = $true
 
@@ -20778,13 +20566,11 @@ Class InventoryWindow : WindowBase {
                         If($b -EQ [ItemRemovalStatus]::Success) {
                             [Console]::Beep(493.9, 250)
                             [Console]::Beep((493.9 * 2), 250)
-
                             $this.BookDirty        = $true
                             $this.CurrentPageDirty = $true
 
                             Return
                         }
-
                         [Console]::Beep(493.9, 250)
                         [Console]::Beep((493.9 / 2), 250)
                     }
@@ -20821,36 +20607,32 @@ Class BattleEntityStatusWindow : WindowBase {
     [ATCoordinates]$StatL2DrawCoordinates = [ATCoordinatesNone]::new() # MAT/MDF
     [ATCoordinates]$StatL3DrawCoordinates = [ATCoordinatesNone]::new() # SPD/AGL
     [ATCoordinates]$StatL4DrawCoordinates = [ATCoordinatesNone]::new() # LCK
+    [Int]$WindowLTRow                     = 0
+    [Int]$WindowLTColumn                  = 0
+    [Int]$WindowBRRow                     = 0
+    [Int]$WindowBRColumn                  = 0
+    [Boolean]$NameDrawDirty               = $true
+    [Boolean]$HpDrawDirty                 = $true
+    [Boolean]$MpDrawDirty                 = $true
+    [Boolean]$StatL1DrawDirty             = $true
+    [Boolean]$StatL2DrawDirty             = $true
+    [Boolean]$StatL3DrawDirty             = $true
+    [Boolean]$StatL4DrawDirty             = $true
+    [Boolean]$EntityBattlePhaseActive     = $false
+    [Boolean]$HasSetEntityActive          = $false
+    [ATString]$FullLineBlank              = [ATStringNone]::new()
+    [ATString[]]$NameDrawString           = @([ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$HpDrawString             = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$MpDrawString             = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL1DrawString         = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL2DrawString         = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL3DrawString         = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [ATString[]]$StatL4DrawString         = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
+    [BattleEntity]$BERef                  = $null
 
-    [Int]$WindowLTRow    = 0
-    [Int]$WindowLTColumn = 0
-    [Int]$WindowBRRow    = 0
-    [Int]$WindowBRColumn = 0
-    
-    [Boolean]$NameDrawDirty           = $true
-    [Boolean]$HpDrawDirty             = $true
-    [Boolean]$MpDrawDirty             = $true
-    [Boolean]$StatL1DrawDirty         = $true
-    [Boolean]$StatL2DrawDirty         = $true
-    [Boolean]$StatL3DrawDirty         = $true
-    [Boolean]$StatL4DrawDirty         = $true
-    [Boolean]$EntityBattlePhaseActive = $false
-    [Boolean]$HasSetEntityActive      = $false
-
-    [ATString]$FullLineBlank      = [ATStringNone]::new()
-    [ATString[]]$NameDrawString   = @([ATStringNone]::new(), [ATStringNone]::new())
-    [ATString[]]$HpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
-    [ATString[]]$MpDrawString     = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
-    [ATString[]]$StatL1DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
-    [ATString[]]$StatL2DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
-    [ATString[]]$StatL3DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
-    [ATString[]]$StatL4DrawString = @([ATStringNone]::new(), [ATStringNone]::new(), [ATStringNone]::new())
-
-    [BattleEntity]$BERef = $null
-
-    BattleEntityStatusWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new($this.WindowLTRow, $this.WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new($this.WindowBRRow, $this.WindowBRColumn)
+    BattleEntityStatusWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new($this.WindowLTRow, $this.WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new($this.WindowBRRow, $this.WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -20862,7 +20644,6 @@ Class BattleEntityStatusWindow : WindowBase {
             [BattleEntityStatusWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-        
         $this.FullLineBlank = [ATString]::new(
             [ATStringPrefix]::new(
                 [ATForegroundColor24None]::new(),
@@ -20881,13 +20662,13 @@ Class BattleEntityStatusWindow : WindowBase {
         [Int]$BRRow,
         [Int]$BRColumn,
         [BattleEntity]$BERef = $null
-    ): base() {
-        $this.WindowLTRow    = $LTRow
-        $this.WindowLTColumn = $LTColumn
-        $this.WindowBRRow    = $BRRow
-        $this.WindowBRColumn = $BRColumn
-        $this.LeftTop        = [ATCoordinates]::new($this.WindowLTRow, $this.WindowLTColumn)
-        $this.RightBottom    = [ATCoordinates]::new($this.WindowBRRow, $this.WindowBRColumn)
+    ) : base() {
+        $this.WindowLTRow      = $LTRow
+        $this.WindowLTColumn   = $LTColumn
+        $this.WindowBRRow      = $BRRow
+        $this.WindowBRColumn   = $BRColumn
+        $this.LeftTop          = [ATCoordinates]::new($this.WindowLTRow, $this.WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new($this.WindowBRRow, $this.WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -20899,7 +20680,6 @@ Class BattleEntityStatusWindow : WindowBase {
             [BattleEntityStatusWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-        
         $this.FullLineBlank = [ATString]::new(
             [ATStringPrefix]::new(
                 [ATForegroundColor24None]::new(),
@@ -20910,9 +20690,7 @@ Class BattleEntityStatusWindow : WindowBase {
             [BattleEntityStatusWindow]::FullLineBlankActual,
             $true
         )
-
-        $this.BERef = $BERef
-
+        $this.BERef                 = $BERef
         $this.NameDrawCoordinates   = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 2)
         $this.HpDrawCoordinates     = [ATCoordinates]::new($this.LeftTop.Row + 2, $this.LeftTop.Column + 2)
         $this.MpDrawCoordinates     = [ATCoordinates]::new($this.LeftTop.Row + 5, $this.LeftTop.Column + 2)
@@ -20952,76 +20730,60 @@ Class BattleEntityStatusWindow : WindowBase {
             )
             $this.HasSetEntityActive = $false
         }
-
         ([WindowBase]$this).Draw()
-
         If($this.NameDrawDirty -EQ $true) {
             $this.CreateNameDrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.NameDrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.NameDrawString[0].ToAnsiControlSequenceString())$($this.NameDrawString[1].ToAnsiControlSequenceString())"
-
             $this.NameDrawDirty = $false
         }
         If($this.HpDrawDirty -EQ $true) {
             $this.CreateHpDrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.HpDrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             $this.FullLineBlank.Prefix.Coordinates.Row++
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.HpDrawString[0].ToAnsiControlSequenceString())$($this.HpDrawString[1].ToAnsiControlSequenceString())$($this.HpDrawString[2].ToAnsiControlSequenceString())$($this.HpDrawString[3].ToAnsiControlSequenceString())"
             $this.FullLineBlank.Prefix.Coordinates.Row--
-
             $this.HpDrawDirty = $false
         }
         If($this.MpDrawDirty -EQ $true) {
             $this.CreateMpDrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.MpDrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             $this.FullLineBlank.Prefix.Coordinates.Row++
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.MpDrawString[0].ToAnsiControlSequenceString())$($this.MpDrawString[1].ToAnsiControlSequenceString())$($this.MpDrawString[2].ToAnsiControlSequenceString())$($this.MpDrawString[3].ToAnsiControlSequenceString())"
             $this.FullLineBlank.Prefix.Coordinates.Row--
-
             $this.MpDrawDirty = $false
         }
         If($this.StatL1DrawDirty -EQ $true) {
             $this.CreateStatL1DrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.StatL1DrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.StatL1DrawString[0].ToAnsiControlSequenceString())$($this.StatL1DrawString[1].ToAnsiControlSequenceString())$($this.StatL1DrawString[2].ToAnsiControlSequenceString())$($this.StatL1DrawString[3].ToAnsiControlSequenceString())$($this.StatL1DrawString[4].ToAnsiControlSequenceString())$($this.StatL1DrawString[5].ToAnsiControlSequenceString())"
-
             $this.StatL1DrawDirty = $false
         }
         If($this.StatL2DrawDirty -EQ $true) {
             $this.CreateStatL2DrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.StatL2DrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.StatL2DrawString[0].ToAnsiControlSequenceString())$($this.StatL2DrawString[1].ToAnsiControlSequenceString())$($this.StatL2DrawString[2].ToAnsiControlSequenceString())$($this.StatL2DrawString[3].ToAnsiControlSequenceString())$($this.StatL2DrawString[4].ToAnsiControlSequenceString())$($this.StatL2DrawString[5].ToAnsiControlSequenceString())"
-
             $this.StatL2DrawDirty = $false
         }
         If($this.StatL3DrawDirty -EQ $true) {
             $this.CreateStatL3DrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.StatL3DrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.StatL3DrawString[0].ToAnsiControlSequenceString())$($this.StatL3DrawString[1].ToAnsiControlSequenceString())$($this.StatL3DrawString[2].ToAnsiControlSequenceString())$($this.StatL3DrawString[3].ToAnsiControlSequenceString())$($this.StatL3DrawString[4].ToAnsiControlSequenceString())$($this.StatL3DrawString[5].ToAnsiControlSequenceString())"
-
             $this.StatL3DrawDirty = $false
         }
         If($this.StatL4DrawDirty -EQ $true) {
             $this.CreateStatL4DrawString()
-
             $this.FullLineBlank.Prefix.Coordinates = $this.StatL4DrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.StatL4DrawString[0].ToAnsiControlSequenceString())$($this.StatL4DrawString[1].ToAnsiControlSequenceString())$($this.StatL4DrawString[2].ToAnsiControlSequenceString())"
-
             $this.StatL4DrawDirty = $false
         }
     }
@@ -21073,7 +20835,6 @@ Class BattleEntityStatusWindow : WindowBase {
                 $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
             }
         }
-
         $this.HpDrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21140,7 +20901,6 @@ Class BattleEntityStatusWindow : WindowBase {
                 $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
             }
         }
-
         $this.MpDrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21211,7 +20971,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 }
             }
         } Else {
-            $AtkDrawColor = [CCTextDefault24]::new()
+            $AtkDrawColor   = [CCTextDefault24]::new()
             $AtkStatSignStr = ' '
         }
         If($AtkStat.Base -LT 10) {
@@ -21219,7 +20979,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($AtkStat.Base -GE 10) {
             $AtkStatFmtStr = "$($AtkStat.Base)"
         }
-
         If($DefStat.AugmentTurnDuration -GT 0) {
             Switch($DefStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
@@ -21233,7 +20992,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 }
 
                 Default {
-                    $DefDrawColor = [CCTextDefault24]::new()
+                    $DefDrawColor   = [CCTextDefault24]::new()
                     $DefStatSignStr = ' '
                 }
             }
@@ -21246,8 +21005,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($DefStat.Base -GE 10) {
             $DefStatFmtStr = "$($DefStat.Base)"
         }
-
-        # Attack Portion - 0 = ' ATK '
         $this.StatL1DrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21258,8 +21015,6 @@ Class BattleEntityStatusWindow : WindowBase {
             'ATK ',
             $false
         )
-
-        # Attack Portion - 1 = Sign Indicator
         $this.StatL1DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
                 $AtkDrawColor,
@@ -21270,8 +21025,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $AtkStatSignStr,
             $false
         )
-
-        # Attack Portion - 2 = Attack Stat Value
         $this.StatL1DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
                 $AtkDrawColor,
@@ -21282,8 +21035,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $AtkStatFmtStr,
             $false
         )
-
-        # Defense Portion - 3 = ' DEF '
         $this.StatL1DrawString[3] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21294,8 +21045,6 @@ Class BattleEntityStatusWindow : WindowBase {
             ' DEF ',
             $false
         )
-
-        # Defense Portion - 4 Sign Indicator
         $this.StatL1DrawString[4] = [ATString]::new(
             [ATStringPrefix]::new(
                 $DefDrawColor,
@@ -21306,8 +21055,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $DefStatSignStr,
             $false
         )
-
-        # Defense Portion - 5 Defense Stat Value
         $this.StatL1DrawString[5] = [ATString]::new(
             [ATStringPrefix]::new(
                 $DefDrawColor,
@@ -21343,7 +21090,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 }
 
                 Default {
-                    $MatDrawColor = [CCTextDefault24]::new()
+                    $MatDrawColor   = [CCTextDefault24]::new()
                     $MatStatSignStr = ' '
                 }
             }
@@ -21356,7 +21103,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($MatStat.Base -GE 10) {
             $MatStatFmtStr = "$($MatStat.Base)"
         }
-
         If($MdfStat.AugmentTurnDuration -GT 0) {
             Switch($MdfStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
@@ -21383,8 +21129,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($MdfStat.Base -GE 10) {
             $MdfStatFmtStr = "$($MdfStat.Base)"
         }
-
-        # Magic Attack Portion - 0 = ' MAT '
         $this.StatL2DrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21395,8 +21139,6 @@ Class BattleEntityStatusWindow : WindowBase {
             'MAT ',
             $false
         )
-
-        # Magic Attack Portion - 1 = Sign Indicator
         $this.StatL2DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
                 $MatDrawColor,
@@ -21407,8 +21149,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $MatStatSignStr,
             $false
         )
-
-        # Magic Attack Portion - 2 = Magic Attack Stat Value
         $this.StatL2DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
                 $MatDrawColor,
@@ -21419,8 +21159,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $MatStatFmtStr,
             $false
         )
-
-        # Magic Defense Portion - 3 = ' MDF '
         $this.StatL2DrawString[3] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21431,8 +21169,6 @@ Class BattleEntityStatusWindow : WindowBase {
             ' MDF ',
             $false
         )
-
-        # Magic Defense Portion - 4 Sign Indicator
         $this.StatL2DrawString[4] = [ATString]::new(
             [ATStringPrefix]::new(
                 $MdfDrawColor,
@@ -21443,8 +21179,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $MdfStatSignStr,
             $false
         )
-
-        # Magic Defense Portion - 5 Magic Defense Stat Value
         $this.StatL2DrawString[5] = [ATString]::new(
             [ATStringPrefix]::new(
                 $MdfDrawColor,
@@ -21493,7 +21227,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($SpdStat.Base -GE 10) {
             $SpdStatFmtStr = "$($SpdStat.Base)"
         }
-
         If($AccStat.AugmentTurnDuration -GT 0) {
             Switch($AccStat.BaseAugmentValue) {
                 { $_ -GT 0 } {
@@ -21520,8 +21253,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($AccStat.Base -GE 10) {
             $AccStatFmtStr = "$($AccStat.Base)"
         }
-
-        # Speed Portion - 0 = ' SPD '
         $this.StatL3DrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21532,8 +21263,6 @@ Class BattleEntityStatusWindow : WindowBase {
             'SPD ',
             $false
         )
-
-        # Speed Portion - 1 = Sign Indicator
         $this.StatL3DrawString[1] = [ATString]::new(
             [ATStringPrefix]::new(
                 $SpdDrawColor,
@@ -21544,8 +21273,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $SpdStatSignStr,
             $false
         )
-
-        # Speed Portion - 2 = Speed Stat Value
         $this.StatL3DrawString[2] = [ATString]::new(
             [ATStringPrefix]::new(
                 $SpdDrawColor,
@@ -21556,8 +21283,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $SpdStatFmtStr,
             $false
         )
-
-        # Accuracy Portion - 3 = ' ACC '
         $this.StatL3DrawString[3] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21568,8 +21293,6 @@ Class BattleEntityStatusWindow : WindowBase {
             ' ACC ',
             $false
         )
-
-        # Accuracy Portion - 4 Sign Indicator
         $this.StatL3DrawString[4] = [ATString]::new(
             [ATStringPrefix]::new(
                 $AccDrawColor,
@@ -21580,8 +21303,6 @@ Class BattleEntityStatusWindow : WindowBase {
             $AccStatSignStr,
             $false
         )
-
-        # Accuracy Portion - 5 Accuracy Stat Value
         $this.StatL3DrawString[5] = [ATString]::new(
             [ATStringPrefix]::new(
                 $AccDrawColor,
@@ -21626,7 +21347,6 @@ Class BattleEntityStatusWindow : WindowBase {
         } Elseif($LckStat.Base -GE 10) {
             $LckStatFmtStr = "$($LckStat.Base)"
         }
-
         $this.StatL4DrawString[0] = [ATString]::new(
             [ATStringPrefix]::new(
                 [CCTextDefault24]::new(),
@@ -21703,25 +21423,22 @@ Class BattlePlayerActionWindow : WindowBase {
         $true
     )
 
-    [Boolean]$PlayerChevronDirty = $true
-    [Boolean]$ActiveItemBlinking = $false
-    [Boolean]$ActionADrawDirty   = $true
-    [Boolean]$ActionBDrawDirty   = $true
-    [Boolean]$ActionCDrawDirty   = $true
-    [Boolean]$ActionDDrawDirty   = $true
-
+    [Boolean]$PlayerChevronDirty                       = $true
+    [Boolean]$ActiveItemBlinking                       = $false
+    [Boolean]$ActionADrawDirty                         = $true
+    [Boolean]$ActionBDrawDirty                         = $true
+    [Boolean]$ActionCDrawDirty                         = $true
+    [Boolean]$ActionDDrawDirty                         = $true
     [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+    [Int]$ActiveChevronIndex                           = 0
+    [ATCoordinates]$ActionADrawCoordinates             = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionBDrawCoordinates             = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionCDrawCoordinates             = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionDDrawCoordinates             = [ATCoordinatesNone]::new()
 
-    [Int]$ActiveChevronIndex = 0
-
-    [ATCoordinates]$ActionADrawCoordinates = [ATCoordinatesNone]::new()
-    [ATCoordinates]$ActionBDrawCoordinates = [ATCoordinatesNone]::new()
-    [ATCoordinates]$ActionCDrawCoordinates = [ATCoordinatesNone]::new()
-    [ATCoordinates]$ActionDDrawCoordinates = [ATCoordinatesNone]::new()
-
-    BattlePlayerActionWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowLTRow, [BattlePlayerActionWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowBRRow, [BattlePlayerActionWindow]::WindowBRColumn)
+    BattlePlayerActionWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowLTRow, [BattlePlayerActionWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([BattlePlayerActionWindow]::WindowBRRow, [BattlePlayerActionWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -21733,12 +21450,10 @@ Class BattlePlayerActionWindow : WindowBase {
             [BattlePlayerActionWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         $this.ActionADrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 3)
         $this.ActionBDrawCoordinates = [ATCoordinates]::new($this.ActionADrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
         $this.ActionCDrawCoordinates = [ATCoordinates]::new($this.ActionBDrawCoordinates.Row + 1, $this.ActionBDrawCoordinates.Column)
         $this.ActionDDrawCoordinates = [ATCoordinates]::new($this.ActionCDrawCoordinates.Row + 1, $this.ActionCDrawCoordinates.Column)
-
         $this.CreateChevrons()
     }
 
@@ -21812,25 +21527,22 @@ Class BattlePlayerActionWindow : WindowBase {
                 Return $a.Item1
             }
         }
-
-        $this.ActiveChevronIndex = 0
+        $this.ActiveChevronIndex                       = 0
         $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+
         Return $this.Chevrons[$this.ActiveChevronIndex].Item1
     }
 
     [Void]ResetChevronPosition() {
         $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
         $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
-        
-        $this.ActiveChevronIndex = 0
-
-        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+        $this.ActiveChevronIndex                                = 0
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
         $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.ActionADrawDirty -EQ $true) {
             [ATString]$p1 = [ATString]::new(
                 [ATStringPrefix]::new(
@@ -21842,7 +21554,6 @@ Class BattlePlayerActionWindow : WindowBase {
                 "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item1)",
                 $true
             )
-
             [ATString]$p2 = [ATString]::new(
                 [ATStringPrefix]::new(
                     [CCTextDefault24]::new(),
@@ -21853,9 +21564,7 @@ Class BattlePlayerActionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)",
                 $true
             )
-
             Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-
             $this.ActionADrawDirty = $false
         }
         If($this.ActionBDrawDirty -EQ $true) {
@@ -21879,9 +21588,7 @@ Class BattlePlayerActionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)",
                 $true
             )
-
             Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-
             $this.ActionBDrawDirty = $false
         }
         If($this.ActionCDrawDirty -EQ $true) {
@@ -21905,9 +21612,7 @@ Class BattlePlayerActionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)",
                 $true
             )
-
             Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-
             $this.ActionCDrawDirty = $false
         }
         If($this.ActionDDrawDirty -EQ $true) {
@@ -21931,9 +21636,7 @@ Class BattlePlayerActionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)",
                 $true
             )
-
             Write-Host "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
-
             $this.ActionDDrawDirty = $false
         }
         If($this.PlayerChevronDirty -EQ $true) {
@@ -21955,7 +21658,6 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -21981,7 +21683,6 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -22007,7 +21708,6 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -22033,7 +21733,6 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -22070,25 +21769,19 @@ Class BattlePlayerActionWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveChevronIndex - 1) -LT 0) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
-                    
-                    $this.ActiveChevronIndex = 3
-                    
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.ActiveChevronIndex                                = 3
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
                 } Elseif(($this.ActiveChevronIndex - 1) -GE 0) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
-                    
                     $this.ActiveChevronIndex--
-                    
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
                 }
-
                 $this.PlayerChevronDirty = $true
             }
 
@@ -22103,25 +21796,19 @@ Class BattlePlayerActionWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveChevronIndex + 1) -GT 3) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
-                    
-                    $this.ActiveChevronIndex = 0
-                    
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.ActiveChevronIndex                                = 0
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
                 } Elseif(($this.ActiveChevronIndex + 1) -LE 3) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronBlankCharacter
-                    
                     $this.ActiveChevronIndex++
-                    
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [BattlePlayerActionWindow]::PlayerChevronCharacter
                 }
-
                 $this.PlayerChevronDirty = $true
             }
         }
@@ -22150,8 +21837,7 @@ Class BattleStatusMessageWindow : WindowBase {
 
     Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
     Static [String]$WindowBorderVertical   = '|'
-
-    Static [String]$MessageBlankActual = '                                                          '
+    Static [String]$MessageBlankActual     = '                                                          '
 
     Static [ATCoordinates]$MessageADrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$MessageBDrawCoordinates = [ATCoordinatesNone]::new()
@@ -22162,7 +21848,6 @@ Class BattleStatusMessageWindow : WindowBase {
     Static [Single]$MessageSleepTime = 0.2
 
     [ATStringComposite[]]$MessageHistoryComposite
-
     [ATString]$MessageBlank = [ATString]::new(
         [ATStringPrefix]::new(
             [ATForegroundColor24None]::new(),
@@ -22173,16 +21858,15 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleStatusMessageWindow]::MessageBlankActual,
         $true
     )
-
     [Boolean]$MessageADirty = $false
     [Boolean]$MessageBDirty = $false
     [Boolean]$MessageCDirty = $false
     [Boolean]$MessageDDirty = $false
     [Boolean]$MessageEDirty = $false
 
-    BattleStatusMessageWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([BattleStatusMessageWindow]::WindowLTRow, [BattleStatusMessageWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([BattleStatusMessageWindow]::WindowBRRow, [BattleStatusMessageWindow]::WindowBRColumn)
+    BattleStatusMessageWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([BattleStatusMessageWindow]::WindowLTRow, [BattleStatusMessageWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([BattleStatusMessageWindow]::WindowBRRow, [BattleStatusMessageWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -22194,21 +21878,18 @@ Class BattleStatusMessageWindow : WindowBase {
             [BattleStatusMessageWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         [BattleStatusMessageWindow]::MessageADrawCoordinates = [ATCoordinates]::new(($this.LeftTop.Row + 1), ($this.LeftTop.Column + 1))
         [BattleStatusMessageWindow]::MessageBDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageADrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageADrawCoordinates.Column)
         [BattleStatusMessageWindow]::MessageCDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageBDrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageBDrawCoordinates.Column)
         [BattleStatusMessageWindow]::MessageDDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageCDrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageCDrawCoordinates.Column)
         [BattleStatusMessageWindow]::MessageEDrawCoordinates = [ATCoordinates]::new(([BattleStatusMessageWindow]::MessageDDrawCoordinates.Row + 1), [BattleStatusMessageWindow]::MessageDDrawCoordinates.Column)
-
-        $this.MessageHistoryComposite = @(
+        $this.MessageHistoryComposite                        = @(
             [ATStringComposite]::new(),
             [ATStringComposite]::new(),
             [ATStringComposite]::new(),
             [ATStringComposite]::new(),
             [ATStringComposite]::new()
         )
-
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
@@ -22218,49 +21899,38 @@ Class BattleStatusMessageWindow : WindowBase {
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.MessageEDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
-            
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
-
             $this.MessageEDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageDDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
-            
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
-
             $this.MessageDDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageCDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
-            
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
-
             $this.MessageCDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageBDirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
-            
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
-
             $this.MessageBDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageADirty -EQ $true) {
             $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
-            
             Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())"
             Write-Host "$([BattleStatusMessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
-
             $this.MessageADirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime + 0.4)
         }
@@ -22273,13 +21943,12 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual)
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual)
         $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual = [List[ATString]]::new($this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual)
-        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef] = [ATStringComposite]::new($ATComposite)
-        
-        $this.MessageADirty = $true
-        $this.MessageBDirty = $true
-        $this.MessageCDirty = $true
-        $this.MessageDDirty = $true
-        $this.MessageEDirty = $true
+        $this.MessageHistoryComposite[[BattleStatusMessageWindow]::MessageHistoryERef]                 = [ATStringComposite]::new($ATComposite)
+        $this.MessageADirty                                                                            = $true
+        $this.MessageBDirty                                                                            = $true
+        $this.MessageCDirty                                                                            = $true
+        $this.MessageDDirty                                                                            = $true
+        $this.MessageEDirty                                                                            = $true
     }
 }
 
@@ -22299,9 +21968,9 @@ Class BattleEnemyImageWindow : WindowBase {
     [Boolean]$ImageDirty     = $true
     [EnemyEntityImage]$Image = [EEIEmpty]::new()
 
-    BattleEnemyImageWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([BattleEnemyImageWindow]::WindowLTRow, [BattleEnemyImageWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([BattleEnemyImageWindow]::WindowBRRow, [BattleEnemyImageWindow]::WindowBRColumn)
+    BattleEnemyImageWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([BattleEnemyImageWindow]::WindowLTRow, [BattleEnemyImageWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([BattleEnemyImageWindow]::WindowBRRow, [BattleEnemyImageWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -22313,13 +21982,11 @@ Class BattleEnemyImageWindow : WindowBase {
             [BattleEnemyImageWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         [BattleEnemyImageWindow]::ImageDrawCoordinates = [ATCoordinates]::new([BattleEnemyImageWindow]::ImageDrawRowOffset, [BattleEnemyImageWindow]::ImageDrawColumnOffset)
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.ImageDirty -EQ $true) {
             $this.Image = $Script:TheCurrentEnemy.Image
             Write-Host "$($this.Image.ToAnsiControlSequenceString())"
@@ -22336,21 +22003,18 @@ Class StatusHudWindow : WindowBase {
 
     Static [String]$WindowBorderHorizontal = '*-------------------------------------------------------------------------------*'
     Static [String]$WindowBorderVertical   = '|'
-
-    Static [String]$LineBlankStr = '                                                                              '
+    Static [String]$LineBlankStr           = '                                                                              '
 
     Static [ATCoordinates]$StatLineDrawCoordinates      = [ATCoordinates]::new(2, 3)
     Static [ATCoordinates]$StatSeparatorDrawCoordinates = [ATCoordinates]::new(2, ([StatusHudWindow]::WindowBRColumn - 48))
 
-    [Boolean]$StatLineDrawDirty = $true
-
+    [Boolean]$StatLineDrawDirty        = $true
     [ATStringComposite]$StatLineActual = [ATStringComposite]::new()
+    [ATString]$LineBlank               = [ATStringNone]::new()
 
-    [ATString]$LineBlank = [ATStringNone]::new()
-
-    StatusHudWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([StatusHudWindow]::WindowLTRow, [StatusHudWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([StatusHudWindow]::WindowBRRow, [StatusHudWindow]::WindowBRColumn)
+    StatusHudWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([StatusHudWindow]::WindowLTRow, [StatusHudWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([StatusHudWindow]::WindowBRRow, [StatusHudWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -22362,20 +22026,16 @@ Class StatusHudWindow : WindowBase {
             [StatusHudWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         $this.LineBlank.UserData = [StatusHudWindow]::LineBlankStr
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.StatLineDrawDirty -EQ $true) {
             $this.ComposeStatLineString()
             $this.LineBlank.Prefix.Coordinates = [StatusHudWindow]::StatLineDrawCoordinates
-
             Write-Host "$($this.LineBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.StatLineActual.ToAnsiControlSequenceString())"
-
             $this.StatLineDrawDirty = $false
         }
     }
@@ -22431,7 +22091,6 @@ Class StatusHudWindow : WindowBase {
         } Elseif($Script:ThePlayer.Stats[[StatId]::Luck].Base -GE 10) {
             $LckStatFmtStr = "$($Script:ThePlayer.Stats[[StatId]::Luck].Base)"
         }
-
         $this.StatLineActual = [ATStringComposite]::new(
             @(
                 [ATString]::new(
@@ -22610,7 +22269,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
 
     Static [String]$PlayerChevronCharacter      = '>'
     Static [String]$PlayerChevronBlankCharacter = ' '
-    Static [String]$NameBlank = '               '
+    Static [String]$NameBlank                   = '               '
     
     Static [ATString]$PlayerChevron = [ATString]::new(
         [ATStringPrefix]::new(
@@ -22643,26 +22302,23 @@ Class StatusTechniqueSelectionWindow : WindowBase {
         $true
     )
 
-    [Boolean]$PlayerChevronDirty = $true
-    [Boolean]$ActiveItemBlinking = $false
-    [Boolean]$ActionADrawDirty   = $true
-    [Boolean]$ActionBDrawDirty   = $true
-    [Boolean]$ActionCDrawDirty   = $true
-    [Boolean]$ActionDDrawDirty   = $true
-    [Boolean]$IsActive           = $true
-
+    [Boolean]$PlayerChevronDirty                       = $true
+    [Boolean]$ActiveItemBlinking                       = $false
+    [Boolean]$ActionADrawDirty                         = $true
+    [Boolean]$ActionBDrawDirty                         = $true
+    [Boolean]$ActionCDrawDirty                         = $true
+    [Boolean]$ActionDDrawDirty                         = $true
+    [Boolean]$IsActive                                 = $true
     [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+    [Int]$ActiveChevronIndex                           = 0
+    [ATCoordinates]$ActionADrawCoordinates             = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionBDrawCoordinates             = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionCDrawCoordinates             = [ATCoordinatesNone]::new()
+    [ATCoordinates]$ActionDDrawCoordinates             = [ATCoordinatesNone]::new()
 
-    [Int]$ActiveChevronIndex = 0
-
-    [ATCoordinates]$ActionADrawCoordinates = [ATCoordinatesNone]::new()
-    [ATCoordinates]$ActionBDrawCoordinates = [ATCoordinatesNone]::new()
-    [ATCoordinates]$ActionCDrawCoordinates = [ATCoordinatesNone]::new()
-    [ATCoordinates]$ActionDDrawCoordinates = [ATCoordinatesNone]::new()
-
-    StatusTechniqueSelectionWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowLTRow, [StatusTechniqueSelectionWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowBRRow, [StatusTechniqueSelectionWindow]::WindowBRColumn)
+    StatusTechniqueSelectionWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowLTRow, [StatusTechniqueSelectionWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([StatusTechniqueSelectionWindow]::WindowBRRow, [StatusTechniqueSelectionWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -22674,12 +22330,10 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             [StatusTechniqueSelectionWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         $this.ActionADrawCoordinates = [ATCoordinates]::new($this.LeftTop.Row + 1, $this.LeftTop.Column + 3)
         $this.ActionBDrawCoordinates = [ATCoordinates]::new($this.ActionADrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
         $this.ActionCDrawCoordinates = [ATCoordinates]::new($this.ActionBDrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
         $this.ActionDDrawCoordinates = [ATCoordinates]::new($this.ActionCDrawCoordinates.Row + 1, $this.ActionADrawCoordinates.Column)
-
         $this.CreateChevrons()
     }
 
@@ -22753,25 +22407,22 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 Return $a.Item1
             }
         }
-
-        $this.ActiveChevronIndex = 0
+        $this.ActiveChevronIndex                       = 0
         $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+
         Return $this.Chevrons[$this.ActiveChevronIndex].Item1
     }
 
     [Void]ResetChevronPosition() {
         $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
         $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
-        
-        $this.ActiveChevronIndex = 0
-
-        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+        $this.ActiveChevronIndex                                = 0
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
         $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.ActionADrawDirty -EQ $true) {
             [StatusTechniqueSelectionWindow]::BaNameBlank.Prefix.Coordinates = [ATCoordinates]::new(
                 $this.ActionADrawCoordinates.Row,
@@ -22797,7 +22448,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)",
                 $true
             )
-
             Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionADrawDirty = $false
         }
@@ -22826,7 +22476,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)",
                 $true
             )
-
             Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionBDrawDirty = $false
         }
@@ -22855,7 +22504,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)",
                 $true
             )
-
             Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionCDrawDirty = $false
         }
@@ -22884,7 +22532,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)",
                 $true
             )
-
             Write-Host "$([StatusTechniqueSelectionWindow]::BaNameBlank.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.ActionDDrawDirty = $false
         }
@@ -22900,9 +22547,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                     Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
                 }
             }
-            # Foreach($c in $this.Chevrons) {
-            #     Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
-            # }
             $this.PlayerChevronDirty = $false
         }
     }
@@ -22913,8 +22557,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             13 {
                 Switch($this.ActiveChevronIndex) {
                     0 {
-                        # I don't know if it matters, at this point, if the slot is null or not
-                        # I think it may be enough to just know which slot was selected.
                         $Script:StatusEsSelectedSlot = [ActionSlot]::A
                     }
 
@@ -22935,7 +22577,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
 
             27 {
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-                $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
             }
 
             38 {
@@ -22949,25 +22591,19 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveChevronIndex - 1) -LT 0) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
-                    
-                    $this.ActiveChevronIndex = 3
-
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.ActiveChevronIndex                                = 3
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
                 } Elseif(($this.ActiveChevronIndex - 1) -GE 0) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
-                    
                     $this.ActiveChevronIndex--
-
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
                 }
-
                 $this.PlayerChevronDirty = $true
             }
 
@@ -22982,25 +22618,19 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveChevronIndex + 1) -GT 3) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
-                    
-                    $this.ActiveChevronIndex = 0
-
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.ActiveChevronIndex                                = 0
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
                 } Elseif(($this.ActiveChevronIndex + 1) -LE 3) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter
-                    
                     $this.ActiveChevronIndex++
-
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [StatusTechniqueSelectionWindow]::PlayerChevronCharacter
                 }
-
                 $this.PlayerChevronDirty = $true
             }
         }
@@ -23020,19 +22650,17 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [Int]$WindowBRRow    = 16
     Static [Int]$WindowBRColumn = 80
 
-    Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
-    Static [String]$WindowBorderVertical   = '|'
-
+    Static [String]$WindowBorderHorizontal      = '*----------------------------------------------------------*'
+    Static [String]$WindowBorderVertical        = '|'
     Static [String]$IChevronCharacter           = '>'
     Static [String]$IChevronBlankCharacter      = ' '
     Static [String]$PagingChevronRightCharacter = '>'
     Static [String]$PagingChevronLeftCharacter  = '<'
-    Static [String]$PagingChevronBlankCharacter  = ' '
-    
-    Static [String]$DivLineHorizontalString = '----------------------------------------------------------'
-    Static [String]$ZpLineBlank             = '                                                          '
-    
-    Static [String]$DescLineBlank = '                                                          '
+    Static [String]$PagingChevronBlankCharacter = ' '
+    Static [String]$DivLineHorizontalString     = '----------------------------------------------------------'
+    Static [String]$ZpLineBlank                 = '                                                          '
+    Static [String]$DescLineBlank               = '                                                          '
+    Static [String]$ZeroPagePrompt              = 'You have no techniques in your inventory.'
 
     Static [ATString]$PagingChevronRight = [ATString]::new(
         [ATStringPrefix]::new(
@@ -23086,8 +22714,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     )
 
     Static [Boolean]$DebugMode = $false
-    
-    Static [String]$ZeroPagePrompt = 'You have no techniques in your inventory.'
 
     [Boolean]$PlayerChevronDirty        = $true
     [Boolean]$PagingChevronRightDirty   = $true
@@ -23106,21 +22732,18 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Boolean]$ZpPromptDirty             = $true
     [Boolean]$IsActive                  = $false
     [Boolean]$IsBlanked                 = $false
-    
-    [Int]$ItemsPerPage            = 10
-    [Int]$NumPages                = 1
-    [Int]$CurrentPage             = 1
-    [List[BattleAction]]$PageRefs = $null
-    
+    [Int]$ItemsPerPage                  = 10
+    [Int]$NumPages                      = 1
+    [Int]$CurrentPage                   = 1
+    [Int]$ActiveIChevronIndex           = 0
+    [List[BattleAction]]$PageRefs       = $null
     [List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
     [List[ATString]]$ItemLabels
     [List[ATString]]$ItemLabelBlanks
 
-    [Int]$ActiveIChevronIndex = 0
-
-    StatusTechniqueInventoryWindow(): base() {
-        $this.LeftTop     = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowLTRow, [StatusTechniqueInventoryWindow]::WindowLTColumn)
-        $this.RightBottom = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowBRRow, [StatusTechniqueInventoryWindow]::WindowBRColumn)
+    StatusTechniqueInventoryWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowLTRow, [StatusTechniqueInventoryWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::WindowBRRow, [StatusTechniqueInventoryWindow]::WindowBRColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
             [CCWhite24]::new(),
             [CCWhite24]::new(),
@@ -23132,12 +22755,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [StatusTechniqueInventoryWindow]::WindowBorderVertical
         )
         $this.UpdateDimensions()
-
         $this.PageRefs        = [List[BattleAction]]::new()
         $this.IChevrons       = [List[ValueTuple[[ATString], [Boolean]]]]::new()
         $this.ItemLabels      = [List[ATString]]::new()
         $this.ItemLabelBlanks = [List[ATString]]::new()
-
         $this.CreateIChevrons()
         $this.ConfigurePagingChevrons()
         $this.ConfigureDivLine()
@@ -23145,7 +22766,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
         If($this.IsActive -EQ $true) {
             $this.IsBlanked = $false
             If($this.BookDirty -EQ $true) {
@@ -23230,9 +22850,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         Blink = $true
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
-                    
-                    $this.ItemsListDirty     = $true
-                    $this.ActiveItemBlinking = $true
+                    $this.ItemsListDirty                                               = $true
+                    $this.ActiveItemBlinking                                           = $true
                 }
                 If($this.ItemsListDirty -EQ $true) {
                     $this.WriteItemLabels()
@@ -23462,7 +23081,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             )
             $c++ # FYI - This was intentional
         }
-
         $this.ResetIChevronPosition()
         $this.CreateItemLabelBlanks()
     }
@@ -23598,7 +23216,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         } Else {
             $this.NumPages = [Math]::Ceiling($pp)
         }
-
         If($this.CurrentPage -GT $this.NumPages) {
             $this.CurrentPage = $this.NumPages
         }
@@ -23640,7 +23257,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             } Catch {
                 $this.PageRefs = $Script:ThePlayer.ActionInventory.Listing.GetRange($rs, ($Script:ThePlayer.ActionInventory.Listing.Count - $rs))
             }
-
             $this.CreateItemLabels()
             $this.ItemsListDirty   = $true
             $this.CurrentPageDirty = $false
@@ -23665,9 +23281,9 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
             $this.ActiveIChevronIndex++
         }
-
-        $this.ActiveIChevronIndex = 0
+        $this.ActiveIChevronIndex                        = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
+
         Return $this.IChevrons[$this.ActiveIChevronIndex].Item1
     }
 
@@ -23703,7 +23319,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 [StatusTechniqueInventoryWindow]::ZeroPagePrompt,
                 $true
             )
-
             Write-Host "$($a.ToAnsiControlSequenceString())"
             $this.ZpPromptDirty = $false
         }
@@ -23714,12 +23329,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Void]ResetIChevronPosition() {
         $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
-        
         Try {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
         } Catch {}
-
         $this.ActiveIChevronIndex                                      = 0
         $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
         $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [StatusTechniqueInventoryWindow]::IChevronCharacter
@@ -23727,41 +23340,29 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Blink = $true
         }
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
-
-        $this.PlayerChevronDirty = $true
-        $this.ActiveItemBlinking = $false
-        $this.ItemDescDirty      = $true
+        $this.PlayerChevronDirty                                           = $true
+        $this.ActiveItemBlinking                                           = $false
+        $this.ItemDescDirty                                                = $true
     }
 
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
             13 {
-                # Get the item at the current Active IChevron Index and store it in the
-                # global variable
-                $Script:StatusIsSelected = $this.PageRefs[$this.ActiveIChevronIndex]
-
-                # Get a reference to the Action in the selected slot
+                $Script:StatusIsSelected      = $this.PageRefs[$this.ActiveIChevronIndex]
                 [BattleAction]$EquippedAction = $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]
-
-                # Check to see if the selected equipped slot is null or not
                 If($null -EQ $EquippedAction) {
-                    # This is a "pop" action for the inventory item
                     $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
                     $Script:ThePlayer.ActionInventory.RemoveActionByName($Script:StatusIsSelected.Name)
                 } Else {
-                    # This is a "swap" action for the inventory item
                     [Int]$RootCollectionIndex = $this.CurrentPage -EQ 1 ? $this.ActiveIChevronIndex : ((($this.CurrentPage - 1) * $this.ItemsPerPage) + $this.ActiveIChevronIndex)
-                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
+                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]   = [BattleAction]::new($Script:StatusIsSelected)
                     $Script:ThePlayer.ActionInventory.Listing[$RootCollectionIndex] = [BattleAction]::new($EquippedAction)
                 }
-
-                # Change the mode
                 $Script:StatusScreenMode = [StatusScreenMode]::EquippedTechSelection
             }
 
             27 {
-                # Change the mode
                 $Script:StatusScreenMode = [StatusScreenMode]::EquippedTechSelection
             }
 
@@ -23776,17 +23377,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveIChevronIndex -1) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
                     $this.ActiveIChevronIndex--
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [StatusTechniqueInventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
                         Blink = $true
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
@@ -23807,17 +23406,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
                     $this.ActiveIChevronIndex++
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [StatusTechniqueInventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
                         Blink = $true
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
@@ -23838,17 +23435,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
                     $this.ActiveIChevronIndex += 5
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [StatusTechniqueInventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
                         Blink = $true
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
@@ -23869,17 +23464,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 } Catch [InvalidOperationException] {
                     Write-Host 'Encountered an InvalidOperationException while trying to play the SFX file.'
                 }
-
                 If(($this.ActiveIChevronIndex - 5) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronBlankCharacter
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
-                    
                     $this.ActiveIChevronIndex -= 5
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [StatusTechniqueInventoryWindow]::IChevronCharacter
-                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusTechniqueInventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
                         Blink = $true
                     }
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
@@ -23934,10 +23527,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 Class BattlePhaseIndicator {
     [ATStringComposite]$IndicatorStringActual = [ATStringComposite]::new()
     [ATStringComposite]$IndicatorStringBlank  = [ATStringComposite]::new()
-    
-    [ATCoordinates]$IndicatorDrawLocation = [ATCoordinatesNone]::new()
-
-    [Boolean]$IndicatorDrawDirty = $true
+    [ATCoordinates]$IndicatorDrawLocation     = [ATCoordinatesNone]::new()
+    [Boolean]$IndicatorDrawDirty              = $true
 
     BattlePhaseIndicator() {
         $this.IndicatorDrawLocation = [ATCoordinates]::new(
@@ -23977,25 +23568,20 @@ Class BattlePhaseIndicator {
             Write-Host "$($this.IndicatorDrawLocation.ToAnsiControlSequenceString())$($this.IndicatorStringBlank.ToAnsiControlSequenceString())"
             Write-Host "$($this.IndicatorDrawLocation.ToAnsiControlSequenceString())$($this.IndicatorStringActual.ToAnsiControlSequenceString())"
             $Script:Rui.CursorPosition = $([ATCoordinates]::new(0, 0)).ToAutomationCoordinates()
-            $this.IndicatorDrawDirty = $true
+            $this.IndicatorDrawDirty   = $true
         }
     }
 }
 
 Class BattleManager {
-    [BattleManagerState]$State = [BattleManagerState]::TurnIncrement
-
-    [Int]$TurnCounter = 0
-    [Int]$TurnLimit   = 0
-
-    [Boolean]$CanPhaseOneAct = $true
-    [Boolean]$CanPhaseTwoAct = $true
-
-    [BattleEntity]$PhaseOneEntity = $null
-    [BattleEntity]$PhaseTwoEntity = $null
-
-    [ScriptBlock]$SpoilsAction = $null
-
+    [BattleManagerState]$State            = [BattleManagerState]::TurnIncrement
+    [Int]$TurnCounter                     = 0
+    [Int]$TurnLimit                       = 0
+    [Boolean]$CanPhaseOneAct              = $true
+    [Boolean]$CanPhaseTwoAct              = $true
+    [BattleEntity]$PhaseOneEntity         = $null
+    [BattleEntity]$PhaseTwoEntity         = $null
+    [ScriptBlock]$SpoilsAction            = $null
     [BattlePhaseIndicator]$PhaseIndicator = $null
 
     BattleManager() {
@@ -24026,29 +23612,28 @@ Class BattleManager {
     [Void]Update() {
         $Script:ThePlayer.Update()
         $Script:TheCurrentEnemy.Update()
-        
         $Script:ThePlayerBattleStatWindow.Draw()
         $Script:TheEnemyBattleStatWindow.Draw()
         $Script:TheBattleEnemyImageWindow.Draw()
         $Script:ThePlayerBattleActionWindow.Draw()
         $Script:TheBattleStatusMessageWindow.Draw()
         $Script:Rui.CursorPosition = $([ATCoordinates]::new(0, 0)).ToAutomationCoordinates()
-
         Switch($this.State) {
             TurnIncrement {
                 If($this.TurnLimit -GT 0) {
                     If(($this.TurnCounter + 1) -GT $this.TurnLimit) {
                         $this.State = [BattleManagerState]::BattleLost
+
                         Return
                     }
-
                     $this.TurnCounter++
                     $this.State = [BattleManagerState]::PhaseOrdering
+
                     Return
                 }
-
                 $this.TurnCounter++
                 $this.State = [BattleManagerState]::PhaseOrdering
+
                 Return
             }
 
@@ -24058,9 +23643,7 @@ Class BattleManager {
 
                 $PlayerEffectiveSpeed = $Script:ThePlayer.Stats[[StatId]::Speed].Base + ($(Get-Random -Minimum 0.0 -Maximum 1.0) * $Script:ThePlayer.Stats[[StatId]::Luck].Base)
                 $EnemyEffectiveSpeed  = $Script:TheCurrentEnemy.Stats[[StatId]::Speed].Base + ($(Get-Random -Minimum 0.0 -Maximum 1.0) * $Script:TheCurrentEnemy.Stats[[StatId]::Luck].Base)
-
-                [Single]$EsWinner = [Math]::Max($PlayerEffectiveSpeed, $EnemyEffectiveSpeed)
-
+                [Single]$EsWinner     = [Math]::Max($PlayerEffectiveSpeed, $EnemyEffectiveSpeed)
                 If($EsWinner -EQ $PlayerEffectiveSpeed) {
                     $this.PhaseOneEntity = $Script:ThePlayer
                     $this.PhaseTwoEntity = $Script:TheCurrentEnemy
@@ -24068,20 +23651,19 @@ Class BattleManager {
                     $this.PhaseOneEntity = $Script:TheCurrentEnemy
                     $this.PhaseTwoEntity = $Script:ThePlayer
                 }
-
                 $this.State = [BattleManagerState]::PhaseAExecution
+
                 Return
             }
 
             PhaseAExecution {
                 If(($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) -OR ($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0)) {
                     $this.State = [BattleManagerState]::Calculation
+
                     Break
                 }
-
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseOneEntity)
-
                 If($this.PhaseOneEntity -IS [Player]) {
                     $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
                     $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
@@ -24091,7 +23673,6 @@ Class BattleManager {
                 }
                 $Script:ThePlayerBattleStatWindow.Draw()
                 $Script:TheEnemyBattleStatWindow.Draw()
-
                 If($this.CanPhaseOneAct -EQ $true) {
                     [BattleAction]$ToExecute          = $null
                     [BattleActionResult]$ActionResult = $null
@@ -24102,7 +23683,6 @@ Class BattleManager {
                             $Script:ThePlayerBattleActionWindow.Draw()
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                         }
-
                         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -24122,7 +23702,6 @@ Class BattleManager {
                                 )
                             )
                         )
-
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                         $Script:ThePlayerBattleStatWindow.Draw()
                     } Else  {
@@ -24148,11 +23727,9 @@ Class BattleManager {
                                 )
                             )
                         )
-
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                         $Script:TheEnemyBattleStatWindow.Draw()
                     }
-
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
@@ -24174,14 +23751,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -24216,6 +23791,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24224,7 +23800,6 @@ Class BattleManager {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -24259,6 +23834,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24297,6 +23873,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24335,6 +23912,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24373,6 +23951,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24411,6 +23990,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24449,6 +24029,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24487,6 +24068,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24514,6 +24096,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -24537,14 +24120,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::ElementalFire) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -24579,6 +24160,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24617,6 +24199,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24655,6 +24238,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24693,6 +24277,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24731,6 +24316,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24769,6 +24355,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24807,6 +24394,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24834,6 +24422,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -24867,14 +24456,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::ElementalFire) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -24909,6 +24496,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24947,6 +24535,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -24985,6 +24574,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25023,6 +24613,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25061,6 +24652,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25099,6 +24691,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25137,6 +24730,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25164,6 +24758,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -25182,14 +24777,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -25224,6 +24817,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25232,7 +24826,6 @@ Class BattleManager {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -25267,6 +24860,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25305,6 +24899,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25343,6 +24938,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25381,6 +24977,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25419,6 +25016,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25457,6 +25055,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25495,6 +25094,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
 
@@ -25522,6 +25122,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -25530,7 +25131,6 @@ Class BattleManager {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -25545,6 +25145,7 @@ Class BattleManager {
                                     )
                                 )
                             )
+
                             Break
                         }
 
@@ -25553,7 +25154,6 @@ Class BattleManager {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -25568,6 +25168,7 @@ Class BattleManager {
                                     )
                                 )
                             )
+
                             Break
                         }
 
@@ -25580,7 +25181,6 @@ Class BattleManager {
                         $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
                         $Script:TheSfxMPlayer.Play()
                     } Catch {}
-
                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                         @(
                             [ATStringCompositeSc]::new(
@@ -25596,7 +25196,6 @@ Class BattleManager {
                         )
                     )
                 }
-
                 Foreach($Stat in $this.PhaseOneEntity.Stats.Values) {
                     If($Stat.AugmentTurnDuration -GT 0) {
                         $Stat.AugmentTurnDuration--
@@ -25613,21 +25212,19 @@ Class BattleManager {
                         }
                     }
                 }
-
                 $this.State = [BattleManagerState]::PhaseBExecution
+
+                Break
             }
 
             PhaseBExecution {
                 If(($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) -OR ($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0)) {
                     $this.State = [BattleManagerState]::Calculation
+
                     Break
                 }
-
-                # Update the Phase Indicator
                 $this.PhaseIndicator.IndicatorDrawDirty = $true
                 $this.PhaseIndicator.Draw($this.PhaseTwoEntity)
-
-                # Attempt to test the border color change for the status window
                 If($this.PhaseTwoEntity -IS [Player]) {
                     $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
                     $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
@@ -25637,7 +25234,6 @@ Class BattleManager {
                 }
                 $Script:ThePlayerBattleStatWindow.Draw()
                 $Script:TheEnemyBattleStatWindow.Draw()
-
                 If($this.CanPhaseTwoAct -EQ $true) {
                     [BattleAction]$ToExecute          = $null
                     [BattleActionResult]$ActionResult = $null
@@ -25648,7 +25244,6 @@ Class BattleManager {
                             $Script:ThePlayerBattleActionWindow.Draw()
                             $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
                         }
-
                         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                             @(
                                 [ATStringCompositeSc]::new(
@@ -25668,7 +25263,6 @@ Class BattleManager {
                                 )
                             )
                         )
-
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                         $Script:ThePlayerBattleStatWindow.Draw()
                     } Else {
@@ -25694,11 +25288,9 @@ Class BattleManager {
                                 )
                             )
                         )
-
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                         $Script:TheEnemyBattleStatWindow.Draw()
                     }
-
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
@@ -25720,14 +25312,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-    
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -25762,6 +25352,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -25770,7 +25361,6 @@ Class BattleManager {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -25805,6 +25395,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -25843,6 +25434,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -25881,6 +25473,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -25919,6 +25512,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -25957,6 +25551,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -25995,6 +25590,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26033,6 +25629,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26060,6 +25657,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -26083,14 +25681,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-    
                             Switch($ToExecute.Type) {    
                                 ([BattleActionType]::ElementalFire) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26125,6 +25721,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26163,6 +25760,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26201,6 +25799,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26239,6 +25838,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26277,6 +25877,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26315,6 +25916,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26353,6 +25955,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26380,6 +25983,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -26413,14 +26017,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-    
                             Switch($ToExecute.Type) {    
                                 ([BattleActionType]::ElementalFire) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26455,6 +26057,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26493,6 +26096,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26531,6 +26135,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26569,6 +26174,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26607,6 +26213,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26645,6 +26252,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26683,6 +26291,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26710,6 +26319,7 @@ Class BattleManager {
                                     Break
                                 }
                             }
+
                             Break
                         }
 
@@ -26728,14 +26338,12 @@ Class BattleManager {
                                     )
                                 )
                             )
-    
                             Switch($ToExecute.Type) {
                                 ([BattleActionType]::Physical) {
                                     Try {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26770,6 +26378,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26778,7 +26387,6 @@ Class BattleManager {
                                         $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
                                         $Script:TheSfxMPlayer.Play()
                                     } Catch {}
-
                                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                         @(
                                             [ATStringCompositeSc]::new(
@@ -26813,6 +26421,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26851,6 +26460,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26889,6 +26499,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26927,6 +26538,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -26965,6 +26577,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -27003,6 +26616,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -27041,6 +26655,7 @@ Class BattleManager {
                                             )
                                         )
                                     )
+
                                     Break
                                 }
     
@@ -27076,7 +26691,6 @@ Class BattleManager {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -27091,6 +26705,7 @@ Class BattleManager {
                                     )
                                 )
                             )
+
                             Break
                         }
     
@@ -27099,7 +26714,6 @@ Class BattleManager {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-
                             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                                 @(
                                     [ATStringCompositeSc]::new(
@@ -27114,6 +26728,7 @@ Class BattleManager {
                                     )
                                 )
                             )
+
                             Break
                         }
     
@@ -27126,7 +26741,6 @@ Class BattleManager {
                         $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
                         $Script:TheSfxMPlayer.Play()
                     } Catch {}
-
                     $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                         @(
                             [ATStringCompositeSc]::new(
@@ -27142,7 +26756,6 @@ Class BattleManager {
                         )
                     )
                 }
-
                 Foreach($Stat in $this.PhaseTwoEntity.Stats.Values) {
                     If($Stat.AugmentTurnDuration -GT 0) {
                         $Stat.AugmentTurnDuration--
@@ -27159,32 +26772,37 @@ Class BattleManager {
                         }
                     }
                 }
-
                 $this.State = [BattleManagerState]::TurnIncrement
+                
+                Break
             }
 
             Calculation {
                 If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseOneEntity -IS [Player]) {
                         $this.State = [BattleManagerState]::BattleLost
+
                         Break
                     } Else {
                         $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
                         $this.State        = [BattleManagerState]::BattleWon
+
                         Break
                     }
                 } Elseif($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
                     If($this.PhaseTwoEntity -IS [Player]) {
                         $this.State = [BattleManagerState]::BattleLost
+
                         Break
                     } Else {
                         $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
                         $this.State        = [BattleManagerState]::BattleWon
+
                         Break
                     }
                 }
-
                 $this.State = [BattleManagerState]::TurnIncrement
+
                 Break
             }
 
@@ -27197,7 +26815,6 @@ Class BattleManager {
                     } Catch {}
                     $Script:HasBattleWonChimePlayed = $true
                 }
-
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                     @(
                         [ATStringCompositeSc]::new(
@@ -27208,7 +26825,6 @@ Class BattleManager {
                     )
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
-                
                 If($this.PhaseOneEntity -IS [Player]) {
                     $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
                     Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseOneEntity), ([EnemyBattleEntity]$this.PhaseTwoEntity)
@@ -27216,7 +26832,6 @@ Class BattleManager {
                     $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
                     Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseTwoEntity), ([EnemyBattleEntity]$this.PhaseOneEntity)
                 }
-
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                     @(
                         [ATStringCompositeSc]::new(
@@ -27227,14 +26842,13 @@ Class BattleManager {
                     )
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
-                
                 $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
                 While($a.VirtualKeyCode -NE 13) {
                     $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
                 }
-
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+
                 Break
             }
 
@@ -27245,7 +26859,6 @@ Class BattleManager {
                     $Script:TheSfxMachine.Play()
                     $Script:HasBattleLostChimePlayed = $true
                 }
-
                 $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
                     @(
                         [ATStringCompositeSc]::new(
@@ -27268,9 +26881,9 @@ Class BattleManager {
                     )
                 )
                 $Script:TheBattleStatusMessageWindow.Draw()
-
                 Start-Sleep -Seconds 5
                 Clear-Host
+                
                 Exit
             }
 
