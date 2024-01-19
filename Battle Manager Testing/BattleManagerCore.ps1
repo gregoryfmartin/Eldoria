@@ -73,11 +73,6 @@ Enum StatNumberState {
 Class BattleEntityProperty {
     Static [Single]$StatNumThresholdCaution          = 0.6D
     Static [Single]$StatNumThresholdDanger           = 0.3D
-    Static [ConsoleColor24]$StatNumDrawColorSafe     = [CCAppleGreenLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorCaution  = [CCAppleYellowLight24]::new()
-    Static [ConsoleColor24]$StatNumDrawColorDanger   = [CCAppleRedLight24]::new()
-    Static [ConsoleColor24]$StatAugDrawColorPositive = [CCAppleCyanLight24]::new()
-    Static [ConsoleColor24]$StatAugDrawColorNegative = [CCApplePurpleDark24]::new()
 
     [Int]$Base
     [Int]$BasePre
@@ -354,7 +349,6 @@ Class BattleEntity {
     [Hashtable]$ActionListing
     [ScriptBlock]$SpoilsEffect
     [ActionSlot[]]$ActionMarbleBag
-    [ConsoleColor24]$NameDrawColor
     [BattleActionType]$Affinity
 
     BattleEntity() {
@@ -363,7 +357,6 @@ Class BattleEntity {
         $this.ActionListing   = @{}
         $this.SpoilsEffect    = $null
         $this.ActionMarbleBag = $null
-        $this.NameDrawColor   = [CCTextDefault24]::new()
         $this.Affinity        = [BattleActionType]::None
     }
 
@@ -373,7 +366,6 @@ Class BattleEntity {
         [Hashtable]$ActionListing,
         [ScriptBlock]$SpoilsEffect,
         [ActionSlot[]]$ActionMarbleBag,
-        [ConsoleColor24]$NameDrawColor,
         [BattleActionType]$Affinity
     ) {
         $this.Name            = $Name
@@ -381,7 +373,6 @@ Class BattleEntity {
         $this.ActionListing   = $ActionListing
         $this.SpoilsEffect    = $SpoilsEffect
         $this.ActionMarbleBag = $ActionMarbleBag
-        $this.NameDrawColor   = $NameDrawColor
         $this.Affinity        = $Affinity
     }
 
@@ -414,38 +405,10 @@ Class BattleActionResult {
 }
 
 Class Player : BattleEntity {
-    Static [ConsoleColor24]$AsideColor    = [CCAppleIndigoLight24]::new()
-    Static [ConsoleColor24]$GoldDrawColor = [CCAppleYellowLight24]::new()
-
     [Int]$CurrentGold
-    [ATCoordinates]$MapCoordinates
-    [List[MapTileObject]]$Inventory
-    [List[String]]$TargetOfFilter
-    [PlayerActionInventory]$ActionInventory
 
     Player() : base() {
         $this.CurrentGold     = 0
-        $this.MapCoordinates  = [ATCoordinates]::new(0, 0)
-        $this.Inventory       = [List[MapTileObject]]::new()
-        $this.TargetOfFilter  = [List[String]]::new()
-        $this.ActionInventory = [PlayerActionInventory]::new()
-    }
-
-    Player(
-        [Int]$CurrentGold,
-        [ATCoordinates]$MapCoordinates,
-        [List[MapTileObject]]$Inventory,
-        [String[]]$TargetOfFilter
-    ) : base() {
-        $this.CurrentGold     = $CurrentGold
-        $this.MapCoordinates  = $MapCoordinates
-        $this.Inventory       = $Inventory
-        $this.TargetOfFilter  = [List[String]]::new()
-        $this.ActionInventory = [PlayerActionInventory]::new()
-
-        Foreach($a in $TargetOfFilter) {
-            $this.TargetOfFilter.Add($a) | Out-Null
-        }
     }
 
     Player(
@@ -463,246 +426,6 @@ Class Player : BattleEntity {
         $this.Stats[[StatId]::HitPoints].Max    = $MaxHp
         $this.Stats[[StatId]::MagicPoints].Base = $BaseMp
         $this.Stats[[StatId]::MagicPoints].Max  = $MaxMp
-        $this.MapCoordinates                    = [ATCoordinates]::new(0, 0)
-        $this.Inventory                         = [List[MapTileObject]]::new()
-        $this.TargetOfFilter                    = [List[String]]::new()
-        $this.ActionInventory                   = [PlayerActionInventory]::new()
-
-        Foreach($a in $TargetOfFilter) {
-            $this.TargetOfFilter.Add($a) | Out-Null
-        }
-    }
-
-    [Boolean]IsItemInInventory(
-        [String]$ItemName
-    ) {
-        Foreach($a in $this.Inventory) {
-            If($a.Name -IEQ $ItemName) {
-                Return $true
-            }
-        }
-
-        Return $false
-    }
-
-    [MapTileObject]GetItemReference(
-        [String]$ItemName
-    ) {
-        Foreach($a in $this.Inventory) {
-            If($a.Name -IEQ $ItemName) {
-                Return $a
-            }
-        }
-
-        Return $null
-    }
-
-    [ItemRemovalStatus]RemoveInventoryItemByName(
-        [String]$ItemName
-    ) {
-        $c = 0
-
-        Foreach($a in $this.Inventory) {
-            If($a.Name -IEQ $ItemName) {
-                If($a.KeyItem -EQ $true) {
-                    Return [ItemRemovalStatus]::FailKeyItem
-                }
-                $this.Inventory.RemoveAt($c)
-
-                Return [ItemRemovalStatus]::Success
-            }
-            $c++
-        }
-
-        Return [ItemRemovalStatus]::FailGeneral
-    }
-
-    [ItemRemovalStatus]RemoveInventoryItemByIndex(
-        [Int]$Index
-    ) {
-        [MapTileObject]$a = $null
-
-        Try {
-            $a = $this.Inventory[$Index]
-        } Catch {
-            Return [ItemRemovalStatus]::FailGeneral
-        }
-        If($a.KeyItem -EQ $true) {
-            Return [ItemRemovalStatus]::FailKeyItem
-        }
-        $this.Inventory.RemoveAt($Index)
-
-        Return [ItemRemovalStatus]::Success
-    }
-
-    [Void]MapMoveNorth() {
-        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
-            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-                $a = $Script:CurrentMap.MapHeight - 1
-                $b = $this.MapCoordinates.Row + 1
-                $c = $a % $b
-
-                If($c -EQ $a) {
-                    $this.MapCoordinates.Row = 0
-                } Else {
-                    $this.MapCoordinates.Row++
-                }
-                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                $Script:TheCommandWindow.UpdateCommandHistory($true)
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                Return
-            } Else {
-                $a = $Script:CurrentMap.MapHeight - 1
-                $b = $this.MapCoordinates.Row + 1
-                $c = $a % $b
-
-                If($c -EQ $a) {
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-                } Else {
-                    $this.MapCoordinates.Row++
-                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                    Return
-                }
-            }
-        } Else {
-            $Script:TheCommandWindow.UpdateCommandHistory($true)
-            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-
-            Return
-        }
-    }
-
-    [Void]MapMoveSouth() {
-        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
-            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-                $a = 0
-                $b = $this.MapCoordinates.Row - 1
-
-                If($b -LT $a) {
-                    $this.MapCoordinates.Row = $Script:CurrentMap.MapHeight - 1
-                } Else {
-                    $this.MapCoordinates.Row--
-                }
-                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                $Script:TheCommandWindow.UpdateCommandHistory($true)
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                Return
-            } Else {
-                $a = 0
-                $b = $this.MapCoordinates.Row - 1
-
-                If($b -LT $a) {
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-                } Else {
-                    $this.MapCoordinates.Row--
-                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                    Return
-                }
-            }
-        } Else {
-            $Script:TheCommandWindow.UpdateCommandHistory($true)
-            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-
-            Return
-        }
-    }
-
-    [Void]MapMoveEast() {
-        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitEast] -EQ $true) {
-            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-                $a = $Script:CurrentMap.MapWidth - 1
-                $b = $this.MapCoordinates.Column + 1
-                $c = $a % $b
-
-                If($c -EQ $a) {
-                    $this.MapCoordinates.Column = 0
-                } Else {
-                    $this.MapCoordinates.Column++
-                }
-                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                $Script:TheCommandWindow.UpdateCommandHistory($true)
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                Return
-            } Else {
-                $a = $Script:CurrentMap.MapWidth - 1
-                $b = $this.MapCoordinates.Column + 1
-                $c = $a % $b
-
-                If($c -EQ $a) {
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-                } Else {
-                    $this.MapCoordinates.Column++
-                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                    Return
-                }
-            }
-        } Else {
-            $Script:TheCommandWindow.UpdateCommandHistory($true)
-            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-
-            Return
-        }
-    }
-
-    [Void]MapMoveWest() {
-        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitWest] -EQ $true) {
-            If($Script:CurrentMap.BoundaryWrap -EQ $true) {
-                $a = 0
-                $b = $this.MapCoordinates.Column - 1
-
-                If($b -LT $a) {
-                    $this.MapCoordinates.Column = $Script:CurrentMap.MapWidth - 1
-                } Else {
-                    $this.MapCoordinates.Column--
-                }
-                $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                $Script:TheCommandWindow.UpdateCommandHistory($true)
-                $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                Return
-            } Else {
-                $a = 0
-                $b = $this.MapCoordinates.Column - 1
-
-                If($b -LT $a) {
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:TheMessageWindow.WriteInvisibleWallEncounteredMessage()
-                } Else {
-                    $this.MapCoordinates.Column--
-                    $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-                    $Script:TheCommandWindow.UpdateCommandHistory($true)
-                    $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
-
-                    Return
-                }
-            }
-        } Else {
-            $Script:TheCommandWindow.UpdateCommandHistory($true)
-            $Script:TheMessageWindow.WriteYouShallNotPassMessage()
-
-            Return
-        }
-    }
-
-    [Boolean]ValidateSourceInFilter(
-        [String]$SourceItemClass
-    ) {
-        Return ($SourceItemClass -IN $this.TargetOfFilter)
     }
 }
 
