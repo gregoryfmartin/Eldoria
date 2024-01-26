@@ -741,30 +741,39 @@ Enum StatNumberState {
         [BattleAction]$SelfAction
     )
 
+    If($Script:Debug) { 'Entered BaElementalFireCalc Function' >> $Script:LogFile }
+
     [Boolean]$CanExecute   = $false
     [Boolean]$ReduceSelfMp = $false
 
+    If($Script:Debug) { 'Checking if SelfAction.MpCost is GREATER THAN zero...' >> $Script:LogFile }
     If($SelfAction.MpCost -GT 0) {
+        If($Script:Debug) { '... It is. Checking to see if the Base value of the Magic Points stat is GREATER THAN OR EQUAL TO SelfAction.MpCost...' >> $Script:LogFile }
         If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+            If($Script:Debug) { '... It is. Setting CanExecute and ReduceSelfMp flags to true.' >> $Script:LogFile }
             $CanExecute   = $true
             $ReduceSelfMp = $true
         }
     } Elseif($SelfAction.MpCost -LE 0) {
+        If($Script:Debug) { '... It isn''t. SelfAction.MpCost is LESS THAN OR EQUAL TO zero. Setting CanExecute flag to true.' >> $Script:LogFile }
         $CanExecute = $true
     }
 
+    If($Script:Debug) { 'Checking if CanExecute is EQUAL TO true...' >> $Script:LogFile }
     If($CanExecute -EQ $true) {
+        If($Script:Debug) { '... CanExecute is true. Checking if ReduceSelfMp is EQUAL TO true...' >> $Script:LogFile }
         If($ReduceSelfMp -EQ $true) {
+            If($Script:Debug) { "... It is. Attempting to reduce the Magic Point Stat's Base value by $($SelfAction.MpCost * -1)" >> $Script:LogFile }
             [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
-            If($Self -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
-            }
+            If($Script:Debug) { "The result of the operation is $($DecRes)." >> $Script:LogFile }
         }
 
+        If($Script:Debug) { 'Calculating ExecuteChance' >> $Script:LogFile }
         $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+        If($Script:Debug) { "ExecuteChance was calculated to be $($ExecuteChance)." >> $Script:LogFile }
+        If($Script:Debug) { "Checking if ExecuteChance ($($ExecuteChance)) is GREATER THAN SelfAction.Chance ($($SelfAction.Chance))..." >> $Script:LogFile }
         If($ExecuteChance -GT $SelfAction.Chance) {
+            If($Script:Debug) { '... It is. The attack failed. Returning a BattleActionResult of type FailedAttackFailed.' >> $Script:LogFile }
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackFailed,
                 $Self,
@@ -772,10 +781,17 @@ Enum StatNumberState {
                 0
             )
         }
+        If($Script:Debug) { '... It isn''t. Carrying on.' }
 
+        If($Script:Debug) { 'Calculating TargetEffectiveEvasion' >> $Script:LogFile }
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+        If($Script:Debug) { "TargetEffectiveEvasion was calculated to be $($TargetEffectiveEvasion)." >> $Script:LogFile }
+        If($Script:Debug) { 'Calculating EvRandFactor' >> $Script:LogFile }
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+        If($Script:Debug) { "EvRandFactor was calculated to be $($EvRandFactor)." >> $Script:LogFile }
+        If($Script:Debug) { "Checking if EvRandFactor ($($EvRandFactor)) is LESS THAN OR EQUAL TO ($($TargetEffectiveEvasion))..." >> $Script:LogFile }
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
+            If($Script:Debug) { '... It is. The attack missed. Returning a BattleActionResult of type FailedAttackMissed.' >> $Script:LogFile }
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackMissed,
                 $Self,
@@ -783,38 +799,55 @@ Enum StatNumberState {
                 0
             )
         }
+        If($Script:Debug) { '... It isn''t. Carrying on.' }
 
+        If($Script:Debug) { 'Calculating EffectiveDamageP1' >> $Script:LogFile }
         $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
             $SelfAction.EffectValue * (
                 ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
         ))
+        If($Script:Debug) { "EffectiveDamageP1 was calculated to be $($EffectiveDamageP1)." >> $Script:LogFile }
         $EffectiveDamageCritFactor     = 1.0
         $EffectiveDamageAffinityFactor = 1.0
 
+        If($Script:Debug) { 'Calculating CriticalChance' >> $Script:LogFile }
         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+        If($Script:Debug) { "CriticalChance was calculated to be $($CriticalChance)." >> $Script:LogFile }
+        If($Script:Debug) { "Checking if CriticalChance ($($CriticalChance)) is LESS THAN OR EQUAL TO Self.Stats[Luck].Base ($($Self.Stats[[StatId]::Luck].Base))..." >> $Script:LogFile }
         If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+            If($Script:Debug) { '... It is. A Critical hit has occurred. Set the EffectiveDamageCritFactor to 1.5.' }
             $EffectiveDamageCritFactor = 1.5
         }
+        If($Script:Debug) { '... It isn''t. EffectiveDamageCritFactor remains at 1.0.' >> $Script:LogFile }
 
+        If($Script:Debug) { 'Checking the current value of Target.Affinity to determine Affinity Factor.' >> $Script:LogFile }
         Switch($Target.Affinity) {
             { $_ -EQ $SelfAction.Type } {
+                If($Script:Debug) { 'Target.Affinity is EQUAL TO SelfAction.Type; set the scalar to -0.75.' >> $Script:LogFile }
                 $EffectiveDamageAffinityFactor = -0.75
                 Break
             }
 
             ([BattleActionType]::ElementalEarth) {
+                If($Script:Debug) { 'Target.Affinity is EQUAL TO ElementalIce; set the scalar to 1.6.' >> $Script:LogFile }
                 $EffectiveDamageAffinityFactor = 1.6
                 Break
             }
         }
 
+        If($Script:Debug) { 'Calculating FinalDamage' >> $Script:LogFile }
         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+        If($Script:Debug) { "FinalDamage was calculated to be $($FinalDamage)." >> $Script:LogFile }
 
+        If($Script:Debug) { 'Calculating DecRes' >> $Script:LogFile }
         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+        If($Script:Debug) { "DecRes was calculated to be $($DecRes)." >> $Script:LogFile }
 
+        If($Script:Debug) { "Checking if DecRes ($($DecRes)) is NOT EQUAL TO zero..." >> $Script:LogFile }
         If(0 -NE $DecRes) {
+            If($Script:Debug) { '... It is. The attack failed. Returning a BattleActionResult of type FailedAttackFailed.' >> $Script:LogFile }
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackFailed,
                 $Self,
@@ -822,13 +855,10 @@ Enum StatNumberState {
                 $FinalDamage
             )
         } Else {
-            If($Target -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-            }
-
+            If($Script:Debug) { '... It isn''t. Carrying on.' >> $Script:LogFile }
+            If($Script:Debug) { "Checking if EffectiveDamageCritFactor ($($EffectiveDamageCritFactor)) is GREATER THAN 1.0 AND if EffectiveDamageAffinityFactor ($($EffectiveDamageAffinityFactor)) is EQUAL TO 1.0..." >> $Script:LogFile }
             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                If($Script:Debug) { '... It is. Returning a BattleActionResult of type SuccessWithCritical.' >> $Script:LogFile }
                 Return [BattleActionResult]::new(
                     [BattleActionResultType]::SuccessWithCritical,
                     $Self,
@@ -836,6 +866,7 @@ Enum StatNumberState {
                     $FinalDamage
                 )
             } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                If($Script:Debug) { '... It isn''t. However, EffectiveDamageCritFactor EQUALS 1.0 AND EffectiveDamageAffinityFactor is GREATER THAN 1.0. Returning a BattleActionResult of type SuccessWithAffinityBonus.' >> $Script:LogFile }
                 Return [BattleActionResult]::new(
                     [BattleActionResultType]::SuccessWithAffinityBonus,
                     $Self,
@@ -843,6 +874,7 @@ Enum StatNumberState {
                     $FinalDamage
                 )
             } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                If($Script:Debug) { '... It isn''t. However, EffectiveDamageCritFactor is GREATER THAN 1.0 AND EffectiveDamageAffinityFactor is GREATER THAN 1.0. Returning a BattleActionResult of type SuccessWithCritAndAffinityBonus.' >> $Script:LogFile }
                 Return [BattleActionResult]::new(
                     [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
                     $Self,
@@ -850,6 +882,8 @@ Enum StatNumberState {
                     $FinalDamage
                 )
             }
+            If($Script:Debug) { '... No cases have been satisfied. Carrying on.' >> $Script:LogFile }
+            If($Script:Debug) { 'Returning a BattleActionResult of type Success.' >> $Script:LogFile }
 
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::Success,
@@ -859,6 +893,7 @@ Enum StatNumberState {
             )
         }
     } Else {
+        If($Script:Debug) { '... It isn''t. The entity doesn''t have enough MP to use this technique. Return a BattleActionResult of type FailedNotEnoughMp.' >> $Script:LogFile }
         Return [BattleActionResult]::new(
             [BattleActionResultType]::FailedNoUsesRemaining,
             $Self,
