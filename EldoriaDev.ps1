@@ -233,6 +233,85 @@ Enum StatusScreenMode {
     TechInventorySelection
 }
 
+[ScriptBlock]$Script:BaAffinityTally = {
+    Param(
+        [BattleEntity]$Target,
+        [BattleAction]$SelfAction
+    )
+
+    
+}
+
+[ScriptBlock]$Script:BaDamageCalc = {
+    Param(
+        [BattleEntity]$Self,
+        [BattleEntity]$Target,
+        [BattleAction]$SelfAction
+    )
+
+    [Boolean]$CanExecute = $false
+    [Boolean]$ReduceSelfMp = $false
+
+    If($SelfAction.MpCost -GT 0) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+            $CanExecute = $true
+            $ReduceSelfMp = $true
+        }
+    } Elseif($SelfAction.MpCost -LE 0) {
+        $CanExecute = $true
+    }
+
+    If($CanExecute -EQ $true) {
+        If($ReduceSelfMp -EQ $true) {
+            [Void]($Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1))
+            If($Self -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+            }
+        }
+
+        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+        If($ExecuteChance -GT $SelfAction.Chance) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                0
+            )
+        }
+
+        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+        If($EvRandFactor -LE $TargetEffectiveEvasion) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackMissed,
+                $Self,
+                $Target,
+                0
+            )
+        }
+
+        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+            $SelfAction.EffectValue * (
+                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+        ))
+        $EffectiveDamageCritFactor     = 1.0
+        $EffectiveDamageAffinityFactor = 1.0
+
+        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+            $EffectiveDamageCritFactor = 1.5
+        }
+
+        If($SelfAction.Affinity -NE [BattleActionType]::Physical) {
+            
+        }
+    }
+}
+
 [ScriptBlock]$Script:BaPhysicalCalc = {
     Param(
         [BattleEntity]$Self,
