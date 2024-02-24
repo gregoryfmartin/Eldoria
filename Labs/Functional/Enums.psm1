@@ -165,3 +165,13 @@ Enum StatusScreenMode {
     EquippedTechSelection
     TechInventorySelection
 }
+
+Enum BattleEntityPropertyKeys {
+    StatsTableRef
+    ActionTableRef
+    SpoilsEffectRef
+    MarbleBagRef
+    AffinityRef
+    Name
+    NameDrawColor
+}
