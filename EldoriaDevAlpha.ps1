@@ -1520,3 +1520,30 @@ Class EmojiBank {
     Static [String]$PersonGestureFacepalming = "`u{1F926}"
     Static [String]$PersonGestureShrugging   = "`u{1F937}"
 }
+
+
+
+
+###############################################################################
+#
+# CONSOLE COLOR 24 CLASS
+#
+# Defines a 24-bit color to be used in my programs.
+# Each channel is clamped to an unsigned 8-bit range.
+#
+###############################################################################
+Class ConsoleColor24 {
+    [ValidateRange(0, 255)][Int]$Red
+    [ValidateRange(0, 255)][Int]$Green
+    [ValidateRange(0, 255)][Int]$Blue
+
+    ConsoleColor24(
+        [Int]$Red,
+        [Int]$Green,
+        [Int]$Blue
+    ) {
+        $this.Red   = $Red
+        $this.Green = $Green
+        $this.Blue  = $Blue
+    }
+}
