@@ -428,3 +428,20 @@ Function Script:EldAtGenPrefixStr {
         Return "$($Coordinates)$($Decorations)$($ForegroundColor)$($BackgroundColor)"
     }
 }
+
+
+
+
+
+<##############################################################################
+.SYNOPSIS
+A symbolic placeholder for an empty ANSI SGR Prefix Sequence.
+#>
+Function Script:EldAtGenPrefixEmptyStr {
+    [CmdletBinding()]
+    Param()
+
+    Process {
+        Return ''
+    }
+}
