@@ -62,3 +62,113 @@ Add-Type -AssemblyName PresentationCore
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
+
+
+
+
+###############################################################################
+#
+# ENUMERATION DEFINITIONS
+#
+###############################################################################
+Enum GameStatePrimary {
+    SplashScreenA
+    SplashScreenB
+    TitleScreen
+    PlayerSetupScreen
+    GamePlayScreen
+    InventoryScreen
+    BattleScreen
+    PlayerStatusScreen
+    Cleanup
+}
+
+Enum GameStateSecondary {
+    Normal
+    Battle
+    Shop
+    Inn
+}
+
+Enum StatNumberState {
+    Normal
+    Caution
+    Danger
+}
+
+Enum ItemRemovalStatus {
+    Success
+    FailGeneral
+    FailKeyItem
+}
+
+Enum ActionInvRemovalStatus {
+    Success
+    Fail
+}
+
+Enum BattleActionType {
+    Physical
+    ElementalFire
+    ElementalWater
+    ElementalEarth
+    ElementalWind
+    ElementalLight
+    ElementalDark
+    ElementalIce
+    MagicPoison
+    MagicConfuse
+    MagicSleep
+    MagicAging
+    MagicHealing
+    MagicStatAugment
+    None
+}
+
+Enum StatId {
+    HitPoints
+    MagicPoints
+    Attack
+    Defense
+    MagicAttack
+    MagicDefense
+    Speed
+    Luck
+    Accuracy
+}
+
+Enum ActionSlot {
+    A
+    B
+    C
+    D
+    None
+}
+
+Enum BattleManagerState {
+    HealthCheck
+    TurnIncrement
+    PhaseOrdering
+    PhaseAExecution
+    PhaseBExecution
+    Calculation
+    BattleWon
+    BattleLost
+}
+
+Enum BattleActionResultType {
+    Success
+    SuccessWithCritical
+    SuccessWithAffinityBonus
+    SuccessWithCritAndAffinityBonus
+    FailedAttackMissed
+    FailedAttackFailed
+    FailedElementalMatch
+    FailedNoUsesRemaining
+    FailedNotEnoughMp
+}
+
+Enum StatusScreenMode {
+    EquippedTechSelection
+    TechInventorySelection
+}
