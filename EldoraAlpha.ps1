@@ -6,6 +6,8 @@ using namespace System.Media
 
 Add-Type -AssemblyName PresentationCore
 
+Set-StrictMode -Version Latest
+
 
 
 
@@ -15464,6 +15466,222 @@ Class BufferManager {
         Clear-Host
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
         $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# WINDOW BASE
+#
+# INTENDED TO BE USED AS THE FOUNDATION FOR MORE SPECIFIC "WINDOWS". THIS CLASS
+# ISN'T INTENDED TO BE INSTANTIATED DIRECTLY FOR ANY REASON OTHER THAN TESTING.
+#
+# THE VERSION SHOWN HERE IS DERIVED FROM BURNT LATTE. IT EXTENDS THE ORIGINAL
+# DESIGN BY ADDING SUPPORT FOR INDEPENDENT LEFT AND RIGHT BORDER CHARACTERS,
+# AS WELL AS ADDING A TITLE. LEGACY DERIVED CLASSES WILL BE REQUIRED TO CHANGE
+# CERTAIN INITIALIZATION PROCESSES TO FACILITATE DERIVATION FROM THIS VERSION.
+#
+# THE INCLUSION OF THE SECONDARY CONSTRUCTOR IS FOR POSTERITY. IT'S CURRENTLY
+# UNCLEAR IF THIS CONSTRUCTOR IS USED. THIS SHOULD BE CLEANED UP LATER.
+#
+###############################################################################
+Class WindowBase {
+    Static [Int]$BorderDrawColorTop    = 0
+    Static [Int]$BorderDrawColorBottom = 1
+    Static [Int]$BorderDrawColorLeft   = 2
+    Static [Int]$BorderDrawColorRight  = 3
+    Static [Int]$BorderDirtyTop        = 0
+    Static [Int]$BorderDirtyBottom     = 1
+    Static [Int]$BorderDirtyLeft       = 2
+    Static [Int]$BorderDirtyRight      = 3
+    Static [Int]$BorderStringTop       = 0
+    Static [Int]$BorderStringBottom    = 1
+    Static [Int]$BorderStringLeft      = 2
+    Static [Int]$BorderStringRight     = 3
+
+    [ATCoordinates]$LeftTop
+    [ATCoordinates]$RightBottom
+    [ConsoleColor24[]]$BorderDrawColors
+    [String[]]$BorderStrings
+    [Boolean[]]$BorderDrawDirty
+    [Int]$Width
+    [Int]$Height
+
+    [String]$Title
+    [Boolean]$UseTitle
+    [Boolean]$TitleDirty
+    [ConsoleColor24]$TitleColor
+
+    WindowBase() {
+        $this.LeftTop          = [ATCoordinatesNone]::new()
+        $this.RightBottom      = [ATCoordinatesNone]::new()
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            '',
+            '',
+            '',
+            ''
+        )
+        $this.BorderDrawDirty = [Boolean[]](
+            $true,
+            $true,
+            $true,
+            $true
+        )
+        $this.Title      = ''
+        $this.UseTitle   = $false
+        $this.TitleDirty = $false
+        $this.TitleColor = [CCTextDefault24]::new()
+        $this.UpdateDimensions()
+    }
+
+    WindowBase(
+        [ATCoordinates]$LeftTop,
+        [ATCoordinates]$RightBottom,
+        [ConsoleColor24[]]$BorderDrawColors,
+        [String[]]$BorderStrings,
+        [Boolean[]]$BorderDrawDirty
+    ) {
+        $this.LeftTop          = $LeftTop
+        $this.RightBottom      = $RightBottom
+        $this.BorderDrawColors = $BorderDrawColors
+        $this.BorderStrings    = $BorderStrings
+        $this.BorderDrawDirty  = $BorderDrawDirty
+        $this.Title            = ''
+        $this.UseTitle         = $false
+        $this.TitleDirty       = $false
+        $this.TitleColor       = [CCTextDefault24]::new()
+        $this.UpdateDimensions()
+    }
+
+    [Void]Draw() {
+        [ATString]$bt = [ATStringNone]::new()
+        [ATString]$bb = [ATStringNone]::new()
+        [ATString]$bl = [ATStringNone]::new()
+        [ATString]$br = [ATStringNone]::new()
+
+        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] -EQ $true) {
+            $bt = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop]
+                    Coordinates     = $this.LeftTop
+                }
+                UserData = "$($this.BorderStrings[[WindowBase]::BorderStringTop])"
+            }
+            $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] = $false
+        }
+        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] -EQ $true) {
+            $bb = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom]
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.RightBottom.Row
+                        Column = $this.LeftTop.Column
+                    }
+                }
+                UserData = "$($this.BorderStrings[[WindowBase]::BorderStringBottom])"
+            }
+            $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $false
+        }
+        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] -EQ $true) {
+            $bl = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft]
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 1
+                        Column = $this.LeftTop.Column
+                    }
+                }
+                UserData = $(
+                    Invoke-Command -ScriptBlock {
+                        [String]$temp = ''
+
+                        For($a = 0; $a -LT $this.Height; $a++) {
+                            [ATCoordinates]$b = [ATCoordinates]@{
+                                Row    = ($this.LeftTop.Row + 1) + $a
+                                Column = $this.LeftTop.Column
+                            }
+                            $temp += "$($this.BorderStrings[[WindowBase]::BorderStringLeft])$($b.ToAnsiControlSequenceString())"
+                        }
+
+                        Return $temp
+                    }
+                )
+            }
+            $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
+        }
+        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] -EQ $true) {
+            $br = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight]
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 1
+                        Column = $this.RightBottom.Column + 1
+                    }
+                }
+                UserData = $(
+                    Invoke-Command -ScriptBlock {
+                        [String]$temp = ''
+
+                        For($a = 0; $a -LT $this.Height; $a++) {
+                            [ATCoordinates]$b = [ATCoordinates]@{
+                                Row    = ($this.LeftTop.Row + 1) + $a
+                                Column = $this.RightBottom.Column + 1
+                            }
+                            $temp += "$($this.BorderStrings[[WindowBase]::BorderStringRight])$($b.ToAnsiControlSequenceString())"
+                        }
+
+                        Return $temp
+                    }
+                )
+            }
+            $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
+        }
+
+        Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
+
+        If($this.UseTitle -EQ $true) {
+            If($this.TitleDirty -EQ $true) {
+                [ATString]$a = [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.TitleColor
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.LeftTop.Row
+                            Column = $this.LeftTop.Column + 2
+                        }
+                    }
+                    UserData   = $this.Title
+                    UseATReset = $true
+                }
+
+                Write-Host "$($a.ToAnsiControlSequenceString())"
+                $this.TitleDirty = $false
+            }
+        }
+    }
+
+    [Void]UpdateDimensions() {
+        $this.Width  = $this.RightBottom.Column - $this.LeftTop.Column
+        $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
+    }
+
+    [Void]SetupTitle(
+        [String]$Title,
+        [ConsoleColor24]$Color
+    ) {
+        $this.UseTitle   = $true
+        $this.TitleDirty = $true
+        $this.Title      = $Title
+        $this.TitleColor = $Color
     }
 }
 
