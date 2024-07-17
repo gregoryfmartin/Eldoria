@@ -15001,118 +15001,22 @@ Class MapTileObject {
     [String]$PlayerEffectString
     [Boolean]$KeyItem
 
-    MapTileObject(
-        [String]$Name,
-        [String]$MapObjName,
-        [Boolean]$CanAddToInventory,
-        [String]$ExamineString,
-        [ScriptBlock]$Effect
-    ) {
-        $this.Name              = $Name
-        $this.MapObjName        = $MapObjName
-        $this.Effect            = $Effect
-        $this.CanAddToInventory = $CanAddToInventory
-        $this.ExamineString     = $ExamineString
-        $this.TargetOfFilter    = [List[String]]::new()
-        $this.BaseEffectCall    = {
-            Param(
-                [ValidateNotNullOrEmpty()]
-                [String]$a0
-            )
-
-            Return $this.ValidateSourceInFilter($a0)
-        }
+    MapTileObject() {
+        $this.Name               = ''
+        $this.MapObjName         = ''
+        $this.Effect             = {}
+        $this.CanAddToInventory  = $false
+        $this.ExamineString      = ''
+        $this.TargetOfFilter     = @()
         $this.PlayerEffectString = ''
         $this.KeyItem            = $false
-    }
-
-    MapTileObject(
-        [String]$Name,
-        [String]$MapObjName,
-        [Boolean]$CanAddToInventory,
-        [String]$ExamineString,
-        [ScriptBlock]$Effect,
-        [String[]]$TargetOfFilter
-    ) {
-        $this.Name              = $Name
-        $this.MapObjName        = $MapObjName
-        $this.Effect            = $Effect
-        $this.CanAddToInventory = $CanAddToInventory
-        $this.ExamineString     = $ExamineString
-        $this.TargetOfFilter    = [List[String]]::new()
-        $this.BaseEffectCall    = {
+        $this.BaseEffectCall     = {
             Param(
                 [ValidateNotNullOrEmpty()]
                 [String]$a0
             )
 
             Return $this.ValidateSourceInFilter($a0)
-        }
-        $this.PlayerEffectString = ''
-        $this.KeyItem            = $false
-        Foreach($a in $TargetOfFilter) {
-            $this.TargetOfFilter.Add($a) | Out-Null
-        }
-    }
-
-    MapTileObject(
-        [String]$Name,
-        [String]$MapObjName,
-        [Boolean]$CanAddToInventory,
-        [String]$ExamineString,
-        [ScriptBlock]$Effect,
-        [String[]]$TargetOfFilter,
-        [String]$PlayerEffectString
-    ) {
-        $this.Name              = $Name
-        $this.MapObjName        = $MapObjName
-        $this.Effect            = $Effect
-        $this.CanAddToInventory = $CanAddToInventory
-        $this.ExamineString     = $ExamineString
-        $this.TargetOfFilter    = [List[String]]::new()
-        $this.BaseEffectCall    = {
-            Param(
-                [ValidateNotNullOrEmpty()]
-                [String]$a0
-            )
-
-            Return $this.ValidateSourceInFilter($a0)
-        }
-        $this.PlayerEffectString = $PlayerEffectString
-        $this.KeyItem            = $false
-        Foreach($a in $TargetOfFilter) {
-            $this.TargetOfFilter.Add($a) | Out-Null
-        }
-    }
-
-    MapTileObject(
-        [String]$Name,
-        [String]$MapObjName,
-        [Boolean]$CanAddToInventory,
-        [String]$ExamineString,
-        [ScriptBlock]$Effect,
-        [String[]]$TargetOfFilter,
-        [String]$PlayerEffectString,
-        [Boolean]$KeyItem
-    ) {
-        $this.Name              = $Name
-        $this.MapObjName        = $MapObjName
-        $this.Effect            = $Effect
-        $this.CanAddToInventory = $CanAddToInventory
-        $this.ExamineString     = $ExamineString
-        $this.TargetOfFilter    = [List[String]]::new()
-        $this.BaseEffectCall    = {
-            Param(
-                [ValidateNotNullOrEmpty()]
-                [String]$a0
-            )
-
-            Return $this.ValidateSourceInFilter($a0)
-        }
-        $this.PlayerEffectString = $PlayerEffectString
-        $this.KeyItem            = $KeyItem
-        Foreach($a in $TargetOfFilter) {
-            $this.TargetOfFilter.Add($a) | Out-Null
         }
     }
 
@@ -15242,11 +15146,326 @@ Class MapTile {
 
 ###############################################################################
 #
-# MAP
+# MAP TILE OBJECT ABSTRACTIONS
 #
-# 
+# THESE ABSTRACTIONS SERVE TO BUILD UP ACTUAL ITEMS THAT THE PLAYER CAN 
+# INTERACT WITH. THESE CONSTRUCTS CAN BE A LITTLE CUMBERSOME TO SETUP.
 #
 ###############################################################################
+Class MTOTree : MapTileObject {
+    [Boolean]$HasRopeTied
+
+    MTOTree() {
+        $this.Name              = 'Tree'
+        $this.MapObjName        = 'tree'
+        $this.CanAddToInventory = $false
+        $this.ExamineString     = 'It''s a tree. Looks like all the other ones.'
+        $this.Effect = {
+            <#
+            Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments:
+            A reference to the object itself, and the source. AFAIK, this is because of how the ScriptBlock gets invoked. The $this reference
+            doesn't work as it references the CommandWindow instance rather than the owning object (in this case, MTOTree). Because of this
+            somewhat counterintuitive nature, the caller (in this case, the 'use' command) will invoke the ScriptBlock with two arguments that
+            match the signature here. State changes can be inflicted upon Self (passed as a reference), and Source gets removed from the Player's
+            Inventory.
+            #>
+            Param(
+                [MTOTree]$Self,
+                [Object]$Source
+            )
+
+            Switch($Source.PSTypeNames[0]) {
+                'MTORope' {
+                    $Script:TheMessageWindow.WriteMessageComposite(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                'I''ve tied the '
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleYellowDark24]::new(),
+                                [ATDecoration]@{
+                                    Blink     = $true
+                                    Italic    = $true
+                                    Underline = $true
+                                },
+                                'Rope'
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                ' to the '
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleYellowDark24]::new(),
+                                [ATDecoration]@{
+                                    Blink     = $true
+                                    Italic    = $true
+                                    Underline = $true
+                                },
+                                'Tree'
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCTextDefault24]::new(),
+                                [ATDecorationNone]::new(),
+                                '.'
+                            )
+                        )
+                    )
+
+                    <#
+                    It's important to note that this action *SHOULD* cause a state change with this object. To be more specific,
+                    prior to running this action, it's assumed that the Tree did NOT have a Rope tied to it. After this action,
+                    it does. So the questions now are (A) can you tie another Rope to the Tree, and (B) what can you do with the Tree
+                    now that it has a Rope tied to it?
+
+                    Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
+
+                    UPDATE: I have this functionality in place.
+                    #>
+                    $Self.HasRopeTied   = $true
+                    $Self.ExamineString = 'A rope is tied to this tree. Wee.'
+                    $Script:ThePlayer.RemoveInventoryItemByName($Source.Name)
+                }
+            }
+        }
+        $this.TargetOfFilter = @(
+            'MTORope'
+        )
+        $this.HasRopeTied = $false
+    }
+}
+
+Class MTOLadder : MapTileObject {
+    MTOLadder() {
+        $this.Name              = 'Ladder'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $false
+        $this.ExamineString     = 'Used to climb things. Just don''t walk under one.'
+    }
+}
+
+Class MTORope : MapTileObject {
+    MTORope() {
+        $this.Name              = 'Rope'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'It''s not a snake. Hopefully.'
+    }
+}
+
+Class MTOStairs : MapTileObject {
+    MTOStairs() {
+        $this.Name              = 'Stairs'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'A faithful ally for elevating one''s position.'
+    }
+}
+
+Class MTOPole : MapTileObject {
+    MTOPole() {
+        $this.Name              = 'Pole'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $false
+        $this.ExamineString     = 'Not the north or the south one.'
+    }
+}
+
+Class MTOBacon : MapTileObject {
+    MTOBacon() {
+        $this.Name              = 'Bacon'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'Shredded swine flesh. Cholesterol never tasted so good.'
+        $this.KeyItem           = $true
+    }
+}
+
+Class MTOApple : MapTileObject {
+    MTOApple() {
+        $this.Name              = 'Apple'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'A big, juicy, red apple. Worm not included.'
+    }
+}
+
+Class MTOStick : MapTileObject {
+    MTOStick() {
+        $this.Name              = 'Stick'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'Be careful not to poke your eye out with it.'
+    }
+}
+
+Class MTOYogurt : MapTileObject {
+    MTOYogurt() {
+        $this.Name              = 'Yogurt'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'For some reason, people enjoy this spoiled milk.'
+    }
+}
+
+Class MTORock : MapTileObject {
+    MTORock() {
+        $this.Name              = 'Rock'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'A garden variety rock. Good for taunting raccoons with.'
+    }
+}
+
+Class MTOMilk : MapTileObject {
+    [Int]$PlayerHpBonus
+    [Boolean]$IsSpoiled
+
+    MTOMilk() {
+        $this.Name = 'Milk'
+        $this.MapObjName = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString = '2%. We don''t take kindly to whole milk ''round here.'
+        $this.Effect = {
+            Param(
+            [MTOMilk]$Self,
+            [Object]$Source
+            )
+
+            Switch($Source.PSTypeNames[0]) {
+                'Player' {
+                    <#
+                    Now we're getting into some pretty esoteric stuff here.
+
+                    First, we need to check and see if the Milk is spoiled.
+                    #>
+                    If($Self.IsSpoiled -EQ $true) {
+                        # It is - this will cause the Player's Hp to decrease
+                        # Attempt to decrement the Player's Hp by the Hp Bonus
+                        If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
+                            $Script:TheMessageWindow.WriteMessageComposite(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'Now that wasn''t very smart, was it?'
+                                    )
+                                )
+                            )
+                            $Source.RemoveInventoryItemByName($Self.Name)
+                        } Else {
+                            $Script:TheMessageWindow.WriteMessageComposite(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'There''s no need to drink this now.'
+                                    )
+                                )
+                            )
+                        }
+                    } Else {
+                        # The milk isn't spoiled - attempt to increment the Player's Hp by the Hp Bonus
+                        # Attempt to increment the Player's HP by the Hp Bonus
+                        If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
+                            $Script:TheMessageWindow.WriteMessageComposite(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'Hmmm. Delicious cow juice.'
+                                    )
+                                )
+                            )
+                            $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
+                        } Else {
+                            $Script:TheMessageWindow.WriteMessageComposite(
+                                @(
+                                    [ATStringCompositeSc]::new(
+                                        [CCTextDefault24]::new(),
+                                        [ATDecorationNone]::new(),
+                                        'There''s no need to drink this now.'
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        $a = $(Get-Random -Minimum 0 -Maximum 10)
+        $this.PlayerHpBonus = 75
+        $this.IsSpoiled = $($a -GE 6 ? $true : $false)
+        If($this.IsSpoiled -EQ $true) {
+            $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
+            $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
+        } Else {
+            $this.PlayerEffectString = "+$($this.PlayerHpBonus) HP"
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# BUFFER MANAGER CLASS
+#
+# MANAGES A SET OF BUFFER STORES TO KEEP THE STATE OF THE GAME BUFFER IN.
+#
+###############################################################################
+Class BufferManager {
+    [BufferCell[,]]$ScreenBufferA
+    [BufferCell[,]]$ScreenBufferB
+
+    BufferManager() {
+        $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
+        $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+    }
+
+    [Void]CopyActiveToBufferA() {
+        $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+    }
+
+    [Void]CopyActiveToBufferAWithWipe() {
+        $this.ScreenBufferA = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        Clear-Host
+    }
+
+    [Void]CopyActiveToBufferB() {
+        $this.ScreenBufferB = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+    }
+
+    [Void]CopyActiveToBufferBWithWipe() {
+        $this.ScreenBufferB = $Script:Rui.GetBufferContents([Rectangle]::new(0, 0, 80, 80))
+        Clear-Host
+    }
+
+    [Void]SwapAToB() {
+        $this.ScreenBufferB = $this.ScreenBufferA
+    }
+
+    [Void]SwapBToA() {
+        $this.ScreenBufferA = $this.ScreenBufferB
+    }
+
+    [Void]RestoreBufferAToActive() {
+        Clear-Host
+        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
+        $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
+    }
+
+    [Void]RestoreBufferBToActive() {
+        Clear-Host
+        $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
+        $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+    }
+}
 
 
 
