@@ -18427,16 +18427,24 @@ Class StatusWindow : WindowBase {
 
             { $_ -EQ $Script:OsCheckWindows } {
                 If($this.PlayerNameDrawDirty -EQ $true) {
-                    [ATString]$a = [ATString]::new(
-                        [ATStringPrefix]::new(
-                            $Script:ThePlayer.NameDrawColor,
-                            [ATBackgroundColor24None]::new(),
-                            [ATDecorationNone]::new(),
-                            [StatusWindow]::PlayerNameDrawCoordinates
-                        ),
-                        $Script:ThePlayer.Name,
-                        $true
-                    )
+                    [ATString]$a = [ATString]@{
+                        Prefix=[ATStringPrefix]@{
+                            ForegroundColor = $Script:ThePlayer.NameDrawColor
+                            Coordinates     = [StatusWindow]::PlayerNameDrawCoordinates
+                        }
+                        UserData   = $Script:ThePlayer.Name
+                        UseATReset = $true
+                    }
+                    # [ATString]$a = [ATString]::new(
+                    #     [ATStringPrefix]::new(
+                    #         $Script:ThePlayer.NameDrawColor,
+                    #         [ATBackgroundColor24None]::new(),
+                    #         [ATDecorationNone]::new(),
+                    #         [StatusWindow]::PlayerNameDrawCoordinates
+                    #     ),
+                    #     $Script:ThePlayer.Name,
+                    #     $true
+                    # )
                     $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
                     Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
                     Write-Host "$($a.ToAnsiControlSequenceString())"
@@ -18545,16 +18553,25 @@ Class StatusWindow : WindowBase {
                                 'H ',
                                 $false
                             )
-                            [ATString]$p2 = [ATString]::new(
-                                [ATStringPrefix]::new(
-                                    [BattleEntityProperty]::StatNumDrawColorDanger,
-                                    [ATBackgroundColor24None]::new(),
-                                    [ATDecoration]::new($true),
-                                    [ATCoordinatesNone]::new()
-                                ),
-                                "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
-                                $false
-                            )
+                            [ATString]$p2 = [ATString]@{
+                                Prefix = [ATStringPrefix]@{
+                                    ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                                    Decorations     = [ATDecoration]@{
+                                        Blink = $true
+                                    }
+                                }
+                                UserData = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t"
+                            }
+                            # [ATString]$p2 = [ATString]::new(
+                            #     [ATStringPrefix]::new(
+                            #         [BattleEntityProperty]::StatNumDrawColorDanger,
+                            #         [ATBackgroundColor24None]::new(),
+                            #         [ATDecoration]::new($true),
+                            #         [ATCoordinatesNone]::new()
+                            #     ),
+                            #     "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t",
+                            #     $false
+                            # )
                             [ATString]$p3 = [ATString]::new(
                                 [ATStringPrefix]::new(
                                     [CCTextDefault24]::new(),

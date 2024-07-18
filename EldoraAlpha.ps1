@@ -15691,6 +15691,398 @@ Class WindowBase {
 
 ###############################################################################
 #
+# STATUS WINDOW
+#
+# USED IN THE WORLD NAVIGATION STATE/SCREEN, THIS WINDOW SHOWS VERY BASIC
+# STATISTICS ABOUT THE PLAYER. THE NAME OF THIS OBJECT SHOULD REALLY BE 
+# CHANGED TO BETTER REFLECT ITS INTENDED USE. THIS NAME IS A VESTIGE FROM THE
+# ORIGINAL CODE BASE.
+#
+# THIS CODE HAS ALSO BEEN DRAMATICALLY SIMPLIFIED FROM ITS ORIGINAL DESIGN.
+# ONE OF THE MAJOR COMPONENTS THAT'S BEEN REMOVED IS CROSS PLATFORM SUPPORT
+# IN THE DRAW METHOD. THIS VESTIGE IS NO LONGER NECESSARY SINCE THE CODE WILL
+# NO LONGER BE PORTABLE BY DESIGN.
+#
+###############################################################################
+Class StatusWindow : WindowBase {
+    Static [Int]$PlayerStatDrawColumn = 3
+    Static [Int]$PlayerNameDrawRow    = 2
+    Static [Int]$PlayerHpDrawRow      = 4
+    Static [Int]$PlayerMpDrawRow      = 6
+    Static [Int]$PlayerGoldDrawRow    = 9
+    Static [Int]$WindowLTRow          = 1
+    Static [Int]$WindowLTColumn       = 1
+    Static [Int]$WindowRBRow          = 10
+    Static [Int]$WindowRBColumn       = 19
+
+    Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+
+    Static [String]$LineBlank = '                '
+
+    Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+    Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+    Static [ATCoordinates]$PlayerMpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerMpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+    Static [ATCoordinates]$PlayerGoldDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawRow, [StatusWindow]::PlayerStatDrawColumn)
+
+    [Boolean]$PlayerNameDrawDirty
+    [Boolean]$PlayerHpDrawDirty
+    [Boolean]$PlayerMpDrawDirty
+    [Boolean]$PlayerGoldDrawDirty
+
+    [ATString]$LineBlankActual
+
+    StatusWindow() : base() {
+        $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [StatusWindow]::WindowBorderHorizontal,
+            [StatusWindow]::WindowBorderHorizontal,
+            [StatusWindow]::WindowBorderLeft,
+            [StatusWindow]::WindowBorderRight
+        )
+        $this.UpdateDimensions()
+
+        $this.PlayerNameDrawDirty = $true
+        $this.PlayerHpDrawDirty   = $true
+        $this.PlayerMpDrawDirty   = $true
+        $this.PlayerGoldDrawDirty = $true
+        $this.LineBlankActual     = [ATString]::new(
+            [ATStringPrefix]::new(
+                [ATForegroundColor24None]::new(),
+                [ATBackgroundColor24None]::new(),
+                [ATDecorationNone]::new(),
+                [ATCoordinatesNone]::new()
+            ),
+            [StatusWindow]::LineBlank,
+            $true
+        )
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.PlayerNameDrawDirty -EQ $true) {
+            [ATString]$a = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:ThePlayer.NameDrawColor
+                    Coordinates     = [StatusWindow]::PlayerNameDrawCoordinates
+                }
+                UserData   = $Script:ThePlayer.Name
+                UseATReset = $true
+            }
+            $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a.ToAnsiControlSequenceString())"
+            $this.PlayerNameDrawDirty = $false
+        }
+
+        If($this.PlayerHpDrawDirty -EQ $true) {
+            [String]$a = ''
+
+            Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
+                ([StatNumberState]::Normal) {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerHpDrawCoordinates
+                        }
+                        UserData = 'H '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+
+                ([StatNumberState]::Caution) {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerHpDrawCoordinates
+                        }
+                        UserData = 'H '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+
+                ([StatNumberState]::Danger) {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerHpDrawCoordinates
+                        }
+                        UserData = 'H '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                            Decorations     = [ATDecoration]@{
+                                Blink = $true
+                            }
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                            Decorations     = [ATDecoration]@{
+                                Blink = $true
+                            }
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+
+                Default {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerHpDrawCoordinates
+                        }
+                        UserData = 'H '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+            }
+            $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawCoordinates.Row, [StatusWindow]::PlayerHpDrawCoordinates.Column)
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
+            $this.LineBlankActual.Prefix.Coordinates.Row++
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a)"
+            $this.PlayerHpDrawDirty = $false
+        }
+
+        If($this.PlayerMpDrawDirty -EQ $true) {
+            Switch($Script:ThePlayer.Stats[[StatId]::MagicPoints].State) {
+                ([StatNumberState]::Normal) {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerMpDrawCoordinates
+                        }
+                        UserData = 'M '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+
+                ([StatNumberState]::Caution) {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerMpDrawCoordinates
+                        }
+                        UserData = 'M '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorCaution
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)"
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+
+                ([StatNumberState]::Danger) {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerMpDrawCoordinates
+                        }
+                        UserData = 'M '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                            Decorations     = [ATDecoration]@{
+                                Blink = $true
+                            }
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                            Decorations     = [ATDecoration]@{
+                                Blink = $true
+                            }
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+
+                Default {
+                    [ATString]$p1 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates     = [StatusWindow]::PlayerMpDrawCoordinates
+                        }
+                        UserData = 'M '
+                    }
+                    [ATString]$p2 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base)`n`t"
+                    }
+                    [ATString]$p3 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                        }
+                        UserData = '/ '
+                    }
+                    [ATString]$p4 = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [BattleEntityProperty]::StatNumDrawColorSafe
+                        }
+                        UserData   = "$($Script:ThePlayer.Stats[[StatId]::MagicPoints].Max)"
+                        UseATReset = $true
+                    }
+                    $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+                }
+            }
+
+            $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerMpDrawCoordinates.Row, [StatusWindow]::PlayerHpDrawCoordinates.Column)
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
+            $this.LineBlankActual.Prefix.Coordinates.Row++
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a)"
+            $this.PlayerMpDrawDirty = $false
+        }
+
+        If($this.PlayerGoldDrawDirty -EQ $true) {
+            [ATString]$p1 = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [Player]::GoldDrawColor
+                    Coordinates     = [StatusWindow]::PlayerGoldDrawCoordinates
+                }
+                UserData = "$($Script:ThePlayer.CurrentGold)"
+            }
+            [ATString]$p2 = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'G'
+                UseATReset = $true
+            }
+            $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawCoordinates.Row, [StatusWindow]::PlayerGoldDrawCoordinates.Column)
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
+            $this.PlayerGoldDrawDirty = $false
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
