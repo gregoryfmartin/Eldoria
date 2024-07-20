@@ -16418,8 +16418,8 @@ Class SceneWindow : WindowBase {
 
     Static [ATCoordinates]$SceneImageDrawCoordinates = [ATCoordinatesNone]::new()
 
-    [Boolean]$SceneImageDirty = $true
-    [SceneImage]$Image        = [SIEmpty]::new()
+    [Boolean]$SceneImageDirty
+    [SceneImage]$Image
 
     SceneWindow() {
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
@@ -16463,6 +16463,422 @@ Class SceneWindow : WindowBase {
     ) {
         $this.Image           = $NewImage
         $this.SceneImageDirty = $true
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# MESSAGE WINDOW
+#
+# THIS WINDOW DISPLAYS MESSAGES IN THE MAP NAVIGATION SCREEN.
+#
+###############################################################################
+Class MessageWindow : WindowBase {
+    Static [Int]$MessageHistoryARef = 0
+    Static [Int]$MessageHistoryBRef = 1
+    Static [Int]$MessageHistoryCRef = 2
+    Static [Int]$WindowLTRow        = 21
+    Static [Int]$WindowLTColumn     = 1
+    Static [Int]$WindowBRRow        = 26
+    Static [Int]$WindowBRColumn     = 80
+
+    Static [String]$WindowBorderHorizontal = '-------------------------------------------------------------------------------'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+
+    Static [ATCoordinates]$MessageADrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$MessageBDrawCoordinates = [ATCoordinatesNone]::new()
+    Static [ATCoordinates]$MessageCDrawCoordinates = [ATCoordinatesNone]::new()
+
+    Static [ATString]$MessageWindowBlank = [ATStringNone]::new()
+
+    [ATStringComposite[]]$MessageHistory
+
+    [Boolean]$MessageADirty
+    [Boolean]$MessageBDirty
+    [Boolean]$MessageCDirty
+
+    MessageWindow() {
+        $this.LeftTop          = [ATCoordinates]::new(21, 1)
+        $this.RightBottom      = [ATCoordinates]::new(25, 78)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [MessageWindow]::WindowBorderHorizontal,
+            [MessageWindow]::WindowBorderVertical
+        )
+        $this.UpdateDimensions()
+
+        [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]@{
+            Row    = ($this.RightBottom.Row - 1)
+            Column = ($this.LeftTop.Column + 1)
+        }
+        [MessageWindow]::MessageBDrawCoordinates = [ATCoordinates]@{
+            Row    = ([MessageWindow]::MessageCDrawCoordinates.Row - 1)
+            Column = ($this.LeftTop.Column + 1)
+        }
+        [MessageWindow]::MessageADrawCoordinates = [ATCoordinates]@{
+            Row    = ([MessageWindow]::MessageBDrawCoordinates.Row - 1)
+            Column = ($this.LeftTop.Column + 1)
+        }
+        [MessageWindow]::MessageWindowBlank = [ATString]@{
+            Prefix     = [ATStringPrefix]::new()
+            UserData   = '                                                                             '
+            UseATReset = $true
+        }
+        $this.MessageHistory = @(
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new()
+        )
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.MessageADirty -EQ $true) {
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageADrawCoordinates
+            Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())$([MessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            $this.MessageADirty = $false
+        }
+        If($this.MessageBDirty -EQ $true) {
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageBDrawCoordinates
+            Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())$([MessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            $this.MessageBDirty = $false
+        }
+        If($this.MessageCDirty -EQ $true) {
+            [MessageWindow]::MessageWindowBlank.Prefix.Coordinates = [MessageWindow]::MessageCDrawCoordinates
+            Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            $this.MessageCDirty = $false
+        }
+    }
+
+    ###########################################################################
+    #
+    # THIS METHOD IS LIKELY COMPLETELY DEPRECATED IN FAVOR OF
+    # WRITEMESSAGECOMPOSITE. IT'S KEPT UNTIL COVERAGE IS CONFIRMED.
+    #
+    ###########################################################################
+    [Void]WriteMessage(
+        [String]$Message,
+        [ATForegroundColor24]$ForegroundColor,
+        [ATDecoration]$Decoration
+    ) {
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
+        $this.MessageADirty                                                              = $true
+        $this.MessageBDirty                                                              = $true
+        $this.MessageCDirty                                                              = $true
+    }
+
+    [Void]WriteMessageComposite(
+        [ATString[]]$Composite
+    ) {
+        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual)
+        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual)
+        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($Composite)
+        $this.MessageADirty                                                       = $true
+        $this.MessageBDirty                                                       = $true
+        $this.MessageCDirty                                                       = $true
+    }
+
+    ###########################################################################
+    #
+    # THE FOLLOWING METHODS ARE CONVENIENCE ABSTRACTIONS FOR 
+    # WRITEMESSAGECOMPOSITE THAT ARE INTENDED TO BE USED IN VERY SPECIFIC
+    # SITUATIONS. NOTE THAT AT THIS TIME, THE CONTINUED USE OF 
+    # ATSTRINGCOMPOSITESC IS SUBJECT TO SCRUTINY.
+    #
+    ###########################################################################
+    [Void]WriteBadCommandMessage(
+        [String]$Command
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleRedDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' isn''t a valid command.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteBadArg0Message(
+        [String]$Command,
+        [String]$Arg0
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'We can''t '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' with a(n) '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink     = $true
+                        Italic    = $true
+                        Underline = $true
+                    },
+                    $Arg0
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    '.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteBadArg1Message(
+        [String]$Command,
+        [String]$Arg0,
+        [String]$Arg1
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'We can''t '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' with a(n) '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink     = $true
+                        Italic    = $true
+                        Underline = $true
+                    },
+                    $Arg0
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' and a(n) '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink     = $true
+                        Italic    = $true
+                        Underline = $true
+                    },
+                    $Arg1
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    '.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteSomethingBadMessage() {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'I''m God, and I don''t know what just happened...'
+                )
+            )
+        )
+    }
+
+    [Void]WriteInvisibleWallEncounteredMessage() {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'The invisible wall blocks your path...'
+                )
+            )
+        )
+    }
+
+    [Void]WriteYouShallNotPassMessage() {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'The path you asked for is impossible...'
+                )
+            )
+        )
+    }
+
+    [Void]WriteMapNoItemsFoundMessage() {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'There''s nothing of interest here.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteMapInvalidItemMessage(
+        [String]$ItemName
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'There''s no '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $ItemName
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' here.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteItemTakenMessage(
+        [String]$ItemName
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'I''ve taken the '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $ItemName
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' and put it in my pocket.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteItemCantTakeMessage(
+        [String]$ItemName
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    'It''s not possible to take the '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $ItemName
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCTextDefault24]::new(),
+                    [ATDecorationNone]::new(),
+                    '.'
+                )
+            )
+        )
+    }
+
+    [Void]WriteCmdExtraArgsWarning(
+        [String]$Command,
+        [String[]]$ExtraArgs
+    ) {
+        $this.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleNPinkLight24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $Command
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleNYellowLight24]::new(),
+                    [ATDecorationNone]::new(),
+                    ' has garbage: '
+                ),
+                [ATStringCompositeSc]::new(
+                    [CCAppleNYellowDark24]::new(),
+                    [ATDecoration]@{
+                        Blink = $true
+                    },
+                    $ExtraArgs
+                )
+            )
+        )
     }
 }
 
