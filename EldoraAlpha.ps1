@@ -16397,6 +16397,81 @@ Class CommandWindow : WindowBase {
 
 ###############################################################################
 #
+# SCENE WINDOW
+#
+# THIS WINDOW DISPLAYS AN IMAGE FOR THE CURRENT MAP TILE. THIS IS A VISUAL
+# HACK TO GIVE A VISUAL FLAIR TO THE PROGRAM.
+#
+###############################################################################
+Class SceneWindow : WindowBase {
+    Static [Int]$WindowLTRow           = 1
+    Static [Int]$WindowLTColumn        = 30
+    Static [Int]$WindowRBRow           = 20
+    Static [Int]$WindowRBColumn        = 78
+    Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
+    Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
+
+
+    Static [String]$WindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+
+    Static [ATCoordinates]$SceneImageDrawCoordinates = [ATCoordinatesNone]::new()
+
+    [Boolean]$SceneImageDirty = $true
+    [SceneImage]$Image        = [SIEmpty]::new()
+
+    SceneWindow() {
+        $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
+        $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [SceneWindow]::WindowBorderHorizontal,
+            [SceneWindow]::WindowBorderHorizontal,
+            [SceneWindow]::WindowBorderLeft,
+            [SceneWindow]::WindowBorderRight
+        )
+        $this.UpdateDimensions()
+
+        $this.SceneImageDirty = $true
+        $this.Image           = [SIEmpty]::new()
+
+        [SceneWindow]::SceneImageDrawCoordinates = [ATCoordinates]@{
+            Row    = [SceneWindow]::ImageDrawRowOffset
+            Column = [SceneWindow]::ImageDrawColumnOffset
+        }
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.SceneImageDirty -EQ $true) {
+            # THRE MAY BE AN OPPORTUNITY TO DO SOMETHING A BIT DIFFERENT HERE
+            $this.Image = $Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage
+            Write-Host "$($this.Image.ToAnsiControlSequenceString())"
+            $this.SceneImageDirty = $false
+        }
+    }
+
+    [Void]UpdateCurrentImage(
+        [SceneImage]$NewImage
+    ) {
+        $this.Image           = $NewImage
+        $this.SceneImageDirty = $true
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
