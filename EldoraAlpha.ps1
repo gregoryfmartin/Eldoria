@@ -16888,6 +16888,173 @@ Class MessageWindow : WindowBase {
 
 ###############################################################################
 #
+# INVENTORY WINDOW
+#
+# AS WITH OTHER CLASSES, THE NAME OF THIS CLASS IS A BIT OF A MISNOMER.
+# SPECIFICALLY, THIS CLASS INCORPORATES MULTIPLE WINDOWS TOGETHER INTO A SINGLE
+# SCREEN. ALSO, THIS INVENTORY COVERS THE PLAYER'S ITEM INVENTORY AND NOT THE
+# BATTLE ACTION INVENTORY, SO THERE'S A BIT TO BE DESIRED HERE. THIS WILL BE
+# WORKED ON AFTER COVERAGE IS COMPLETED.
+#
+###############################################################################
+Class InventoryWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 1
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowBRRow    = 20
+    Static [Int]$WindowBRColumn = 79
+
+    Static [String]$WindowBorderHorizontal = '********************************************************************************'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+
+    Static [String]$IChevronCharacter           = '>'
+    Static [String]$IChevronBlankCharacter      = ' '
+    Static [String]$PagingChevronRightCharacter = '>'
+    Static [String]$PagingChevronLeftCharacter  = '<'
+    Static [String]$PagingChevronBlankCharater  = ' '
+
+    Static [String]$DivLineHorizontalString = '----------------------------------------------------------------------------'
+    Static [String]$ZpLineBlank             = '                                                                             '
+    Static [String]$DescLineBlank           = '                                                                          '
+
+    Static [ATString]$PagingChevronRight = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCAppleYellowLight24]::new()
+            Coordinates     = [ATCoordinates]@{
+                Row    = 2
+                Column = 78
+            }
+        }
+        UserData   = [InventoryWindow]::PagingChevronRightCharacter
+        UseATReset = $true
+    }
+    Static [ATString]$PagingChevronLeft = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCAppleYellowLight24]::new()
+            Coordinates     = [ATCoordinates]@{
+                Row    = 2
+                Column = 3
+            }
+        }
+        UserData   = [InventoryWindow]::PagingChevronLeftCharacter
+        UseATReset = $true
+    }
+    Static [ATString]$PagingChevronRightBlank = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCAppleMintLight24]::new()
+            Coordinates     = [ATCoordinates]@{
+                Row    = 2
+                Column = 78
+            }
+        }
+        UserData   = [InventoryWindow]::PagingChevronBlankCharacter
+        UseATReset = $true
+    }
+    Static [ATString]$PagingChevronLeftBlank = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            Coordinates = [ATCoordinates]@{
+                Row    = 2
+                Column = 3
+            }
+        }
+        UserData   = [InventoryWindow]::PagingChevronBlankCharacter
+        UseATReset = $true
+    }
+
+    Static [ATString]$DivLineHorizontal = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCTextDefault24]::new()
+            Coordinates     = [ATCoordinates]@{
+                Row    = 13
+                Column = 3
+            }
+        }
+    }
+
+    Static [Boolean]$DebugMode     = $false
+    Static [Int]$MoronCounter      = 0
+    Static [String]$ZeroPagePrompt = 'You have no items in your inventory.'
+
+    [Boolean]$PlayerChevronDirty
+    [Boolean]$PagingChevronRightDirty
+    [Boolean]$PagingChevronLeftDirty
+    [Boolean]$ItemsListDirty
+    [Boolean]$CurrentPageDirty
+    [Boolean]$PlayerChevronVisible
+    [Boolean]$PagingChevronRightVisible
+    [Boolean]$PagingChevronLeftVisible
+    [Boolean]$ZeroPageActive
+    [Boolean]$MoronPageActive
+    [Boolean]$BookDirty
+    [Boolean]$ActiveItemBlinking
+    [Boolean]$DivLineDirty
+    [Boolean]$ItemDescDirty
+    [Boolean]$ZpBlankedDirty
+    [Boolean]$ZpPromptDirty
+
+    [Int]$ItemsPerPage
+    [Int]$NumPages
+    [Int]$CurrentPage
+    [Int]$ActiveIChevronIndex
+    [List[MapTileObject]]$PageRefs
+    [List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
+    [List[ATString]]$ItemLabels
+    [List[ATString]]$ItemLabelBlanks
+
+    InventoryWindow() {
+        $this.LeftTop          = [ATCoordinates]@{
+            Row    = [InventoryWindow]::WindowLTRow
+            Column = [InventoryWindow]::WindowLTColumn
+        }
+        $this.RightBottom      = [ATCoordinates]@{
+            Row    = [InventoryWindow]::WindowBRRow
+            Column = [InventoryWindow]::WindowBRColumn
+        }
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [InventoryWindow]::WindowBorderHorizontal,
+            [InventoryWindow]::WindowBorderHorizontal,
+            [InventoryWindow]::WindowBorderLeft,
+            [InventoryWindow]::WindowBorderRight
+        )
+        $this.UpdateDimensions()
+
+        $this.PlayerChevronDirty        = $true
+        $this.PagingChevronRightDirty   = $true
+        $this.PagingChevronLeftDirty    = $true
+        $this.ItemsListDirty            = $true
+        $this.CurrentPageDirty          = $true
+        $this.PlayerChevronVisible      = $true
+        $this.PagingChevronRightVisible = $false
+        $this.PagingChevronLeftVisible  = $false
+        $this.ZeroPageActive            = $false
+        $this.MoronPageActive           = $false
+        $this.BookDirty                 = $true
+        $this.ActiveItemBlinking        = $false
+        $this.DivLineDirty              = $true
+        $this.ItemDescDirty             = $true
+        $this.ZpBlankedDirty            = $true
+        $this.ZpPromptDirty             = $true
+        $this.ItemsPerPage              = 10
+        $this.NumPages                  = 1
+        $this.CurrentPage               = 1
+        $this.PageRefs                  = [List[MapTileObject]]::new()
+
+        $this.CreateIChevrons()
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
