@@ -17788,6 +17788,42 @@ Class InventoryWindow : WindowBase {
 
 ###############################################################################
 #
+# BATTLE ENTITY STATUS WINDOW
+#
+# THIS IS THE STATUS WINDOW THAT DISPLAYS THE STATUS OF A BATTLE ENTITY IN THE
+# BATTLE SCREEN.
+#
+# BECAUSE IN THE BATTLE SCREEN MULTIPLE INSTANCES OF THIS WINDOW EXIST, THERE
+# ARE SOME ANTI-PATTERNS EXHIBITED HERE IN RELATION TO THE OTHER WINDOWS. THE
+# FOLLOWING VARIABLES ARE DEMOTED FROM STATIC TO INSTANCE MEMBERS:
+#
+# WINDOWLTROW
+# WINDOWLTCOLUMN
+# WINDOWRBROW
+# WINDOWRBCOLUMN
+#
+###############################################################################
+Class BattleEntityStatusWindow : WindowBase {
+    Static [String]$WindowBorderHorizontal = '*------------------*'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+    Static [String]$FullLineBlankActual    = '                 '
+
+    [ATCoordinates]$NameDrawCoordinates
+    [ATCoordinates]$HpDrawCoordinates
+    [ATCoordinates]$MpDrawCoordinates
+    [ATCoordinates]$StatL1DrawCoordinates
+    [ATCoordinates]$StatL2DrawCoordinates
+    [ATCoordinates]$StatL3DrawCoordinates
+    [ATCoordinates]$StatL4DrawCoordinateswwwwwwww
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
