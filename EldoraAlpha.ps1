@@ -18069,6 +18069,67 @@ Class BattleEntityStatusWindow : WindowBase {
             }
         ))
     }
+
+    [Void]CreateMpDrawString() {
+        [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
+        [ATDecoration]$NumDeco        = [ATDecorationNone]::new()
+
+        Switch($this.BERef.Stats[[StatId]::MagicPoints].State) {
+            ([StatNumberState]::Normal) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+
+            ([StatNumberState]::Caution) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorCaution
+            }
+
+            ([StatNumberState]::Danger) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                $NumDeco      = [ATDecoration]@{
+                    Blink = $true
+                }
+            }
+
+            Default {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+        }
+
+        $this.MpDrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = $this.MpDrawCoordinates
+                }
+                UserData = 'M '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $NumDrawColor
+                    Decorations     = $NumDeco
+                }
+                UserData = "$($this.BERef.Stats[[StatId]::MagicPoints].Base)"
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.MpDrawCoordinates.Row + 2
+                        Column = $this.MpDrawCoordinates.Column + 6
+                    }
+                }
+                UserData = '/ '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $NumDrawColor
+                    Decorations     = $NumDeco
+                }
+                UserData   = "$($this.BERef.Stats[[StatId]::MagicPoints].Max)"
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
