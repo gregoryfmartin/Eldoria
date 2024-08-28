@@ -18505,6 +18505,16 @@ Class BattleEntityStatusWindow : WindowBase {
             }
         ))
     }
+
+    [Void]SetAllFlagsDirty() {
+        $this.NameDrawDirty   = $true
+        $this.HpDrawDirty     = $true
+        $this.MpDrawDirty     = $true
+        $this.StatL1DrawDirty = $true
+        $this.StatL2DrawDirty = $true
+        $this.StatL3DrawDirty = $true
+        $this.StatL4DrawDirty = $true
+    }
 }
 
 
