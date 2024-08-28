@@ -17996,7 +17996,7 @@ Class BattleEntityStatusWindow : WindowBase {
                     ForegroundColor = $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item2
                     Coordinates     = $this.NameDrawCoordinates
                 }
-                UserData   = $Script:BATADornmentCharTable[$this.BERef.Affinity].Item1
+                UserData   = "$($Script:BATADornmentCharTable[$this.BERef.Affinity].Item1)"
                 UseATReset = $true
             },
             [ATString]@{
@@ -18207,13 +18207,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $AtkDrawColor
                 }
-                UserData = $AtkStatSignStr
+                UserData = "$($AtkStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $AtkDrawColor
                 }
-                UserData = $AtkStatFmtStr
+                UserData = "$($AtkStatFmtStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
@@ -18225,13 +18225,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $DefDrawColor
                 }
-                UserData = $DefStatSignStr
+                UserData = "$($DefStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $DefDrawColor
                 }
-                UserData   = $DefStatFmtStr
+                UserData   = "$($DefStatFmtStr)"
                 UseATReset = $true
             }
         ))
@@ -18313,13 +18313,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $MatDrawColor
                 }
-                UserData = $MatStatSignStr
+                UserData = "$($MatStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $MatDrawColor
                 }
-                UserData = $MatStatFmtStr
+                UserData = "$($MatStatFmtStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
@@ -18331,13 +18331,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $MdfDrawColor
                 }
-                UserData = $MdfStatSignStr
+                UserData = "$($MdfStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $MdfDrawColor
                 }
-                UserData   = $MdfStatFmtStr
+                UserData   = "$($MdfStatFmtStr)"
                 UseATReset = $true
             }
         ))
@@ -18419,13 +18419,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $SpdDrawColor
                 }
-                UserData = $SpdStatSignStr
+                UserData = "$($SpdStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $SpdDrawColor
                 }
-                UserData = $SpdStatFmtStr
+                UserData = "$($SpdStatFmtStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
@@ -18437,13 +18437,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $AccDrawColor
                 }
-                UserData = $AccStatSignStr
+                UserData = "$($AccStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $AccDrawColor
                 }
-                UserData   = $AccStatFmtStr
+                UserData   = "$($AccStatFmtStr)"
                 UseATReset = $true
             }
         ))
@@ -18494,13 +18494,13 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $LckDrawColor
                 }
-                UserData = $LckStatSignStr
+                UserData = "$($LckStatSignStr)"
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $LckDrawColor
                 }
-                UserData   = $LckStatFmtStr
+                UserData   = "$($LckStatFmtStr)"
                 UseATReset = $true
             }
         ))
