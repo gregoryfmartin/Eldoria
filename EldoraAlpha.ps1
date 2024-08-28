@@ -18341,6 +18341,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 UseATReset = $true
             }
         ))
+    }
 }
 
 
