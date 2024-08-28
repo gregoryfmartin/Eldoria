@@ -18236,6 +18236,111 @@ Class BattleEntityStatusWindow : WindowBase {
             }
         ))
     }
+
+    [Void]CreateStatL2DrawString() {
+        [BattleEntityProperty]$MatStat = $this.BERef.Stats[[StatId]::MagicAttack]
+        [BattleEntityProperty]$MdfStat = $this.BERef.Stats[[StatId]::MagicDefense]
+        [ConsoleColor24]$MatDrawColor  = [CCTextDefault24]::new()
+        [ConsoleColor24]$MdfDrawColor  = [CCTextDefault24]::new()
+        [String]$MatStatSignStr        = ''
+        [String]$MdfStatSignStr        = ''
+        [String]$MatStatFmtStr         = ''
+        [String]$MdfStatFmtStr         = ''
+
+        If($MatStat.AugmentTurnDuration -GT 0) {
+            Switch($MatStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $MatDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $MatStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $MatDrawColor = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $MatStatSignStr = '-'
+                }
+
+                Default {
+                    $MatDrawColor   = [CCTextDefault24]::new()
+                    $MatStatSignStr = ' '
+                }
+            }
+        } Else {
+            $MatDrawColor   = [CCTextDefault24]::new()
+            $MatStatSignStr = ' '
+        }
+        If($MatStat.Base -LT 10) {
+            $MatStatFmtStr = "{0:d2}" -F $MatStat.Base
+        } Elseif($MatStat.Base -GE 10) {
+            $MatStatFmtStr = "$($MatStat.Base)"
+        }
+
+        If($MdfStat.AugmentTurnDuration -GT 0) {
+            Switch($MdfStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $MdfDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $MdfStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $MdfDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $MdfStatSignStr = '-'
+                }
+
+                Default {
+                    $MdfDrawColor   = [CCTextDefault24]::new()
+                    $MdfStatSignStr = ' '
+                }
+            }
+        } Else {
+            $MdfDrawColor   = [CCTextDefault24]::new()
+            $MdfStatSignStr = ' '
+        }
+        If($MdfStat.Base -LT 10) {
+            $MdfStatFmtStr = "{0:d2}" -F $MdfStat.Base
+        } Elseif($MdfStat.Base -GE 10) {
+            $MdfStatFmtStr = "$($MdfStat.Base)"
+        }
+
+        $this.StatL2DrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = $this.StatL2DrawCoordinates
+                }
+                UserData = 'MAT '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $MatDrawColor
+                }
+                UserData = $MatStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $MatDrawColor
+                }
+                UserData = $MatStatFmtStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' MDF '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $MdfDrawColor
+                }
+                UserData = $MdfStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $MdfDrawColor
+                }
+                UserData   = $MdfStatFmtStr
+                UseATReset = $true
+            }
+        ))
 }
 
 
