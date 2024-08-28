@@ -18130,6 +18130,112 @@ Class BattleEntityStatusWindow : WindowBase {
             }
         ))
     }
+
+    [Void]CreateStatL1DrawString() {
+        [BattleEntityProperty]$AtkStat = $this.BERef.Stats[[StatId]::Attack]
+        [BattleEntityProperty]$DefStat = $this.BERef.Stats[[StatId]::Defense]
+        [ConsoleColor24]$AtkDrawColor  = [CCTextDefault24]::new()
+        [ConsoleColor24]$DefDrawColor  = [CCTextDefault24]::new()
+        [String]$AtkStatSignStr        = ''
+        [String]$DefStatSignStr        = ''
+        [String]$AtkStatFmtStr         = ''
+        [String]$DefStatFmtStr         = ''
+
+        If($AtkStat.AugmentTurnDuration -GT 0) {
+            Switch($AtkStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $AtkDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $AtkStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $AtkDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $AtkStatSignStr = '-'
+                }
+
+                Default {
+                    $AtkDrawColor   = [CCTextDefault24]::new()
+                    $AtkStatSignStr = ' '
+                }
+            }
+        } Else {
+            $AtkDrawColor   = [CCTextDefault24]::new()
+            $AtkStatSignStr = ' '
+        }
+        If($AtkStat.Base -LT 10) {
+            $AtkStatFmtStr = "{0:d2}" -F $AtkStat.Base
+        } Elseif($AtkStat.Base -GE 10) {
+            $AtkStatFmtStr = "$($AtkStat.Base)"
+        }
+
+        If($DefStat.AugmentTurnDuration -GT 0) {
+            Switch($DefStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $DefDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $DefStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $DefDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $DefStatSignStr = '-'
+                }
+
+                Default {
+                    $DefDrawColor   = [CCTextDefault24]::new()
+                    $DefStatSignStr = ' '
+                }
+            }
+        } Else {
+            $DefDrawColor   = [CCTextDefault24]::new()
+            $DefStatSignStr = ' '
+        }
+        If($DefStat.Base -LT 10) {
+            $DefStatFmtStr = "{0:d2}" -F $DefStat.Base
+        } Elseif($DefStat.Base -GE 10) {
+            $DefStatFmtStr = "$($DefStat.Base)"
+        }
+
+        $this.StatL1DrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = $this.StatL1DrawCoordinates
+                }
+                UserData = 'ATK '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $AtkDrawColor
+                }
+                UserData = $AtkStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $AtkDrawColor
+                }
+                UserData = $AtkStatFmtStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' DEF '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $DefDrawColor
+                }
+                UserData = $DefStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $DefDrawColor
+                }
+                UserData   = $DefStatFmtStr
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
