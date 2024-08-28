@@ -18448,6 +18448,63 @@ Class BattleEntityStatusWindow : WindowBase {
             }
         ))
     }
+
+    [Void]CreateStatL4DrawString() {
+        [BattleEntityProperty]$LckStat = $this.BERef.Stats[[StatId]::Luck]
+        [ConsoleColor24]$LckDrawColor  = [CCTextDefault24]::new()
+        [String]$LckStatSignStr        = ''
+        [String]$LckStatFmtStr         = ''
+
+        If($LckStat.AugmentTurnDuration -GT 0) {
+            Switch($LckStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $LckDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $LckStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $LckDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $LckStatSignStr = '-'
+                }
+
+                Default {
+                    $LckDrawColor   = [CCTextDefault24]::new()
+                    $LckStatSignStr = ' '
+                }
+            }
+        } Else {
+            $LckDrawColor   = [CCTextDefault24]::new()
+            $LckStatSignStr = ' '
+        }
+        If($LckStat.Base -LT 10) {
+            $LckStatFmtStr = "{0:d2}" -F $LckStat.Base
+        } Elseif($LckStat.Base -GE 10) {
+            $LckStatFmtStr = "$($LckStat.Base)"
+        }
+
+        $this.StatL4DrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = $this.StatL4DrawCoordinates
+                }
+                UserData = 'LCK '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $LckDrawColor
+                }
+                UserData = $LckStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $LckDrawColor
+                }
+                UserData   = $LckStatFmtStr
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
