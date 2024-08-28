@@ -18342,6 +18342,112 @@ Class BattleEntityStatusWindow : WindowBase {
             }
         ))
     }
+
+    [Void]CreateStatL3DrawString() {
+        [BattleEntityProperty]$SpdStat = $this.BERef.Stats[[StatId]::Speed]
+        [BattleEntityProperty]$AccStat = $this.BERef.Stats[[StatId]::Accuracy]
+        [ConsoleColor24]$SpdDrawColor  = [CCTextDefault24]::new()
+        [ConsoleColor24]$AccDrawColor  = [CCTextDefault24]::new()
+        [String]$SpdStatSignStr        = ''
+        [String]$AccStatSignStr        = ''
+        [String]$SpdStatFmtStr         = ''
+        [String]$AccStatFmtStr         = ''
+
+        If($SpdStat.AugmentTurnDuration -GT 0) {
+            Switch($SpdStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $SpdDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $SpdStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $SpdDrawColor = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $SpdStatSignStr = '-'
+                }
+
+                Default {
+                    $SpdDrawColor   = [CCTextDefault24]::new()
+                    $SpdStatSignStr = ' '
+                }
+            }
+        } Else {
+            $SpdDrawColor   = [CCTextDefault24]::new()
+            $SpdStatSignStr = ' '
+        }
+        If($SpdStat.Base -LT 10) {
+            $SpdStatFmtStr = "{0:d2}" -F $SpdStat.Base
+        } Elseif($SpdStat.Base -GE 10) {
+            $SpdStatFmtStr = "$($SpdStat.Base)"
+        }
+
+        If($AccStat.AugmentTurnDuration -GT 0) {
+            Switch($AccStat.BaseAugmentValue) {
+                { $_ -GT 0 } {
+                    $AccDrawColor   = [BattleEntityProperty]::StatAugDrawColorPositive
+                    $AccStatSignStr = '+'
+                }
+
+                { $_ -LT 0 } {
+                    $AccDrawColor   = [BattleEntityProperty]::StatAugDrawColorNegative
+                    $AccStatSignStr = '-'
+                }
+
+                Default {
+                    $AccDrawColor   = [CCTextDefault24]::new()
+                    $AccStatSignStr = ' '
+                }
+            }
+        } Else {
+            $AccDrawColor   = [CCTextDefault24]::new()
+            $AccStatSignStr = ' '
+        }
+        If($AccStat.Base -LT 10) {
+            $AccStatFmtStr = "{0:d2}" -F $AccStat.Base
+        } Elseif($AccStat.Base -GE 10) {
+            $AccStatFmtStr = "$($AccStat.Base)"
+        }
+
+        $this.StatL3DrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = $this.StatL3DrawCoordinates
+                }
+                UserData = 'SPD '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $SpdDrawColor
+                }
+                UserData = $SpdStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $SpdDrawColor
+                }
+                UserData = $SpdStatFmtStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' ACC '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $AccDrawColor
+                }
+                UserData = $AccStatSignStr
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $AccDrawColor
+                }
+                UserData   = $AccStatFmtStr
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
