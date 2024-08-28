@@ -17910,6 +17910,88 @@ Class BattleEntityStatusWindow : WindowBase {
             UseATReset = $true
         }
     }
+
+    [Void]Draw() {
+        If(($this.EntityBattlePhaseActive -EQ $true) -AND ($this.HasSetEntityActive -EQ $false)) {
+            $this.BorderDrawColors = [ConsoleColor24[]](
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new()
+            )
+            $this.BorderDrawDirty = [Boolean[]](
+                $true,
+                $true,
+                $true,
+                $true
+            )
+            $this.HasSetEntityActive = $true
+        } Elseif($this.EntityBattlePhaseActive -EQ $false) {
+            $this.BorderDrawColors = [ConsoleColor24[]](
+                [CCWhite24]::new(),
+                [CCWhite24]::new(),
+                [CCWhite24]::new(),
+                [CCWhite24]::new()
+            )
+            $this.BorderDrawDirty = [Boolean[]](
+                $true,
+                $true,
+                $true,
+                $true
+            )
+            $this.HasSetEntityActive = $false
+        }
+
+        ([WindowBase]$this).Draw()
+        If($this.NameDrawDirty -EQ $true) {
+            $this.CreateNameDrawString()
+            $this.FullLineBlank.Prefix.Coordinates = $this.NameDrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.NameDrawString.ToAnsiControlSequenceString())"
+            $this.NameDrawDirty = $false
+        }
+        If($this.HpDrawDirty -EQ $true) {
+            $this.CreateHpDrawString()
+            $this.FullLineBlank.Prefix.Coordinates = $this.HpDrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
+            $this.FullLineBlank.Prefix.Coordinates.Row++
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.MpDrawString.ToAnsiControlSequenceString())"
+            $this.HpDrawDirty = $false
+        }
+        If($this.MpDrawDirty -EQ $true) {
+            $this.CreateMpDrawString()
+            $this.FullLineBlank.Prefix.Coordinates = $this.MpDrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.MpDrawString.ToAnsiControlSequenceString())"
+            $this.MpDrawDirty = $false
+        }
+        If($this.StatL1DrawDirty -EQ $true) {
+            $this.CreateStatL1DrawString()
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL1DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL1DrawString.ToAnsiControlSequenceString())"
+            $this.StatL1DrawDirty = $false
+        }
+        If($this.StatL2DrawDirty -EQ $true) {
+            $this.CreateStatL2DrawString()
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL2DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL2DrawString.ToAnsiControlSequenceString())"
+            $this.StatL2DrawDirty = $false
+        }
+        If($this.StatL3DrawDirty -EQ $true) {
+            $this.CreateStatL3DrawString()
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL3DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL3DrawString.ToAnsiControlSequenceString())"
+            $this.StatL3DrawDirty = $false
+        }
+        If($this.StatL4DrawDirty -EQ $true) {
+            $this.CreateStatL4DrawString()
+            $this.FullLineBlank.Prefix.Coordinats = $this.StatL4DrawCoordinates
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL4DrawString.ToAnsiControlSequenceString())"
+            $this.StatL4DrawDirty = $false
+        }
+    }
+
+    [Void]CreateNameDrawString() {
+        
+    }
 }
 
 
