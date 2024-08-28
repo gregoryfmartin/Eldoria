@@ -17990,7 +17990,84 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 
     [Void]CreateNameDrawString() {
-        
+        $this.NameDrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item2
+                    Coordinates     = $this.NameDrawCoordinates
+                }
+                UserData   = $Script:BATADornmentCharTable[$this.BERef.Affinity].Item1
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $this.BERef.NameDrawColor
+                }
+                UserData   = " $($this.BERef.Name)"
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]CreateHpDrawString() {
+        [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
+        [ATDecoration]$NumDeco        = [ATDecorationNone]::new()
+
+        Switch($this.BERef.Stats[[StatId]::HitPoints].State) {
+            ([StatNumberState]::Normal) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+
+            ([StatNumberState]::Caution) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorCaution
+            }
+
+            ([StatNumberState]::Danger) {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorDanger
+                $NumDeco      = [ATDecoration]@{
+                    Blink = $true
+                }
+            }
+
+            Default {
+                $NumDrawColor = [BattleEntityProperty]::StatNumDrawColorSafe
+            }
+        }
+
+        $this.HpDrawString = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = $this.HpDrawCoordinates
+                }
+                UserData = 'H '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $NumDrawColor
+                    Decorations     = $NumDeco
+                }
+                UserData = "$($this.BERef.Stats[[StatId]::HitPoints].Base)"
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.HpDrawCoordinates.Row + 2
+                        Column = $this.HpDrawCoordinates.Column + 6
+                    }
+                }
+                UserData = '/ '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $NumDrawColor
+                    Decorations     = $NumDeco
+                }
+                UserData   = "$($this.BERef.Stats[[StatId]::HitPoints].Max)"
+                UseATReset = $true
+            }
+        ))
     }
 }
 
