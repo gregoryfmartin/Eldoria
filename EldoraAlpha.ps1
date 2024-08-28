@@ -17815,7 +17815,101 @@ Class BattleEntityStatusWindow : WindowBase {
     [ATCoordinates]$StatL1DrawCoordinates
     [ATCoordinates]$StatL2DrawCoordinates
     [ATCoordinates]$StatL3DrawCoordinates
-    [ATCoordinates]$StatL4DrawCoordinateswwwwwwww
+    [ATCoordinates]$StatL4DrawCoordinates
+    [Int]$WindowLTRow
+    [Int]$WindowLTColumn
+    [Int]$WindowBRRow
+    [Int]$WindowBRColumn
+    [Boolean]$NameDrawDirty
+    [Boolean]$HpDrawDirty
+    [Boolean]$MpDrawDirty
+    [Boolean]$StatL1DrawDirty
+    [Boolean]$StatL2DrawDirty
+    [Boolean]$StatL3DrawDirty
+    [Boolean]$StatL4DrawDirty
+    [Boolean]$EntityBattlePhaseActive
+    [Boolean]$HasSetEntityActive
+    [ATString]$FullLineBlank
+    [ATStringComposite]$NameDrawString
+    [ATStringComposite]$HpDrawString
+    [ATStringComposite]$MpDrawString
+    [ATStringComposite]$StatL1DrawString
+    [ATStringComposite]$StatL2DrawString
+    [ATStringComposite]$StatL3DrawString
+    [ATStringComposite]$StatL4DrawString
+    [BattleEntity]$BERef
+
+    BattleEntityStatusWindow() {
+        $this.WindowLTRow    = 1
+        $this.WindowLTColumn = 1
+        $this.WindowRBRow    = 1
+        $this.WindowRBColumn = 1
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = $this.WindowLTRow
+            Column = $this.WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = $this.WindowRBRow
+            Column = $this.WindowRBColumn
+        }
+        $this.BorderDrawColors = @(
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = @(
+            [BattleEntityStatusWindow]::WindowBorderHorizontal,
+            [BattleEntityStatusWindow]::WindowBorderHorizontal,
+            [BattleEntityStatusWindow]::WindowBorderLeft,
+            [BattleEntityStatusWindow]::WindowBorderRight
+        )
+        $this.UpdateDimensions()
+
+        [Int]$ColDef = $this.LeftTop.Column + 2
+        $this.NameDrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $ColDef
+        }
+        $this.HpDrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 2
+            Column = $ColDef
+        }
+        $this.MpDrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 5
+            Column = $ColDef
+        }
+        $this.StatL1DrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 9
+            Column = $ColDef
+        }
+        $this.StatL2DrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 11
+            Column = $ColDef
+        }
+        $this.StatL3DrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 13
+            Column = $ColDef
+        }
+        $this.StatL4DrawCoordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 15
+            Column = $ColDef
+        }
+        $this.NameDrawDirty           = $true
+        $this.HpDrawDirty             = $true
+        $this.MpDrawDirty             = $true
+        $this.StatL1DrawDirty         = $true
+        $this.StatL2DrawDirty         = $true
+        $this.StatL3DrawDirty         = $true
+        $this.StatL4DrawDirty         = $true
+        $this.EntityBattlePhaseActive = $false
+        $this.HasSetEntityActive      = $false
+        $this.BERef                   = $null
+        $this.FullLineBlank           = [ATString]@{
+            UserData   = [BattleEntityStatusWindow]::FullLineBlankActual
+            UseATReset = $true
+        }
+    }
 }
 
 
