@@ -18806,21 +18806,8 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-                            #
-                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
-                            #
-                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                            #     @(
-                            #         [ATStringCompositeSc]::new(
-                            #             [CCAppleVYellowADark24]::new(),
-                            #             [ATDecoration]@{
-                            #                 Blink = $true
-                            #             },
-                            #             'Not enough MP!'
-                            #         )
-                            #     )
-                            # )
-                            # $Script:TheBattleStatusMessageWindow.Draw()
+                            $Script:TheBattleStatusMessageWindow.WriteNotEnoughMpMessage()
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -18834,21 +18821,8 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-                            #
-                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
-                            #
-                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                            #     @(
-                            #         [ATStringCompositeSc]::new(
-                            #             [CCAppleVYellowADark24]::new(),
-                            #             [ATDecoration]@{
-                            #                 Blink = $true
-                            #             },
-                            #             'Not enough MP!'
-                            #         )
-                            #     )
-                            # )
-                            # $Script:TheBattleStatusMessageWindow.Draw()
+                            $Script:TheBattleStatusMessageWindow.WriteNotEnoughMpMessage()
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -18862,21 +18836,8 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-                            #
-                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
-                            #
-                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                            #     @(
-                            #         [ATStringCompositeSc]::new(
-                            #             [CCAppleVYellowADark24]::new(),
-                            #             [ATDecoration]@{
-                            #                 Blink = $true
-                            #             },
-                            #             'Not enough MP!'
-                            #         )
-                            #     )
-                            # )
-                            # $Script:TheBattleStatusMessageWindow.Draw()
+                            $Script:TheBattleStatusMessageWindow.WriteNotEnoughMpMessage()
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -18890,21 +18851,8 @@ Class BattlePlayerActionWindow : WindowBase {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
-                            #
-                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
-                            #
-                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                            #     @(
-                            #         [ATStringCompositeSc]::new(
-                            #             [CCAppleVYellowADark24]::new(),
-                            #             [ATDecoration]@{
-                            #                 Blink = $true
-                            #             },
-                            #             'Not enough MP!'
-                            #         )
-                            #     )
-                            # )
-                            # $Script:TheBattleStatusMessageWindow.Draw()
+                            $Script:TheBattleStatusMessageWindow.WriteNotEnoughMpMessage()
+                            $Script:TheBattleStatusMessageWindow.Draw()
 
                             Return $null
                         }
@@ -19134,6 +19082,21 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.MessageCDirty = $true
         $this.MessageDDirty = $true
         $this.MessageEDirty = $true
+    }
+
+    [Void]WriteNotEnoughMpMessage() {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowADark24]::new()
+                    Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                }
+                UserData   = 'Not enough MP!'
+                UseATReset = $true
+            }
+        ))
     }
 }
 
