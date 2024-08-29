@@ -18982,6 +18982,116 @@ Class BattlePlayerActionWindow : WindowBase {
 
 ###############################################################################
 #
+# BATTLE STATUS MESSAGE WINDOW
+#
+###############################################################################
+Class BattleStatusMessageWindow : WindowBase {
+    Static [Int]$MessageHistoryARef = 0
+    Static [Int]$MessageHistoryBRef = 1
+    Static [Int]$MessageHistoryCRef = 2
+    Static [Int]$MessageHistoryDRef = 3
+    Static [Int]$MessageHistoryERef = 4
+    Static [Int]$WindowLTRow        = 18
+    Static [Int]$WindowLTColumn     = 22
+    Static [Int]$WindowRBRow        = 24
+    Static [Int]$WindowRBColumn     = 80
+
+    Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+    Static [String]$MessageBlankActual     = '                                                          '
+
+    Static [Single]$MessageSleepTime = 0.2
+
+    [Boolean]$MessageADirty
+    [Boolean]$MessageBDirty
+    [Boolean]$MessageCDirty
+    [Boolean]$MessageDDirty
+    [Boolean]$MessageEDirty
+    [ATString]$MessageBlank
+    [ATCoordinates]$MessageADrawCoords
+    [ATCoordinates]$MessageBDrawCoords
+    [ATCoordinates]$MessageCDrawCoords
+    [ATCoordinates]$MessageDDrawCoords
+    [ATCoordinates]$MessageEDrawCoords
+    [ATStringComposite[]]$MessageHistory
+
+    BattleStatusMessageWindow() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = [BattleStatusMessageWindow]::WindowLTRow
+            Column = [BattleStatusMessageWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = [BattleStatusMessageWindow]::WindowRBRow
+            Column = [BattleStatusMessageWindow]::WindowRBColumn
+        }
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            "$([BattleStatusMessageWindow]::WindowBorderHorizontal)",
+            "$([BattleStatusMessageWindow]::WindowBorderHorizontal)",
+            "$([BattleStatusMessageWindow]::WindowBorderLeft)",
+            "$([BattleStatusMessageWindow]::WindowBorderRight)"
+        )
+        $this.UpdateDimensions()
+
+        $this.MessageADirty = $false
+        $this.MessagebDirty = $false
+        $this.MessageCDirty = $false
+        $this.MessageDDirty = $false
+        $this.MessageEDirty = $false
+
+        $this.MessageBlank = [ATString]@{
+            UserData   = "$([BattleStatusMessageWindow]::MessageBlankActual)"
+            UseATReset = $true
+        }
+
+        $this.MessageADrawCoords = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $this.LeftTop.Column + 1
+        }
+        $this.MessageBDrawCoords = [ATCoordinates]@{
+            Row    = $this.MessageADrawCoords.Row + 1
+            Column = $this.MessageADrawCoords.Column
+        }
+        $this.MessageCDrawCoords = [ATCoordinates]@{
+            Row    = $this.MessageBDrawCoords.Row + 1
+            Column = $this.MessageBDrawCoords.Column
+        }
+        $this.MessageDDrawCoords = [ATCoordinates]@{
+            Row    = $this.MessageCDrawCoords.Row + 1
+            Column = $this.MessageCDrawCoords.Column
+        }
+        $this.MessageEDrawCoords = [ATCoordinates]@{
+            Row    = $this.MessageDDrawCoords.Row + 1
+            Column = $this.MessageDDrawCoords.Column
+        }
+
+        $this.MessageHistory = [ATStringComposite[]](
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new(),
+            [ATStringComposite]::new()
+        )
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual[0].Prefix.Coordinates = $this.MessageADrawCoords
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual[0].Prefix.Coordinates = $this.MessageBDrawCoords
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual[0].Prefix.Coordinates = $this.MessageCDrawCoords
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = $this.MessageDDrawCoords
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = $this.MessageEDrawCoords
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
