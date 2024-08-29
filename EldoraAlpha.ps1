@@ -19106,6 +19106,72 @@ Class BattleStatusMessageWindow : WindowBase {
 
 ###############################################################################
 #
+# BATTLE ENEMY IMAGE WINDOW
+#
+###############################################################################
+Class BattleEnemyImageWindow : WindowBase {
+    Static [Int]$WindowLTRow           = 1
+    Static [Int]$WindowLTColumn        = 43
+    Static [Int]$WindowRBRow           = 17
+    Static [Int]$WindowRBColumn        = 80
+    Static [Int]$ImageDrawRowOffset    = [BattleEnemyImageWindow]::WindowLTRow + 1
+    Static [Int]$ImageDrawColumnOffset = [BattleEnemyImageWindow]::WindowLTColumn + 1
+
+    Static [String]$WindowBorderHorizontal = '*-------------------------------------*'
+    Static [String]$WindowBorderLeft       = '|'
+    Static [String]$WindowBorderRight      = '|'
+
+    [Boolean]$ImageDirty
+    [ATCoordinates]$ImageDrawCoords
+    [EnemyEntityImage]$Image
+
+    BattleEnemyImageWindow() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = [BattleEnemyImageWindow]::WindowLTRow
+            Column = [BattleEnemyImageWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = [BattleEnemyImageWindow]::WindowRBRow
+            Column = [BattleEnemyImageWindow]::WindowRBColumn
+        }
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            "$([BattleEnemyImageWindow]::WindowBorderHorizontal)",
+            "$([BattleEnemyImageWindow]::WindowBorderHorizontal)",
+            "$([BattleEnemyImageWindow]::WindowBorderLeft)",
+            "$([BattleEnemyImageWindow]::WindowBorderRight)"
+        )
+        $this.UpdateDimensions()
+
+        $this.ImageDirty      = $true
+        $this.Image           = [EEIEmpty]::new()
+        $this.ImageDrawCoords = [ATCoordinates]@{
+            Row    = [BattleEnemyImageWindow]::ImageDrawRowOffset
+            Column = [BattleEnemyImageWindow]::ImageDrawColumnOffset
+        }
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+        If($this.ImageDirty -EQ $true) {
+            $this.Image = $Script:TheCurrentEnemy.Image
+            Write-Host "$($this.Image.ToAnsiControlSequenceString())"
+            $this.ImageDirty = $false
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
