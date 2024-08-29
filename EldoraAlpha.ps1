@@ -18794,6 +18794,186 @@ Class BattlePlayerActionWindow : WindowBase {
             $this.PlayerChevronDirty = $false
         }
     }
+
+    [BattleAction]HandleInput() {
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        Switch($keyCap.VirtualKeyCode) {
+            13 {
+                Switch($this.ActiveChevronIndex) {
+                    0 {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::A].MpCost)) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+                            #
+                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
+                            #
+                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            #     @(
+                            #         [ATStringCompositeSc]::new(
+                            #             [CCAppleVYellowADark24]::new(),
+                            #             [ATDecoration]@{
+                            #                 Blink = $true
+                            #             },
+                            #             'Not enough MP!'
+                            #         )
+                            #     )
+                            # )
+                            # $Script:TheBattleStatusMessageWindow.Draw()
+
+                            Return $null
+                        }
+
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::A]
+                    }
+
+                    1 {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::B].MpCost)) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+                            #
+                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
+                            #
+                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            #     @(
+                            #         [ATStringCompositeSc]::new(
+                            #             [CCAppleVYellowADark24]::new(),
+                            #             [ATDecoration]@{
+                            #                 Blink = $true
+                            #             },
+                            #             'Not enough MP!'
+                            #         )
+                            #     )
+                            # )
+                            # $Script:TheBattleStatusMessageWindow.Draw()
+
+                            Return $null
+                        }
+
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::B]
+                    }
+
+                    2 {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::C].MpCost)) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+                            #
+                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
+                            #
+                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            #     @(
+                            #         [ATStringCompositeSc]::new(
+                            #             [CCAppleVYellowADark24]::new(),
+                            #             [ATDecoration]@{
+                            #                 Blink = $true
+                            #             },
+                            #             'Not enough MP!'
+                            #         )
+                            #     )
+                            # )
+                            # $Script:TheBattleStatusMessageWindow.Draw()
+
+                            Return $null
+                        }
+
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::C]
+                    }
+
+                    3 {
+                        If(($Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost -GT 0) -AND ($Script:ThePlayer.Stats[[StatId]::MagicPoints].Base -LT $Script:ThePlayer.ActionListing[[ActionSlot]::D].MpCost)) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBattleNem)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+                            #
+                            # TODO: I NEED TO REFACTOR THE FOLLOWING CODE
+                            #
+                            # $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+                            #     @(
+                            #         [ATStringCompositeSc]::new(
+                            #             [CCAppleVYellowADark24]::new(),
+                            #             [ATDecoration]@{
+                            #                 Blink = $true
+                            #             },
+                            #             'Not enough MP!'
+                            #         )
+                            #     )
+                            # )
+                            # $Script:TheBattleStatusMessageWindow.Draw()
+
+                            Return $null
+                        }
+
+                        Return $Script:ThePlayer.ActionListing[[ActionSlot]::D]
+                    }
+
+                    Default {
+                        Return $null
+                    }
+                }
+            }
+
+            38 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {
+                    Write-Host 'Blew up'
+                }
+                If(($this.ActiveChevronIndex - 1) -LT 0) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    $this.ActiveChevronIndex                                = 3
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+                } Elseif(($this.ActiveChevronIndex - 1) -GE 0) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    $this.ActiveChevronIndex--
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+                }
+                $this.PlayerChevronDirty = $true
+            }
+
+            40 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {
+                    Write-Host 'Blew up'
+                }
+                If(($this.ActiveChevronIndex + 1) -GT 3) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    $this.ActiveChevronIndex                                = 0
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+                } Elseif(($this.ActiveChevronIndex + 1) -LE 3) {
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    $this.ActiveChevronIndex++
+                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+                }
+                $this.PlayerChevronDirty = $true
+            }
+        }
+
+        Return $null
+    }
+
+    [Void]SetAllActionDrawDirty() {
+        $this.ActionADrawDirty = $true
+        $this.ActionBDrawDirty = $true
+        $this.ActionCDrawDirty = $true
+        $this.ActionDDrawDirty = $true
+    }
 }
 
 
