@@ -19084,6 +19084,57 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual[0].Prefix.Coordinates = $this.MessageDDrawCoords
         $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual[0].Prefix.Coordinates = $this.MessageEDrawCoords
     }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.MessageEDirty -EQ $true) {
+            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
+            $this.MessageEDirty = $false
+            Start-Sleep -Seconds [BattleStatusMessageWindow]::MessageSleepTime
+        }
+        If($this.MessageDDirty -EQ $true) {
+            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
+            $this.MessageDDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
+        }
+        If($this.MessageCDirty -EQ $true) {
+            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            $this.MessageCDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
+        }
+        If($this.MessageBDirty -EQ $true) {
+            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            $this.MessageBDirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
+        }
+        If($this.MessageADirty -EQ $true) {
+            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            $this.MessageADirty = $false
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime + 0.4)
+        }
+    }
+
+    [Void]WriteCompositeMessage(
+        [ATString[]]$ATComposite
+    ) {
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual)
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual)
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual)
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].CompositeActual)
+        $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef]                 = [ATStringComposite]::new($ATComposite)
+
+        $this.MessageADirty = $true
+        $this.MessageBDirty = $true
+        $this.MessageCDirty = $true
+        $this.MessageDDirty = $true
+        $this.MessageEDirty = $true
+    }
 }
 
 
