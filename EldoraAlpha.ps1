@@ -18526,6 +18526,275 @@ Class BattleEntityStatusWindow : WindowBase {
 # BATTLE PLAYER ACTION WINDOW
 #
 ###############################################################################
+Class BattlePlayerActionWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 18
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowRBRow    = 23
+    Static [Int]$WindowRBCOlumn = 19
+
+    Static [String]$WindowBorderHorizontal      = '*------------------*'
+    Static [String]$WindowBorderLeft            = '|'
+    Static [String]$WindowBorderRight           = '|'
+    Static [String]$PlayerChevronCharacter      = '>'
+    Static [String]$PlayerChevronBlankCharacter = ' '
+
+    Static [ATString]$PlayerChevron = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCTextDefault24]::new()
+        }
+        UserData   = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+        UseATReset = $true
+    }
+    Static [ATString]$PlayerChevronBlank = [ATString]@{
+        UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+        UseATReset = $true
+    }
+
+    [Int]$ActiveChevronIndex
+    [Boolean]$PlayerChevronDirty
+    [Boolean]$ActiveItemBlinking
+    [Boolean]$ActionADrawDirty
+    [Boolean]$ActionBDrawDirty
+    [Boolean]$ActionCDrawDirty
+    [Boolean]$ActionDDrawDirty
+    [ATCoordinates]$ActionADrawCoords
+    [ATCoordinates]$ActionBDrawCoords
+    [ATCoordinates]$ActionCDrawCoords
+    [ATCoordinates]$ActionDDrawCoords
+    [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons
+
+    BattlePlayerActionWindow() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = [BattlePlayerActionWindow]::WindowLTRow
+            Column = [BattlePlayerActionWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = [BattlePlayerActionWindow]::WindowRBRow
+            Column = [BattlePlayerActionWindow]::WindowRBColumn
+        }
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            "$([BattlePlayerActionWindow]::WindowBorderHorizontal)",
+            "$([BattlePlayerActionWindow]::WindowBorderHorizontal)",
+            "$([BattlePlayerActionWindow]::WindowBorderLeft)",
+            "$([BattlePlayerActionWindow]::WindowBorderRight)"
+        )
+        $this.UpdateDimensions()
+
+        $this.ActiveChevronIndex = 0
+        $this.PlayerChevronDirty = $true
+        $this.ActiveItemBlinking = $false
+        $this.ActionADrawDirty   = $true
+        $this.ActionBDrawDirty   = $true
+        $this.ActionCDrawDirty   = $true
+        $this.ActionDDrawDirty   = $true
+        $this.ActionADrawCoords = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $this.LeftTop.Column + 3
+        }
+        $this.ActionBDrawCoords = [ATCoordinates]@{
+            Row    = $this.ActionADrawCoords.Row + 1
+            Column = $this.ActionADrawCoords.Column
+        }
+        $this.ActionCDrawCoords = [ATCoordinates]@{
+            Row    = $this.ActionBDrawCoords.Row + 1
+            Column = $this.ActionBDrawCoords.Column
+        }
+        $this.ActionDDrawCoords = [ATCoordinates]@{
+            Row    = $this.ActionCDrawCoords.Row + 1
+            Column = $this.ActionCDrawCoords.Column
+        }
+        $this.CreateChevrons()
+    }
+
+    [Void]CreateChevrons() {
+        $this.Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.ActionADrawCoords.Row
+                            Column = $this.ActionADrawCoords.Column - 2
+                        }
+                    }
+                    UserData   = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+                    UseATReset = true
+                },
+                $true
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.ActionBDrawCoords.Row
+                            Column = $this.ActionBDrawCoords.Column - 2
+                        }
+                    }
+                    UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    UseATReset = true
+                },
+                $false
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.ActionCDrawCoords.Row
+                            Column = $this.ActionCDrawCoords.Column - 2
+                        }
+                    }
+                    UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    UseATReset = true
+                },
+                $false
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.ActionDDrawCoords.Row
+                            Column = $this.ActionDDrawCoords.Column - 2
+                        }
+                    }
+                    UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+                    UseATReset = true
+                },
+                $false
+            )
+        )
+    }
+
+    [ATString]GetActiveChevron() {
+        Foreach($a in $this.Chevrons) {
+            If($a.Item2 -EQ $true) {
+                Return $a.Item1
+            }
+        }
+        $this.ActiveChevronIndex                       = 0
+        $this.Chevrons[$this.ActiveChevronIndex].Item2 = $true
+
+        Return $this.Chevrons[$this.ActiveChevronIndex].Item1
+    }
+
+    [Void]ResetChevronPosition() {
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
+        $this.ActiveChevronIndex                                = 0
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.ActionADrawDirty -EQ $true) {
+            [ATStringComposite]$a = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item2
+                        Coordinates     = $this.ActionADrawCoords
+                    }
+                    UserData   = "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::A].Type].Item1)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = " $($Script:ThePlayer.ActionListing[[ActionSlot]::A].Name)"
+                    UseATReset = $true
+                }
+            ))
+            Write-Host "$($a.ToAnsiControlSequenceString())"
+            $this.ActionADrawDirty = $false
+        }
+        If($this.ActionBDrawDirty -EQ $true) {
+            [ATStringComposite]$a = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item2
+                        Coordinates     = $this.ActionBDrawCoords
+                    }
+                    UserData   = "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::B].Type].Item1)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = " $($Script:ThePlayer.ActionListing[[ActionSlot]::B].Name)"
+                    UseATReset = $true
+                }
+            ))
+            Write-Host "$($a.ToAnsiControlSequenceString())"
+            $this.ActionBDrawDirty = $false
+        }
+        If($this.ActionCDrawDirty -EQ $true) {
+            [ATStringComposite]$a = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item2
+                        Coordinates     = $this.ActionCDrawCoords
+                    }
+                    UserData   = "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::C].Type].Item1)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = " $($Script:ThePlayer.ActionListing[[ActionSlot]::C].Name)"
+                    UseATReset = $true
+                }
+            ))
+            Write-Host "$($a.ToAnsiControlSequenceString())"
+            $this.ActionCDrawDirty = $false
+        }
+        If($this.ActionDDrawDirty -EQ $true) {
+            [ATStringComposite]$a = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item2
+                        Coordinates     = $this.ActionDDrawCoords
+                    }
+                    UserData   = "$($Script:BATAdornmentCharTable[$Script:ThePlayer.ActionListing[[ActionSlot]::D].Type].Item1)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = " $($Script:ThePlayer.ActionListing[[ActionSlot]::D].Name)"
+                    UseATReset = $true
+                }
+            ))
+            Write-Host "$($a.ToAnsiControlSequenceString())"
+            $this.ActionDDrawDirty = $false
+        }
+        If($this.PlayerChevronDirty -EQ $true) {
+            Foreach($c in $this.Chevrons) {
+                Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            }
+            $this.PlayerChevronDirty = $false
+        }
+    }
+}
 
 
 
