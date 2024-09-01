@@ -19382,7 +19382,7 @@ Class StatusHudWindow : WindowBase {
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = [CCTextDeafult24]::new()
+                    ForegroundColor = [CCTextDefault24]::new()
                 }
                 UserData = "$($LckDispStr)"
             },
