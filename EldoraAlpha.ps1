@@ -19798,6 +19798,144 @@ Class StatusTechniqueSelectionWindow : WindowBase {
 
 ###############################################################################
 #
+# STATUS TECHNIQUE INVENTORY WINDOW
+#
+###############################################################################
+Class StatusTechniqueInventoryWindow : WindowBase {
+    Static [Int]$WindowLTRow    = 4
+    Static [Int]$WindowLTColumn = 22
+    Static [Int]$WindowRBRow    = 16
+    Static [Int]$WindowRBColumn = 80
+
+    Static [String]$WindowBorderHorizontal      = '*----------------------------------------------------------*'
+    Static [String]$WindowBorderLeft            = '|'
+    Static [String]$WindowBorderRight           = '|'
+    Static [String]$IChevronCharacter           = '>'
+    Static [String]$IChevronCharacterBlank      = ' '
+    Static [String]$PagingChevronRightCharacter = '>'
+    Static [String]$PagingChevronLeftCharacter  = '<'
+    Static [String]$PagingChevronBlankCharacter = ' '
+    Static [String]$DivLineHorizontalString     = '----------------------------------------------------------'
+    Static [String]$ZpLineBlank                 = '                                                          '
+    Static [String]$DescLineBlank               = '                                                          '
+    Static [String]$ZeroPagePrompt              = 'You have no techniques in your inventory.'
+
+    Static [ATString]$PagingChevronRight = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCAppleYellowLight24]::new()
+        }
+        UserData   = "$([StatusTechniqueInventoryWindow]::PagingChevronRightCharacter)"
+        UseATReset = $true
+    }
+    Static [ATString]$PagingChevronLeft = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCAppleYellowLight24]::new()
+        }
+        UserData   = "$([StatusTechniqueInventoryWindow]::PagingChevronLeftCharacter)"
+        UseATReset = $true
+    }
+    Static [ATString]$PagingChevronRightBlank = [ATString]@{
+        UserData  = "$([StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter)"
+        UseATRest = $true
+    }
+    Static [ATString]$PagingChevronLeftBlank = [ATString]@{
+        UserData  = "$([StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter)"
+        UseATRest = $true
+    }
+    Static [ATString]$DivLineHorizontal = [ATString]@{
+        Prefix = [ATStringPrefix]@{
+            ForegroundColor = [CCTextDefault24]::new()
+        }
+        UserData   = "$([StatusTechniqueInventoryWindow]::DivLineHorizontalString)"
+        UseATReset = $true
+    }
+
+    Static [Boolean]$DebugMode = $false
+
+    [Int]$ItemsPerPage
+    [Int]$NumPages
+    [Int]$CurrentPage
+    [Int]$ActiveIChevronIndex
+    [Boolean]$PlayerChevronDirty
+    [Boolean]$PagingChevronRightDirty
+    [Boolean]$PagingChevronLeftDirty
+    [Boolean]$ItemsListDirty
+    [Boolean]$CurrentPageDirty
+    [Boolean]$PlayerChevronVisible
+    [Boolean]$PagingChevronRightVisible
+    [Boolean]$PagingChevronLeftVisible
+    [Boolean]$ZeroPageActive
+    [Boolean]$BookDirty
+    [Boolean]$ActiveItemBlinking
+    [Boolean]$DivLineDirty
+    [Boolean]$ItemDescDirty
+    [Boolean]$ZpBlankedDirty
+    [Boolean]$ZpPromptDirty
+    [Boolean]$IsActive
+    [Boolean]$IsBlanked
+    [List[ATString]]$ItemLabels
+    [List[ATString]]$ItemLabelBlanks
+    [List[BattleAction]]$PageRefs
+    [List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
+
+    StatusTechniqueInventoryWindow() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = [StatusTechniqueInventoryWindow]::WindowLTRow
+            Column = [StatusTechniqueInventoryWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = [StatusTechniqueInventoryWindow]::WindowRBRow
+            Column = [StatusTechniqueInventoryWindow]::WindowRBColumn
+        }
+        $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new()
+        )
+        $this.BorderStrings = [String[]](
+            [StatusTechniqueInventoryWindow]::WindowBorderHoritzontal,
+            [StatusTechniqueInventoryWindow]::WindowBorderHoritzontal,
+            [StatusTechniqueInventoryWindow]::WindowBorderLeft,
+            [StatusTechniqueInventoryWindow]::WindowBorderRight
+        )
+        $this.UpdateDimensions()
+
+        $this.ItemsPerPage              = 10
+        $this.NumPages                  = 1
+        $this.CurrentPage               = 1
+        $this.ActiveIChevronIndex       = 0
+        $this.PlayerChevronDirty        = $true
+        $this.PagingChevronRightDirty   = $true
+        $this.PagingChevronLeftDirty    = $true
+        $this.ItemsListDirty            = $true
+        $this.CurrentPageDirty          = $true
+        $this.PlayerChevronVisible      = $true
+        $this.PagingChevronRightVisible = $false
+        $this.PagingChevronLeftVisible  = $false
+        $this.ZeroPageActive            = $false
+        $this.BookDirty                 = $true
+        $this.ActiveItemBlinking        = $false
+        $this.DivLineDirty              = $true
+        $this.ItemsDescDirty            = $true
+        $this.ZpBlankedDirty            = $true
+        $this.ZpPromptDirty             = $true
+        $this.IsActive                  = $false
+        $this.IsBlanked                 = $false
+        $this.PageRefs                  = $null
+
+        $this.CreateIChevrons()
+        $this.ConfigurePagingChevrons()
+        $this.ConfigureDivLine()
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
