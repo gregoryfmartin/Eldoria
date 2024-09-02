@@ -19928,6 +19928,171 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         $this.ConfigurePagingChevrons()
         $this.ConfigureDivLine()
     }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        If($this.IsActive -EQ $true) {
+            $this.IsBlanked = $false
+            If($this.BookDirty -EQ $true) {
+                $this.CalculateNumPages()
+                $this.BookDirty = $false
+            }
+            If($this.CurrentPageDirty -EQ $true) {
+                $this.PopulatePage()
+            }
+            If($this.ZeroPageActive -EQ $true) {
+                $this.WriteZeroInventoryPage()
+            } Else {
+                If($this.DivLineDirty -EQ $true) {
+                    Write-Host "$([StatusTechniqueInventoryWindow]::DivLineHorizontal.ToAnsiControlSequenceString())"
+                    $this.DivLineDirty = $false
+                }
+                If($this.PlayerChevronVisible -EQ $true -AND $this.PlayerChevronDirty -EQ $true) {
+                    Foreach($ic in $this.IChevrons) {
+                        Write-Host "$($ic.Item1.ToAnsiControlSequenceStrin())"
+                    }
+                    $this.PlayerChevronDirty = $false
+                }
+                If($this.NumPages -GT 1) {
+                    If($this.CurrentPage -EQ 1) {
+                        If($this.PagingChevronLeftVisible -EQ $true) {
+                            Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.ToAnsiControlSequenceString())"
+                            $this.PagingChevronLeftVisible = $false
+                            $this.PagingChevrinLeftDirty   = $true
+                        }
+                        If($this.PagingChevronRightVisible -EQ $false) {
+                            $this.PagingChevronRightVisible = $true
+                        }
+                        If(($this.PagingChevronRightVisible -EQ $true) -AND ($this.PagingChevronRightDirty -EQ $true)) {
+                            Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
+                            $this.PagingChevronRightDirty = $false
+                        }
+                    } Elseif(($this.CurrentPage -GT 1) -AND ($this.CurrentPage -LT $this.NumPages)) {
+                        If($this.PagingChevronLeftVisible -EQ $false) {
+                            $this.PagingChevronLeftVisible = $true
+                        }
+                        If($this.PagingChevronRightVisible -EQ $false) {
+                            $this.PagingChevronRightVisible = $true
+                        }
+                        If(($this.PagingChevronRightVisible -EQ $true) -AND ($this.PagingChevronRightDirty -EQ $true)) {
+                            Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
+                            $this.PagingChevronRightDirty = $false
+                        }
+                        If(($this.PagingChevronLeftVisible -EQ $true) -AND ($this.PagingChevronLeftDirty -EQ $true)) {
+                            Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRight.ToAnsiControlSequenceString())"
+                            $this.PagingChevronLeftDirty = $false
+                        }
+                    } Elseif($this.CurrentPage -GE $this.NumPages) {
+                        If($this.PagingChevronRightVisible -EQ $true) {
+                            Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRightBlank.ToAnsiControlSequenceString())"
+                            $this.PagingChevronRightVisible = $false
+                            $this.PagingChevronRightDirty   = $true
+                        }
+                        If($this.PagingChevronLeftVisible -EQ $false) {
+                            $this.PagingChevronLeftVisible = $true
+                        }
+                        If(($this.PagingChevronLeftVisible -EQ $true) -AND ($this.PagingChevronLeftDirty -EQ $true)) {
+                            Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeft.ToAnsiControlSequenceString())"
+                            $this.PagingChevronLeftDirty = $false
+                        }
+                    }
+                } Elseif($this.NumPages -EQ 1) {
+                    If($this.PagingChevronLeftVisible -EQ $true) {
+                        $this.PagingChevronLeftVisible = $false
+                    }
+                    If($this.PagingChevronRightVisible -EQ $true) {
+                        $this.PagingChevronRightVisible = $false
+                    }
+                    If($this.PagingChevronLeftVisible -EQ $false) {
+                        Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.ToAnsiControlSequenceString())"
+                    }
+                    If($this.PagingChevronRightVisible -EQ $false) {
+                        Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronRightBlank.ToAnsiControlSequenceString())"
+                    }
+                }
+                If($this.ActiveItemBlinking -EQ $false) {
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
+                    $this.ItemsListDirty                                               = $true
+                    $this.ActiveItemBlinking                                           = $true
+                }
+                If($this.ItemsListDirty -EQ $true) {
+                    $this.WriteItemLabels()
+                    Write-Host "$([ATControlSequences]::CursorHide)"
+                    $this.ItemsListDirty = $false
+                }
+                If($this.ItemDescDirty -EQ $true) {
+                    [ATStringComposite]$a = [ATStringComposite]::new(@(
+                        [ATString]@{
+                            Prefix = [ATStringPrefix]@{
+                                ForegroundColor = [CCTextDefault24]::new()
+                                Coordinates     = [ATCoordinates]@{
+                                    Row    = $this.RightBottom.Row - 3
+                                    Column = $this.LeftTop.Column + 1
+                                }
+                            }
+                            UserData   = "$([StatusTechniqueInventoryWindow]::DescLineBlank)"
+                            UseATReset = $true
+                        },
+                        [ATString]@{
+                            Prefix = [ATStringPrefix]@{
+                                ForegroundColor = [CCTextDefault24]::new()
+                                Coordinates     = [ATCoordinates]@{
+                                    Row    = $this.RightBottom.Row - 3
+                                    Column = $this.LeftTop.Column + 2
+                                }
+                            }
+                            UserData   = "$($this.PageRefs[$this.ActiveIChevronIndex].Description)"
+                            UseATReset = $true
+                        },
+                        [ATString]@{
+                            Prefix = [ATStringPrefix]@{
+                                ForegroundColor = [CCTextDefault24]::new()
+                                Coordinates     = [ATCoordinates]@{
+                                    Row    = $this.RightBottom.Row - 1
+                                    Column = $this.LeftTop.Column + 1
+                                }
+                            }
+                            UserData   = "$([StatusTechniqueInventoryWindow]::DescLineBlank)"
+                            UseATReset = $true
+                        },
+                        [ATString]@{
+                            Prefix = [ATStringPrefix]@{
+                                ForegroundColor = [CCTextDefault24]::new()
+                                Coordinates     = [ATCoordinates]@{
+                                    Row    = $this.RightBottom.Row - 1
+                                    Column = $this.LeftTop.Column + 2
+                                }
+                            }
+                            UserData   = "PWR: $($this.PageRefs[$this.ActiveIChevronIndex].EffectValue)   MP COST: $("{0:d2}" -F $this.PageRefs[$this.ActiveIChevronIndex].MpCost)   CHANCE: $("{0:f0}" -F ($this.PageRefs[$this.ActiveIChevronIndex].Chance * 100))%"
+                            UseATReset = $true
+                        }
+                    ))
+                    Write-Host "$($a.ToAnsiControlSequenceString())"
+                }
+            }
+        } Else {
+            If($this.IsBlanked -EQ $false) {
+                Foreach($Row in 5..15) {
+                    [ATString]$a = [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            Coordinates = [ATCoordinates]@{
+                                Row    = $Row
+                                Column = $this.LeftTop.Column + 1
+                            }
+                        }
+                        UserData   = "$([StatusTechniqueInventoryWindow]::ZpLineBlank)"
+                        UseATReset = $true
+                    }
+                    Write-Host "$($a.ToAnsiControlSequenceString())"
+                }
+                $this.IsBlanked = $true
+            }
+        }
+    }
 }
 
 
