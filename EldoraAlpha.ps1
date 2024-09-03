@@ -19264,6 +19264,27 @@ Class BattleStatusMessageWindow : WindowBase {
             }
         ))
     }
+
+    [Void]WriteBarFailFailed(
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' failed!'
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
@@ -21070,7 +21091,7 @@ Class BattleManager {
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
                             $Script:TheBattleStatusMessageWindow.WriteBarSwc($ToExecute)
-                            
+
                             Break
                         }
 
@@ -21093,21 +21114,26 @@ Class BattleManager {
                         }
 
                         ([BattleActionResultType]::FailedAttackMissed) {
-                            # WHILE FOR OTHER CASES THE SOUND EFFECTS WOULD BE PLAYED IN THE FUNCTION
-                            # THAT HANDLES THEM, NO SUCH FUNCTION WOULD BE CALLED HERE. SO THE SOUND
-                            # EFFECT IS PLAYED HERE. AND WHILE THERE IS NO EXPLICIT LOGGING OF AN
-                            # EXCEPTION, SHOULD ONE OCCUR, IT'S NOT THE END OF THE WORLD IF IT DOESN'T
-                            # HAPPEN TO PLAY.
                             Try {
                                 $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
                                 $Script:TheSfxMPlayer.Play()
                             } Catch {}
+
                             $Script:TheBattleStatusMessageWindow.WriteBarFailMissed($ToExecute)
 
                             Break
                         }
 
-                        ([BattleActionResultType]::FailedAttackFailed) {}
+                        ([BattleActionResultType]::FailedAttackFailed) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBarFailFailed($ToExecute)
+
+                            Break
+                        }
                     }
                 }
             }
