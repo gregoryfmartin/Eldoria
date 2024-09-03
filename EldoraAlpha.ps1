@@ -2925,6 +2925,7 @@ Class BALightCataclysm : BattleAction {
 ###############################################################################
 Class BattleEntity {
     [String]$Name
+    [Boolean]$CanAct
     [Hashtable]$Stats
     [Hashtable]$ActionListing
     [ScriptBlock]$SpoilsEffect
@@ -2934,6 +2935,7 @@ Class BattleEntity {
 
     BattleEntity() {
         $this.Name            = ''
+        $this.CanAct          = $false
         $this.Stats           = @{}
         $this.ActionListing   = @{}
         $this.SpoilsEffect    = $null
@@ -19098,6 +19100,128 @@ Class BattleStatusMessageWindow : WindowBase {
             }
         ))
     }
+
+    [Void]WriteEntityUsesMessage(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' uses '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBarSwc(
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' was successful! '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYelloLight24]::new()
+                    Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                }
+                UserData   = 'CRITICAL!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBarAff(
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' was successful! '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowLight24]::new()
+                    Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                }
+                UserData   = 'AFFINITY!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBarCritAff(
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' was successful! '
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowLight24]::new()
+                    Decorations = [ATDecoration]@{
+                        Blink = $true
+                    }
+                }
+                UserData   = 'CRIT AND AFFINITY!'
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
@@ -20738,6 +20862,203 @@ Class BattlePhaseIndicator {
             Write-Host "$($this.IndicatorStringBlank.ToAnsiControlSequenceString())$($this.IndicatorStringActual.ToAnsiControlSequenceString())"
             # I'M OMITTING THE ORIGINAL CALL I MADE HERE TO RESET THE CURSOR POSITION TO ORIGIN - SEEMS LIKE A SHIT CALL TO MAKE
             $this.IndicatorDrawDirty = $true
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# BATTLE MANAGER
+#
+# THIS CLASS IS SUBJECT TO SERIOUS REFACTORING AT THIS POINT. MOST OF THE CODE
+# HERE IS TOTAL GARBAGE.
+#
+###############################################################################
+Class BattleManager {
+    [Int]$TurnCounter
+    [Int]$TurnLimit
+    [BattleEntity]$PhaseOneEntity
+    [BattleEntity]$PhaseTwoEntity
+    [BattleManagerState]$State
+
+    # AT THIS POINT, I'VE OMITTED THE TWO ACTION FLAGS (THESE SHOULD COME FROM THE ENTITIES THEMSELVES)
+    # AND THE SPOILS ACTION MEMBER; NOT SURE WHAT THE FUCK I NEEDED THAT THING FOR. I PROBABLY STILL
+    # NEED IT, BUT I'LL WORK AROUND IT.
+
+    BattleManager() {
+        # THIS CTOR DID A WHOLE BUNCH OF CRAP THAT REALLY SHOULD BE IN THE STATE TABLE. I'M NOT DOING
+        # THAT STUFF HERE. IT'LL BE MOVED TO THE STATE TABLE.
+    }
+
+    [Void]Update() {
+        # MAKE PRELIMINARY OUT-OF-BAND DRAW CALLS TO ENSURE THAT THE VISUAL DISPLAY IS KOSHER
+        $Script:ThePlayer.Update()
+        $Script:TheCurrentEnemy.Update()
+        $Script:ThePlayerBattleStatWindow.Draw()
+        $Script:TheEnemyBattleStatWindow.Draw()
+        $Script:TheBattleEnemyImageWindow.Draw()
+        $Script:ThePlayerBattleActionWindow.Draw()
+        $Script:TheBattleStatusMessageWindow.Draw()
+        $Script:Rui.CursorPosition = $([ATCoordinates]::new(0, 0)).ToAutomationCoordinates()
+
+        # HERE COMES THE HONKER BLOCK
+        # THESE CASES WERE ORIGINALLY UNSCOPED, WHICH IS FUCKING LAZY ON MY PART
+        Switch($this.State) {
+            ([BattleManagerState]::TurnIncrement) {
+                If($this.TurnLimit -GT 0) {
+                    If(($this.TurnCounter + 1) -GT $this.TurnLimit) {
+                        $this.State = [BattleManagerState]::BattleLost
+
+                        Return
+                    }
+                }
+                $this.TurnCounter++
+                $this.State = [BattleManagerState]::PhaseOrdering
+
+                Return
+            }
+
+            ([BattleManagerState]::PhaseOrdering) {
+                [Single]$PlayerEffectiveSpeed = 0.0
+                [Single]$EnemyEffectiveSpeed  = 0.0
+
+                $PlayerEffectiveSpeed = $Script:ThePlayer.Stats[[StatId]::Speed].Base + ($(Get-Random -Minimum 0.0 -Maximum 1.0) * $Script:ThePlayer.Stats[[StatId]::Luck].Base)
+                $EnemyEffectiveSpeed  = $Script:TheCurrentEnemy.Stats[[StatId]::Speed].Base + ($(Get-Random -Minimum 0.0 -Maximum 1.0) * $Script:TheCurrentEnemy.Stats[[StatId]::Luck].Base)
+                [Single]$EsWinner     = [Math]::Max($PlayerEffectiveSpeed, $EnemyEffectiveSpeed)
+                If($EsWinner -EQ $PlayerEffectiveSpeed) {
+                    $this.PhaseOneEntity = $Script:ThePlayer
+                    $this.PhaseTwoEntity = $Script:TheCurrentEnemy
+                } Elseif($EsWinner -EQ $EnemyEffectiveSpeed) {
+                    $this.PhaseOneEntity = $Script:TheCurrentEnemy
+                    $this.PhaseTwoEntity = $Script:ThePlayer
+                }
+                $this.State = [BattleManagerState]::PhaseAExecution
+
+                Return
+            }
+
+            ([BattleManagerState]::PhaseAExecution) {
+                # THE FIRST OF THE NASTY BLOCKS
+                # DESPITE THIS BEING A SECOND PASS AT THIS CODE, I'LL BE COMMENTING ALONG THE WAY
+
+                # BEFORE DOING ANYTHING, MAKE SURE THAT WE DON'T NEED TO CHANGE OUT TO THE CALCULATION STATE
+                # THIS HELPS FACILITATE, PRIMARILY, THAT AN ENTITY CAN'T ACT IF THEY'RE ACTUALLY "DEAD"
+                If(($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) -OR ($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0)) {
+                    $this.State = [BattleManagerState]::Calculation
+
+                    Break
+                }
+
+                # UPDATE THE PHASE INDICATOR
+                $this.PhaseIndicator.IndicatorDrawDirty = $true
+                $this.PhaseIndicator.Draw($this.PhaseOneEntity)
+
+                # ENSURE THAT THE CORRESPONDING STATUS WINDOW HAS A HIGHLIGHT AROUND THE BORDER
+                If($this.PhaseOneEntity -IS [Player]) {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
+                } Else {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $false
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $true
+                }
+                $Script:ThePlayerBattleStatWindow.Draw()
+                $Script:TheEnemyBattleStatWindow.Draw()
+
+                # CHECK TO SEE IF THE PHASE ONE ENTITY CAN ACTUALLY ACT
+                # REASONS THEY COULDN'T INCLUDE, BUT AREN'T LIMITED TO, STATUS AILMENTS LIKE SLEEP OR PARALYSIS
+                If($this.PhaseOneEntity.CanAct -EQ $true) {
+                    [BattleAction]$ToExecute          = $null
+                    [BattleActionResult]$ActionResult = $null
+
+                    # DETERMINE IF THE PHASE ONE ENTITY IS THE PLAYER OR NOT
+                    # DIFFERENT LOGIC NEEDS TO OCCUR DEPENDING UPON THIS DECISION
+                    # IF IT'S THE PLAYER, WE NEED TO BLOCK LOOP ON THE BATTLE ACTION
+                    # SELECTION WINDOW SO THE PLAYER CAN CHOOSE AN ATTACK TO EXECUTE.
+                    If($this.PhaseOneEntity -IS [Player]) {
+                        # REFRESH THE BATTLE ACTION SELECTION WINDOW AND BLOCK LOOP ON IT
+                        # THE RESULT OF THE SELECTION IS STORED IN TOEXECUTE
+                        # NOTE THAT THIS IMPLEMENTATION OF HANDLEINPUT IS AN ANTI-PATTERN
+                        # BUT IS REQUIRED
+                        $Script:ThePlayerBattleActionWindow.SetAllActionDrawDirty()
+                        While($null -EQ $ToExecute) {
+                            $Script:ThePlayerBattleActionWindow.Draw()
+                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
+                        }
+
+                        # THIS IS WHERE THINGS START GETTING HAIRY
+                        # A LITANY OF CALLS TO WRITECOMPOSITEMESSAGE ON THE BATTLESTATUSMESSAGEWINDOW
+                        # OCCUR FOLLOWING. I'M GOING TO ATTEMPT TO CONDENSE THESE CALLS.
+                        $Script:TheBattleStatusMessageWindow.WriteEntityUsesMessage(
+                            $this.PhaseOneEntity,
+                            $this.PhaseTwoEntity,
+                            $ToExecute
+                        )
+
+                        # ACTUALLY EXECUTE THE SELECTED COMMAND
+                        # PS DOES SOME GOOFY SHIT WITH DISPATCHING THESE CALLS TO IEX, BUT THIS HASN'T CAUSED ANY PROBLEMS AFTER MANY HOURS
+                        # OF TESTING THUS FAR.
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
+
+                        # REFRESH THE PLAYER BATTLE STATUS WINDOW
+                        $Script:ThePlayerBattleStatWindow.Draw()
+                    } Else {
+                        # THE PHASE ONE ENTITY IS THE ENEMY
+                        # THE ACTION THE ENEMY USES IS SELECTED FROM THE "MARBLE BAG", SO NO DELAY IS NEEDED HERE.
+                        [ActionSlot]$SelectedSlot = $($this.PhaseOneEntity.ActionMarbleBag | Get-Random)
+                        $ToExecute                = $this.PhaseOneEntity.ActionListing[$SelectedSlot]
+
+                        # NOTIFY THE BATTLE STATUS MESSAGE WINDOW
+                        $Script:TheBattleStatusMessageWindow.WriteEntityUsesMessage(
+                            $this.PhaseOneEntity,
+                            $this.PhaseTwoEntity,
+                            $ToExecute
+                        )
+
+                        # EXECUTE THE ACTION AND UPDATE THE ENEMY'S BATTLE STATUS WINDOW
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
+                        $Script:TheEnemyBattleStatWindow.Draw()
+                    }
+
+                    # WE NEED TO EXAMINE THE ACTION RESULT TO SEE WHAT HAPPENED AS A CONSEQUENCE OF RUNNING THE SELECTED ACTION
+                    # THIS IS DONE FIRST BY LOOKING AT THE VALUE OF THE TYPE PROPERTY
+                    Switch($ActionResult.Type) {
+                        ([BattleActionResultType]::SuccessWithCritical) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarSwc($ToExecute)
+                            Break
+                        }
+
+                        ([BattleActionResultType]::SuccessWithAffinity) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarAff($ToExecute)
+                            Break
+                        }
+
+                        ([BattleActionResultType]::SuccessCritAff) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarCritAff($ToExecute)
+                            Break
+                        }
+
+                        ([BattleActionResultType]::Success) {}
+
+                        ([BattleActionResultType]::FailedAttackMissed) {}
+
+                        ([BattleActionResultType]::FailedAttackFailed) {}
+                    }
+                }
+            }
+
+            ([BattleManagerState]::PhaseBExecution) {}
+
+            ([BattleManagerState]::Calculation) {}
+
+            ([BattleManagerState]::BattleWon) {}
+
+            ([BattleManagerState]::BattleLost) {}
+
+            Default {}
         }
     }
 }
