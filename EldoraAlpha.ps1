@@ -20439,6 +20439,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $this.CurrentPageDirty = $false
         }
     }
+
+    [Void]WriteItemLabels() {
+        Foreach($i in $this.ItemLabelBlanks) {
+            Write-Host "$($i.ToAnsiControlSequenceString())"
+        }
+        Foreach($i in $this.ItemLabels) {
+            Write-Host "$($i.ToAnsiControlSequenceString())"
+        }
+    }
 }
 
 
