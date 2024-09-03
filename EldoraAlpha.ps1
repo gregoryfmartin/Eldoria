@@ -20448,6 +20448,21 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Write-Host "$($i.ToAnsiControlSequenceString())"
         }
     }
+
+    [ATString]GetActiveIChevron() {
+        $this.ActiveIChevronIndex = 0
+
+        Foreach($a in $this.IChevrons) {
+            If($a.Item2 -EQ $true) {
+                Return $a.Item1
+            }
+            $this.ActiveIChevronIndex++
+        }
+        $this.ActiveIChevronIndex                        = 0
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2 = $true
+
+        Return $this.IChevrons[$this.ActiveIChevronIndex].Item1
+    }
 }
 
 
