@@ -20385,6 +20385,18 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
         )
     }
+
+    [Void]CalculateNumPages() {
+        $pp = $Script:ThePlayer.ActionInventory.Listing.Count / $this.ItemsPerPage
+        If($pp -LT 1) {
+            $this.NumPages = 1
+        } Else {
+            $this.NumPages = [Math]::Ceiling($pp)
+        }
+        If($this.CurrentPage -GT $this.NumPages) {
+            $this.CurrentPage = $this.NumPages
+        }
+    }
 }
 
 
