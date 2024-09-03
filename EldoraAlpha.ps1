@@ -20671,6 +20671,13 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Column = $this.LeftTop.Column + 1
         }
     }
+
+    [Void]SetFlagsDirty() {
+        $this.BookDirty        = $true
+        $this.CurrentPageDirty = $true
+        $this.DivLineDirty     = $true
+        $this.CurrentPage      = 1
+    }
 }
 
 
