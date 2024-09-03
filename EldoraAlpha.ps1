@@ -19123,7 +19123,7 @@ Class BattleStatusMessageWindow : WindowBase {
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
                 }
                 UserData   = "$($Action.Name)"
                 UseATReset = $true
@@ -19137,7 +19137,7 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.WriteCompositeMessage(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
                 }
                 UserData   = "$($Action.Name)"
                 UseATReset = $true
@@ -19151,7 +19151,7 @@ Class BattleStatusMessageWindow : WindowBase {
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = [CCAppleYelloLight24]::new()
+                    ForegroundColor = [CCAppleYellowLight24]::new()
                     Decorations     = [ATDecoration]@{
                         Blink = $true
                     }
@@ -19168,7 +19168,7 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.WriteCompositeMessage(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
                 }
                 UserData   = "$($Action.Name)"
                 UseATReset = $true
@@ -19199,7 +19199,7 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.WriteCompositeMessage(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $Script:BATAdornmentCharTable[$ToExecute.Type].Item2
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
                 }
                 UserData   = "$($Action.Name)"
                 UseATReset = $true
@@ -19218,6 +19218,48 @@ Class BattleStatusMessageWindow : WindowBase {
                     }
                 }
                 UserData   = 'CRIT AND AFFINITY!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBarSuccess(
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' was successful!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBarFailMissed(
+        [BattleAction]$Action
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Action.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' missed!'
                 UseATReset = $true
             }
         ))
@@ -21028,22 +21070,42 @@ Class BattleManager {
                     Switch($ActionResult.Type) {
                         ([BattleActionResultType]::SuccessWithCritical) {
                             $Script:TheBattleStatusMessageWindow.WriteBarSwc($ToExecute)
+                            
                             Break
                         }
 
                         ([BattleActionResultType]::SuccessWithAffinity) {
                             $Script:TheBattleStatusMessageWindow.WriteBarAff($ToExecute)
+
                             Break
                         }
 
                         ([BattleActionResultType]::SuccessCritAff) {
                             $Script:TheBattleStatusMessageWindow.WriteBarCritAff($ToExecute)
+
                             Break
                         }
 
-                        ([BattleActionResultType]::Success) {}
+                        ([BattleActionResultType]::Success) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarSuccess($ToExecute)
 
-                        ([BattleActionResultType]::FailedAttackMissed) {}
+                            Break
+                        }
+
+                        ([BattleActionResultType]::FailedAttackMissed) {
+                            # WHILE FOR OTHER CASES THE SOUND EFFECTS WOULD BE PLAYED IN THE FUNCTION
+                            # THAT HANDLES THEM, NO SUCH FUNCTION WOULD BE CALLED HERE. SO THE SOUND
+                            # EFFECT IS PLAYED HERE. AND WHILE THERE IS NO EXPLICIT LOGGING OF AN
+                            # EXCEPTION, SHOULD ONE OCCUR, IT'S NOT THE END OF THE WORLD IF IT DOESN'T
+                            # HAPPEN TO PLAY.
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+                            $Script:TheBattleStatusMessageWindow.WriteBarFailMissed($ToExecute)
+
+                            Break
+                        }
 
                         ([BattleActionResultType]::FailedAttackFailed) {}
                     }
