@@ -20415,6 +20415,30 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $this.ItemDescDirty      = $true
         }
     }
+
+    [Void]PopulatePage() {
+        If($Script:ThePlayer.ActionInventory.Count -LE 0) {
+            $this.ZeroPageActive   = $true
+            $this.CurrentPageDirty = $false
+            $this.ZpPromptDirty    = $true
+            $this.ZpBlankedDirty   = $true
+        } Else {
+            $this.PageRefs       = [List[BattleAction]]::new()
+            $this.ZeroPageActive = $false
+            $rs                  = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage)
+            $rs                  = [Math]::Clamp($rs, 0, [Int]::MaxValue)
+            $re                  = 10
+            
+            Try {
+                $this.PageRefs = $Script:ThePlayer.ActionInventory.Listing.GetRange($rs, $re)
+            } Catch {
+                $this.PageRefs = $Script:ThePlayer.ActionInventory.Listing.GetRange($rs, ($Script:ThePlayer.ActionInventory.Listing.Count - $rs))
+            }
+            $this.CreateItemLabels()
+            $this.ItemsListDirty   = $true
+            $this.CurrentPageDirty = $false
+        }
+    }
 }
 
 
