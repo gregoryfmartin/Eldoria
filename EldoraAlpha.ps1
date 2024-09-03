@@ -20463,6 +20463,42 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
         Return $this.IChevrons[$this.ActiveIChevronIndex].Item1
     }
+
+    [Void]WriteZeroInventoryPage() {
+        If($this.ZpBlankedDirty -EQ $true) {
+            Foreach($a in 5..15) {
+                [ATString]$b = [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                        BackgroundColor = [CCAppleBlueDark24]::new()
+                        Coordinates = [ATCoordinates]@{
+                            Row    = $a
+                            Column = $this.LeftTop.Column + 1
+                        }
+                    }
+                    UserData   = "$([StatusTechniqueInventoryWindow]::ZpLineBlank)"
+                    UseATReset = $true
+                }
+                Write-Host "$($b.ToAnsiControlSequenceString())"
+            }
+            $this.ZpBlankedDirty = $false
+        }
+        If($this.ZpPromptDirty -EQ $true) {
+            [ATString]$a = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + ($this.Height / 2)
+                        Column = $this.LeftTop.Column + (($this.Width / 2) - ([StatusTechniqueInventoryWindow]::ZeroPagePrompt.Length / 2))
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::ZeroPagePrompt)"
+                UseATReset = $true
+            }
+            Write-Host "$($a.ToAnsiControlSequenceString())"
+            $this.ZpPromptDirty = $false
+        }
+    }
 }
 
 
