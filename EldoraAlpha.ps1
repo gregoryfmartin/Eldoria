@@ -20520,6 +20520,137 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         $this.ActiveItemBlinking                                           = $false
         $this.ItemDescDirty                                                = $true
     }
+
+    [Void]HandleInput() {
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        Switch($keyCap.VirtualKeyCode) {
+            13 {
+                $Script:StatusIsSelected      = $this.PageRefs[$this.ActiveIChevronIndex]
+                [BattleAction]$EquippedAction = $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]
+                If($null -EQ $EquippedAction) {
+                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot] = [BattleAction]::new($Script:StatusIsSelected)
+                    $Script:ThePlayer.ActionInventory.RemoveActionByName($Script:StatusIsSelected.Name)
+                } Else {
+                    [Int]$RootCollectionIndex = $this.CurrentPage -EQ 1 ? $this.ActiveIChevronIndex : ((($this.CurrentPage - 1) * $this.ItemsPerPage) + $this.ActiveIChevronIndex)
+                    $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]   = [BattleAction]::new($Script:StatusIsSelected)
+                    $Script:ThePlayer.ActionInventory.Listing[$RootCollectionIndex] = [BattleAction]::new($EquippedAction)
+                }
+                $Script:StatusScreenMode = [StatusScreenMode]::EquippedTechSelection
+            }
+
+            27 {
+                $Script:StatusScreenMode = [StatusScreenMode]::EquippedTechSelection
+            }
+
+            38 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {
+                    Write-Host 'Blew up.'
+                }
+                If(($this.ActiveIChevronIndex -1) -GE 0) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                    $this.ActiveIChevronIndex--
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                }
+                $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
+            }
+
+            40 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {
+                    Write-Host 'Blew up.'
+                }
+                If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                    $this.ActiveIChevronIndex++
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                }
+                $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
+            }
+
+            39 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {
+                    Write-Host 'Blew up.'
+                }
+                If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                    $this.ActiveIChevronIndex += 5
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                }
+                $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
+            }
+
+            37 {
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {
+                    Write-Host 'Blew up.'
+                }
+                If(($this.ActiveIChevronIndex - 5) -GE 0) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                    $this.ActiveIChevronIndex -= 5
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacter)"
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                }
+                $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
+            }
+
+            68 {
+                $this.TurnPageForward()
+            }
+
+            65 {
+                $this.TurnPageBackward()
+            }
+        }
+    }
 }
 
 
