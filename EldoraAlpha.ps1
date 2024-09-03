@@ -20501,6 +20501,25 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     }
 
     [Void]WriteMoronPage() {}
+
+    [Void]ResetIChevronPosition() {
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+        Try {
+            $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+            $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Catch {}
+        $this.ActiveIChevronIndex                                      = 0
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = "$([StatusTechniqueInventoryWindow]::IChevronCharacter)"
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+            Blink = $true
+        }
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+        $this.PlayerChevronDirty                                           = $true
+        $this.ActiveItemBlinking                                           = $false
+        $this.ItemDescDirty                                                = $true
+    }
 }
 
 
