@@ -20406,6 +20406,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $this.ItemDescDirty      = $true
         }
     }
+
+    [Void]TurnPageBackward() {
+        If(($this.CurrentPage - 1) -GE 1) {
+            $this.CurrentPage--
+            $this.CurrentPageDirty   = $true
+            $this.ActiveItemBlinking = $false
+            $this.ItemDescDirty      = $true
+        }
+    }
 }
 
 
