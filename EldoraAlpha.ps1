@@ -20499,6 +20499,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $this.ZpPromptDirty = $false
         }
     }
+
+    [Void]WriteMoronPage() {}
 }
 
 
