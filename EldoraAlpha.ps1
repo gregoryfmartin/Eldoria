@@ -20651,6 +20651,19 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
         }
     }
+
+    [Void]ConfigurePagingChevrons() {
+        [StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $this.RightBottom.Column - 1
+        }
+        [StatusTechniqueInventoryWindow]::PagingChevronRightBlank.Prefix.Coordinates = [StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates
+        [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $this.LeftTop.Column + 2
+        }
+        [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.Prefix.Coordinates = [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates
+    }
 }
 
 
