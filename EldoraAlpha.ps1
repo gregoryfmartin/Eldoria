@@ -20397,6 +20397,15 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $this.CurrentPage = $this.NumPages
         }
     }
+
+    [Void]TurnPageForward() {
+        If(($this.CurrentPage + 1) -LE $this.NumPages) {
+            $this.CurrentPage++
+            $this.CurrentPageDirty   = $true
+            $this.ActiveItemBlinking = $false
+            $this.ItemDescDirty      = $true
+        }
+    }
 }
 
 
