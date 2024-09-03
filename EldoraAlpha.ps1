@@ -20664,6 +20664,13 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         }
         [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.Prefix.Coordinates = [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates
     }
+
+    [Void]ConfigureDivLine() {
+        [StatusTechniqueInventoryWindow]::DivLineHorizontal.Prefix.Coordinates = [ATCoordinates]@{
+            Row    = $this.RightBottom.Row - 4
+            Column = $this.LeftTop.Column + 1
+        }
+    }
 }
 
 
