@@ -20093,6 +20093,298 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
         }
     }
+
+    [Void]CreateIChevrons() {
+        $this.IChevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 2
+                        Column = $this.LeftTop.Column + 1
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacter)"
+                UseATReset = $true
+            },
+            $true
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 3
+                        Column = $this.LeftTop.Column + 1
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 4
+                        Column = $this.LeftTop.Column + 1
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 5
+                        Column = $this.LeftTop.Column + 1
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 6
+                        Column = $this.LeftTop.Column + 1
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 2
+                        Column = $this.LeftTop.Column - 17
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 3
+                        Column = $this.LeftTop.Column - 17
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 4
+                        Column = $this.LeftTop.Column - 17
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 5
+                        Column = $this.LeftTop.Column - 17
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+        $this.IChevrons.Add([ValueTuple]::Create(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 6
+                        Column = $this.LeftTop.Column - 17
+                    }
+                }
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UseATReset = $true
+            },
+            $false
+        ))
+    }
+
+    [Void]CreateItemLabels() {
+        $this.ItemLabels = [List[ATString]]::new()
+        [Int]$c = 0
+
+        Foreach($i in $this.PageRefs) {
+            $this.ItemLabels.Add(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.IChevrons[$c].Item1.Prefix.Coordinates.Row
+                            Column = $this.IChevrons[$c].Item1.Prefix.Coordinates.Column + 2
+                        }
+                    }
+                    UserData   = "$($i.Name)"
+                    UseATReset = $true
+                }
+            )
+            $c++ # TOTALLY A PROGRAMMER JOKE OLO LFOR
+        }
+        $this.ResetIChevronPositions()
+        $this.CreateItemLabelBlanks()
+    }
+
+    [Void]CreateItemLabelBlanks() {
+        $this.ItemLabelBlanks = [List[ATString]]::new()
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 2
+                        Column = $this.LeftTop.Column + 2
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 3
+                        Column = $this.LeftTop.Column + 2
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 4
+                        Column = $this.LeftTop.Column + 2
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 5
+                        Column = $this.LeftTop.Column + 2
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 6
+                        Column = $this.LeftTop.Column + 2
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 2
+                        Column = $this.LeftTop.Column - 16
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 3
+                        Column = $this.LeftTop.Column - 16
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 4
+                        Column = $this.LeftTop.Column - 16
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 5
+                        Column = $this.LeftTop.Column - 16
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+        $this.ItemLabelBlanks.Add(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 6
+                        Column = $this.LeftTop.Column - 16
+                    }
+                }
+                UserData   = '               '
+                UseATReset = $true
+            }
+        )
+    }
 }
 
 
