@@ -1495,6 +1495,7 @@ Class BattleEntityProperty {
 
     [Void]Update() {
         If($this.AugmentTurnDuration -GT 0) {
+            $this.AugmentTurnDuration--
             If($this.BasePre -EQ 0) {
                 $this.BasePre = $this.Base
             }
@@ -1719,6 +1720,34 @@ Class BattleAction {
     #     $this.Description = $Copy.Description
     # }
 }
+
+
+
+
+
+###############################################################################
+#
+# BATTLE ACTION RESULT
+#
+###############################################################################
+Class BattleActionResult {
+    [Int]$ActionEffectSum
+    [BattleEntity]$Originator
+    [BattleEntity]$Target
+    [BattleActionResultType]$Type
+
+    BattleActionResult() {
+        $this.ActionEffectSum = 0
+        $this.Originator      = $null
+        $this.Target          = $null
+        $this.Type            = [BattleActionResultType]::Success
+    }
+}
+
+
+
+
+
 
 ###############################################################################
 #
@@ -19285,6 +19314,719 @@ Class BattleStatusMessageWindow : WindowBase {
             }
         ))
     }
+
+    [Void]WriteBatPhysical(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' hit '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalFire(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' burned '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalWater(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' soaked '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalEarth(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' stoned '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalWind(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' sheared '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalLight(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' cast holy power on '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalDark(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' cast unholy power on '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatElementalIce(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' froze '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatMagicPoison(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' poisoned '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATSTringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' for '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
+                }
+                UserData   = "$($Result.ActionEffectSum)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' damage.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatMagicConfuse(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' confused '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = '!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatMagicSleep(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' put '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' to sleep!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatMagicAging(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        $this.WriteCompositeMessage(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData   = "$($Originator.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' made '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Target.NameDrawColor
+                }
+                UserData   = "$($Target.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' grow old!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBatMagicHealing(
+        [BattleEntity]$Originator,
+        [BattleEntity]$Target,
+        [BattleAction]$Action,
+        [BattleActionResult]$Result
+    ) {
+        If($Originator == $Target) {
+            # Healed themselves
+            $this.WriteCompositeMessage(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Originator.NameDrawColor
+                    }
+                    UserData   = "$($Originator.Name)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = ' healed themself '
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                    }
+                    UserData   = "$($Result.ActionEfffectSum)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = '!'
+                    UseATReset = $true
+                }
+            ))
+        } Else {
+            # Healed Target
+            $this.WriteCompositeMessage(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Originator.NameDrawColor
+                    }
+                    UserData   = "$($Originator.Name)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = ' healed '
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $Target.NameDrawColor
+                    }
+                    UserData   = "$($Target.Name)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = ' for '
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                    }
+                    UserData   = "$($Result.ActionEfffectSum)"
+                    UseATReset = $true
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                    }
+                    UserData   = '!'
+                    UseATReset = $true
+                }
+            ))
+        }
+    }
+
+    [Void]WriteEntityCantActMessage(
+        [BattleEntity]$Originator
+    ) {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Originator.NameDrawColor
+                }
+                UserData = "$($Originator.Name)"
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' is unable to act!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBattleWonMessage() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'You''ve won the battle!'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteBattleEndPrompt() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'Press ''Enter'' to exit.'
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
@@ -21062,7 +21804,7 @@ Class BattleManager {
                         )
 
                         # ACTUALLY EXECUTE THE SELECTED COMMAND
-                        # PS DOES SOME GOOFY SHIT WITH DISPATCHING THESE CALLS TO IEX, BUT THIS HASN'T CAUSED ANY PROBLEMS AFTER MANY HOURS
+                        # PS DOES SOME GOOFY SHIT WITH DISPATCHING THESE CALLS TO ICM, BUT THIS HASN'T CAUSED ANY PROBLEMS AFTER MANY HOURS
                         # OF TESTING THUS FAR.
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
 
@@ -21135,14 +21877,653 @@ Class BattleManager {
                             Break
                         }
                     }
+
+                    # NEXT WE NEED TO EXAMINE THE TYPE OF THE ACTION EXECUTED TO DO PROVIDE SOME
+                    # ADDITIONAL FEEDBACK
+                    Switch($ToExecute.Type) {
+                        ([BattleActionType]::Physical) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatPhysical(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalFire) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalFire(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalWater) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalWater(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalEarth) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalEarth(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalWind) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalWind(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalLight) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalLight(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalDark) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalDark(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalIce) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalIce(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicPoison) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicPoison(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicConfuse) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicPoison(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicSleep) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicSleep(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicAging) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicAging(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicHealing) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicHealing(
+                                $this.PhaseOneEntity,
+                                $this.PhaseTwoEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicStatAugment) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            # TODO: I'M NOT SURE I'VE CODIFIED IN THE BATTLE RESULT FOR STAT AUGS.
+
+                            Break
+                        }
+                    }
+                } Else {
+                    # THE PHASE ONE ENTITY CAN'T ACT AT THIS TIME
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
+
+                    $Script:TheBattleStatusMessageWindow.WriteEntityCantActMessage(
+                        $this.PhaseOneEntity
+                    )
                 }
+
+                # FACILITATE THE UPDATE OF AUGMENTS AT THE END OF THE TURN
+                Foreach($Stat in $this.PhaseOneEntity.Status.Values) {
+                    $Stat.Update()
+                    If($Stat.AugmentTurnDuration -EQ 0) {
+                        If($this.PhaseOneEntity -IS [Player]) {
+                            $Script:ThePlayerBattleStatWindow.SetAllFlagsDirty()
+                            $Script:ThePlayerBattleStatWindow.Draw()
+                        } Else {
+                            $Script:TheEnemyBattleStatWindow.SetAllFlagsDirty()
+                            $Script:TheEnemyBattleStatWindow.Draw()
+                        }
+                    }
+                }
+
+                # CHANGE STATE TO PHASE B
+                $this.State = [BattleManagerState]::PhaseBExecution
+
+                Break
             }
 
-            ([BattleManagerState]::PhaseBExecution) {}
+            ([BattleManagerState]::PhaseBExecution) {
+                # THE SECOND OF THE NASTY BLOCKS
+                # THIS IS A CARBON COPY OF PHASE A, EXCEPT THAT THE ENTITY CONSIDERED IS THE PHASETWOENTITY
 
-            ([BattleManagerState]::Calculation) {}
+                # BEFORE DOING ANYTHING, MAKE SURE THAT WE DON'T NEED TO CHANGE OUT TO THE CALCULATION STATE
+                # THIS HELPS FACILITATE, PRIMARILY, THAT AN ENTITY CAN'T ACT IF THEY'RE ACTUALLY "DEAD"
+                If(($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) -OR ($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0)) {
+                    $this.State = [BattleManagerState]::Calculation
 
-            ([BattleManagerState]::BattleWon) {}
+                    Break
+                }
+
+                # UPDATE THE PHASE INDICATOR
+                $this.PhaseIndicator.IndicatorDrawDirty = $true
+                $this.PhaseIndicator.Draw($this.PhaseTwoEntity)
+
+                # ENSURE THAT THE CORRESPONDING STATUS WINDOW HAS A HIGHLIGHT AROUND THE BORDER
+                If($this.PhaseTwoEntity -IS [Player]) {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $true
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $false
+                } Else {
+                    $Script:ThePlayerBattleStatWindow.EntityBattlePhaseActive = $false
+                    $Script:TheEnemyBattleStatWindow.EntityBattlePhaseActive  = $true
+                }
+                $Script:ThePlayerBattleStatWindow.Draw()
+                $Script:TheEnemyBattleStatWindow.Draw()
+
+                # CHECK TO SEE IF THE PHASE ONE ENTITY CAN ACTUALLY ACT
+                # REASONS THEY COULDN'T INCLUDE, BUT AREN'T LIMITED TO, STATUS AILMENTS LIKE SLEEP OR PARALYSIS
+                If($this.PhaseTwoEntity.CanAct -EQ $true) {
+                    [BattleAction]$ToExecute          = $null
+                    [BattleActionResult]$ActionResult = $null
+
+                    # DETERMINE IF THE PHASE ONE ENTITY IS THE PLAYER OR NOT
+                    # DIFFERENT LOGIC NEEDS TO OCCUR DEPENDING UPON THIS DECISION
+                    # IF IT'S THE PLAYER, WE NEED TO BLOCK LOOP ON THE BATTLE ACTION
+                    # SELECTION WINDOW SO THE PLAYER CAN CHOOSE AN ATTACK TO EXECUTE.
+                    If($this.PhaseTwoEntity -IS [Player]) {
+                        # REFRESH THE BATTLE ACTION SELECTION WINDOW AND BLOCK LOOP ON IT
+                        # THE RESULT OF THE SELECTION IS STORED IN TOEXECUTE
+                        # NOTE THAT THIS IMPLEMENTATION OF HANDLEINPUT IS AN ANTI-PATTERN
+                        # BUT IS REQUIRED
+                        $Script:ThePlayerBattleActionWindow.SetAllActionDrawDirty()
+                        While($null -EQ $ToExecute) {
+                            $Script:ThePlayerBattleActionWindow.Draw()
+                            $ToExecute = $Script:ThePlayerBattleActionWindow.HandleInput()
+                        }
+
+                        # THIS IS WHERE THINGS START GETTING HAIRY
+                        # A LITANY OF CALLS TO WRITECOMPOSITEMESSAGE ON THE BATTLESTATUSMESSAGEWINDOW
+                        # OCCUR FOLLOWING. I'M GOING TO ATTEMPT TO CONDENSE THESE CALLS.
+                        $Script:TheBattleStatusMessageWindow.WriteEntityUsesMessage(
+                            $this.PhaseTwoEntity,
+                            $this.PhaseOneEntity,
+                            $ToExecute
+                        )
+
+                        # ACTUALLY EXECUTE THE SELECTED COMMAND
+                        # PS DOES SOME GOOFY SHIT WITH DISPATCHING THESE CALLS TO ICM, BUT THIS HASN'T CAUSED ANY PROBLEMS AFTER MANY HOURS
+                        # OF TESTING THUS FAR.
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
+
+                        # REFRESH THE PLAYER BATTLE STATUS WINDOW
+                        $Script:ThePlayerBattleStatWindow.Draw()
+                    } Else {
+                        # THE PHASE ONE ENTITY IS THE ENEMY
+                        # THE ACTION THE ENEMY USES IS SELECTED FROM THE "MARBLE BAG", SO NO DELAY IS NEEDED HERE.
+                        [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
+                        $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
+
+                        # NOTIFY THE BATTLE STATUS MESSAGE WINDOW
+                        $Script:TheBattleStatusMessageWindow.WriteEntityUsesMessage(
+                            $this.PhaseTwoEntity,
+                            $this.PhaseOneEntity,
+                            $ToExecute
+                        )
+
+                        # EXECUTE THE ACTION AND UPDATE THE ENEMY'S BATTLE STATUS WINDOW
+                        $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
+                        $Script:TheEnemyBattleStatWindow.Draw()
+                    }
+
+                    # WE NEED TO EXAMINE THE ACTION RESULT TO SEE WHAT HAPPENED AS A CONSEQUENCE OF RUNNING THE SELECTED ACTION
+                    # THIS IS DONE FIRST BY LOOKING AT THE VALUE OF THE TYPE PROPERTY
+                    Switch($ActionResult.Type) {
+                        ([BattleActionResultType]::SuccessWithCritical) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarSwc($ToExecute)
+
+                            Break
+                        }
+
+                        ([BattleActionResultType]::SuccessWithAffinity) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarAff($ToExecute)
+
+                            Break
+                        }
+
+                        ([BattleActionResultType]::SuccessCritAff) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarCritAff($ToExecute)
+
+                            Break
+                        }
+
+                        ([BattleActionResultType]::Success) {
+                            $Script:TheBattleStatusMessageWindow.WriteBarSuccess($ToExecute)
+
+                            Break
+                        }
+
+                        ([BattleActionResultType]::FailedAttackMissed) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBarFailMissed($ToExecute)
+
+                            Break
+                        }
+
+                        ([BattleActionResultType]::FailedAttackFailed) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaMissFail)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBarFailFailed($ToExecute)
+
+                            Break
+                        }
+                    }
+
+                    # NEXT WE NEED TO EXAMINE THE TYPE OF THE ACTION EXECUTED TO DO PROVIDE SOME
+                    # ADDITIONAL FEEDBACK
+                    Switch($ToExecute.Type) {
+                        ([BattleActionType]::Physical) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaPhysicalStrikeA)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatPhysical(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalFire) {
+                            Try {
+                                $Script:TheSfxMPlayer.Open($Script:SfxBaFireStrikeA)
+                                $Script:TheSfxMPlayer.Play()
+                            } Catch {}
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalFire(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalWater) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalWater(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalEarth) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalEarth(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalWind) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalWind(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalLight) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalLight(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalDark) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalDark(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::ElementalIce) {
+                            # TODO: ADD SOUND EFFECT FOR THIS ELEMENT
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatElementalIce(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicPoison) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicPoison(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicConfuse) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicPoison(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicSleep) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicSleep(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicAging) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicAging(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicHealing) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            $Script:TheBattleStatusMessageWindow.WriteBatMagicHealing(
+                                $this.PhaseTwoEntity,
+                                $this.PhaseOneEntity,
+                                $ToExecute,
+                                $ActionResult
+                            )
+
+                            Break
+                        }
+
+                        ([BattleActionType]::MagicStatAugment) {
+                            # TODO: ADD SOUND EFFECT FOR THIS MAGIC
+
+                            # TODO: I'M NOT SURE I'VE CODIFIED IN THE BATTLE RESULT FOR STAT AUGS.
+
+                            Break
+                        }
+                    }
+                } Else {
+                    # THE PHASE ONE ENTITY CAN'T ACT AT THIS TIME
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxBaActionDisabled)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
+
+                    $Script:TheBattleStatusMessageWindow.WriteEntityCantActMessage(
+                        $this.PhaseTwoEntity
+                    )
+                }
+
+                # FACILITATE THE UPDATE OF AUGMENTS AT THE END OF THE TURN
+                Foreach($Stat in $this.PhaseTwoEntity.Status.Values) {
+                    $Stat.Update()
+                    If($Stat.AugmentTurnDuration -EQ 0) {
+                        If($this.PhaseOneEntity -IS [Player]) {
+                            $Script:ThePlayerBattleStatWindow.SetAllFlagsDirty()
+                            $Script:ThePlayerBattleStatWindow.Draw()
+                        } Else {
+                            $Script:TheEnemyBattleStatWindow.SetAllFlagsDirty()
+                            $Script:TheEnemyBattleStatWindow.Draw()
+                        }
+                    }
+                }
+
+                # CHANGE STATE TO TURN INCREMENT
+                $this.State = [BattleManagerState]::TurnIncrement
+
+                Break
+            }
+
+            ([BattleManagerState]::Calculation) {
+                # GIVEN HOW THIS STATE IS ENTERED, THIS MAY BE A REDUNDANT CHECK, BUT I DON'T CARE
+                If($this.PhaseOneEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                    If($this.PhaseOneEntity -IS [Player]) {
+                        $this.State = [BattleManagerState]::BattleLost
+
+                        Break
+                    } Else {
+                        $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
+                        $this.State        = [BattleManagerState]::BattleWon
+
+                        Break
+                    }
+                } Elseif($this.PhaseTwoEntity.Stats[[StatId]::HitPoints].Base -LE 0) {
+                    If($this.PhaseTwoEntity -IS [Player]) {
+                        $this.State = [BattleManagerState]::BattleLost
+
+                        Break
+                    } Else {
+                        $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
+                        $this.State        = [BattleManagerState]::BattleWon
+
+                        Break
+                    }
+                }
+
+                # DO NOTHING, TRANSITION BACK TO TURN INCREMENT STATE
+                $this.State = [BattleManagerState]::BattleWon
+
+                Break
+            }
+
+            ([BattleManagerState]::BattleWon) {
+                $Script:TheBgmPlayer.Stop() # STOP PLAYING THE BATTLE BGM
+                
+                # CHECK TO SEE IF THE BATTLE WON CHIME HAS PLAYED
+                # PLAY IT IF IT HASN'T
+                If($Script:HasBattleWonChimePlayed -EQ $false) {
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxBattlePlayerWin)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
+                    $Script:HasBattleWonChimePlayed = $true
+                }
+
+                # THE FOLLOWING CODE WILL WRITE TWO OUT-OF-BAND MESSAGES TO THE STATUS WINDOW
+                # OUT-OF-BAND MEANING THAT EXPLICIT CALLS TO THE DRAW FUNCTION ARE MADE BECAUSE
+                # THE NORMAL SEQUENCING WOULD CAUSE THESE TO NOT BE DRAWN IN TIME
+                
+                # WRITE THE WON MESSAGE TO THE STATUS WINDOW
+                $Script:TheBattleStatusMessageWindow.WriteBattleWonMessage()
+                $Script:TheBattleStatusMessageWindow.Draw()
+
+                # RUN THE SPOILS EFFECT; NEED TO DETERMINE WHICH ENTITY IS THE PLAYER
+                If($this.PhaseOneEntity -IS [Player]) {
+                    # THE ORIGINAL CODE RESET THE SPOILSACTION MEMBER; NOT SURE WHY
+                    # THE LIKELY CAUSE IS I'M AN IDIOT
+                    Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseOneEntity), ([EnemyBattleEntity]$this.PhaseTwoEntity)
+                } Elseif($this.PhaseTwoEntity -IS [Player]) {
+                    Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseTwoEntity), ([EnemyBattleEntity]$this.PhaseOneEntity)
+                }
+
+                # WRITE THE BATTLE END PROMPT
+                $Script:TheBattleStatusMessageWindow.WriteBattleEndPrompt()
+                $Script:TheBattleStatusMessageWindow.Draw()
+
+                # BLOCK FOR THE ENTER KEY (ACKSHUALEE ENTER KEY)
+                $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                While($a.VirtualKeyCode -NE 13) {
+                    $a = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                }
+
+                # CHANGE GLOBAL STATE
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+
+                Break
+            }
 
             ([BattleManagerState]::BattleLost) {}
 
