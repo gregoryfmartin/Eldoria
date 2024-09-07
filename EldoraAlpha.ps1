@@ -20015,6 +20015,30 @@ Class BattleStatusMessageWindow : WindowBase {
             }
         ))
     }
+	
+	[Void]WriteBattleLostMessage() {
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'You''ve lost the battle.'
+				UseATReset = $true
+			}
+		))
+	}
+	
+	[Void]WriteGameOverMessage() {
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'GAME OVER'
+				UseATReset = $true
+			}
+		))
+	}
 
     [Void]WriteBattleEndPrompt() {
         $this.WriteMessageComposite(@(
@@ -22525,7 +22549,31 @@ Class BattleManager {
                 Break
             }
 
-            ([BattleManagerState]::BattleLost) {}
+            ([BattleManagerState]::BattleLost) {
+				$Script:TheBgmPlayer.Stop() # STOP PLAYING THE BATTLE BGM
+				
+				# CHECK TO SEE IF THE BATTLE LOST CHIME HAS PLAYED
+				# PLAY IT IF IT HASN'T
+				If($Script:HasBattleLostChimePlayed -EQ $false) {
+					Try {
+						$Script:TheSfxMPlayer.Open($Script:SfxBattlePlayerLose)
+						$Script:TheSfxMPlayer.Play()
+					} Catch {}
+					$Script:HasBattleLostChimPlayed = $true
+				}
+				
+				# WRITE THE LOST MESSAGE TO THE STATUS WINDOW
+				$Script:TheBattleStatusMessageWindow.WriteBattleLostMessage()
+				$Script:TheBattleStatusMessageWindow.Draw()
+				$Script:TheBattleStatusMessageWindow.WriteGameOverMessage()
+				$Script:TheBattleStatusMessageWindow.Draw()
+				
+				# SLEEP THEN DIE
+				Start-Sleep -Seconds 5
+				Clear-Host
+				
+				Exit
+			}
 
             Default {}
         }
