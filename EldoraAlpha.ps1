@@ -187,6 +187,7 @@ $Script:BadCommandRetorts = @(
     'ceuwcnesckldsc',
     '843214385321832904'
 )
+
 $Script:BattleEncounterRegionTable = @{
     0 = @(
         'EEBat',
@@ -198,6 +199,7 @@ $Script:BattleEncounterRegionTable = @{
         'EEDuskbane'
     )
 }
+
 $Script:BATAdornmentCharTable = @{
     [BattleActionType]::Physical         = [Tuple[[String], [ConsoleColor24]]]::new("`u{2022}", [CCTextDefault24]::new())
     [BattleActionType]::ElementalFire    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B6}", [CCAppleRedLight24]::new())
@@ -214,7 +216,302 @@ $Script:BATAdornmentCharTable = @{
     [BattleActionType]::MagicHealing     = [Tuple[[String], [ConsoleColor24]]]::new("`u{20AA}", [CCAppleMintLight24]::new())
     [BattleActionType]::MagicStatAugment = [Tuple[[String], [ConsoleColor24]]]::new("`u{20B9}", [CCAppleOrangeLight24]::new())
 }
+
+#
+# BATTLE ACTION TABLE - LOOKUP TABLE
+#
+# LOOKUP FOR RESISTANCE/WEAKNESS SCALARS. THIS IS GREATLY SENSITIVE TO THE ENUMERATION
+# ORDERING IN THE BATTLE ACTION TYPE ENUMERATION.
+#
+$Script:BATLut = @(
+	# PHYSICAL ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1, 1, 1, 1, 1),
+	
+	# ELEMENTAL FIRE ATTACKS AGAINST OTHERS
+	@(1, -0.75, 0.5, 0.5, 0.5, 1, 1, 1.75),
+	
+	# ELEMENTAL WATER ATTACKS AGAINST OTHERS
+	@(1, 1.75, -0.75, 1, 0.5, 1, 1, 0.5),
+	
+	# ELEMENTAL EARTH ATTACKS AGAINST OTHERS
+	@(1, 0.5, 1, -0.75, 0.5, 1, 1, 1.75),
+	
+	# ELEMENTAL WIND ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1.75, -0.75, 1, 1, 0.5),
+	
+	# ELEMENTAL LIGHT ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1, 1, -0.75, 1.75, 1),
+	
+	# ELEMENTAL DARK ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1, 1, 1.75, -0.75, 1),
+	
+	# ELEMENTAL ICE ATTACKS AGAINST OTHERS
+	@(1, 0.5, 1.75, 1.75, 1, 1, 1, -0.75)
+)
+
 $Script:Rui = $(Get-Host).UI.RawUI
+
+
+
+
+
+###############################################################################
+#
+# BATTLE ACTION CALCULATION
+#
+###############################################################################
+[ScriptBlock]$Script:BaCalc = {
+    Param(
+        [BattleEntity]$Self,
+        [BattleEntity]$Target,
+        [BattleAction]$SelfAction
+    )
+
+    [Boolean]$CanExecute   = $false
+    [Boolean]$ReduceSelfMp = $false
+
+    If($SelfAction.MpCost -GT 0) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+            $CanExecute   = $true
+            $ReduceSelfMp = $true
+        }
+    } Elseif($SelfAction.MpCost -LE 0) {
+        $CanExecute = $true
+    }
+
+    If($CanExecute -EQ $true) {
+        If($ReduceSelfMp -EQ $true) {
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+            If($Self -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+            }
+        }
+
+        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+        If($ExecuteChance -GT $SelfAction.Chance) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                0
+            )
+        }
+    
+        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+        If($EvRandFactor -LE $TargetEffectiveEvasion) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackMissed,
+                $Self,
+                $Target,
+                0
+            )
+        }
+    
+        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+            $SelfAction.EffectValue * (
+                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+        ))
+        $EffectiveDamageCritFactor     = 1.0
+        $EffectiveDamageAffinityFactor = 1.0
+
+        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+            $EffectiveDamageCritFactor = 1.5
+        }
+
+        $EffectiveDamageAffinityFactor = $Script:BALut[$SelfAction.Type][$Target.Affinity]
+
+        $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+    
+        [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+    
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $FinalDamage
+            )
+        } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+    
+            If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::SuccessWithCritical,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
+            } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::SuccessWithAffinityBonus,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
+            } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
+            }
+    
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $FinalDamage
+            )
+        }
+    } Else {
+        Return [BattleActionResult]::new(
+            [BattleActionResultType]::FailedNoUsesRemaining,
+            $Self,
+            $Target,
+            0
+        )
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# BATTLE ACTION PHYSICAL CALCULATION FUNCTION
+#
+###############################################################################
+# [ScriptBlock]$Script:BaPhysicalCalc = {
+# 	Param(
+# 		[BattleEntity]$Self,
+# 		[BattleEntity]$Target,
+# 		[BattleAction]$SelfAction
+# 	)
+	
+# 	[Boolean]$CanExecute   = $false
+# 	[Boolean]$ReduceSelfMp = $false
+	
+# 	If($SelfAction.MpCost -GT 0) {
+# 		If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+# 			$CanExecute   = $true
+# 			$ReduceSelfMp = $true
+# 		}
+# 	} Elseif($SelfAction.MpCost -LE 0) {
+# 		$CanExecute = $true
+# 	}
+	
+# 	If($CanExecute -EQ $true) {
+# 		If($ReduceSelfMp -EQ $true) {
+# 			[Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+# 			If($Self -IS [Player]) {
+# 				$Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+# 			} Else {
+# 				$Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+# 			}
+# 		}
+		
+# 		$ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+# 		If($ExecuteChance -GT $SelfAction.Chance) {
+# 			Return [BattleActionResult]@{
+# 				Type       = [BattleActionResultType]::FailedAttackFailed
+# 				Originator = $Self
+# 				Target     = $Target
+# 			}
+# 		}
+		
+# 		$TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+#         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+#         If($EvRandFactor -LE $TargetEffectiveEvasion) {
+#             Return [BattleActionResult]@{
+# 				Type       = [BattleActionResultType]::FailedAttackMissed
+# 				Originator = $Self
+# 				Target     = $Target
+# 			}
+#         }
+		
+# 		$EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+#             $SelfAction.EffectValue * (
+#                 ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+#                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+#             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+#         ))
+#         $EffectiveDamageCritFactor     = 1.0
+#         $EffectiveDamageAffinityFactor = 1.0
+    
+#         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+#         If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+#             $EffectiveDamageCritFactor = 1.5
+#         }
+    
+#         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+    
+#         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+		
+# 		If(0 -NE $DecRes) {
+# 			Return [BattleActionResult]@{
+# 				Type            = [BattleActionResultType]::FailedAttackFailed
+# 				Originator      = $Self
+# 				Target          = $Target
+# 				ActionEffectSum = $FinalDamage
+# 			}
+#         } Else {
+#             If($Target -IS [Player]) {
+#                 $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+#             } Else {
+#                 $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+#             }
+    
+#             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+# 				Return [BattleActionResult]@{
+# 					Type            = [BattleActionResultType]::SuccessWithCritical
+# 					Originator      = $Self
+# 					Target          = $Target
+# 					ActionEffectSum = $FinalDamage
+# 				}
+#             } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+# 				Return [BattleActionResult]@{
+# 					Type            = [BattleActionResultType]::SuccessWithAffinityBonus
+# 					Originator      = $Self
+# 					Target          = $Target
+# 					ActionEffectSum = $FinalDamage
+# 				}
+#             } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+# 				Return [BattleActionResult]@{
+# 					Type            = [BattleActionResultType]::SuccessWithCritAndAffinityBonus
+# 					Originator      = $Self
+# 					Target          = $Target
+# 					ActionEffectSum = $FinalDamage
+# 				}
+#             }
+    
+# 			Return [BattleActionResult]@{
+# 				Type            = [BattleActionResultType]::Success
+# 				Originator      = $Self
+# 				Target          = $Target
+# 				ActionEffectSum = $FinalDamage
+# 			}
+#         }
+# 	} Else {
+# 		Return [BattleActionResult]@{
+# 			Type            = [BattleActionResultType]::FailedAttackFailed
+# 			Originator      = $Self
+# 			Target          = $Target
+# 			ActionEffectSum = 0
+# 		}
+# 	}
+# }
 
 
 
@@ -1639,7 +1936,7 @@ Class BattleAction {
     BattleAction() {
         $this.Name        = ''
         $this.Type        = [BattleActionType]::None
-        $this.Effect      = $null
+        $this.Effect      = $Script:BaCalc
         $this.PreCalc     = $null
         $this.PostCalc    = $null
         $this.EffectValue = 0
@@ -1767,7 +2064,7 @@ Class BAPunch : BattleAction {
         $this.Name        = 'Punch'
         $this.Description = 'A punch. Just like dad taught you.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 50
         $this.Chance      = 1.0
@@ -1779,7 +2076,7 @@ Class BAKick : BattleAction {
         $this.Name        = 'Kick'
         $this.Description = 'A kick. Don''t stub your toe.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 50
         $this.Chance      = 1.0
@@ -1791,7 +2088,7 @@ Class BAKarateChop : BattleAction {
         $this.Name        = 'Karate Chop'
         $this.Description = 'Test your might!'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 60
         $this.Chance      = 0.8
@@ -1803,7 +2100,7 @@ Class BAKarateKick : BattleAction {
         $this.Name        = 'Karate Kick'
         $this.Description = 'I hope your shins are fit.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BAPhysicalCalc
+        # $this.Effect      = $Script:BAPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 65
         $this.Chance      = 0.75
@@ -1815,7 +2112,7 @@ Class BABash : BattleAction {
         $this.Name        = 'Bash'
         $this.Description = 'HULK SMASH!'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 75
         $this.Chance      = 0.7
@@ -1827,7 +2124,7 @@ Class BABite : BattleAction {
         $this.Name        = 'Bite'
         $this.Description = 'When fists fail, teeth do just fine.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 40
         $this.Chance      = 0.9
@@ -1839,7 +2136,7 @@ Class BAScratch : BattleAction {
         $this.Name        = 'Scratch'
         $this.Description = 'Nails are sometimes useful.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 45
         $this.Chance      = 1.0
@@ -1851,7 +2148,7 @@ Class BADoubleScratch : BattleAction {
         $this.Name        = 'Double Scratch'
         $this.Description = 'The manicure on these is lethal.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 85
         $this.Chance      = 0.75
@@ -1863,7 +2160,7 @@ Class BAHeadbutt : BattleAction {
         $this.Name        = 'Headbutt'
         $this.Description = 'Put that noggin'' to work!'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 160
         $this.Chance      = 0.4
@@ -1875,7 +2172,7 @@ Class BADropKick : BattleAction {
         $this.Name        = 'Dropkick'
         $this.Description = 'Don''t use this on Murphy.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 120
         $this.Chance      = 0.3
@@ -1887,7 +2184,7 @@ Class BAThrow : BattleAction {
         $this.Name        = 'Throw'
         $this.Description = 'One man''s trash is a useful weapon.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 0
         $this.Chance      = 0.9
@@ -1899,7 +2196,7 @@ Class BAPeck : BattleAction {
         $this.Name        = 'Peck'
         $this.Description = 'One from Grandma usually means cookies later.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 20
         $this.Chance      = 1.0
@@ -1911,7 +2208,7 @@ Class BATalonStab : BattleAction {
         $this.Name        = 'Talon Stab'
         $this.Description = 'You don''t want a hug from these.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 70
         $this.Chance      = 1.0
@@ -1923,7 +2220,7 @@ Class BASwordSlash : BattleAction {
         $this.Name        = 'Sword Slash'
         $this.Description = 'A basic sword attack.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 60
         $this.Chance      = 1.0
@@ -1935,7 +2232,7 @@ Class BASwordStab : BattleAction {
         $this.Name        = 'Sword Stab'
         $this.Description = 'This was practiced with toothpicks.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 80
         $this.Chance      = 0.7
@@ -1947,7 +2244,7 @@ Class BAAxeSlash : BattleAction {
         $this.Name        = 'Axe Slash'
         $this.Description = 'Chopping trees pays off.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 70
         $this.Chance      = 1.0
@@ -1959,7 +2256,7 @@ Class BAAxeCleave : BattleAction {
         $this.Name        = 'Axe Cleave'
         $this.Description = 'Before his fury, the trees stood no chance.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 90
         $this.Chance      = 0.8
@@ -1971,7 +2268,7 @@ Class BAAxeThrow : BattleAction {
         $this.Name        = 'Axe Throw'
         $this.Description = 'Don''t let one hit you on the way out.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 180
         $this.Chance      = 0.3
@@ -1983,7 +2280,7 @@ Class BAKnifeStab : BattleAction {
         $this.Name        = 'Knife Stab'
         $this.Description = 'Just a little prick, right?'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 40
         $this.Chance      = 0.9
@@ -1995,7 +2292,7 @@ Class BAKnifeThrow : BattleAction {
         $this.Name        = 'Knife Throw'
         $this.Description = 'Like throwing darts, but cooler.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 80
         $this.Chance      = 0.3
@@ -2007,7 +2304,7 @@ Class BAClubSwing : BattleAction {
         $this.Name        = 'Club Swing'
         $this.Description = 'Me Ooga. Me swing-um big-um stick.'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 70
         $this.Chance      = 0.7
@@ -2019,7 +2316,7 @@ Class BAHomerunHit : BattleAction {
         $this.Name        = 'Homerun Hit'
         $this.Description = 'Swing, batter... SWING!'
         $this.Type        = [BattleActionType]::Physical
-        $this.Effect      = $Script:BaPhysicalCalc
+        # $this.Effect      = $Script:BaPhysicalCalc
         $this.MpCost      = 0
         $this.EffectValue = 200
         $this.Chance      = 0.1
@@ -2031,7 +2328,7 @@ Class BAFlamePunch : BattleAction {
         $this.Name        = 'Flame Punch'
         $this.Description = 'Flaming fists of fury.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 5
         $this.EffectValue = 75
         $this.Chance      = 1.0
@@ -2043,7 +2340,7 @@ Class BAFlameKick : BattleAction {
         $this.Name        = 'Flame Kick'
         $this.Description = 'I got channed heat on my heels.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 5
         $this.EffectValue = 85
         $this.Chance      = 0.9
@@ -2055,7 +2352,7 @@ Class BAFireball : BattleAction {
         $this.Name        = 'Fireball'
         $this.Description = 'That''s a spicy meatball!'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 7
         $this.EffectValue = 80
         $this.Chance      = 0.75
@@ -2067,7 +2364,7 @@ Class BAMortarToss : BattleAction {
         $this.Name        = 'Mortar Toss'
         $this.Description = 'An esploozshun of firez.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 9
         $this.EffectValue = 100
         $this.Chance      = 0.7
@@ -2079,7 +2376,7 @@ Class BAIKill : BattleAction {
         $this.Name        = 'IKill'
         $this.Description = 'Insta death'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 0
         $this.EffectValue = 50000
         $this.Chance      = 1.0
@@ -2091,7 +2388,7 @@ Class BABlazeBurst : BattleAction {
         $this.Name        = 'Blaze Burst'
         $this.Description = 'Like an arc flash, only worse.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 10
         $this.EffectValue = 80
         $this.Chance      = 0.8
@@ -2103,7 +2400,7 @@ Class BAFlamethrower : BattleAction {
         $this.Name        = 'Flamethrower'
         $this.Description = 'Our inspiration was Elon.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 10
         $this.EffectValue = 90
         $this.Chance      = 0.7
@@ -2115,7 +2412,7 @@ Class BAEmberSlash : BattleAction {
         $this.Name        = 'Ember Slash'
         $this.Description = 'At least the wound is cauterized.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2127,7 +2424,7 @@ Class BAPyroblast : BattleAction {
         $this.Name        = 'Pyroblast'
         $this.Description = 'Fireworks never looked so good.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 15
         $this.EffectValue = 110
         $this.Chance      = 0.6
@@ -2139,7 +2436,7 @@ Class BAAshenNova : BattleAction {
         $this.Name        = 'Ashen Nova'
         $this.Description = 'Reminds me of Pompeii. Only worse.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2151,7 +2448,7 @@ Class BAIncenerate : BattleAction {
         $this.Name        = 'Incenerate'
         $this.Description = 'Kill it with fire, they said.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 20
         $this.EffectValue = 120
         $this.Chance      = 0.7
@@ -2163,7 +2460,7 @@ Class BACinderStorm : BattleAction {
         $this.Name        = 'Cinder Storm'
         $this.Description = 'Hot coal hail. Yum.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 5
         $this.EffectValue = 60
         $this.Chance      = 0.9
@@ -2175,7 +2472,7 @@ Class BALavaSurge : BattleAction {
         $this.Name        = 'Lava Surge'
         $this.Description = 'It''s like a surge of love, only the molten kind.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2187,7 +2484,7 @@ Class BAFireCataclysm : BattleAction {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalFire]) Cataclysm"
         $this.Description = 'Firey death rains upon you.'
         $this.Type        = [BattleActionType]::ElementalFire
-        $this.Effect      = $Script:BaElementalFireCalc
+        # $this.Effect      = $Script:BaElementalFireCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2199,7 +2496,7 @@ Class BAIcePunch : BattleAction {
         $this.Name        = 'Ice Punch'
         $this.Description = 'Frigid AND stiff.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2211,7 +2508,7 @@ Class BAFrostKick : BattleAction {
         $this.Name        = 'Frost Kick'
         $this.Description = 'Ice on the knee. It''s a thing.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2223,7 +2520,7 @@ Class BAIcicleStrike : BattleAction {
         $this.Name        = 'Icicle Strike'
         $this.Description = 'When they''re this big, who needs a sword?'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2235,7 +2532,7 @@ Class BAGlacialSpike : BattleAction {
         $this.Name        = 'Glacial Spike'
         $this.Description = 'Global warming helped me make this one.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2247,7 +2544,7 @@ Class BAChillSlash : BattleAction {
         $this.Name        = 'Chill Slash'
         $this.Description = 'Let''s all cool down, yeah?'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2259,7 +2556,7 @@ Class BAIceBolt : BattleAction {
         $this.Name        = 'Ice Bolt'
         $this.Description = 'Not the kind of bolt you secure things with.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2271,7 +2568,7 @@ Class BAArcticBlast : BattleAction {
         $this.Name        = 'Arctic Blast'
         $this.Description = 'Oh you won''t be long for gettin'' froshbit, now!'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2283,7 +2580,7 @@ Class BAFrostWave : BattleAction {
         $this.Name        = 'Frost Wave'
         $this.Description = 'Ride the wave, dude.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2295,7 +2592,7 @@ Class BAArcticFury : BattleAction {
         $this.Name        = 'Arctic Fury'
         $this.Description = 'An ass whooping is a dish best served cold.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2307,7 +2604,7 @@ Class BAFrozenSpear : BattleAction {
         $this.Name        = 'Frozen Spear'
         $this.Description = 'I found this spear in a fridge.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2319,7 +2616,7 @@ Class BAHailstorm : BattleAction {
         $this.Name        = 'Hailstorm'
         $this.Description = 'A common cause of insurace claims.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2331,7 +2628,7 @@ Class BAIcefallSlam : BattleAction {
         $this.Name        = 'Icefall Slam'
         $this.Description = 'Not avoiding the avalanche is a bad idea.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2343,7 +2640,7 @@ Class BAIceCataclysm : BattleAction {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalIce]) Cataclysm"
         $this.Description = 'Icy death rains down upon you.'
         $this.Type        = [BattleActionType]::ElementalIce
-        $this.Effect      = $Script:BaElementalIceCalc
+        # $this.Effect      = $Script:BaElementalIceCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2355,7 +2652,7 @@ Class BAAquaJet : BattleAction {
         $this.Name        = 'Aqua Jet'
         $this.Description = 'A Boeing 737 made entirely of water.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2367,7 +2664,7 @@ Class BATidalSurge : BattleAction {
         $this.Name        = 'Tidal Surge'
         $this.Description = 'They ebb, they flow, they attac.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2379,7 +2676,7 @@ Class BAWaterWhip : BattleAction {
         $this.Name        = 'Water Whip'
         $this.Description = 'Indiana Jones''s least favorite whip.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 5
         $this.EffectValue = 80
         $this.Chance      = 0.9
@@ -2391,7 +2688,7 @@ Class BAMistStrike : BattleAction {
         $this.Name        = 'Mist Strike'
         $this.Description = 'Was it a cat I saw? Was I tac a ti saw?'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2403,7 +2700,7 @@ Class BAHydroSlash : BattleAction {
         $this.Name        = 'Hydro Slash'
         $this.Description = 'A moistened bint lobbed this scimitar at me.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2415,7 +2712,7 @@ Class BAWavePunch : BattleAction {
         $this.Name        = 'Wave Punch'
         $this.Description = 'The latest Hawaiian Punch flavor. Swelling aftertaste.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 15
         $this.EffectValue = 100
         $this.Chance      = 1.0
@@ -2427,7 +2724,7 @@ Class BAAquaticBolt : BattleAction {
         $this.Name        = 'Aquatic Bolt'
         $this.Description = 'Some watery things to pelt your neighbor with.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2439,7 +2736,7 @@ Class BAAquaSphere : BattleAction {
         $this.Name        = 'Aqua Sphere'
         $this.Description = 'Listen to ''Barbie Girl'' all day long. Enjoy.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2451,7 +2748,7 @@ Class BATidalCrush : BattleAction {
         $this.Name        = 'Tidal Crush'
         $this.Description = 'Your high school crush came to kill you, in water form.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2463,7 +2760,7 @@ Class BATsunami : BattleAction {
         $this.Name        = 'Tsunami'
         $this.Description = 'WAVES!'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2475,7 +2772,7 @@ Class BASeafoamBolt : BattleAction {
         $this.Name        = 'Seafoam Bolt'
         $this.Description = 'Sometimes I see these white bubbles on the shore.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2487,7 +2784,7 @@ Class BATyphoon : BattleAction {
         $this.Name        = 'Typhoon'
         $this.Description = 'Not to be confused with the infamous Tie Foon.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2499,7 +2796,7 @@ Class BARaindance : BattleAction {
         $this.Name        = 'Raindance'
         $this.Description = 'Like Riverdance, only shit.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2511,7 +2808,7 @@ Class BAWateryGrave : BattleAction {
         $this.Name        = 'Watery Grave'
         $this.Description = 'Davey Jones is holed up here.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2523,7 +2820,7 @@ Class BATempest : BattleAction {
         $this.Name        = 'Tempest'
         $this.Description = 'If it were a tempest of love, would you feel any different?'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 400
         $this.EffectValue = 2000
         $this.Chance      = 0.1
@@ -2535,7 +2832,7 @@ Class BAWaterCataclysm : BattleAction {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalWater]) Cataclysm"
         $this.Description = 'Watery death rains down upon you.'
         $this.Type        = [BattleActionType]::ElementalWater
-        $this.Effect      = $Script:BaElementalWaterCalc
+        # $this.Effect      = $Script:BaElementalWaterCalc
         $this.MpCost      = 400
         $this.EffectValue = 2000
         $this.Chance      = 0.1
@@ -2547,7 +2844,7 @@ Class BATerraStrike : BattleAction {
         $this.Name        = 'Terra Strike'
         $this.Description = 'Sticks and stones can break your bones.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2559,7 +2856,7 @@ Class BAQuakeFist : BattleAction {
         $this.Name        = 'Quake Fist'
         $this.Description = 'Two nerds get in a fight at QuakeCon.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2571,7 +2868,7 @@ Class BABoulderBash : BattleAction {
         $this.Name        = 'Boulder Bash'
         $this.Description = 'We played Resident Evil 5 to the end.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2583,7 +2880,7 @@ Class BATremor : BattleAction {
         $this.Name        = 'Tremor'
         $this.Description = 'Does more damage than those Kevin Bacon movies.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2595,7 +2892,7 @@ Class BAGraniteDust : BattleAction {
         $this.Name        = 'Granite Dust'
         $this.Description = 'There''s blood on the ground before you know it.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2607,7 +2904,7 @@ Class BARockslide : BattleAction {
         $this.Name        = 'Rockslide'
         $this.Description = 'Fallin'' rocks, fallin'' rocks, fallin'' rocks.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2619,7 +2916,7 @@ Class BASinkhole : BattleAction {
         $this.Name        = 'Sinkhole'
         $this.Description = 'Tumbling down the rabbit hole.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 400
         $this.EffectValue = 2000
         $this.Chance      = 0.1
@@ -2631,7 +2928,7 @@ Class BAGeoFence : BattleAction {
         $this.Name        = 'Geo Fence'
         $this.Description = 'Get off my lawn!'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 400
         $this.EffectValue = 2000
         $this.Chance      = 0.1
@@ -2643,7 +2940,7 @@ Class BAEarthCataclysm : BattleAction {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalEarth]) Cataclysm"
         $this.Description = 'A rocky death rains down on you.'
         $this.Type        = [BattleActionType]::ElementalEarth
-        $this.Effect      = $Script:BaElementalEarthCalc
+        # $this.Effect      = $Script:BaElementalEarthCalc
         $this.MpCost      = 400
         $this.EffectValue = 2000
         $this.Chance      = 0.1
@@ -2655,7 +2952,7 @@ Class BAGaleStrike : BattleAction {
         $this.Name        = 'Gale Strike'
         $this.Description = 'The wind can hurt you.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 50
         $this.EffectValue = 250
         $this.Chance      = 0.5
@@ -2667,7 +2964,7 @@ Class BAZephyrSlash : BattleAction {
         $this.Name        = 'Zephyr Slash'
         $this.Description = 'What the hell is a zephyr, anyway?'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2679,7 +2976,7 @@ Class BABreezeBlade : BattleAction {
         $this.Name        = 'Breeze Blade'
         $this.Description = 'Easy, breezy, bleedy, dying guy.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2691,7 +2988,7 @@ Class BAThunderClap : BattleAction {
         $this.Name        = 'Thunder Clap'
         $this.Description = 'Sometimes an euphemism, this time a threat.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2703,7 +3000,7 @@ Class BASkywardCut : BattleAction {
         $this.Name        = 'Skyward Cut'
         $this.Description = 'Remember to always cut away from yourself.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2715,7 +3012,7 @@ Class BAGrandFlash : BattleAction {
         $this.Name        = 'Grand Flash'
         $this.Description = 'Right when the lightning strikes.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2727,7 +3024,7 @@ Class BACyclone : BattleAction {
         $this.Name        = 'Cyclone'
         $this.Description = 'Something about moving all night long.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2739,7 +3036,7 @@ Class BALightningBolt : BattleAction {
         $this.Name        = 'Lightning Bolt'
         $this.Description = 'These look cool from a distance.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2751,7 +3048,7 @@ Class BAGaleflash : BattleAction {
         $this.Name        = 'Galeflash'
         $this.Description = 'The lightning rode on the wind.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2763,7 +3060,7 @@ Class BABreezyWind : BattleAction {
         $this.Name        = 'Breezy Wind'
         $this.Description = 'So brisk it''ll carry her bonnet off.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2775,7 +3072,7 @@ Class BALeafShield : BattleAction {
         $this.Name        = 'Leaf Shield'
         $this.Description = 'Are you sure this''ll work?'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2787,7 +3084,7 @@ Class BAWindCataclysm : BattleAction {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalWind]) Cataclysm"
         $this.Description = 'Windy death rains down upon you.'
         $this.Type        = [BattleActionType]::ElementalWind
-        $this.Effect      = $Script:BaElementalWindCalc
+        # $this.Effect      = $Script:BaElementalWindCalc
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2799,7 +3096,7 @@ Class BARadiance : BattleAction {
         $this.Name        = 'Radiance'
         $this.Description = 'All teh brights.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = $Script:BaElementalLightCalc
+        # $this.Effect      = $Script:BaElementalLightCalc
         $this.MpCost      = 100
         $this.EffectValue = 500
         $this.Chance      = 0.1
@@ -2811,7 +3108,7 @@ Class BAHolyNova : BattleAction {
         $this.Name        = 'Holy Nova'
         $this.Description = 'More Bible than you can handle.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 200
         $this.EffectValue = 1000
         $this.Chance      = 0.1
@@ -2823,7 +3120,7 @@ Class BADivineBeam : BattleAction {
         $this.Name        = 'Divine Beam'
         $this.Description = 'Got Jesus?'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2835,7 +3132,7 @@ Class BAPrismShock : BattleAction {
         $this.Name        = 'Prism Shock'
         $this.Description = 'The pretty rainbow of death.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2847,7 +3144,7 @@ Class BAHaloStrike : BattleAction {
         $this.Name        = 'Halo Strike'
         $this.Description = 'These surprisingly hurt.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2859,7 +3156,7 @@ Class BALightbringer : BattleAction {
         $this.Name        = 'Lightbringer'
         $this.Description = 'Bring the party!'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2871,7 +3168,7 @@ Class BASacredPulse : BattleAction {
         $this.Name        = 'Sacred Pulse'
         $this.Description = 'The defunct newsletter of the Catholic Church.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2883,7 +3180,7 @@ Class BADaybreaker : BattleAction {
         $this.Name        = 'Daybreaker'
         $this.Description = 'Some statue in Skyrim gave me this.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2895,7 +3192,7 @@ Class BAAngelicHymn : BattleAction {
         $this.Name        = 'Angelic Hymn'
         $this.Description = 'This is how I sound when I sing Britney Spears.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2907,7 +3204,7 @@ Class BABrilliance : BattleAction {
         $this.Name        = 'Brilliance'
         $this.Description = 'How I feel when I look at myself in the mirror.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 300
         $this.EffectValue = 1500
         $this.Chance      = 0.1
@@ -2919,7 +3216,7 @@ Class BASunfire : BattleAction {
         $this.Name        = 'Sunfire'
         $this.Description = 'Scorched Earth, mofo.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 400
         $this.EffectValue = 2000
         $this.Chance      = 0.1
@@ -2931,7 +3228,7 @@ Class BALightCataclysm : BattleAction {
         $this.Name        = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalLight]) Cataclysm"
         $this.Description = 'Holy death rains down upon you.'
         $this.Type        = [BattleActionType]::ElementalLight
-        $this.Effect      = {}
+        # $this.Effect      = {}
         $this.MpCost      = 500
         $this.EffectValue = 2500
         $this.Chance      = 0.1
