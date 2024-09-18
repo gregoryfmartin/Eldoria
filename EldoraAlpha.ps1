@@ -15669,51 +15669,19 @@ Class MTOMilk : MapTileObject {
                         # It is - this will cause the Player's Hp to decrease
                         # Attempt to decrement the Player's Hp by the Hp Bonus
                         If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
-                            $Script:TheMessageWindow.WriteMessageComposite(
-                                @(
-                                    [ATStringCompositeSc]::new(
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new(),
-                                        'Now that wasn''t very smart, was it?'
-                                    )
-                                )
-                            )
+                            $Script:TheMessageWindow.WriteMilkUseSpoiledMessage()
                             $Source.RemoveInventoryItemByName($Self.Name)
                         } Else {
-                            $Script:TheMessageWindow.WriteMessageComposite(
-                                @(
-                                    [ATStringCompositeSc]::new(
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new(),
-                                        'There''s no need to drink this now.'
-                                    )
-                                )
-                            )
+                            $Script:TheMessageWindow.WriteMilkUseNotNowMessage()
                         }
                     } Else {
                         # The milk isn't spoiled - attempt to increment the Player's Hp by the Hp Bonus
                         # Attempt to increment the Player's HP by the Hp Bonus
                         If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
-                            $Script:TheMessageWindow.WriteMessageComposite(
-                                @(
-                                    [ATStringCompositeSc]::new(
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new(),
-                                        'Hmmm. Delicious cow juice.'
-                                    )
-                                )
-                            )
+                            $Script:TheMessageWindow.WriteMilkUseOkayMessage()
                             $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
                         } Else {
-                            $Script:TheMessageWindow.WriteMessageComposite(
-                                @(
-                                    [ATStringCompositeSc]::new(
-                                        [CCTextDefault24]::new(),
-                                        [ATDecorationNone]::new(),
-                                        'There''s no need to drink this now.'
-                                    )
-                                )
-                            )
+                            $Script:TheMessageWindow.WriteMilkUseNotNowMessage()
                         }
                     }
                 }
@@ -17201,6 +17169,42 @@ Class MessageWindow : WindowBase {
                 )
             )
         )
+    }
+
+    [Void]WriteMilkUseOkayMessage() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'Hmmm. Delicious cow juice.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteMilkUseSpoiledMessage() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'Now that wasn''t very smart, was it?'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteMilkUseNotNowMessage() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'There''s no need to drink this now.'
+                UseATReset = $true
+            }
+        ))
     }
 }
 
