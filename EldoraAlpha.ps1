@@ -3309,7 +3309,7 @@ Class EnemyBattleEntity : BattleEntity {
     [Int]$SpoilsGold
     [MapTileObject[]]$SpoilsItems
 
-    EnemyBattleEntity() : base() {
+    EnemyBattleEntity() {
         $this.Image = $null
         $this.SpoilsGold = 0
         $this.SpoilsItems = @()
@@ -3319,54 +3319,13 @@ Class EnemyBattleEntity : BattleEntity {
                 [EnemyBattleEntity]$Opponent
             )
 
-            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                @(
-                    [ATStringCompositeSc]::new(
-                        $Opponent.NameDrawColor,
-                        [ATDecorationNone]::new(),
-                        $Opponent.Name
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        ' dropped '
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCAppleYellowDark24]::new(),
-                        [ATDecorationNone]::new(),
-                        $Opponent.SpoilsGold
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        ' gold.'
-                    )
-                )
-            )
+            $Script:TheBattleStatusMessageWindow.WriteSpoilsMessage($Opponent)
             $Script:TheBattleStatusMessageWindow.Draw()
             $Player.CurrentGold += $Opponent.SpoilsGold
             If($Opponent.SpoilsItems.Length -GT 0) {
                 [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
                 
-                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                    @(
-                        [ATStringCompositeSc]::new(
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new(),
-                            'Also found '
-                        ),
-                        [ATStringCompositeSc]::new(
-                            [CCAppleYellowDark24]::new(),
-                            [ATDecorationNone]::new(),
-                            $ItemNames
-                        ),
-                        [ATStringCompositeSc]::new(
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new(),
-                            '.'
-                        )
-                    )
-                )
+                $Script:TheBattleStatusMessageWindow.WriteItemsFoundMessage($ItemNames)
                 $Script:TheBattleStatusMessageWindow.Draw()
                 Foreach($a in $Opponent.SpoilsItems) {
                     $Player.Inventory.Add($a) | Out-Null
@@ -3375,74 +3334,75 @@ Class EnemyBattleEntity : BattleEntity {
         }
     }
     
-    EnemyBattleEntity(
-        [EnemyEntityImage]$Image
-    ) : base() {
-        $this.Image       = $Image
-        $this.SpoilsGold  = 0
-        $this.SpoilsItems = @()
+    # THIS CTOR LIKELY ISN'T NECESSARY, AND IF IT IS, IT NEEDS TO GO AWAY IN ACTUAL USE
+    # EnemyBattleEntity(
+    #     [EnemyEntityImage]$Image
+    # ) : base() {
+    #     $this.Image       = $Image
+    #     $this.SpoilsGold  = 0
+    #     $this.SpoilsItems = @()
 
-        $this.SpoilsEffect = {
-            Param(
-                [Player]$Player,
-                [EnemyBattleEntity]$Opponent
-            )
+    #     $this.SpoilsEffect = {
+    #         Param(
+    #             [Player]$Player,
+    #             [EnemyBattleEntity]$Opponent
+    #         )
 
-            $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                @(
-                    [ATStringCompositeSc]::new(
-                        $Opponent.NameDrawColor,
-                        [ATDecorationNone]::new(),
-                        $Opponent.Name
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        ' dropped '
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCAppleYellowDark24]::new(),
-                        [ATDecorationNone]::new(),
-                        $Opponent.SpoilsGold
-                    ),
-                    [ATStringCompositeSc]::new(
-                        [CCTextDefault24]::new(),
-                        [ATDecorationNone]::new(),
-                        ' gold.'
-                    )
-                )
-            )
-            $Script:TheBattleStatusMessageWindow.Draw()
-            $Player.CurrentGold += $Opponent.SpoilsGold
-            If($Opponent.SpoilsItems.Length -GT 0) {
-                [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
+    #         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+    #             @(
+    #                 [ATStringCompositeSc]::new(
+    #                     $Opponent.NameDrawColor,
+    #                     [ATDecorationNone]::new(),
+    #                     $Opponent.Name
+    #                 ),
+    #                 [ATStringCompositeSc]::new(
+    #                     [CCTextDefault24]::new(),
+    #                     [ATDecorationNone]::new(),
+    #                     ' dropped '
+    #                 ),
+    #                 [ATStringCompositeSc]::new(
+    #                     [CCAppleYellowDark24]::new(),
+    #                     [ATDecorationNone]::new(),
+    #                     $Opponent.SpoilsGold
+    #                 ),
+    #                 [ATStringCompositeSc]::new(
+    #                     [CCTextDefault24]::new(),
+    #                     [ATDecorationNone]::new(),
+    #                     ' gold.'
+    #                 )
+    #             )
+    #         )
+    #         $Script:TheBattleStatusMessageWindow.Draw()
+    #         $Player.CurrentGold += $Opponent.SpoilsGold
+    #         If($Opponent.SpoilsItems.Length -GT 0) {
+    #             [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
                 
-                $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
-                    @(
-                        [ATStringCompositeSc]::new(
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new(),
-                            'Also found '
-                        ),
-                        [ATStringCompositeSc]::new(
-                            [CCAppleYellowDark24]::new(),
-                            [ATDecorationNone]::new(),
-                            $ItemNames
-                        ),
-                        [ATStringCompositeSc]::new(
-                            [CCTextDefault24]::new(),
-                            [ATDecorationNone]::new(),
-                            '.'
-                        )
-                    )
-                )
-                $Script:TheBattleStatuMessageWindow.Draw()
-                Foreach($a in $Opponent.SpoilsItems) {
-                    $Player.Inventory.Add($a) | Out-Null
-                }
-            }
-        }
-    }
+    #             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
+    #                 @(
+    #                     [ATStringCompositeSc]::new(
+    #                         [CCTextDefault24]::new(),
+    #                         [ATDecorationNone]::new(),
+    #                         'Also found '
+    #                     ),
+    #                     [ATStringCompositeSc]::new(
+    #                         [CCAppleYellowDark24]::new(),
+    #                         [ATDecorationNone]::new(),
+    #                         $ItemNames
+    #                     ),
+    #                     [ATStringCompositeSc]::new(
+    #                         [CCTextDefault24]::new(),
+    #                         [ATDecorationNone]::new(),
+    #                         '.'
+    #                     )
+    #                 )
+    #             )
+    #             $Script:TheBattleStatuMessageWindow.Draw()
+    #             Foreach($a in $Opponent.SpoilsItems) {
+    #                 $Player.Inventory.Add($a) | Out-Null
+    #             }
+    #         }
+    #     }
+    # }
 }
 
 ###############################################################################
@@ -15474,6 +15434,40 @@ Class MapTile {
     }
 }
 
+
+
+
+
+###############################################################################
+#
+# MAP
+#
+###############################################################################
+Class Map {
+    [Int]$MapWidth
+    [Int]$MapHeight
+    [String]$Name
+    [Boolean]$BoundaryWrap
+    [MapTile[,]]$Tiles
+
+    Map() {
+        $this.MapWidth = 0
+        $this.MapHeight = 0
+        $this.Name = ''
+        $this.BoundaryWrap = $false
+        $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+    }
+
+    [MapTile]GetTileAtPlayerCoordinates() {
+        Return $this.Tiles[$Script:ThePlayer.MapCoordinates.Row, $Script:ThePlayer.MapCoordinates.Column]
+    }
+}
+
+
+
+
+
+
 ###############################################################################
 #
 # MAP TILE OBJECT ABSTRACTIONS
@@ -20348,6 +20342,69 @@ Class BattleStatusMessageWindow : WindowBase {
             }
         ))
     }
+
+    [Void]WriteSpoilsMessage(
+        [EnemyBattleEntity]$Opponent
+    ) {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Opponent.NameDrawColor
+                }
+                UserData   = "$($Opponent.Name)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' dropped '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowDark24]::new()
+                }
+                UserData   = "$($Opponent.SpoilsGold)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' gold.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteItemsFoundMessage(
+        [String]$ItemNames
+    ) {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'Also found '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowDark24]::new()
+                }
+                UserData   = "$($ItemNames)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = '.'
+                UseATReset = $true
+            }
+        ))
+    }
 }
 
 
@@ -22874,6 +22931,19 @@ Class BattleManager {
 
             Default {}
         }
+    }
+
+    [Void]Cleanup() {
+        $Script:BattleCursorVisible          = $false
+        # $Script:ThePlayerBattleStatWindow    = $null
+        # $Script:TheEnemyBattleStatWindow     = $null
+        # $Script:ThePlayerBattleActionWindow  = $null
+        # $Script:TheBattleStatusMessageWindow = $null
+        # $Script:TheBattleEnemyImageWindow    = $null
+        $Script:HasBattleIntroPlayed         = $false
+        $Script:IsBattleBgmPlaying           = $false
+        $Script:HasBattleWonChimePlayed      = $false
+        $Script:HasBattleLostChimePlayed     = $false
     }
 }
 
