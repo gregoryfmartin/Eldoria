@@ -15500,43 +15500,7 @@ Class MTOTree : MapTileObject {
 
             Switch($Source.PSTypeNames[0]) {
                 'MTORope' {
-                    $Script:TheMessageWindow.WriteMessageComposite(
-                        @(
-                            [ATStringCompositeSc]::new(
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new(),
-                                'I''ve tied the '
-                            ),
-                            [ATStringCompositeSc]::new(
-                                [CCAppleYellowDark24]::new(),
-                                [ATDecoration]@{
-                                    Blink     = $true
-                                    Italic    = $true
-                                    Underline = $true
-                                },
-                                'Rope'
-                            ),
-                            [ATStringCompositeSc]::new(
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new(),
-                                ' to the '
-                            ),
-                            [ATStringCompositeSc]::new(
-                                [CCAppleYellowDark24]::new(),
-                                [ATDecoration]@{
-                                    Blink     = $true
-                                    Italic    = $true
-                                    Underline = $true
-                                },
-                                'Tree'
-                            ),
-                            [ATStringCompositeSc]::new(
-                                [CCTextDefault24]::new(),
-                                [ATDecorationNone]::new(),
-                                '.'
-                            )
-                        )
-                    )
+                    $Script:TheMessageWindow.WriteTiedRopeToTreeMessage()
 
                     <#
                     It's important to note that this action *SHOULD* cause a state change with this object. To be more specific,
@@ -16584,15 +16548,7 @@ Class CommandWindow : WindowBase {
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         If([String]::IsNullOrEmpty($this.CommandActual.UserData.Trim()) -EQ $true) {
-            $Script:TheMessageWindow.WriteMessageComposite(
-                @(
-                    [ATStringCompositeSc]::new(
-                        [CCAppleNRedDark24]::new(),
-                        [ATDecorationNone]::new(),
-                        "$($Script:BadCommandRetorts | Get-Random)"
-                    )
-                )
-            )
+            $Script:TheMessageWindow.WriteBadCommandRetortMessage()
             $this.CommandActual.UserData = ''
 
             Return
@@ -16616,28 +16572,12 @@ Class CommandWindow : WindowBase {
 
                     Default {
                         $Script:TheCommandWindow.UpdateCommandHistory($false)
-                        $Script:TheMessageWindow.WriteMessageComposite(
-                            @(
-                                [ATStringCompositeSc]::new(
-                                    [CCAppleNRedDark24]::new(),
-                                    [ATDecorationNone]::new(),
-                                    "$($Script:BadCommandRetorts | Get-Random)"
-                                )
-                            )
-                        )
+                        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
                     }
                 }
             } Else {
                 $Script:TheCommandWindow.UpdateCommandHistory($false)
-                $Script:TheMessageWindow.WriteMessageComposite(
-                    @(
-                        [ATStringCompositeSc]::new(
-                            [CCAppleNRedDark24]::new(),
-                            [ATDecorationNone]::new(),
-                            "$($Script:BadCommandRetorts | Get-Random)"
-                        )
-                    )
-                )
+                $Script:TheMessageWindow.WriteBadCommandRetortMessage()
 
                 Return
             }
@@ -16901,63 +16841,74 @@ Class MessageWindow : WindowBase {
     [Void]WriteBadCommandMessage(
         [String]$Command
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCAppleRedDark24]::new(),
-                    [ATDecoration]@{
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleRedDark24]::new()
+                    Decorations     = [ATDecoration]@{
                         Blink = $true
-                    },
-                    $Command
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' isn''t a valid command.'
-                )
-            )
-        )
+                    }
+                }
+                UserData   = "$($Command)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' isn''t a valid command.'
+                UseATReset = $true
+            }
+        ))
     }
 
     [Void]WriteBadArg0Message(
         [String]$Command,
         [String]$Arg0
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'We can''t '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'We can''t '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowDark24]::new()
+                    Decorations     = [ATDecoration]@{
                         Blink = $true
-                    },
-                    $Command
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' with a(n) '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink     = $true
-                        Italic    = $true
-                        Underline = $true
-                    },
-                    $Arg0
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    '.'
-                )
-            )
-        )
+                    }
+                }
+                UserData   = "$($Command)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' with a(n) '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                }
+                UserData   = "$($Arg0)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = '.'
+                UseATReset = $true
+            }
+        ))
     }
 
     [Void]WriteBadArg1Message(
@@ -17171,6 +17122,18 @@ Class MessageWindow : WindowBase {
         )
     }
 
+    [Void]WriteBadCommandRetortMessage() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleNRedDark24]::new()
+                }
+                UserData   = "$($Script:BadCommandRetorts | Get-Random)"
+                UseATReset = $true
+            }
+        ))
+    }
+
     [Void]WriteMilkUseOkayMessage() {
         $this.WriteMessageComposite(@(
             [ATString]@{
@@ -17202,6 +17165,46 @@ Class MessageWindow : WindowBase {
                     ForegroundColor = [CCTextDefault24]::new()
                 }
                 UserData   = 'There''s no need to drink this now.'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]WriteTiedRopeToTreeMessage() {
+        $this.WriteMessageComposite(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = 'I''ve tied the '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowDark24]::new()
+                }
+                UserData   = 'Rope'
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = ' to the '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleYellowDark24]::new()
+                }
+                UserData   = 'Tree'
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData   = '.'
                 UseATReset = $true
             }
         ))
