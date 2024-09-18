@@ -16916,155 +16916,176 @@ Class MessageWindow : WindowBase {
         [String]$Arg0,
         [String]$Arg1
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'We can''t '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink = $true
-                    },
-                    $Command
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' with a(n) '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink     = $true
-                        Italic    = $true
-                        Underline = $true
-                    },
-                    $Arg0
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' and a(n) '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink     = $true
-                        Italic    = $true
-                        Underline = $true
-                    },
-                    $Arg1
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    '.'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'We can''t '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($Command)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = ' with a(n) '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($Arg0)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = ' and a(n) '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($Arg1)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = '.'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteSomethingBadMessage() {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'I''m God, and I don''t know what just happened...'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'I''m God, and I don''t know what just happened...'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteInvisibleWallEncounteredMessage() {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'The invisible wall blocks your path...'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'The invisible wall blocks your path...'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteYouShallNotPassMessage() {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'The path you asked for is impossible...'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'The path you asked for is impossible...'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteMapNoItemsFoundMessage() {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'There''s nothing of interest here.'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'There''s nothing of interest here.'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteMapInvalidItemMessage(
         [String]$ItemName
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'There''s no '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink = $true
-                    },
-                    $ItemName
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' here.'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'There''s no '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($ItemName)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = ' here.'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteItemTakenMessage(
         [String]$ItemName
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'I''ve taken the '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink = $true
-                    },
-                    $ItemName
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' and put it in my pocket.'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'I''ve taken the '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($ItemName)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = ' and put it in my pocket.'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteItemCantTakeMessage(
