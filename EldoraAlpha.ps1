@@ -158,6 +158,10 @@ Enum StatusScreenMode {
 [Boolean]                         $Script:HasBattleIntroPlayed         = $false
 [Boolean]                         $Script:HasBattleWonChimePlayed      = $false
 [Boolean]                         $Script:HasBattleLostChimePlayed     = $false
+[Boolean]                         $Script:GpsRestoredFromInvBackup     = $true
+[Boolean]                         $Script:GpsRestoredFromBatBackup     = $false
+[Boolean]                         $Script:GpsRestoredFromStaBackup     = $false
+[Boolean]                         $Script:BattleCursorVisible          = $false
 [EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
 [EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
 [EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
@@ -172,6 +176,17 @@ Enum StatusScreenMode {
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
+[SIFieldNorthRoad]                $Script:FieldNorthRoadImage          = [SIFieldNorthRoad]::new()
+[SIFieldNorthEastRoad]            $Script:FieldNorthEastRoadImage      = [SIFieldNorthEastRoad]::new()
+[SIFieldNorthWestRoad]            $Script:FieldNorthWestRoadImage      = [SIFieldNorthWestRoad]::new()
+[SIFieldNorthEastWestRoad]        $Script:FieldNorthEastWestRoadImage  = [SIFieldNorthEastWestRoad]::new()
+[SIFieldSouthRoad]                $Script:FieldSouthRoadImage          = [SIFieldSouthRoad]::new()
+[SIFieldSouthEastRoad]            $Script:FieldSouthEastRoadImage      = [SIFieldSouthEastRoad]::new()
+[SIFieldSouthWestRoad]            $Script:FieldSouthWestRoadImage      = [SIFieldSouthWestRoad]::new()
+[SIFieldSouthEastWestRoad]        $Script:FieldSouthEastWestRoadImage  = [SIFieldSouthEastWestRoad]::new()
+[Map]                             $Script:SampleMap                    = [Map]::new('Sample Map', 2, 2, $false)
+[Map]                             $Script:CurrentMap                   = $Script:SampleMap
+[Map]                             $Script:PreviousMap                  = $null
 
 $Script:BadCommandRetorts = @(
     'Huh?',
@@ -251,24 +266,6 @@ $Script:BATLut = @(
 )
 
 $Script:Rui = $(Get-Host).UI.RawUI
-
-[Map]$Script:SampleMap   = [Map]::new('Sample Map', 2, 2, $false)
-[Map]$Script:CurrentMap  = $Script:SampleMap
-[Map]$Script:PreviousMap = $null
-
-[SIFieldNorthRoad]        $Script:FieldNorthRoadImage         = [SIFieldNorthRoad]::new()
-[SIFieldNorthEastRoad]    $Script:FieldNorthEastRoadImage     = [SIFieldNorthEastRoad]::new()
-[SIFieldNorthWestRoad]    $Script:FieldNorthWestRoadImage     = [SIFieldNorthWestRoad]::new()
-[SIFieldNorthEastWestRoad]$Script:FieldNorthEastWestRoadImage = [SIFieldNorthEastWestRoad]::new()
-[SIFieldSouthRoad]        $Script:FieldSouthRoadImage         = [SIFieldSouthRoad]::new()
-[SIFieldSouthEastRoad]    $Script:FieldSouthEastRoadImage     = [SIFieldSouthEastRoad]::new()
-[SIFieldSouthWestRoad]    $Script:FieldSouthWestRoadImage     = [SIFieldSouthWestRoad]::new()
-[SIFieldSouthEastWestRoad]$Script:FieldSouthEastWestRoadImage = [SIFieldSouthEastWestRoad]::new()
-
-[Boolean]$Script:GpsRestoredFromInvBackup = $true
-[Boolean]$Script:GpsRestoredFromBatBackup = $false
-[Boolean]$Script:GpsRestoredFromStaBackup = $false
-[Boolean]$Script:BattleCursorVisible      = $false
 
 
 
@@ -402,135 +399,6 @@ $Script:Rui = $(Get-Host).UI.RawUI
         )
     }
 }
-
-
-
-
-
-###############################################################################
-#
-# BATTLE ACTION PHYSICAL CALCULATION FUNCTION
-#
-###############################################################################
-# [ScriptBlock]$Script:BaPhysicalCalc = {
-# 	Param(
-# 		[BattleEntity]$Self,
-# 		[BattleEntity]$Target,
-# 		[BattleAction]$SelfAction
-# 	)
-#
-# 	[Boolean]$CanExecute   = $false
-# 	[Boolean]$ReduceSelfMp = $false
-#
-# 	If($SelfAction.MpCost -GT 0) {
-# 		If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-# 			$CanExecute   = $true
-# 			$ReduceSelfMp = $true
-# 		}
-# 	} Elseif($SelfAction.MpCost -LE 0) {
-# 		$CanExecute = $true
-# 	}
-#
-# 	If($CanExecute -EQ $true) {
-# 		If($ReduceSelfMp -EQ $true) {
-# 			[Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
-# 			If($Self -IS [Player]) {
-# 				$Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
-# 			} Else {
-# 				$Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
-# 			}
-# 		}
-#
-# 		$ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
-# 		If($ExecuteChance -GT $SelfAction.Chance) {
-# 			Return [BattleActionResult]@{
-# 				Type       = [BattleActionResultType]::FailedAttackFailed
-# 				Originator = $Self
-# 				Target     = $Target
-# 			}
-# 		}
-#
-# 		$TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-#         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
-#         If($EvRandFactor -LE $TargetEffectiveEvasion) {
-#             Return [BattleActionResult]@{
-# 				Type       = [BattleActionResultType]::FailedAttackMissed
-# 				Originator = $Self
-# 				Target     = $Target
-# 			}
-#         }
-#
-# 		$EffectiveDamageP1 = [Math]::Round([Math]::Abs(
-#             $SelfAction.EffectValue * (
-#                 ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
-#                 (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
-#             ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
-#         ))
-#         $EffectiveDamageCritFactor     = 1.0
-#         $EffectiveDamageAffinityFactor = 1.0
-#
-#         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
-#         If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
-#             $EffectiveDamageCritFactor = 1.5
-#         }
-#
-#         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-#
-#         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-#
-# 		If(0 -NE $DecRes) {
-# 			Return [BattleActionResult]@{
-# 				Type            = [BattleActionResultType]::FailedAttackFailed
-# 				Originator      = $Self
-# 				Target          = $Target
-# 				ActionEffectSum = $FinalDamage
-# 			}
-#         } Else {
-#             If($Target -IS [Player]) {
-#                 $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-#             } Else {
-#                 $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-#             }
-#
-#             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-# 				Return [BattleActionResult]@{
-# 					Type            = [BattleActionResultType]::SuccessWithCritical
-# 					Originator      = $Self
-# 					Target          = $Target
-# 					ActionEffectSum = $FinalDamage
-# 				}
-#             } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-# 				Return [BattleActionResult]@{
-# 					Type            = [BattleActionResultType]::SuccessWithAffinityBonus
-# 					Originator      = $Self
-# 					Target          = $Target
-# 					ActionEffectSum = $FinalDamage
-# 				}
-#             } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-# 				Return [BattleActionResult]@{
-# 					Type            = [BattleActionResultType]::SuccessWithCritAndAffinityBonus
-# 					Originator      = $Self
-# 					Target          = $Target
-# 					ActionEffectSum = $FinalDamage
-# 				}
-#             }
-#
-# 			Return [BattleActionResult]@{
-# 				Type            = [BattleActionResultType]::Success
-# 				Originator      = $Self
-# 				Target          = $Target
-# 				ActionEffectSum = $FinalDamage
-# 			}
-#         }
-# 	} Else {
-# 		Return [BattleActionResult]@{
-# 			Type            = [BattleActionResultType]::FailedAttackFailed
-# 			Originator      = $Self
-# 			Target          = $Target
-# 			ActionEffectSum = 0
-# 		}
-# 	}
-# }
 
 
 
