@@ -226,25 +226,25 @@ $Script:BATAdornmentCharTable = @{
 $Script:BATLut = @(
 	# PHYSICAL ATTACKS AGAINST OTHERS
 	@(1, 1, 1, 1, 1, 1, 1, 1),
-	
+
 	# ELEMENTAL FIRE ATTACKS AGAINST OTHERS
 	@(1, -0.75, 0.5, 0.5, 0.5, 1, 1, 1.75),
-	
+
 	# ELEMENTAL WATER ATTACKS AGAINST OTHERS
 	@(1, 1.75, -0.75, 1, 0.5, 1, 1, 0.5),
-	
+
 	# ELEMENTAL EARTH ATTACKS AGAINST OTHERS
 	@(1, 0.5, 1, -0.75, 0.5, 1, 1, 1.75),
-	
+
 	# ELEMENTAL WIND ATTACKS AGAINST OTHERS
 	@(1, 1, 1, 1.75, -0.75, 1, 1, 0.5),
-	
+
 	# ELEMENTAL LIGHT ATTACKS AGAINST OTHERS
 	@(1, 1, 1, 1, 1, -0.75, 1.75, 1),
-	
+
 	# ELEMENTAL DARK ATTACKS AGAINST OTHERS
 	@(1, 1, 1, 1, 1, 1.75, -0.75, 1),
-	
+
 	# ELEMENTAL ICE ATTACKS AGAINST OTHERS
 	@(1, 0.5, 1.75, 1.75, 1, 1, 1, -0.75)
 )
@@ -298,7 +298,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
                 0
             )
         }
-    
+
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
@@ -309,7 +309,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
                 0
             )
         }
-    
+
         $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
             $SelfAction.EffectValue * (
                 ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
@@ -327,9 +327,9 @@ $Script:Rui = $(Get-Host).UI.RawUI
         $EffectiveDamageAffinityFactor = $Script:BALut[$SelfAction.Type][$Target.Affinity]
 
         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-    
+
         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-    
+
         If(0 -NE $DecRes) {
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::FailedAttackFailed,
@@ -343,7 +343,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
             } Else {
                 $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
             }
-    
+
             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
                 Return [BattleActionResult]::new(
                     [BattleActionResultType]::SuccessWithCritical,
@@ -366,7 +366,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
                     $FinalDamage
                 )
             }
-    
+
             Return [BattleActionResult]::new(
                 [BattleActionResultType]::Success,
                 $Self,
@@ -399,10 +399,10 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # 		[BattleEntity]$Target,
 # 		[BattleAction]$SelfAction
 # 	)
-	
+#
 # 	[Boolean]$CanExecute   = $false
 # 	[Boolean]$ReduceSelfMp = $false
-	
+#
 # 	If($SelfAction.MpCost -GT 0) {
 # 		If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
 # 			$CanExecute   = $true
@@ -411,7 +411,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # 	} Elseif($SelfAction.MpCost -LE 0) {
 # 		$CanExecute = $true
 # 	}
-	
+#
 # 	If($CanExecute -EQ $true) {
 # 		If($ReduceSelfMp -EQ $true) {
 # 			[Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
@@ -421,7 +421,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # 				$Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
 # 			}
 # 		}
-		
+#
 # 		$ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
 # 		If($ExecuteChance -GT $SelfAction.Chance) {
 # 			Return [BattleActionResult]@{
@@ -430,7 +430,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # 				Target     = $Target
 # 			}
 # 		}
-		
+#
 # 		$TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
 #         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
 #         If($EvRandFactor -LE $TargetEffectiveEvasion) {
@@ -440,7 +440,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # 				Target     = $Target
 # 			}
 #         }
-		
+#
 # 		$EffectiveDamageP1 = [Math]::Round([Math]::Abs(
 #             $SelfAction.EffectValue * (
 #                 ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
@@ -449,16 +449,16 @@ $Script:Rui = $(Get-Host).UI.RawUI
 #         ))
 #         $EffectiveDamageCritFactor     = 1.0
 #         $EffectiveDamageAffinityFactor = 1.0
-    
+#
 #         $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
 #         If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
 #             $EffectiveDamageCritFactor = 1.5
 #         }
-    
+#
 #         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-    
+#
 #         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-		
+#
 # 		If(0 -NE $DecRes) {
 # 			Return [BattleActionResult]@{
 # 				Type            = [BattleActionResultType]::FailedAttackFailed
@@ -472,7 +472,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 #             } Else {
 #                 $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
 #             }
-    
+#
 #             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
 # 				Return [BattleActionResult]@{
 # 					Type            = [BattleActionResultType]::SuccessWithCritical
@@ -495,7 +495,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # 					ActionEffectSum = $FinalDamage
 # 				}
 #             }
-    
+#
 # 			Return [BattleActionResult]@{
 # 				Type            = [BattleActionResultType]::Success
 # 				Originator      = $Self
@@ -3333,7 +3333,7 @@ Class EnemyBattleEntity : BattleEntity {
             }
         }
     }
-    
+
     # THIS CTOR LIKELY ISN'T NECESSARY, AND IF IT IS, IT NEEDS TO GO AWAY IN ACTUAL USE
     # EnemyBattleEntity(
     #     [EnemyEntityImage]$Image
@@ -3341,13 +3341,13 @@ Class EnemyBattleEntity : BattleEntity {
     #     $this.Image       = $Image
     #     $this.SpoilsGold  = 0
     #     $this.SpoilsItems = @()
-
+    #
     #     $this.SpoilsEffect = {
     #         Param(
     #             [Player]$Player,
     #             [EnemyBattleEntity]$Opponent
     #         )
-
+    #
     #         $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
     #             @(
     #                 [ATStringCompositeSc]::new(
@@ -3376,7 +3376,7 @@ Class EnemyBattleEntity : BattleEntity {
     #         $Player.CurrentGold += $Opponent.SpoilsGold
     #         If($Opponent.SpoilsItems.Length -GT 0) {
     #             [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
-                
+    #
     #             $Script:TheBattleStatusMessageWindow.WriteCompositeMessage(
     #                 @(
     #                     [ATStringCompositeSc]::new(
@@ -3442,12 +3442,12 @@ Class Player : BattleEntity {
     #     $this.Inventory       = $Inventory
     #     $this.TargetOfFilter  = [List[String]]::new()
     #     $this.ActionInventory = [PlayerActionInventory]::new()
-
+    #
     #     Foreach($a in $TargetOfFilter) {
     #         $this.TargetOfFilter.Add($a) | Out-Null
     #     }
     # }
-
+    #
     # THIS CTOR IS LIKELY NOT NEEDED
     # Player(
     #     [String]$Name,
@@ -3468,7 +3468,7 @@ Class Player : BattleEntity {
     #     $this.Inventory                         = [List[MapTileObject]]::new()
     #     $this.TargetOfFilter                    = [List[String]]::new()
     #     $this.ActionInventory                   = [PlayerActionInventory]::new()
-
+    #
     #     Foreach($a in $TargetOfFilter) {
     #         $this.TargetOfFilter.Add($a) | Out-Null
     #     }
@@ -17091,56 +17091,67 @@ Class MessageWindow : WindowBase {
     [Void]WriteItemCantTakeMessage(
         [String]$ItemName
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    'It''s not possible to take the '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink = $true
-                    },
-                    $ItemName
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCTextDefault24]::new(),
-                    [ATDecorationNone]::new(),
-                    '.'
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = 'It''s not possible to take the '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($ItemName)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = '.'
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteCmdExtraArgsWarning(
         [String]$Command,
         [String[]]$ExtraArgs
     ) {
-        $this.WriteMessageComposite(
-            @(
-                [ATStringCompositeSc]::new(
-                    [CCAppleNPinkLight24]::new(),
-                    [ATDecoration]@{
-                        Blink = $true
-                    },
-                    $Command
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleNYellowLight24]::new(),
-                    [ATDecorationNone]::new(),
-                    ' has garbage: '
-                ),
-                [ATStringCompositeSc]::new(
-                    [CCAppleNYellowDark24]::new(),
-                    [ATDecoration]@{
-                        Blink = $true
-                    },
-                    $ExtraArgs
-                )
-            )
-        )
+		$this.WriteMessageComposite(@(
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleNPinkLight24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($Command)"
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCTextDefault24]::new()
+				}
+				UserData   = ' has garbage: '
+				UseATReset = $true
+			},
+			[ATString]@{
+				Prefix = [ATStringPrefix]@{
+					ForegroundColor = [CCAppleNYellowDark24]::new()
+					Decorations     = [ATDecoration]@{
+						Blink = $true
+					}
+				}
+				UserData   = "$($ExtraArgs)"
+				UseATReset = $true
+			}
+		))
     }
 
     [Void]WriteBadCommandRetortMessage() {
