@@ -273,6 +273,167 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 ###############################################################################
 #
+# PLAYER INITIALIZATION
+#
+###############################################################################
+[Player]$Script:ThePlayer = [Player]@{
+    Name  = 'Steve'
+    Stats = @{
+        [StatId]::HitPoints = [BattleEntityProperty]@{
+            Base                = 1000
+            Max                 = 1000
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                        Return
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                        Return
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                        Return
+                    }
+                }
+            }
+        }
+        [StatId]::MagicPoints = [BattleEntityProperty]@{
+            Base                = 500
+            Max                 = 500
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                        Return
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                        Return
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                        Return
+                    }
+                }
+            }
+        }
+        [StatId]::Attack = [BattleEntityProperty]@{
+            Base                = 25
+            BasePre             = 25
+            BaseAugmentValue    = 5
+            Max                 = 15
+            MaxPre              = 15
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 2
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return $Self.Base
+            }
+        }
+        [StatId]::Defense = [BattleEntityProperty]@{
+            Base                = 8
+            Max                 = 8
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicAttack = [BattleEntityProperty]@{
+            Base                = 6
+            Max                 = 6
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicDefense = [BattleEntityProperty]@{
+            Base                = 4
+            Max                 = 4
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Speed = [BattleEntityProperty]@{
+            Base                = 9
+            Max                 = 9
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Luck = [BattleEntityProperty]@{
+            Base                = 5
+            Max                 = 5
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Accuracy = [BattleEntityProperty]@{
+            Base                = 9
+            BaseAugmentValue    = -5
+            Max                 = 9
+            AugmentTurnDuration = 2
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+    }
+    ActionListing = @{
+        [ActionSlot]::A = [BAPunch]::new()
+        [ActionSlot]::B = [BAKick]::new()
+        [ActionSlot]::C = [BAFlamePunch]::new()
+        [ActionSlot]::D = [BAIKill]::new()
+    }
+    SpoilsEffect    = {}
+    ActionMarbleBag = @()
+    CurrentGold     = 500
+    Affinity        = [BattleActionType]::ElementalFire
+}
+
+
+
+
+
+###############################################################################
+#
 # BATTLE ACTION CALCULATION
 #
 ###############################################################################
@@ -23193,3 +23354,71 @@ $Script:ThePlayer.ActionInventory.Add([BAIcicleStrike]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BAGaleStrike]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BARadiance]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BASunfire]::new()) | Out-Null
+
+$Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
+    $Script:FieldNorthEastRoadImage,
+    @(
+        [MTOApple]::new(),
+        [MTOTree]::new(),
+        [MTOLadder]::new(),
+        [MTORope]::new(),
+        [MTOStairs]::new(),
+        [MTOPole]::new()
+    ),
+    @(
+        $true,
+        $false,
+        $true,
+        $false
+    ),
+    $true,
+    0.5,
+    0
+)
+$Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
+    $Script:FieldNorthWestRoadImage,
+    @(
+        [MTOApple]::new()
+    ),
+    @(
+        $true,
+        $false,
+        $false,
+        $true
+    ),
+    $true,
+    0.5,
+    0
+)
+$Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
+    $Script:FieldSouthEastRoadImage,
+    @(
+        [MTOTree]::new()
+    ),
+    @(
+        $false,
+        $true,
+        $true,
+        $false
+    ),
+    $true,
+    0.5,
+    0
+)
+$Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
+    $Script:FieldSouthWestRoadImage,
+    @(
+        [MTOTree]::new()
+    ),
+    @(
+        $false,
+        $true,
+        $false,
+        $true
+    ),
+    $true,
+    0.5,
+    0
+)
+
+# $Script:TheGameCore.Run()
