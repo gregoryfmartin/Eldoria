@@ -184,7 +184,7 @@ Enum StatusScreenMode {
 [SIFieldSouthEastRoad]            $Script:FieldSouthEastRoadImage      = [SIFieldSouthEastRoad]::new()
 [SIFieldSouthWestRoad]            $Script:FieldSouthWestRoadImage      = [SIFieldSouthWestRoad]::new()
 [SIFieldSouthEastWestRoad]        $Script:FieldSouthEastWestRoadImage  = [SIFieldSouthEastWestRoad]::new()
-[Map]                             $Script:SampleMap                    = [Map]::new('Sample Map', 2, 2, $false)
+[Map]                             $Script:SampleMap                    = [Map]@{Name = 'Sample Map'; MapWidth = 2; MapHeight = 2; BoundaryWrap = $false}
 [Map]                             $Script:CurrentMap                   = $Script:SampleMap
 [Map]                             $Script:PreviousMap                  = $null
 
@@ -266,6 +266,139 @@ $Script:BATLut = @(
 )
 
 $Script:Rui = $(Get-Host).UI.RawUI
+
+
+
+
+
+###############################################################################
+#
+# BATTLE ACTION CALCULATION
+#
+###############################################################################
+[ScriptBlock]$Script:BaCalc = {
+    Param(
+        [BattleEntity]$Self,
+        [BattleEntity]$Target,
+        [BattleAction]$SelfAction
+    )
+
+    [Boolean]$CanExecute   = $false
+    [Boolean]$ReduceSelfMp = $false
+
+    If($SelfAction.MpCost -GT 0) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+            $CanExecute   = $true
+            $ReduceSelfMp = $true
+        }
+    } Elseif($SelfAction.MpCost -LE 0) {
+        $CanExecute = $true
+    }
+
+    If($CanExecute -EQ $true) {
+        If($ReduceSelfMp -EQ $true) {
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+            If($Self -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+            }
+        }
+
+        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+        If($ExecuteChance -GT $SelfAction.Chance) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                0
+            )
+        }
+
+        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+        If($EvRandFactor -LE $TargetEffectiveEvasion) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackMissed,
+                $Self,
+                $Target,
+                0
+            )
+        }
+
+        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+            $SelfAction.EffectValue * (
+                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+        ))
+        $EffectiveDamageCritFactor     = 1.0
+        $EffectiveDamageAffinityFactor = 1.0
+
+        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+            $EffectiveDamageCritFactor = 1.5
+        }
+
+        $EffectiveDamageAffinityFactor = $Script:BALut[$SelfAction.Type][$Target.Affinity]
+
+        $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+
+        [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+
+        If(0 -NE $DecRes) {
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::FailedAttackFailed,
+                $Self,
+                $Target,
+                $FinalDamage
+            )
+        } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
+            If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::SuccessWithCritical,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
+            } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::SuccessWithAffinityBonus,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
+            } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                Return [BattleActionResult]::new(
+                    [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                    $Self,
+                    $Target,
+                    $FinalDamage
+                )
+            }
+
+            Return [BattleActionResult]::new(
+                [BattleActionResultType]::Success,
+                $Self,
+                $Target,
+                $FinalDamage
+            )
+        }
+    } Else {
+        Return [BattleActionResult]::new(
+            [BattleActionResultType]::FailedNoUsesRemaining,
+            $Self,
+            $Target,
+            0
+        )
+    }
+}
 
 
 
@@ -426,139 +559,6 @@ $Script:Rui = $(Get-Host).UI.RawUI
     ActionMarbleBag = @()
     CurrentGold     = 500
     Affinity        = [BattleActionType]::ElementalFire
-}
-
-
-
-
-
-###############################################################################
-#
-# BATTLE ACTION CALCULATION
-#
-###############################################################################
-[ScriptBlock]$Script:BaCalc = {
-    Param(
-        [BattleEntity]$Self,
-        [BattleEntity]$Target,
-        [BattleAction]$SelfAction
-    )
-
-    [Boolean]$CanExecute   = $false
-    [Boolean]$ReduceSelfMp = $false
-
-    If($SelfAction.MpCost -GT 0) {
-        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
-            $CanExecute   = $true
-            $ReduceSelfMp = $true
-        }
-    } Elseif($SelfAction.MpCost -LE 0) {
-        $CanExecute = $true
-    }
-
-    If($CanExecute -EQ $true) {
-        If($ReduceSelfMp -EQ $true) {
-            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
-            If($Self -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
-            }
-        }
-
-        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
-        If($ExecuteChance -GT $SelfAction.Chance) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                0
-            )
-        }
-
-        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
-        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
-        If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackMissed,
-                $Self,
-                $Target,
-                0
-            )
-        }
-
-        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
-            $SelfAction.EffectValue * (
-                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
-                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
-            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
-        ))
-        $EffectiveDamageCritFactor     = 1.0
-        $EffectiveDamageAffinityFactor = 1.0
-
-        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
-        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
-            $EffectiveDamageCritFactor = 1.5
-        }
-
-        $EffectiveDamageAffinityFactor = $Script:BALut[$SelfAction.Type][$Target.Affinity]
-
-        $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
-
-        [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
-
-        If(0 -NE $DecRes) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
-        } Else {
-            If($Target -IS [Player]) {
-                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
-            } Else {
-                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
-            }
-
-            If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritical,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
-            }
-
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::Success,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
-        }
-    } Else {
-        Return [BattleActionResult]::new(
-            [BattleActionResultType]::FailedNoUsesRemaining,
-            $Self,
-            $Target,
-            0
-        )
-    }
 }
 
 
@@ -4120,7 +4120,8 @@ Class PlayerActionInventory {
         If($ActionAlreadyListed -EQ $true) {
             Return $false
         }
-        $this.Listing.Add([BattleAction]::new($ActionToAdd))
+        # $this.Listing.Add([BattleAction]::new($ActionToAdd))
+        $this.Listing.Add($ActionToAdd)
 
         Return $true
     }
@@ -15717,11 +15718,17 @@ Class Map {
     [MapTile[,]]$Tiles
 
     Map() {
-        $this.MapWidth = 0
-        $this.MapHeight = 0
-        $this.Name = ''
+        $this.MapWidth     = 0
+        $this.MapHeight    = 0
+        $this.Name         = ''
         $this.BoundaryWrap = $false
-        $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+        $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+    }
+
+    [Void]CreateMapTiles() {
+        If($this.MapWidth -GT 0 -AND $this.MapHeight -GT 0) {
+            $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+        }
     }
 
     [MapTile]GetTileAtPlayerCoordinates() {
@@ -16253,7 +16260,7 @@ Class StatusWindow : WindowBase {
 
     [ATString]$LineBlankActual
 
-    StatusWindow() : base() {
+    StatusWindow() {
         $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
         $this.BorderDrawColors = [ConsoleColor24[]](
@@ -23291,7 +23298,7 @@ Class GameCore {
 # DUMMY SETUP CODE
 #
 ###############################################################################
-Clear-Host
+# Clear-Host
 
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
@@ -23355,6 +23362,7 @@ $Script:ThePlayer.ActionInventory.Add([BAGaleStrike]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BARadiance]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BASunfire]::new()) | Out-Null
 
+$Script:SampleMap.CreateMapTiles()
 $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     $Script:FieldNorthEastRoadImage,
     @(
@@ -23375,50 +23383,50 @@ $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
     0.5,
     0
 )
-$Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
-    $Script:FieldNorthWestRoadImage,
-    @(
-        [MTOApple]::new()
-    ),
-    @(
-        $true,
-        $false,
-        $false,
-        $true
-    ),
-    $true,
-    0.5,
-    0
-)
-$Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
-    $Script:FieldSouthEastRoadImage,
-    @(
-        [MTOTree]::new()
-    ),
-    @(
-        $false,
-        $true,
-        $true,
-        $false
-    ),
-    $true,
-    0.5,
-    0
-)
-$Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
-    $Script:FieldSouthWestRoadImage,
-    @(
-        [MTOTree]::new()
-    ),
-    @(
-        $false,
-        $true,
-        $false,
-        $true
-    ),
-    $true,
-    0.5,
-    0
-)
+# $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
+#     $Script:FieldNorthWestRoadImage,
+#     @(
+#         [MTOApple]::new()
+#     ),
+#     @(
+#         $true,
+#         $false,
+#         $false,
+#         $true
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
+# $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
+#     $Script:FieldSouthEastRoadImage,
+#     @(
+#         [MTOTree]::new()
+#     ),
+#     @(
+#         $false,
+#         $true,
+#         $true,
+#         $false
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
+# $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
+#     $Script:FieldSouthWestRoadImage,
+#     @(
+#         [MTOTree]::new()
+#     ),
+#     @(
+#         $false,
+#         $true,
+#         $false,
+#         $true
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
 
 # $Script:TheGameCore.Run()
