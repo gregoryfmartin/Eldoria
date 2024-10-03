@@ -16300,6 +16300,9 @@ Class StatusWindow : WindowBase {
         $this.PlayerMpDrawDirty   = $true
         $this.PlayerGoldDrawDirty = $true
         $this.LineBlankActual     = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]::new()
+            }
             UserData   = [StatusWindow]::LineBlank
             UseATReset = $true
         }
@@ -16354,6 +16357,8 @@ Class StatusWindow : WindowBase {
                         UseATReset = $true
                     }
                     $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+
+                    Break
                 }
 
                 ([StatNumberState]::Caution) {
@@ -16384,6 +16389,8 @@ Class StatusWindow : WindowBase {
                         UseATReset = $true
                     }
                     $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+
+                    Break
                 }
 
                 ([StatNumberState]::Danger) {
@@ -16420,6 +16427,8 @@ Class StatusWindow : WindowBase {
                         UseATReset = $true
                     }
                     $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+
+                    Break
                 }
 
                 Default {
@@ -16450,8 +16459,11 @@ Class StatusWindow : WindowBase {
                         UseATReset = $true
                     }
                     $a += "$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())$($p3.ToAnsiControlSequenceString())$($p4.ToAnsiControlSequenceString())"
+
+                    Break
                 }
             }
+
             $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerHpDrawCoordinates
             Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
             $this.LineBlankActual.Prefix.Coordinates.Row++
