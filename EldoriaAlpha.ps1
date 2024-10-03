@@ -275,6 +275,436 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 ###############################################################################
 #
+# THE COMMAND TABLE AND ITS ASSOCIATED SCRIPT BLOCKS
+#
+###############################################################################
+[ScriptBlock]$Script:TheMoveCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('move', $args)
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If([String]::IsNullOrEmpty($a0) -EQ $true) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteBadArg0Message('move', '')
+
+            Return
+        } Else {
+            Switch($a0) {
+                { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
+                    $Script:ThePlayer.MapMoveNorth()
+                }
+    
+                { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
+                    $Script:ThePlayer.MapMoveSouth()
+                }
+    
+                { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
+                    $Script:ThePlayer.MapMoveEast()
+                }
+    
+                { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
+                    $Script:ThePlayer.MapMoveWest()
+                }
+    
+                Default {
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    $Script:TheMessageWindow.WriteBadCommandMessage('move')
+    
+                    Return
+                }
+            }
+        }
+    } Else {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+
+    Return
+}
+
+[ScriptBlock]$Script:TheLookCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('look', $args)
+    }
+
+    $Script:TheCommandWindow.UpdateCommandHistory($true)
+    $Script:TheCommandWindow.InvokeLookAction()
+
+    Return
+}
+
+[ScriptBlock]$Script:TheInventoryCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('inventory', $args)
+    }
+
+    $Script:TheCommandWindow.UpdateCommandHistory($true)
+    $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+    $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+    $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
+
+    Return
+}
+
+[ScriptBlock]$Script:TheExamineCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtrasArgsWarning('examine', $args)
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If([String]::IsNullOrEmpty($a0) -EQ $true) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteBadArg0Message('examine', '')
+
+            Return
+        } Else {
+            # THIS NEEDS CHANGED FUCKING ASAP!
+            $Script:TheCommandWindow.InvokeExamineAction($a0)
+        }
+    } Else {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+
+    Return
+}
+
+[ScriptBlock]$Script:TheGetCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('get', $args)
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If([String]::IsNullOrEmpty($a0) -EQ $true) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteBadArg0Message('get', '')
+
+            Return
+        } Else {
+            # THIS NEEDS CHANGED FUCKING ASAP!
+            $Script:TheCommandWindow.InvokeGetAction($a0)
+        }
+    } Else {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+
+    Return
+}
+
+[ScriptBlock]$Script:TheUseCommand = {
+    Param(
+        [String]$a0,
+        [String]$a1
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtrasArgsWarning('use', $args)
+    }
+
+    If(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ($PSBoundParameters.ContainsKey('a1') -EQ $true)) {
+        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+            If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1) -EQ $true) {
+                [MapTileObject]$pi  = $Script:ThePlayer.GetItemReference($a0)
+                [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
+
+                If($mti.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    Invoke-Command $mti.Effect -ArgumentList $mti, $pi
+                } Else {
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    $Script:TheMessageWindow.WriteMessageComposite(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                [CCAppleRedDark24]::new(),
+                                [ATDecorationNone]::new(),
+                                'Can''t use a(n) '
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleYellowDark24]::new(),
+                                [ATDecoration]::new($true),
+                                $a0
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleRedDark24]::new(),
+                                [ATDecorationNone]::new(),
+                                ' on a(n) '
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleYellowDark24]::new(),
+                                [ATDecoration]::new($true),
+                                $a1
+                            ),
+                            [ATStringCompositeSc]::new(
+                                [CCAppleRedDark24]::new(),
+                                [ATDecorationNone]::new(),
+                                '.'
+                            )
+                        )
+                    )
+                }
+            } Else {
+                If($a1 -IEQ 'self') {
+                    [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+
+                    # This code is problematic if the filter has no items in it
+                    If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+                        Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
+                    } Else {
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        $Script:TheMessageWindow.WriteMessageComposite(
+                            @(
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    'I can''t use '
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleYellowDark24]::new(),
+                                    [ATDecoration]@{
+                                        Blink      = $true
+                                        Italic     = $true
+                                        Underline  = $true
+                                        Strikethru = $false
+                                    },
+                                    $a0
+                                ),
+                                [ATStringCompositeSc]::new(
+                                    [CCAppleRedDark24]::new(),
+                                    [ATDecorationNone]::new(),
+                                    ' on myself.'
+                                )
+                            )
+                        )
+                    }
+                } Else {
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    $Script:TheMessageWindow.WriteMessageComposite(
+                        @(
+                            [ATStringCompositeSc]::new(
+                                [CCAppleRedDark24]::new(),
+                                [ATDecorationNone]::new(),
+                                "$($Script:BadCommandRetorts | Get-Random)"
+                            )
+                        )
+                    )
+                }
+            }
+        } Else {
+            # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        'You don''t seem to have any '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecoration]::new($true),
+                        $a0
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' in your pocket(s).'
+                    )
+                )
+            )
+
+            Return
+        }
+    } Elseif(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        'You need to tell me what you want to use the '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecoration]::new($true),
+                        $a0
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' on.'
+                    )
+                )
+            )
+        } Else {
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCAppleRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        'I have no idea how to use a(n) '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecoration]::new($true),
+                        $a0
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleRedDark24]::new(),
+                        [ATDecorationNone]::new(),
+                        '.'
+                    )
+                )
+            )
+        }
+    } Elseif(((-NOT $PSBoundParameters.ContainsKey('a0')) -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+        $Script:TheMessageWindow.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleNRedDark24]::new(),
+                    [ATDecorationNone]::new(),
+                    "$($Script:BadCommandRetorts | Get-Random)"
+                )
+            )
+        )
+    }
+}
+
+[ScriptBlock]$Script:TheDropCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GE 1) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+        $Script:TheMessageWindow.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleNYellowDark24]::new(),
+                    [ATDecorationNone]::new(),
+                    'Can''t drop all those items at once, bruh.'
+                )
+            )
+        )
+
+        Return
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+            If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                $Script:TheMessageWindow.WriteMessageComposite(
+                    @(
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            'Dropped '
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCAppleNYellowDark24]::new(),
+                            [ATDecoration]@{
+                                Blink = $true
+                            },
+                            "$($a0)"
+                        ),
+                        [ATStringCompositeSc]::new(
+                            [CCTextDefault24]::new(),
+                            [ATDecorationNone]::new(),
+                            ' from your inventory.'
+                        )
+                    )
+                )
+
+                Return
+            } Else {
+                # WARNING
+                # At this point, this branch is considered a fatal error
+                # There really should be a better way of handling this, however
+                Exit
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMessageComposite(
+                @(
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        'There ain''t no '
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCAppleYellowDark24]::new(),
+                        [ATDecoration]::new($true),
+                        $a0
+                    ),
+                    [ATStringCompositeSc]::new(
+                        [CCTextDefault24]::new(),
+                        [ATDecorationNone]::new(),
+                        ' in your pockets guv''.'
+                    )
+                )
+            )
+
+            Return
+        }
+    } Else {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+        $Script:TheMessageWindow.WriteMessageComposite(
+            @(
+                [ATStringCompositeSc]::new(
+                    [CCAppleNRedDark24]::new(),
+                    [ATDecorationNone]::new(),
+                    "$($Script:BadCommandRetorts | Get-Random)"
+                )
+            )
+        )
+
+        Return
+    }
+}
+
+[ScriptBlock]$Script:TheStatusCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning(
+            'use',
+            $args
+        )
+    }
+
+    $Script:TheCommandWindow.UpdateCommandHistory($true)
+    $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+    $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+    $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
+}
+
+$Script:TheCommandTable = @{}
+
+
+
+
+
+###############################################################################
+#
 # BATTLE ACTION CALCULATION
 #
 ###############################################################################
