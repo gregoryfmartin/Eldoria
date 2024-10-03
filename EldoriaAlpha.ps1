@@ -16735,9 +16735,10 @@ Class CommandWindow : WindowBase {
 
         [CommandWindow]::CommandDiv = [ATString]@{
             Prefix = [ATStringPrefix]@{
-                ForegroundColor = [CommandWindow]::HistoryBlankColor
+                ForegroundColor = [CommandWindow]::CommandDivDrawColor
+                Coordinates     = [CommandWindow]::CommandDivDrawCoordinates
             }
-            UserData   = '                  '
+            UserData   = [CommandWindow]::WindowCommandDiv
             UseATReset = $true
         }
         [CommandWindow]::CommandHistBlank = [ATString]@{
