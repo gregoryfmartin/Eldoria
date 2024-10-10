@@ -570,6 +570,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
             }
         }
     } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
         $Script:TheCommandWindow.UpdateCommandHistory($false)
 
         Return
@@ -652,6 +653,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
             $Script:TheCommandWindow.InvokeExamineAction($a0)
         }
     } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
         $Script:TheCommandWindow.UpdateCommandHistory($false)
 
         Return
@@ -680,6 +682,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
             $Script:TheCommandWindow.InvokeGetAction($a0)
         }
     } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
         $Script:TheCommandWindow.UpdateCommandHistory($false)
 
         Return
@@ -744,8 +747,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
             $Script:TheMessageWindow.WriteItemUseUnsureMessage($a0)
         }
     } Elseif(((-NOT $PSBoundParameters.ContainsKey('a0')) -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
-        $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
     }
 }
 
@@ -781,8 +784,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
             Return
         }
     } Else {
-        $Script:TheCommandWindow.UpdateCommandHistory($false)
         $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
 
         Return
     }
@@ -16958,7 +16961,7 @@ Class StatusWindow : WindowBase {
                 UserData   = 'G'
                 UseATReset = $true
             }
-            
+
             $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerGoldDrawCoordinates)
             Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($p1.ToAnsiControlSequenceString())$($p2.ToAnsiControlSequenceString())"
             $this.PlayerGoldDrawDirty = $false
