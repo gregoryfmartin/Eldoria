@@ -386,7 +386,12 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 [ScriptBlock]$Script:TheInventoryScreenState = {
     If($null -EQ $Script:TheInventoryWindow) {
-        $Script:TheInventoryWindow = [InventoryWindow]::new()
+        Try {
+            $Script:TheInventoryWindow = [InventoryWindow]::new()
+        } Catch {
+            Write-Error $_.Exception.Message
+            Write-Error $_.Exception.StackTrace
+        }
     }
     If($Script:GpsRestoredFromInvBackup -EQ $true) {
         $Script:GpsRestoredFromInvBackup = $false
@@ -18175,7 +18180,7 @@ Class InventoryWindow : WindowBase {
                 Column = 78
             }
         }
-        UserData   = [InventoryWindow]::PagingChevronBlankCharacter
+        UserData   = [InventoryWindow]::PagingChevronBlankCharater
         UseATReset = $true
     }
     Static [ATString]$PagingChevronLeftBlank = [ATString]@{
@@ -18185,10 +18190,9 @@ Class InventoryWindow : WindowBase {
                 Column = 3
             }
         }
-        UserData   = [InventoryWindow]::PagingChevronBlankCharacter
+        UserData   = [InventoryWindow]::PagingChevronBlankCharater
         UseATReset = $true
     }
-
     Static [ATString]$DivLineHorizontal = [ATString]@{
         Prefix = [ATStringPrefix]@{
             ForegroundColor = [CCTextDefault24]::new()
@@ -18197,6 +18201,8 @@ Class InventoryWindow : WindowBase {
                 Column = 3
             }
         }
+        UserData   = [InventoryWindow]::DivLineHorizontalString
+        UseATReset = $true
     }
 
     Static [Boolean]$DebugMode     = $false
@@ -18482,7 +18488,7 @@ Class InventoryWindow : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleGreenLight24]::new()
-                    Coordinats      = [ATCoordinates]@{
+                    Coordinates      = [ATCoordinates]@{
                         Row    = 7
                         Column = 15
                     }
@@ -19288,7 +19294,7 @@ Class BattleEntityStatusWindow : WindowBase {
         }
         If($this.StatL4DrawDirty -EQ $true) {
             $this.CreateStatL4DrawString()
-            $this.FullLineBlank.Prefix.Coordinats = $this.StatL4DrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = $this.StatL4DrawCoordinates
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL4DrawString.ToAnsiControlSequenceString())"
             $this.StatL4DrawDirty = $false
         }
