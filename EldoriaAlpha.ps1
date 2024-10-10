@@ -16628,7 +16628,7 @@ Class StatusWindow : WindowBase {
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]::new()
             }
-            UserData   = [StatusWindow]::LineBlank
+            UserData   = "$([StatusWindow]::LineBlank)"
             UseATReset = $true
         }
     }
@@ -16789,7 +16789,18 @@ Class StatusWindow : WindowBase {
                 }
             }
 
-            $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerHpDrawCoordinates
+            ###################################################################
+            #
+            # MAKE A FUCKING MENTAL NOTE THAT THIS IS ABSOLUTELY NECESSARY!!!
+            #
+            # I TOTALLY FORGOT WHY I NEEDED THIS, AND NOW I REMEMBER!
+            #
+            # IF LINEBLANKACTUAL.PREFIX.COORDINATES IS ASSIGNED TO PLAYERHPDRAWCOORDINATES,
+            # THE STATEMENT THAT POSTFIXES THE ROW VALUE WILL MODIFY PLAYERHPDRAWCOORDINATES
+            # AND CAUSE SUBSEQUENT DRAWS TO TRAIL DOWN THE SCREEN, WHICH IS TOTAL BULLSHIT!!!
+            #
+            ###################################################################
+            $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawCoordinates)
             Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())"
             $this.LineBlankActual.Prefix.Coordinates.Row++
             Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a)"
@@ -18158,7 +18169,7 @@ Class InventoryWindow : WindowBase {
                 Column = 78
             }
         }
-        UserData   = [InventoryWindow]::PagingChevronRightCharacter
+        UserData   = "$([InventoryWindow]::PagingChevronRightCharacter)"
         UseATReset = $true
     }
     Static [ATString]$PagingChevronLeft = [ATString]@{
@@ -18169,7 +18180,7 @@ Class InventoryWindow : WindowBase {
                 Column = 3
             }
         }
-        UserData   = [InventoryWindow]::PagingChevronLeftCharacter
+        UserData   = "$([InventoryWindow]::PagingChevronLeftCharacter)"
         UseATReset = $true
     }
     Static [ATString]$PagingChevronRightBlank = [ATString]@{
@@ -18180,7 +18191,7 @@ Class InventoryWindow : WindowBase {
                 Column = 78
             }
         }
-        UserData   = [InventoryWindow]::PagingChevronBlankCharater
+        UserData   = "$([InventoryWindow]::PagingChevronBlankCharater)"
         UseATReset = $true
     }
     Static [ATString]$PagingChevronLeftBlank = [ATString]@{
@@ -18190,7 +18201,7 @@ Class InventoryWindow : WindowBase {
                 Column = 3
             }
         }
-        UserData   = [InventoryWindow]::PagingChevronBlankCharater
+        UserData   = "$([InventoryWindow]::PagingChevronBlankCharater)"
         UseATReset = $true
     }
     Static [ATString]$DivLineHorizontal = [ATString]@{
@@ -18201,7 +18212,7 @@ Class InventoryWindow : WindowBase {
                 Column = 3
             }
         }
-        UserData   = [InventoryWindow]::DivLineHorizontalString
+        UserData   = "$([InventoryWindow]::DivLineHorizontalString)"
         UseATReset = $true
     }
 
