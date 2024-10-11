@@ -649,8 +649,18 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
             Return
         } Else {
-            # THIS NEEDS CHANGED FUCKING ASAP!
-            $Script:TheCommandWindow.InvokeExamineAction($a0)
+            Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
+                If($a.Name -IEQ $a0) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteItemExamineMessage($a.ExamineString)
+    
+                    Return
+                }
+            }
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
+    
+            Return
         }
     } Else {
         $Script:TheMessageWindow.WriteBadCommandRetortMessage()
@@ -18118,15 +18128,29 @@ Class MessageWindow : WindowBase {
         ))
         If($UseSetB -EQ $true) {
             $this.WriteMessageComposite(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleYellowLight24]::new()
+                    }
+                    UserData   = "$($ItemSetB)"
+                    UseATReset = $true
+                }
+            ))
+        }
+    }
+
+    [Void]WriteItemExamineMessage(
+        [String]$ExamineString
+    ) {
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
-                    ForegroundColor = [CCAppleYellowLight24]::new()
+                    ForegroundColor = [CCAppleMintDark24]::new()
                 }
-                UserData   = "$($ItemSetB)"
+                UserData   = "$($ExamineString)"
                 UseATReset = $true
             }
         ))
-        }
     }
 }
 
