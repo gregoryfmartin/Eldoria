@@ -688,8 +688,41 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
             Return
         } Else {
-            # THIS NEEDS CHANGED FUCKING ASAP!
-            $Script:TheCommandWindow.InvokeGetAction($a0)
+            $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+
+            If($a.Count -LE 0) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+
+                Return
+            }
+            Foreach($b in $a) {
+                If($b.Name -IEQ $a0) {
+                    If($b.CanAddToInventory -EQ $true) {
+                        $Script:ThePlayer.Inventory.Add($b) | Out-Null
+                        $c = $a.Remove($b) | Out-Null
+                        If($c -EQ $false) {
+                            Write-Error 'Failed to remove an item from the Map Tile!'
+
+                            Exit
+                        } Else {
+                            $Script:TheCommandWindow.UpdateCommandHistory($true)
+                            $Script:TheMessageWindow.WriteItemTakenMessage($a0)
+
+                            Return
+                        }
+                    } Else {
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+                        $Script:TheMessageWindow.WriteItemCantTakeMessage($a0)
+
+                        Return
+                    }
+                }
+            }
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMapInvalidItemMessage($a0)
+
+            Return
         }
     } Else {
         $Script:TheMessageWindow.WriteBadCommandRetortMessage()
