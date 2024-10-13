@@ -21806,6 +21806,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
         UseATReset = $true
     }
     Static [ATString]$BaNameBlank = [ATString]@{
+        Prefix     = [ATStringPrefix]::new()
         UserData   = "$([StatusTechniqueSelectionWindow]::NameBlank)"
         UseATReset = $true
     }
