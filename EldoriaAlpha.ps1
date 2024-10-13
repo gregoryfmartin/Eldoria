@@ -462,59 +462,65 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 [ScriptBlock]$Script:ThePlayerStatusScreenState = {
     Write-Host "$([ATControlSequences]::CursorHide)"
-        $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
+    $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
 
-        If($null -EQ $Script:TheStatusHudWindow) {
-            $Script:TheStatusHudWindow = [StatusHudWindow]::new()
-        }
-        If($null -EQ $Script:TheStatusTechSelectionWindow) {
-            $Script:TheStatusTechSelectionWindow = [StatusTechniqueSelectionWindow]::new()
-        }
-        If($null -EQ $Script:TheStatusTechInventoryWindow) {
+    If($null -EQ $Script:TheStatusHudWindow) {
+        $Script:TheStatusHudWindow = [StatusHudWindow]::new()
+    }
+    If($null -EQ $Script:TheStatusTechSelectionWindow) {
+        $Script:TheStatusTechSelectionWindow = [StatusTechniqueSelectionWindow]::new()
+    }
+    If($null -EQ $Script:TheStatusTechInventoryWindow) {
+        Try {
             $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
+        } Catch {
+            Clear-Host
+            $_.Exception.Message | Out-File .\Log.txt
+            $_.Exception.StackTrace | Out-File .\Log.txt
         }
-        If($Script:GpsRestoredFromStaBackup -EQ $true) {
-            $Script:GpsRestoredFromStaBackup = $false
-        }
-        $Script:TheStatusHudWindow.Draw()
-        $Script:TheStatusTechSelectionWindow.Draw()
-        $Script:TheStatusTechInventoryWindow.Draw()
-        Switch($Script:StatusScreenMode) {
-            ([StatusScreenMode]::EquippedTechSelection) {
-                If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
-                    $Script:TheStatusTechSelectionWindow.SetAllActionDrawDirty()
-                    $Script:TheStatusTechSelectionWindow.IsActive = $true
-                }
-                If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
-                    $Script:TheStatusTechInventoryWindow.IsActive = $false
-                    $Script:TheStatusTechInventoryWindow.SetFlagsDirty()
-                }
-                $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
-                $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
-                $Script:TheStatusTechInventoryWindow.Draw()
-                $Script:TheStatusTechSelectionWindow.HandleInput()
-                $Script:TheStatusTechSelectionWindow.Draw()
+    }
+    If($Script:GpsRestoredFromStaBackup -EQ $true) {
+        $Script:GpsRestoredFromStaBackup = $false
+    }
+    $Script:TheStatusHudWindow.Draw()
+    $Script:TheStatusTechSelectionWindow.Draw()
+    $Script:TheStatusTechInventoryWindow.Draw()
+    Switch($Script:StatusScreenMode) {
+        ([StatusScreenMode]::EquippedTechSelection) {
+            If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
+                $Script:TheStatusTechSelectionWindow.SetAllActionDrawDirty()
+                $Script:TheStatusTechSelectionWindow.IsActive = $true
             }
+            If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
+                $Script:TheStatusTechInventoryWindow.IsActive = $false
+                $Script:TheStatusTechInventoryWindow.SetFlagsDirty()
+            }
+            $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
+            $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
+            $Script:TheStatusTechInventoryWindow.Draw()
+            $Script:TheStatusTechSelectionWindow.HandleInput()
+            $Script:TheStatusTechSelectionWindow.Draw()
+        }
 
-            ([StatusScreenMode]::TechInventorySelection) {
-                If($Script:TheStatusTechSelectionWindow.IsActive -NE $false) {
-                    $Script:TheStatusTechSelectionWindow.IsActive = $false
-                }
-                If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
-                    $Script:TheStatusTechInventoryWindow.IsActive = $true
-                }
-                $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
-                $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
-                $Script:TheStatusTechInventoryWindow.Draw()
-                $Script:TheStatusTechInventoryWindow.HandleInput()
-                $Script:TheStatusTechInventoryWindow.Draw()
+        ([StatusScreenMode]::TechInventorySelection) {
+            If($Script:TheStatusTechSelectionWindow.IsActive -NE $false) {
+                $Script:TheStatusTechSelectionWindow.IsActive = $false
             }
-
-            Default {
-                # DO NOTHING
-                # BECAUSE I'M A FUCKING GENIUS
+            If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
+                $Script:TheStatusTechInventoryWindow.IsActive = $true
             }
+            $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
+            $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
+            $Script:TheStatusTechInventoryWindow.Draw()
+            $Script:TheStatusTechInventoryWindow.HandleInput()
+            $Script:TheStatusTechInventoryWindow.Draw()
         }
+
+        Default {
+            # DO NOTHING
+            # BECAUSE I'M A FUCKING GENIUS
+        }
+    }
 }
 
 [ScriptBlock]$Script:TheCleanupState = {}
@@ -21604,7 +21610,7 @@ Class StatusHudWindow : WindowBase {
 
         If($this.StatLineDrawDirty -EQ $true) {
             $this.ComposeStatLineString()
-            $this.LineBlank.Prefix.Coordinates = $this.StatLineDrawCoords
+            $this.LineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.StatLineDrawCoords)
             Write-Host "$($this.LineBlank.ToAnsiControlSequenceString())$($this.StatLineActual.ToAnsiControlSequenceString())"
             $this.StatLineDrawDirty = $false
         }
@@ -21666,7 +21672,7 @@ Class StatusHudWindow : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Script:ThePlayer.Affinity].Item2
-                    Coordinates     = [StatusHudWindow]::StatLineDrawCoords
+                    Coordinates     = [ATCoordinates]::new($this.StatLineDrawCoords)
                 }
                 UserData = "$($Script:BATAdornmentCharTable[$Script:ThePlayer.Affinity].Item1) "
             },
@@ -21679,7 +21685,7 @@ Class StatusHudWindow : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates     = [StatusHudWindow]::StatSeparatorDrawCoords
+                    Coordinates     = [ATCoordinates]::new($this.StatSeparatorDrawCoords)
                 }
                 UserData = "$($AtkDispStr)"
             },
@@ -21882,9 +21888,9 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                     }
                     UserData   = "$([StatusTechniqueSelectionWindow]::PlayerChevronCharacter)"
                     UseATReset = $true
-                }
-            ),
-            $true
+                },
+                $true
+            )
         )
         $this.Chevrons.Add(
             [ValueTuple]::Create(
@@ -21898,9 +21904,9 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                     }
                     UserData   = "$([StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter)"
                     UseATReset = $true
-                }
-            ),
-            $false
+                },
+                $false
+            )
         )
         $this.Chevrons.Add(
             [ValueTuple]::Create(
@@ -21914,9 +21920,9 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                     }
                     UserData   = "$([StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter)"
                     UseATReset = $true
-                }
-            ),
-            $false
+                },
+                $false
+            )
         )
         $this.Chevrons.Add(
             [ValueTuple]::Create(
@@ -21930,9 +21936,9 @@ Class StatusTechniqueSelectionWindow : WindowBase {
                     }
                     UserData   = "$([StatusTechniqueSelectionWindow]::PlayerChevronBlankCharacter)"
                     UseATReset = $true
-                }
-            ),
-            $false
+                },
+                $false
+            )
         )
     }
 
@@ -22203,14 +22209,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         UserData   = "$([StatusTechniqueInventoryWindow]::PagingChevronLeftCharacter)"
         UseATReset = $true
     }
-    Static [ATString]$PagingChevronRightBlank = [ATString]@{
-        UserData  = "$([StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter)"
-        UseATRest = $true
-    }
-    Static [ATString]$PagingChevronLeftBlank = [ATString]@{
-        UserData  = "$([StatusTechniqueInventoryWindow]::PagingChevronBlankCharacter)"
-        UseATRest = $true
-    }
+    Static [ATString]$PagingChevronRightBlank = [ATStringNone]::new()
+    Static [ATString]$PagingChevronLeftBlank = [ATStringNone]::new()
     Static [ATString]$DivLineHorizontal = [ATString]@{
         Prefix = [ATStringPrefix]@{
             ForegroundColor = [CCTextDefault24]::new()
@@ -22263,8 +22263,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [CCWhite24]::new()
         )
         $this.BorderStrings = [String[]](
-            [StatusTechniqueInventoryWindow]::WindowBorderHoritzontal,
-            [StatusTechniqueInventoryWindow]::WindowBorderHoritzontal,
+            [StatusTechniqueInventoryWindow]::WindowBorderHorizontal,
+            [StatusTechniqueInventoryWindow]::WindowBorderHorizontal,
             [StatusTechniqueInventoryWindow]::WindowBorderLeft,
             [StatusTechniqueInventoryWindow]::WindowBorderRight
         )
@@ -22286,7 +22286,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         $this.BookDirty                 = $true
         $this.ActiveItemBlinking        = $false
         $this.DivLineDirty              = $true
-        $this.ItemsDescDirty            = $true
+        $this.ItemDescDirty             = $true
         $this.ZpBlankedDirty            = $true
         $this.ZpPromptDirty             = $true
         $this.IsActive                  = $false
@@ -22319,7 +22319,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 }
                 If($this.PlayerChevronVisible -EQ $true -AND $this.PlayerChevronDirty -EQ $true) {
                     Foreach($ic in $this.IChevrons) {
-                        Write-Host "$($ic.Item1.ToAnsiControlSequenceStrin())"
+                        Write-Host "$($ic.Item1.ToAnsiControlSequenceString())"
                     }
                     $this.PlayerChevronDirty = $false
                 }
@@ -22328,7 +22328,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         If($this.PagingChevronLeftVisible -EQ $true) {
                             Write-Host "$([StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.ToAnsiControlSequenceString())"
                             $this.PagingChevronLeftVisible = $false
-                            $this.PagingChevrinLeftDirty   = $true
+                            $this.PagingChevronLeftDirty   = $true
                         }
                         If($this.PagingChevronRightVisible -EQ $false) {
                             $this.PagingChevronRightVisible = $true
@@ -22488,7 +22488,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         Column = $this.LeftTop.Column + 1
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22502,7 +22502,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         Column = $this.LeftTop.Column + 1
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22516,7 +22516,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         Column = $this.LeftTop.Column + 1
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22530,7 +22530,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                         Column = $this.LeftTop.Column + 1
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22541,10 +22541,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     ForegroundColor = [CCAppleGreenLight24]::new()
                     Coordinates     = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 2
-                        Column = $this.LeftTop.Column - 17
+                        Column = $this.RightBottom.Column - 17
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22555,10 +22555,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     ForegroundColor = [CCAppleGreenLight24]::new()
                     Coordinates     = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 3
-                        Column = $this.LeftTop.Column - 17
+                        Column = $this.RightBottom.Column - 17
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22569,10 +22569,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     ForegroundColor = [CCAppleGreenLight24]::new()
                     Coordinates     = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 4
-                        Column = $this.LeftTop.Column - 17
+                        Column = $this.RightBottom.Column - 17
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22583,10 +22583,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     ForegroundColor = [CCAppleGreenLight24]::new()
                     Coordinates     = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 5
-                        Column = $this.LeftTop.Column - 17
+                        Column = $this.RightBottom.Column - 17
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22597,10 +22597,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     ForegroundColor = [CCAppleGreenLight24]::new()
                     Coordinates     = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 6
-                        Column = $this.LeftTop.Column - 17
+                        Column = $this.RightBottom.Column - 17
                     }
                 }
-                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                UserData   = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                 UseATReset = $true
             },
             $false
@@ -22625,7 +22625,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                     UseATReset = $true
                 }
             )
-            $c++ # TOTALLY A PROGRAMMER JOKE OLO LFOR
+            $c++ # TOTALLY A PROGRAMMER JOKE
         }
         $this.ResetIChevronPositions()
         $this.CreateItemLabelBlanks()
@@ -22698,7 +22698,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     Coordinates = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 2
-                        Column = $this.LeftTop.Column - 16
+                        Column = $this.RightBottom.Column - 16
                     }
                 }
                 UserData   = '               '
@@ -22710,7 +22710,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     Coordinates = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 3
-                        Column = $this.LeftTop.Column - 16
+                        Column = $this.RightBottom.Column - 16
                     }
                 }
                 UserData   = '               '
@@ -22722,7 +22722,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     Coordinates = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 4
-                        Column = $this.LeftTop.Column - 16
+                        Column = $this.RightBottom.Column - 16
                     }
                 }
                 UserData   = '               '
@@ -22734,7 +22734,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     Coordinates = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 5
-                        Column = $this.LeftTop.Column - 16
+                        Column = $this.RightBottom.Column - 16
                     }
                 }
                 UserData   = '               '
@@ -22746,7 +22746,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     Coordinates = [ATCoordinates]@{
                         Row    = $this.LeftTop.Row + 6
-                        Column = $this.LeftTop.Column - 16
+                        Column = $this.RightBottom.Column - 16
                     }
                 }
                 UserData   = '               '
@@ -22786,7 +22786,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     }
 
     [Void]PopulatePage() {
-        If($Script:ThePlayer.ActionInventory.Count -LE 0) {
+        If($Script:ThePlayer.ActionInventory.Listing.Count -LE 0) {
             $this.ZeroPageActive   = $true
             $this.CurrentPageDirty = $false
             $this.ZpPromptDirty    = $true
@@ -22871,9 +22871,9 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
     [Void]WriteMoronPage() {}
 
-    [Void]ResetIChevronPosition() {
+    [Void]ResetIChevronPositions() {
         $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
-        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
         Try {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
@@ -22920,7 +22920,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 }
                 If(($this.ActiveIChevronIndex -1) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     $this.ActiveIChevronIndex--
@@ -22945,7 +22945,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 }
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     $this.ActiveIChevronIndex++
@@ -22970,7 +22970,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 }
                 If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     $this.ActiveIChevronIndex += 5
@@ -22995,7 +22995,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 }
                 If(($this.ActiveIChevronIndex - 5) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
-                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronBlankCharacter)"
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = "$([StatusTechniqueInventoryWindow]::IChevronCharacterBlank)"
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
                     $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
                     $this.ActiveIChevronIndex -= 5
@@ -23026,12 +23026,20 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Row    = $this.LeftTop.Row + 1
             Column = $this.RightBottom.Column - 1
         }
-        [StatusTechniqueInventoryWindow]::PagingChevronRightBlank.Prefix.Coordinates = [StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates
+        [StatusTechniqueInventoryWindow]::PagingChevronRightBlank = [ATString]@{
+            UserData   = ' '
+            UseATReset = $true
+        }
+        [StatusTechniqueInventoryWindow]::PagingChevronRightBlank.Prefix.Coordinates = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates)
         [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates = [ATCoordinates]@{
             Row    = $this.LeftTop.Row + 1
             Column = $this.LeftTop.Column + 2
         }
-        [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.Prefix.Coordinates = [StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates
+        [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank = [ATString]@{
+            UserData   = ' '
+            UseATReset = $true
+        }
+        [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank.Prefix.Coordinates = [ATCoordinates]::new([StatusTechniqueInventoryWindow]::PagingChevronLeft.Prefix.Coordinates)
     }
 
     [Void]ConfigureDivLine() {
