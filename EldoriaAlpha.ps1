@@ -474,13 +474,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
         $Script:TheStatusTechSelectionWindow = [StatusTechniqueSelectionWindow]::new()
     }
     If($null -EQ $Script:TheStatusTechInventoryWindow) {
-        Try {
-            $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
-        } Catch {
-            Clear-Host
-            $_.Exception.Message | Out-File .\Log.txt
-            $_.Exception.StackTrace | Out-File .\Log.txt
-        }
+        $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
     }
     If($Script:GpsRestoredFromStaBackup -EQ $true) {
         $Script:GpsRestoredFromStaBackup = $false
