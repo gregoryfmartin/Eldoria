@@ -426,7 +426,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
         $Script:HasBattleIntroPlayed = $true
     }
     If($null -EQ $Script:TheBattleManager) {
-        $Script:TheBattleManager = [BattleManager]::new()
+        $Script:TheBattleManager       = [BattleManager]::new()
+        $Script:TheBattleManager.State = [BattleManagerState]::TurnIncrement
     }
     If($Script:BattleCursorVisible -EQ $false) {
         Write-Host "$([ATControlSequences]::CursorHide)"
@@ -20383,12 +20384,13 @@ Class BattleStatusMessageWindow : WindowBase {
         $this.UpdateDimensions()
 
         $this.MessageADirty = $false
-        $this.MessagebDirty = $false
+        $this.MessageBDirty = $false
         $this.MessageCDirty = $false
         $this.MessageDDirty = $false
         $this.MessageEDirty = $false
 
         $this.MessageBlank = [ATString]@{
+            Prefix     = [ATStringPrefix]::new()
             UserData   = "$([BattleStatusMessageWindow]::MessageBlankActual)"
             UseATReset = $true
         }
@@ -20432,38 +20434,38 @@ Class BattleStatusMessageWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.MessageEDirty -EQ $true) {
-            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageEDrawCoordinates
-            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageEDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
+            $this.MessageBlank.Prefix.Coordinates = $this.MessageEDrawCoords
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$($this.MessageEDrawCoords.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryERef].ToAnsiControlSequenceString())"
             $this.MessageEDirty = $false
-            Start-Sleep -Seconds [BattleStatusMessageWindow]::MessageSleepTime
+            Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageDDirty -EQ $true) {
-            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageDDrawCoordinates
-            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageDDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
+            $this.MessageBlank.Prefix.Coordinates = $this.MessageDDrawCoords
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$($this.MessageDDrawCoords.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryDRef].ToAnsiControlSequenceString())"
             $this.MessageDDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageCDirty -EQ $true) {
-            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageCDrawCoordinates
-            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
+            $this.MessageBlank.Prefix.Coordinates = $this.MessageCDrawCoords
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$($this.MessageCDrawCoords.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
             $this.MessageCDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageBDirty -EQ $true) {
-            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageBDrawCoordinates
-            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageBDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
+            $this.MessageBlank.Prefix.Coordinates = $this.MessageBDrawCoords
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$($this.MessageBDrawCoords.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].ToAnsiControlSequenceString())"
             $this.MessageBDirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime)
         }
         If($this.MessageADirty -EQ $true) {
-            $this.MessageBlank.Prefix.Coordinates = [BattleStatusMessageWindow]::MessageADrawCoordinates
-            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$([BattleStatusMessageWindow]::MessageADrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
+            $this.MessageBlank.Prefix.Coordinates = $this.MessageADrawCoords
+            Write-Host "$($this.MessageBlank.ToAnsiControlSequenceString())$($this.MessageADrawCoords.ToAnsiControlSequenceString())$($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].ToAnsiControlSequenceString())"
             $this.MessageADirty = $false
             Start-Sleep -Seconds $([BattleStatusMessageWindow]::MessageSleepTime + 0.4)
         }
     }
 
-    [Void]WriteCompositeMessage(
+    [Void]WriteMessageComposite(
         [ATString[]]$ATComposite
     ) {
         $this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryARef].CompositeActual = [List[ATString]]::new($this.MessageHistory[[BattleStatusMessageWindow]::MessageHistoryBRef].CompositeActual)
@@ -23533,7 +23535,7 @@ Class BattleManager {
                 }
 
                 # FACILITATE THE UPDATE OF AUGMENTS AT THE END OF THE TURN
-                Foreach($Stat in $this.PhaseOneEntity.Status.Values) {
+                Foreach($Stat in $this.PhaseOneEntity.Stats.Values) {
                     $Stat.Update()
                     If($Stat.AugmentTurnDuration -EQ 0) {
                         If($this.PhaseOneEntity -IS [Player]) {
@@ -23883,7 +23885,7 @@ Class BattleManager {
                 }
 
                 # FACILITATE THE UPDATE OF AUGMENTS AT THE END OF THE TURN
-                Foreach($Stat in $this.PhaseTwoEntity.Status.Values) {
+                Foreach($Stat in $this.PhaseTwoEntity.Stats.Values) {
                     $Stat.Update()
                     If($Stat.AugmentTurnDuration -EQ 0) {
                         If($this.PhaseOneEntity -IS [Player]) {
