@@ -411,6 +411,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
                         Column = 40 - (15 / 2)
                     }
                 }
+                UserData   = 'BATTLE COMMENCE'
+                UseATReset = $true
             }
             Write-Host "$($Banner.ToAnsiControlSequenceString())"
             Write-Host "$([ATControlSequences]::CursorHide)"
@@ -2648,19 +2650,21 @@ Class BattleAction {
     #     $this.Description = $Description
     # }
 
-    # BattleAction(
-    #     [BattleAction]$Copy
-    # ) {
-    #     $this.Name        = $Copy.Name
-    #     $this.Type        = $Copy.Type
-    #     $this.Effect      = $Copy.Effect
-    #     $this.PreCalc     = $Copy.PreCalc
-    #     $this.PostCalc    = $Copy.PostCalc
-    #     $this.MpCost      = $Copy.MpCost
-    #     $this.EffectValue = $Copy.EffectValue
-    #     $this.Chance      = $Copy.Chance
-    #     $this.Description = $Copy.Description
-    # }
+    # THIS CTOR IS NEEDED BECAUSE POWERSHELL ASSIGNMENT IS BY REFERENCE
+    # THANKS C++
+    BattleAction(
+        [BattleAction]$Copy
+    ) {
+        $this.Name        = $Copy.Name
+        $this.Type        = $Copy.Type
+        $this.Effect      = $Copy.Effect
+        $this.PreCalc     = $Copy.PreCalc
+        $this.PostCalc    = $Copy.PostCalc
+        $this.MpCost      = $Copy.MpCost
+        $this.EffectValue = $Copy.EffectValue
+        $this.Chance      = $Copy.Chance
+        $this.Description = $Copy.Description
+    }
 }
 
 
@@ -19130,8 +19134,8 @@ Class BattleEntityStatusWindow : WindowBase {
     [ATCoordinates]$StatL4DrawCoordinates
     [Int]$WindowLTRow
     [Int]$WindowLTColumn
-    [Int]$WindowBRRow
-    [Int]$WindowBRColumn
+    [Int]$WindowRBRow
+    [Int]$WindowRBColumn
     [Boolean]$NameDrawDirty
     [Boolean]$HpDrawDirty
     [Boolean]$MpDrawDirty
@@ -19184,7 +19188,7 @@ Class BattleEntityStatusWindow : WindowBase {
             Column = $ColDef
         }
         $this.HpDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 2
+            Row    = $this.NameDrawCoordinates.Row + 2
             Column = $ColDef
         }
         $this.MpDrawCoordinates = [ATCoordinates]@{
@@ -19262,27 +19266,27 @@ Class BattleEntityStatusWindow : WindowBase {
             Column = $ColDef
         }
         $this.HpDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 2
+            Row    = $this.NameDrawCoordinates.Row + 2
             Column = $ColDef
         }
         $this.MpDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 5
+            Row    = $this.HpDrawCoordinates.Row + 3
             Column = $ColDef
         }
         $this.StatL1DrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 9
+            Row    = $this.MpDrawCoordinates.Row + 3
             Column = $ColDef
         }
         $this.StatL2DrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 11
+            Row    = $this.StatL1DrawCoordinates.Row + 2
             Column = $ColDef
         }
         $this.StatL3DrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 13
+            Row    = $this.StatL2DrawCoordinates.Row + 2
             Column = $ColDef
         }
         $this.StatL4DrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 15
+            Row    = $this.StatL3DrawCoordinates.Row + 2
             Column = $ColDef
         }
         $this.NameDrawDirty           = $true
@@ -19296,6 +19300,7 @@ Class BattleEntityStatusWindow : WindowBase {
         $this.HasSetEntityActive      = $false
         $this.BERef                   = $BERef
         $this.FullLineBlank           = [ATString]@{
+            Prefix     = [ATStringPrefix]::new()
             UserData   = [BattleEntityStatusWindow]::FullLineBlankActual
             UseATReset = $true
         }
@@ -19335,45 +19340,45 @@ Class BattleEntityStatusWindow : WindowBase {
         ([WindowBase]$this).Draw()
         If($this.NameDrawDirty -EQ $true) {
             $this.CreateNameDrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.NameDrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.NameDrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.NameDrawString.ToAnsiControlSequenceString())"
             $this.NameDrawDirty = $false
         }
         If($this.HpDrawDirty -EQ $true) {
             $this.CreateHpDrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.HpDrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.HpDrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())"
             $this.FullLineBlank.Prefix.Coordinates.Row++
-            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.MpDrawString.ToAnsiControlSequenceString())"
+            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.HpDrawString.ToAnsiControlSequenceString())"
             $this.HpDrawDirty = $false
         }
         If($this.MpDrawDirty -EQ $true) {
             $this.CreateMpDrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.MpDrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.MpDrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.MpDrawString.ToAnsiControlSequenceString())"
             $this.MpDrawDirty = $false
         }
         If($this.StatL1DrawDirty -EQ $true) {
             $this.CreateStatL1DrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.StatL1DrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.StatL1DrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL1DrawString.ToAnsiControlSequenceString())"
             $this.StatL1DrawDirty = $false
         }
         If($this.StatL2DrawDirty -EQ $true) {
             $this.CreateStatL2DrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.StatL2DrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.StatL2DrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL2DrawString.ToAnsiControlSequenceString())"
             $this.StatL2DrawDirty = $false
         }
         If($this.StatL3DrawDirty -EQ $true) {
             $this.CreateStatL3DrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.StatL3DrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.StatL3DrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL3DrawString.ToAnsiControlSequenceString())"
             $this.StatL3DrawDirty = $false
         }
         If($this.StatL4DrawDirty -EQ $true) {
             $this.CreateStatL4DrawString()
-            $this.FullLineBlank.Prefix.Coordinates = $this.StatL4DrawCoordinates
+            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.StatL4DrawCoordinates)
             Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.StatL4DrawString.ToAnsiControlSequenceString())"
             $this.StatL4DrawDirty = $false
         }
@@ -19443,7 +19448,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
                     Coordinates = [ATCoordinates]@{
-                        Row    = $this.HpDrawCoordinates.Row + 2
+                        Row    = $this.HpDrawCoordinates.Row + 1
                         Column = $this.HpDrawCoordinates.Column + 6
                     }
                 }
@@ -19504,7 +19509,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
                     Coordinates = [ATCoordinates]@{
-                        Row    = $this.MpDrawCoordinates.Row + 2
+                        Row    = $this.MpDrawCoordinates.Row + 1
                         Column = $this.MpDrawCoordinates.Column + 6
                     }
                 }
@@ -20015,7 +20020,7 @@ Class BattlePlayerActionWindow : WindowBase {
                         }
                     }
                     UserData   = "$([BattlePlayerActionWindow]::PlayerChevronCharacter)"
-                    UseATReset = true
+                    UseATReset = $true
                 },
                 $true
             )
@@ -20031,7 +20036,7 @@ Class BattlePlayerActionWindow : WindowBase {
                         }
                     }
                     UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
-                    UseATReset = true
+                    UseATReset = $true
                 },
                 $false
             )
@@ -20047,7 +20052,7 @@ Class BattlePlayerActionWindow : WindowBase {
                         }
                     }
                     UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
-                    UseATReset = true
+                    UseATReset = $true
                 },
                 $false
             )
@@ -20063,7 +20068,7 @@ Class BattlePlayerActionWindow : WindowBase {
                         }
                     }
                     UserData   = "$([BattlePlayerActionWindow]::PlayerChevronBlankCharacter)"
-                    UseATReset = true
+                    UseATReset = $true
                 },
                 $false
             )
@@ -23028,6 +23033,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Column = $this.RightBottom.Column - 1
         }
         [StatusTechniqueInventoryWindow]::PagingChevronRightBlank = [ATString]@{
+            Prefix     = [ATStringPrefix]::new()
             UserData   = ' '
             UseATReset = $true
         }
@@ -23037,6 +23043,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Column = $this.LeftTop.Column + 2
         }
         [StatusTechniqueInventoryWindow]::PagingChevronLeftBlank = [ATString]@{
+            Prefix     = [ATStringPrefix]::new()
             UserData   = ' '
             UseATReset = $true
         }
