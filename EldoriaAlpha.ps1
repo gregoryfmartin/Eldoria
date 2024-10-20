@@ -909,23 +909,35 @@ $Script:TheCommandTable = @{
 
         $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
         If($ExecuteChance -GT $SelfAction.Chance) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                0
-            )
+            # Return [BattleActionResult]::new(
+            #     [BattleActionResultType]::FailedAttackFailed,
+            #     $Self,
+            #     $Target,
+            #     0
+            # )
+            Return [BattleActionResult]@{
+                Type            = [BattleActionResultType]::FailedAttackFailed
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = 0
+            }
         }
 
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackMissed,
-                $Self,
-                $Target,
-                0
-            )
+            # Return [BattleActionResult]::new(
+            #     [BattleActionResultType]::FailedAttackMissed,
+            #     $Self,
+            #     $Target,
+            #     0
+            # )
+            Return [BattleActionResult]@{
+                Type            = [BattleActionResultType]::FailedAttackMissed
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = 0
+            }
         }
 
         $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
@@ -942,19 +954,25 @@ $Script:TheCommandTable = @{
             $EffectiveDamageCritFactor = 1.5
         }
 
-        $EffectiveDamageAffinityFactor = $Script:BALut[$SelfAction.Type][$Target.Affinity]
+        $EffectiveDamageAffinityFactor = $Script:BATLut[$SelfAction.Type][$Target.Affinity]
 
         $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
 
         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
 
         If(0 -NE $DecRes) {
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::FailedAttackFailed,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
+            # Return [BattleActionResult]::new(
+            #     [BattleActionResultType]::FailedAttackFailed,
+            #     $Self,
+            #     $Target,
+            #     $FinalDamage
+            # )
+            Return [BattleActionResultType]@{
+                Type            = [BattleActionResultType]::FailedAttackFailed
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = $FinalDamage
+            }
         } Else {
             If($Target -IS [Player]) {
                 $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
@@ -963,42 +981,72 @@ $Script:TheCommandTable = @{
             }
 
             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritical,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
+                # Return [BattleActionResult]::new(
+                #     [BattleActionResultType]::SuccessWithCritical,
+                #     $Self,
+                #     $Target,
+                #     $FinalDamage
+                # )
+                Return [BattleActionResult]@{
+                    Type            = [BattleActionResultType]::SuccessWithCritical
+                    Originator      = $Self
+                    Target          = $Target
+                    ActionEffectSum = $FinalDamage
+                }
             } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
+                # Return [BattleActionResult]::new(
+                #     [BattleActionResultType]::SuccessWithAffinityBonus,
+                #     $Self,
+                #     $Target,
+                #     $FinalDamage
+                # )
+                Return [BattleActionResult]@{
+                    Type            = [BattleActionResultType]::SuccessWithAffinityBonus
+                    Originator      = $Self
+                    Target          = $Target
+                    ActionEffectSum = $FinalDamage
+                }
             } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                Return [BattleActionResult]::new(
-                    [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
-                    $Self,
-                    $Target,
-                    $FinalDamage
-                )
+                # Return [BattleActionResult]::new(
+                #     [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
+                #     $Self,
+                #     $Target,
+                #     $FinalDamage
+                # )
+                Return [BattleActionResult]@{
+                    Type            = [BattleActionResultType]::SuccessWithCritAndAffinityBonus
+                    Originator      = $Self
+                    Target          = $Target
+                    ActionEffectSum = $FinalDamage
+                }
             }
 
-            Return [BattleActionResult]::new(
-                [BattleActionResultType]::Success,
-                $Self,
-                $Target,
-                $FinalDamage
-            )
+            # Return [BattleActionResult]::new(
+            #     [BattleActionResultType]::Success,
+            #     $Self,
+            #     $Target,
+            #     $FinalDamage
+            # )
+            Return [BattleActionResult]@{
+                Type            = [BattleActionResultType]::Success
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = $FinalDamage
+            }
         }
     } Else {
-        Return [BattleActionResult]::new(
-            [BattleActionResultType]::FailedNoUsesRemaining,
-            $Self,
-            $Target,
-            0
-        )
+        # Return [BattleActionResult]::new(
+        #     [BattleActionResultType]::FailedNoUsesRemaining,
+        #     $Self,
+        #     $Target,
+        #     0
+        # )
+        Return [BattleActionResult]@{
+            Type            = [BattleActionResultType]::FailedNoUsesRemaining
+            Originator      = $Self
+            Target          = $Target
+            ActionEffectSum = 0
+        }
     }
 }
 
@@ -3905,7 +3953,7 @@ Class BattleEntity {
 
     BattleEntity() {
         $this.Name            = ''
-        $this.CanAct          = $false
+        $this.CanAct          = $true
         $this.Stats           = @{}
         $this.ActionListing   = @{}
         $this.SpoilsEffect    = $null
@@ -20476,7 +20524,7 @@ Class BattleStatusMessageWindow : WindowBase {
     }
 
     [Void]WriteNotEnoughMpMessage() {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVYellowADark24]::new()
@@ -20495,7 +20543,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleEntity]$Target,
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20523,7 +20571,7 @@ Class BattleStatusMessageWindow : WindowBase {
     [Void]WriteBarSwc(
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
@@ -20554,7 +20602,7 @@ Class BattleStatusMessageWindow : WindowBase {
     [Void]WriteBarAff(
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
@@ -20585,7 +20633,7 @@ Class BattleStatusMessageWindow : WindowBase {
     [Void]WriteBarCritAff(
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
@@ -20615,7 +20663,7 @@ Class BattleStatusMessageWindow : WindowBase {
     [Void]WriteBarSuccess(
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
@@ -20636,7 +20684,7 @@ Class BattleStatusMessageWindow : WindowBase {
     [Void]WriteBarFailMissed(
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
@@ -20657,7 +20705,7 @@ Class BattleStatusMessageWindow : WindowBase {
     [Void]WriteBarFailFailed(
         [BattleAction]$Action
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:BATAdornmentCharTable[$Action.Type].Item2
@@ -20681,7 +20729,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20733,7 +20781,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20785,7 +20833,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20837,7 +20885,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20889,7 +20937,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20941,7 +20989,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -20993,7 +21041,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -21045,7 +21093,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -21097,7 +21145,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -21149,7 +21197,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -21187,7 +21235,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -21225,7 +21273,7 @@ Class BattleStatusMessageWindow : WindowBase {
         [BattleAction]$Action,
         [BattleActionResult]$Result
     ) {
-        $this.WriteCompositeMessage(@(
+        $this.WriteMessageComposite(@(
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Originator.NameDrawColor
@@ -21265,7 +21313,7 @@ Class BattleStatusMessageWindow : WindowBase {
     ) {
         If($Originator == $Target) {
             # Healed themselves
-            $this.WriteCompositeMessage(@(
+            $this.WriteMessageComposite(@(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = $Originator.NameDrawColor
@@ -21297,7 +21345,7 @@ Class BattleStatusMessageWindow : WindowBase {
             ))
         } Else {
             # Healed Target
-            $this.WriteCompositeMessage(@(
+            $this.WriteMessageComposite(@(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = $Originator.NameDrawColor
@@ -23289,13 +23337,13 @@ Class BattleManager {
                             Break
                         }
 
-                        ([BattleActionResultType]::SuccessWithAffinity) {
+                        ([BattleActionResultType]::SuccessWithAffinityBonus) {
                             $Script:TheBattleStatusMessageWindow.WriteBarAff($ToExecute)
 
                             Break
                         }
 
-                        ([BattleActionResultType]::SuccessCritAff) {
+                        ([BattleActionResultType]::SuccessWithCritAndAffinityBonus) {
                             $Script:TheBattleStatusMessageWindow.WriteBarCritAff($ToExecute)
 
                             Break
@@ -23575,13 +23623,13 @@ Class BattleManager {
                 $Script:ThePlayerBattleStatWindow.Draw()
                 $Script:TheEnemyBattleStatWindow.Draw()
 
-                # CHECK TO SEE IF THE PHASE ONE ENTITY CAN ACTUALLY ACT
+                # CHECK TO SEE IF THE PHASE TWO ENTITY CAN ACTUALLY ACT
                 # REASONS THEY COULDN'T INCLUDE, BUT AREN'T LIMITED TO, STATUS AILMENTS LIKE SLEEP OR PARALYSIS
                 If($this.PhaseTwoEntity.CanAct -EQ $true) {
                     [BattleAction]$ToExecute          = $null
                     [BattleActionResult]$ActionResult = $null
 
-                    # DETERMINE IF THE PHASE ONE ENTITY IS THE PLAYER OR NOT
+                    # DETERMINE IF THE PHASE TWO ENTITY IS THE PLAYER OR NOT
                     # DIFFERENT LOGIC NEEDS TO OCCUR DEPENDING UPON THIS DECISION
                     # IF IT'S THE PLAYER, WE NEED TO BLOCK LOOP ON THE BATTLE ACTION
                     # SELECTION WINDOW SO THE PLAYER CAN CHOOSE AN ATTACK TO EXECUTE.
@@ -23613,7 +23661,7 @@ Class BattleManager {
                         # REFRESH THE PLAYER BATTLE STATUS WINDOW
                         $Script:ThePlayerBattleStatWindow.Draw()
                     } Else {
-                        # THE PHASE ONE ENTITY IS THE ENEMY
+                        # THE PHASE TWO ENTITY IS THE ENEMY
                         # THE ACTION THE ENEMY USES IS SELECTED FROM THE "MARBLE BAG", SO NO DELAY IS NEEDED HERE.
                         [ActionSlot]$SelectedSlot = $($this.PhaseTwoEntity.ActionMarbleBag | Get-Random)
                         $ToExecute                = $this.PhaseTwoEntity.ActionListing[$SelectedSlot]
@@ -23639,13 +23687,13 @@ Class BattleManager {
                             Break
                         }
 
-                        ([BattleActionResultType]::SuccessWithAffinity) {
+                        ([BattleActionResultType]::SuccessWithAffinityBonus) {
                             $Script:TheBattleStatusMessageWindow.WriteBarAff($ToExecute)
 
                             Break
                         }
 
-                        ([BattleActionResultType]::SuccessCritAff) {
+                        ([BattleActionResultType]::SuccessWithCritAndAffinityBonus) {
                             $Script:TheBattleStatusMessageWindow.WriteBarCritAff($ToExecute)
 
                             Break
