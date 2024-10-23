@@ -622,9 +622,9 @@ Class FastNoiseLite {
 
         [Float]$Xg    = [FastNoiseLite]::GRADIENTS2D[$Index1]
         [Float]$Yg    = [FastNoiseLite]::GRADIENTS2D[($Index1 -BOR 1)]
-        [Float]$Value = $Xd * $Xg + $Yd * $Yg
         [Float]$Xgo   = [FastNoiseLite]::RANDVECS2D[$Index2]
         [Float]$Ygo   = [FastNoiseLite]::RANDVECS2D[($Index2 -BOR 1)]
+        [Float]$Value = $Xd * $Xg + $Yd * $Yg
 
         $Xo = $Value * $Xgo
         $Yo = $Value * $Ygo
@@ -649,10 +649,10 @@ Class FastNoiseLite {
         [Float]$Xg    = [FastNoiseLite]::GRADIENTS3D[$Index1]
         [Float]$Yg    = [FastNoiseLite]::GRADIENTS3D[($Index1 -BOR 1)]
         [Float]$Zg    = [FastNoiseLite]::GRADIENTS2D[($Index1 -BOR 2)]
-        [Float]$Value = $Xd * $Xg + $Yd * $Yg + $Zd * $Zg
         [Float]$Xgo   = [FastNoiseLite]::RANDVECS3D[$Index2]
         [Float]$Ygo   = [FastNoiseLite]::RANDVECS3D[($Index2 -BOR 1)]
         [Float]$Zgo   = [FastNoiseLite]::RANDVECS3D[($Index2 -BOR 2)]
+        [Float]$Value = $Xd * $Xg + $Yd * $Yg + $Zd * $Zg
 
         $Xo = $Value * $Xgo
         $Yo = $Value * $Ygo
@@ -819,5 +819,586 @@ Class FastNoiseLite {
         }
 
         $this.FractalBounding = 1 / $LAmpFractal
+    }
+
+    [Float]GenNoiseSingle(
+        [Int]$Seed,
+        [Float]$X,
+        [Float]$Y
+    ) {
+        Switch($this.NoiseType) {
+            ([FnlNoiseType]::OpenSimplex2) {
+                Return $this.SingleSimplex($Seed, $X, $Y)
+            }
+
+            ([FnlNoiseType]::OpenSimplex2S) {
+                Return $this.SingleOpenSimplex2S($Seed, $X, $Y)
+            }
+
+            ([FnlNoiseType]::Cellular) {
+                Return $this.SingleCellular($Seed, $X, $Y)
+            }
+
+            ([FnlNoiseType]::Perlin) {
+                Return $this.SinglePerlin($Seed, $X, $Y)
+            }
+
+            ([FnlNoiseType]::ValueCubic) {
+                Return $this.SingleValueCubic($Seed, $X, $Y)
+            }
+
+            ([FnlNoiseType]::Value) {
+                Return $this.SingleValue($Seed, $X, $Y)
+            }
+
+            Default {
+                Return 0
+            }
+        }
+
+        Return 0
+    }
+
+    [Float]GenNoiseSingle(
+        [Int]$Seed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        Switch($this.NoiseType) {
+            ([FnlNoiseType]::OpenSimplex2) {
+                Return $this.SingleSimplex($Seed, $X, $Y, $Z)
+            }
+
+            ([FnlNoiseType]::OpenSimplex2S) {
+                Return $this.SingleOpenSimplex2S($Seed, $X, $Y, $Z)
+            }
+
+            ([FnlNoiseType]::Cellular) {
+                Return $this.SingleCellular($Seed, $X, $Y, $Z)
+            }
+
+            ([FnlNoiseType]::Perlin) {
+                Return $this.SinglePerlin($Seed, $X, $Y, $Z)
+            }
+
+            ([FnlNoiseType]::ValueCubic) {
+                Return $this.SingleValueCubic($Seed, $X, $Y, $Z)
+            }
+
+            ([FnlNoiseType]::Value) {
+                Return $this.SingleValue($Seed, $X, $Y, $Z)
+            }
+
+            Default {
+                Return 0
+            }
+        }
+
+        Return 0
+    }
+
+    [Void]TransformNoiseCoordinate(
+        [Ref]$X,
+        [Ref]$Y
+    ) {
+        $X *= $this.Frequency
+        $Y *= $this.Frequency
+
+        Switch($this.NoiseType) {
+            ($_ -EQ [FnlNoiseType]::OpenSimplex2 -OR $_ -EQ [FnlNoiseType]::OpenSimplex2S) {
+                [Float]$Sqrt3 = ([Float]1.7320508075688772935274463415059)
+                [Float]$F2    = 0.5 * ($Sqrt3 - 1)
+                [Float]$T     = ($X + $Y) * $F2
+
+                $X += $T
+                $Y += $T
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+
+        Return
+    }
+
+    [Void]TransformNoiseCoordinate(
+        [Ref]$X,
+        [Ref]$Y,
+        [Ref]$Z
+    ) {
+        $X *= $this.Frequency
+        $Y *= $this.Frequency
+        $Z *= $this.Frequency
+
+        Switch($this.TransformType3D) {
+            ([FnlTransformType3D]::ImproveXYPlanes) {
+                [Float]$Xy = $X + $Y
+                [Float]$S2 = $Xy * -([Float]0.211324865405187)
+                
+                $Z *= ([Float]0.577350269189626)
+                $X += $S2 - $Z
+                $Y  = $Y + $S2 - $Z
+                $Z += $Xy * ([Float]0.577350269189626)
+
+                Break
+            }
+
+            ([FnlTransformType3D]::ImproveXZPlanes) {
+                [Float]$Xz = $X + $Z
+                [Float]$S2 = $Xz * -([Float]0.211324865405187)
+
+                $Y *= ([Float]0.577350269189626)
+                $X += $S2 - $Z
+                $Y  = $Y + $S2 - $Z
+                $Z += $Xz * ([Float]0.577350269189626)
+
+                Break
+            }
+
+            ([FnlTransformType3D]::DefaultOpenSimplex2) {
+                [Float]$R3 = ([Float](2.0 / 3.0))
+                [Float]$R  = ($X + $Y + $Z) * $R3
+
+                $X = $R - $X
+                $Y = $R - $Y
+                $Z = $R - $Z
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+
+        Return
+    }
+
+    [Void]UpdateTransformType3D() {
+        Switch($this.RotationType3D) {
+            ([FnlRotationType3D]::ImproveXYPlanes) {
+                $this.TransformType3D = [FnlTransformType3D]::ImproveXYPlanes
+                
+                Break
+            }
+
+            ([FnlRotationType3D]::ImproveXZPlanes) {
+                $this.TransformType3D = [FnlTransformType3D]::ImproveXZPlanes
+
+                Break
+            }
+
+            Default {
+                Switch($this.NoiseType) {
+                    ($_ -EQ [FnlNoiseType]::OpenSimplex2 -OR $_ -EQ [FnlNoiseType]::OpenSimplex2S) {
+                        $this.TransformType3D = [FnlTransformType3D]::DefaultOpenSimplex2
+
+                        Break
+                    }
+
+                    Default {
+                        $this.TransformType3D = [FnlTransformType3D]::None
+
+                        Break
+                    }
+                }
+
+                Break
+            }
+        }
+
+        Return
+    }
+
+    [Void]TransformDomainWarpCoordinate(
+        [Ref]$X,
+        [Ref]$Y
+    ) {
+        Switch($this.DomainWarpType) {
+            ($_ -EQ [FnlDomainWarpType]::OpenSimplex2 -OR $_ -EQ [FnlDomainWarpType]::OpenSimplex2Reduced) {
+                [Float]$Sqrt3 = ([Float]1.7320508075688772935274463415059)
+                [Float]$F2    = 0.5 * ($Sqrt3 - 1)
+                [Float]$T     = ($X + $Y) * $F2
+
+                $X += $T
+                $Y += $T
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+
+        Return
+    }
+
+    [Void]TransformDomainWarpCoordinate(
+        [Ref]$X,
+        [Ref]$Y,
+        [Ref]$Z
+    ) {
+        Switch($this.WarpTransformType3D) {
+            ([FnlTransformType3D]::ImproveXYPlanes) {
+                [Float]$Xy = $X + $Y
+                [Float]$S2 = $Xy * -([Float]0.211324865405187)
+
+                $Z *= ([Float]0.577350269189626)
+                $X += $S2 - $Z
+                $Y  = $Y + $S2 - $Z
+                $Z += $Xy * ([Float]0.577350269189626)
+
+                Break
+            }
+
+            ([FnlTransformType3D]::ImproveXZPlanes) {
+                [Float]$Xz = $X + $Z
+                [Float]$S2 = $Xz -([Float]0.211324865405187)
+
+                $Y *= ([Float]0.577350269189626)
+                $X += $S2 - $Y
+                $Z += $S2 - $Y
+                $Y += $Xz * ([Float]0.577350269189626)
+
+                Break
+            }
+
+            ([FnlTransformType3D]::DefaultOpenSimplex2) {
+                [Float]$R3 = ([Float](2.0 / 3.0))
+                [Float]$R  = ($X + $Y + $Z) * $R3
+
+                $X = $R - $X
+                $Y = $R - $Y
+                $Z = $R - $Z
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+
+        Return
+    }
+
+    [Void]UpdateWarpTransformType3D() {
+        Switch($this.RotationType3D) {
+            ([FnlRotationType3D]::ImproveXYPlanes) {
+                $this.WarpTransformType3D = [FnlTransformType3D]::ImproveXYPlanes
+
+                Break
+            }
+
+            ([FnlRotationType3D]::ImproveXZPlanes) {
+                $this.WarpTransformType3D = [FnlTransformType3D]::ImproveXZPlanes
+
+                Break
+            }
+
+            Default {
+                Switch($this.DomainWarpType) {
+                    ($_ -EQ [FnlDomainWarpType]::OpenSimplex2 -OR $_ -EQ [FnlDomainWarpType]::OpenSimplex2Reduced) {
+                        $this.WarpTransformType3D = [FnlTransformType3D]::DefaultOpenSimplex2
+
+                        Break
+                    }
+
+                    Default {
+                        $this.WarpTransformType3D = [FnlTransformType3D]::None
+
+                        Break
+                    }
+                }
+
+                Break
+            }
+        }
+
+        Return
+    }
+
+    [Float]GenFractalFBm(
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Int]$LSeed = $this.Seed
+        [Float]$Sum = 0
+        [Float]$Amp = $this.FractalBounding
+
+        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+            [Float]$Noise = $this.GenNoiseSingle($LSeed++, $X, $Y)
+
+            $Sum += $Noise * $Amp
+            $Amp *= $this.Lerp(1.0, [FastNoiseLite]::FastMin($Noise + 1, 2) * 0.5, $this.WeightedStrength)
+
+            $X   *= $this.Lacunarity
+            $Y   *= $this.Lacunarity
+            $Amp *= $this.Gain
+        }
+
+        Return $Sum
+    }
+
+    [Float]GenFractalFBm(
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$LSeed = $this.Seed
+        [Float]$Sum = 0
+        [Float]$Amp = $this.FractalBounding
+
+        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+            [Float]$Noise = $this.GenNoiseSingle($LSeed++, $X, $Y, $Z)
+
+            $Sum += $Noise * $Amp
+            $Amp *= $this.Lerp(1.0, [FastNoiseLite]::FastMin($Noise + 1, 2) * 0.5, $this.WeightedStrength)
+
+            $X   *= $this.Lacunarity
+            $Y   *= $this.Lacunarity
+            $Z   *= $this.Lacunarity
+            $Amp *= $this.Gain
+        }
+
+        Return $Sum
+    }
+
+    [Float]GenFractalRidged(
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Int]$LSeed = $this.Seed
+        [Float]$Sum = 0
+        [Float]$Amp = $this.FractalBounding
+
+        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+            [Float]$Noise = [FastNoiseLite]::FastAbs($this.GenNoiseSingle($LSeed++, $X, $Y))
+
+            $Sum += ($Noise * -2 + 1) * $Amp
+            $Amp *= $this.Lerp(1.0, 1 - $Noise, $this.WeightedStrength)
+
+            $X   *= $this.Lacunarity
+            $Y   *= $this.Lacunarity
+            $Amp *= $this.Gain
+        }
+
+        Return $Sum
+    }
+
+    [Float]GenFractalRidged(
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$LSeed = $this.Seed
+        [Float]$Sum = 0
+        [Float]$Amp = $this.FractalBounding
+
+        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+            [Float]$Noise = [FastNoiseLite]::FastAbs($this.GenNoiseSingle($LSeed++, $X, $Y, $Z))
+
+            $Sum += ($Noise * -2 + 1) * $Amp
+            $Amp *= $this.Lerp(1.0, 1 - $Noise, $this.WeightedStrength)
+
+            $X   *= $this.Lacunarity
+            $Y   *= $this.Lacunarity
+            $Z   *= $this.Lacunarity
+            $Amp *= $this.Gain
+        }
+
+        Return $Sum
+    }
+
+    [Float]GenFractalPingPong(
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Int]$LSeed = $this.Seed
+        [Float]$Sum = 0
+        [Float]$Amp = $this.FractalBounding
+
+        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+            [Float]$Noise = $this.PingPong(($this.GenNoiseSingle($LSeed++, $X, $Y) + 1) * $this.PingPongStrength)
+
+            $Sum += ($Noise - 0.5) * 2 * $Amp
+            $Amp *= $this.Lerp(1.0, $Noise, $this.WeightedStrength)
+            $X   *= $this.Lacunarity
+            $Y   *= $this.Lacunarity
+            $Amp *= $this.Gain
+        }
+
+        Return $Sum
+    }
+
+    [Float]GenFractalPingPong(
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$LSeed = $this.Seed
+        [Float]$Sum = 0
+        [Float]$Amp = $this.FractalBounding
+
+        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+            [Float]$Noise = $this.PingPong(($this.GenNoiseSingle($LSeed++, $X, $Y, $Z) + 1) * $this.PingPongStrength)
+
+            $Sum += ($Noise - 0.5) * 2 * $Amp
+            $Amp *= $this.Lerp(1.0, $Noise, $this.WeightedStrength)
+            $X   *= $this.Lacunarity
+            $Y   *= $this.Lacunarity
+            $Z   *= $this.Lacunarity
+            $Amp *= $this.Gain
+        }
+
+        Return $Sum
+    }
+
+    [Float]SingleSimplex(
+        [Int]$Seed,
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Float]$Sqrt3 = 1.7320508075688772935274463415059
+        [Float]$G2    = (3 - $Sqrt3) / 6
+        [Int]$I       = [FastNoiseLite]::FastFloor($X)
+        [Int]$J       = [FastNoiseLite]::FastFloor($Y)
+        [Float]$Xi    = ([Float]($X - $I))
+        [Float]$Yi    = ([Float]($Y - $J))
+        [Float]$T     = ($Xi + $Yi) * $G2
+        [Float]$X0    = ([Float]($Xi - $T))
+        [Float]$Y0    = ([Float]($Yi - $T))
+        [Float]$N0    = 0.0
+        [Float]$N1    = 0.0
+        [Float]$N2    = 0.0
+
+        $I *= [FastNoiseLite]::PRIMEX
+        $J *= [FastNoiseLite]::PRIMEY
+
+        [Float]$A = 0.5 - $X0 * $X0 - $Y0 * $Y0
+        If($A -LE 0) {
+            $N0 = 0
+        } Else {
+            $N0 = ($A * $A) * ($A * $A) * $this.GradCoord($Seed, $I, $J, $X0, $Y0)
+        }
+
+        [Float]$C = ([Float](2 * (1 - 2 * $G2) * (1 / $G2 - 2)) * $T + ([Float](-2 * (1 - 2 * $G2) * (1 - 2 * $G2)) + $A))
+        If($C -LE 0) {
+            $N2 = 0
+        } Else {
+            [Float]$X2 = $X0 + (2 * ([Float]($G2 - 1)))
+            [Float]$Y2 = $Y0 + (2 * ([Float]($G2 - 1)))
+            $N2 = ($C * $C) * ($C * $C) * $this.GradCoord($Seed, $I + [FastNoiseLite]::PRIMEX, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
+        }
+
+        If($Y0 -GT $X0) {
+            [Float]$X1 = $X0 + ([Float]$G2)
+            [Float]$Y1 = $Y0 + ([Float]($G2 - 1))
+            [Float]$B  = 0.5 - $X1 * $X1 - $Y1 * $Y1
+
+            If($B -LE 0) {
+                $N1 = 0
+            } Else {
+                $N1 = ($B * $B) * ($B * $B) * $this.GradCoord($Seed, $I, $J + [FastNoiseLite]::PRIMEY, $X1, $Y1)
+            }
+        } Else {
+            [Float]$X1 = $X0 + ([Float]($G2 - 1))
+            [Float]$Y1 = $Y0 + ([Float]$G2)
+            [Float]$B  = 0.5 - $X1 * $X1 - $Y1 * $Y1
+
+            If($B -LE 0) {
+                $N1 = 0
+            } Else {
+                $N1 = ($B * $B) * ($B * $B) * $this.GradCoord($Seed, $I + [FastNoiseLite]::PRIMEX, $J, $X1, $Y1)
+            }
+        }
+
+        Return ($N0 + $N1 + $N2) * 99.83685446303647
+    }
+
+    [Float]SingleOpenSimplex2(
+        [Int]$LSeed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$I      = [FastNoiseLite]::FastRound($X)
+        [Int]$J      = [FastNoiseLite]::FastRound($Y)
+        [Int]$K      = [FastNoiseLite]::FastRound($Z)
+        [Float]$X0   = ([Float]($X - $I))
+        [Float]$Y0   = ([Float]($Y - $J))
+        [Float]$Z0   = ([Float]($Z - $K))
+        [Int]$XNSign = ([Int](-1.0 - $X0) -BOR 1)
+        [Int]$YNSign = ([Int](-1.0 - $Y0) -BOR 1)
+        [Int]$ZNSign = ([Int](-1.0 - $Z0) -BOR 1)
+        [Float]$Ax0  = $XNSign * -$X0
+        [Float]$Ay0  = $YNSign * -$Y0
+        [Float]$Az0  = $ZNSign * -$Z0
+
+        $I *= [FastNoiseLite]::PRIMEX
+        $J *= [FastNoiseLite]::PRIMEY
+        $K *= [FastNoiseLite]::PRIMEZ
+
+        [Float]$Value = 0
+        [Float]$A = (0.6 - $X0 * $X0) - ($Y0 * $Y0 + $Z0 * $Z0)
+
+        For([Int]$l = 0; ; $l++) {
+            If($A -GT 0) {
+                $Value += ($A * $A) * ($A * $A) * $this.GradCoord($LSeed, $I, $J, $K, $X0, $Y0, $Z0)
+            }
+            If($Ax0 -GE $Ay0 -AND $Ax0 -GE $Az0) {
+                [Float]$B = $A + $Ax0 + $Ax0
+
+                If($B -GT 1) {
+                    $B     -= 1
+                    $Value += ($B * $B) * ($B * $B) * $this.GradCoord($LSeed, $I - $XNSign * [FastNoiseLite]::PRIMEX, $J, $K, $X0 + $XNSign, $Y0, $Z0)
+                }
+            } Elseif($Ay0 -GT $Ax0 -AND $Ay0 -GE $Az0) {
+                [Float]$B = $A + $Ay0 + $Ay0
+
+                If($B -GT 1) {
+                    $B     -= 1
+                    $Value += ($B * $B) * ($B * $B) * $this.GradCoord($LSeed, $I, $J - $YNSign * [FastNoiseLite]::PRIMEY, $K, $X0, $Y0 + $YNSign, $Z0)
+                }
+            } Else {
+                [Float]$B = $A + $Az0 + $Az0
+
+                If($B -GT 1) {
+                    $B -= 1
+                    $Value += ($B * $B) * ($B * $B) * $this.GradCoord($LSeed, $I, $J, $K - $ZNSign * [FastNoiseLite]::PRIMEZ, $X0, $Y0, $Z0 + $ZNSign)
+                }
+            }
+
+            If($l == 1) {
+                Break
+            }
+
+            $Ax0 = 0.5 - $Ax0
+            $Ay0 = 0.5 - $Ay0
+            $Az0 = 0.5 - $Az0
+
+            $X0 = $XNSign * $Ax0
+            $Y0 = $YNSign * $Ay0
+            $Z0 = $ZNSign * $Az0
+
+            $A += (0.75 - $Ax0) - ($Ay0 + $Az0)
+
+            $I += ($XNSign -SHR 1) -BAND [FastNoiseLite]::PRIMEX
+            $J += ($YNSign -SHR 1) -BAND [FastNoiseLite]::PRIMEY
+            $K += ($ZNSign -SHR 1) -BAND [FastNoiseLite]::PRIMEZ
+
+            $XNSign = -$XNSign
+            $YNSign = -$YNSign
+            $ZNSign = -$ZNSign
+
+            $LSeed = -BNOT $LSeed
+        }
+
+        Return $Value * 32.69428253173828125
     }
 }
