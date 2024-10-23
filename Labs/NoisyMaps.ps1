@@ -541,7 +541,123 @@ Class FastNoiseLite {
         Return $Xd * $Xg + $Yd * $Yg
     }
 
-    
+    Static [Float]GradCoord(
+        [Int]$Seed,
+        [Int]$XPrimed,
+        [Int]$YPrimed,
+        [Int]$ZPrimed,
+        [Float]$Xd,
+        [Float]$Yd,
+        [Float]$Zd
+    ) {
+        [Int]$Hash = [FastNoiseLite]::Hash($Seed, $XPrimed, $YPrimed, $ZPrimed)
+
+        $Hash = $Hash -BXOR ($Hash -SHR 15) # ORIGINAL STATEMENT WAS hash ^= hash >> 15;
+        $Hash = $Hash -BAND (63 -SHL 2) # ORIGINAL STATEMENT WAS  hash &= 63 << 2;
+
+        [Float]$Xg = [FastNoiseLite]::GRADIENTS3D[$Hash]
+        [Float]$Yg = [FastNoiseLite]::GRADIENTS3D[($Hash -BOR 1)]
+        [Float]$Zg = [FastNoiseLite]::GRADIENTS3D[($Hash -BOR 2)]
+
+        Return $Xd * $Xg + $Yd * $Yg + $Zd * $Zg
+    }
+
+    ###########################################################################
+    #
+    # THE ORIGINAL SOURCE FOR THIS METHOD IS AS FOLLOWS:
+    #
+    #     private static void GradCoordOut(int seed, int xPrimed, int yPrimed, out float xo, out float yo)
+    #     {
+    #     int hash = Hash(seed, xPrimed, yPrimed) & (255 << 1);
+    #
+    #     xo = RandVecs2D[hash];
+    #     yo = RandVecs2D[hash | 1];
+    #     }
+    #
+    # I'M UNSURE IF USING REFERENCE ARGUMENTS HERE IS GOING TO BE SATISFACTORY
+    # ENOUGH, BUT IT SHOULD BE IN THEORY.
+    #
+    ###########################################################################
+    Static [Void]GradCoordOut(
+        [Int]$Seed,
+        [Int]$XPrimed,
+        [Int]$YPrimed,
+        [Ref]$Xo,
+        [Ref]$Yo
+    ) {
+        [Int]$Hash = [FastNoiseLite]::Hash($Seed, $XPrimed, $YPrimed) -BAND (255 -SHL 1)
+
+        $Xo = [FastNoiseLite]::RANDVECS2D[$Hash]
+        $Yo = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 1)]
+    }
+
+    Static [Void]GradCoordOut(
+        [Int]$Seed,
+        [Int]$XPrimed,
+        [Int]$YPrimed,
+        [Int]$ZPrimed,
+        [Ref]$Xo,
+        [Ref]$Yo,
+        [Ref]$Zo
+    ) {
+        [Int]$Hash = [FastNoiseLite]::Hash($Seed, $XPrimed, $YPrimed) -BAND (255 -SHL 2)
+
+        $Xo = [FastNoiseLite]::RANDVECS2D[$Hash]
+        $Yo = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 1)]
+        $Zo = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 2)]
+    }
+
+    Static [Void]GradCoordDual(
+        [Int]$Seed,
+        [Int]$XPrimed,
+        [Int]$YPrimed,
+        [Float]$Xd,
+        [Float]$Yd,
+        [Ref]$Xo,
+        [Ref]$Yo
+    ) {
+        [Int]$Hash   = [FastNoiseLite]::Hash($Seed, $XPrimed, $YPrimed)
+        [Int]$Index1 = $Hash -BAND (127 -SHL 1)
+        [Int]$Index2 = ($Hash -SHR 7) -BAND (255 -SHL 1)
+
+        [Float]$Xg    = [FastNoiseLite]::GRADIENTS2D[$Index1]
+        [Float]$Yg    = [FastNoiseLite]::GRADIENTS2D[($Index1 -BOR 1)]
+        [Float]$Value = $Xd * $Xg + $Yd * $Yg
+        [Float]$Xgo   = [FastNoiseLite]::RANDVECS2D[$Index2]
+        [Float]$Ygo   = [FastNoiseLite]::RANDVECS2D[($Index2 -BOR 1)]
+
+        $Xo = $Value * $Xgo
+        $Yo = $Value * $Ygo
+    }
+
+    Static [Void]GradCoordDual(
+        [Int]$Seed,
+        [Int]$XPrimed,
+        [Int]$YPrimed,
+        [Int]$ZPrimed,
+        [Float]$Xd,
+        [Float]$Yd,
+        [Float]$Zd,
+        [Ref]$Xo,
+        [Ref]$Yo,
+        [Ref]$Zo
+    ) {
+        [Int]$Hash   = [FastNoiseLite]::Hash($Seed, $XPrimed, $YPrimed, $ZPrimed)
+        [Int]$Index1 = $Hash -BAND (63 -SHL 2)
+        [Int]$Index2 = ($Hash -SHR 6) -BAND (255 -SHL 2)
+
+        [Float]$Xg    = [FastNoiseLite]::GRADIENTS3D[$Index1]
+        [Float]$Yg    = [FastNoiseLite]::GRADIENTS3D[($Index1 -BOR 1)]
+        [Float]$Zg    = [FastNoiseLite]::GRADIENTS2D[($Index1 -BOR 2)]
+        [Float]$Value = $Xd * $Xg + $Yd * $Yg + $Zd * $Zg
+        [Float]$Xgo   = [FastNoiseLite]::RANDVECS3D[$Index2]
+        [Float]$Ygo   = [FastNoiseLite]::RANDVECS3D[($Index2 -BOR 1)]
+        [Float]$Zgo   = [FastNoiseLite]::RANDVECS3D[($Index2 -BOR 2)]
+
+        $Xo = $Value * $Xgo
+        $Yo = $Value * $Ygo
+        $Zo = $Value * $Zgo
+    }
 
     [Void]SetNoiseType(
         [FnlNoiseType]$NoiseType
