@@ -1502,4 +1502,262 @@ Class FastNoiseLite {
 
         Return $Value * 18.24196194486065
     }
+
+    [Float]SingleOpenSimplex2S(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Float]$Sqrt3 = 1.7320508075688772935274463415059
+        [Float]$G2    = (3 - $Sqrt3) / 6
+        [Int]$I       = [FastNoiseLite]::FastFloor($X)
+        [Int]$J       = [FastNoiseLite]::FastFloor($Y)
+        [Int]$K       = [FastNoiseLite]::FastFloor($Z)
+        [Float]$Xi    = ([Float]($X - $I))
+        [Float]$Yi    = ([Float]($Y - $J))
+        [Float]$Zi    = ([Float]($Z - $K))
+
+        $I *= [FastNoiseLite]::PRIMEX
+        $J *= [FastNoiseLite]::PRIMEY
+        $K *= [FastNoiseLite]::PRIMEZ
+
+        [Int]$Seed2  = $ASeed + 1293373
+        [Int]$XNMask = ([Int](0.5 - $Xi))
+        [Int]$YNMask = ([Int](0.5 - $Yi))
+        [Int]$ZNMask = ([Int](0.5 - $Zi))
+
+        [Float]$X0    = $Xi + $XNMask
+        [Float]$Y0    = $Yi + $YNMask
+        [Float]$Z0    = $Zi + $ZNMask
+        [Float]$A0    = 0.75 - $X0 * $X0 - $Y0 * $Y0 - $Z0 * $Z0
+        [Float]$Value = ($A0 * $A0) * ($A0 * $A0) * $this.GradCoord(
+            $ASeed,
+            $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
+            $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
+            $K + ($ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+            $X0, $Y0, $Z0
+        )
+        
+        [Float]$X1  = $Xi - 0.5
+        [Float]$Y1  = $Yi - 0.5
+        [Float]$Z1  = $Zi - 0.5
+        [Float]$A1  = 0.75 - $X1 * $X1 - $Y1 * $Y1 - $Z1 * $Z1
+        $Value     += ($A1 * $A1) * ($A1 * $A1) * $this.GradCoord(
+            $Seed2,
+            $I + [FastNoiseLite]::PRIMEX,
+            $J + [FastNoiseLite]::PRIMEY,
+            $K + [FastNoiseLite]::PRIMEZ,
+            $X1, $Y1, $Z1
+        )
+
+        [Float]$XAFlipMask0 = (($XNMask -BOR 1) -SHL 1) * $X1
+        [Float]$YAFlipMask0 = (($YNMask -BOR 1) -SHL 1) * $Y1
+        [Float]$ZAFlipMask0 = (($ZNMask -BOR 1) -SHL 1) * $Z1
+        [Float]$XAFlipMask1 = (-2 - ($XNMask -SHL 2)) * $X1 - 1.0
+        [Float]$YAFlipMask1 = (-2 - ($YNMask -SHL 2)) * $Y1 - 1.0
+        [Float]$ZAFlipMask1 = (-2 - ($ZNMask -SHL 2)) * $Z1 - 1.0
+
+        [Boolean]$Skip5 = $false
+        [Float]$A2      = $XAFlipMask0 + $A0
+
+        If($A2 -GT 0) {
+            [Float]$X2 = $X0 - ($XNMask -BOR 1)
+            [Float]$Y2 = $Y0
+            [Float]$Z2 = $Z0
+
+            $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord(
+                $ASeed,
+                $I + (-BNOT $XNMask -BAND [FastNoiseLite]::PRIMEX),
+                $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
+                $K + ($ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+                $X2, $Y2, $Z2
+            )
+        } Else {
+            [Float]$A3 = $YAFlipMask0 + $ZAFlipMask0 + $A0
+
+            If($A3 -GT 0) {
+                [Float]$X3 = $X0
+                [Float]$Y3 = $Y0 - ($YNMask -BOR 1)
+                [Float]$Z3 = $Z0 - ($ZNMask -BOR 1)
+
+                $Value += ($A3 * $A3) * ($A3 * $A3) * $this.GradCoord(
+                    $ASeed,
+                    $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
+                    $J + (-BNOT $YNMask -BAND [FastNoiseLite]::PRIMEY),
+                    $K + (-BNOT $ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+                    $X3, $Y3, $Z3
+                )
+            }
+
+            [Float]$A4 = $XAFlipMask1 + $A1
+            If($A4 -GT 0) {
+                [Float]$X4 = ($XNMask -BOR 1) + $X1
+                [Float]$Y4 = $Y1
+                [Float]$Z4 = $Z1
+
+                $Value += ($A4 * $A4) * ($A4 * $A4) * $this.GradCoord(
+                    $Seed2,
+                    $I + ($XNMask -BAND ([FastNoiseLite]::PRIMEX * 2)),
+                    $J + [FastNoiseLite]::PRIMEY,
+                    $K + [FastNoiseLite]::PRIMEZ,
+                    $X4, $Y4, $Z4
+                )
+                $Skip5 = $true
+            }
+        }
+
+        [Boolean]$Skip9 = $false
+        [Float]$A6      = $YAFlipMask0 + $A0
+
+        If($A6 -GT 0) {
+            [Float]$X6 = $X0
+            [Float]$Y6 = $Y0 - ($YNMask -BOR 1)
+            [Float]$Z6 = $Z0
+
+            $Value += ($A6 * $A6) * ($A6 * $A6) * $this.GradCoord(
+                $ASeed,
+                $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
+                $J + (-BNOT $YNMask -BAND [FastNoiseLite]::PRIMEY),
+                $K + ($ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+                $X6, $Y6, $Z6
+            )
+        } Else {
+            [Float]$A7 = $XAFlipMask0 + $ZAFlipMask0 + $A0
+
+            If($A7 -GT 0) {
+                [FLoat]$X7 = $X0 - ($XNMask -BOR 1)
+                [Float]$Y7 = $Y0
+                [Float]$Z7 = $Z0 - ($ZNMask -BOR 1)
+
+                $Value += ($A7 * $A7) * ($A7 * $A7) * $this.GradCoord(
+                    $ASeed,
+                    $I + (-BNOT $XNMask -BAND [FastNoiseLite]::PRIMEX),
+                    $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
+                    $K + (-BNOT $ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+                    $X7, $Y7, $Z7
+                )
+            }
+
+            [Float]$A8 = $YAFlipMask1 + $A1
+            If($A8 -GT 0) {
+                [Float]$X8 = $X1
+                [Float]$Y8 = ($YNMask -BOR 1) + $Y1
+                [Float]$Z8 = $Z1
+
+                $Value += ($A8 * $A8) * ($A8 * $A8) * $this.GradCoord(
+                    $Seed2,
+                    $I + [FastNoiseLite]::PRIMEX,
+                    $J + ($YNMask -BAND ([FastNoiseLite]::PRIMEY -SHL 1)),
+                    $K + [FastNoiseLite]::PRIMEZ,
+                    $X8, $Y8, $Z8
+                )
+                $Skip9 = $true
+            }
+        }
+
+        [Boolean]$SkipD = $false
+        [Float]$Aa      = $ZAFlipMask0 + $A0
+        If($Aa -GT 0) {
+            [Float]$Xa = $X0
+            [Float]$Ya = $Y0
+            [Float]$Za = $Z0 - ($ZNMask -BOR 1)
+
+            $Value += ($Aa * $Aa) * ($Aa * $Aa) * $this.GradCoord(
+                $ASeed,
+                $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
+                $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
+                $K + (-BNOT $ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+                $Xa, $Ya, $Za
+            )
+        } Else {
+            [Float]$Ab = $XAFlipMask0 + $YAFlipMask0 + $A0
+
+            If($Ab -GT 0) {
+                [Float]$Xb = $X0 - ($XNMask -BOR 1)
+                [Float]$Yb = $Y0 - ($YNMask -BOR 1)
+                [Float]$Zb = $Z0
+
+                $Value += ($Ab * $Ab) * ($Ab * $Ab) * $this.GradCoord(
+                    $ASeed,
+                    $I + (-BNOT $XNMask -BAND [FastNoiseLite]::PRIMEX),
+                    $J + (-BNOT $YNMask -BAND [FastNoiseLite]::PRIMEY),
+                    $K + ($ZNMask -BAND [FastNoiseLite]::PRIMEZ),
+                    $Xb, $Yb, $Zb
+                )
+            }
+
+            [Float]$Ac = $ZAFlipMask1 + $A1
+            If($Ac -GT 0) {
+                [Float]$Xc = $X1
+                [Float]$Yc = $Y1
+                [Float]$Zc = ($ZNMask -BOR 1) + $Z1
+
+                $Value += ($Ac * $Ac) * ($Ac * $Ac) * $this.GradCoord(
+                    $Seed2,
+                    $I + [FastNoiseLite]::PRIMEX,
+                    $J + [FastNoiseLite]::PRIMEY,
+                    $K + ($ZNMask -BAND ([FastNoiseLite]::PRIMEZ -SHL 1)),
+                    $Xc, $Yc, $Zc
+                )
+                $SkipD = $true
+            }
+        }
+
+        If(-NOT $Skip5) {
+            [Float]$A5 = $YAFlipMask1 + $ZAFlipMask1 + $A1
+
+            If($A5 -GT 0) {
+                [Float]$X5 = $X1
+                [Float]$Y5 = ($YNMask -BOR 1) + $Y1
+                [Float]$Z5 = ($ZNMask -BOR 1) + $Z1
+
+                $Value += ($A5 * $A5) * ($A5 * $A5) * $this.GradCoord(
+                    $Seed2,
+                    $I + [FastNoiseLite]::PRIMEX,
+                    $J + ($YNMask -BAND ([FastNoiseLite]::PRIMEY -SHL 1)),
+                    $K + ($ZNMask -BAND ([FastNoiseLite]::PRIMEZ -SHL 1)),
+                    $X5, $Y5, $Z5
+                )
+            }
+        }
+
+        If(-NOT $Skip9) {
+            [Float]$A9 = $XAFlipMask1 + $ZAFlipMask1 + $A1
+
+            If($A9 -GT 0) {
+                [Float]$X9 = ($XNMask -BOR 1) + $X1
+                [Float]$Y9 = $Y1
+                [Float]$Z9 = ($ZNMask -BOR 1) + $Z1
+
+                $Value += ($A9 * $A9) * ($A9 * $A9) * $this.GradCoord(
+                    $Seed2,
+                    $I + ($XNMask -BAND ([FastNoiseLite]::PRIMEX * 2)),
+                    $J + [FastNoiseLite]::PRIMEY,
+                    $K + ($ZNMask -BAND ([FastNoiseLite]::PRIMEZ -SHL 1)),
+                    $X9, $Y9, $Z9
+                )
+            }
+        }
+
+        If(-NOT $SkipD) {
+            [Float]$Ad = $XAFlipMask1 + $YAFlipMask1 + $A1
+
+            If($Ad -GT 0) {
+                [Float]$Xd = ($XNMask -BOR 1) + $X1
+                [Float]$Yd = ($YNMask -BOR 1) + $Y1
+                [Float]$Zd = $Z1
+
+                $Value += ($Ad * $Ad) * ($Ad * $Ad) * $this.GradCoord(
+                    $Seed2,
+                    $I + ($XNMask -BAND ([FastNoiseLite]::PRIMEX -SHL 1)),
+                    $J + ($YNMask -BAND ([FastNoiseLite]::PRIMEY -SHL 1)),
+                    $K + [FastNoiseLite]::PRIMEZ,
+                    $Xd, $Yd, $Zd
+                )
+            }
+        }
+
+        Return $Value * 9.046026385208288
+    }
 }
