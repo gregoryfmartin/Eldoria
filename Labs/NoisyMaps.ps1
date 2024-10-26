@@ -1925,4 +1925,212 @@ Class FastNoiseLite {
 
         Return 0
     }
+
+    [Float]SingleCellular(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$Xr               = [FastNoiseLite]::FastRound($X)
+        [Int]$Yr               = [FastNoiseLite]::FastRound($Y)
+        [Int]$Zr               = [FastNoiseLite]::FastRound($Z)
+        [Int]$ClosestHash      = 0
+        [Float]$Distance0      = [Float]::MaxValue
+        [Float]$Distance1      = [Float]::MaxValue
+        [Float]$CellularJitter = 0.39614353 * $this.CellularJitterModifier
+        [Int]$XPrimed          = ($Xr - 1) * [FastNoiseLite]::PRIMEX
+        [Int]$YPrimedBase      = ($Yr - 1) * [FastNoiseLite]::PRIMEY
+        [Int]$ZPrimedBase      = ($Zr - 1) * [FastNoiseLite]::PRIMEZ
+
+        Switch($this.CellularDistanceFunction) {
+            { $_ -EQ [FnlCellularDistanceFunction]::Euclidean -OR $_ -EQ [FnlCellularDistanceFunction]::EuclideanSq } {
+                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr; $Xi++) {
+                    [Int]$YPrimed = $YPrimedBase
+
+                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr; $Yi++) {
+                        [Int]$ZPrimed = $ZPrimedBase
+
+                        For([Int]$Zi = $Zr - 1; $Zi -LE $Zr; $Zi++) {
+                            [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+                            [Int]$Idx           = $AHash -BAND (255 -SHL 2)
+                            [Float]$VecX        = ([Float]($Xi - $X) + [FastNoiseLite]::RANDVECS3D[$Idx] * $CellularJitter)
+                            [Float]$VecY        = ([Float]($Yi - $Y) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 1] * $CellularJitter)
+                            [Float]$VecZ        = ([Float]($Zi - $Z) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 2] * $CellularJitter)
+                            [Float]$NewDistance = $VecX * $VecX + $VecY * $VecY + $VecZ * $VecZ
+
+                            $Distance1 = [FastNoiseLite]::FastMax([FastNoiseLite]::FastMin($Distance1, $NewDistance), $Distance0)
+                            If($NewDistance -LT $Distance0) {
+                                $Distance0   = $NewDistance
+                                $ClosestHash = $AHash
+                            }
+
+                            $ZPrimed += [FastNoiseLite]::PRIMEZ
+                        }
+
+                        $YPrimed += [FastNoiseLite]::PRIMEY
+                    }
+
+                    $XPrimed += [FastNoiseLite]::PRIMEX
+                }
+
+                Break
+            }
+
+            ([FnlCellularDistanceFunction]::Manhattan) {
+                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr; $Xi++) {
+                    [Int]$YPrimed = $YPrimedBase
+
+                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr; $Yi++) {
+                        [Int]$ZPrimed = $ZPrimedBase
+
+                        For([Int]$Zi = $Zr - 1; $Zi -LE $Zr + 1; $Zi++) {
+                            [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+                            [Int]$Idx           = $AHash -BAND (255 -SHL 2)
+                            [Float]$VecX        = ([Float]($Xi - $X) + [FastNoiseLite]::RANDVECS3D[$Idx] * $CellularJitter)
+                            [Float]$VecY        = ([Float]($Yi - $Y) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 1] * $CellularJitter)
+                            [Float]$VecZ        = ([Float]($Zi - $Z) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 2] * $CellularJitter)
+                            [Float]$NewDistance = [FastNoiseLite]::FastAbs($VecX) + [FastNoiseLite]::FastAbs($VecY) + [FastNoiseLite]::FastAbs($VecZ)
+
+                            $Distance1 = [FastNoiseLite]::FastMax([FastNoiseLite]::FastMin($Distance1, $NewDistance), $Distance0)
+                            If($NewDistance -LT $Distance0) {
+                                $Distance0   = $NewDistance
+                                $ClosestHash = $AHash
+                            }
+
+                            $ZPrimed += [FastNoiseLite]::PRIMEZ
+                        }
+
+                        $YPrimed += [FastNoiseLite]::PRIMEY
+                    }
+
+                    $XPrimed += [FastNoiseLite]::PRIMEX
+                }
+
+                Break
+            }
+
+            ([FnlCellularDistanceFunction]::Hybrid) {
+                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
+                    [Int]$YPrimed = $YPrimedBase
+
+                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
+                        [Int]$ZPrimed = $ZPrimedBase
+
+                        For([Int]$Zi = $Zr - 1; $Zi -LE $Zr + 1; $Zi++) {
+                            [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+                            [Int]$Idx           = $AHash -BAND (255 -SHL 2)
+                            [Float]$VecX        = ([Float]($Xi - $X) + [FastNoiseLite]::RANDVECS3D[$Idx] * $CellularJitter)
+                            [Float]$VecY        = ([Float]($Yi - $Y) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 1] * $CellularJitter)
+                            [Float]$VecZ        = ([Float]($Zi - $Z) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 2] * $CellularJitter)
+                            [Float]$NewDistance = (
+                                [FastNoiseLite]::FastAbs($VecX) +
+                                [FastNoiseLite]::FastAbs($VecY) +
+                                [FastNoiseLite]::FastAbs($VecZ)
+                            ) + (
+                                $VecX * $VecX +
+                                $VecY * $VecY +
+                                $VecZ * $VecZ
+                            )
+
+                            $Distance1 = [FastNoiseLite]::FastMax([FastNoiseLite]::FastMin($Distance1, $NewDistance), $Distance0)
+                            If($NewDistance -LT $Distance0) {
+                                $Distance0   = $NewDistance
+                                $ClosestHash = $AHash
+                            }
+
+                            $Zprimed += [FastNoiseLite]::PRIMEZ
+                        }
+
+                        $YPrimed += [FastNoiseLite]::PRIMEY
+                    }
+
+                    $XPrimed += [FastNoiseLite]::PRIMEX
+                }
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+
+        If($this.CellularDistanceFunction -EQ [FnlCellularDistanceFunction]::Euclidean -AND $this.CellularReturnType -GE [FnlCellularReturnType]::Distance) {
+            $Distance0 = [FastNoiseLite]::FastSqrt($Distance0)
+
+            If($this.CellularReturnType -GE [FnlCellularReturnType].Distance2) {
+                $Distance1 = [FastNoiseLite]::FastSqrt($Distance1)
+            }
+        }
+
+        Switch($this.CellularReturnType) {
+            ([FnlCellularReturnType]::CellValue) {
+                Return $ClosestHash * (1 / 2147483648.0)
+            }
+
+            ([FnlCellularReturnType]::Distance) {
+                Return $Distance0 - 1
+            }
+
+            ([FnlCellularReturnType]::Distance2) {
+                Return $Distance1 - 1
+            }
+
+            ([FnlCellularReturnType]::Distance2Add) {
+                Return ($Distance1 + $Distance0) * 0.5 - 1
+            }
+
+            ([FnlCellularReturnType]::Distance2Sub) {
+                Return $Distance1 - $Distance0 - 1
+            }
+
+            ([FnlCellularReturnType]::Distance2Mul) {
+                Return $Distance1 * $Distance0 * 0.5 - 1
+            }
+
+            ([FnlCellularReturnType]::Distance2Div) {
+                Return $Distance0 / $Distance1 - 1
+            }
+
+            Default {
+                Return 0
+            }
+        }
+
+        Return 0
+    }
+
+    [Float]SinglePerlin(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Float]$Xd0 = ([Float]($X - $X0))
+        [Float]$Yd0 = ([Float]($Y - $Y0))
+        [Float]$Xd1 = $Xd0 - 1
+        [Float]$Yd1 = $Yd0 - 1
+        [Float]$Xs = [FastNoiseLite]::InterpQuintic($Xd0)
+        [Float]$Ys = [FastNoiseLite]::InterpQuintic($Yd0)
+
+        $X0 *= [FastNoiseLite]::PRIMEX
+        $Y0 *= [FastNoiseLite]::PRIMEY
+        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+
+        [Float]$Xf0 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::GradCoord($ASeed, $X0, $Y0, $Xd0, $Yd0),
+            [FastNoiseLite]::GradCoord($ASeed, $X1, $Y0, $Xd1, $Yd0),
+            $Xs
+        )
+        [Float]$Xf1 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::GradCoord($ASeed, $X0, $Y1, $Xd0, $Yd1),
+            [FastNoiseLite]::GradCoord($ASeed, $X1, $Y1, $Xd1, $Yd1),
+            $Xs
+        )
+
+        Return [FastNoiseLite]::Lerp($Xf0, $Xf1, $Ys) * 1.4247691104677813
+    }
 }
