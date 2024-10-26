@@ -2106,19 +2106,19 @@ Class FastNoiseLite {
         [Float]$X,
         [Float]$Y
     ) {
-        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Int]$X0    = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y0    = [FastNoiseLite]::FastFloor($Y)
         [Float]$Xd0 = ([Float]($X - $X0))
         [Float]$Yd0 = ([Float]($Y - $Y0))
         [Float]$Xd1 = $Xd0 - 1
         [Float]$Yd1 = $Yd0 - 1
-        [Float]$Xs = [FastNoiseLite]::InterpQuintic($Xd0)
-        [Float]$Ys = [FastNoiseLite]::InterpQuintic($Yd0)
+        [Float]$Xs  = [FastNoiseLite]::InterpQuintic($Xd0)
+        [Float]$Ys  = [FastNoiseLite]::InterpQuintic($Yd0)
 
-        $X0 *= [FastNoiseLite]::PRIMEX
-        $Y0 *= [FastNoiseLite]::PRIMEY
-        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        $X0      *= [FastNoiseLite]::PRIMEX
+        $Y0      *= [FastNoiseLite]::PRIMEY
+        [Int]$X1  = $X0 + [FastNoiseLite]::PRIMEX
+        [Int]$Y1  = $Y0 + [FastNoiseLite]::PRIMEY
 
         [Float]$Xf0 = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::GradCoord($ASeed, $X0, $Y0, $Xd0, $Yd0),
