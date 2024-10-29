@@ -763,7 +763,7 @@ Class FastNoiseLite {
             }
 
             ([FnlFractalType]::DomainWarpIndependent) {
-                $this.DomainWrapFractalIndependent(([Ref]$X), ([Ref]$Y))
+                $this.DomainWarpFractalIndependent(([Ref]$X), ([Ref]$Y))
                 Break
             }
 
@@ -788,7 +788,7 @@ Class FastNoiseLite {
             }
 
             ([FnlFractalType]::DomainWarpIndependent) {
-                $this.DomainWrapFractalIndependent(([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+                $this.DomainWarpFractalIndependent(([Ref]$X), ([Ref]$Y), ([Ref]$Z))
                 Break
             }
 
@@ -2132,5 +2132,600 @@ Class FastNoiseLite {
         )
 
         Return [FastNoiseLite]::Lerp($Xf0, $Xf1, $Ys) * 1.4247691104677813
+    }
+
+    [Float]SinglePerlin(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Int]$Z0 = [FastNoiseLite]::FastFloor($Z)
+
+        [Float]$Xd0 = ([Float]($X - $X0))
+        [Float]$Yd0 = ([Float]($Y - $Y0))
+        [Float]$Zd0 = ([Float]($Z - $Z0))
+        [Float]$Xd1 = $Xd0 - 1
+        [Float]$Yd1 = $Yd0 - 1
+        [Float]$Zd1 = $Zd0 - 1
+        [Float]$Xs = [FastNoiseLite]::InterpQuintic($Xd0)
+        [Float]$Ys = [FastNoiseLite]::InterpQuintic($Yd0)
+        [Float]$Zs = [FastNoiseLite]::InterpQuintic($Zd0)
+
+        $X0 *= [FastNoiseLite]::PRIMEX
+        $Y0 *= [FastNoiseLite]::PRIMEY
+        $Z0 *= [FastNoiseLite]::PRIMEZ
+
+        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
+
+        [Float]$Xf00 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X0, $Y0, $Z0,
+                $Xd0, $Yd0, $Zd0
+            ),
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X1, $Y0, $Z0,
+                $Xd1, $Yd0, $Zd0
+            ),
+            $Xs
+        )
+        [Float]$Xf10 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X0, $Y1, $Z0,
+                $Xd0, $Yd1, $Zd0
+            ),
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X1, $Y1, $Z0,
+                $Xd1, $Yd1, $Zd0
+            ),
+            $Xs
+        )
+        [Float]$Xf01 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X0, $Y0, $Z1,
+                $Xd0, $Yd0, $Zd1
+            ),
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X1, $Y0, $Z1,
+                $Xd1, $Yd0, $Zd1
+            ),
+            $Xs
+        )
+        [Float]$Xf11 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X0, $Y1, $Z1,
+                $Xd0, $Yd1, $Zd1
+            ),
+            [FastNoiseLite]::GradCoord(
+                $ASeed,
+                $X1, $Y1, $Z1,
+                $Xd1, $Yd1, $Zd1
+            ),
+            $Xs
+        )
+
+        [Float]$Yf0 = [FastNoiseLite]::Lerp($Xf00, $Xf10, $Ys)
+        [Float]$Yf1 = [FastNoiseLite]::Lerp($Xf01, $Xf11, $Ys)
+
+        Return [FastNoiseLite]::Lerp($Yf0, $Yf1, $Zs) * 0.964921414852142333984375
+    }
+
+    [Float]SingleValueCubic(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Int]$X1 = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y1 = [FastNoiseLite]::FastFloor($Y)
+
+        [Float]$Xs = ([Float]($X - $X1))
+        [Float]$Ys = ([Float]($Y - $Y1))
+
+        $X1 *= [FastNoiseLite]::PRIMEX
+        $Y1 *= [FastNoiseLite]::PRIMEY
+
+        [Int]$X0 = $X1 - [FastNoiseLite]::PRIMEX
+        [Int]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
+        [Int]$X2 = $X1 + [FastNoiseLite]::PRIMEX
+        [Int]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
+        
+        # THE FOLLOWING TWO STATEMENTS ORIGINALLY USED UNCHECKED STATEMENTS IN THE ARITHMETIC.
+        # POWERSHELL DOESN'T REALLY OFFER THIS, SO A FIXED CEILING COMPENSATING CONTROL IS
+        # USED (WHICH WOULD LIKELY BE THE SAME RESULT IN C# GIVEN THE BEHAVIOR OF THE UNCHECKED OPERATION,
+        # SAVE THE LACK OF A THROWN EXCEPTION).
+        #
+        # THAT SAID, IF THE RESULT OF THE CONDITIONAL IS MAX VALUE, SIMPLY ADDING X1 TO IT WOULD CAUSE AN
+        # OVERFLOW, SO I'M KIND OF CONFUSED ABOUT THESE FOLLOWING TWO STATEMENTS (THEY'RE FUNCTIONALLY EQUIVALENT TO
+        # AN UNCHECKED OP IN C#).
+        #
+        # ANOTHER SANITY CHECK HERE IS TO USE INT64 RATHER THAN INT. INT MASKS TO INT32, AND AN OVERFLOW WILL THROW
+        # AN EXCEPTION IN POWERSHELL.
+        [Int64]$X3 = $X1 + ((([FastNoiseLite]::PRIMEX * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEX * 2))
+        [Int64]$Y3 = $Y1 + ((([FastNoiseLite]::PRIMEY * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEY * 2))
+
+        Return [FastNoiseLite]::CubicLerp(
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0),
+                [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0),
+                [FastNoiseLite]::ValCoord($ASeed, $X2, $Y0),
+                [FastNoiseLite]::ValCoord($ASeed, $X3, $Y0),
+                $Xs
+            ),
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1),
+                [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1),
+                [FastNoiseLite]::ValCoord($ASeed, $X2, $Y1),
+                [FastNoiseLite]::ValCoord($ASeed, $X3, $Y1),
+                $Xs
+            ),
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::ValCoord($ASeed, $X0, $Y2),
+                [FastNoiseLite]::ValCoord($ASeed, $X1, $Y2),
+                [FastNoiseLite]::ValCoord($ASeed, $X2, $Y2),
+                [FastNoiseLite]::ValCoord($ASeed, $X3, $Y2),
+                $Xs
+            ),
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::ValCoord($ASeed, $X0, $Y3),
+                [FastNoiseLite]::ValCoord($ASeed, $X1, $Y3),
+                [FastNoiseLite]::ValCoord($ASeed, $X2, $Y3),
+                [FastNoiseLite]::ValCoord($ASeed, $X3, $Y3),
+                $Xs
+            ),
+            $Ys
+        ) * (1 / (1.5 * 1.5))
+    }
+
+    [Float]SingleValueCubic(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$X1 = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y1 = [FastNoiseLite]::FastFloor($Y)
+        [Int]$Z1 = [FastNoiseLite]::FastFloor($Z)
+
+        [Float]$Xs = ([Float]($X - $X1))
+        [Float]$Ys = ([Float]($Y - $Y1))
+        [Float]$Zs = ([Float]($Z - $Z1))
+
+        $X1 *= [FastNoiseLite]::PRIMEX
+        $Y1 *= [FastNoiseLite]::PRIMEY
+        $Z1 *= [FastNoiseLite]::PRIMEZ
+
+        [Int]$X0 = $X1 - [FastNoiseLite]::PRIMEX
+        [Int]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
+        [Int]$Z0 = $Z1 - [FastNoiseLite]::PRIMEZ
+        [Int]$X2 = $X1 + [FastNoiseLite]::PRIMEX
+        [Int]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
+        [Int]$Z2 = $Z1 + [FastNoiseLite]::PRIMEZ
+
+        # THE FOLLOWING THREE STATEMENTS ORIGINALLY USED UNCHECKED STATEMENTS IN THE ARITHMETIC.
+        # POWERSHELL DOESN'T REALLY OFFER THIS, SO A FIXED CEILING COMPENSATING CONTROL IS
+        # USED (WHICH WOULD LIKELY BE THE SAME RESULT IN C# GIVEN THE BEHAVIOR OF THE UNCHECKED OPERATION,
+        # SAVE THE LACK OF A THROWN EXCEPTION).
+        #
+        # THAT SAID, IF THE RESULT OF THE CONDITIONAL IS MAX VALUE, SIMPLY ADDING X1 TO IT WOULD CAUSE AN
+        # OVERFLOW, SO I'M KIND OF CONFUSED ABOUT THESE FOLLOWING THREE STATEMENTS (THEY'RE FUNCTIONALLY EQUIVALENT TO
+        # AN UNCHECKED OP IN C#).
+        #
+        # ANOTHER SANITY CHECK HERE IS TO USE INT64 RATHER THAN INT. INT MASKS TO INT32, AND AN OVERFLOW WILL THROW
+        # AN EXCEPTION IN POWERSHELL.
+        [Int64]$X3 = $X1 + ((([FastNoiseLite]::PRIMEX * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEX * 2))
+        [Int64]$Y3 = $Y1 + ((([FastNoiseLite]::PRIMEY * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEY * 2))
+        [Int64]$Z3 = $Z1 + ((([FastNoiseLite]::PRIMEZ * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEZ * 2))
+
+        Return [FastNoiseLite]::CubicLerp(
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y0, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y0, $Z0),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y1, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y1, $Z0),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y2, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y2, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y2, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y2, $Z0),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y3, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y3, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y3, $Z0),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y3, $Z0),
+                    $Xs
+                ),
+                $Ys
+            ),
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y0, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y0, $Z1),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y1, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y1, $Z1),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y2, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y2, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y2, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y2, $Z1),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y3, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y3, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y3, $Z1),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y3, $Z1),
+                    $Xs
+                ),
+                $Ys
+            ),
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y0, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y0, $Z2),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y1, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y1, $Z2),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y2, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y2, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y2, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y2, $Z2),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y3, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y3, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y3, $Z2),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y3, $Z2),
+                    $Xs
+                ),
+                $Ys
+            ),
+            [FastNoiseLite]::CubicLerp(
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y0, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y0, $Z3),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y1, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y1, $Z3),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y2, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y2, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y2, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y2, $Z3),
+                    $Xs
+                ),
+                [FastNoiseLite]::CubicLerp(
+                    [FastNoiseLite]::ValCoord($ASeed, $X0, $Y3, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X1, $Y3, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X2, $Y3, $Z3),
+                    [FastNoiseLite]::ValCoord($ASeed, $X3, $Y3, $Z3),
+                    $Xs
+                ),
+                $Ys
+            ),
+            $Zs
+        ) * (1 / (1.5 * 1.5 * 1.5))
+    }
+
+    [Float]SingleValue(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y
+    ) {
+        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
+
+        [Float]$Xs = [FastNoiseLite]::InterpHermite(([Float]($X - $X0)))
+        [Float]$Ys = [FastNoiseLite]::InterpHermite(([Float]($Y - $Y0)))
+
+        $X0 *= [FastNoiseLite]::PRIMEX
+        $Y0 *= [FastNoiseLite]::PRIMEY
+
+        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+
+        [Float]$Xf0 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0),
+            [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0),
+            $Xs
+        )
+        [Float]$Xf1 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1),
+            [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1),
+            $Xs
+        )
+
+        Return [FastNoiseLite]::Lerp($Xf0, $Xf1, $Ys)
+    }
+
+    [Float]SingleValue(
+        [Int]$ASeed,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z
+    ) {
+        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Int]$Z0 = [FastNoiseLite]::FastFloor($Z)
+
+        [Float]$Xs = [FastNoiseLite]::InterpHermite(([Float]($X - $X0)))
+        [Float]$Ys = [FastNoiseLite]::InterpHermite(([Float]($Y - $Y0)))
+        [Float]$Zs = [FastNoiseLite]::InterpHermite(([Float]($Z - $Z0)))
+
+        $X0 *= [FastNoiseLite]::PRIMEX
+        $Y0 *= [FastNoiseLite]::PRIMEY
+        $Z0 *= [FastNoiseLite]::PRIMEZ
+
+        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
+
+        [Float]$Xf00 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z0),
+            [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0, $Z0),
+            $Xs
+        )
+        [Float]$Xf10 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1, $Z0),
+            [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1, $Z0),
+            $Xs
+        )
+        [Float]$Xf01 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z1),
+            [FastNoiseLite]::ValCoord($ASeed, $X1, $Y0, $Z1),
+            $Xs
+        )
+        [Float]$Xf11 = [FastNoiseLite]::Lerp(
+            [FastNoiseLite]::ValCoord($ASeed, $X0, $Y1, $Z1),
+            [FastNoiseLite]::ValCoord($ASeed, $X1, $Y1, $Z1),
+            $Xs
+        )
+
+        [Float]$Yf0 = [FastNoiseLite]::Lerp($Xf00, $Xf10, $Ys)
+        [Float]$Yf1 = [FastNoiseLite]::Lerp($Xf01, $Xf11, $Ys)
+
+        Return [FastNoiseLite]::Lerp($Yf0, $Yf1, $Zs)
+    }
+
+    [Void]DoSingleDomainWarp(
+        [Int]$ASeed,
+        [Float]$Amp,
+        [Float]$Freq,
+        [Float]$X,
+        [Float]$Y,
+        [Ref]$Xr,
+        [Ref]$Yr
+
+    ) {
+        Switch($this.DomainWarpType) {
+            ([FnlDomainWarpType]::OpenSimplex2) {
+                $this.SingleDomainWarpOpenSimplex2Gradient($ASeed, $Amp * 32.69428253173828125, $Freq, $X, $Y, ([Ref]$Xr), ([Ref]$Yr), $false)
+
+                Break
+            }
+
+            ([FnlDomainWarpType]::OpenSimplex2Reduced) {
+                $this.SingleDomainWarpSimplexGradient($ASeed, $Amp * 16.0, $Freq, $X, $Y, ([Ref]$Xr), ([Ref]$Yr), $true)
+
+                Break
+            }
+
+            ([FnlDomainWarpType]::BasicGrid) {
+                $this.SingleDomainWarpBasicGrid($ASeed, $Amp, $Freq, $X, $Y, ([Ref]$Xr, ([Ref]$Yr)))
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+    }
+
+    [Void]DoSingleDomainWarp(
+        [Int]$ASeed,
+        [Float]$Amp,
+        [Float]$Freq,
+        [Float]$X,
+        [Float]$Y,
+        [Float]$Z,
+        [Ref]$Xr,
+        [Ref]$Yr,
+        [Ref]$Zr
+    ) {
+        Switch($this.DomainWarpType) {
+            ([FnlDomainWarpType]::OpenSimplex2) {
+                $this.SingleDomainWarpOpenSimplex2Gradient($ASeed, $Amp * 32.69428253173828125, $Freq, $X, $Y, $Z, ([Ref]$Xr), ([Ref]$Yr), ([Ref]$Zr), $false)
+
+                Break
+            }
+
+            ([FnlDomainWarpType]::OpenSimplex2Reduced) {
+                $this.SingleDomainWarpOpenSimplex2Gradient($ASeed, $Amp * 7.71604938271605, $Freq, $X, $Y, $Z, ([Ref]$Xr), ([Ref]$Yr), ([Ref]$Zr), $true)
+
+                Break
+            }
+
+            ([FnlDomainWarpType]::BasicGrid) {
+                $this.SingleDomainWarpBasicGrid($ASeed, $Amp, $Freq, $X, $Y, $Z, ([Ref]$Xr), ([Ref]$Yr), ([Ref]$Zr))
+
+                Break
+            }
+
+            Default {
+                Break
+            }
+        }
+    }
+
+    [Void]DomainWarpSingle(
+        [Ref]$X,
+        [Ref]$Y
+    ) {
+        [Int]$ASeed  = $this.Seed
+        [Float]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
+        [Float]$Freq = $this.Frequency
+        [Float]$Xs   = $X
+        [Float]$Ys   = $Y
+
+        $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys))
+
+        $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, ([Ref]$X), ([Ref]$Y))
+    }
+
+    [Void]DomainWarpSingle(
+        [Ref]$X,
+        [Ref]$Y,
+        [Ref]$Z
+    ) {
+        [Int]$ASeed  = $this.Seed
+        [Float]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
+        [Float]$Freq = $this.Frequency
+        [Float]$Xs   = $X
+        [Float]$Ys   = $Y
+        [Float]$Zs   = $Z
+
+        $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys), ([Ref]$Zs))
+
+        $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, $Zs, ([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+    }
+
+    [Void]DomainWarpFractalProgressive(
+        [Ref]$X,
+        [Ref]$Y
+    ) {
+        [Int]$Aseed = $this.Seed
+        [Float]$Amp = $this.DomainWarpAmp * $this.FractalBounding
+        [Float]$Freq = $this.Frequency
+
+        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
+            [Float]$Xs = $X
+            [Float]$Ys = $Y
+
+            $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys))
+
+            $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, ([Ref]$X), ([Ref]$Y))
+
+            $ASeed++
+            $Amp  *= $this.Gain
+            $Freq *= $this.Lacunarity
+        }
+    }
+
+    [Void]DomainWarpFractalProgressive(
+        [Ref]$X,
+        [Ref]$Y,
+        [Ref]$Z
+    ) {
+        [Int]$ASeed  = $this.Seed
+        [Float]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
+        [Float]$Freq = $this.Frequency
+
+        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
+            [Float]$Xs = $X
+            [Float]$Ys = $Y
+            [Float]$Zs = $Z
+
+            $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys), ([Ref]$Zs))
+
+            $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, $Zs, ([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+
+            $ASeed++
+            $Amp  *= $this.Gain
+            $Freq *= $this.Lacunarity
+        }
+    }
+
+    [Void]DomainWarpFractalIndependent(
+        [Ref]$X,
+        [Ref]$Y
+    ) {
+        [Int]$ASeed  = $this.Seed
+        [Float]$Xs   = $X
+        [Float]$Ys   = $Y
+        [Float]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
+        [Float]$Freq = $this.Frequency
+
+        $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys))
+
+        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
+            $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, ([Ref]$X), ([Ref]$Y))
+
+            $ASeed++
+            $Amp  *= $this.Gain
+            $Freq *= $this.Lacunarity
+        }
+    }
+
+    [Void]DomainWarpFractalIndependent(
+        [Ref]$X,
+        [Ref]$Y,
+        [Ref]$Z
+    ) {
+        [Int]$ASeed  = $this.Seed
+        [Float]$Xs   = $X
+        [Float]$Ys   = $Y
+        [Float]$Zs   = $Z
+        [Float]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
+        [Float]$Freq = $this.Frequency
+
+        $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys), ([Ref]$Zs))
+
+        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
+            $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, $Zs, ([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+
+            $ASeed++
+            $Amp  *= $this.Gain
+            $Freq *= $this.Lacunarity
+        }
     }
 }
