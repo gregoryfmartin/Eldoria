@@ -11,6 +11,12 @@
 # I'M GOING TO BRING OVER MY MAP CONSTRUCTS FROM THE ALPHA CODE AND TRACK
 # AUGMENTS AS WELL AS RAW ADDITIONS.
 #
+# SOME NOTES ABOUT THIS TRANSLATION:
+#
+# FLOAT TYPES ARE CHANGED TO SINGLES. I HATE THE USE OF THESE SYNTACTIC SUGARS.
+# EVERY INT IS CONVERTED EXPLICITLY TO INT64. THERE ARE A TREMENDOUS NUMBER OF
+#  SIZING ISSUES AND OVERFLOW POTENTIALS ARE ALL OVER THE PLACE.
+#
 ###############################################################################
 
 
@@ -248,9 +254,9 @@ Enum FnlTransformType3D {
 }
 
 Class FastNoiseLite {
-    Static [Int]$PRIMEX = 501125321
-    Static [Int]$PRIMEY = 1136930381
-    Static [Int]$PRIMEZ = 1720413743
+    Static [Int64]$PRIMEX = 501125321
+    Static [Int64]$PRIMEY = 1136930381
+    Static [Int64]$PRIMEZ = 1720413743
 
     Static [Single[]]$GRADIENTS2D = @(
         0.130526192220052,  0.99144486137381,   0.38268343236509,   0.923879532511287,  0.608761429008721,  0.793353340291235,  0.793353340291235,  0.608761429008721,
@@ -376,8 +382,8 @@ Class FastNoiseLite {
         -0.7870349638, 0.03447489231, 0.6159443543, 0, -0.2015596421, 0.6859872284, 0.6991389226, 0, -0.08581082512, -0.10920836, -0.9903080513, 0, 0.5532693395, 0.7325250401, -0.396610771, 0, -0.1842489331, -0.9777375055, -0.1004076743, 0, 0.0775473789, -0.9111505856, 0.4047110257, 0, 0.1399838409, 0.7601631212, -0.6344734459, 0, 0.4484419361, -0.845289248, 0.2904925424, 0
     )
 
-    [Int]$Seed                                             = 1337
-    [Int]$Octaves                                          = 3
+    [Int64]$Seed                                           = 1337
+    [Int64]$Octaves                                        = 3
     [Single]$Frequency                                     = 0.01
     [Single]$Lacunarity                                    = 2.0
     [Single]$Gain                                          = 0.5
@@ -430,16 +436,16 @@ Class FastNoiseLite {
         Return ([Single]([System.Math]::Sqrt($F)))
     }
 
-    Static [Int]FastFloor(
+    Static [Int64]FastFloor(
         [Single]$F
     ) {
-        Return $F -GE 0 ? ([Int]$F) : ([Int]$F) - 1
+        Return $F -GE 0 ? ([Int64]$F) : ([Int64]$F) - 1
     }
 
-    Static [Int]FastRound(
+    Static [Int64]FastRound(
         [Single]$F
     ) {
-        Return $F -GE 0 ? ([Int]($F + 0.5)) : ([Int]($F - 0.5))
+        Return $F -GE 0 ? ([Int64]($F + 0.5)) : ([Int64]($F - 0.5))
     }
 
     Static [Single]Lerp(
@@ -470,38 +476,39 @@ Class FastNoiseLite {
         [Single]$T
     ) {
         [Single]$P = ($D - $C) - ($A - $B)
+
         Return $T * $T * $T * $P + $T * $T * (($A - $B) - $P) + $T * ($C - $A) + $B
     }
 
-    Static [Int]Hash(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed
+    Static [Int64]Hash(
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed
     ) {
-        [Int]$Hash = $ASeed -BXOR $XPrimed -BXOR $YPrimed
-    
-        $Hash *= 0x27D4EB2D
+        [Int64]$Hash  = $ASeed -BXOR $XPrimed -BXOR $YPrimed
+        $Hash        *= 0x27D4EB2D
+
         Return $Hash
     }
 
-    Static [Int]Hash(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
-        [Int]$ZPrimed
+    Static [Int64]Hash(
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
+        [Int64]$ZPrimed
     ) {
-        [Int]$Hash = $ASeed -BXOR $XPrimed -BXOR $YPrimed -BXOR $ZPrimed
+        [Int64]$Hash = $ASeed -BXOR $XPrimed -BXOR $YPrimed -BXOR $ZPrimed
     
         $Hash *= 0x27D4EB2D
         Return $Hash
     }
 
     Static [Single]ValCoord(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed
     ) {
-        [Int]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+        [Int64]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
     
         $Hash *= $Hash
         $Hash  = $Hash -BXOR ($Hash -SHL 19) # ORIGINAL STATEMENT WAS hash ^= hash << 19;
@@ -510,12 +517,12 @@ Class FastNoiseLite {
     }
 
     Static [Single]ValCoord(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
-        [Int]$ZPrimed
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
+        [Int64]$ZPrimed
     ) {
-        [Int]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+        [Int64]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
     
         $Hash *= $Hash
         $Hash  = $Hash -BXOR ($Hash -SHL 19) # ORIGINAL STATEMENT WAS hash ^= hash << 19;
@@ -524,13 +531,13 @@ Class FastNoiseLite {
     }
 
     Static [Single]GradCoord(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
         [Single]$Xd,
         [Single]$Yd
     ) {
-        [Int]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+        [Int64]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
     
         $Hash = $Hash -BXOR ($Hash -SHR 15) # ORIGINAL STATEMENT WAS hash ^= hash >> 15;
         $Hash = $Hash -BAND (127 -SHL 1) # ORIGINAL STATEMENT WAS  hash &= 127 << 1;
@@ -542,15 +549,15 @@ Class FastNoiseLite {
     }
 
     Static [Single]GradCoord(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
-        [Int]$ZPrimed,
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
+        [Int64]$ZPrimed,
         [Single]$Xd,
         [Single]$Yd,
         [Single]$Zd
     ) {
-        [Int]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+        [Int64]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
     
         $Hash = $Hash -BXOR ($Hash -SHR 15) # ORIGINAL STATEMENT WAS hash ^= hash >> 15;
         $Hash = $Hash -BAND (63 -SHL 2) # ORIGINAL STATEMENT WAS  hash &= 63 << 2;
@@ -579,46 +586,46 @@ Class FastNoiseLite {
     #
     ###########################################################################
     Static [Void]GradCoordOut(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
         [Ref]$Xo,
         [Ref]$Yo
     ) {
-        [Int]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed) -BAND (255 -SHL 1)
+        [Int64]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed) -BAND (255 -SHL 1)
     
-        $Xo = [FastNoiseLite]::RANDVECS2D[$Hash]
-        $Yo = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 1)]
+        $Xo.Value = [FastNoiseLite]::RANDVECS2D[$Hash]
+        $Yo.Value = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 1)]
     }
 
     Static [Void]GradCoordOut(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
-        [Int]$ZPrimed,
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
+        [Int64]$ZPrimed,
         [Ref]$Xo,
         [Ref]$Yo,
         [Ref]$Zo
     ) {
-        [Int]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed) -BAND (255 -SHL 2)
+        [Int64]$Hash = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed) -BAND (255 -SHL 2)
     
-        $Xo = [FastNoiseLite]::RANDVECS2D[$Hash]
-        $Yo = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 1)]
-        $Zo = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 2)]
+        $Xo.Value = [FastNoiseLite]::RANDVECS2D[$Hash]
+        $Yo.Value = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 1)]
+        $Zo.Value = [FastNoiseLite]::RANDVECS2D[($Hash -BOR 2)]
     }
 
     Static [Void]GradCoordDual(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
         [Single]$Xd,
         [Single]$Yd,
         [Ref]$Xo,
         [Ref]$Yo
     ) {
-        [Int]$Hash   = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
-        [Int]$Index1 = $Hash -BAND (127 -SHL 1)
-        [Int]$Index2 = ($Hash -SHR 7) -BAND (255 -SHL 1)
+        [Int64]$Hash   = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+        [Int64]$Index1 = $Hash -BAND (127 -SHL 1)
+        [Int64]$Index2 = ($Hash -SHR 7) -BAND (255 -SHL 1)
     
         [Single]$Xg    = [FastNoiseLite]::GRADIENTS2D[$Index1]
         [Single]$Yg    = [FastNoiseLite]::GRADIENTS2D[($Index1 -BOR 1)]
@@ -626,15 +633,15 @@ Class FastNoiseLite {
         [Single]$Ygo   = [FastNoiseLite]::RANDVECS2D[($Index2 -BOR 1)]
         [Single]$Value = $Xd * $Xg + $Yd * $Yg
     
-        $Xo = $Value * $Xgo
-        $Yo = $Value * $Ygo
+        $Xo.Value = $Value * $Xgo
+        $Yo.Value = $Value * $Ygo
     }
 
     Static [Void]GradCoordDual(
-        [Int]$ASeed,
-        [Int]$XPrimed,
-        [Int]$YPrimed,
-        [Int]$ZPrimed,
+        [Int64]$ASeed,
+        [Int64]$XPrimed,
+        [Int64]$YPrimed,
+        [Int64]$ZPrimed,
         [Single]$Xd,
         [Single]$Yd,
         [Single]$Zd,
@@ -642,9 +649,9 @@ Class FastNoiseLite {
         [Ref]$Yo,
         [Ref]$Zo
     ) {
-        [Int]$Hash   = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
-        [Int]$Index1 = $Hash -BAND (63 -SHL 2)
-        [Int]$Index2 = ($Hash -SHR 6) -BAND (255 -SHL 2)
+        [Int64]$Hash   = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+        [Int64]$Index1 = $Hash -BAND (63 -SHL 2)
+        [Int64]$Index2 = ($Hash -SHR 6) -BAND (255 -SHL 2)
     
         [Single]$Xg    = [FastNoiseLite]::GRADIENTS3D[$Index1]
         [Single]$Yg    = [FastNoiseLite]::GRADIENTS3D[($Index1 -BOR 1)]
@@ -654,9 +661,9 @@ Class FastNoiseLite {
         [Single]$Zgo   = [FastNoiseLite]::RANDVECS3D[($Index2 -BOR 2)]
         [Single]$Value = $Xd * $Xg + $Yd * $Yg + $Zd * $Zg
     
-        $Xo = $Value * $Xgo
-        $Yo = $Value * $Ygo
-        $Zo = $Value * $Zgo
+        $Xo.Value = $Value * $Xgo
+        $Yo.Value = $Value * $Ygo
+        $Zo.Value = $Value * $Zgo
     }
 
     [Void]SetNoiseType(
@@ -675,7 +682,7 @@ Class FastNoiseLite {
     }
 
     [Void]SetFractalOctaves(
-        [Int]$Octaves
+        [Int64]$Octaves
     ) {
         $this.Octaves = $Octaves
         $this.CalculateFractalBounding()
@@ -784,16 +791,19 @@ Class FastNoiseLite {
         Switch($this.FractalType) {
             ([FnlFractalType]::DomainWarpProgressive) {
                 $this.DomainWarpFractalProgressive(([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+
                 Break
             }
 
             ([FnlFractalType]::DomainWarpIndependent) {
                 $this.DomainWarpFractalIndependent(([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+
                 Break
             }
 
             Default {
                 $this.DomainWrapSingle(([Ref]$X), ([Ref]$Y), ([Ref]$Z))
+
                 Break
             }
         }
@@ -804,7 +814,7 @@ Class FastNoiseLite {
     [Single]PingPong(
         [Single]$T
     ) {
-        $T = $T - ([Int]($T * 0.5)) * 2
+        $T = $T - ([Int64]($T * 0.5)) * 2
         Return $T -LT 1 ? $T : 2 - $T
     }
 
@@ -813,7 +823,7 @@ Class FastNoiseLite {
         [Single]$LAmp        = $LGain
         [Single]$LAmpFractal = 1.0
 
-        For([Int]$i = 1; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 1; $i -LT $this.Octaves; $i++) {
             $LAmpFractal += $LAmp
             $LAmp        *= $LGain
         }
@@ -822,7 +832,7 @@ Class FastNoiseLite {
     }
 
     [Single]GenNoiseSingle(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
@@ -860,7 +870,7 @@ Class FastNoiseLite {
     }
 
     [Single]GenNoiseSingle(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
@@ -902,17 +912,17 @@ Class FastNoiseLite {
         [Ref]$X,
         [Ref]$Y
     ) {
-        $X *= $this.Frequency
-        $Y *= $this.Frequency
+        $X.Value *= $this.Frequency
+        $Y.Value *= $this.Frequency
 
         Switch($this.NoiseType) {
             ($_ -EQ [FnlNoiseType]::OpenSimplex2 -OR $_ -EQ [FnlNoiseType]::OpenSimplex2S) {
                 [Single]$Sqrt3 = ([Single]1.7320508075688772935274463415059)
                 [Single]$F2    = 0.5 * ($Sqrt3 - 1)
-                [Single]$T     = ($X + $Y) * $F2
+                [Single]$T     = ($X.Value + $Y.Value) * $F2
 
-                $X += $T
-                $Y += $T
+                $X.Value += $T
+                $Y.Value += $T
 
                 Break
             }
@@ -930,42 +940,42 @@ Class FastNoiseLite {
         [Ref]$Y,
         [Ref]$Z
     ) {
-        $X *= $this.Frequency
-        $Y *= $this.Frequency
-        $Z *= $this.Frequency
+        $X.Value *= $this.Frequency
+        $Y.Value *= $this.Frequency
+        $Z.Value *= $this.Frequency
 
         Switch($this.TransformType3D) {
             ([FnlTransformType3D]::ImproveXYPlanes) {
-                [Single]$Xy = $X + $Y
+                [Single]$Xy = $X.Value + $Y.Value
                 [Single]$S2 = $Xy * -([Single]0.211324865405187)
                 
-                $Z *= ([Single]0.577350269189626)
-                $X += $S2 - $Z
-                $Y  = $Y + $S2 - $Z
-                $Z += $Xy * ([Single]0.577350269189626)
+                $Z.Value *= ([Single]0.577350269189626)
+                $X.Value += $S2 - $Z.Value
+                $Y.Value  = $Y.Value + $S2 - $Z.Value
+                $Z.Value += $Xy * ([Single]0.577350269189626)
 
                 Break
             }
 
             ([FnlTransformType3D]::ImproveXZPlanes) {
-                [Single]$Xz = $X + $Z
+                [Single]$Xz = $X.Value + $Z.Value
                 [Single]$S2 = $Xz * -([Single]0.211324865405187)
 
-                $Y *= ([Single]0.577350269189626)
-                $X += $S2 - $Z
-                $Y  = $Y + $S2 - $Z
-                $Z += $Xz * ([Single]0.577350269189626)
+                $Y.Value *= ([Single]0.577350269189626)
+                $X.Value += $S2 - $Z.Value
+                $Y.Value  = $Y.Value + $S2 - $Z.Value
+                $Z.Value += $Xz * ([Single]0.577350269189626)
 
                 Break
             }
 
             ([FnlTransformType3D]::DefaultOpenSimplex2) {
                 [Single]$R3 = ([Single](2.0 / 3.0))
-                [Single]$R  = ($X + $Y + $Z) * $R3
+                [Single]$R  = ($X.Value + $Y.Value + $Z.Value) * $R3
 
-                $X = $R - $X
-                $Y = $R - $Y
-                $Z = $R - $Z
+                $X.Value = $R - $X.Value
+                $Y.Value = $R - $Y.Value
+                $Z.Value = $R - $Z.Value
 
                 Break
             }
@@ -1022,10 +1032,10 @@ Class FastNoiseLite {
             ($_ -EQ [FnlDomainWarpType]::OpenSimplex2 -OR $_ -EQ [FnlDomainWarpType]::OpenSimplex2Reduced) {
                 [Single]$Sqrt3 = ([Single]1.7320508075688772935274463415059)
                 [Single]$F2    = 0.5 * ($Sqrt3 - 1)
-                [Single]$T     = ($X + $Y) * $F2
+                [Single]$T     = ($X.Value + $Y.Value) * $F2
 
-                $X += $T
-                $Y += $T
+                $X.Value += $T
+                $Y.Value += $T
 
                 Break
             }
@@ -1045,36 +1055,36 @@ Class FastNoiseLite {
     ) {
         Switch($this.WarpTransformType3D) {
             ([FnlTransformType3D]::ImproveXYPlanes) {
-                [Single]$Xy = $X + $Y
+                [Single]$Xy = $X.Value + $Y.Value
                 [Single]$S2 = $Xy * -([Single]0.211324865405187)
 
-                $Z *= ([Single]0.577350269189626)
-                $X += $S2 - $Z
-                $Y  = $Y + $S2 - $Z
-                $Z += $Xy * ([Single]0.577350269189626)
+                $Z.Value *= ([Single]0.577350269189626)
+                $X.Value += $S2 - $Z.Value
+                $Y.Value  = $Y.Value + $S2 - $Z.Value
+                $Z.Value += $Xy * ([Single]0.577350269189626)
 
                 Break
             }
 
             ([FnlTransformType3D]::ImproveXZPlanes) {
-                [Single]$Xz = $X + $Z
+                [Single]$Xz = $X.Value + $Z.Value
                 [Single]$S2 = $Xz -([Single]0.211324865405187)
 
-                $Y *= ([Single]0.577350269189626)
-                $X += $S2 - $Y
-                $Z += $S2 - $Y
-                $Y += $Xz * ([Single]0.577350269189626)
+                $Y.Value *= ([Single]0.577350269189626)
+                $X.Value += $S2 - $Y.Value
+                $Z.Value += $S2 - $Y.Value
+                $Y.Value += $Xz * ([Single]0.577350269189626)
 
                 Break
             }
 
             ([FnlTransformType3D]::DefaultOpenSimplex2) {
                 [Single]$R3 = ([Single](2.0 / 3.0))
-                [Single]$R  = ($X + $Y + $Z) * $R3
+                [Single]$R  = ($X.Value + $Y.Value + $Z.Value) * $R3
 
-                $X = $R - $X
-                $Y = $R - $Y
-                $Z = $R - $Z
+                $X.Value = $R - $X.Value
+                $Y.Value = $R - $Y.Value
+                $Z.Value = $R - $Z.Value
 
                 Break
             }
@@ -1127,11 +1137,11 @@ Class FastNoiseLite {
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$ASeed = $this.Seed
+        [Int64]$ASeed  = $this.Seed
         [Single]$Sum = 0
         [Single]$Amp = $this.FractalBounding
     
-        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 0; $i -LT $this.Octaves; $i++) {
             [Single]$Noise = $this.GenNoiseSingle($ASeed++, $X, $Y)
     
             $Sum += $Noise * $Amp
@@ -1150,11 +1160,11 @@ Class FastNoiseLite {
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$ASeed = $this.Seed
+        [Int64]$ASeed  = $this.Seed
         [Single]$Sum = 0
         [Single]$Amp = $this.FractalBounding
     
-        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 0; $i -LT $this.Octaves; $i++) {
             [Single]$Noise = $this.GenNoiseSingle($ASeed++, $X, $Y, $Z)
     
             $Sum += $Noise * $Amp
@@ -1173,11 +1183,11 @@ Class FastNoiseLite {
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$ASeed = $this.Seed
+        [Int64]$ASeed  = $this.Seed
         [Single]$Sum = 0
         [Single]$Amp = $this.FractalBounding
     
-        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 0; $i -LT $this.Octaves; $i++) {
             [Single]$Noise = [FastNoiseLite]::FastAbs($this.GenNoiseSingle($ASeed++, $X, $Y))
     
             $Sum += ($Noise * -2 + 1) * $Amp
@@ -1196,11 +1206,11 @@ Class FastNoiseLite {
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$ASeed = $this.Seed
+        [Int64]$ASeed  = $this.Seed
         [Single]$Sum = 0
         [Single]$Amp = $this.FractalBounding
     
-        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 0; $i -LT $this.Octaves; $i++) {
             [Single]$Noise = [FastNoiseLite]::FastAbs($this.GenNoiseSingle($ASeed++, $X, $Y, $Z))
     
             $Sum += ($Noise * -2 + 1) * $Amp
@@ -1219,11 +1229,11 @@ Class FastNoiseLite {
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$ASeed = $this.Seed
+        [Int64]$ASeed  = $this.Seed
         [Single]$Sum = 0
         [Single]$Amp = $this.FractalBounding
     
-        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 0; $i -LT $this.Octaves; $i++) {
             [Single]$Noise = $this.PingPong(($this.GenNoiseSingle($ASeed++, $X, $Y) + 1) * $this.PingPongStrength)
     
             $Sum += ($Noise - 0.5) * 2 * $Amp
@@ -1241,11 +1251,11 @@ Class FastNoiseLite {
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$ASeed = $this.Seed
+        [Int64]$ASeed  = $this.Seed
         [Single]$Sum = 0
         [Single]$Amp = $this.FractalBounding
     
-        For([Int]$i = 0; $i -LT $this.Octaves; $i++) {
+        For([Int64]$i = 0; $i -LT $this.Octaves; $i++) {
             [Single]$Noise = $this.PingPong(($this.GenNoiseSingle($ASeed++, $X, $Y, $Z) + 1) * $this.PingPongStrength)
     
             $Sum += ($Noise - 0.5) * 2 * $Amp
@@ -1260,14 +1270,14 @@ Class FastNoiseLite {
     }
 
     [Single]SingleSimplex(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
         [Single]$Sqrt3 = 1.7320508075688772935274463415059
         [Single]$G2    = (3 - $Sqrt3) / 6
-        [Int]$I       = [FastNoiseLite]::FastFloor($X)
-        [Int]$J       = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$I        = [FastNoiseLite]::FastFloor($X)
+        [Int64]$J        = [FastNoiseLite]::FastFloor($Y)
         [Single]$Xi    = ([Single]($X - $I))
         [Single]$Yi    = ([Single]($Y - $J))
         [Single]$T     = ($Xi + $Yi) * $G2
@@ -1284,7 +1294,7 @@ Class FastNoiseLite {
         If($A -LE 0) {
             $N0 = 0
         } Else {
-            $N0 = ($A * $A) * ($A * $A) * $this.GradCoord($ASeed, $I, $J, $X0, $Y0)
+            $N0 = ($A * $A) * ($A * $A) * [FastNoiseLite]::GradCoord($ASeed, $I, $J, $X0, $Y0)
         }
 
         [Single]$C = ([Single](2 * (1 - 2 * $G2) * (1 / $G2 - 2)) * $T + ([Single](-2 * (1 - 2 * $G2) * (1 - 2 * $G2)) + $A))
@@ -1293,7 +1303,7 @@ Class FastNoiseLite {
         } Else {
             [Single]$X2 = $X0 + (2 * ([Single]($G2 - 1)))
             [Single]$Y2 = $Y0 + (2 * ([Single]($G2 - 1)))
-            $N2 = ($C * $C) * ($C * $C) * $this.GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
+            $N2         = ($C * $C) * ($C * $C) * [FastNoiseLite]::GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
         }
 
         If($Y0 -GT $X0) {
@@ -1304,7 +1314,7 @@ Class FastNoiseLite {
             If($B -LE 0) {
                 $N1 = 0
             } Else {
-                $N1 = ($B * $B) * ($B * $B) * $this.GradCoord($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, $X1, $Y1)
+                $N1 = ($B * $B) * ($B * $B) * [FastNoiseLite]::GradCoord($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, $X1, $Y1)
             }
         } Else {
             [Single]$X1 = $X0 + ([Single]($G2 - 1))
@@ -1314,7 +1324,7 @@ Class FastNoiseLite {
             If($B -LE 0) {
                 $N1 = 0
             } Else {
-                $N1 = ($B * $B) * ($B * $B) * $this.GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, $X1, $Y1)
+                $N1 = ($B * $B) * ($B * $B) * [FastNoiseLite]::GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, $X1, $Y1)
             }
         }
 
@@ -1322,23 +1332,23 @@ Class FastNoiseLite {
     }
 
     [Single]SingleOpenSimplex2(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$I      = [FastNoiseLite]::FastRound($X)
-        [Int]$J      = [FastNoiseLite]::FastRound($Y)
-        [Int]$K      = [FastNoiseLite]::FastRound($Z)
-        [Single]$X0   = ([Single]($X - $I))
-        [Single]$Y0   = ([Single]($Y - $J))
-        [Single]$Z0   = ([Single]($Z - $K))
-        [Int]$XNSign = ([Int](-1.0 - $X0) -BOR 1)
-        [Int]$YNSign = ([Int](-1.0 - $Y0) -BOR 1)
-        [Int]$ZNSign = ([Int](-1.0 - $Z0) -BOR 1)
-        [Single]$Ax0  = $XNSign * -$X0
-        [Single]$Ay0  = $YNSign * -$Y0
-        [Single]$Az0  = $ZNSign * -$Z0
+        [Int64]$I      = [FastNoiseLite]::FastRound($X)
+        [Int64]$J      = [FastNoiseLite]::FastRound($Y)
+        [Int64]$K      = [FastNoiseLite]::FastRound($Z)
+        [Single]$X0  = ([Single]($X - $I))
+        [Single]$Y0  = ([Single]($Y - $J))
+        [Single]$Z0  = ([Single]($Z - $K))
+        [Int64]$XNSign = ([Int64](-1.0 - $X0) -BOR 1)
+        [Int64]$YNSign = ([Int64](-1.0 - $Y0) -BOR 1)
+        [Int64]$ZNSign = ([Int64](-1.0 - $Z0) -BOR 1)
+        [Single]$Ax0 = $XNSign * -$X0
+        [Single]$Ay0 = $YNSign * -$Y0
+        [Single]$Az0 = $ZNSign * -$Z0
     
         $I *= [FastNoiseLite]::PRIMEX
         $J *= [FastNoiseLite]::PRIMEY
@@ -1347,30 +1357,30 @@ Class FastNoiseLite {
         [Single]$Value = 0
         [Single]$A = (0.6 - $X0 * $X0) - ($Y0 * $Y0 + $Z0 * $Z0)
     
-        For([Int]$l = 0; ; $l++) {
+        For([Int64]$l = 0; ; $l++) {
             If($A -GT 0) {
-                $Value += ($A * $A) * ($A * $A) * $this.GradCoord($ASeed, $I, $J, $K, $X0, $Y0, $Z0)
+                $Value += ($A * $A) * ($A * $A) * [FastNoiseLite]::GradCoord($ASeed, $I, $J, $K, $X0, $Y0, $Z0)
             }
             If($Ax0 -GE $Ay0 -AND $Ax0 -GE $Az0) {
                 [Single]$B = $A + $Ax0 + $Ax0
     
                 If($B -GT 1) {
                     $B     -= 1
-                    $Value += ($B * $B) * ($B * $B) * $this.GradCoord($ASeed, $I - $XNSign * [FastNoiseLite]::PRIMEX, $J, $K, $X0 + $XNSign, $Y0, $Z0)
+                    $Value += ($B * $B) * ($B * $B) * [FastNoiseLite]::GradCoord($ASeed, $I - $XNSign * [FastNoiseLite]::PRIMEX, $J, $K, $X0 + $XNSign, $Y0, $Z0)
                 }
             } Elseif($Ay0 -GT $Ax0 -AND $Ay0 -GE $Az0) {
                 [Single]$B = $A + $Ay0 + $Ay0
     
                 If($B -GT 1) {
                     $B     -= 1
-                    $Value += ($B * $B) * ($B * $B) * $this.GradCoord($ASeed, $I, $J - $YNSign * [FastNoiseLite]::PRIMEY, $K, $X0, $Y0 + $YNSign, $Z0)
+                    $Value += ($B * $B) * ($B * $B) * [FastNoiseLite]::GradCoord($ASeed, $I, $J - $YNSign * [FastNoiseLite]::PRIMEY, $K, $X0, $Y0 + $YNSign, $Z0)
                 }
             } Else {
                 [Single]$B = $A + $Az0 + $Az0
     
                 If($B -GT 1) {
-                    $B -= 1
-                    $Value += ($B * $B) * ($B * $B) * $this.GradCoord($ASeed, $I, $J, $K - $ZNSign * [FastNoiseLite]::PRIMEZ, $X0, $Y0, $Z0 + $ZNSign)
+                    $B     -= 1
+                    $Value += ($B * $B) * ($B * $B) * [FastNoiseLite]::GradCoord($ASeed, $I, $J, $K - $ZNSign * [FastNoiseLite]::PRIMEZ, $X0, $Y0, $Z0 + $ZNSign)
                 }
             }
     
@@ -1403,35 +1413,35 @@ Class FastNoiseLite {
     }
 
     [Single]SingleOpenSimplex2S(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
         [Single]$Sqrt3 = 1.7320508075688772935274463415059
         [Single]$G2    = (3 - $Sqrt3) / 6
-        [Int]$I       = [FastNoiseLite]::FastFloor($X)
-        [Int]$J       = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$I        = [FastNoiseLite]::FastFloor($X)
+        [Int64]$J        = [FastNoiseLite]::FastFloor($Y)
         [Single]$Xi    = ([Single]($X - $I))
         [Single]$Yi    = ([Single]($Y - $J))
 
         $I *= [FastNoiseLite]::PRIMEX
         $J *= [FastNoiseLite]::PRIMEY
 
-        [Int]$I1 = $I + [FastNoiseLite]::PRIMEX
-        [Int]$J1 = $J + [FastNoiseLite]::PRIMEY
+        [Int64]$I1 = $I + [FastNoiseLite]::PRIMEX
+        [Int64]$J1 = $J + [FastNoiseLite]::PRIMEY
 
         [Single]$T  = ($Xi + $Yi) * ([Single]$G2)
         [Single]$X0 = $Xi - $T
         [Single]$Y0 = $Yi - $T
 
         [Single]$A0    = (2.0 / 3.0) - $X0 * $X0 - $Y0 * $Y0
-        [Single]$Value = ($A0 * $A0) * ($A0 * $A0) * $this.GradCoord($ASeed, $I, $J, $X0, $Y0)
+        [Single]$Value = ($A0 * $A0) * ($A0 * $A0) * [FastNoiseLite]::GradCoord($ASeed, $I, $J, $X0, $Y0)
 
         [Single]$A1 = ([Single](2 * (1 - 2 * $G2) * (1 / $G2 - 2)) * $T + ([Single](-2 * (1 - 2 * $G2) * (1 - 2 * $G2)) + $A0))
         [Single]$X1 = $X0 - ([Single](1 - 2 * $G2))
         [Single]$Y1 = $Y0 - ([Single](1 - 2 * $G2))
         
-        $Value += ($A1 * $A1) * ($A1 * $A1) * $this.GradCoord($ASeed, $I1, $J1, $X1, $Y1)
+        $Value += ($A1 * $A1) * ($A1 * $A1) * [FastNoiseLite]::GradCoord($ASeed, $I1, $J1, $X1, $Y1)
 
         [Single]$Xmyi = $Xi - $Yi
         If($T -GT $G2) {
@@ -1441,7 +1451,7 @@ Class FastNoiseLite {
                 [Single]$A2 = (2.0 / 3.0) - $X2 * $X2 - $Y2 * $Y2
 
                 If($A2 -GT 0) {
-                    $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord($ASeed, $I + ([FastNoiseLite]::PRIMEX -SHL 1), $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
+                    $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord($ASeed, $I + ([FastNoiseLite]::PRIMEX -SHL 1), $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
                 }
             } Else {
                 [Single]$X2 = $X0 + ([Single]$G2)
@@ -1449,7 +1459,7 @@ Class FastNoiseLite {
                 [Single]$A2 = (2.0 / 3.0) - $X2 * $X2 - $Y2 * $Y2
 
                 If($A2 -GT 0) {
-                    $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
+                    $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
                 }
             }
 
@@ -1459,7 +1469,7 @@ Class FastNoiseLite {
                 [Single]$A3 = (2.0 / 3.0) - $X3 * $X3 - $Y3 * $Y3
 
                 If($A3 -GT 0) {
-                    $Value += ($A3 * $A3) * ($A3 * $A3) * $this.GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, $X3, $Y3)
+                    $Value += ($A3 * $A3) * ($A3 * $A3) * [FastNoiseLite]::GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, $X3, $Y3)
                 }
             }
         } Else {
@@ -1469,7 +1479,7 @@ Class FastNoiseLite {
                 [Single]$A2 = (2.0 / 3.0) - $X2 * $X2 - $Y2 * $Y2
 
                 If($A2 -GT 0) {
-                    $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord($ASeed, $I - [FastNoiseLite]::PRIMEX, $J, $X2, $Y2)
+                    $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord($ASeed, $I - [FastNoiseLite]::PRIMEX, $J, $X2, $Y2)
                 }
             } Else {
                 [Single]$X2 = $X0 + ([Single]($G2 - 1))
@@ -1477,7 +1487,7 @@ Class FastNoiseLite {
                 [Single]$A2 = (2.0 / 3.0) - $X2 * $X2 - $Y2 * $Y2
 
                 If($A2 -GT 0) {
-                    $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, $X2, $Y2)
+                    $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, $X2, $Y2)
                 }
             }
 
@@ -1487,7 +1497,7 @@ Class FastNoiseLite {
                 [Single]$A2 = (2.0 / 3.0) - $X2 * $X2 - $Y2 * $Y2
 
                 If($A2 -GT 0) {
-                    $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord($ASeed, $I, $J - [FastNoiseLite]::PRIMEY, $X2, $Y2)
+                    $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord($ASeed, $I, $J - [FastNoiseLite]::PRIMEY, $X2, $Y2)
                 }
             } Else {
                 [Single]$X2 = $X0 + ([Single]$G2)
@@ -1495,7 +1505,7 @@ Class FastNoiseLite {
                 [Single]$A2 = (2.0 / 3.0) - $X2 * $X2 - $Y2 * $Y2
 
                 If($A2 -GT 0) {
-                    $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
+                    $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, $X2, $Y2)
                 }
             }
         }
@@ -1504,16 +1514,16 @@ Class FastNoiseLite {
     }
 
     [Single]SingleOpenSimplex2S(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
     ) {
         [Single]$Sqrt3 = 1.7320508075688772935274463415059
         [Single]$G2    = (3 - $Sqrt3) / 6
-        [Int]$I       = [FastNoiseLite]::FastFloor($X)
-        [Int]$J       = [FastNoiseLite]::FastFloor($Y)
-        [Int]$K       = [FastNoiseLite]::FastFloor($Z)
+        [Int64]$I        = [FastNoiseLite]::FastFloor($X)
+        [Int64]$J        = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$K        = [FastNoiseLite]::FastFloor($Z)
         [Single]$Xi    = ([Single]($X - $I))
         [Single]$Yi    = ([Single]($Y - $J))
         [Single]$Zi    = ([Single]($Z - $K))
@@ -1522,16 +1532,16 @@ Class FastNoiseLite {
         $J *= [FastNoiseLite]::PRIMEY
         $K *= [FastNoiseLite]::PRIMEZ
 
-        [Int]$Seed2  = $ASeed + 1293373
-        [Int]$XNMask = ([Int](0.5 - $Xi))
-        [Int]$YNMask = ([Int](0.5 - $Yi))
-        [Int]$ZNMask = ([Int](0.5 - $Zi))
+        [Int64]$Seed2  = $ASeed + 1293373
+        [Int64]$XNMask = ([Int64](0.5 - $Xi))
+        [Int64]$YNMask = ([Int64](0.5 - $Yi))
+        [Int64]$ZNMask = ([Int64](0.5 - $Zi))
 
         [Single]$X0    = $Xi + $XNMask
         [Single]$Y0    = $Yi + $YNMask
         [Single]$Z0    = $Zi + $ZNMask
         [Single]$A0    = 0.75 - $X0 * $X0 - $Y0 * $Y0 - $Z0 * $Z0
-        [Single]$Value = ($A0 * $A0) * ($A0 * $A0) * $this.GradCoord(
+        [Single]$Value = ($A0 * $A0) * ($A0 * $A0) * [FastNoiseLite]::GradCoord(
             $ASeed,
             $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
             $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1543,7 +1553,7 @@ Class FastNoiseLite {
         [Single]$Y1  = $Yi - 0.5
         [Single]$Z1  = $Zi - 0.5
         [Single]$A1  = 0.75 - $X1 * $X1 - $Y1 * $Y1 - $Z1 * $Z1
-        $Value     += ($A1 * $A1) * ($A1 * $A1) * $this.GradCoord(
+        $Value      += ($A1 * $A1) * ($A1 * $A1) * [FastNoiseLite]::GradCoord(
             $Seed2,
             $I + [FastNoiseLite]::PRIMEX,
             $J + [FastNoiseLite]::PRIMEY,
@@ -1559,14 +1569,14 @@ Class FastNoiseLite {
         [Single]$ZAFlipMask1 = (-2 - ($ZNMask -SHL 2)) * $Z1 - 1.0
 
         [Boolean]$Skip5 = $false
-        [Single]$A2      = $XAFlipMask0 + $A0
+        [Single]$A2     = $XAFlipMask0 + $A0
 
         If($A2 -GT 0) {
             [Single]$X2 = $X0 - ($XNMask -BOR 1)
             [Single]$Y2 = $Y0
             [Single]$Z2 = $Z0
 
-            $Value += ($A2 * $A2) * ($A2 * $A2) * $this.GradCoord(
+            $Value += ($A2 * $A2) * ($A2 * $A2) * [FastNoiseLite]::GradCoord(
                 $ASeed,
                 $I + (-BNOT $XNMask -BAND [FastNoiseLite]::PRIMEX),
                 $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1581,7 +1591,7 @@ Class FastNoiseLite {
                 [Single]$Y3 = $Y0 - ($YNMask -BOR 1)
                 [Single]$Z3 = $Z0 - ($ZNMask -BOR 1)
 
-                $Value += ($A3 * $A3) * ($A3 * $A3) * $this.GradCoord(
+                $Value += ($A3 * $A3) * ($A3 * $A3) * [FastNoiseLite]::GradCoord(
                     $ASeed,
                     $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
                     $J + (-BNOT $YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1596,7 +1606,7 @@ Class FastNoiseLite {
                 [Single]$Y4 = $Y1
                 [Single]$Z4 = $Z1
 
-                $Value += ($A4 * $A4) * ($A4 * $A4) * $this.GradCoord(
+                $Value += ($A4 * $A4) * ($A4 * $A4) * [FastNoiseLite]::GradCoord(
                     $Seed2,
                     $I + ($XNMask -BAND ([FastNoiseLite]::PRIMEX * 2)),
                     $J + [FastNoiseLite]::PRIMEY,
@@ -1608,14 +1618,14 @@ Class FastNoiseLite {
         }
 
         [Boolean]$Skip9 = $false
-        [Single]$A6      = $YAFlipMask0 + $A0
+        [Single]$A6     = $YAFlipMask0 + $A0
 
         If($A6 -GT 0) {
             [Single]$X6 = $X0
             [Single]$Y6 = $Y0 - ($YNMask -BOR 1)
             [Single]$Z6 = $Z0
 
-            $Value += ($A6 * $A6) * ($A6 * $A6) * $this.GradCoord(
+            $Value += ($A6 * $A6) * ($A6 * $A6) * [FastNoiseLite]::GradCoord(
                 $ASeed,
                 $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
                 $J + (-BNOT $YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1630,7 +1640,7 @@ Class FastNoiseLite {
                 [Single]$Y7 = $Y0
                 [Single]$Z7 = $Z0 - ($ZNMask -BOR 1)
 
-                $Value += ($A7 * $A7) * ($A7 * $A7) * $this.GradCoord(
+                $Value += ($A7 * $A7) * ($A7 * $A7) * [FastNoiseLite]::GradCoord(
                     $ASeed,
                     $I + (-BNOT $XNMask -BAND [FastNoiseLite]::PRIMEX),
                     $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1645,7 +1655,7 @@ Class FastNoiseLite {
                 [Single]$Y8 = ($YNMask -BOR 1) + $Y1
                 [Single]$Z8 = $Z1
 
-                $Value += ($A8 * $A8) * ($A8 * $A8) * $this.GradCoord(
+                $Value += ($A8 * $A8) * ($A8 * $A8) * [FastNoiseLite]::GradCoord(
                     $Seed2,
                     $I + [FastNoiseLite]::PRIMEX,
                     $J + ($YNMask -BAND ([FastNoiseLite]::PRIMEY -SHL 1)),
@@ -1663,7 +1673,7 @@ Class FastNoiseLite {
             [Single]$Ya = $Y0
             [Single]$Za = $Z0 - ($ZNMask -BOR 1)
 
-            $Value += ($Aa * $Aa) * ($Aa * $Aa) * $this.GradCoord(
+            $Value += ($Aa * $Aa) * ($Aa * $Aa) * [FastNoiseLite]::GradCoord(
                 $ASeed,
                 $I + ($XNMask -BAND [FastNoiseLite]::PRIMEX),
                 $J + ($YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1678,7 +1688,7 @@ Class FastNoiseLite {
                 [Single]$Yb = $Y0 - ($YNMask -BOR 1)
                 [Single]$Zb = $Z0
 
-                $Value += ($Ab * $Ab) * ($Ab * $Ab) * $this.GradCoord(
+                $Value += ($Ab * $Ab) * ($Ab * $Ab) * [FastNoiseLite]::GradCoord(
                     $ASeed,
                     $I + (-BNOT $XNMask -BAND [FastNoiseLite]::PRIMEX),
                     $J + (-BNOT $YNMask -BAND [FastNoiseLite]::PRIMEY),
@@ -1693,7 +1703,7 @@ Class FastNoiseLite {
                 [Single]$Yc = $Y1
                 [Single]$Zc = ($ZNMask -BOR 1) + $Z1
 
-                $Value += ($Ac * $Ac) * ($Ac * $Ac) * $this.GradCoord(
+                $Value += ($Ac * $Ac) * ($Ac * $Ac) * [FastNoiseLite]::GradCoord(
                     $Seed2,
                     $I + [FastNoiseLite]::PRIMEX,
                     $J + [FastNoiseLite]::PRIMEY,
@@ -1712,7 +1722,7 @@ Class FastNoiseLite {
                 [Single]$Y5 = ($YNMask -BOR 1) + $Y1
                 [Single]$Z5 = ($ZNMask -BOR 1) + $Z1
 
-                $Value += ($A5 * $A5) * ($A5 * $A5) * $this.GradCoord(
+                $Value += ($A5 * $A5) * ($A5 * $A5) * [FastNoiseLite]::GradCoord(
                     $Seed2,
                     $I + [FastNoiseLite]::PRIMEX,
                     $J + ($YNMask -BAND ([FastNoiseLite]::PRIMEY -SHL 1)),
@@ -1730,7 +1740,7 @@ Class FastNoiseLite {
                 [Single]$Y9 = $Y1
                 [Single]$Z9 = ($ZNMask -BOR 1) + $Z1
 
-                $Value += ($A9 * $A9) * ($A9 * $A9) * $this.GradCoord(
+                $Value += ($A9 * $A9) * ($A9 * $A9) * [FastNoiseLite]::GradCoord(
                     $Seed2,
                     $I + ($XNMask -BAND ([FastNoiseLite]::PRIMEX * 2)),
                     $J + [FastNoiseLite]::PRIMEY,
@@ -1748,7 +1758,7 @@ Class FastNoiseLite {
                 [Single]$Yd = ($YNMask -BOR 1) + $Y1
                 [Single]$Zd = $Z1
 
-                $Value += ($Ad * $Ad) * ($Ad * $Ad) * $this.GradCoord(
+                $Value += ($Ad * $Ad) * ($Ad * $Ad) * [FastNoiseLite]::GradCoord(
                     $Seed2,
                     $I + ($XNMask -BAND ([FastNoiseLite]::PRIMEX -SHL 1)),
                     $J + ($YNMask -BAND ([FastNoiseLite]::PRIMEY -SHL 1)),
@@ -1762,27 +1772,27 @@ Class FastNoiseLite {
     }
 
     [Single]SingleCellular(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$Xr               = [FastNoiseLite]::FastRound($X)
-        [Int]$Yr               = [FastNoiseLite]::FastRound($Y)
-        [Int]$ClosestHash      = 0
-        [Int]$XPrimed          = ($Xr - 1) * [FastNoiseLite]::PRIMEX
-        [Int]$YPrimedBase      = ($Yr - 1) * [FastNoiseLite]::PRIMEY
+        [Int64]$Xr               = [FastNoiseLite]::FastRound($X)
+        [Int64]$Yr               = [FastNoiseLite]::FastRound($Y)
+        [Int64]$ClosestHash      = 0
+        [Int64]$XPrimed          = ($Xr - 1) * [FastNoiseLite]::PRIMEX
+        [Int64]$YPrimedBase      = ($Yr - 1) * [FastNoiseLite]::PRIMEY
         [Single]$Distance0      = [Single]::MaxValue
         [Single]$Distance1      = [Single]::MaxValue
         [Single]$CellularJitter = 0.43701595 * $this.CellularJitterModifier
 
         Switch($this.CellularDistanceFunction) {
             { $_ -EQ [FnlCellularDistanceFunction]::Euclidean -OR $_ -EQ [FnlCellularDistanceFunction]::EuclideanSq } {
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr - 1; $Yi++) {
-                        [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
-                        [Int]$Idx           = $AHash -BAND (255 -SHL 1)
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr - 1; $Yi++) {
+                        [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+                        [Int64]$Idx           = $AHash -BAND (255 -SHL 1)
                         [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS2D[$Idx] * $CellularJitter)
                         [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS2D[$Idx -BOR 1] * $CellularJitter)
                         [Single]$NewDistance = $VecX * $VecX + $VecY * $VecY
@@ -1803,12 +1813,12 @@ Class FastNoiseLite {
             }
 
             ([FnlCellularDistanceFunction]::Manhattan) {
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
-                        [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
-                        [Int]$Idx           = $AHash -BAND (255 -SHL 1)
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
+                        [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+                        [Int64]$Idx           = $AHash -BAND (255 -SHL 1)
                         [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS2D[$Idx] * $CellularJitter)
                         [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS2D[$Idx -BOR 1] * $CellularJitter)
                         [Single]$NewDistance = [FastNoiseLite]::FastAbs($VecX) + [FastNoiseLite]::FastAbs($VecY)
@@ -1829,12 +1839,12 @@ Class FastNoiseLite {
             }
 
             ([FnlCellularDistanceFunction]::Hybrid) {
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
-                        [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
-                        [Int]$Idx           = $AHash -BAND (255 -SHL 1)
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
+                        [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+                        [Int64]$Idx           = $AHash -BAND (255 -SHL 1)
                         [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS2D[$Idx] * $CellularJitter)
                         [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS2D[$Idx -BOR 1] * $CellularJitter)
                         [Single]$NewDistance = ([FastNoiseLite]::FastAbs($VecX) + [FastNoiseLite]::FastAbs($VecY)) + ($VecX * $VecX + $VecY * $VecY)
@@ -1855,12 +1865,12 @@ Class FastNoiseLite {
             }
 
             Default { # SAME AS FIRST CASE
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr - 1; $Yi++) {
-                        [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
-                        [Int]$Idx           = $AHash -BAND (255 -SHL 1)
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr - 1; $Yi++) {
+                        [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed)
+                        [Int64]$Idx           = $AHash -BAND (255 -SHL 1)
                         [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS2D[$Idx] * $CellularJitter)
                         [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS2D[$Idx -BOR 1] * $CellularJitter)
                         [Single]$NewDistance = $VecX * $VecX + $VecY * $VecY
@@ -1927,33 +1937,33 @@ Class FastNoiseLite {
     }
 
     [Single]SingleCellular(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$Xr               = [FastNoiseLite]::FastRound($X)
-        [Int]$Yr               = [FastNoiseLite]::FastRound($Y)
-        [Int]$Zr               = [FastNoiseLite]::FastRound($Z)
-        [Int]$ClosestHash      = 0
+        [Int64]$Xr               = [FastNoiseLite]::FastRound($X)
+        [Int64]$Yr               = [FastNoiseLite]::FastRound($Y)
+        [Int64]$Zr               = [FastNoiseLite]::FastRound($Z)
+        [Int64]$ClosestHash      = 0
         [Single]$Distance0      = [Single]::MaxValue
         [Single]$Distance1      = [Single]::MaxValue
         [Single]$CellularJitter = 0.39614353 * $this.CellularJitterModifier
-        [Int]$XPrimed          = ($Xr - 1) * [FastNoiseLite]::PRIMEX
-        [Int]$YPrimedBase      = ($Yr - 1) * [FastNoiseLite]::PRIMEY
-        [Int]$ZPrimedBase      = ($Zr - 1) * [FastNoiseLite]::PRIMEZ
+        [Int64]$XPrimed          = ($Xr - 1) * [FastNoiseLite]::PRIMEX
+        [Int64]$YPrimedBase      = ($Yr - 1) * [FastNoiseLite]::PRIMEY
+        [Int64]$ZPrimedBase      = ($Zr - 1) * [FastNoiseLite]::PRIMEZ
 
         Switch($this.CellularDistanceFunction) {
             { $_ -EQ [FnlCellularDistanceFunction]::Euclidean -OR $_ -EQ [FnlCellularDistanceFunction]::EuclideanSq } {
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr; $Yi++) {
-                        [Int]$ZPrimed = $ZPrimedBase
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr; $Yi++) {
+                        [Int64]$ZPrimed = $ZPrimedBase
 
-                        For([Int]$Zi = $Zr - 1; $Zi -LE $Zr; $Zi++) {
-                            [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
-                            [Int]$Idx           = $AHash -BAND (255 -SHL 2)
+                        For([Int64]$Zi = $Zr - 1; $Zi -LE $Zr; $Zi++) {
+                            [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+                            [Int64]$Idx           = $AHash -BAND (255 -SHL 2)
                             [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS3D[$Idx] * $CellularJitter)
                             [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 1] * $CellularJitter)
                             [Single]$VecZ        = ([Single]($Zi - $Z) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 2] * $CellularJitter)
@@ -1978,15 +1988,15 @@ Class FastNoiseLite {
             }
 
             ([FnlCellularDistanceFunction]::Manhattan) {
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr; $Yi++) {
-                        [Int]$ZPrimed = $ZPrimedBase
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr; $Yi++) {
+                        [Int64]$ZPrimed = $ZPrimedBase
 
-                        For([Int]$Zi = $Zr - 1; $Zi -LE $Zr + 1; $Zi++) {
-                            [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
-                            [Int]$Idx           = $AHash -BAND (255 -SHL 2)
+                        For([Int64]$Zi = $Zr - 1; $Zi -LE $Zr + 1; $Zi++) {
+                            [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+                            [Int64]$Idx           = $AHash -BAND (255 -SHL 2)
                             [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS3D[$Idx] * $CellularJitter)
                             [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 1] * $CellularJitter)
                             [Single]$VecZ        = ([Single]($Zi - $Z) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 2] * $CellularJitter)
@@ -2011,15 +2021,15 @@ Class FastNoiseLite {
             }
 
             ([FnlCellularDistanceFunction]::Hybrid) {
-                For([Int]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
-                    [Int]$YPrimed = $YPrimedBase
+                For([Int64]$Xi = $Xr - 1; $Xi -LE $Xr + 1; $Xi++) {
+                    [Int64]$YPrimed = $YPrimedBase
 
-                    For([Int]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
-                        [Int]$ZPrimed = $ZPrimedBase
+                    For([Int64]$Yi = $Yr - 1; $Yi -LE $Yr + 1; $Yi++) {
+                        [Int64]$ZPrimed = $ZPrimedBase
 
-                        For([Int]$Zi = $Zr - 1; $Zi -LE $Zr + 1; $Zi++) {
-                            [Int]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
-                            [Int]$Idx           = $AHash -BAND (255 -SHL 2)
+                        For([Int64]$Zi = $Zr - 1; $Zi -LE $Zr + 1; $Zi++) {
+                            [Int64]$AHash         = [FastNoiseLite]::Hash($ASeed, $XPrimed, $YPrimed, $ZPrimed)
+                            [Int64]$Idx           = $AHash -BAND (255 -SHL 2)
                             [Single]$VecX        = ([Single]($Xi - $X) + [FastNoiseLite]::RANDVECS3D[$Idx] * $CellularJitter)
                             [Single]$VecY        = ([Single]($Yi - $Y) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 1] * $CellularJitter)
                             [Single]$VecZ        = ([Single]($Zi - $Z) + [FastNoiseLite]::RANDVECS3D[$Idx -BOR 2] * $CellularJitter)
@@ -2102,12 +2112,12 @@ Class FastNoiseLite {
     }
 
     [Single]SinglePerlin(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$X0    = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y0    = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$X0    = [FastNoiseLite]::FastFloor($X)
+        [Int64]$Y0    = [FastNoiseLite]::FastFloor($Y)
         [Single]$Xd0 = ([Single]($X - $X0))
         [Single]$Yd0 = ([Single]($Y - $Y0))
         [Single]$Xd1 = $Xd0 - 1
@@ -2117,8 +2127,8 @@ Class FastNoiseLite {
 
         $X0      *= [FastNoiseLite]::PRIMEX
         $Y0      *= [FastNoiseLite]::PRIMEY
-        [Int]$X1  = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1  = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int64]$X1  = $X0 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y1  = $Y0 + [FastNoiseLite]::PRIMEY
 
         [Single]$Xf0 = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::GradCoord($ASeed, $X0, $Y0, $Xd0, $Yd0),
@@ -2135,14 +2145,14 @@ Class FastNoiseLite {
     }
 
     [Single]SinglePerlin(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
-        [Int]$Z0 = [FastNoiseLite]::FastFloor($Z)
+        [Int64]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int64]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$Z0 = [FastNoiseLite]::FastFloor($Z)
 
         [Single]$Xd0 = ([Single]($X - $X0))
         [Single]$Yd0 = ([Single]($Y - $Y0))
@@ -2158,9 +2168,9 @@ Class FastNoiseLite {
         $Y0 *= [FastNoiseLite]::PRIMEY
         $Z0 *= [FastNoiseLite]::PRIMEZ
 
-        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
-        [Int]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
+        [Int64]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int64]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
 
         [Single]$Xf00 = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::GradCoord(
@@ -2222,12 +2232,12 @@ Class FastNoiseLite {
     }
 
     [Single]SingleValueCubic(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$X1 = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y1 = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$X1 = [FastNoiseLite]::FastFloor($X)
+        [Int64]$Y1 = [FastNoiseLite]::FastFloor($Y)
 
         [Single]$Xs = ([Single]($X - $X1))
         [Single]$Ys = ([Single]($Y - $Y1))
@@ -2235,10 +2245,10 @@ Class FastNoiseLite {
         $X1 *= [FastNoiseLite]::PRIMEX
         $Y1 *= [FastNoiseLite]::PRIMEY
 
-        [Int]$X0 = $X1 - [FastNoiseLite]::PRIMEX
-        [Int]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
-        [Int]$X2 = $X1 + [FastNoiseLite]::PRIMEX
-        [Int]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
+        [Int64]$X0 = $X1 - [FastNoiseLite]::PRIMEX
+        [Int64]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
+        [Int64]$X2 = $X1 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
         
         # THE FOLLOWING TWO STATEMENTS ORIGINALLY USED UNCHECKED STATEMENTS IN THE ARITHMETIC.
         # POWERSHELL DOESN'T REALLY OFFER THIS, SO A FIXED CEILING COMPENSATING CONTROL IS
@@ -2251,8 +2261,8 @@ Class FastNoiseLite {
         #
         # ANOTHER SANITY CHECK HERE IS TO USE INT64 RATHER THAN INT. INT MASKS TO INT32, AND AN OVERFLOW WILL THROW
         # AN EXCEPTION IN POWERSHELL.
-        [Int64]$X3 = $X1 + ((([FastNoiseLite]::PRIMEX * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEX * 2))
-        [Int64]$Y3 = $Y1 + ((([FastNoiseLite]::PRIMEY * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEY * 2))
+        [Int64]$X3 = $X1 + ((([FastNoiseLite]::PRIMEX * 2) -GT [Int64]::MaxValue) ? [Int64]::MaxValue : ([FastNoiseLite]::PRIMEX * 2))
+        [Int64]$Y3 = $Y1 + ((([FastNoiseLite]::PRIMEY * 2) -GT [Int64]::MaxValue) ? [Int64]::MaxValue : ([FastNoiseLite]::PRIMEY * 2))
 
         Return [FastNoiseLite]::CubicLerp(
             [FastNoiseLite]::CubicLerp(
@@ -2288,14 +2298,14 @@ Class FastNoiseLite {
     }
 
     [Single]SingleValueCubic(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$X1 = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y1 = [FastNoiseLite]::FastFloor($Y)
-        [Int]$Z1 = [FastNoiseLite]::FastFloor($Z)
+        [Int64]$X1 = [FastNoiseLite]::FastFloor($X)
+        [Int64]$Y1 = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$Z1 = [FastNoiseLite]::FastFloor($Z)
 
         [Single]$Xs = ([Single]($X - $X1))
         [Single]$Ys = ([Single]($Y - $Y1))
@@ -2305,12 +2315,12 @@ Class FastNoiseLite {
         $Y1 *= [FastNoiseLite]::PRIMEY
         $Z1 *= [FastNoiseLite]::PRIMEZ
 
-        [Int]$X0 = $X1 - [FastNoiseLite]::PRIMEX
-        [Int]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
-        [Int]$Z0 = $Z1 - [FastNoiseLite]::PRIMEZ
-        [Int]$X2 = $X1 + [FastNoiseLite]::PRIMEX
-        [Int]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
-        [Int]$Z2 = $Z1 + [FastNoiseLite]::PRIMEZ
+        [Int64]$X0 = $X1 - [FastNoiseLite]::PRIMEX
+        [Int64]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
+        [Int64]$Z0 = $Z1 - [FastNoiseLite]::PRIMEZ
+        [Int64]$X2 = $X1 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
+        [Int64]$Z2 = $Z1 + [FastNoiseLite]::PRIMEZ
 
         # THE FOLLOWING THREE STATEMENTS ORIGINALLY USED UNCHECKED STATEMENTS IN THE ARITHMETIC.
         # POWERSHELL DOESN'T REALLY OFFER THIS, SO A FIXED CEILING COMPENSATING CONTROL IS
@@ -2323,9 +2333,9 @@ Class FastNoiseLite {
         #
         # ANOTHER SANITY CHECK HERE IS TO USE INT64 RATHER THAN INT. INT MASKS TO INT32, AND AN OVERFLOW WILL THROW
         # AN EXCEPTION IN POWERSHELL.
-        [Int64]$X3 = $X1 + ((([FastNoiseLite]::PRIMEX * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEX * 2))
-        [Int64]$Y3 = $Y1 + ((([FastNoiseLite]::PRIMEY * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEY * 2))
-        [Int64]$Z3 = $Z1 + ((([FastNoiseLite]::PRIMEZ * 2) -GT [Int]::MaxValue) ? [Int]::MaxValue : ([FastNoiseLite]::PRIMEZ * 2))
+        [Int64]$X3 = $X1 + ((([FastNoiseLite]::PRIMEX * 2) -GT [Int64]::MaxValue) ? [Int64]::MaxValue : ([FastNoiseLite]::PRIMEX * 2))
+        [Int64]$Y3 = $Y1 + ((([FastNoiseLite]::PRIMEY * 2) -GT [Int64]::MaxValue) ? [Int64]::MaxValue : ([FastNoiseLite]::PRIMEY * 2))
+        [Int64]$Z3 = $Z1 + ((([FastNoiseLite]::PRIMEZ * 2) -GT [Int64]::MaxValue) ? [Int64]::MaxValue : ([FastNoiseLite]::PRIMEZ * 2))
 
         Return [FastNoiseLite]::CubicLerp(
             [FastNoiseLite]::CubicLerp(
@@ -2457,12 +2467,12 @@ Class FastNoiseLite {
     }
 
     [Single]SingleValue(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y
     ) {
-        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int64]$Y0 = [FastNoiseLite]::FastFloor($Y)
 
         [Single]$Xs = [FastNoiseLite]::InterpHermite(([Single]($X - $X0)))
         [Single]$Ys = [FastNoiseLite]::InterpHermite(([Single]($Y - $Y0)))
@@ -2470,8 +2480,8 @@ Class FastNoiseLite {
         $X0 *= [FastNoiseLite]::PRIMEX
         $Y0 *= [FastNoiseLite]::PRIMEY
 
-        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int64]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
 
         [Single]$Xf0 = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0),
@@ -2488,14 +2498,14 @@ Class FastNoiseLite {
     }
 
     [Single]SingleValue(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$X,
         [Single]$Y,
         [Single]$Z
     ) {
-        [Int]$X0 = [FastNoiseLite]::FastFloor($X)
-        [Int]$Y0 = [FastNoiseLite]::FastFloor($Y)
-        [Int]$Z0 = [FastNoiseLite]::FastFloor($Z)
+        [Int64]$X0 = [FastNoiseLite]::FastFloor($X)
+        [Int64]$Y0 = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$Z0 = [FastNoiseLite]::FastFloor($Z)
 
         [Single]$Xs = [FastNoiseLite]::InterpHermite(([Single]($X - $X0)))
         [Single]$Ys = [FastNoiseLite]::InterpHermite(([Single]($Y - $Y0)))
@@ -2505,9 +2515,9 @@ Class FastNoiseLite {
         $Y0 *= [FastNoiseLite]::PRIMEY
         $Z0 *= [FastNoiseLite]::PRIMEZ
 
-        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
-        [Int]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
+        [Int64]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int64]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
 
         [Single]$Xf00 = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::ValCoord($ASeed, $X0, $Y0, $Z0),
@@ -2537,7 +2547,7 @@ Class FastNoiseLite {
     }
 
     [Void]DoSingleDomainWarp(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$Amp,
         [Single]$Freq,
         [Single]$X,
@@ -2572,7 +2582,7 @@ Class FastNoiseLite {
     }
 
     [Void]DoSingleDomainWarp(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$Amp,
         [Single]$Freq,
         [Single]$X,
@@ -2611,11 +2621,11 @@ Class FastNoiseLite {
         [Ref]$X,
         [Ref]$Y
     ) {
-        [Int]$ASeed  = $this.Seed
+        [Int64]$ASeed   = $this.Seed
         [Single]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
         [Single]$Freq = $this.Frequency
-        [Single]$Xs   = $X
-        [Single]$Ys   = $Y
+        [Single]$Xs   = $X.Value
+        [Single]$Ys   = $Y.Value
 
         $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys))
 
@@ -2627,12 +2637,12 @@ Class FastNoiseLite {
         [Ref]$Y,
         [Ref]$Z
     ) {
-        [Int]$ASeed  = $this.Seed
+        [Int64]$ASeed   = $this.Seed
         [Single]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
         [Single]$Freq = $this.Frequency
-        [Single]$Xs   = $X
-        [Single]$Ys   = $Y
-        [Single]$Zs   = $Z
+        [Single]$Xs   = $X.Value
+        [Single]$Ys   = $Y.Value
+        [Single]$Zs   = $Z.Value
 
         $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys), ([Ref]$Zs))
 
@@ -2643,13 +2653,13 @@ Class FastNoiseLite {
         [Ref]$X,
         [Ref]$Y
     ) {
-        [Int]$Aseed = $this.Seed
-        [Single]$Amp = $this.DomainWarpAmp * $this.FractalBounding
+        [Int64]$Aseed   = $this.Seed
+        [Single]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
         [Single]$Freq = $this.Frequency
 
-        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
-            [Single]$Xs = $X
-            [Single]$Ys = $Y
+        For([Int64]$I = 0; $I -LT $this.Octaves; $I++) {
+            [Single]$Xs = $X.Value
+            [Single]$Ys = $Y.Value
 
             $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys))
 
@@ -2666,14 +2676,14 @@ Class FastNoiseLite {
         [Ref]$Y,
         [Ref]$Z
     ) {
-        [Int]$ASeed  = $this.Seed
+        [Int64]$ASeed   = $this.Seed
         [Single]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
         [Single]$Freq = $this.Frequency
 
-        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
-            [Single]$Xs = $X
-            [Single]$Ys = $Y
-            [Single]$Zs = $Z
+        For([Int64]$I = 0; $I -LT $this.Octaves; $I++) {
+            [Single]$Xs = $X.Value
+            [Single]$Ys = $Y.Value
+            [Single]$Zs = $Z.Value
 
             $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys), ([Ref]$Zs))
 
@@ -2689,15 +2699,15 @@ Class FastNoiseLite {
         [Ref]$X,
         [Ref]$Y
     ) {
-        [Int]$ASeed  = $this.Seed
-        [Single]$Xs   = $X
-        [Single]$Ys   = $Y
+        [Int64]$ASeed   = $this.Seed
+        [Single]$Xs   = $X.Value
+        [Single]$Ys   = $Y.Value
         [Single]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
         [Single]$Freq = $this.Frequency
 
         $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys))
 
-        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
+        For([Int64]$I = 0; $I -LT $this.Octaves; $I++) {
             $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, ([Ref]$X), ([Ref]$Y))
 
             $ASeed++
@@ -2711,16 +2721,16 @@ Class FastNoiseLite {
         [Ref]$Y,
         [Ref]$Z
     ) {
-        [Int]$ASeed  = $this.Seed
-        [Single]$Xs   = $X
-        [Single]$Ys   = $Y
-        [Single]$Zs   = $Z
+        [Int64]$ASeed   = $this.Seed
+        [Single]$Xs   = $X.Value
+        [Single]$Ys   = $Y.Value
+        [Single]$Zs   = $Z.Value
         [Single]$Amp  = $this.DomainWarpAmp * $this.FractalBounding
         [Single]$Freq = $this.Frequency
 
         $this.TransformDomainWarpCoordinate(([Ref]$Xs), ([Ref]$Ys), ([Ref]$Zs))
 
-        For([Int]$I = 0; $I -LT $this.Octaves; $I++) {
+        For([Int64]$I = 0; $I -LT $this.Octaves; $I++) {
             $this.DoSingleDomainWarp($ASeed, $Amp, $Freq, $Xs, $Ys, $Zs, ([Ref]$X), ([Ref]$Y), ([Ref]$Z))
 
             $ASeed++
@@ -2730,7 +2740,7 @@ Class FastNoiseLite {
     }
 
     [Void]SingleDomainWarpBasicGrid(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$WarpAmp,
         [Single]$AFrequency,
         [Single]$X,
@@ -2740,19 +2750,19 @@ Class FastNoiseLite {
     ) {
         [Single]$Xf = $X * $AFrequency
         [Single]$Yf = $Y * $AFrequency
-        [Int]$X0   = [FastNoiseLite]::FastFloor($Xf)
-        [Int]$Y0   = [FastNoiseLite]::FastFloor($Yf)
+        [Int64]$X0    = [FastNoiseLite]::FastFloor($Xf)
+        [Int64]$Y0    = [FastNoiseLite]::FastFloor($Yf)
         [Single]$Xs = [FastNoiseLite]::InterpHermite(([Single]($Xf - $X0)))
         [Single]$Ys = [FastNoiseLite]::InterpHermite(([Single]($Yf - $Y0)))
 
         $X0 *= [FastNoiseLite]::PRIMEX
         $Y0 *= [FastNoiseLite]::PRIMEY
 
-        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int64]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
 
-        [Int]$Hash0 = [FastNoiseLite]::Hash($ASeed, $X0, $Y0) -BAND (255 -SHL 1)
-        [Int]$Hash1 = [FastNoiseLite]::Hash($ASeed, $X1, $Y1) -BAND (255 -SHL 1)
+        [Int64]$Hash0 = [FastNoiseLite]::Hash($ASeed, $X0, $Y0) -BAND (255 -SHL 1)
+        [Int64]$Hash1 = [FastNoiseLite]::Hash($ASeed, $X1, $Y1) -BAND (255 -SHL 1)
 
         [Single]$Lx0x = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::RANDVECS2D[$Hash0],
@@ -2779,12 +2789,12 @@ Class FastNoiseLite {
             $Xs
         )
 
-        $Xr += [FastNoiseLite]::Lerp($Lx0x, $Lx1x, $Ys) * $WarpAmp
-        $Yr += [FastNoiseLite]::Lerp($Ly0x, $Ly1x, $Ys) * $WarpAmp
+        $Xr.Value += [FastNoiseLite]::Lerp($Lx0x, $Lx1x, $Ys) * $WarpAmp
+        $Yr.Value += [FastNoiseLite]::Lerp($Ly0x, $Ly1x, $Ys) * $WarpAmp
     }
 
     [Void]SingleDomainWarpBasicGrid(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$WarpAmp,
         [Single]$AFrequency,
         [Single]$X,
@@ -2798,9 +2808,9 @@ Class FastNoiseLite {
         [Single]$Yf = $Y * $AFrequency
         [Single]$Zf = $Z * $AFrequency
 
-        [Int]$X0 = [FastNoiseLite]::FastFloor($Xf)
-        [Int]$Y0 = [FastNoiseLite]::FastFloor($Yf)
-        [Int]$Z0 = [FastNoiseLite]::FastFloor($Zf)
+        [Int64]$X0 = [FastNoiseLite]::FastFloor($Xf)
+        [Int64]$Y0 = [FastNoiseLite]::FastFloor($Yf)
+        [Int64]$Z0 = [FastNoiseLite]::FastFloor($Zf)
 
         [Single]$Xs = [FastNoiseLite]::InterpHermite(([Single]($Xf - $X0)))
         [Single]$Ys = [FastNoiseLite]::InterpHermite(([Single]($Yf - $Y0)))
@@ -2810,12 +2820,12 @@ Class FastNoiseLite {
         $Y0 *= [FastNoiseLite]::PRIMEY
         $Z0 *= [FastNoiseLite]::PRIMEZ
 
-        [Int]$X1 = $X0 + [FastNoiseLite]::PRIMEX
-        [Int]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
-        [Int]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
+        [Int64]$X1 = $X0 + [FastNoiseLite]::PRIMEX
+        [Int64]$Y1 = $Y0 + [FastNoiseLite]::PRIMEY
+        [Int64]$Z1 = $Z0 + [FastNoiseLite]::PRIMEZ
 
-        [Int]$Hash0 = [FastNoiseLite]::Hash($ASeed, $X0, $Y0, $Z0) -BAND (255 -SHL 2)
-        [Int]$Hash1 = [FastNoiseLite]::Hash($ASeed, $X1, $Y0, $Z0) -BAND (255 -SHL 2)
+        [Int64]$Hash0 = [FastNoiseLite]::Hash($ASeed, $X0, $Y0, $Z0) -BAND (255 -SHL 2)
+        [Int64]$Hash1 = [FastNoiseLite]::Hash($ASeed, $X1, $Y0, $Z0) -BAND (255 -SHL 2)
 
         [Single]$Lx0x = [FastNoiseLite]::Lerp(
             [FastNoiseLite]::RANDVECS3D[$Hash0],
@@ -2894,7 +2904,7 @@ Class FastNoiseLite {
             $Xs
         )
 
-        $Xr += [FastNoiseLite]::Lerp(
+        $Xr.Value += [FastNoiseLite]::Lerp(
             $Lx0y,
             [FastNoiseLite]::Lerp(
                 $Lx0x,
@@ -2903,7 +2913,7 @@ Class FastNoiseLite {
             ),
             $Zs
         ) * $WarpAmp
-        $Yr += [FastNoiseLite]::Lerp(
+        $Yr.Value += [FastNoiseLite]::Lerp(
             $Ly0y,
             [FastNoiseLite]::Lerp(
                 $Ly0x,
@@ -2912,7 +2922,7 @@ Class FastNoiseLite {
             ),
             $Zs
         ) * $WarpAmp
-        $Zr += [FastNoiseLite]::Lerp(
+        $Zr.Value += [FastNoiseLite]::Lerp(
             $Lz0y,
             [FastNoiseLite]::Lerp(
                 $Ly0x,
@@ -2924,7 +2934,7 @@ Class FastNoiseLite {
     }
 
     [Void]SingleDomainWarpSimplexGradient(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$WarpAmp,
         [Single]$AFrequency,
         [Single]$X,
@@ -2939,11 +2949,11 @@ Class FastNoiseLite {
         $X *= $AFrequency
         $Y *= $AFrequency
 
-        [Int]$I = [FastNoiseLite]::FastFloor($X)
-        [Int]$J = [FastNoiseLite]::FastFloor($Y)
+        [Int64]$I     = [FastNoiseLite]::FastFloor($X)
+        [Int64]$J     = [FastNoiseLite]::FastFloor($Y)
         [Single]$Xi = ([Single]($X - $I))
         [Single]$Yi = ([Single]($Y - $J))
-        [Single]$T = ($Xi + $Yi) * $G2
+        [Single]$T  = ($Xi + $Yi) * $G2
         [Single]$X0 = ([Single]($Xi - $T))
         [Single]$Y0 = ([Single]($Yi - $T))
 
@@ -2956,8 +2966,8 @@ Class FastNoiseLite {
         [Single]$A = 0.5 - $X0 * $X0 - $Y0 * $Y0
         If($A -GT 0) {
             [Single]$Aaaa = ($A * $A) * ($A * $A)
-            [Single]$Xo = 0
-            [Single]$Yo = 0
+            [Single]$Xo   = 0
+            [Single]$Yo   = 0
 
             If($OutGradOnly -EQ $true) {
                 [FastNoiseLite]::GradCoordOut($ASeed, $I, $J, ([Ref]$Xo), ([Ref]$Yo))
@@ -2973,11 +2983,11 @@ Class FastNoiseLite {
             ([Single](-2 * (1 - 2 * $G2) * (1 - 2 * $G2)) + $A)
         )
         If($C -GT 0) {
-            [Single]$X2 = $X0 + (2 * ([Single]($G2 - 1)))
-            [Single]$Y2 = $Y0 + (2 * ([Single]($G2 - 1)))
+            [Single]$X2   = $X0 + (2 * ([Single]($G2 - 1)))
+            [Single]$Y2   = $Y0 + (2 * ([Single]($G2 - 1)))
             [Single]$Cccc = ($C * $C) * ($C * $C)
-            [Single]$Xo = 0
-            [Single]$Yo = 0
+            [Single]$Xo   = 0
+            [Single]$Yo   = 0
 
             If($OutGradOnly -EQ $true) {
                 [FastNoiseLite]::GradCoordOut($ASeed, $I + [FastNoiseLite]::PRIMEX, $J + [FastNoiseLite]::PRIMEY, ([Ref]$Xo), ([Ref]$Yo))
@@ -2992,12 +3002,12 @@ Class FastNoiseLite {
         If($Y0 -GT $X0) {
             [Single]$X1 = $X0 + ([Single]$G2)
             [Single]$Y1 = $Y0 + ([Single]($G2 - 1))
-            [Single]$B = 0.5 - $X1 * $X1 - $Y1 * $Y1
+            [Single]$B  = 0.5 - $X1 * $X1 - $Y1 * $Y1
 
             If($B -GT 0) {
                 [Single]$Bbbb = ($B * $B) * ($B * $B)
-                [Single]$Xo = 0
-                [Single]$Yo = 0
+                [Single]$Xo   = 0
+                [Single]$Yo   = 0
 
                 If($OutGradOnly -EQ $true) {
                     [FastNoiseLite]::GradCoordOut($ASeed, $I, $J + [FastNoiseLite]::PRIMEY, ([Ref]$Xo), ([Ref]$Yo))
@@ -3011,12 +3021,12 @@ Class FastNoiseLite {
         } Else {
             [Single]$X1 = $X0 + ([Single]($G2 - 1))
             [Single]$Y1 = $Y0 + ([Single]$G2)
-            [Single]$B = 0.5 - $X1 * $X1 - $Y1 * $Y1
+            [Single]$B  = 0.5 - $X1 * $X1 - $Y1 * $Y1
 
             If($B -GT 0) {
                 [Single]$Bbbb = ($B * $B) * ($B * $B)
-                [Single]$Xo = 0
-                [Single]$Yo = 0
+                [Single]$Xo   = 0
+                [Single]$Yo   = 0
 
                 If($OutGradOnly -EQ $true) {
                     [FastNoiseLite]::GradCoordOut($ASeed, $I + [FastNoiseLite]::PRIMEX, $J, ([Ref]$Xo), ([Ref]$Yo))
@@ -3029,12 +3039,12 @@ Class FastNoiseLite {
             }
         }
 
-        $Xr += $Vx * $WarpAmp
-        $Yr += $Vy * $WarpAmp
+        $Xr.Value += $Vx * $WarpAmp
+        $Yr.Value += $Vy * $WarpAmp
     }
 
     [Void]SingleDomainWarpOpenSimplex2Gradient(
-        [Int]$ASeed,
+        [Int64]$ASeed,
         [Single]$WarpAmp,
         [Single]$AFrequency,
         [Single]$X,
@@ -3049,16 +3059,16 @@ Class FastNoiseLite {
         $Y *= $AFrequency
         $Z *= $AFrequency
 
-        [Int]$I    = [FastNoiseLite]::FastRound($X)
-        [Int]$J    = [FastNoiseLite]::FastRound($Y)
-        [Int]$K    = [FastNoiseLite]::FastRound($Z)
+        [Int64]$I     = [FastNoiseLite]::FastRound($X)
+        [Int64]$J     = [FastNoiseLite]::FastRound($Y)
+        [Int64]$K     = [FastNoiseLite]::FastRound($Z)
         [Single]$X0 = ([Single]($X - $I))
         [Single]$Y0 = ([Single]($Y - $J))
         [Single]$Z0 = ([Single]($Z - $K))
 
-        [Int]$XNSign = ([Int](-$X0 - 1) -BOR 1)
-        [Int]$YNSign = ([Int](-$Y0 - 1) -BOR 1)
-        [Int]$ZNSign = ([Int](-$Z0 - 1) -BOR 1)
+        [Int64]$XNSign = ([Int64](-$X0 - 1) -BOR 1)
+        [Int64]$YNSign = ([Int64](-$Y0 - 1) -BOR 1)
+        [Int64]$ZNSign = ([Int64](-$Z0 - 1) -BOR 1)
 
         [Single]$Ax0 = $XNSign * -$X0
         [Single]$Ay0 = $YNSign * -$Y0
@@ -3073,7 +3083,7 @@ Class FastNoiseLite {
         [Single]$Vz = 0
         [Single]$A  = (0.6 - $X0 * $X0)- ($Y0 * $Y0 + $Z0 * $Z0)
 
-        For([Int]$L = 0; ; $L++) {
+        For([Int64]$L = 0; ; $L++) {
             If($A -GT 0) {
                 [Single]$Aaaa = ($A * $A) * ($A * $A)
                 [Single]$Xo   = 0
@@ -3092,9 +3102,9 @@ Class FastNoiseLite {
             }
 
             [Single]$B  = $A
-            [Int]$I1   = $I
-            [Int]$J1   = $J
-            [Int]$K1   = $K
+            [Int64]$I1    = $I
+            [Int64]$J1    = $J
+            [Int64]$K1    = $K
             [Single]$X1 = $X0
             [Single]$Y1 = $Y0
             [Single]$Z1 = $Z0
@@ -3117,9 +3127,9 @@ Class FastNoiseLite {
                 $B -= 1
 
                 [Single]$Bbbb = ($B * $B) * ($B * $B)
-                [Single]$Xo = 0
-                [Single]$Yo = 0
-                [Single]$Zo = 0
+                [Single]$Xo   = 0
+                [Single]$Yo   = 0
+                [Single]$Zo   = 0
 
                 If($OutGradOnly -EQ $true) {
                     [FastNoiseLite]::GradCoordOut($ASeed, $I, $J, $K, ([Ref]$Xo), ([Ref]$Yo), ([Ref]$Zo))
@@ -3157,9 +3167,9 @@ Class FastNoiseLite {
             $ASeed += 1293373
         }
 
-        $Xr += $Vx * $WarpAmp
-        $Yr += $Vy * $WarpAmp
-        $Zr += $Vz * $WarpAmp
+        $Xr.Value += $Vx * $WarpAmp
+        $Yr.Value += $Vy * $WarpAmp
+        $Zr.Value += $Vz * $WarpAmp
     }
 }
 
