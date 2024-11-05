@@ -1456,7 +1456,6 @@ Class FastNoiseLite {
         [Single]$G2   = (3 - [FastNoiseLite]::SQRT3) / 6
         [Single]$G2m1 = $G2 - 1
         [Single]$G2a1 = 1 - 2 * $G2
-        [Single]$G2a2 = 2 * $G2m1
         [Int64]$I     = [FastNoiseLite]::FastFloor($X)
         [Int64]$J     = [FastNoiseLite]::FastFloor($Y)
         [Single]$Xi   = ([Single]($X - $I))
@@ -2334,8 +2333,7 @@ Class FastNoiseLite {
         # SAVE THE LACK OF A THROWN EXCEPTION).
         #
         # THAT SAID, IF THE RESULT OF THE CONDITIONAL IS MAX VALUE, SIMPLY ADDING X1 TO IT WOULD CAUSE AN
-        # OVERFLOW, SO I'M KIND OF CONFUSED ABOUT THESE FOLLOWING TWO STATEMENTS (THEY'RE FUNCTIONALLY EQUIVALENT TO
-        # AN UNCHECKED OP IN C#).
+        # OVERFLOW, SO I'M KIND OF CONFUSED ABOUT THESE FOLLOWING TWO STATEMENTS.
         #
         # ANOTHER SANITY CHECK HERE IS TO USE INT64 RATHER THAN INT. INT MASKS TO INT32, AND AN OVERFLOW WILL THROW
         # AN EXCEPTION IN POWERSHELL.
@@ -2405,8 +2403,7 @@ Class FastNoiseLite {
         # SAVE THE LACK OF A THROWN EXCEPTION).
         #
         # THAT SAID, IF THE RESULT OF THE CONDITIONAL IS MAX VALUE, SIMPLY ADDING X1 TO IT WOULD CAUSE AN
-        # OVERFLOW, SO I'M KIND OF CONFUSED ABOUT THESE FOLLOWING THREE STATEMENTS (THEY'RE FUNCTIONALLY EQUIVALENT TO
-        # AN UNCHECKED OP IN C#).
+        # OVERFLOW, SO I'M KIND OF CONFUSED ABOUT THESE FOLLOWING THREE STATEMENTS.
         #
         # ANOTHER SANITY CHECK HERE IS TO USE INT64 RATHER THAN INT. INT MASKS TO INT32, AND AN OVERFLOW WILL THROW
         # AN EXCEPTION IN POWERSHELL.
@@ -3010,7 +3007,9 @@ Class FastNoiseLite {
         [Ref]$Yr,
         [Boolean]$OutGradOnly
     ) {
-        [Single]$G2 = (3 - [FastNoiseLite]::SQRT3) / 6
+        [Single]$G2   = (3 - [FastNoiseLite]::SQRT3) / 6
+        [Single]$G2m1 = $G2 - 1
+        [Single]$G2a1 = 1 - 2 * $G2
 
         $X *= $AFrequency
         $Y *= $AFrequency
@@ -3020,8 +3019,8 @@ Class FastNoiseLite {
         [Single]$Xi = ([Single]($X - $I))
         [Single]$Yi = ([Single]($Y - $J))
         [Single]$T  = ($Xi + $Yi) * $G2
-        [Single]$X0 = ([Single]($Xi - $T))
-        [Single]$Y0 = ([Single]($Yi - $T))
+        [Single]$X0 = $Xi - $T
+        [Single]$Y0 = $Yi - $T
 
         $I *= [FastNoiseLite]::PRIMEX
         $J *= [FastNoiseLite]::PRIMEY
@@ -3029,9 +3028,10 @@ Class FastNoiseLite {
         [Single]$Vx = 0
         [Single]$Vy = 0
         [Single]$A  = 0.5 - $X0 * $X0 - $Y0 * $Y0
+        [Single]$A2 = $A * $A
 
         If($A -GT 0) {
-            [Single]$Aaaa = ($A * $A) * ($A * $A)
+            [Single]$Aaaa = $A2 * $A2
             [Single]$Xo   = 0
             [Single]$Yo   = 0
 
@@ -3045,14 +3045,15 @@ Class FastNoiseLite {
         }
 
         [Single]$C = ([Single](
-            2 * (1 - 2 * $G2) * (1 / $G2 - 2)) * $T +
-            ([Single](-2 * (1 - 2 * $G2) * (1 - 2 * $G2)) + $A)
+            2 * $G2a1 * (1 / $G2 - 2)) * $T +
+            ([Single](-2 * $G2a1 * $G2a1) + $A)
         )
+        [Single]$C2 = $C * $C
 
         If($C -GT 0) {
-            [Single]$X2   = $X0 + (2 * ([Single]($G2 - 1)))
-            [Single]$Y2   = $Y0 + (2 * ([Single]($G2 - 1)))
-            [Single]$Cccc = ($C * $C) * ($C * $C)
+            [Single]$X2   = $X0 + (2 * $G2m1)
+            [Single]$Y2   = $Y0 + (2 * $G2m1)
+            [Single]$Cccc = $C2 * $C2
             [Single]$Xo   = 0
             [Single]$Yo   = 0
 
@@ -3067,12 +3068,13 @@ Class FastNoiseLite {
         }
 
         If($Y0 -GT $X0) {
-            [Single]$X1 = $X0 + ([Single]$G2)
-            [Single]$Y1 = $Y0 + ([Single]($G2 - 1))
+            [Single]$X1 = $X0 + $G2
+            [Single]$Y1 = $Y0 + $G2m1
             [Single]$B  = 0.5 - $X1 * $X1 - $Y1 * $Y1
+            [Single]$B2 = $B * $B
 
             If($B -GT 0) {
-                [Single]$Bbbb = ($B * $B) * ($B * $B)
+                [Single]$Bbbb = $B2 * $B2
                 [Single]$Xo   = 0
                 [Single]$Yo   = 0
 
@@ -3086,12 +3088,13 @@ Class FastNoiseLite {
                 $Vy += $Bbbb * $Yo
             }
         } Else {
-            [Single]$X1 = $X0 + ([Single]($G2 - 1))
-            [Single]$Y1 = $Y0 + ([Single]$G2)
+            [Single]$X1 = $X0 + $G2m1
+            [Single]$Y1 = $Y0 + $G2
             [Single]$B  = 0.5 - $X1 * $X1 - $Y1 * $Y1
+            [Single]$B2 = $B * $B
 
             If($B -GT 0) {
-                [Single]$Bbbb = ($B * $B) * ($B * $B)
+                [Single]$Bbbb = $B2 * $B2
                 [Single]$Xo   = 0
                 [Single]$Yo   = 0
 
@@ -3147,10 +3150,11 @@ Class FastNoiseLite {
         [Single]$Vy = 0
         [Single]$Vz = 0
         [Single]$A  = (0.6 - $X0 * $X0)- ($Y0 * $Y0 + $Z0 * $Z0)
+        [Single]$A2 = $A * $A
 
         For([Int64]$L = 0; ; $L++) {
             If($A -GT 0) {
-                [Single]$Aaaa = ($A * $A) * ($A * $A)
+                [Single]$Aaaa = $A2 * $A2
                 [Single]$Xo   = 0
                 [Single]$Yo   = 0
                 [Single]$Zo   = 0
@@ -3170,28 +3174,29 @@ Class FastNoiseLite {
             [Int64]$J1  = $J
             [Int64]$K1  = $K
             [Single]$B  = $A
+            [Single]$B2 = $B * $B
             [Single]$X1 = $X0
             [Single]$Y1 = $Y0
             [Single]$Z1 = $Z0
 
             If($Ax0 -GE $Ay0 -AND $Ax0 -GE $Az0) {
                 $X1 += $XNSign
-                $B   = $B + $Ax0 + $Ax0
+                $B  += $Ax0 + $Ax0
                 $I1 -= $XNSign + [FastNoiseLite]::PRIMEX
             } Elseif($Ay0 -GT $Ax0 -AND $Ay0 -GE $Az0) {
                 $Y1 += $YNSign
-                $B   = $B + $Ay0 + $Ay0
+                $B  += $Ay0 + $Ay0
                 $J1 -= $YNSign * [FastNoiseLite]::PRIMEY
             } Else {
                 $Z1 += $ZNSign
-                $B   = $B + $Az0 + $Az0
+                $B  += $Az0 + $Az0
                 $K1 -= $ZNSign * [FastNoiseLite]::PRIMEZ
             }
 
             If($B -GT 1) {
                 $B -= 1
 
-                [Single]$Bbbb = ($B * $B) * ($B * $B)
+                [Single]$Bbbb = $B2 * $B2
                 [Single]$Xo   = 0
                 [Single]$Yo   = 0
                 [Single]$Zo   = 0
