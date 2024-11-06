@@ -1,223 +1,65 @@
 ###############################################################################
+# PSFASTNOISELITE
 #
-# NOISY MAPS
-# WRITTEN BY GREGORY F MARTIN
+# WRITTEN BY GREGORY F MARTIN <GREG@GREGFMARTIN.ORG>
 #
-# THIS LAB IS A BIT OF A DOOZY, BUT THE IDEA IS TO TEST NOISE ALGORITHMS
-# FOR PROCEDURALLY GENERATING MAPS. I WAS TRYING TO AVOID THIS FOR A WHILE
-# GIVEN THE COMPLEXITY THEY BRING, BUT I'M THINKING I'M PISSING UP A ROPE AT
-# THIS POINT.
+# LICENSED UNDER THE MIT LICENSE (SAME AS FASTNOISELITE)
 #
-# I'M GOING TO BRING OVER MY MAP CONSTRUCTS FROM THE ALPHA CODE AND TRACK
-# AUGMENTS AS WELL AS RAW ADDITIONS.
+# COPYRIGHT 2024 GREGORY F MARTIN <GREG@GREGFMARTIN.ORG>
 #
-# SOME NOTES ABOUT THIS TRANSLATION:
+# PERMISSION IS HEREBY GRANTED, FREE OF CHARGE, TO ANY PERSON OBTAINING A COPY
+# OF THIS SOFTWARE AND ASSOCIATED DOCUMENTATION FILES (THE “SOFTWARE”), TO DEAL
+# IN THE SOFTWARE WITHOUT RESTRICTION, INCLUDING WITHOUT LIMITATION THE RIGHTS
+# TO USE, COPY, MODIFY, MERGE, PUBLISH, DISTRIBUTE, SUBLICENSE, AND/OR SELL
+# COPIES OF THE SOFTWARE, AND TO PERMIT PERSONS TO WHOM THE SOFTWARE IS
+# FURNISHED TO DO SO, SUBJECT TO THE FOLLOWING CONDITIONS:
 #
-# FLOAT TYPES ARE CHANGED TO SINGLES. I HATE THE USE OF THESE SYNTACTIC SUGARS.
+# THE ABOVE COPYRIGHT NOTICE AND THIS PERMISSION NOTICE SHALL BE INCLUDED IN
+# ALL COPIES OR SUBSTANTIAL PORTIONS OF THE SOFTWARE.
 #
-# EVERY INT IS CONVERTED EXPLICITLY TO INT64. THERE ARE A TREMENDOUS NUMBER OF
-#  SIZING ISSUES IN THE ORIGINAL SOURCE AND OVERFLOW POTENTIALS ARE ALL OVER
-#  THE PLACE. ALSO, THE EXPLICIT CASTING HERE IS RIDICULOUS. THAT SAID, PLACES
-#  WHERE EXPLICIT CASTS CAN BE REMOVED DUE TO REDUNDANCIES, THEY ARE.
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 #
-# SOME COMMON EXPRESSIONS ARE PRECOMPUTED AND STORED FOR USE (I.E. 255 << [1|2])
 #
-# COMPOUND BITWISE ARITHMETIC OPERATORS ARE NOT AVAILABLE IN POWERSHELL, SO ANY
-#  STATEMENTS IN THE ORIGINAL CODE THAT USED THESE OPERATORS HAVE SEEN EXPLICIT
-#  EXPANSION.
 #
-# IT'S FASTER BY A MINISCULE NUMBER OF MILLISECONDS TO EXECUTE EXPRESSIONS
-#  WHERE VARIABLES ARE MULTIPLIED DIRECTLY THAN TO CALL TO MATH::POW, SO THESE
-#  ARE RETAINED.
+# PSFASTNOISELITE IS A "POWERSHELL-NATIVE" PORT OF THE FAST NOISE LITE LIBRARY.
+# WHILE FAST NOISE LITE OFFERS A C# DIALECT VARIANT, AND IT COULD BE IMPORTED
+# INTO POWERSHELL AS-IS, IT'S NOT A "NATIVE" IMPLEMENTATION RESTRICTED TO
+# POWERSHELL SPECIFIC CONSTRAINTS. PSFASTNOISELITE ISN'T JUST A SIMPLE
+# DIALECT TRANSLATION. MODIFICATIONS HAVE BEEN MADE IN AN ATTEMPT TO OPTIMIZE
+# FOR PERFORMANCE WHILE RETAINING THE INTEGRITY OF THE OUTPUT. THE FOLLOWING
+# LIST DETAILS SOME OF THE MORE IMPORTANT DEVIATIONS:
 #
-# CURRENT WORK IS ATTEMPTING TO OPTIMIZE FUNCTIONS WITH HEAVY ARITHMETIC BY
-#  IDENTIFYING EXPRESSION GROUPS AND PRECALCULATING THEM BEFORE STARTING THE
-#  ALGORITHM.
+# - ALL INSTANCES OF FLOAT HAVE BEEN CHANGED TO SINGLE.
+# - ALL INSTANCES OF INT HAVE BEEN CHANGED TO INT64. THIS IS TO HELP AVOID
+#   STATEMENTS THAT COULD POTENTIALLY RESULT IN OVERFLOWS WHEN USING SIMPLY INT
+#   SINCE IT MASKS TO INT32.
+# - REDUNDANT CASTS OF EXPRESSIONS ARE REMOVED, ESPECIALLY IN PLACES WHERE ALL
+#   OPERANDS ARE OF THE SAME TYPE, OR WHERE A LITERAL WOULD BE INFERRED
+#   CORRECTLY GIVEN THE OPERANDS, OPERATION(S), AND TYPE OF STORAGE FOR
+#   ASSIGNMENT.
+# - REPEAT EXPRESSIONS HAVE BEEN PRE-COMPUTED WHERE POSSIBLE (I.E. 255 << 1).
+# - POWERSHELL DOESN'T SUPPORT COMPOUND BITWISE ARITHMETIC OPERATORS. IN PLACES
+#   WHERE THOSE WERE ENCOUNTERED, THE EXPRESSION HAS BEEN EXPANDED.
 #
+# THE ORIGINAL SOURCE CODE FOR FAST NOISE LITE CAN BE FOUND AT THEIR GITHUB
+# REPOSITORY: https://github.com/Auburn/FastNoiseLite
+#
+#
+#
+# HOW TO USE
+#
+# MODULARIZING CLASSES IN POWERSHELL CAN BE TROUBLESOME, SO IT'S BEST IF THIS
+# CODE IS COPIED/PASTED INTO THE PROGRAM IN WHICH IT'S INTENDED TO BE USED IN.
+# COPY EVERYTHING FROM LINE 34 DOWN.
 ###############################################################################
-
 Set-StrictMode -Version Latest
 
-
-
-
-
-
-###############################################################################
-#
-# MAP TILE CLASS
-#
-# THIS IS A STRIPPED DOWN VARIANT OF THE ACTUAL MAP TILE CLASS. IT REMOVES
-# ANY SUPURFLUOUS MEMBERS IN FAVOR OF RAW NAVIGATION.
-#
-###############################################################################
-Class MapTile {
-    Static [Int]$TileExitNorth = 0
-    Static [Int]$TileExitSouth = 1
-    Static [Int]$TileExitEast  = 2
-    Static [Int]$TileExitWest  = 3
-
-    # [SceneImage]$BackgroundImage
-    # [List[MapTileObject]]$ObjectListing
-    [Boolean[]]$Exits
-    [Boolean]$BattleAllowed
-    [Double]$EncounterRate
-    [Int]$RegionCode
-
-    MapTile() {
-        # $this.BackgroundImage = [SIEmpty]::new()
-        # $this.ObjectListing   = [List[MapTileObject]]::new()
-        $this.Exits = @(
-            $false,
-            $false,
-            $false,
-            $false
-        )
-        $this.BattleAllowed = $false
-        $this.EncounterRate = 0.5
-        $this.RegionCode    = 0
-    }
-
-    MapTile(
-        # [SceneImage]$BackgroundImage,
-        # [MapTileObject[]]$ObjectListing,
-        [Boolean[]]$Exits
-    ) {
-        # $this.BackgroundImage = $BackgroundImage
-        # $this.ObjectListing   = [List[MapTileObject]]::new()
-        $this.Exits           = $Exits
-        $this.BattleAllowed   = $false
-        $this.EncounterRate   = 0.5
-        $this.RegionCode      = 0
-        # Foreach($a In $ObjectListing) {
-        #     $this.ObjectListing.Add($a) | Out-Null
-        # }
-    }
-
-    MapTile(
-        # [SceneImage]$BackgroundImage,
-        # [MapTileObject[]]$ObjectListing,
-        [Boolean[]]$Exits,
-        [Boolean]$BattleAllowed,
-        [Double]$EncounterRate,
-        [Int]$RegionCode
-    ) {
-        # $this.BackgroundImage = $BackgroundImage
-        # $this.ObjectListing   = [List[MapTileObject]]::new()
-        $this.Exits           = $Exits
-        $this.BattleAllowed   = $BattleAllowed
-        $this.EncounterRate   = $EncounterRate
-        $this.RegionCode      = $RegionCode
-        # Foreach($a in $ObjectListing) {
-        #     $this.ObjectListing.Add($a) | Out-Null
-        # }
-    }
-
-    # [Boolean]IsItemInTile([String]$ItemName) {
-    #     Foreach($a in $this.ObjectListing) {
-    #         If($a.Name -IEQ $ItemName) {
-    #             Return $true
-    #         }
-    #     }
-
-    #     Return $false
-    # }
-
-    # [MapTileObject]GetItemReference([String]$ItemName) {
-    #     Foreach($a in $this.ObjectListing) {
-    #         If($a.Name -IEQ $ItemName) {
-    #             Return $a
-    #         }
-    #     }
-
-    #     Return $null
-    # }
-
-    # [Void]BattleStep() {
-    #     If($this.BattleAllowed -EQ $true) {
-    #         [Double]$BattleChance = Get-Random -Minimum 0.0 -Maximum 1.0
-    #         If($BattleChance -GT $this.EncounterRate) {
-    #             $Script:TheCurrentEnemy = New-Object -TypeName $($Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random)
-    #             $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-    #             $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-    #             $Script:TheGlobalGameState         = [GameStatePrimary]::BattleScreen
-    #         }
-    #     }
-    # }
-}
-
-
-
-
-
-###############################################################################
-#
-# MAP CLASS
-#
-###############################################################################
-Class Map {
-    [Int]$MapWidth
-    [Int]$MapHeight
-    [String]$Name
-    [Boolean]$BoundaryWrap
-    [MapTile[,]]$Tiles
-
-    Map() {
-        $this.MapWidth     = 0
-        $this.MapHeight    = 0
-        $this.Name         = ''
-        $this.BoundaryWrap = $false
-
-        # THIS LINE PRESENTS A PROBLEM WITH SPLATTING SINCE IT EVIDENTLY GETS CALLED BEFORE
-        # ANY OF THE SPLATTED VALUES ARE APPLIED TO THE OBJECT.
-        $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
-    }
-
-    Map(
-        [String]$Name,
-        [Int]$MapWidth,
-        [Int]$MapHeight,
-        [Boolean]$BoundaryWrap
-    ) {
-        $this.Name         = $Name
-        $this.MapWidth     = $MapWidth
-        $this.MapHeight    = $MapHeight
-        $this.BoundaryWrap = $BoundaryWrap
-        $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
-    }
-
-    [Void]CreateMapTiles() {
-        If($this.MapWidth -GT 0 -AND $this.MapHeight -GT 0) {
-            $this.Tiles = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
-        }
-    }
-
-    # [MapTile]GetTileAtPlayerCoordinates() {
-    #     Return $this.Tiles[$Script:ThePlayer.MapCoordinates.Row, $Script:ThePlayer.MapCoordinates.Column]
-    # }
-}
-
-
-
-
-
-###############################################################################
-#
-# THE NEXT PART OF THIS PROGRAM IS A LITTLE DODGY.
-#
-# THERE'S A LIBRARY CALLED FAST NOISE LITE THAT CLAIMS TO BE EASILY PORTED TO
-# DIFFERENT PROGRAMMING LANGUAGES. THAT SAID, THE C# VERSION USES CALLS AND
-# FROM THE SYSTEM.RUNTIME.COMPILERSERVICES NAMESPACE, AND THAT'S LIKELY GOING
-# TO CAUSE A PROBLEM WITHIN THE CONTEXT OF POWERSHELL. ERGO I HAVE TWO OPTIONS:
-#
-# 1. ATTEMPT TO RUN THE PROGRAM DIRECTLY AS THE C# CODE.
-# 2. TRANSLATE AS MUCH OF THE C# CODE TO POWERSHELL AS I CAN, AVOIDING THE
-#    USE OF THE SYSTEM.RUNTIME.COMPILERSERVICES NAMESPACE AS POSSIBLE.
-#
-# THAT SAID, I'M STILL NOT ENTIRELY SURE HOW THESE NOISE ALGORITHMS ARE GOING
-# TO ASSIST IN MAP GENERATION, BUT THIS MAY COME WITH TIME.
-#
-###############################################################################
 Enum FnlNoiseType {
     OpenSimplex2
     OpenSimplex2S
@@ -3239,32 +3081,3 @@ Class FastNoiseLite {
         $Zr.Value += $Vz * $WarpAmp
     }
 }
-
-
-
-
-
-###############################################################################
-#
-# TEST THIS SHIT
-#
-###############################################################################
-[FastNoiseLite]$Noise = $null
-Try {
-    $Noise = [FastNoiseLite]::new()
-} Catch {
-    Write-Error "$($_.Exception.Message)"
-    Write-Error "$($_.Exception.StackTrace)"
-    Exit
-}
-$Noise.SetNoiseType([FnlNoiseType]::OpenSimplex2)
-
-$TestNoise = New-Object 'Single[,]' 128, 128
-
-For([Int]$X = 0; $X -LT 128; $X++) {
-    For([Int]$Y = 0; $Y -LT 128; $Y++) {
-        $TestNoise[$X, $Y] = $Noise.GetNoise($X, $Y)
-    }
-}
-
-Write-Host "$($TestNoise)"
