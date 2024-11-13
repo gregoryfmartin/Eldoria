@@ -27002,7 +27002,7 @@ Class BattleManager {
 						$Script:TheSfxMPlayer.Open($Script:SfxBattlePlayerLose)
 						$Script:TheSfxMPlayer.Play()
 					} Catch {}
-					$Script:HasBattleLostChimPlayed = $true
+					$Script:HasBattleLostChimePlayed = $true
 				}
 				
 				# WRITE THE LOST MESSAGE TO THE STATUS WINDOW
