@@ -963,12 +963,6 @@ $Script:TheCommandTable = @{
 
         $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
         If($ExecuteChance -GT $SelfAction.Chance) {
-            # Return [BattleActionResult]::new(
-            #     [BattleActionResultType]::FailedAttackFailed,
-            #     $Self,
-            #     $Target,
-            #     0
-            # )
             Return [BattleActionResult]@{
                 Type            = [BattleActionResultType]::FailedAttackFailed
                 Originator      = $Self
@@ -980,12 +974,6 @@ $Script:TheCommandTable = @{
         $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
         $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
         If($EvRandFactor -LE $TargetEffectiveEvasion) {
-            # Return [BattleActionResult]::new(
-            #     [BattleActionResultType]::FailedAttackMissed,
-            #     $Self,
-            #     $Target,
-            #     0
-            # )
             Return [BattleActionResult]@{
                 Type            = [BattleActionResultType]::FailedAttackMissed
                 Originator      = $Self
@@ -1015,12 +1003,6 @@ $Script:TheCommandTable = @{
         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
 
         If(0 -NE $DecRes) {
-            # Return [BattleActionResult]::new(
-            #     [BattleActionResultType]::FailedAttackFailed,
-            #     $Self,
-            #     $Target,
-            #     $FinalDamage
-            # )
             Return [BattleActionResultType]@{
                 Type            = [BattleActionResultType]::FailedAttackFailed
                 Originator      = $Self
@@ -1035,12 +1017,6 @@ $Script:TheCommandTable = @{
             }
 
             If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
-                # Return [BattleActionResult]::new(
-                #     [BattleActionResultType]::SuccessWithCritical,
-                #     $Self,
-                #     $Target,
-                #     $FinalDamage
-                # )
                 Return [BattleActionResult]@{
                     Type            = [BattleActionResultType]::SuccessWithCritical
                     Originator      = $Self
@@ -1048,12 +1024,6 @@ $Script:TheCommandTable = @{
                     ActionEffectSum = $FinalDamage
                 }
             } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                # Return [BattleActionResult]::new(
-                #     [BattleActionResultType]::SuccessWithAffinityBonus,
-                #     $Self,
-                #     $Target,
-                #     $FinalDamage
-                # )
                 Return [BattleActionResult]@{
                     Type            = [BattleActionResultType]::SuccessWithAffinityBonus
                     Originator      = $Self
@@ -1061,12 +1031,6 @@ $Script:TheCommandTable = @{
                     ActionEffectSum = $FinalDamage
                 }
             } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
-                # Return [BattleActionResult]::new(
-                #     [BattleActionResultType]::SuccessWithCritAndAffinityBonus,
-                #     $Self,
-                #     $Target,
-                #     $FinalDamage
-                # )
                 Return [BattleActionResult]@{
                     Type            = [BattleActionResultType]::SuccessWithCritAndAffinityBonus
                     Originator      = $Self
@@ -1075,12 +1039,6 @@ $Script:TheCommandTable = @{
                 }
             }
 
-            # Return [BattleActionResult]::new(
-            #     [BattleActionResultType]::Success,
-            #     $Self,
-            #     $Target,
-            #     $FinalDamage
-            # )
             Return [BattleActionResult]@{
                 Type            = [BattleActionResultType]::Success
                 Originator      = $Self
@@ -1089,12 +1047,6 @@ $Script:TheCommandTable = @{
             }
         }
     } Else {
-        # Return [BattleActionResult]::new(
-        #     [BattleActionResultType]::FailedNoUsesRemaining,
-        #     $Self,
-        #     $Target,
-        #     0
-        # )
         Return [BattleActionResult]@{
             Type            = [BattleActionResultType]::FailedNoUsesRemaining
             Originator      = $Self
@@ -26921,8 +26873,8 @@ Class BattleManager {
 
                         Break
                     } Else {
-                        $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
-                        $this.State        = [BattleManagerState]::BattleWon
+                        # $this.SpoilsAction = $this.PhaseTwoEntity.SpoilsEffect
+                        $this.State = [BattleManagerState]::BattleWon
 
                         Break
                     }
@@ -26932,8 +26884,8 @@ Class BattleManager {
 
                         Break
                     } Else {
-                        $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
-                        $this.State        = [BattleManagerState]::BattleWon
+                        # $this.SpoilsAction = $this.PhaseOneEntity.SpoilsEffect
+                        $this.State = [BattleManagerState]::BattleWon
 
                         Break
                     }
@@ -26946,7 +26898,7 @@ Class BattleManager {
             }
 
             ([BattleManagerState]::BattleWon) {
-                $Script:TheBgmPlayer.Stop() # STOP PLAYING THE BATTLE BGM
+                $Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
                 
                 # CHECK TO SEE IF THE BATTLE WON CHIME HAS PLAYED
                 # PLAY IT IF IT HASN'T
@@ -26970,9 +26922,9 @@ Class BattleManager {
                 If($this.PhaseOneEntity -IS [Player]) {
                     # THE ORIGINAL CODE RESET THE SPOILSACTION MEMBER; NOT SURE WHY
                     # THE LIKELY CAUSE IS I'M AN IDIOT
-                    Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseOneEntity), ([EnemyBattleEntity]$this.PhaseTwoEntity)
+                    Invoke-Command $this.PhaseTwoEntity.SpoilsEffect -ArgumentList ([Player]$this.PhaseOneEntity), ([EnemyBattleEntity]$this.PhaseTwoEntity)
                 } Elseif($this.PhaseTwoEntity -IS [Player]) {
-                    Invoke-Command $this.SpoilsAction -ArgumentList ([Player]$this.PhaseTwoEntity), ([EnemyBattleEntity]$this.PhaseOneEntity)
+                    Invoke-Command $this.PhaseOneEntity.SpoilsEffect -ArgumentList ([Player]$this.PhaseTwoEntity), ([EnemyBattleEntity]$this.PhaseOneEntity)
                 }
 
                 # WRITE THE BATTLE END PROMPT
@@ -26993,7 +26945,7 @@ Class BattleManager {
             }
 
             ([BattleManagerState]::BattleLost) {
-				$Script:TheBgmPlayer.Stop() # STOP PLAYING THE BATTLE BGM
+				$Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
 				
 				# CHECK TO SEE IF THE BATTLE LOST CHIME HAS PLAYED
 				# PLAY IT IF IT HASN'T
