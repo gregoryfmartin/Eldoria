@@ -1,0 +1,77 @@
+{
+    "MapName"     : "SampleMap",
+    "Width"       : 2,
+    "Height"      : 2,
+    "BoundaryWrap": false,
+    "Tiles"       : [
+        [
+            {
+                "BackgroundImage": "$Script:FieldNorthEastRoadImage",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree",
+                    "MTOLadder",
+                    "MTORope",
+                    "MTOStairs",
+                    "MTOPole"
+                ],
+                "Exits"          : [
+                    true,
+                    false,
+                    true,
+                    false
+                ],
+                "BattleAllowed"  : false,
+                "EncounterRate"  : 0.5,
+                "RegionCode"     : 0
+            },
+            {
+                "BackgroundImage": "$Script:FieldNorthWestRoadImage",
+                "ObjectListing"  : [
+                    "MTOApple"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    false,
+                    true
+                ],
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
+                "RegionCode"   : 0
+            }
+        ],
+        [
+            {
+                "BackgroundImage": "$Script:FieldSouthEastRoadImage",
+                "ObjectListing"  : [
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    true,
+                    false
+                ],
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "$Script:FieldSouthWestRoadImage",
+                "ObjectListing"  : [
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    false,
+                    true
+                ],
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
+                "RegionCode"   : 0
+            }
+        ]
+    ]
+}
