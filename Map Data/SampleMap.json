@@ -1,12 +1,12 @@
 {
     "MapName"     : "SampleMap",
-    "Width"       : 2,
-    "Height"      : 2,
+    "MapWidth"    : 2,
+    "MapHeight"   : 2,
     "BoundaryWrap": false,
     "Tiles"       : [
         [
             {
-                "BackgroundImage": "$Script:FieldNorthEastRoadImage",
+                "BackgroundImage": "FieldNorthEastRoad",
                 "ObjectListing"  : [
                     "MTOApple",
                     "MTOTree",
@@ -26,7 +26,7 @@
                 "RegionCode"     : 0
             },
             {
-                "BackgroundImage": "$Script:FieldNorthWestRoadImage",
+                "BackgroundImage": "FieldNorthWestRoad",
                 "ObjectListing"  : [
                     "MTOApple"
                 ],
@@ -43,7 +43,7 @@
         ],
         [
             {
-                "BackgroundImage": "$Script:FieldSouthEastRoadImage",
+                "BackgroundImage": "FieldSouthEastRoad",
                 "ObjectListing"  : [
                     "MTOTree"
                 ],
@@ -58,7 +58,7 @@
                 "RegionCode"   : 0
             },
             {
-                "BackgroundImage": "$Script:FieldSouthWestRoadImage",
+                "BackgroundImage": "FieldSouthWestRoad",
                 "ObjectListing"  : [
                     "MTOTree"
                 ],

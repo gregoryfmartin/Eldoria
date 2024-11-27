@@ -230,19 +230,31 @@ Enum FnlTransformType3D {
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[SIFieldNorthRoad]                $Script:FieldNorthRoadImage          = [SIFieldNorthRoad]::new()
-[SIFieldNorthEastRoad]            $Script:FieldNorthEastRoadImage      = [SIFieldNorthEastRoad]::new()
-[SIFieldNorthWestRoad]            $Script:FieldNorthWestRoadImage      = [SIFieldNorthWestRoad]::new()
-[SIFieldNorthEastWestRoad]        $Script:FieldNorthEastWestRoadImage  = [SIFieldNorthEastWestRoad]::new()
-[SIFieldSouthRoad]                $Script:FieldSouthRoadImage          = [SIFieldSouthRoad]::new()
-[SIFieldSouthEastRoad]            $Script:FieldSouthEastRoadImage      = [SIFieldSouthEastRoad]::new()
-[SIFieldSouthWestRoad]            $Script:FieldSouthWestRoadImage      = [SIFieldSouthWestRoad]::new()
-[SIFieldSouthEastWestRoad]        $Script:FieldSouthEastWestRoadImage  = [SIFieldSouthEastWestRoad]::new()
-[Map]                             $Script:SampleMap                    = [Map]::new('Sample Map', 2, 2, $false)
-[Map]                             $Script:CurrentMap                   = $Script:SampleMap
-[Map]                             $Script:PreviousMap                  = $null
+# [SIFieldNorthRoad]                $Script:FieldNorthRoadImage          = [SIFieldNorthRoad]::new()
+# [SIFieldNorthEastRoad]            $Script:FieldNorthEastRoadImage      = [SIFieldNorthEastRoad]::new()
+# [SIFieldNorthWestRoad]            $Script:FieldNorthWestRoadImage      = [SIFieldNorthWestRoad]::new()
+# [SIFieldNorthEastWestRoad]        $Script:FieldNorthEastWestRoadImage  = [SIFieldNorthEastWestRoad]::new()
+# [SIFieldSouthRoad]                $Script:FieldSouthRoadImage          = [SIFieldSouthRoad]::new()
+# [SIFieldSouthEastRoad]            $Script:FieldSouthEastRoadImage      = [SIFieldSouthEastRoad]::new()
+# [SIFieldSouthWestRoad]            $Script:FieldSouthWestRoadImage      = [SIFieldSouthWestRoad]::new()
+# [SIFieldSouthEastWestRoad]        $Script:FieldSouthEastWestRoadImage  = [SIFieldSouthEastWestRoad]::new()
+# [Map]                             $Script:SampleMap                    = [Map]::new('Sample Map', 2, 2, $false)
 [GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::GamePlayScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
+[Hashtable]                       $Script:TheSceneImages               = @{
+    'FieldNorthRoad'         = [SIFieldNorthRoad]::new()
+    'FieldNorthEastRoad'     = [SIFieldNorthEastRoad]::new()
+    'FieldNorthWestRoad'     = [SIFieldNorthWestRoad]::new()
+    'FieldNorthEastWestRoad' = [SIFieldNorthEastWestRoad]::new()
+    'FieldSouthRoad'         = [SIFIeldSouthRoad]::new()
+    'FieldSouthEastRoad'     = [SIFieldSouthEastRoad]::new()
+    'FieldSouthWestRoad'     = [SIFieldSouthWestRoad]::new()
+    'FieldSouthEastWestRoad' = [SIFieldSouthEastWestRoad]::new()
+}
+
+[Map] $Script:SampleMap   = [Map]::new('Map Data\SampleMap.json')
+[Map] $Script:CurrentMap  = $Script:SampleMap
+[Map] $Script:PreviousMap = $null
 
 $Script:BadCommandRetorts = @(
     'Huh?',
@@ -16100,6 +16112,21 @@ Class MapTile {
         }
     }
 
+    MapTile(
+        [Hashtable]$JsonData
+    ) {
+        $this.BackgroundImage = $Script:TheSceneImages[$JsonData['BackgroundImage']]
+        $this.Exits           = $JsonData['Exits']
+        $this.BattleAllowed   = $JsonData['BattleAllowed']
+        $this.EncounterRate   = $JsonData['EncounterRate']
+        $this.RegionCode      = $JsonData['RegionCode']
+        $this.ObjectListing   = [List[MapTileObject]]::new()
+
+        Foreach($A in $JsonData['ObjectListing']) {
+            $this.ObjectListing.Add($(New-Object -TypeName $A)) | Out-Null
+        }
+    }
+
     [Boolean]IsItemInTile([String]$ItemName) {
         Foreach($a in $this.ObjectListing) {
             If($a.Name -IEQ $ItemName) {
@@ -16171,6 +16198,29 @@ Class Map {
         $this.MapHeight    = $MapHeight
         $this.BoundaryWrap = $BoundaryWrap
         $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+    }
+
+    Map(
+        [String]$JsonConfigPath
+    ) {
+        [Hashtable]$JsonData = @{}
+
+        If($(Test-Path $JsonConfigPath) -EQ $true) {
+            $JsonData = Get-Content -Raw $JsonConfigPath | ConvertFrom-Json -AsHashtable
+        }
+
+        $this.Name         = $JsonData['Name']
+        $this.MapWidth     = $JsonData['MapWidth']
+        $this.MapHeight    = $JsonData['MapHeight']
+        $this.BoundaryWrap = $JsonData['BoundaryWrap']
+        $this.Tiles        = New-Object 'MapTile[,]' $this.MapHeight, $this.MapWidth
+
+        For([Int]$Y = 0; $Y -LT $this.MapHeight; $Y++) {
+            For([Int]$X = 0; $X -LT $this.MapWidth; $X++) {
+                # [Hashtable]$A = $JsonData['Tiles'][$Y][$X]
+                $this.Tiles[$Y, $X] = [MapTile]::new($JsonData['Tiles'][$Y][$X])
+            }
+        }
     }
 
     [Void]CreateMapTiles() {
@@ -27087,71 +27137,71 @@ $Script:ThePlayer.ActionInventory.Add([BAGaleStrike]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BARadiance]::new()) | Out-Null
 $Script:ThePlayer.ActionInventory.Add([BASunfire]::new()) | Out-Null
 
-$Script:SampleMap.CreateMapTiles()
-$Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
-    $Script:FieldNorthEastRoadImage,
-    @(
-        [MTOApple]::new(),
-        [MTOTree]::new(),
-        [MTOLadder]::new(),
-        [MTORope]::new(),
-        [MTOStairs]::new(),
-        [MTOPole]::new()
-    ),
-    @(
-        $true,
-        $false,
-        $true,
-        $false
-    ),
-    $true,
-    0.5,
-    0
-)
-$Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
-    $Script:FieldNorthWestRoadImage,
-    @(
-        [MTOApple]::new()
-    ),
-    @(
-        $true,
-        $false,
-        $false,
-        $true
-    ),
-    $true,
-    0.5,
-    0
-)
-$Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
-    $Script:FieldSouthEastRoadImage,
-    @(
-        [MTOTree]::new()
-    ),
-    @(
-        $false,
-        $true,
-        $true,
-        $false
-    ),
-    $true,
-    0.5,
-    0
-)
-$Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
-    $Script:FieldSouthWestRoadImage,
-    @(
-        [MTOTree]::new()
-    ),
-    @(
-        $false,
-        $true,
-        $false,
-        $true
-    ),
-    $true,
-    0.5,
-    0
-)
+# $Script:SampleMap.CreateMapTiles()
+# $Script:SampleMap.Tiles[0, 0] = [MapTile]::new(
+#     $Script:FieldNorthEastRoadImage,
+#     @(
+#         [MTOApple]::new(),
+#         [MTOTree]::new(),
+#         [MTOLadder]::new(),
+#         [MTORope]::new(),
+#         [MTOStairs]::new(),
+#         [MTOPole]::new()
+#     ),
+#     @(
+#         $true,
+#         $false,
+#         $true,
+#         $false
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
+# $Script:SampleMap.Tiles[0, 1] = [MapTile]::new(
+#     $Script:FieldNorthWestRoadImage,
+#     @(
+#         [MTOApple]::new()
+#     ),
+#     @(
+#         $true,
+#         $false,
+#         $false,
+#         $true
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
+# $Script:SampleMap.Tiles[1, 0] = [MapTile]::new(
+#     $Script:FieldSouthEastRoadImage,
+#     @(
+#         [MTOTree]::new()
+#     ),
+#     @(
+#         $false,
+#         $true,
+#         $true,
+#         $false
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
+# $Script:SampleMap.Tiles[1, 1] = [MapTile]::new(
+#     $Script:FieldSouthWestRoadImage,
+#     @(
+#         [MTOTree]::new()
+#     ),
+#     @(
+#         $false,
+#         $true,
+#         $false,
+#         $true
+#     ),
+#     $true,
+#     0.5,
+#     0
+# )
 
 $Script:TheGameCore.Run()
