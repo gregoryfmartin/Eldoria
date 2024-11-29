@@ -1,0 +1,272 @@
+{
+    "MapName"     : "MapWarpTest01",
+    "MapWidth"    : 4,
+    "MapHeight"   : 4,
+    "BoundaryWarp": false,
+    "Tiles"       : [
+        [
+            {
+                "BackgroundImage": "FieldSouthRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    true,
+                    false
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldSouthRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldSouthRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldSouthRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    false,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            }
+        ],
+        [
+            {
+                "BackgroundImage": "FieldNorthEastWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    true,
+                    false
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldNorthEastWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldNorthEastWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldNorthEastWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    false,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            }
+        ],
+        [
+            {
+                "BackgroundImage": "FieldSouthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    true,
+                    false
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldSouthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldSouthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldSouthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    true,
+                    false,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            }
+        ],
+        [
+            {
+                "BackgroundImage": "FieldNorthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    true,
+                    false
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldNorthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldNorthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    true,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "FieldNorthWestRoad",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    false,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            }
+        ]
+    ]
+}

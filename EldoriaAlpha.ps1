@@ -252,9 +252,10 @@ Enum FnlTransformType3D {
     'FieldSouthEastWestRoad' = [SIFieldSouthEastWestRoad]::new()
 }
 
-[Map] $Script:SampleMap   = [Map]::new('Map Data\SampleMap.json')
-[Map] $Script:CurrentMap  = $Script:SampleMap
-[Map] $Script:PreviousMap = $null
+[Map]$Script:SampleMap       = [Map]::new('Map Data\SampleMap.json')
+[Map]$Script:SampleWarpMap01 = [Map]::new('Map Data\MapWarpTest01.json')
+[Map]$Script:CurrentMap      = $Script:SampleWarpMap01
+[Map]$Script:PreviousMap     = $null
 
 $Script:BadCommandRetorts = @(
     'Huh?',
@@ -4246,8 +4247,8 @@ Class Player : BattleEntity {
         Return [ItemRemovalStatus]::Success
     }
 
-    [Void]MapMoveNorth() {
-        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
+    [Void]MapMoveSouth() {
+        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
                 $a = $Script:CurrentMap.MapHeight - 1
                 $b = $this.MapCoordinates.Row + 1
@@ -4288,8 +4289,8 @@ Class Player : BattleEntity {
         }
     }
 
-    [Void]MapMoveSouth() {
-        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
+    [Void]MapMoveNorth() {
+        If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitNorth] -EQ $true) {
             If($Script:CurrentMap.BoundaryWrap -EQ $true) {
                 $a = 0
                 $b = $this.MapCoordinates.Row - 1
@@ -16209,7 +16210,7 @@ Class Map {
             $JsonData = Get-Content -Raw $JsonConfigPath | ConvertFrom-Json -AsHashtable
         }
 
-        $this.Name         = $JsonData['Name']
+        $this.Name         = $JsonData['MapName']
         $this.MapWidth     = $JsonData['MapWidth']
         $this.MapHeight    = $JsonData['MapHeight']
         $this.BoundaryWrap = $JsonData['BoundaryWrap']
