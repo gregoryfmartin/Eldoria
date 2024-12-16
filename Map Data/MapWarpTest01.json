@@ -57,7 +57,8 @@
                 "BackgroundImage": "FieldSouthRoad",
                 "ObjectListing"  : [
                     "MTOApple",
-                    "MTOTree"
+                    "MTOTree",
+                    "MTODoor00001"
                 ],
                 "Exits": [
                     false,

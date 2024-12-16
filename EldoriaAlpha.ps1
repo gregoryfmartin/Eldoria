@@ -230,17 +230,13 @@ Enum FnlTransformType3D {
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-# [SIFieldNorthRoad]                $Script:FieldNorthRoadImage          = [SIFieldNorthRoad]::new()
-# [SIFieldNorthEastRoad]            $Script:FieldNorthEastRoadImage      = [SIFieldNorthEastRoad]::new()
-# [SIFieldNorthWestRoad]            $Script:FieldNorthWestRoadImage      = [SIFieldNorthWestRoad]::new()
-# [SIFieldNorthEastWestRoad]        $Script:FieldNorthEastWestRoadImage  = [SIFieldNorthEastWestRoad]::new()
-# [SIFieldSouthRoad]                $Script:FieldSouthRoadImage          = [SIFieldSouthRoad]::new()
-# [SIFieldSouthEastRoad]            $Script:FieldSouthEastRoadImage      = [SIFieldSouthEastRoad]::new()
-# [SIFieldSouthWestRoad]            $Script:FieldSouthWestRoadImage      = [SIFieldSouthWestRoad]::new()
-# [SIFieldSouthEastWestRoad]        $Script:FieldSouthEastWestRoadImage  = [SIFieldSouthEastWestRoad]::new()
-# [Map]                             $Script:SampleMap                    = [Map]::new('Sample Map', 2, 2, $false)
 [GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::GamePlayScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
+[Map]                             $Script:SampleMap                    = $null
+[Map]                             $Script:SampleWarpMap01              = $null
+[Map]                             $Script:SampleWarpMap02              = $null
+[Map]                             $Script:CurrentMap                   = $null
+[Map]                             $Script:PreviousMap                  = $null
 [Hashtable]                       $Script:TheSceneImages               = @{
     'FieldNorthRoad'         = [SIFieldNorthRoad]::new()
     'FieldNorthEastRoad'     = [SIFieldNorthEastRoad]::new()
@@ -250,12 +246,52 @@ Enum FnlTransformType3D {
     'FieldSouthEastRoad'     = [SIFieldSouthEastRoad]::new()
     'FieldSouthWestRoad'     = [SIFieldSouthWestRoad]::new()
     'FieldSouthEastWestRoad' = [SIFieldSouthEastWestRoad]::new()
+    'Random'                 = [SIRandomNoise]::new()
 }
+
+
+
+
+
+###############################################################################
+#
+# MAP WARP FUNCTION
+#
+# THIS IS LIKELY A PRETTY NAIEVE APPROACH TO THIS AT THE MOMENT, BUT WHAT THE
+# HELL?
+#
+###############################################################################
+[ScriptBlock]$Script:MapWarpHandler = {
+    Param(
+        [Map]$TargetMap,
+        [Int]$WarpX,
+        [Int]$WarpY
+    )
+
+    # ASSIGN THE PREVIOUS MAP
+    $Script:PreviousMap = $Script:CurrentMap
+
+    # ASSIGN THE CURRENT MAP
+    $Script:CurrentMap = $TargetMap
+
+    # SET THE PLAYER'S MAP COORDINATES
+    $Script:ThePlayer.MapCoordinates.Row    = $WarpX
+    $Script:ThePlayer.MapCoordinates.Column = $WarpY
+
+    # TODO: THIS WOULD HAVE TO TRIGGER A REFRESH OF THE GPS IN ORDER FOR THE
+    # CHANGE TO BE VISIBLE. WHATEVER LOGIC I'VE BEEN USING FOR THE TILE CHANGE
+    # WOULD LIKELY SUFFICE (AGAIN, MAY BE A BIT NAIEVE BUT I THINK IT SHOULD WORK).
+    # CORRECTION: THIS HAS BEEN MOVED TO THE COMMAND BLOCK CALL RATHER THAN HERE.
+}
+
+
+
+
 
 [Map]$Script:SampleMap       = [Map]::new('Map Data\SampleMap.json')
 [Map]$Script:SampleWarpMap01 = [Map]::new('Map Data\MapWarpTest01.json')
+[Map]$Script:SampleWarpMap02 = [Map]::new('Map Data\MapWarpTest02.json')
 [Map]$Script:CurrentMap      = $Script:SampleWarpMap01
-[Map]$Script:PreviousMap     = $null
 
 $Script:BadCommandRetorts = @(
     'Huh?',
@@ -915,6 +951,50 @@ $Script:Rui = $(Get-Host).UI.RawUI
     $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
 }
 
+[ScriptBlock]$Script:TheEnterCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('enter', $args)
+    }
+
+    $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+
+    If($a.Count -LE 0) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        # THIS MAY NEED MODIFIED TO A DIFFERENT METHOD CALL GIVEN THE NATURE
+        # OF THE ACTION.
+        $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+
+        Return
+    }
+
+    Foreach($b in $a) {
+        # THIS COULD BE PROBLEMATIC IF THERE ARE MULTIPLE WARPABLE ITEMS ON A SINGLE TILE
+        # BUT REALLY? WHY?
+        If($b -IS [MTOWarpable]) {
+            # ASIDE FROM THE OTHER WAYS IN WHICH WARPABLES DIFFER FROM THEIR OTHER MTO
+            # CONTEMPORARIES IS THAT THEY DON'T MAKE USE OF THE MTO TARGET OF FILTER.
+            # WE'RE JUST GOING TO INVOKE THE EFFECT METHOD, WHICH WOULD BE THE MAP
+            # WARPING FUNCTION.
+            $Script:TheCommandWindow.UpdateCommandHistory($true)
+            Invoke-Command $b.Effect -ArgumentList $b.WarpToReference.Value, $b.WarpToX, $b.WarpToY
+
+            # I MAY ALSO WANT TO WRITE A MESSAGE TO THE MESSAGE WINDOW ABOUT HAVING
+            # ENTERED A MAP? I'LL LEAVE THIS AS A TODO HERE.
+
+            $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+            
+            # THIS NEXT PART IS LIKELY SUBJECT TO CHANGE BECAUSE IT WOULD IMPLY THAT
+            # BATTLES CAN OCCUR ON THE WARPING TILES, AND THIS MAY NOT MAKE MUCH SENSE
+            $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+        }
+    }
+
+    # THERE ARE NO WARPABLE INSTANCES ON THIS TILE, REPORT TO THE MESSAGE WINDOW
+    $Script:TheCommandWindow.UpdateCommandHistory($false)
+    $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+}
+
 $Script:TheCommandTable = @{
     'move'      = $Script:TheMoveCommand
     'm'         = $Script:TheMoveCommand
@@ -934,6 +1014,10 @@ $Script:TheCommandTable = @{
     'd'         = $Script:TheDropCommand
     'status'    = $Script:TheStatusCommand
     'sta'       = $Script:TheStatusCommand
+    'enter'     = $Script:TheEnterCommand
+    'en'        = $Script:TheEnterCommand
+    'exit'      = $Script:TheEnterCommand
+    'ex'        = $Script:TheEnterCommand
 }
 
 
@@ -19303,8 +19387,8 @@ Class MTOMilk : MapTileObject {
         $this.ExamineString = '2%. We don''t take kindly to whole milk ''round here.'
         $this.Effect = {
             Param(
-            [MTOMilk]$Self,
-            [Object]$Source
+                [MTOMilk]$Self,
+                [Object]$Source
             )
 
             Switch($Source.PSTypeNames[0]) {
@@ -19337,15 +19421,43 @@ Class MTOMilk : MapTileObject {
             }
         }
 
-        $a = $(Get-Random -Minimum 0 -Maximum 10)
+        # THIS LOOKS STRANGE, BUT NOW WE'RE STILL IN THE CTOR AND THIS SETS, RANDOMLY, SOME STUFF ABOUT THE MLIK
+        $a                  = $(Get-Random -Minimum 0 -Maximum 10)
         $this.PlayerHpBonus = 75
-        $this.IsSpoiled = $($a -GE 6 ? $true : $false)
+        $this.IsSpoiled     = $($a -GE 6 ? $true : $false)
+        
         If($this.IsSpoiled -EQ $true) {
             $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
             $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
         } Else {
             $this.PlayerEffectString = "+$($this.PlayerHpBonus) HP"
         }
+    }
+}
+
+Class MTOWarpable : MapTileObject {
+    [Ref]$WarpToReference
+    [Int]$WarpToX
+    [Int]$WarpToY
+
+    MTOWarpable() {
+        $this.WarpToReference = $null
+        $this.WarpToX         = 0
+        $this.WarpToY         = 0
+        $this.Effect          = $Script:MapWarpHandler
+    }
+}
+
+Class MTODoor : MTOWarpable {
+    MTODoor() {
+        $this.Name       = 'Door'
+        $this.MapObjName = 'door'
+    }
+}
+
+Class MTODoor00001 : MTODoor {
+    MTODoor00001() {
+        $this.WarpToReference = ([Ref]$Script:SampleWarpMap02)
     }
 }
 

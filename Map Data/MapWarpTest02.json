@@ -1,0 +1,76 @@
+{
+    "MapName"     : "MapWarpTest02",
+    "MapWidth"    : 2,
+    "MapHeight"   : 2,
+    "BoundaryWarp": false,
+    "Tiles"       : [
+        [
+            {
+                "BackgroundImage": "Random",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    true,
+                    false
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "Random",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    false,
+                    true,
+                    false,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            }
+        ],
+        [
+            {
+                "BackgroundImage": "Random",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    true,
+                    false
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            },
+            {
+                "BackgroundImage": "Random",
+                "ObjectListing"  : [
+                    "MTOApple",
+                    "MTOTree"
+                ],
+                "Exits": [
+                    true,
+                    false,
+                    false,
+                    true
+                ],
+                "BattleAllowed": false,
+                "EncounterRate": 0.0,
+                "RegionCode"   : 0
+            }
+        ]
+    ]
+}
