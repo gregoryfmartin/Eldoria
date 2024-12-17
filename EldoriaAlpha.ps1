@@ -987,6 +987,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
             # THIS NEXT PART IS LIKELY SUBJECT TO CHANGE BECAUSE IT WOULD IMPLY THAT
             # BATTLES CAN OCCUR ON THE WARPING TILES, AND THIS MAY NOT MAKE MUCH SENSE
             $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+
+            Return
         }
     }
 
