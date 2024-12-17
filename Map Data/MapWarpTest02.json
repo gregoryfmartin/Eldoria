@@ -9,7 +9,8 @@
                 "BackgroundImage": "Random",
                 "ObjectListing"  : [
                     "MTOApple",
-                    "MTOTree"
+                    "MTOTree",
+                    "MTODoor00002"
                 ],
                 "Exits": [
                     false,

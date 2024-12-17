@@ -275,8 +275,8 @@ Enum FnlTransformType3D {
     $Script:CurrentMap = $TargetMap
 
     # SET THE PLAYER'S MAP COORDINATES
-    $Script:ThePlayer.MapCoordinates.Row    = $WarpX
-    $Script:ThePlayer.MapCoordinates.Column = $WarpY
+    $Script:ThePlayer.MapCoordinates.Row    = $WarpY
+    $Script:ThePlayer.MapCoordinates.Column = $WarpX
 
     # TODO: THIS WOULD HAVE TO TRIGGER A REFRESH OF THE GPS IN ORDER FOR THE
     # CHANGE TO BE VISIBLE. WHATEVER LOGIC I'VE BEEN USING FOR THE TILE CHANGE
@@ -19460,6 +19460,13 @@ Class MTODoor : MTOWarpable {
 Class MTODoor00001 : MTODoor {
     MTODoor00001() {
         $this.WarpToReference = ([Ref]$Script:SampleWarpMap02)
+    }
+}
+
+Class MTODoor00002 : MTODoor {
+    MTODoor00002() {
+        $this.WarpToReference = ([Ref]$Script:SampleWarpMap01)
+        $this.WarpToX         = 3
     }
 }
 
