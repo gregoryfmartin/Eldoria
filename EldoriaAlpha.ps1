@@ -404,7 +404,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
         $Script:TheEnemyBattleStatWindow = $null
     }
     If($null -NE $Script:ThePlayerBattleActionWindow) {
-        $Script:ThePlayeBattleActionWindow = $null
+        $Script:ThePlayerBattleActionWindow = $null
     }
     If($null -NE $Script:TheBattleStatusMessageWindow) {
         $Script:TheBattleStatusMessageWindow = $null
