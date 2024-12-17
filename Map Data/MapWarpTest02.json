@@ -18,8 +18,8 @@
                     true,
                     false
                 ],
-                "BattleAllowed": false,
-                "EncounterRate": 0.0,
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
                 "RegionCode"   : 0
             },
             {
@@ -34,8 +34,8 @@
                     false,
                     true
                 ],
-                "BattleAllowed": false,
-                "EncounterRate": 0.0,
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
                 "RegionCode"   : 0
             }
         ],
@@ -52,8 +52,8 @@
                     true,
                     false
                 ],
-                "BattleAllowed": false,
-                "EncounterRate": 0.0,
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
                 "RegionCode"   : 0
             },
             {
@@ -68,8 +68,8 @@
                     false,
                     true
                 ],
-                "BattleAllowed": false,
-                "EncounterRate": 0.0,
+                "BattleAllowed": true,
+                "EncounterRate": 0.5,
                 "RegionCode"   : 0
             }
         ]
