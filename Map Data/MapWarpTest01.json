@@ -6,7 +6,7 @@
     "Tiles"       : [
         [
             {
-                "BackgroundImage": "FieldSouthRoad",
+                "BackgroundImage": "FieldNorthRoad",
                 "ObjectListing"  : [
                     "MTOApple",
                     "MTOTree"
