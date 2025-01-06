@@ -1,13 +1,13 @@
 {
-  "MapName": "MapWarpTest02",
-  "MapWidth": 2,
-  "MapHeight": 2,
+  "MapName"     : "MapWarpTest02",
+  "MapWidth"    : 2,
+  "MapHeight"   : 2,
   "BoundaryWarp": false,
   "Tiles": [
     [
       {
         "BackgroundImage": "Random",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOApple",
           "MTOTree",
           "MTODoor00002"
@@ -20,11 +20,11 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       },
       {
         "BackgroundImage": "Random",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
         ],
@@ -36,13 +36,13 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       }
     ],
     [
       {
         "BackgroundImage": "Random",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
         ],
@@ -54,11 +54,11 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       },
       {
         "BackgroundImage": "Random",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
         ],
@@ -70,7 +70,7 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       }
     ]
   ]

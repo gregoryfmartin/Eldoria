@@ -2056,6 +2056,22 @@ Class CCAppleVGreyADark24 : ConsoleColor24 {
     CCAppleVGreyADark24() : base(152, 152, 157) {}
 }
 
+Class CCPixenSkyBlue24 : ConsoleColor24 {
+    CCPixenSkyBlue24() : base(0, 253, 255) {}
+}
+
+Class CCPixenGrassDarkGreen24 : ConsoleColor24 {
+    CCPixenGrassDarkGreen24() : base(0, 165, 0) {}
+}
+
+Class CCPixenRoadDarkBrown24 : ConsoleColor24 {
+    CCPixenRoadDarkBrown24() : base(122, 67, 0) {}
+}
+
+Class CCPixenGrassLightGreen24 : ConsoleColor24 {
+    CCPixenGrassLightGreen24() : base(0, 209, 66) {}
+}
+
 Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
 Class CCListItemCurrentHighlight24 : CCAppleNPinkLight24 {}
@@ -9052,33 +9068,33 @@ Class SIInternalBase : SceneImage {
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
     }
 
-  SIInternalBase(
+    SIInternalBase(
     [String]$JsonConfigPath
-  ) : base() {
+    ) : base() {
     [Hashtable]$JsonData = @{}
     $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
 
     If($(Test-Path $JsonConfigPath) -EQ $true) {
-      $JsonData = Get-Content -Raw $JsonConfigPath | ConvertFrom-Json -AsHashtable
+        $JsonData = Get-Content -Raw $JsonConfigPath | ConvertFrom-Json -AsHashtable
 
-      # THIS JSON DATA WOULD CONTAIN ONLY ONE ELEMENT CALLED COLORDATA WHICH IS A SINGLE ARRAY
-      # THAT CONTAINS EITHER A STRING, WHICH WOULD BE MAPPED TO A SPECIFIC COLOR DEFINED ABOVE,
-      # OR AN ARRAY OF R, G, B VALUES WHICH WOULD CREATE A CUSTOM COLOR.
-      [Int]$A = 0
-      Foreach($B in $JsonData['ColorData']) {
+        # THIS JSON DATA WOULD CONTAIN ONLY ONE ELEMENT CALLED COLORDATA WHICH IS A SINGLE ARRAY
+        # THAT CONTAINS EITHER A STRING, WHICH WOULD BE MAPPED TO A SPECIFIC COLOR DEFINED ABOVE,
+        # OR AN ARRAY OF R, G, B VALUES WHICH WOULD CREATE A CUSTOM COLOR.
+        [Int]$A = 0
+        Foreach($B in $JsonData['ColorData']) {
         If($B -IS [String]) {
-          [String]$C = [String]::Format("CC{0}24", $B)
-          $this.ColorMap[$A] = New-Object "$($C)"
+            [String]$C = [String]::Format("CC{0}24", $B)
+            $this.ColorMap[$A] = New-Object "$($C)"
         } Elseif($B -IS [Array]) {
-          $this.ColorMap[$A] = [ATBackgroundColor24]::new([ConsoleColor24]::new($B[0], $B[1], $B[2]))
+            $this.ColorMap[$A] = [ATBackgroundColor24]::new([ConsoleColor24]::new($B[0], $B[1], $B[2]))
         }
         $A++
-      }
+        }
 
-      $this.CreateSceneImageATString($this.ColorMap)
-      $this.ColorMap = $null
+        $this.CreateSceneImageATString($this.ColorMap)
+        $this.ColorMap = $null
     }
-  }
+    }
 }
 
 ###############################################################################

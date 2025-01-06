@@ -1,13 +1,13 @@
 {
-  "MapName": "SampleMap",
-  "MapWidth": 2,
-  "MapHeight": 2,
+  "MapName"     : "SampleMap",
+  "MapWidth"    : 2,
+  "MapHeight"   : 2,
   "BoundaryWrap": false,
   "Tiles": [
     [
       {
         "BackgroundImage": "FieldNorthEastRoad",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOApple",
           "MTOTree",
           "MTOLadder",
@@ -23,11 +23,11 @@
         ],
         "BattleAllowed": false,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       },
       {
         "BackgroundImage": "FieldNorthWestRoad",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOApple"
         ],
         "Exits": [
@@ -38,13 +38,13 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       }
     ],
     [
       {
         "BackgroundImage": "FieldSouthEastRoad",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOTree"
         ],
         "Exits": [
@@ -55,11 +55,11 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       },
       {
         "BackgroundImage": "FieldSouthWestRoad",
-        "ObjectListing": [
+        "ObjectListing"  : [
           "MTOTree"
         ],
         "Exits": [
@@ -70,7 +70,7 @@
         ],
         "BattleAllowed": true,
         "EncounterRate": 0.5,
-        "RegionCode": 0
+        "RegionCode"   : 0
       }
     ]
   ]
