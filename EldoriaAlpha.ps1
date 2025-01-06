@@ -9070,7 +9070,7 @@ Class SIInternalBase : SceneImage {
           [String]$C = [String]::Format("CC{0}24", $B)
           $this.ColorMap[$A] = New-Object "$($C)"
         } Elseif($B -IS [Array]) {
-          $this.ColorMap = [ATBackgroundColor24]::new([ConsoleColor24]::new($B[0], $B[1], $B[2]))
+          $this.ColorMap[$A] = [ATBackgroundColor24]::new([ConsoleColor24]::new($B[0], $B[1], $B[2]))
         }
         $A++
       }
@@ -9111,7 +9111,7 @@ Class SIRandomNoise : SceneImage {
 #
 ###############################################################################
 Class SIFieldNorthRoad : SIInternalBase {
-    SIFieldNorthRoad() : base("$(Get-Location)Image Data\SIFieldNorthRoad.json") {
+    SIFieldNorthRoad() : base("$(Get-Location)Image Data\SIFieldNorthRoadNew.json") {
     <#
         # Write-Progress -Activity 'Creating Scene Images      ' -Id 3 -Status 'Creating SIFieldNorthRoad' -PercentComplete -1
         $this.ColorMap[0]   = [CCAppleBlueLight24]::new()
