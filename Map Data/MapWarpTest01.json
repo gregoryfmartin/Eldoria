@@ -6,7 +6,7 @@
   "Tiles": [
     [
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadSouth",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
@@ -22,7 +22,7 @@
         "RegionCode"   : 0
       },
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadSouth",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
@@ -38,7 +38,7 @@
         "RegionCode"   : 0
       },
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadSouth",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
@@ -54,7 +54,7 @@
         "RegionCode"   : 0
       },
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadSouth",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree",
@@ -73,7 +73,7 @@
     ],
     [
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadNorthSouthEast",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
@@ -89,7 +89,7 @@
         "RegionCode"   : 0
       },
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadNorthSouthEastWest",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
@@ -105,7 +105,7 @@
         "RegionCode"   : 0
       },
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadNorthSouthEastWest",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
@@ -121,7 +121,7 @@
         "RegionCode"   : 0
       },
       {
-        "BackgroundImage": "FieldPlainsNoRoad",
+        "BackgroundImage": "FieldPlainsRoadNorthSouthWest",
         "ObjectListing"  : [
           "MTOApple",
           "MTOTree"
