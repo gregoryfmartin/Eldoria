@@ -250,6 +250,9 @@ Enum FnlTransformType3D {
     'FieldPlainsRoadNorthSouthEast'     = [SIFieldPlainsRoadNorthSouthEast]::new()
     'FieldPlainsRoadNorthSouthEastWest' = [SIFieldPlainsRoadNorthSouthEastWest]::new()
     'FieldPlainsRoadNorthSouthWest'     = [SIFieldPlainsRoadNorthSouthWest]::new()
+    'RiverRoadSample'                   = [SIRiverRoadSample]::new()
+    'RiverRoadEWNSSample'               = [SIRiverRoadEWNSSample]::new()
+    'RiverRoadEWSSSample'               = [SIRiverRoadEWSSSample]::new()
     'Random'                            = [SIRandomNoise]::new()
 }
 
@@ -9075,8 +9078,8 @@ Class SIInternalBase : SceneImage {
     SIInternalBase(
     [String]$JsonConfigPath
     ) : base() {
-    [Hashtable]$JsonData = @{}
-    $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
+        [Hashtable]$JsonData = @{}
+        $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
 
     If($(Test-Path $JsonConfigPath) -EQ $true) {
         $JsonData = Get-Content -Raw $JsonConfigPath | ConvertFrom-Json -AsHashtable
@@ -9184,6 +9187,18 @@ Class SIFieldPlainsRoadNorthSouthWest : SIInternalBase {
 
 Class SIFieldNorthEastRoad : SIInternalBase {
     SIFieldNorthEastRoad() : base("$(Get-Location)Image Data\SIFieldNorthEastRoadNew.json") {}
+}
+
+Class SIRiverRoadSample : SIInternalBase {
+    SIRiverRoadSample() : base("$(Get-Location)Image Data\SIRiverRoadSample.json") {}
+}
+
+Class SIRiverRoadEWNSSample : SIInternalBase {
+    SIRiverRoadEWNSSample() : base("$(Get-Location)Image Data\SIRiverRoadEWNSSample.json") {}
+}
+
+Class SIRiverRoadEWSSSample : SIInternalBase {
+    SIRiverRoadEWSSSample() : base("$(Get-Location)Image Data\SIRiverRoadEWSSSample.json") {}
 }
 
 
