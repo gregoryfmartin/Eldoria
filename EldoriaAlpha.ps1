@@ -175,6 +175,10 @@ Enum FnlTransformType3D {
 # GLOBAL VARIABLE DECLARATIONS
 #
 ###############################################################################
+$PSStyle.Progress.View = 'Classic'
+Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
+[Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
+[Int]                             $Script:SceneImagesLoaded            = 0
 [String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
 [String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
 [String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
@@ -237,24 +241,48 @@ Enum FnlTransformType3D {
 [Map]                             $Script:SampleWarpMap02              = $null
 [Map]                             $Script:CurrentMap                   = $null
 [Map]                             $Script:PreviousMap                  = $null
-[Hashtable]                       $Script:TheSceneImages               = @{
-    'FieldPlainsNoRoad'                 = [SIFieldPlainsNoRoad]::new()
-    'FieldPlainsRoadNorth'              = [SIFieldPlainsRoadNorth]::new()
-    'FieldPlainsRoadSouth'              = [SIFieldPlainsRoadSouth]::new()
-    'FieldPlainsRoadEast'               = [SIFieldPlainsRoadEast]::new()
-    'FieldPlainsRoadWest'               = [SIFieldPlainsRoadWest]::new()
-    'FieldPlainsRoadNorthEast'          = [SIFieldPlainsRoadNorthEast]::new()
-    'FieldPlainsRoadNorthWest'          = [SIFieldPlainsRoadNorthWest]::new()
-    'FieldPlainsRoadNorthSouth'         = [SIFieldPlainsRoadNorthSouth]::new()
-    'FieldPlainsRoadEastWest'           = [SIFieldPlainsRoadEastWest]::new()
-    'FieldPlainsRoadNorthSouthEast'     = [SIFieldPlainsRoadNorthSouthEast]::new()
-    'FieldPlainsRoadNorthSouthEastWest' = [SIFieldPlainsRoadNorthSouthEastWest]::new()
-    'FieldPlainsRoadNorthSouthWest'     = [SIFieldPlainsRoadNorthSouthWest]::new()
-    'RiverRoadSample'                   = [SIRiverRoadSample]::new()
-    'RiverRoadEWNSSample'               = [SIRiverRoadEWNSSample]::new()
-    'RiverRoadEWSSSample'               = [SIRiverRoadEWSSSample]::new()
-    'Random'                            = [SIRandomNoise]::new()
+Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
+
+Write-Progress -Activity 'Creating Scene Images' -Id 2 -PercentComplete 0
+[Hashtable]$Script:TheSceneImages = @{
+    'FieldPlainsNoRoad'                          = [SIFieldPlainsNoRoad]::new()
+    'FieldPlainsRoadNorth'                       = [SIFieldPlainsRoadNorth]::new()
+    'FieldPlainsRoadSouth'                       = [SIFieldPlainsRoadSouth]::new()
+    'FieldPlainsRoadEast'                        = [SIFieldPlainsRoadEast]::new()
+    'FieldPlainsRoadWest'                        = [SIFieldPlainsRoadWest]::new()
+    'FieldPlainsRoadNorthEast'                   = [SIFieldPlainsRoadNorthEast]::new()
+    'FieldPlainsRoadNorthWest'                   = [SIFieldPlainsRoadNorthWest]::new()
+    'FieldPlainsRoadNorthSouth'                  = [SIFieldPlainsRoadNorthSouth]::new()
+    'FieldPlainsRoadEastWest'                    = [SIFieldPlainsRoadEastWest]::new()
+    'FieldPlainsRoadNorthSouthEast'              = [SIFieldPlainsRoadNorthSouthEast]::new()
+    'FieldPlainsRoadNorthSouthEastWest'          = [SIFieldPlainsRoadNorthSouthEastWest]::new()
+    'FieldPlainsRoadNorthSouthWest'              = [SIFieldPlainsRoadNorthSouthWest]::new()
+    'RiverRoadSample'                            = [SIRiverRoadSample]::new()
+    'RiverRoadEWNSSample'                        = [SIRiverRoadEWNSSample]::new()
+    'RiverRoadEWSSSample'                        = [SIRiverRoadEWSSSample]::new()
+    'Random'                                     = [SIRandomNoise]::new()
+    'SIRiverOnEastAtNorth'                       = [SIRiverOnEastAtNorth]::new()
+    'SIRiverOnEastAtSouth'                       = [SIRiverOnEastAtSouth]::new()
+    'SIRiverOnEastWestAtNorth'                   = [SIRiverOnEastWestAtNorth]::new()
+    'SIRiverOnEastWestAtNorthSouth'              = [SIRiverOnEastWestAtNorthSouth]::new()
+    'SIRiverOnEastWestNorthSouthAtEast'          = [SIRiverOnEastWestNorthSouthAtEast]::new()
+    'SIRiverOnEastWestNorthSouthAtEastWest'      = [SIRiverOnEastWestNorthSouthAtEastWest]::new()
+    'SIRiverOnEastWestNorthSouthAtEastWestSouth' = [SIRiverOnEastWestNorthSouthAtEastWestSouth]::new()
+    'SIRiverOnEastWestNorthSouthAtWest'          = [SIRiverOnEastWestNorthSouthAtWest]::new()
+    'SIRiverOnNorthEastAtNorth'                  = [SIRiverOnNorthEastAtNorth]::new()
+    'SIRiverOnNorthSouthAtEast'                  = [SIRiverOnNorthSouthAtEast]::new()
+    'SIRiverOnNorthSouthAtWest'                  = [SIRiverOnNorthSouthAtWest]::new()
+    'SIRiverOnNorthSouthEastAtEast'              = [SIRiverOnNorthSouthEastAtEast]::new()
+    'SIRiverOnNorthSouthEastAtNorth'             = [SIRiverOnNorthSouthEastAtNorth]::new()
+    'SIRiverOnSouthAtEast'                       = [SIRiverOnSouthAtEast]::new()
+    'SIRiverOnSouthEastAtSouthEast'              = [SIRiverOnSouthEastAtSouthEast]::new()
+    'SIRiverOnWestAtNorth'                       = [SIRiverOnWestAtNorth]::new()
+    'SIRiverOnWestAtSouth'                       = [SIRiverOnWestAtSouth]::new()
+    'SIRiverOnWestEastAtSouth'                   = [SIRiverOnWestEastAtSouth]::new()
+    'SIRiverOnWestNorthAtNorth'                  = [SIRiverOnWestNorthAtNorth]::new()
+    'SIRiverOnWestNorthSouthAtNorth'             = [SIRiverOnWestNorthSouthAtNorth]::new()
 }
+Write-Progress -Activity 'Creating Scene Images' -Id 2 -Completed
 
 
 
@@ -9078,6 +9106,12 @@ Class SIInternalBase : SceneImage {
     SIInternalBase(
         [String]$JsonConfigPath
     ) : base() {
+        Write-Progress `
+            -Activity 'Creating Scene Images' `
+            -Id 2 `
+            -CurrentOperation "Creating $([System.IO.Path]::GetFileNameWithoutExtension($JsonConfigPath))" `
+            -PercentComplete (($Script:SceneImagesLoaded / $Script:SceneImagesToLoad) * 100)
+
         [Hashtable]$JsonData = @{}
         $this.ColorMap = New-Object 'ATBackgroundColor24[]' ([Int32](([Int32]([SceneImage]::Width)) * ([Int32]([SceneImage]::Height))))
 
@@ -9100,6 +9134,13 @@ Class SIInternalBase : SceneImage {
 
             $this.CreateSceneImageATString($this.ColorMap)
             $this.ColorMap = $null
+
+            $Script:SceneImagesLoaded++
+            Write-Progress `
+                -Activity 'Creating Scene Images' `
+                -Id 2 `
+                -CurrentOperation "Created $([System.IO.Path]::GetFileNameWithoutExtension($JsonConfigPath))" `
+                -PercentComplete (($Script:SceneImagesLoaded / $Script:SceneImagesToLoad) * 100)
         }
     }
 }
@@ -9190,15 +9231,95 @@ Class SIFieldNorthEastRoad : SIInternalBase {
 }
 
 Class SIRiverRoadSample : SIInternalBase {
-    SIRiverRoadSample() : base("$(Get-Location)Image Data\SIRiverRoadSample.json") {}
+    SIRiverRoadSample() : base("$(Get-Location)\Image Data\SIRiverRoadSample.json") {}
 }
 
 Class SIRiverRoadEWNSSample : SIInternalBase {
-    SIRiverRoadEWNSSample() : base("$(Get-Location)Image Data\SIRiverRoadEWNSSample.json") {}
+    SIRiverRoadEWNSSample() : base("$(Get-Location)\Image Data\SIRiverRoadEWNSSample.json") {}
 }
 
 Class SIRiverRoadEWSSSample : SIInternalBase {
-    SIRiverRoadEWSSSample() : base("$(Get-Location)Image Data\SIRiverRoadEWSSSample.json") {}
+    SIRiverRoadEWSSSample() : base("$(Get-Location)\Image Data\SIRiverRoadEWSSSample.json") {}
+}
+
+Class SIRiverOnEastAtNorth : SIInternalBase {
+    SIRiverOnEastAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnEastAtNorth.json") {}
+}
+
+Class SIRiverOnEastAtSouth : SIInternalBase {
+    SIRiverOnEastAtSouth() : base("$(Get-Location)\Image Data\SIRiverOnEastAtSouth.json") {}
+}
+
+Class SIRiverOnEastWestAtNorth : SIInternalBase {
+    SIRiverOnEastWestAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnEastWestAtNorth.json") {}
+}
+
+Class SIRiverOnEastWestAtNorthSouth : SIInternalBase {
+    SIRiverOnEastWestAtNorthSouth() : base("$(Get-Location)\Image Data\SIRiverOnEastWestAtNorthSouth.json") {}
+}
+
+Class SIRiverOnEastWestNorthSouthAtEast : SIInternalBase {
+    SIRiverOnEastWestNorthSouthAtEast() : base("$(Get-Location)\Image Data\SIRiverOnEastWestNorthSouthAtEast.json") {}
+}
+
+Class SIRiverOnEastWestNorthSouthAtEastWest : SIInternalBase {
+    SIRiverOnEastWestNorthSouthAtEastWest() : base("$(Get-Location)\Image Data\SIRiverOnEastWestNorthSouthAtEastWest.json") {}
+}
+
+Class SIRiverOnEastWestNorthSouthAtEastWestSouth : SIInternalBase {
+    SIRiverOnEastWestNorthSouthAtEastWestSouth() : base("$(Get-Location)\Image Data\SIRiverOnEastWestNorthSouthAtEastWestSouth.json") {}
+}
+
+Class SIRiverOnEastWestNorthSouthAtWest : SIInternalBase {
+    SIRiverOnEastWestNorthSouthAtWest() : base("$(Get-Location)\Image Data\SIRiverOnEastWestNorthSouthAtWest.json") {}
+}
+
+Class SIRiverOnNorthEastAtNorth : SIInternalBase {
+    SIRiverOnNorthEastAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnNorthEastAtNorth.json") {}
+}
+
+Class SIRiverOnNorthSouthAtEast : SIInternalBase {
+    SIRiverOnNorthSouthAtEast() : base("$(Get-Location)\Image Data\SIRiverOnNorthSouthAtEast.json") {}
+}
+
+Class SIRiverOnNorthSouthAtWest : SIInternalBase {
+    SIRiverOnNorthSouthAtWest() : base("$(Get-Location)\Image Data\SIRiverOnNorthSouthAtWest.json") {}
+}
+
+Class SIRiverOnNorthSouthEastAtEast : SIInternalBase {
+    SIRiverOnNorthSouthEastAtEast() : base("$(Get-Location)\Image Data\SIRiverOnNorthSouthEastAtEast.json") {}
+}
+
+Class SIRiverOnNorthSouthEastAtNorth : SIInternalBase {
+    SIRiverOnNorthSouthEastAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnNorthSouthEastAtNorth.json") {}
+}
+
+Class SIRiverOnSouthAtEast : SIInternalBase {
+    SIRiverOnSouthAtEast() : base("$(Get-Location)\Image Data\SIRiverOnSouthAtEast.json") {}
+}
+
+Class SIRiverOnSouthEastAtSouthEast : SIInternalBase {
+    SIRiverOnSouthEastAtSouthEast() : base("$(Get-Location)\Image Data\SIRiverOnSouthEastAtSouthEast.json") {}
+}
+
+Class SIRiverOnWestAtNorth : SIInternalBase {
+    SIRiverOnWestAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnWestAtNorth.json") {}
+}
+
+Class SIRiverOnWestAtSouth : SIInternalBase {
+    SIRiverOnWestAtSouth() : base("$(Get-Location)\Image Data\SIRiverOnWestAtSouth.json") {}
+}
+
+Class SIRiverOnWestEastAtSouth : SIInternalBase {
+    SIRiverOnWestEastAtSouth() : base("$(Get-Location)\Image Data\SIRiverOnWestEastAtSouth.json") {}
+}
+
+Class SIRiverOnWestNorthAtNorth : SIInternalBase {
+    SIRiverOnWestNorthAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnWestNorthAtNorth.json") {}
+}
+
+Class SIRiverOnWestNorthSouthAtNorth : SIInternalBase {
+    SIRiverOnWestNorthSouthAtNorth() : base("$(Get-Location)\Image Data\SIRiverOnWestNorthSouthAtNorth.json") {}
 }
 
 
