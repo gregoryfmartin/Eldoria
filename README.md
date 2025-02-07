@@ -12,7 +12,7 @@ Please read the GitHub wiki for more information.
 
 * Download this repository in its entirety or clone the master branch into a local directory on your computer.
 * Open Windows Terminal and navigate to the directory where the repository is located at.
-* Run the script as follows: Set-ExecutionPolicy Bypass -Scope Process -Force; .\EldoriaDev.ps1
+* Run the script as follows: `Set-ExecutionPolicy Bypass -Scope Process -Force; .\EldoriaAlpha.ps1`
 
 # Navigating the World Map
 
