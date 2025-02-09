@@ -9139,7 +9139,7 @@ Class SIInternalBase : SceneImage {
             Write-Progress `
                 -Activity 'Creating Scene Images' `
                 -Id 2 `
-                -CurrentOperation "Created $([System.IO.Path]::GetFileNameWithoutExtension($JsonConfigPath))" `
+                -CurrentOperation "Creating $([System.IO.Path]::GetFileNameWithoutExtension($JsonConfigPath))" `
                 -PercentComplete (($Script:SceneImagesLoaded / $Script:SceneImagesToLoad) * 100)
         }
     }
