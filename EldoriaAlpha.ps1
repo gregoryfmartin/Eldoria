@@ -12796,6 +12796,159 @@ Class BufferManager {
 
 ###############################################################################
 #
+# WIDGET BASE
+#
+# AS OF NOW, I DON'T REALLY HAVE MUCH OF A PURPOSE FOR THIS CLASS FUNCTIONALLY.
+# THIS THING JUST NEEDS TO SIT HERE SO I CAN CREATE ABSTRACTIONS FROM IT UNTIL
+# MORE CAN BE PUT HERE.
+#
+# I KNOW, THIS IS DUMB AND POTENTIALLY OVERKILL, BUT OH WELL. I'M SURE I'LL
+# DOUBLE BACK ON THIS LATER.
+#
+###############################################################################
+Class WidgetBase {}
+
+
+
+
+
+###############################################################################
+#
+# WLLABEL
+#
+# ASIDE FROM THE SUPER CREATIVE NAME, THIS IS INTENDED TO ACT AS A COMPOSITION
+# OF USER CONTENT AND A BLANK IN A MORE SUCCINCT PACKAGE. SUCH CUTE.
+#
+# ALSO, I JUST REALIZED THAT ABBREVIATING ABSTRACTIONS WITH THE WB PREFIX
+# ALIGNS THEM WITH WINDOWBASE EVEN THOUGH ITS ABSTRACTIONS DON'T FOLLOW THIS
+# PATTERN. SO WE'LL GO WITH WL FOR "WIDGET LIBRARY". JUST TO MAKE THINGS MORE
+# CONFUSING.
+#
+# THE IDEA HERE IS THAT THIS REPRESENTS A SINGLE - OR MULTILINE (NOT EXPLICIT) -
+# LINE OF TEXT THAT CONFORMS TO THE ATSTRING SPEC. IT CONTAINS ALSO A BLANK,
+# WHICH IS MODIFIED DYNAMICALLY TO MEET THE USER-SPECIFIED LENGTH OF TEXT.
+#
+# WITH REGARD TO DIRTY FLAGS, MY CURRENT THOUGHT ON THE MATTER IS THAT THE OWNING
+# WINDOW WOULD BE RESPONSIBLE FOR DECIDING WHETHER THIS ELEMENT IS DIRTY OR NOT
+# AND TRIGGERING THE REFRESH. IT WOULD LIKELY BE AN UNNECESSARY LEVEL OF
+# COMPLICATION TO REQUIRE THAT BOTH THE WINDOW AND THE WIDGET ITSELF BE PARTY
+# TO DIRTY FLAGS. THE WORRY OF REDUNDANT CHECKS ISN'T GENERALLY THE CONCERN, IT'S
+# MORE EXTERNAL INFLUENCES THAT CAN TRIGGER CHANGES (I.E. STATE CHANGES THAT SET
+# DIRTY FLAGS FOR THE WINDOWS WOULD NOW NEED ALSO TO SET DIRTY FLAGS FOR THE
+# SPECIFIC WIDGETS THAT NEED UPDATED, WHICH SEEMS LIKE MASSIVE OVERKILL). THUS,
+# THE WIDGETS DON'T CONCERN THEMSELVES WITH UPDATES. THEY SIMPLY DRAW, IN ORDER,
+# THE BLANK AND THEN THE TEXT.
+#
+# TO MAKE THIS AS SIMPLE AS IT POSSIBLY CAN BE, THE ATSTRINGS ARE IMPLEMENTED
+# USING THE ATSTRINGCOMPOSITE CONSTRUCT. NORMALLY, THE PATTERN EMPLOYED IN THE
+# WINDOWS IS TO CREATE MULTIPLE DISCRETE ATSTRING INSTANCES, BUT WE PROBABLY
+# COULD BE A BIT MORE HYGENIC IN THIS APPROACH. THE THING TO NOTE ABOUT THE USE
+# OF ATSTRINGCOMPOSITE HERE IS THAT ELEMENT 0 IS ALWAYS INTENDED TO BE THE BLANK.
+# THIS MAY TURN OUT NOT TO WORK RIGHT WITH MULTILINE TEXT, BUT WE'LL SEE HOW IT
+# PANS OUT IN IMPLEMENTATION.
+#
+# REAL TALK, WHEN DEALING WITH MULTILINE, IT MAY NOT EVEN BE THAT BIG OF A DEAL.
+# ALL WE'RE CONCERNED ABOUT IS DISTILLING THE LONGEST LINE FROM THE OVERALL TEXT
+# AND FROM THAT CREATING A SUFFICIENTLY LARGE ENOUGH BLANK TO COVER THE BUFFER
+# CELL REAL ESTATE.
+#
+# BY DEFAULT, THE CTOR ASSUMES THAT MULTILINE ISN'T WARRANTED. THE CALLER WILL
+# NEED TO EXPLICITLY SPECIFY THE NEED FOR MULTILINE. I'M INITIALLY OPEN TO THE
+# IDEA OF CREATING THESE WITH SPLATS, BUT WE'LL SEE WHAT HAPPENS.
+#
+###############################################################################
+Class WLLabel : WidgetBase {
+    [Boolean]$Multiline
+    [ATStringComposite]$Data
+
+    WLLabel(
+        [ATCoordinates]$InitialCoords,
+        [ATString[]]$UData
+    ) : base() {
+        $this.Multiline               = $false
+        $this.Data                    = [ATStringComposite]::new()
+        $this.Data.CompositeActual[0] = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]::new($InitialCoords.Row, $InitialCoords.Column)
+            }
+            UserData   = ' '
+            UseATReset = $true
+        }
+
+        If($null -NE $UData -AND $UData.Length -GT 0) {
+            Foreach($A in $UData) {
+                $this.Data.CompositeActual.Add($A) | Out-Null
+            }
+        }
+
+        $this.Update()
+    }
+
+    [Void]Update() {
+        # DETERMINE THE LONGEST STRING IN THE COLLECTION AND UPDATE THE BLANK ACCORDINGLY
+        # THIS STILL ISN'T THE MOST DEFENSIVE CODE EVER, BUT WTH
+        If($null -NE $this.Data -AND $this.Data.CompositeActual.Count -GE 2) {
+            # CHECK TO SEE IF WE'RE MULTILINE
+            If($this.Multiline -EQ $true) {
+                # FIGURE OUT WHAT'S THE LARGEST STRING IN THE COLLECTION ASIDE FROM THE BLANK
+                [Int]$Itr        = 0
+                [Int]$LargestLen = 0
+
+                Foreach($A in $this.Data.CompositeActual) {
+                    If($Itr -EQ 0) { # DON'T FACTOR IN THE BLANK
+                        Continue
+                    }
+                    If($A.UserData.Length -GT $LargestLen) {
+                        $LargestLen = $A.UserData.Length
+                    }
+                    $Itr++
+                }
+
+                # BY THIS POINT, WE SHOULD'VE OBTAINED THE LARGEST STRING
+                # CREATE THE BLANK
+                $this.Data.CompositeActual[0].UserData = "$(' '.PadLeft($LargestLen, ' '))"
+            } Else { # $this.Multiline -EQ $false
+                # THE BLANK STRING LENGTH SIMPLY NEEDS MATCH THE LENGTH OF THE DATA
+                $this.Data.CompositeActual[0].UserData = "$(' '.PadLeft($this.Data.CompositeActual[1].UserData.Length, ' '))"
+            }
+        }
+    }
+
+    [String]ToAnsiControlSequenceString() {
+        [String]$A = ''
+
+        If($null -NE $this.Data) {
+            If($this.Data.CompositeActual.Count -EQ 2) {
+                $A += "$($this.Data.CompositeActual[0].ToAnsiControlSequenceString())$($this.Data.CompositeActual[1].ToAnsiControlSequenceString())"
+            } Elseif($this.Data.CompositeActual.Count -GT 2) {
+                [Int]$Itr = 0
+
+                Foreach($B in $this.Data.CompositeActual) {
+                    If($Itr -EQ 0) { # DON'T EXPLICITLY ADD THE BLANK
+                        Continue
+                    }
+                    $A += "$($this.Data.CompositeActual[0].ToAnsiControlSequenceString())$($B.ToAnsiControlSequenceString())"
+                    $this.Data.CompositeActual[0].Prefix.Coordinates.Row++
+                    $Itr++
+                }
+
+                # RESET THE ROW COORDINATE OF THE BLANK SO THAT WE'RE NOT SCROLLING DOWN THE SCREEN
+                $this.Data.CompositeActual[0].Prefix.Coordinates.Row = $this.Data.CompositeActual[1].Prefix.Coordinates.Row
+            }
+        } Else {
+            # THIS IS AN ERROR STATE; DO NOTHING FOR THE TIME BEING
+        }
+
+        Return $A
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # WINDOW BASE
 #
 # INTENDED TO BE USED AS THE FOUNDATION FOR MORE SPECIFIC "WINDOWS". THIS CLASS
@@ -13054,6 +13207,8 @@ Class StatusWindow : WindowBase {
 
     [ATString]$LineBlankActual
 
+    [WLLabel]$PlayerNameLabel
+
     StatusWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
@@ -13082,22 +13237,41 @@ Class StatusWindow : WindowBase {
             UserData   = "$([StatusWindow]::LineBlank)"
             UseATReset = $true
         }
+
+        # SETTING THE INITIAL COORDINATES AND THEN SPECIFYING THEM AGAIN IN THE PREFIX
+        # SEEMS... ODD. ALTHOUGH I'M UNSURE IF THERE'S A WAY AROUND THAT, OR EVEN IF
+        # IT'S SOMETHING THAT SHOULD BE "FIXED". I'M SURE THIS WILL LOOK DIFFERENT WHEN IT'S
+        # MULTILINE.
+        $this.PlayerNameLabel = [WLLabel]::new(
+            [StatusWindow]::PlayerNameDrawCoordinates,
+            @(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        Coordinates     = [StatusWindow]::PlayerNameDrawCoordinates
+                    }
+                    UseATReset = $true
+                }
+            )
+        )
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
 
         If($this.PlayerNameDrawDirty -EQ $true) {
-            [ATString]$a = [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $Script:ThePlayer.NameDrawColor
-                    Coordinates     = [StatusWindow]::PlayerNameDrawCoordinates
-                }
-                UserData   = $Script:ThePlayer.Name
-                UseATReset = $true
-            }
-            $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
-            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a.ToAnsiControlSequenceString())"
+            $this.PlayerNameLabel.Data.CompositeActual[1].Prefix.ForegroundColor = $Script:ThePlayer.NameDrawColor
+            $this.PlayerNameLabel.Data.CompositeActual[1].UserData = "$($Script:ThePlayer.Name)"
+            # [ATString]$a = [ATString]@{
+            #     Prefix = [ATStringPrefix]@{
+            #         ForegroundColor = $Script:ThePlayer.NameDrawColor
+            #         Coordinates     = [StatusWindow]::PlayerNameDrawCoordinates
+            #     }
+            #     UserData   = $Script:ThePlayer.Name
+            #     UseATReset = $true
+            # }
+            # $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
+            # Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a.ToAnsiControlSequenceString())"
+            Write-Host "$($this.PlayerNameLabel.ToAnsiControlSequenceString())"
             $this.PlayerNameDrawDirty = $false
         }
 
