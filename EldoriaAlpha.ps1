@@ -20422,6 +20422,403 @@ Class BattleManager {
 
 ###############################################################################
 #
+# QUEST STEP
+#
+# PRETTY SELF EXPLANATORY.
+#
+###############################################################################
+Class QuestStep {
+    QuestStep() {}
+
+    [Boolean]IsMet() {
+        # THIS ISN'T INTENDED TO BE THE IMPLEMENTATION TO USE
+        Return $false
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QUEST
+#
+# A BASIC DEFINITION OF A QUEST.
+#
+###############################################################################
+Class Quest {
+    [Boolean]$Completed
+    [System.Collections.Generic.List[QuestStep]]$Steps
+
+    Quest() {
+        $this.Steps = [System.Collections.Generic.List[QuestStep]]::new()
+    }
+
+    Quest(
+        [System.Collections.Generic.List[QuestStep]]$Steps
+    ) {
+        $this.Steps = $Steps
+    }
+
+    Quest(
+        [QuestStep[]]$Steps
+    ) {
+        $this.Steps = [System.Collections.Generic.List[QuestStep]]::new()
+
+        Foreach($A in $Steps) {
+            $this.Steps.Add($A) | Out-Null
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# LINEAR QUEST
+#
+# A QUEST WITH STEPS INTENDED TO BE COMPLETED IN A LINEAR FASHION. SPECIFICALLY,
+# THE STEPS NEED COMPLETED IN ORDER BEFORE THE QUEST CAN BE CONSIDERED SUCCESSFUL.
+#
+###############################################################################
+Class LinearQuest : Quest {
+    [Int]$CurrentStep
+
+    LinearQuest() : base() {
+        $this.CurrentStep = 0
+    }
+
+    LinearQuest(
+        [List[QuestStep]]$Steps
+    ) : base($Steps) {
+        $this.CurrentStep = 0
+    }
+
+    LinearQuest(
+        [QuestStep[]]$Steps
+    ) : base($Steps) {
+        $this.CurrentStep = 0
+    }
+
+    [QuestStep]GetCurrentStep() {
+        Return $this.Steps[$this.CurrentStep]
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# NONLINEAR QUEST
+#
+# A QUEST WITH STEPS INTENDED TO BE COMPLETED IN A NONLINEAR FASHION. SPECIFICALLY,
+# THE STEPS CAN BE COMPLETED IN ANY ORDER BEFORE THE QUEST CAN BE CONSIDERED
+# SUCCESSFUL.
+#
+###############################################################################
+Class NonlinearQuest : Quest {
+    NonlinearQuest() : base() {}
+
+    NonlinearQuest(
+        [List[QuestStep]]$Steps
+    ) : base($Steps) {}
+
+    NonlinearQuest(
+        [QuestStep[]]$Steps
+    ) : base($Steps) {}
+}
+
+
+
+
+
+###############################################################################
+#
+# QSHASITEM
+#
+# A QUEST STEP SPECIALIZATION THAT CHECKS IF THE PLAYER HAS OBTAINED A SPECIFIC
+# ITEM.
+#
+# THIS SPECIALIZATION CAN HAVE A STRING FOR THE TARGETITEM MEMBER SINCE THE
+# INTERFACE CALLS FOR QUERYING THE INVENTORY USE STRINGS.
+#
+###############################################################################
+Class QAHasItem : QuestStep {
+    [String]$TargetItem
+
+    QAHasItem(
+        [String]$TargetItem
+    ) : base() {
+        $this.TargetItem = $TargetItem
+    }
+
+    [Boolean]IsMet() {
+        Return $Script:ThePlayer.IsItemInInventory($this.TargetItem)
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QAISQUESTCOMPLETED
+#
+# A QUEST STEP SPECIALIZATIN THAT CHECKS IF A SPECIFIC QUEST HAS BEEN COMPLETED.
+#
+###############################################################################
+Class QAQuestCompleted : QuestStep {
+    [Quest]$TargetQuest
+
+    QAQuestCompleted(
+        [Quest]$TargetQuest
+    ) : base() {
+        $this.TargetQuest = $TargetQuest
+    }
+
+    [Boolean]IsMet() {
+        Return $this.TargetQuest.Completed
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QAPLAYERHASGOLD
+#
+# A QUEST STEP SPECIALIZATION THAT CHECKS IF THE PLAYER HAS A SPECIFIC AMOUNT
+# OF GOLD.
+#
+###############################################################################
+Class QAPlayerHasGold : QuestStep {
+    [Int]$GoldTarget
+
+    QAPlayerHasGold(
+        [Int]$GoldTarget
+    ) : base() {
+        $this.GoldTarget = $GoldTarget
+    }
+
+    [Boolean]IsMet() {
+        Return $Script:ThePlayer.CurrentGold -GE $this.GoldTarget
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QAPLAYERSTATATLEVEL
+#
+# A QUEST STEP SPECIALIZATION THAT CHECKS IF A SPECIFIC STAT OF THE PLAYER IS
+# AT A SPECIFIC LEVEL. SPECIFICALLY, IT EXAMINES THE MAX VALUE FOR A STAT. THERE
+# ARE SOME OBVIOUS PITFALL WITH THIS KIND OF CHECK, BUT IT'LL DO FOR THE TIME
+# BEING.
+#
+###############################################################################
+Class QAPlayerStatAtLevel : QuestStep {
+    [StatId]$TargetStat
+    [Int]$TargetMaxValue
+
+    QAPlayerStatAtLevel(
+        [StatId]$TargetStat,
+        [Int]$TargetMaxValue
+    ) : base() {
+        $this.TargetStat     = $TargetStat
+        $this.TargetMaxValue = $TargetMaxValue
+    }
+
+    [Boolean]IsMet() {
+        Return $Script:ThePlayer.Stats[$this.TargetStat].Max -GE $this.TargetMaxValue
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QAPLAYERHASNUMBEROFTECHNIQUES
+#
+# A QUEST STEP SPECIALIZATION THAT CHECKS IF THE PLAYER HAS A SPECIFIC NUMBER OF
+# BATTLE ACTIONS IN THE THEIR BATTLE ACTION INVENTORY. IT'S UNCLEAR IF THIS'LL
+# ACTUALLY BE USEFUL OR NOT, BUT WE'LL INCLUDE IT ALL THE SAME.
+#
+###############################################################################
+Class QAPlayerHasNumberOfTechniques : QuestStep {
+    [Int]$TargetNumber
+
+    QAPlayerHasNumberOfTechniques(
+        [Int]$TargetNumber
+    ) : base() {
+        $this.TargetNumber = $TargetNumber
+    }
+
+    [Boolean]IsMet() {
+        Return $Script:ThePlayer.ActionInventory.Listing.Count -GE $this.TargetNumber
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QAPLAYERHASDEALTHIGHDAMAGE
+#
+# A QUEST STEP SPECIALIZATION THAT CHECKS IF THE PLAYER HAS DEALT A SUFFICIENTLY
+# HIGH LEVEL OF DAMAGE.
+#
+# !!! CRITICAL ERROR WILL ROBINSON !!!
+#
+# THE CURRENT VERSION OF THIS PROGRAM DOESN'T PROVIDE THE BACKING FACILITIES
+# TO MAKE THIS QUEST STEP A "REAL THING", SO IT DON'T NOT WORK. UNTIL I CAN
+# FIGURE OUT THE BEST WAY TO PLUG THIS IN, IT'LL STAY BORKED.
+#
+###############################################################################
+Class QAPlayerHasDealtHighDamage : QuestStep {
+    [Int]$TargetDamageThreshold
+
+    QAPlayerHasDealtHighDamage(
+        [Int]$TargetDamageThreshold
+    ) : base() {
+        $this.TargetDamageThreshold = $TargetDamageThreshold
+    }
+
+    [Boolean]IsMet() {
+        Return $false
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# QUESTLINE
+#
+# A SOMEWHAT FINAL ABSTRACTION OF QUESTS THAT MARRY TOGETHER EITHER LINEAR OR
+# NON-LINEAR QUESTS. GIVEN THE NATURE OF THIS COMPOSITION, IT'S ENTIRELY POSSIBLE
+# TO HAVE A QUESTLINE COMPOSED OF BOTH LINEAR AND NON-LINEAR QUESTS.
+#
+# AT THE RISK OF BECOMING PARADOXICAL TO AN EXTENT, QUESTLINES, DESPITE BEING
+# ABLE TO CONTAIN NON-LINEAR QUESTS, ARE THEMSELVES LINEAR. IF THE CURRENT QUEST
+# HAPPENS TO BE A NON-LINEAR ONE, THEN THE STEPS IN THAT QUEST CAN BE COMPLETED
+# IN ANY ORDER WHICH THE PLAYER CHOOSES. HOWEVER, THE COMPLETION OF A QUESTLINE
+# IS CONTINGENT ENTIRELY ON COMPLETING THE QUESTS WITHIN IN SEQUENCE.
+#
+###############################################################################
+Class Questline {
+    [Int]$CurrentQuest
+    [List[Quest]]$Quests
+
+    Questline() {
+        $this.CurrentQuest = 0
+        $this.Quests       = [List[Quest]]::new()
+    }
+
+    Questline(
+        [List[Quest]]$Quests
+    ) {
+        $this.CurrentQuest = 0
+        $this.Quests       = $Quests
+    }
+
+    Questline(
+        [Quest[]]$Quests
+    ) {
+        $this.CurrentQuest = 0
+        $this.Quests       = [List[Quest]]::new()
+
+        Foreach($A in $Quests) {
+            $this.Quests.Add($A) | Out-Null
+        }
+    }
+
+    [Quest]GetCurrentQuest() {
+        Return $this.Quests[$this.CurrentQuest]
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# EXAMPLE OF CREATING A NEW QUESTLINE
+#
+# THIS IS JUST TO SAMPLE HOW CREATING A NEW QUESTLINE WOULD LOOK/FEEL. NONE
+# OF THIS IS EXPECTED TO CARRY OVER INTO ANYTHING WORKABLE.
+#
+###############################################################################
+#
+# IT'S LIKELY THAT SPLATTING ISN'T GOING TO BE POSSIBLE WITH CREATING THESE GIVEN HOW
+# THE QUESTS THEMSELVES ARE INTENDED TO BE INSTANTIATED. THE SPLATS WILL ALWAYS CALL
+# THE DEFAULT CTORS AND THIS WILL CAUSE SOME UNINTENDED BEHAVIOR FROM THE ASSUMPTIONS THAT
+# A SPLAT IMPLIES.
+#
+# [Questline]$SampleQuestlineA = [Questline]@{
+# }
+
+#
+# THIS FEELS OKAY TYPING IT OUT. IT LOOKS A LITTLE HOKEY, PERHAPS BECAUSE OF THE
+# SHORTHAND INTERSPERSED, ALTHOUGH THIS IS FUNDAMENTALLY NO DIFFERENT THAN THE JSON
+# NOTATION.
+#
+[Questline]$SampleQuestlineA = [Questline]::new(
+    @(
+        [LinearQuest]::new(
+            @(
+                [QAHasItem]::new('MTORope'),
+                [QAHasItem]::new('MTOApple'),
+                [QAPlayerHasGold]::new(50000)
+            )
+        ),
+        [NonlinearQuest]::new(
+            @(
+                [QAPlayerStatAtLevel]::new(
+                    [StatId]::Attack,
+                    75
+                ),
+                [QAHasItem]::new('MTOMilk'),
+                [QAPlayerHasNumberOfTechniques]::new(25)
+            )
+        )
+    )
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###############################################################################
+#
 # GAME CORE
 #
 # ENTRY POINT FOR THE GAME PROGRAM
