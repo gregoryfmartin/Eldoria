@@ -3,6 +3,7 @@ using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
 using namespace System.Media
+using namespace System.Linq
 
 Add-Type -AssemblyName PresentationCore
 
@@ -20428,12 +20429,13 @@ Class BattleManager {
 #
 ###############################################################################
 Class QuestStep {
-    QuestStep() {}
+    [Boolean]$Completed
 
-    [Boolean]IsMet() {
-        # THIS ISN'T INTENDED TO BE THE IMPLEMENTATION TO USE
-        Return $false
+    QuestStep() {
+        $this.Completed = $false
     }
+
+    [Void]Update() {}
 }
 
 
@@ -20449,25 +20451,45 @@ Class QuestStep {
 ###############################################################################
 Class Quest {
     [Boolean]$Completed
-    [System.Collections.Generic.List[QuestStep]]$Steps
+    [List[QuestStep]]$Steps
 
     Quest() {
-        $this.Steps = [System.Collections.Generic.List[QuestStep]]::new()
+        $this.Completed = $false
+        $this.Steps     = [List[QuestStep]]::new()
     }
 
     Quest(
-        [System.Collections.Generic.List[QuestStep]]$Steps
+        [List[QuestStep]]$Steps
     ) {
-        $this.Steps = $Steps
+        $this.Completed = $false
+        $this.Steps     = $Steps
     }
 
     Quest(
         [QuestStep[]]$Steps
     ) {
-        $this.Steps = [System.Collections.Generic.List[QuestStep]]::new()
+        $this.Completed = $false
+        $this.Steps     = [List[QuestStep]]::new()
 
         Foreach($A in $Steps) {
             $this.Steps.Add($A) | Out-Null
+        }
+    }
+
+    [Void]Update() {
+        If($this.Completed -EQ $false) {
+            [Int]$A = 0
+
+            Foreach($Q in $this.Steps) {
+                $Q.Update()
+                If($Q.Completed -EQ $true) {
+                    $A++
+                }
+            }
+
+            If($A -EQ $this.Steps.Count) {
+                $this.Completed = $true
+            }
         }
     }
 }
@@ -20557,8 +20579,10 @@ Class QAHasItem : QuestStep {
         $this.TargetItem = $TargetItem
     }
 
-    [Boolean]IsMet() {
-        Return $Script:ThePlayer.IsItemInInventory($this.TargetItem)
+    [Void]Update() {
+        If($Script:ThePlayer.IsItemInInventory($this.TargetItem) -EQ $true) {
+            $this.Completed = $true
+        }
     }
 }
 
@@ -20582,8 +20606,10 @@ Class QAQuestCompleted : QuestStep {
         $this.TargetQuest = $TargetQuest
     }
 
-    [Boolean]IsMet() {
-        Return $this.TargetQuest.Completed
+    [Void]Update() {
+        If($this.TargetQuest.Completed -EQ $true) {
+            $this.Completed = $true
+        }
     }
 }
 
@@ -20608,8 +20634,10 @@ Class QAPlayerHasGold : QuestStep {
         $this.GoldTarget = $GoldTarget
     }
 
-    [Boolean]IsMet() {
-        Return $Script:ThePlayer.CurrentGold -GE $this.GoldTarget
+    [Void]Update() {
+        If($Script:ThePlayer.CurrentGold -GE $this.GoldTarget) {
+            $this.Completed = $true
+        }
     }
 }
 
@@ -20639,8 +20667,10 @@ Class QAPlayerStatAtLevel : QuestStep {
         $this.TargetMaxValue = $TargetMaxValue
     }
 
-    [Boolean]IsMet() {
-        Return $Script:ThePlayer.Stats[$this.TargetStat].Max -GE $this.TargetMaxValue
+    [Void]Update() {
+        If($Script:ThePlayer.Stats[$this.TargetStat].Max -GE $this.TargetMaxValue) {
+            $this.Completed = $true
+        }
     }
 }
 
@@ -20666,8 +20696,10 @@ Class QAPlayerHasNumberOfTechniques : QuestStep {
         $this.TargetNumber = $TargetNumber
     }
 
-    [Boolean]IsMet() {
-        Return $Script:ThePlayer.ActionInventory.Listing.Count -GE $this.TargetNumber
+    [Void]Update() {
+        If($Script:ThePlayer.ActionInventory.Listing.Count -GE $this.TargetNumber) {
+            $this.Completed = $true
+        }
     }
 }
 
@@ -20698,9 +20730,7 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
         $this.TargetDamageThreshold = $TargetDamageThreshold
     }
 
-    [Boolean]IsMet() {
-        Return $false
-    }
+    [Void]Update() {}
 }
 
 
@@ -20724,10 +20754,14 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 ###############################################################################
 Class Questline {
     [Int]$CurrentQuest
+    [Boolean]$Completed
+    [Boolean]$Active
     [List[Quest]]$Quests
 
     Questline() {
         $this.CurrentQuest = 0
+        $this.Completed    = $false
+        $this.Active       = $false
         $this.Quests       = [List[Quest]]::new()
     }
 
@@ -20735,6 +20769,8 @@ Class Questline {
         [List[Quest]]$Quests
     ) {
         $this.CurrentQuest = 0
+        $this.Completed    = $false
+        $this.Active       = $false
         $this.Quests       = $Quests
     }
 
@@ -20742,6 +20778,8 @@ Class Questline {
         [Quest[]]$Quests
     ) {
         $this.CurrentQuest = 0
+        $this.Completed    = $false
+        $this.Active       = $false
         $this.Quests       = [List[Quest]]::new()
 
         Foreach($A in $Quests) {
@@ -20751,6 +20789,12 @@ Class Questline {
 
     [Quest]GetCurrentQuest() {
         Return $this.Quests[$this.CurrentQuest]
+    }
+
+    [Void]Update() {
+        If($this.Active -EQ $true) {
+            
+        }
     }
 }
 
