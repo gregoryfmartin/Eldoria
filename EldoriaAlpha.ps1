@@ -483,7 +483,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
         Write-Host "$([ATControlSequences]::CursorShow)"
     } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen) -AND ($Script:GpsRestoredFromBatBackup -EQ $false)) {
         $Script:TheBufferManager.RestoreBufferAToActive()
-        
+
         # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
         # and I really don't feel like trying to figure out how to grab the buffer manually
         $Script:GpsRestoredFromBatBackup             = $true
@@ -499,7 +499,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
         Write-Host "$([ATControlSequences]::CursorShow)"
     } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen) -AND ($Script:GpsRestoredFromStaBackup -EQ $false)) {
         $Script:TheBufferManager.RestoreBufferAToActive()
-        
+
         # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
         # and I really don't feel like trying to figure out how to grab the buffer manually
         $Script:GpsRestoredFromStaBackup             = $true
@@ -690,23 +690,23 @@ $Script:Rui = $(Get-Host).UI.RawUI
                 { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
                     $Script:ThePlayer.MapMoveNorth()
                 }
-    
+
                 { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
                     $Script:ThePlayer.MapMoveSouth()
                 }
-    
+
                 { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
                     $Script:ThePlayer.MapMoveEast()
                 }
-    
+
                 { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
                     $Script:ThePlayer.MapMoveWest()
                 }
-    
+
                 Default {
                     $Script:TheCommandWindow.UpdateCommandHistory($false)
                     $Script:TheMessageWindow.WriteBadCommandMessage('move')
-    
+
                     Return
                 }
             }
@@ -795,13 +795,13 @@ $Script:Rui = $(Get-Host).UI.RawUI
                 If($a.Name -IEQ $a0) {
                     $Script:TheCommandWindow.UpdateCommandHistory($true)
                     $Script:TheMessageWindow.WriteItemExamineMessage($a.ExamineString)
-    
+
                     Return
                 }
             }
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
-    
+
             Return
         }
     } Else {
@@ -1019,7 +1019,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
             # ENTERED A MAP? I'LL LEAVE THIS AS A TODO HERE.
 
             $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
-            
+
             # THIS NEXT PART IS LIKELY SUBJECT TO CHANGE BECAUSE IT WOULD IMPLY THAT
             # BATTLES CAN OCCUR ON THE WARPING TILES, AND THIS MAY NOT MAKE MUCH SENSE
             $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
@@ -1210,7 +1210,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Switch($Self.Base) {
                     { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
                         $Self.State = [StatNumberState]::Normal
@@ -1236,7 +1236,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Switch($Self.Base) {
                     { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
                         $Self.State = [StatNumberState]::Normal
@@ -1267,7 +1267,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return $Self.Base
             }
         }
@@ -1278,7 +1278,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return
             }
         }
@@ -1289,7 +1289,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return
             }
         }
@@ -1300,7 +1300,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return
             }
         }
@@ -1311,7 +1311,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return
             }
         }
@@ -1322,7 +1322,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return
             }
         }
@@ -1335,7 +1335,7 @@ $Script:TheCommandTable = @{
                 Param(
                     [BattleEntityProperty]$Self
                 )
-                
+
                 Return
             }
         }
@@ -2716,11 +2716,11 @@ Class BattleEntityProperty {
         [Int]$t    = $this.Base + $DecAmt
         $t         = [Math]::Clamp($t, 0, $this.Max)
         $this.Base = $t
-        
+
         Return 0
     }
 
-    <# 
+    <#
     .OUTPUTS
     Integer
         -1 - The value of IncAmt is less than or equal to zero.
@@ -4048,7 +4048,7 @@ Class BAAngelicHymn : BattleAction {
     }
 }
 
-Class BABrilliance : BattleAction { 
+Class BABrilliance : BattleAction {
     BABrilliance() : base() {
         $this.Name        = 'Brilliance'
         $this.Description = 'How I feel when I look at myself in the mirror.'
@@ -4149,7 +4149,7 @@ Class BattleEntity {
 #
 # ENEMY BATTLE ENTITY
 #
-# AN ENTITY THAT IS NOT THE PLAYER THAT CAN BE ENCOUNTERED IN A BATTLE 
+# AN ENTITY THAT IS NOT THE PLAYER THAT CAN BE ENCOUNTERED IN A BATTLE
 # SCENARIO.
 #
 ###############################################################################
@@ -4173,7 +4173,7 @@ Class EnemyBattleEntity : BattleEntity {
             $Player.CurrentGold += $Opponent.SpoilsGold
             If($Opponent.SpoilsItems.Length -GT 0) {
                 [String]$ItemNames = ($Opponent.SpoilsItems | Select-Object -ExpandProperty 'Name') -JOIN ', '
-                
+
                 $Script:TheBattleStatusMessageWindow.WriteItemsFoundMessage($ItemNames)
                 $Script:TheBattleStatusMessageWindow.Draw()
                 Foreach($a in $Opponent.SpoilsItems) {
@@ -8746,7 +8746,7 @@ Class EEIDuskbane : EEIInternalBase {
 #
 # EE SPECIALIZATIONS
 #
-# THESE REPRESENT ACTUAL ENEMIES IN THE GAME THAT THE PLAYER COULD FIGHT 
+# THESE REPRESENT ACTUAL ENEMIES IN THE GAME THAT THE PLAYER COULD FIGHT
 # AGAINST. AS WITH OTHER COLLECTIONS, THE NAMES ARE SELF-DOCUMENTING.
 #
 ###############################################################################
@@ -8769,16 +8769,16 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Switch($Self.Base) {
                         { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
                             $Self.State = [StatNumberState]::Normal
                         }
-    
+
                         { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
                             $Self.State = [StatNumberState]::Caution
                         }
-    
+
                         { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
                             $Self.State = [StatNumberState]::Danger
                         }
@@ -8800,16 +8800,16 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Switch($Self.Base) {
                         { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
                             $Self.State = [StatNumberState]::Normal
                         }
-    
+
                         { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
                             $Self.State = [StatNumberState]::Caution
                         }
-    
+
                         { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
                             $Self.State = [StatNumberState]::Danger
                         }
@@ -8831,7 +8831,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return $Self.Base
                 }
             }
@@ -8850,7 +8850,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return
                 }
             }
@@ -8869,7 +8869,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return
                 }
             }
@@ -8888,7 +8888,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return
                 }
             }
@@ -8907,7 +8907,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return
                 }
             }
@@ -8926,7 +8926,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return
                 }
             }
@@ -8945,7 +8945,7 @@ Class EEBat : EnemyBattleEntity {
                     Param(
                         [BattleEntityProperty]$Self
                     )
-                    
+
                     Return
                 }
             }
@@ -9379,7 +9379,7 @@ Class MapTileObject {
 #
 # MAP TILE
 #
-# A "PLACE" ON A MAP. ANY GIVEN COORDINATE PAIR VALUE RELATES TO A SINGLE MAP 
+# A "PLACE" ON A MAP. ANY GIVEN COORDINATE PAIR VALUE RELATES TO A SINGLE MAP
 # TILE. MAP TILE NAVIGATION IS RESTRICTED TO CARDINAL DIRECTIONS, CONSEQUENTLY
 # SOME DIRECTIONS ARE "EXITABLE" WHILE OTHERS AREN'T. MAP TILES HAVE A SINGLE
 # "IMAGE" THAT IS DRAWN ON THE NAVIGATION SCREEN IN THE SCENE IMAGE WINDOW.
@@ -9389,11 +9389,11 @@ Class MapTileObject {
 # THIS IS DETERMINED BY A "TARGET OF" FILTER, WHICH IS DESCRIBED AT THE MAP
 # TILE OBJECT DEFINITION.
 #
-# MAP TILES ALSO PLAY AN INTEGRAL PART OF THE COMBAT SYSTEM AS THEY SERVE AS 
+# MAP TILES ALSO PLAY AN INTEGRAL PART OF THE COMBAT SYSTEM AS THEY SERVE AS
 # THE ENTRY POINT FOR THE COMBAT SUB-PROGRAM. THIS IS FACILITATED BY HAVING
 # EACH TILE SPECIFIY THE FOLLOWING: IS BATTLE ALLOWED ON THIS TILE, WHAT IS
 # THE EFFECTIVE ENCOUNTER RATE (OR CHANCE OF ENTERING A COMBAT SITUATION; THIS
-# IS DETERMINED WHEN THE TILE IS CREATED AND DOESN'T CHANGE OVER TIME; IT 
+# IS DETERMINED WHEN THE TILE IS CREATED AND DOESN'T CHANGE OVER TIME; IT
 # PROBABLY SHOULD! :)), AND A "REGION CODE" WHICH MAPS TO A HASHTABLE THAT
 # CONTAINS ARRAYS THAT MAP TO REGION CODES. THESE ARRAYS SPECIFY WHICH KINDS OF
 # ENEMIES CAN BE ENCOUNTERED IN THIS REGION.
@@ -9602,7 +9602,7 @@ Class FastNoiseLite {
     Static [Int64]$APRIMEXMULT2   = [FastNoiseLite]::PRIMEX * 2
     Static [Int64]$APRIMEYMULT2   = [FastNoiseLite]::PRIMEY * 2
     Static [Int64]$APRIMEZMULT2   = [FastNoiseLite]::PRIMEZ * 2
-    
+
     Static [Single]$SQRT3                     = 1.7320508075688772935274463415059
     Static [Single]$PLANARIMPROVEA_MAGIC      = 0.211324865405187
     Static [Single]$PLANARIMPROVEZSCALE_MAGIC = 0.577350269189626
@@ -10696,14 +10696,14 @@ Class FastNoiseLite {
         [Single]$Ax0   = $XNSign * -$X0
         [Single]$Ay0   = $YNSign * -$Y0
         [Single]$Az0   = $ZNSign * -$Z0
-    
+
         $I *= [FastNoiseLite]::PRIMEX
         $J *= [FastNoiseLite]::PRIMEY
         $K *= [FastNoiseLite]::PRIMEZ
-    
+
         [Single]$Value = 0
         [Single]$A     = (0.6 - $X0 * $X0) - ($Y0 * $Y0 + $Z0 * $Z0)
-    
+
         For([Int64]$L = 0; ; $L++) {
             If($A -GT 0) {
                 $Value += $A * $A * $A * $A * [FastNoiseLite]::GradCoord($ASeed, $I, $J, $K, $X0, $Y0, $Z0)
@@ -11590,7 +11590,7 @@ Class FastNoiseLite {
         [Int64]$Y0 = $Y1 - [FastNoiseLite]::PRIMEY
         [Int64]$X2 = $X1 + [FastNoiseLite]::PRIMEX
         [Int64]$Y2 = $Y1 + [FastNoiseLite]::PRIMEY
-        
+
         # THE FOLLOWING TWO STATEMENTS ORIGINALLY USED UNCHECKED STATEMENTS IN THE ARITHMETIC.
         # POWERSHELL DOESN'T REALLY OFFER THIS, SO A FIXED CEILING COMPENSATING CONTROL IS
         # USED (WHICH WOULD LIKELY BE THE SAME RESULT IN C# GIVEN THE BEHAVIOR OF THE UNCHECKED OPERATION,
@@ -12505,7 +12505,7 @@ Class FastNoiseLite {
 #
 # MAP TILE OBJECT ABSTRACTIONS
 #
-# THESE ABSTRACTIONS SERVE TO BUILD UP ACTUAL ITEMS THAT THE PLAYER CAN 
+# THESE ABSTRACTIONS SERVE TO BUILD UP ACTUAL ITEMS THAT THE PLAYER CAN
 # INTERACT WITH. THESE CONSTRUCTS CAN BE A LITTLE CUMBERSOME TO SETUP.
 #
 ###############################################################################
@@ -12689,7 +12689,7 @@ Class MTOMilk : MapTileObject {
         $a                  = $(Get-Random -Minimum 0 -Maximum 10)
         $this.PlayerHpBonus = 75
         $this.IsSpoiled     = $($a -GE 6 ? $true : $false)
-        
+
         If($this.IsSpoiled -EQ $true) {
             $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
             $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
@@ -13016,7 +13016,7 @@ Class WindowBase {
 # STATUS WINDOW
 #
 # USED IN THE WORLD NAVIGATION STATE/SCREEN, THIS WINDOW SHOWS VERY BASIC
-# STATISTICS ABOUT THE PLAYER. THE NAME OF THIS OBJECT SHOULD REALLY BE 
+# STATISTICS ABOUT THE PLAYER. THE NAME OF THIS OBJECT SHOULD REALLY BE
 # CHANGED TO BETTER REFLECT ITS INTENDED USE. THIS NAME IS A VESTIGE FROM THE
 # ORIGINAL CODE BASE.
 #
@@ -13427,7 +13427,7 @@ Class StatusWindow : WindowBase {
 # COMMAND WINDOW
 #
 # THIS IS THE WINDOW THAT ALLOWS THE USER TO INPUT COMMANDS AND ALSO SHOWS THE
-# COMMAND HISTORY (FIVE MOST RECENT COMMANDS). 
+# COMMAND HISTORY (FIVE MOST RECENT COMMANDS).
 #
 ###############################################################################
 Class CommandWindow : WindowBase {
@@ -13937,9 +13937,9 @@ Class MessageWindow : WindowBase {
 
     ###########################################################################
     #
-    # THE FOLLOWING METHODS ARE CONVENIENCE ABSTRACTIONS FOR 
+    # THE FOLLOWING METHODS ARE CONVENIENCE ABSTRACTIONS FOR
     # WRITEMESSAGECOMPOSITE THAT ARE INTENDED TO BE USED IN VERY SPECIFIC
-    # SITUATIONS. NOTE THAT AT THIS TIME, THE CONTINUED USE OF 
+    # SITUATIONS. NOTE THAT AT THIS TIME, THE CONTINUED USE OF
     # ATSTRINGCOMPOSITESC IS SUBJECT TO SCRUTINY.
     #
     ###########################################################################
@@ -17776,7 +17776,7 @@ Class BattleStatusMessageWindow : WindowBase {
             }
         ))
     }
-	
+
 	[Void]WriteBattleLostMessage() {
 		$this.WriteMessageComposite(@(
 			[ATString]@{
@@ -17788,7 +17788,7 @@ Class BattleStatusMessageWindow : WindowBase {
 			}
 		))
 	}
-	
+
 	[Void]WriteGameOverMessage() {
 		$this.WriteMessageComposite(@(
 			[ATString]@{
@@ -19200,7 +19200,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             $rs                  = (($this.CurrentPage * $this.ItemsPerPage) - $this.ItemsPerPage)
             $rs                  = [Math]::Clamp($rs, 0, [Int]::MaxValue)
             $re                  = 10
-            
+
             Try {
                 $this.PageRefs = $Script:ThePlayer.ActionInventory.Listing.GetRange($rs, $re)
             } Catch {
@@ -20333,7 +20333,7 @@ Class BattleManager {
 
             ([BattleManagerState]::BattleWon) {
                 $Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
-                
+
                 # CHECK TO SEE IF THE BATTLE WON CHIME HAS PLAYED
                 # PLAY IT IF IT HASN'T
                 If($Script:HasBattleWonChimePlayed -EQ $false) {
@@ -20347,7 +20347,7 @@ Class BattleManager {
                 # THE FOLLOWING CODE WILL WRITE TWO OUT-OF-BAND MESSAGES TO THE STATUS WINDOW
                 # OUT-OF-BAND MEANING THAT EXPLICIT CALLS TO THE DRAW FUNCTION ARE MADE BECAUSE
                 # THE NORMAL SEQUENCING WOULD CAUSE THESE TO NOT BE DRAWN IN TIME
-                
+
                 # WRITE THE WON MESSAGE TO THE STATUS WINDOW
                 $Script:TheBattleStatusMessageWindow.WriteBattleWonMessage()
                 $Script:TheBattleStatusMessageWindow.Draw()
@@ -20380,7 +20380,7 @@ Class BattleManager {
 
             ([BattleManagerState]::BattleLost) {
 				$Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
-				
+
 				# CHECK TO SEE IF THE BATTLE LOST CHIME HAS PLAYED
 				# PLAY IT IF IT HASN'T
 				If($Script:HasBattleLostChimePlayed -EQ $false) {
@@ -20390,17 +20390,17 @@ Class BattleManager {
 					} Catch {}
 					$Script:HasBattleLostChimPlayed = $true
 				}
-				
+
 				# WRITE THE LOST MESSAGE TO THE STATUS WINDOW
 				$Script:TheBattleStatusMessageWindow.WriteBattleLostMessage()
 				$Script:TheBattleStatusMessageWindow.Draw()
 				$Script:TheBattleStatusMessageWindow.WriteGameOverMessage()
 				$Script:TheBattleStatusMessageWindow.Draw()
-				
+
 				# SLEEP THEN DIE
 				Start-Sleep -Seconds 5
 				Clear-Host
-				
+
 				Exit
 			}
 
@@ -20444,51 +20444,110 @@ Class QuestStep {
 
 ###############################################################################
 #
+# QUEST REWARD
+#
+# A REWARD GIVEN FOR COMPLETING A QUEST/QUESTLINE.
+#
+###############################################################################
+Class QuestReward {
+    [Boolean]$Given
+
+    QuestReward() {
+        $this.Given = $false
+    }
+
+    [Void]Give() {}
+}
+
+
+
+
+
+
+###############################################################################
+#
 # QUEST
 #
 # A BASIC DEFINITION OF A QUEST.
 #
 ###############################################################################
 Class Quest {
+    [Boolean]$Active
     [Boolean]$Completed
+    [Boolean]$RewardsGiven
     [List[QuestStep]]$Steps
+    [List[QuestReward]]$Rewards
 
     Quest() {
-        $this.Completed = $false
-        $this.Steps     = [List[QuestStep]]::new()
+        $this.Active       = $false
+        $this.Completed    = $false
+        $this.RewardsGiven = $false
+        $this.Steps        = [List[QuestStep]]::new()
+        $this.Rewards      = [List[QuestReward]]::new()
     }
 
     Quest(
-        [List[QuestStep]]$Steps
+        [List[QuestStep]]$Steps,
+        [List[QuestReward]]$Rewards
     ) {
-        $this.Completed = $false
-        $this.Steps     = $Steps
+        $this.Active       = $false
+        $this.Completed    = $false
+        $this.RewardsGiven = $false
+        $this.Steps        = $Steps
+        $this.Rewards      = $Rewards
     }
 
     Quest(
-        [QuestStep[]]$Steps
+        [QuestStep[]]$Steps,
+        [QuestReward[]]$Rewards
     ) {
-        $this.Completed = $false
-        $this.Steps     = [List[QuestStep]]::new()
+        $this.Active       = $false
+        $this.Completed    = $false
+        $this.RewardsGiven = $false
+        $this.Steps        = [List[QuestStep]]::new()
+        $this.Rewards      = [List[QuestReward]]::new()
 
         Foreach($A in $Steps) {
             $this.Steps.Add($A) | Out-Null
         }
+        Foreach($A in $Rewards) {
+            $this.Rewards.Add($A) | Out-Null
+        }
     }
 
     [Void]Update() {
-        If($this.Completed -EQ $false) {
-            [Int]$A = 0
+        If($this.Active -EQ $true) {
+            If($this.Completed -EQ $false) {
+                [Int]$A = 0
 
-            Foreach($Q in $this.Steps) {
-                $Q.Update()
-                If($Q.Completed -EQ $true) {
-                    $A++
+                Foreach($Q in $this.Steps) {
+                    $Q.Update()
+                    If($Q.Completed -EQ $true) {
+                        $A++
+                    }
                 }
-            }
 
-            If($A -EQ $this.Steps.Count) {
-                $this.Completed = $true
+                If($A -EQ $this.Steps.Count) {
+                    $this.Completed = $true
+                }
+            } Else {
+                If($this.RewardsGiven -EQ $false) {
+                    # IT'S POSSIBLE THERE AREN'T ANY REWARDS FOR A QUEST... I SUPPOSE.
+                    # REGARDLESS, IT'S BETTER TO TRY AND CATER FOR IT THAN OTHERWISE.
+                    Foreach($A in $this.Rewards) {
+                        If($A.Given -EQ $false) {
+                            $A.Give()
+                        }
+                    }
+                    $this.RewardsGiven = $true
+
+                    # THIS MAY OR MAY NOT BE THE BEST PLACE FOR THIS,
+                    # BUT AT THIS POINT, THE QUEST COULD BE CONSIDERED INACTIVE
+                    # SINCE THERE'S NOTHING LEFT TO GAIN FROM IT REMAINING SO.
+                    # THE CATCH HERE IS THAT EVERY QUEST SHOULD HAVE ITS REWARDSGIVEN
+                    # FLAG UNSET AT TIME OF CREATION SO THAT THIS GETS PARSED.
+                    $this.Active = $false
+                }
             }
         }
     }
@@ -20730,7 +20789,9 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
         $this.TargetDamageThreshold = $TargetDamageThreshold
     }
 
-    [Void]Update() {}
+    [Void]Update() {
+        # DON'T DO ANYTHING AT THIS POINT
+    }
 }
 
 
@@ -20754,36 +20815,49 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 ###############################################################################
 Class Questline {
     [Int]$CurrentQuest
-    [Boolean]$Completed
     [Boolean]$Active
+    [Boolean]$Completed
+    [Boolean]$RewardsGiven
     [List[Quest]]$Quests
+    [List[QuestReward]]$Rewards
 
     Questline() {
         $this.CurrentQuest = 0
-        $this.Completed    = $false
         $this.Active       = $false
+        $this.Completed    = $false
+        $this.RewardsGiven = $false
         $this.Quests       = [List[Quest]]::new()
+        $this.Rewards      = [List[QuestReward]]::new()
     }
 
     Questline(
-        [List[Quest]]$Quests
+        [List[Quest]]$Quests,
+        [List[QuestReward]]$Rewards
     ) {
         $this.CurrentQuest = 0
-        $this.Completed    = $false
         $this.Active       = $false
+        $this.Completed    = $false
+        $this.RewardsGiven = $false
         $this.Quests       = $Quests
+        $this.Rewards      = $Rewards
     }
 
     Questline(
-        [Quest[]]$Quests
+        [Quest[]]$Quests,
+        [QuestReward[]]$Rewards
     ) {
         $this.CurrentQuest = 0
-        $this.Completed    = $false
         $this.Active       = $false
+        $this.Completed    = $false
+        $this.RewardsGiven = $false
         $this.Quests       = [List[Quest]]::new()
+        $this.Rewards      = [List[QuestReward]]::new()
 
         Foreach($A in $Quests) {
             $this.Quests.Add($A) | Out-Null
+        }
+        Foreach($A in $Rewards) {
+            $this.Rewards.Add($A) | Out-Null
         }
     }
 
@@ -20792,8 +20866,36 @@ Class Questline {
     }
 
     [Void]Update() {
+        # THE CODE HERE IS GOING TO LOOK AWFULLY SIMILAR TO THE CODE IN THE UPDATE
+        # METHOD OF QUEST. WE'RE TAKING THE D OUT OF DRY BAYBEE!
+        # FOR FURTHER DETAILS ON THIS BLOCK, YOU SHOULD PROBABLY LOOK AT THE
+        # UPDATE METHOD IN THE QUEST CLASS. I'LL REPEAT MYSELF IN LOGIC, NOT IN
+        # COMMENTS; I DO HAVE *SOME* STANDARDS.
         If($this.Active -EQ $true) {
-            
+            If($this.Completed -EQ $false) {
+                [Int]$A = 0
+
+                Foreach($Q in $this.Quests) {
+                    $Q.Update()
+                    If($Q.Completed -EQ $true) {
+                        $A++
+                    }
+                }
+
+                If($A -EQ $this.Quests.Count) {
+                    $this.Completed = $true
+                }
+            } Else {
+                If($this.RewardsGiven -EQ $false) {
+                    Foreach($A in $this.Rewards) {
+                        If($A.Given -EQ $false) {
+                            $A.Give()
+                        }
+                    }
+                    $this.RewardsGiven = $true
+                    $this.Active       = $false
+                }
+            }
         }
     }
 }
