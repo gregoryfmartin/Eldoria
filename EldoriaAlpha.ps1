@@ -20515,42 +20515,7 @@ Class Quest {
         }
     }
 
-    [Void]Update() {
-        If($this.Active -EQ $true) {
-            If($this.Completed -EQ $false) {
-                [Int]$A = 0
-
-                Foreach($Q in $this.Steps) {
-                    $Q.Update()
-                    If($Q.Completed -EQ $true) {
-                        $A++
-                    }
-                }
-
-                If($A -EQ $this.Steps.Count) {
-                    $this.Completed = $true
-                }
-            } Else {
-                If($this.RewardsGiven -EQ $false) {
-                    # IT'S POSSIBLE THERE AREN'T ANY REWARDS FOR A QUEST... I SUPPOSE.
-                    # REGARDLESS, IT'S BETTER TO TRY AND CATER FOR IT THAN OTHERWISE.
-                    Foreach($A in $this.Rewards) {
-                        If($A.Given -EQ $false) {
-                            $A.Give()
-                        }
-                    }
-                    $this.RewardsGiven = $true
-
-                    # THIS MAY OR MAY NOT BE THE BEST PLACE FOR THIS,
-                    # BUT AT THIS POINT, THE QUEST COULD BE CONSIDERED INACTIVE
-                    # SINCE THERE'S NOTHING LEFT TO GAIN FROM IT REMAINING SO.
-                    # THE CATCH HERE IS THAT EVERY QUEST SHOULD HAVE ITS REWARDSGIVEN
-                    # FLAG UNSET AT TIME OF CREATION SO THAT THIS GETS PARSED.
-                    $this.Active = $false
-                }
-            }
-        }
-    }
+    [Void]Update() {}
 }
 
 
@@ -20587,6 +20552,10 @@ Class LinearQuest : Quest {
     [QuestStep]GetCurrentStep() {
         Return $this.Steps[$this.CurrentStep]
     }
+
+    [Void]Update() {
+        # 
+    }
 }
 
 
@@ -20612,6 +20581,43 @@ Class NonlinearQuest : Quest {
     NonlinearQuest(
         [QuestStep[]]$Steps
     ) : base($Steps) {}
+
+    [Void]Update() {
+        If($this.Active -EQ $true) {
+            If($this.Completed -EQ $false) {
+                [Int]$A = 0
+
+                Foreach($Q in $this.Steps) {
+                    $Q.Update()
+                    If($Q.Completed -EQ $true) {
+                        $A++
+                    }
+                }
+
+                If($A -EQ $this.Steps.Count) {
+                    $this.Completed = $true
+                }
+            } Else {
+                If($this.RewardsGiven -EQ $false) {
+                    # IT'S POSSIBLE THERE AREN'T ANY REWARDS FOR A QUEST... I SUPPOSE.
+                    # REGARDLESS, IT'S BETTER TO TRY AND CATER FOR IT THAN OTHERWISE.
+                    Foreach($A in $this.Rewards) {
+                        If($A.Given -EQ $false) {
+                            $A.Give()
+                        }
+                    }
+                    $this.RewardsGiven = $true
+
+                    # THIS MAY OR MAY NOT BE THE BEST PLACE FOR THIS,
+                    # BUT AT THIS POINT, THE QUEST COULD BE CONSIDERED INACTIVE
+                    # SINCE THERE'S NOTHING LEFT TO GAIN FROM IT REMAINING SO.
+                    # THE CATCH HERE IS THAT EVERY QUEST SHOULD HAVE ITS REWARDSGIVEN
+                    # FLAG UNSET AT TIME OF CREATION SO THAT THIS GETS PARSED.
+                    $this.Active = $false
+                }
+            }
+        }
+    }
 }
 
 
