@@ -20425,17 +20425,19 @@ Class BattleManager {
 #
 # QUEST STEP
 #
-# PRETTY SELF EXPLANATORY.
+# PRETTY SELF EXPLANATORY. THIS IS THE MOST FUNDAMENTAL EXPRESSION OF AN
+# ACTIONABLE ITEM BY THE PLAYER. IT MARRIES A BOOLEAN FLAG, CALLED COMPLETED,
+# WITH DOMAIN-SPECIFIC LOGIC, EXPRESSED VIA VIRTUAL UPDATE METHOD DEFINITIONS.
 #
 ###############################################################################
 Class QuestStep {
     [Boolean]$Completed
 
     QuestStep() {
-        $this.Completed = $false
+        $this.Completed = $false # UNSET THIS FLAG BY DEFAULT; THE QUESTSTEP SHOULDN'T BE COMPLETED AT THIS POINT
     }
 
-    [Void]Update() {}
+    [Void]Update() {} # THIS METHOD IS INTENDED TO BE VIRTUAL AT THIS POINT
 }
 
 
@@ -20446,7 +20448,9 @@ Class QuestStep {
 #
 # QUEST REWARD
 #
-# A REWARD GIVEN FOR COMPLETING A QUEST/QUESTLINE.
+# A REWARD GIVEN FOR COMPLETING A QUEST/QUESTLINE. STRUCTURALLY, THIS IS SIMILAR
+# TO A QUESTSTEP. THE DIFFERENCE IS THE INTERFACE CALL (GIVE INSTEAD OF UPDATE),
+# AND THAT AT A MINIMUM, THE GIVE METHOD SHOULD SET THE GIVEN FLAG WHEN COMPLETED.
 #
 ###############################################################################
 Class QuestReward {
@@ -20456,7 +20460,9 @@ Class QuestReward {
         $this.Given = $false
     }
 
-    [Void]Give() {}
+    [Void]Give() {
+        $this.Given = $true # AT A MINIMUM, THIS SHOULD SET THE GIVEN FLAG TO TRUE
+    }
 }
 
 
@@ -20469,6 +20475,25 @@ Class QuestReward {
 # QUEST
 #
 # A BASIC DEFINITION OF A QUEST.
+#
+# ACTIVE
+#   IS THIS QUEST ACTIVE OR NOT? THIS FLAG SERVES TWO PURPOSES:
+#     FULFILLING TRACKING
+#     ASSISTING WITH LIMITING PARSE WASTE
+#
+# COMPLETED
+#   IS THIS QUEST COMPLETED? THIS FLAG SERVES TWO PURPOSES:
+#     ISSUING QUEST REWARDS TO THE PLAYER
+#     ASSISTING WITH LIMITING PARSE WASTE
+#
+# REWARDS GIVEN
+#   HAVE THE QUEST REWARDS BEEN GIVEN TO THE PLAYER?
+#
+# STEPS
+#   THE COLLECTION OF QUESTSTEP INSTANCES THAT NEED TO BE EXECUTED TO COMPLETE THIS QUEST.
+#
+# REWARDS
+#   THE COLLECTION OF REWARDS THAT ARE GIVEN TO THE PLAYER IF THE QUEST IS COMPLETED.
 #
 ###############################################################################
 Class Quest {
@@ -20526,8 +20551,10 @@ Class Quest {
 #
 # LINEAR QUEST
 #
-# A QUEST WITH STEPS INTENDED TO BE COMPLETED IN A LINEAR FASHION. SPECIFICALLY,
-# THE STEPS NEED COMPLETED IN ORDER BEFORE THE QUEST CAN BE CONSIDERED SUCCESSFUL.
+# THE LINEAR QUEST AUGMENTS THE QUEST BY TRACKING THE "CURRENT STEP". THE PLAYER
+# IS UNABLE TO COMPLETE THE STEPS OUT-OF-ORDER. WHEN THE UPDATE METHOD IS CALLED,
+# ONLY THE UPDATE METHOD OF THE CURRENT QUESTSTEP IS CALLED; THE DETAILS OF THIS
+# PROCESS ARE DOCUMENTED CLEARLY IN THE UPDATE METHOD BELOW.
 #
 ###############################################################################
 Class LinearQuest : Quest {
@@ -20538,14 +20565,16 @@ Class LinearQuest : Quest {
     }
 
     LinearQuest(
-        [List[QuestStep]]$Steps
-    ) : base($Steps) {
+        [List[QuestStep]]$Steps,
+        [List[QuestReward]]$Rewards
+    ) : base($Steps, $Rewards) {
         $this.CurrentStep = 0
     }
 
     LinearQuest(
-        [QuestStep[]]$Steps
-    ) : base($Steps) {
+        [QuestStep[]]$Steps,
+        [QuestReward[]]$Rewards
+    ) : base($Steps, $Rewards) {
         $this.CurrentStep = 0
     }
 
@@ -20554,8 +20583,35 @@ Class LinearQuest : Quest {
     }
 
     [Void]Update() {
-        # 
-    }
+        If($this.Active -EQ $true) { # IS THIS QUEST'S ACTIVE FLAG SET?
+            If($this.Completed -EQ $false) { # HAS THIS QUEST'S COMPLETE FLAG NOT YET BEEN SET?
+                If($this.CurrentStep -LT $this.Steps.Count) { # IS THE CURRENT STEP COUNTER LESS THAN THE TOTAL NUMBER OF STEPS (INCLUSIVE)?
+                    $this.Steps[$this.CurrentStep].Update() # UPDATE THE CURRENT STEP (SETS THE STEP'S COMPLETED FLAG IF HEURISTICS ARE SATISFIED)
+                    If($this.Steps[$this.CurrentStep].Completed -EQ $true) { # AFTER HAVING CALLED UPDATE, HAS THE STEP'S COMPLETED FLAG BEEN SET?
+                        $this.CurrentStep++ # YES, INCREMENT THE CURRENTSTEP COUNTER
+                    }
+                } Else { # IF($THIS.CURRENTSTEP -LT $THIS.STEPS.COUNT)
+                    # THIS IS A REALLY POOR MAN'S WAY OF CONCEDING THAT THE COMPLETION
+                    # HAS BEEN MET, BUT GIVEN THAT THE CURRENTSTEP WOULDN'T INCREMENT
+                    # UNLESS THE STEP COMPLETION FLAG HAD BEEN SET, IT SHOULD BE SANE
+                    # TO ASSUME THAT ALL QUEST STEPS ARE COMPLETED BY THIS POINT.
+                    $this.Completed = $true
+                }
+            } Else { # IF($THIS.COMPLETED -EQ $FALSE)
+                If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
+                    # THE CODE HERE IS SIMILAR TO WHAT'S IN NONLINEAR QUEST.
+                    # READ THAT FOR MORE DETAILS.
+                    Foreach($A in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
+                        If($A.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
+                            $A.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
+                        }
+                    }
+                    $this.RewardsGiven = $true # SET THE REWARDSGIVEN FLAG
+                    $this.Active       = $false # UNSET THE ACTIVE FLAG
+                } # IF($THIS.REWARDSGIVEN -EQ $FALSE)
+            } # IF($THIS.COMPLETED -EQ $FALSE)
+        } # IF($THIS.ACTIVE -EQ $TRUE)
+    } # END UPDATE METHOD DEFINITION
 }
 
 
@@ -20575,38 +20631,41 @@ Class NonlinearQuest : Quest {
     NonlinearQuest() : base() {}
 
     NonlinearQuest(
-        [List[QuestStep]]$Steps
-    ) : base($Steps) {}
+        [List[QuestStep]]$Steps,
+        [List[QuestReward]]$Rewards
+    ) : base($Steps, $Rewards) {}
 
     NonlinearQuest(
-        [QuestStep[]]$Steps
-    ) : base($Steps) {}
+        [QuestStep[]]$Steps,
+        [QuestReward[]]$Rewards
+    ) : base($Steps, $Rewards) {}
 
     [Void]Update() {
-        If($this.Active -EQ $true) {
-            If($this.Completed -EQ $false) {
-                [Int]$A = 0
+        If($this.Active -EQ $true) { # IS THIS QUEST'S ACTIVE FLAG SET?
+            If($this.Completed -EQ $false) { # HAS THIS QUEST'S COMPLETE FLAG NOT YET BEEN SET?
+                [Int]$A = 0 # INITIALIZE A "TRUE" COUNTER
 
                 Foreach($Q in $this.Steps) {
-                    $Q.Update()
-                    If($Q.Completed -EQ $true) {
-                        $A++
+                    If($Q.Completed -EQ $false) { # HAS THE STEP'S COMPLETED FLAG NOT YET BEEN SET?
+                        $Q.Update() # IF NOT, CALL THE STEP'S UPDATE METHOD
+                    } Else {
+                        $A++ # THE STEP'S COMPLETED FLAG HAS BEEN SET, INCREMENT THE "TRUE" COUNTER
                     }
                 }
 
-                If($A -EQ $this.Steps.Count) {
-                    $this.Completed = $true
+                If($A -EQ $this.Steps.Count) { # DO THE NUMBER OF COMPLETED STEPS EQUAL THE NUMBER OF STEPS IN THIS QUEST?
+                    $this.Completed = $true # YES, SET THE QUEST'S COMPLETED FLAG
                 }
-            } Else {
-                If($this.RewardsGiven -EQ $false) {
+            } Else { # IF($THIS.COMPLETED -EQ $FALSE)
+                If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
                     # IT'S POSSIBLE THERE AREN'T ANY REWARDS FOR A QUEST... I SUPPOSE.
                     # REGARDLESS, IT'S BETTER TO TRY AND CATER FOR IT THAN OTHERWISE.
-                    Foreach($A in $this.Rewards) {
-                        If($A.Given -EQ $false) {
-                            $A.Give()
+                    Foreach($A in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
+                        If($A.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
+                            $A.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
                         }
                     }
-                    $this.RewardsGiven = $true
+                    $this.RewardsGiven = $true # SET THE REWARDSGIVEN FLAG
 
                     # THIS MAY OR MAY NOT BE THE BEST PLACE FOR THIS,
                     # BUT AT THIS POINT, THE QUEST COULD BE CONSIDERED INACTIVE
@@ -20614,10 +20673,10 @@ Class NonlinearQuest : Quest {
                     # THE CATCH HERE IS THAT EVERY QUEST SHOULD HAVE ITS REWARDSGIVEN
                     # FLAG UNSET AT TIME OF CREATION SO THAT THIS GETS PARSED.
                     $this.Active = $false
-                }
-            }
-        }
-    }
+                } # IF($THIS.REWARDSGIVEN -EQ $FALSE)
+            } # IF($THIS.COMPLETED -EQ $FALSE)
+        } # IF($THIS.ACTIVE -EQ $TRUE)
+    } # END UPDATE METHOD DEFINITION
 }
 
 
@@ -20818,6 +20877,30 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 # IN ANY ORDER WHICH THE PLAYER CHOOSES. HOWEVER, THE COMPLETION OF A QUESTLINE
 # IS CONTINGENT ENTIRELY ON COMPLETING THE QUESTS WITHIN IN SEQUENCE.
 #
+# MEMBERS
+#
+# CURRENT QUEST
+#   A "POINTER" TO THE CURRENT QUEST THAT THE PLAYER IS WORKING IN THIS QUESTLINE.
+#
+# ACTIVE
+#   IS THIS QUESTLINE ACTIVE OR NOT? THIS FLAG SERVES TWO PURPOSES:
+#     FULFILLING TRACKING
+#     ASSISTING WITH LIMITING PARSE WASTE
+#
+# COMPLETED
+#   IS THIS QUESTLINE COMPLETED? THIS FLAG SERVES TWO PURPOSES:
+#     ISSUING QUEST REWARDS TO THE PLAYER
+#     ASSISTING WITH LIMITING PARSE WASTE
+#
+# REWARDS GIVEN
+#   HAVE THE QUEST REWADS BEEN GIVEN TO THE PLAYER?
+#
+# QUESTS
+#   THE COLLECTION OF QUEST INSTANCES THAT NEED TO BE EXECUTED TO COMPLETE THIS QUESTLINE.
+#
+# REWARDS
+#   THE COLLECTION OF REWARDS THAT ARE GIVEN TO THE PLAYER IF THE QUESTLINE IS COMPLETED.
+#
 ###############################################################################
 Class Questline {
     [Int]$CurrentQuest
@@ -20873,37 +20956,38 @@ Class Questline {
 
     [Void]Update() {
         # THE CODE HERE IS GOING TO LOOK AWFULLY SIMILAR TO THE CODE IN THE UPDATE
-        # METHOD OF QUEST. WE'RE TAKING THE D OUT OF DRY BAYBEE!
+        # METHOD IN THE LINEARQUEST CLASS. WE'RE TAKING THE D OUT OF DRY BAYBEE!
         # FOR FURTHER DETAILS ON THIS BLOCK, YOU SHOULD PROBABLY LOOK AT THE
         # UPDATE METHOD IN THE QUEST CLASS. I'LL REPEAT MYSELF IN LOGIC, NOT IN
         # COMMENTS; I DO HAVE *SOME* STANDARDS.
-        If($this.Active -EQ $true) {
-            If($this.Completed -EQ $false) {
-                [Int]$A = 0
-
-                Foreach($Q in $this.Quests) {
-                    $Q.Update()
-                    If($Q.Completed -EQ $true) {
-                        $A++
+        If($this.Active -EQ $true) { # IS THIS QUESTLINE'S ACTIVE FLAG SET?
+            If($this.Completed -EQ $false) { # HAS THIS QUESTLINE'S COMPLETE FLAG NOT YET BEEN SET?
+                If($this.CurrentQuest -LT $this.Quests.Count) { # IS THE CURRENT QUEST COUNTER LESS THAN THE TOTAL NUMBER OF QUESTS (INCLUSIVE)?
+                    $this.Quests[$this.CurrentQuest].Update() # UPDATE THE CURRENT QUEST (SETS THE QUEST'S COMPLETED FLAG IF HEURISTICS ARE SATISFIED)
+                    If($this.Quests[$this.CurrentQuest].Completed -EQ $true) { # AFTER HAVING CALLED UPDATE, HAS THE QUEST'S COMPLETED FLAG BEEN SET?
+                        $this.CurrentQuest++ # YES, INCREMENT THE CURRENTQUEST COUNTER
                     }
-                }
-
-                If($A -EQ $this.Quests.Count) {
+                } Else { # IF($THIS.CURRENTQUEST -LT $THIS.QUESTS.COUNT)
+                    # THIS IS A REALLY POOR MAN'S WAY OF CONCEDING THAT THE COMPLETION
+                    # HAS BEEN MET, BUT GIVEN THAT THE CURRENTSTEP WOULDN'T INCREMENT
+                    # UNLESS THE STEP COMPLETION FLAG HAD BEEN SET, IT SHOULD BE SANE
+                    # TO ASSUME THAT ALL QUEST STEPS ARE COMPLETED BY THIS POINT.
                     $this.Completed = $true
                 }
-            } Else {
-                If($this.RewardsGiven -EQ $false) {
-                    Foreach($A in $this.Rewards) {
-                        If($A.Given -EQ $false) {
-                            $A.Give()
+            } Else { # IF($THIS.COMPLETED -EQ $FALSE)
+                If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
+                    Foreach($A in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
+                        If($A.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
+                            $A.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
                         }
                     }
-                    $this.RewardsGiven = $true
-                    $this.Active       = $false
-                }
-            }
-        }
-    }
+
+                    $this.RewardsGiven = $true # SET THE REWARDSGIVEN FLAG
+                    $this.Active       = $false # UNSET THE ACTIVE FLAG
+                } # IF($THIS.REWARDSGIVEN -EQ $FALSE)
+            } # IF($THIS.COMPLETED -EQ $FALSE)
+        } # IF($THIS.ACTIVE -EQ $TRUE)
+    } # END UPDATE METHOD DEFINITION
 }
 
 
