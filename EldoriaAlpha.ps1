@@ -20469,7 +20469,6 @@ Class QuestReward {
 
 
 
-
 ###############################################################################
 #
 # QUEST
@@ -20882,6 +20881,10 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 # CURRENT QUEST
 #   A "POINTER" TO THE CURRENT QUEST THAT THE PLAYER IS WORKING IN THIS QUESTLINE.
 #
+# REINSTATE LIMIT
+#   IF A QUESTLINE CAN BE REINSTATED AFTER ENTERING A FAILED STATE, HOW MANY TIMES CAN
+#   IT BE REPEATED.
+#
 # ACTIVE
 #   IS THIS QUESTLINE ACTIVE OR NOT? THIS FLAG SERVES TWO PURPOSES:
 #     FULFILLING TRACKING
@@ -20892,6 +20895,12 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 #     ISSUING QUEST REWARDS TO THE PLAYER
 #     ASSISTING WITH LIMITING PARSE WASTE
 #
+# FAILED
+#   IS THIS QUESTLINE CONSIDERED FAILED?
+#
+# CAN REINSTATE
+#   IF THIS QUESTLINE HAS ENTERED A FAILED STATE, CAN IT BE REINSTATED?
+#
 # REWARDS GIVEN
 #   HAVE THE QUEST REWADS BEEN GIVEN TO THE PLAYER?
 #
@@ -20901,46 +20910,66 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 # REWARDS
 #   THE COLLECTION OF REWARDS THAT ARE GIVEN TO THE PLAYER IF THE QUESTLINE IS COMPLETED.
 #
+# FAILURE CONDITION
+#   THE MOST RECENT FAILURE CONDITION TRIGGERED FOR THE QUESTLINE (MEANING THAT IF
+#   A REINSTATEMENT IS POSSIBLE, WHAT WAS THE MOST RECENT CAUSE OF FAILURE?)
+#
 ###############################################################################
 Class Questline {
     [Int]$CurrentQuest
+    [Int]$ReinstateLimit
     [Boolean]$Active
     [Boolean]$Completed
+    [Boolean]$Failed
+    [Boolean]$CanReinstate
     [Boolean]$RewardsGiven
     [List[Quest]]$Quests
     [List[QuestReward]]$Rewards
+    [QuestFailureCondition]$FailureCondition
 
     Questline() {
-        $this.CurrentQuest = 0
-        $this.Active       = $false
-        $this.Completed    = $false
-        $this.RewardsGiven = $false
-        $this.Quests       = [List[Quest]]::new()
-        $this.Rewards      = [List[QuestReward]]::new()
+        $this.CurrentQuest     = 0
+        $this.ReinstateLimit   = 0
+        $this.Active           = $false
+        $this.Completed        = $false
+        $this.Failed           = $false
+        $this.CanReinstate     = $false
+        $this.RewardsGiven     = $false
+        $this.Quests           = [List[Quest]]::new()
+        $this.Rewards          = [List[QuestReward]]::new()
+        $this.FailureCondition = [QFCNone]::new()
     }
 
     Questline(
         [List[Quest]]$Quests,
         [List[QuestReward]]$Rewards
     ) {
-        $this.CurrentQuest = 0
-        $this.Active       = $false
-        $this.Completed    = $false
-        $this.RewardsGiven = $false
-        $this.Quests       = $Quests
-        $this.Rewards      = $Rewards
+        $this.CurrentQuest     = 0
+        $this.ReinstateLimit   = 0
+        $this.Active           = $false
+        $this.Completed        = $false
+        $this.Failed           = $false
+        $this.CanReinstate     = $false
+        $this.RewardsGiven     = $false
+        $this.Quests           = $Quests
+        $this.Rewards          = $Rewards
+        $this.FailureCondition = [QFCNone]::new()
     }
 
     Questline(
         [Quest[]]$Quests,
         [QuestReward[]]$Rewards
     ) {
-        $this.CurrentQuest = 0
-        $this.Active       = $false
-        $this.Completed    = $false
-        $this.RewardsGiven = $false
-        $this.Quests       = [List[Quest]]::new()
-        $this.Rewards      = [List[QuestReward]]::new()
+        $this.CurrentQuest     = 0
+        $this.ReinstateLimit   = 0
+        $this.Active           = $false
+        $this.Completed        = $false
+        $this.Failed           = $false
+        $this.CanReinstate     = $false
+        $this.RewardsGiven     = $false
+        $this.Quests           = [List[Quest]]::new()
+        $this.Rewards          = [List[QuestReward]]::new()
+        $this.FailureCondition = [QFCNone]::new()
 
         Foreach($A in $Quests) {
             $this.Quests.Add($A) | Out-Null
