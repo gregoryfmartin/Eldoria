@@ -13,6 +13,9 @@ Class QuestStep {
 
         $this.Completed = $false # UNSET THIS FLAG BY DEFAULT; THE QUESTSTEP SHOULDN'T BE COMPLETED AT THIS POINT
 
+        # FOR TESTING PURPOSES ONLY!!!
+        $this.Completed = $true
+
         Write-Host 'Exiting QuestStep Default Constructor...'
     }
 
@@ -178,7 +181,9 @@ Class LinearQuest : Quest {
 
                         $this.CurrentStep++ # YES, INCREMENT THE CURRENTSTEP COUNTER
                     }
-                } Else { # IF($THIS.CURRENTSTEP -LT $THIS.STEPS.COUNT)
+                }
+
+                If($this.CurrentStep -GE $this.Steps.Count) { # IF($THIS.CURRENTSTEP -LT $THIS.STEPS.COUNT)
                     Write-Host 'CurrentStep is GREATER THAN OR EQUAL TO Steps.Count...'
                     Write-Warning 'Evidently, all QuestSteps are complete...'
                     Write-Host 'Setting the LinearQuest''s Completed flag to true...'
@@ -189,7 +194,9 @@ Class LinearQuest : Quest {
                     # TO ASSUME THAT ALL QUEST STEPS ARE COMPLETED BY THIS POINT.
                     $this.Completed = $true
                 }
-            } Else { # IF($THIS.COMPLETED -EQ $FALSE)
+            }
+            
+            If($this.Completed -EQ $true) { # IF($THIS.COMPLETED -EQ $FALSE)
                 Write-Host 'The Completed flag is SET...'
 
                 If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
@@ -198,12 +205,12 @@ Class LinearQuest : Quest {
 
                     # THE CODE HERE IS SIMILAR TO WHAT'S IN NONLINEAR QUEST.
                     # READ THAT FOR MORE DETAILS.
-                    Foreach($A in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
-                        If($A.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
+                    Foreach($R in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
+                        If($R.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
                             Write-Host 'Current Reward''s Given flag is UNSET...'
                             Write-Host 'Calling Give Method...'
 
-                            $A.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
+                            $R.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
 
                             Write-Host 'Returned from Give Method...'
                         }
@@ -276,7 +283,9 @@ Class NonlinearQuest : Quest {
 
                     $this.Completed = $true # YES, SET THE QUEST'S COMPLETED FLAG
                 }
-            } Else { # IF($THIS.COMPLETED -EQ $FALSE)
+            }
+            
+            If($this.Completed -EQ $true) { # IF($THIS.COMPLETED -EQ $FALSE)
                 Write-Host 'The Completed flag is SET...'
 
                 If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
@@ -285,12 +294,12 @@ Class NonlinearQuest : Quest {
 
                     # IT'S POSSIBLE THERE AREN'T ANY REWARDS FOR A QUEST... I SUPPOSE.
                     # REGARDLESS, IT'S BETTER TO TRY AND CATER FOR IT THAN OTHERWISE.
-                    Foreach($A in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
-                        If($A.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
+                    Foreach($R in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
+                        If($R.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
                             Write-Host 'Current Reward''s Given flag is UNSET...'
                             Write-Host 'Calling Give Method...'
 
-                            $A.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
+                            $R.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
 
                             Write-Host 'Returned from Give Method...'
                         }
@@ -321,6 +330,10 @@ Class Questline {
     [List[QuestReward]]$Rewards
 
     Questline() {
+        # THIS CTOR MAY NOT BE ABLE TO BE USED!
+        # IF A QUESTLINE IS CREATED FROM A SPLAT, THIS CTOR IS USED. THE ISSUE HERE IS THAT THE FIRST QUEST CAN'T BE SET AS ACTIVE AT THIS TIME
+        # SINCE IT DOESN'T ACTUALLY EXIST IN THE LISTING AT THE TIME THIS CTOR IS CALLED, SO IT WOULD RESULT IN AN EXCEPTION.
+
         Write-Host 'Entering Questline Default Constructor...'
 
         $this.CurrentQuest = 0
@@ -335,36 +348,42 @@ Class Questline {
 
     Questline(
         [List[Quest]]$Quests,
-        [List[QuestReward]]$Rewards
+        [List[QuestReward]]$Rewards,
+        [Boolean]$Active = $false
     ) {
         Write-Host 'Entering Questline Secondary Constructor...'
         Write-Host "Value of Quests is $($Quests)"
         Write-Host "Value of Rewards is $($Rewards)"
 
         $this.CurrentQuest = 0
-        $this.Active       = $false
+        $this.Active       = $Active
         $this.Completed    = $false
         $this.RewardsGiven = $false
-        $this.Quests       = $Quests
-        $this.Rewards      = $Rewards
+        $this.Quests       = [List[Quest]]::new($Quests)
+        $this.Rewards      = [List[QuestReward]]::new($Rewards)
+
+        $this.Quests[$this.CurrentQuest].Active = $true
 
         Write-Host 'Exiting Questline Secondary Constructor...'
     }
 
     Questline(
         [Quest[]]$Quests,
-        [QuestReward[]]$Rewards
+        [QuestReward[]]$Rewards,
+        [Boolean]$Active = $false
     ) {
         Write-Host 'Entering Questline Tertiary Constructor...'
         Write-Host "Value of Quests is $($Quests)"
         Write-Host "Value of Rewards is $($Rewards)"
 
         $this.CurrentQuest = 0
-        $this.Active       = $false
+        $this.Active       = $Active
         $this.Completed    = $false
         $this.RewardsGiven = $false
         $this.Quests       = [List[Quest]]::new()
         $this.Rewards      = [List[QuestReward]]::new()
+
+        $this.Quests[$this.CurrentQuest].Active = $true
 
         Write-Host 'Exiting Questline Tertiary Constructor...'
 
@@ -410,29 +429,296 @@ Class Questline {
                     Write-Host 'Returned from CurrentQuest Update...'
 
                     If($this.Quests[$this.CurrentQuest].Completed -EQ $true) { # AFTER HAVING CALLED UPDATE, HAS THE QUEST'S COMPLETED FLAG BEEN SET?
+                        # CONFER THE REWARDS TO THE PLAYER (CALL UPDATE A SECOND TIME; THIS ALSO SETS THE QUESTS ACTIVE FLAG TO FALSE)
+                        # Write-Host 'Quest is complete; calling its Update method again to confer rewards...'
+                        # $this.Quests[$this.CurrentQuest].Update()
+
                         Write-Host 'CurrentQuests'' Completed flag is SET...'
                         Write-Host 'Increment the CurrentQuest counter...'
                         $this.CurrentQuest++ # YES, INCREMENT THE CURRENTQUEST COUNTER
+
+                        If($this.CurrentQuest -LT $this.Quests.Count) {
+                            $this.Quests[$this.CurrentQuest].Active = $true
+                        }
                     }
-                } Else { # IF($THIS.CURRENTQUEST -LT $THIS.QUESTS.COUNT)
+                }
+
+                # THERE'S A VERY SPECIFIC REASON FOR NOT USING AN ELSE FROM THE PREVIOUS CONDITIONAL; WASITNG CALL CYCLES!
+                If($this.CurrentQuest -GE $this.Quests.Count) { # IF($THIS.CURRENTQUEST -LT $THIS.QUESTS.COUNT)
+                    Write-Host 'CurrentQuest is LESS THAN Quests.Count...'
+                    Write-Host 'Setting the Completed flag...'
                     # THIS IS A REALLY POOR MAN'S WAY OF CONCEDING THAT THE COMPLETION
                     # HAS BEEN MET, BUT GIVEN THAT THE CURRENTSTEP WOULDN'T INCREMENT
                     # UNLESS THE STEP COMPLETION FLAG HAD BEEN SET, IT SHOULD BE SANE
                     # TO ASSUME THAT ALL QUEST STEPS ARE COMPLETED BY THIS POINT.
                     $this.Completed = $true
                 }
-            } Else { # IF($THIS.COMPLETED -EQ $FALSE)
+            }
+
+            # THERE'S A VERY SPECIFIC REASON FOR NOT USING AN ELSE FROM THE PREVIOUS CONDITIONAL; WASITING CALL CYCLES!
+            If($this.Completed -EQ $true) { # IF($THIS.COMPLETED -EQ $FALSE)
+                Write-Host 'Completed flag is SET...'
                 If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
+                    Write-Host 'RewardsGiven flag is UNSET...'
                     Foreach($A in $this.Rewards) { # LOOP THROUGH ALL THE ELEMENTS IN THE REWARDS CONTAINER
                         If($A.Given -EQ $false) { # HAS THIS ELEMENT'S GIVEN FLAG NOT YET BEEN SET?
+                            Write-Host 'Current Reward''s Given flag is UNSET...'
+                            Write-Host 'Calling Give Method...'
                             $A.Give() # NO - EXECUTE THE ELEMENT'S GIVE METHOD (SETS THIS ELEMENT'S GIVEN FLAG)
+
+                            Write-Host 'Returning from Give Method...'
                         }
                     }
 
+                    Write-Host 'Setting the RewardsGiven flag...'
                     $this.RewardsGiven = $true # SET THE REWARDSGIVEN FLAG
+
+                    Write-Host 'Unsetting the Active flag...'
                     $this.Active       = $false # UNSET THE ACTIVE FLAG
                 } # IF($THIS.REWARDSGIVEN -EQ $FALSE)
             } # IF($THIS.COMPLETED -EQ $FALSE)
         } # IF($THIS.ACTIVE -EQ $TRUE)
+
+        Write-Host 'Exiting Questline Update Method...'
     } # END UPDATE METHOD DEFINITION
 }
+
+Class QAHasItem : QuestStep {
+    [String]$TargetItem
+
+    QAHasItem() : base() {
+        Write-Host 'Entered QAHasItem Default Constructor...'
+
+        $this.TargetItem = ''
+        
+        # FOR TESTING PURPOSES ONLY!!!
+        $this.Completed = $true
+
+        Write-Host 'Exiting QAHasItem Default Constructor...'
+    }
+
+    QAHasItem(
+        [String]$TargetItem
+    ) : base() {
+        Write-Host 'Entered QAHasItem Secondary Constructor...'
+        Write-Host "TargetItem is $($TargetItem)"
+
+        $this.TargetItem = $TargetItem
+
+        Write-Host 'Exiting QAHasItem Secondary Constructor...'
+    }
+
+    [Void]Update() {
+        Write-Host 'Entered QAHasItem Update Method...'
+
+        $this.Completed = $true
+
+        Write-Host 'Exiting QAHasItem Update Method...'
+    }
+}
+
+Class QAQuestCompleted : QuestStep {
+    [Quest]$TargetQuest
+
+    QAQuestCompleted() : base() {
+        Write-Host 'Entered QAQuestCompleted Default Constructor...'
+
+        $this.TargetQuest = $null
+
+        # FOR TESTING PURPOSES ONLY!
+        $this.Completed = $true
+
+        Write-Host 'Exiting QAQuestCompleted Default Constructor...'
+    }
+
+    QAQuestCompleted(
+        [Quest]$TargetQuest
+    ) : base() {
+        Write-Host 'Entered QAQuestCompleted Secondary Constructor...'
+        Write-Host "TargetQuest is $($TargetQuest)"
+
+        $this.TargetQuest = $TargetQuest
+
+        Write-Host 'Exiting QAQuestCompleted Secondary Constructor...'
+    }
+
+    [Void]Update() {
+        Write-Host 'Entered QAQuestCompleted Update Method...'
+
+        $this.Completed = $true
+
+        Write-Host 'Exiting QAQuestCompleted Update Method...'
+    }
+}
+
+Class QAPlayerHasGold : QuestStep {
+    [Int]$GoldTarget
+
+    QAPlayerHasGold() : base() {
+        Write-Host 'Entered QAPlayerHasGold Default Constructor...'
+
+        $this.GoldTarget = 0
+
+        # FOR TESTING PURPOSES ONLY!
+        $this.Completed = $true
+
+        Write-Host 'Exited QAPlayerHasGold Default Constructor...'
+    }
+
+    QAPlayerHasGold(
+        [Int]$GoldTarget
+    ) : base() {
+        Write-Host 'Entered QAPlayerHasGold Secondary Constructor...'
+        Write-Host "GoldTarget is $($GoldTarget)"
+
+        $this.GoldTarget = $GoldTarget
+
+        Write-Host 'Exiting QAPlayerHasGold Secondary Constructor...'
+    }
+
+    [Void]Update() {
+        Write-Host 'Entering QAPlayerHasGold Update Method...'
+
+        $this.Completed = $true
+
+        Write-Host 'Exiting QAPlayerHasGold Update Method...'
+    }
+}
+
+Write-Host 'Creating a new Questline...'
+[Questline]$SampleQuestline2 = [Questline]::new(
+    @(
+        [NonlinearQuest]@{
+            Steps = @(
+                [QAHasItem]::new(),
+                [QAPlayerHasGold]::new(),
+                [QAQuestCompleted]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new()
+            )
+            Rewards = @(
+                [QuestReward]::new(),
+                [QuestReward]::new(),
+                [QuestReward]::new()
+            )
+        },
+        [LinearQuest]@{
+            Steps = @(
+                [QAHasItem]::new(),
+                [QAPlayerHasGold]::new(),
+                [QAQuestCompleted]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new(),
+                [QuestStep]::new()
+            )
+            Rewards = @(
+                [QuestReward]::new(),
+                [QuestReward]::new(),
+                [QuestReward]::new()
+            )
+        }
+    ),
+    @(
+        [QuestReward]::new(),
+        [QuestReward]::new(),
+        [QuestReward]::new(),
+        [QuestReward]::new(),
+        [QuestReward]::new()
+    ),
+    $true
+)
+
+# [Questline]$SampleQuestline = [Questline]@{
+#     Quests = @(
+#         [NonlinearQuest]@{
+#             Steps = @(
+#                 [QAHasItem]::new(),
+#                 [QAPlayerHasGold]::new(),
+#                 [QAQuestCompleted]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new()
+#             )
+#             Rewards = @(
+#                 [QuestReward]::new(),
+#                 [QuestReward]::new(),
+#                 [QuestReward]::new()
+#             )
+#         },
+#         [LinearQuest]@{
+#             Steps = @(
+#                 [QAHasItem]::new(),
+#                 [QAPlayerHasGold]::new(),
+#                 [QAQuestCompleted]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new(),
+#                 [QuestStep]::new()
+#             )
+#             Rewards = @(
+#                 [QuestReward]::new(),
+#                 [QuestReward]::new(),
+#                 [QuestReward]::new()
+#             )
+#         }
+#     )
+#     Rewards = @(
+#         [QuestReward]::new(),
+#         [QuestReward]::new(),
+#         [QuestReward]::new(),
+#         [QuestReward]::new(),
+#         [QuestReward]::new()
+#     )
+#     Active = $true
+# }
+
+Write-Host 'Sample Questline Created...'
+Write-Host ''
+Write-Host ''
+Write-Host 'Calling Questline Update Method...'
+Write-Host ''
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+Write-Host 'Calling Questline Update Method Again...'
+$SampleQuestline2.Update()
+Write-Host ''
+
