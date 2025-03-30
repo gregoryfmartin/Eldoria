@@ -365,8 +365,10 @@ Class QuestManager {
     }
 
     [Void]Update() {
-        If($this.Questlines[$this.TrackedQuestlineIndex].Completed -EQ $false) {
-
+        Foreach($Q in $this.Questlines) {
+            If($Q.Completed -EQ $false) {
+                $Q.Update()
+            }
         }
     }
 }
