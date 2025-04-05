@@ -27,6 +27,7 @@ Enum GameStatePrimary {
     InventoryScreen
     BattleScreen
     PlayerStatusScreen
+    QuestManagementScreen
     Cleanup
 }
 
@@ -208,6 +209,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [StatusTechniqueSelectionWindow]  $Script:TheStatusTechSelectionWindow = $null
 [StatusTechniqueInventoryWindow]  $Script:TheStatusTechInventoryWindow = $null
 [BufferManager]                   $Script:TheBufferManager             = [BufferManager]::new()
+[QuestManager]                    $Script:TheQuestManager              = [QuestManager]::new
 [GameCore]                        $Script:TheGameCore                  = [GameCore]::new()
 [EnemyBattleEntity]               $Script:TheCurrentEnemy              = $null
 [BattleManager]                   $Script:TheBattleManager             = $null
@@ -659,6 +661,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
     }
 }
 
+[ScriptBlock]$Script:TheQuestManagementScreenState = {}
+
 [ScriptBlock]$Script:TheCleanupState = {}
 
 
@@ -1033,6 +1037,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
     $Script:TheMessageWindow.WriteBadCommandRetortMessage()
 }
 
+[ScriptBlock]$Script:TheQuestCommand = {}
+
 $Script:TheCommandTable = @{
     'move'      = $Script:TheMoveCommand
     'm'         = $Script:TheMoveCommand
@@ -1056,6 +1062,8 @@ $Script:TheCommandTable = @{
     'en'        = $Script:TheEnterCommand
     'exit'      = $Script:TheEnterCommand
     'ex'        = $Script:TheEnterCommand
+    'quest'     = $Script:TheQuestCommand
+    'qu'        = $Script:TheQuestCommand
 }
 
 
@@ -1362,15 +1370,16 @@ $Script:TheCommandTable = @{
 #
 ###############################################################################
 $Script:TheGlobalStateBlockTable = @{
-    [GameStatePrimary]::SplashScreenA      = $Script:TheSplashScreenAState
-    [GameStatePrimary]::SplashScreenB      = $Script:TheSplashScreenBState
-    [GameStatePrimary]::TitleScreen        = $Script:TheTitleScreenState
-    [GameStatePrimary]::PlayerSetupScreen  = $Script:ThePlayerSetupState
-    [GameStatePrimary]::GamePlayScreen     = $Script:TheGamePlayScreenState
-    [GameStatePrimary]::InventoryScreen    = $Script:TheInventoryScreenState
-    [GameStatePrimary]::BattleScreen       = $Script:TheBattleScreenState
-    [GameStatePrimary]::PlayerStatusScreen = $Script:ThePlayerStatusScreenState
-    [GameStatePrimary]::Cleanup            = $Script:TheCleanupState
+    [GameStatePrimary]::SplashScreenA         = $Script:TheSplashScreenAState
+    [GameStatePrimary]::SplashScreenB         = $Script:TheSplashScreenBState
+    [GameStatePrimary]::TitleScreen           = $Script:TheTitleScreenState
+    [GameStatePrimary]::PlayerSetupScreen     = $Script:ThePlayerSetupState
+    [GameStatePrimary]::GamePlayScreen        = $Script:TheGamePlayScreenState
+    [GameStatePrimary]::InventoryScreen       = $Script:TheInventoryScreenState
+    [GameStatePrimary]::BattleScreen          = $Script:TheBattleScreenState
+    [GameStatePrimary]::PlayerStatusScreen    = $Script:ThePlayerStatusScreenState
+    [GameStatePrimary]::QuestManagementScreen = $Script:TheQuestManagementScreenState
+    [GameStatePrimary]::Cleanup               = $Script:TheCleanupState
 }
 
 
@@ -20881,10 +20890,6 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 # CURRENT QUEST
 #   A "POINTER" TO THE CURRENT QUEST THAT THE PLAYER IS WORKING IN THIS QUESTLINE.
 #
-# REINSTATE LIMIT
-#   IF A QUESTLINE CAN BE REINSTATED AFTER ENTERING A FAILED STATE, HOW MANY TIMES CAN
-#   IT BE REPEATED.
-#
 # ACTIVE
 #   IS THIS QUESTLINE ACTIVE OR NOT? THIS FLAG SERVES TWO PURPOSES:
 #     FULFILLING TRACKING
@@ -20895,12 +20900,6 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 #     ISSUING QUEST REWARDS TO THE PLAYER
 #     ASSISTING WITH LIMITING PARSE WASTE
 #
-# FAILED
-#   IS THIS QUESTLINE CONSIDERED FAILED?
-#
-# CAN REINSTATE
-#   IF THIS QUESTLINE HAS ENTERED A FAILED STATE, CAN IT BE REINSTATED?
-#
 # REWARDS GIVEN
 #   HAVE THE QUEST REWADS BEEN GIVEN TO THE PLAYER?
 #
@@ -20909,10 +20908,6 @@ Class QAPlayerHasDealtHighDamage : QuestStep {
 #
 # REWARDS
 #   THE COLLECTION OF REWARDS THAT ARE GIVEN TO THE PLAYER IF THE QUESTLINE IS COMPLETED.
-#
-# FAILURE CONDITION
-#   THE MOST RECENT FAILURE CONDITION TRIGGERED FOR THE QUESTLINE (MEANING THAT IF
-#   A REINSTATEMENT IS POSSIBLE, WHAT WAS THE MOST RECENT CAUSE OF FAILURE?)
 #
 ###############################################################################
 Class Questline {
@@ -21012,6 +21007,27 @@ Class Questline {
 # QUEST MANAGER
 #
 ###############################################################################
+Class QuestManager {
+    [Int]$TrackedQuestlineIndex
+    [List[Questline]]$Questlines
+
+    QuestManager() {
+        $this.TrackedQuestlineIndex = 0
+        $this.Questlines            = [List[Questline]]::new()
+    }
+
+    [Questline]GetTrackedQuest() {
+        Return $this.Questlines[$this.TrackedQuestlineIndex]
+    }
+
+    [Void]Update() {
+        Foreach($Q in $this.Questlines) {
+            If($Q.Completed -EQ $false) {
+                $Q.Update()
+            }
+        }
+    }
+}
 
 
 
@@ -21041,27 +21057,27 @@ Class Questline {
 # SHORTHAND INTERSPERSED, ALTHOUGH THIS IS FUNDAMENTALLY NO DIFFERENT THAN THE JSON
 # NOTATION.
 #
-[Questline]$SampleQuestlineA = [Questline]::new(
-    @(
-        [LinearQuest]::new(
-            @(
-                [QAHasItem]::new('MTORope'),
-                [QAHasItem]::new('MTOApple'),
-                [QAPlayerHasGold]::new(50000)
-            )
-        ),
-        [NonlinearQuest]::new(
-            @(
-                [QAPlayerStatAtLevel]::new(
-                    [StatId]::Attack,
-                    75
-                ),
-                [QAHasItem]::new('MTOMilk'),
-                [QAPlayerHasNumberOfTechniques]::new(25)
-            )
-        )
-    )
-)
+# [Questline]$SampleQuestlineA = [Questline]::new(
+#     @(
+#         [LinearQuest]::new(
+#             @(
+#                 [QAHasItem]::new('MTORope'),
+#                 [QAHasItem]::new('MTOApple'),
+#                 [QAPlayerHasGold]::new(50000)
+#             )
+#         ),
+#         [NonlinearQuest]::new(
+#             @(
+#                 [QAPlayerStatAtLevel]::new(
+#                     [StatId]::Attack,
+#                     75
+#                 ),
+#                 [QAHasItem]::new('MTOMilk'),
+#                 [QAPlayerHasNumberOfTechniques]::new(25)
+#             )
+#         )
+#     )
+# )
 
 
 

@@ -203,7 +203,7 @@ Class NonlinearQuest : Quest {
                     $this.Completed = $true # YES, SET THE QUEST'S COMPLETED FLAG
                 }
             }
-            
+
             If($this.Completed -EQ $true) { # IF($THIS.COMPLETED -EQ $FALSE)
                 If($this.RewardsGiven -EQ $false) { # HAS THE REWARDSGIVEN FLAG NOT YET BEEN SET?
                     # IT'S POSSIBLE THERE AREN'T ANY REWARDS FOR A QUEST... I SUPPOSE.
