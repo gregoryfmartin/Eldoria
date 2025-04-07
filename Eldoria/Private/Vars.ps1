@@ -2,11 +2,24 @@
 
 Set-StrictMode -Version Latest
 
+<#
+.SYNOPSIS
+Sets a variable in the global scope with the prefix ELD:.
+
+.PARAMETER Name
+The name of the variable. This name will automatically have the ELD: prefix prepended to it.
+
+.PARAMETER Value
+The value to assign to this variable. It's System.Object so that it can be anything.
+
+.PARAMETER ReadOnly
+Specify if this variable is intended to be readonly.
+#>
 Function Set-EldVar {
     [CmdletBinding()]
     Param(
         [String]$Name,
-        [System.Object]$Value,
+        [Object]$Value,
         [Switch]$ReadOnly
     )
 
@@ -19,6 +32,10 @@ Function Set-EldVar {
     }
 }
 
+<#
+.SYNOPSIS
+Removes all variables in the global scope with an ELD: prefix.
+#>
 Function Remove-EldVars {
     Process {
         $Vars = Get-ChildItem -Path Variable: | Where-Object { $_.Name -LIKE 'ELD:*' }
@@ -28,6 +45,16 @@ Function Remove-EldVars {
     }
 }
 
+<#
+.SYNOPSIS
+Retreives a specific variable with an ELD: prefix.
+
+.PARAMETER Name
+The name of the ELD: variable to get, not including the ELD: prefix.
+
+.OUTPUTS
+PSVariable or throws System.Exception
+#>
 Function Get-EldVar {
     [CmdletBinding()]
     Param(
@@ -44,6 +71,14 @@ Function Get-EldVar {
     }
 }
 
+<#
+.SYNOPSIS
+Initializes all the Eldoria variables in the global scope.
+
+.DESCRIPTION
+This is largely a translation from the collection of script-level variables in the original game script. All this is doing is placing the variables
+in the Variable PSDrive in the global scope rather than, as was the case with the single script, at script level.
+#>
 Function Initialize-EldVars {
     Process {
         Set-EldVar -Name 'SceneImagesToLoad' -Value ($(Get-ChildItem "$($PSScriptRoot)\..\Data\Image Data").Count) -ReadOnly
@@ -60,27 +95,27 @@ Function Initialize-EldVars {
         Set-EldVar -Name 'BgmBattleThemeA' -Value "$($PSScriptRoot)\..\Data\Assets\BGM\Battle Theme A.wav" -ReadOnly
         Set-EldVar -Name 'SfxBattleNem' -Value "$($PSScriptRoot)\..\Data\Assets\SFX\UI Selection NEM.wav" -ReadOnly
         Set-EldVar -Name 'BadCommandRetorts' -Value @()
-        Set-EldVar -Name 'TheStatusWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheCommandWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheSceneWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheMessageWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheInventoryWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'DefaultCursorCoordinates' -Value ([PSObject]::new())
-        Set-EldVar -Name 'ThePlayerBattleStatWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheEnemyBattleStatWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'ThePlayerBattleActionWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheBattleStatusMessageWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheBattleEnemyImageWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheBattlePhaseIndicator' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheStatusHudWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheStatusTechSelectionWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheStatusTechInventoryWindow' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheBufferManager' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheGameCore' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheCurrentEnemy' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheBattleManager' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheSfxMachine' -Value ([PSObject]::new())
-        Set-EldVar -Name 'TheBgmMachine' -Value ([PSObject]::new())
+        Set-EldVar -Name 'TheStatusWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheCommandWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheSceneWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheMessageWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheInventoryWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'DefaultCursorCoordinates' -Value ([Object]::new())
+        Set-EldVar -Name 'ThePlayerBattleStatWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheEnemyBattleStatWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'ThePlayerBattleActionWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheBattleStatusMessageWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheBattleEnemyImageWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheBattlePhaseIndicator' -Value ([Object]::new())
+        Set-EldVar -Name 'TheStatusHudWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheStatusTechSelectionWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheStatusTechInventoryWindow' -Value ([Object]::new())
+        Set-EldVar -Name 'TheBufferManager' -Value ([Object]::new())
+        Set-EldVar -Name 'TheGameCore' -Value ([Object]::new())
+        Set-EldVar -Name 'TheCurrentEnemy' -Value ([Object]::new())
+        Set-EldVar -Name 'TheBattleManager' -Value ([Object]::new())
+        Set-EldVar -Name 'TheSfxMachine' -Value ([Object]::new())
+        Set-EldVar -Name 'TheBgmMachine' -Value ([Object]::new())
         Set-EldVar -Name 'IsBattleBgmPlaying' -Value $false
         Set-EldVar -Name 'HasBattleIntroPlayed' -Value $false
         Set-EldVar -Name 'HasBattleWonChimePlayed' -Value $false
@@ -89,26 +124,26 @@ Function Initialize-EldVars {
         Set-EldVar -Name 'GpsRestoredFromBatBackup' -Value $false
         Set-EldVar -Name 'GpsRestoredFromStaBackup' -Value $false
         Set-EldVar -Name 'BattleCursorVisible' -Value $false
-        Set-EldVar -Name 'EeiBat' -Value ([PSObject]::new())
-        Set-EldVar -Name 'EeiNightwing' -Value ([PSObject]::new())
-        Set-EldVar -Name 'EeiWingblight' -Value ([PSObject]::new())
-        Set-EldVar -Name 'EeiDarkfang' -Value ([PSObject]::new())
-        Set-EldVar -Name 'EeiNocturna' -Value ([PSObject]::new())
-        Set-EldVar -Name 'EeiBloodswoop' -Value ([PSObject]::new())
-        Set-EldVar -Name 'EeiDuskbane' -Value ([PSObject]::new())
+        Set-EldVar -Name 'EeiBat' -Value ([Object]::new())
+        Set-EldVar -Name 'EeiNightwing' -Value ([Object]::new())
+        Set-EldVar -Name 'EeiWingblight' -Value ([Object]::new())
+        Set-EldVar -Name 'EeiDarkfang' -Value ([Object]::new())
+        Set-EldVar -Name 'EeiNocturna' -Value ([Object]::new())
+        Set-EldVar -Name 'EeiBloodswoop' -Value ([Object]::new())
+        Set-EldVar -Name 'EeiDuskbane' -Value ([Object]::new())
         Set-EldVar -Name 'TheSfxMPlayer' -Value ([System.Windows.Media.MediaPlayer]::new())
         Set-EldVar -Name 'TheBgmMPlayer' -Value ([System.Windows.Media.MediaPlayer]::new())
         Set-EldVar -Name 'AffinityMultNeg' -Value -0.75 -ReadOnly
         Set-EldVar -Name 'AffinityMultPos' -Value 1.6 -ReadOnly
         Set-EldVar -Name 'StatusEsSelectedSlot' -Value ([ActionSlot]::None)
-        Set-EldVar -Name 'StatusIsSelected' -Value ([PSObject]::new())
+        Set-EldVar -Name 'StatusIsSelected' -Value ([Object]::new())
         Set-EldVar -Name 'StatusScreenMode' -Value ([StatusScreenMode]::EquippedTechSelection)
         Set-EldVar -Name 'TheGlobalGameState' -Value ([GameStatePrimary]::GamePlayScreen)
-        Set-EldVar -Name 'SampleMap' -Value ([PSObject]::new())
-        Set-EldVar -Name 'SampleWarpMap01' -Value ([PSObject]::new())
-        Set-EldVar -Name 'SampleWarpMap02' -Value ([PSObject]::new())
-        Set-EldVar -Name 'CurrentMap' -Value ([PSObject]::new())
-        Set-EldVar -Name 'PreviousMap' -Value ([PSObject]::new())
+        Set-EldVar -Name 'SampleMap' -Value ([Object]::new())
+        Set-EldVar -Name 'SampleWarpMap01' -Value ([Object]::new())
+        Set-EldVar -Name 'SampleWarpMap02' -Value ([Object]::new())
+        Set-EldVar -Name 'CurrentMap' -Value ([Object]::new())
+        Set-EldVar -Name 'PreviousMap' -Value ([Object]::new())
         Set-EldVar -Name 'TheSceneImages' -Value @{}
         Set-EldVar -Name 'MapWarpHandler' -Value {}
         Set-EldVar -Name 'BattleEncounterRegionTable' -Value @{}
@@ -134,7 +169,7 @@ Function Initialize-EldVars {
         Set-EldVar -Name 'TheEnterCommand' -Value {}
         Set-EldVar -Name 'TheCommandTable' -Value @{}
         Set-EldVar -Name 'BaCalc' -Value {}
-        Set-EldVar -Name 'ThePlayer' -Value ([PSObject]::new())
+        Set-EldVar -Name 'ThePlayer' -Value ([Object]::new())
         Set-EldVar -Name 'TheGlobalStateBlockTable' -Value @{}
         Set-EldVar -Name 'CCBlack24' -Value @(0, 0, 0) -ReadOnly
         Set-EldVar -Name 'CCWhite24' -Value @(255, 255, 255) -ReadOnly
