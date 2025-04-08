@@ -13,7 +13,8 @@ any of the values in ColorData fall outside the 8-bit range (0-255), or AnsiFgCo
 Function New-EldFg24String {
     [CmdletBinding()]
     Param(
-        [Int[]]$ColorData = @(0, 0, 0)
+        [Int[]]$ColorData = @(0, 0, 0),
+        [Switch]$Empty
     )
 
     Begin {
@@ -35,6 +36,10 @@ Function New-EldFg24String {
     }
 
     Process {
+        If($Empty) {
+            Return ''
+        }
+
         Return "$((Get-EldVar -Name 'AnsiFgCol24Prefix').Value)$($ColorData[0]);$($ColorData[1]);$($ColorData[2])m"
     }
 }
@@ -50,7 +55,8 @@ any of the values in ColorData fall outside the 8-bit range (0-255), or AnsiBgCo
 Function New-EldBg24String {
     [CmdletBinding()]
     Param(
-        [Int[]]$ColorData = @(0, 0, 0)
+        [Int[]]$ColorData = @(0, 0, 0),
+        [Switch]$Empty
     )
 
     Begin {
@@ -72,6 +78,29 @@ Function New-EldBg24String {
     }
 
     Process {
+        If($Empty) {
+            Return ''
+        }
+
         Return "$((Get-EldVar -Name 'AnsiBgCol24Prefix').Value)$($ColorData[0]);$($ColorData[1]);$($ColorData[2])m"
+    }
+}
+
+Function New-EldCoordString {
+    [CmdletBinding()]
+    Param(
+        [ValidateRange(1, 80)]
+        [Int]$Row = 1,
+        [ValidateRange(1, 80)]
+        [Int]$Column = 1,
+        [Switch]$Empty
+    )
+
+    Process {
+        If($Empty) {
+            Return ''
+        }
+
+        Return "`e[$($Row);$($Column)H"
     }
 }
