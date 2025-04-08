@@ -2,6 +2,8 @@
 
 Set-StrictMode -Version Latest
 
+Add-Type -AssemblyName PresentationCore
+
 <#
 .SYNOPSIS
 Sets a variable in the global scope with the prefix ELD:.

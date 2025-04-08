@@ -24,9 +24,9 @@ Function New-EldFg24String {
         }
 
         Try {
-            $null = Get-EldVar -Name 'AnsiFgCol24Prefix'
+            $null = Get-EldVar -Name 'AnsiFgCol24Prefix' -ErrorAction SilentlyContinue
         } Catch {
-            Write-Error "$($_.Exception.Message)"
+            Throw $_
         }
     }
 
