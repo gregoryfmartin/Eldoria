@@ -10,6 +10,26 @@ Set-StrictMode -Version Latest
 
 . "$PSScriptRoot\Enums.ps1"
 
+<#
+.SYNOPSIS
+Creates a new ELD variable in the global scope.
+
+.DESCRIPTION
+Wraps Set-Variable to create a new ELD variable in the global scope. The variable name will have the ELD prefix prepended to it before creation.
+The caller can optionally make the variable readonly. All variables created will be in the Variable PSDrive.
+
+.PARAMETER Name
+The name of the variable. The ELD prefix will automatically be prepended to it, so don't add this to the name itself.
+
+.PARAMETER Data
+The value to assign to the variable. This can be omitted and will default to null.
+
+.PARAMETER ReadOnly
+A Switch that specifies if this variable is readonly. By default, variables are mutable.
+
+.OUTPUTS
+None
+#>
 Function New-EldVar {
     [CmdletBinding()]
     Param(
@@ -28,6 +48,17 @@ Function New-EldVar {
     }
 }
 
+<#
+.SYNOPSIS
+Checks to see if a specific ELD variable exists or not. The value of the variable is inconsequential.
+
+.PARAMETER Name
+The name of an ELD variable to check.
+
+.OUTPUTS
+System.Exception
+    If the specified ELD variable doesn't exist, this function throws a standard Exception.
+#>
 Function Assert-EldVarExists {
     [CmdletBinding()]
     Param(
@@ -42,6 +73,17 @@ Function Assert-EldVarExists {
     }
 }
 
+<#
+.SYNOPSIS
+Checks to see if a specified group of ELD variables exists or not. The values of these variables are inconsequential.
+
+.PARAMETER Names
+An array of names of ELD variables to check.
+
+.OUTPUTS
+System.Exception
+    If any of the specifed ELD variables doesn't exist, this function bubbles the standard Exception thrown from Assert-EldVarExists.
+#>
 Function Assert-EldVarsExists {
     [CmdletBinding()]
     Param(
@@ -59,6 +101,22 @@ Function Assert-EldVarsExists {
     }
 }
 
+<#
+.SYNOPSIS
+Gets an ELD variable from the Variable PSDrive, if it exists.
+
+.DESCRIPTION
+If the requested ELD variable exists in the Variable PSDrive, this function will give that variable back to the caller.
+Assert-EldVarExists will throw a standard Exception if the requested variable doesn't exist, so this will cause the program
+to halt (which is what we would want really as it would indicate a failure to initialize the program state).
+
+.PARAMETER Name
+The name of the ELD variable to get.
+
+.OUTPUTS
+System.Management.Automation.PSVariable
+    The ELD variable, if found in the Variable PSDrive.
+#>
 Function Get-EldVar {
     [CmdletBinding()]
     Param(
@@ -79,6 +137,22 @@ Function Get-EldVar {
     }
 }
 
+<#
+.SYNOPSIS
+Checks to see if a specific ELD variable is readonly.
+
+
+.DESCRIPTION
+This function seems a little counterintuitive, but the whole point is to prevent a write attempt to a variable that's marked as readonly
+and deflect the standard PowerShell response to it.
+
+.PARAMETER Name
+The name of the ELD variable to check.
+
+.OUTPUTS
+System.Exception
+    If the ELD variable is readonly, this function will throw a standard Exception.
+#>
 Function Assert-EldVarReadOnly {
     [CmdletBinding()]
     Param(
@@ -101,6 +175,24 @@ Function Assert-EldVarReadOnly {
     }
 }
 
+<#
+.SYNOPSIS
+Changes the current value of an existing ELD variable.
+
+.DESCRIPTION
+This function will check to see if the target ELD variable is readonly before attempting anything. As such, it's possible 
+for this function to throw a standard Exception.
+
+.PARAMETER Name
+The name of the ELD variable to change.
+
+.PARAMETER Data
+The new value to assign to the ELD variable.
+
+.OUTPUTS
+System.Exception
+    If Assert-EldVarReadOnly throws a standard Exception, this function will bubble it.
+#>
 Function Set-EldVar {
     [CmdletBinding()]
     Param(
@@ -122,6 +214,10 @@ Function Set-EldVar {
     }
 }
 
+<#
+.SYNOPSIS
+Creates and sets all ELD variables. This is a crucial function and should be called as early as possible.
+#>
 Function Initialize-EldVars {
     Process {
         Write-Progress -Activity 'Setting Up Globals' -Id 1 -PercentComplete -1
@@ -493,6 +589,10 @@ Function Initialize-EldVars {
     }
 }
 
+<#
+.SYNOPSIS
+Removes all ELD variables from the Variable PSDrive. This function is intended to be called at the cleanup state.
+#>
 Function Remove-EldVars {
     Process {
         Get-ChildItem Variable: | Where-Object { $_.Name -LIKE 'ELD:*' } | Remove-Variable -Scope Global -Force -ErrorAction SilentlyContinue
