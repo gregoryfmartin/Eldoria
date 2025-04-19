@@ -584,6 +584,114 @@ Function Initialize-EldVars {
             [BattleActionType]::MagicHealing     = [Tuple[[String], [Int[]]]]::new("`u{20AA}", (Get-EldVar -Name 'CCAppleMintLight24').Value)
             [BattleActionType]::MagicStatAugment = [Tuple[[String], [Int[]]]]::new("`u{20B9}", (Get-EldVar -Name 'CCAppleOrangeLight24').Value)
         }
+        New-EldVar -Name 'BepStatNumThresholdCaution' -Data 0.6D -ReadOnly
+        New-EldVar -Name 'BepStatNumThresholdDanger' -Data 0.3D -ReadOnly
+        New-EldVar -Name 'BepStatNumDrawColorSafe' -Data $((Get-EldVar -Name 'CCAppleGreenLight24').Value) -ReadOnly
+        New-EldVar -Name 'BepStatNumDrawColorCaution' -Data $((Get-EldVar -Name 'CCAppleYellowLight24').Value) -ReadOnly
+        New-EldVar -Name 'BepStatNumDrawColorDanger' -Data $((Get-EldVar -Name 'CCAppleRedLight24').Value) -ReadOnly
+        New-EldVar -Name 'BepStatAugDrawColorPositive' -Data $((Get-EldVar -Name 'CCAppleCyanLight24').Value) -ReadOnly
+        New-EldVar -Name 'BepStatAugDrawColorNegative' -Data $((Get-EldVar -Name 'CCApplePurpleDark24').Value) -ReadOnly
+
+        # Variables that pertain to the Player
+        New-EldVar -Name 'PlayerBepHpBase' -Data 0
+        New-EldVar -Name 'PlayerBepMpBase' -Data 0
+        New-EldVar -Name 'PlayerBepAtkBase' -Data 0
+        New-EldVar -Name 'PlayerBepDefBase' -Data 0
+        New-EldVar -Name 'PlayerBepMatBase' -Data 0
+        New-EldVar -Name 'PlayerBepMdfBase' -Data 0
+        New-EldVar -Name 'PlayerBepSpdBase' -Data 0
+        New-EldVar -Name 'PlayerBepLckBase' -Data 0
+        New-EldVar -Name 'PlayerBepAccBase' -Data 0
+        New-EldVar -Name 'PlayerBepHpBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepMpBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepAtkBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepDefBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepMatBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepMdfBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepSpdBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepLckBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepAccBasePre' -Data 0
+        New-EldVar -Name 'PlayerBepHpBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepMpBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepAtkBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepDefBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepMatBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepMdfBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepSpdBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepLckBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepAccBaseAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepHpMax' -Data 0
+        New-EldVar -Name 'PlayerBepMpMax' -Data 0
+        New-EldVar -Name 'PlayerBepAtkMax' -Data 0
+        New-EldVar -Name 'PlayerBepDefMax' -Data 0
+        New-EldVar -Name 'PlayerBepMatMax' -Data 0
+        New-EldVar -Name 'PlayerBepMdfMax' -Data 0
+        New-EldVar -Name 'PlayerBepSpdMax' -Data 0
+        New-EldVar -Name 'PlayerBepLckMax' -Data 0
+        New-EldVar -Name 'PlayerBepAccMax' -Data 0
+        New-EldVar -Name 'PlayerBepHpMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepMpMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepAtkMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepDefMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepMatMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepMdfMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepSpdMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepLckMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepAccMaxPre' -Data 0
+        New-EldVar -Name 'PlayerBepHpMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepMpMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepAtkMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepDefMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepMatMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepMdfMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepSpdMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepLckMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepAccMaxAugmentValue' -Data 0
+        New-EldVar -Name 'PlayerBepHpAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepMpAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepAtkAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepDefAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepMatAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepMdfAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepSpdAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepLckAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepAccAugmentTurnDuration' -Data 0
+        New-EldVar -Name 'PlayerBepHpBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepMpBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepAtkBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepDefBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepMatBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepMdfBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepSpdBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepLckBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepAccBaseAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepHpMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepMpMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepAtkMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepDefMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepMatMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepMdfMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepSpdMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepLckMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepAccMaxAugmentActive' -Data $false
+        New-EldVar -Name 'PlayerBepHpState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepMpState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepAtkState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepDefState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepMatState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepMdfState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepSpdState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepLckState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepAccState' -Data [StatNumberState]::Normal
+        New-EldVar -Name 'PlayerBepHpValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepMpValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepAtkValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepDefValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepMatValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepMdfValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepSpdValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepLckValidateFunction' -Data {}
+        New-EldVar -Name 'PlayerBepAccValidateFunction' -Data {}
 
         Write-Progress -Activity 'Setting Up Globals' -Id 1 -PercentComplete -1 -Completed
     }
