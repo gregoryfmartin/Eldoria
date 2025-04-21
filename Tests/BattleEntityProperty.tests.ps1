@@ -1,3 +1,26 @@
+Describe 'New-EldBepSuffix' {
+    BeforeAll {
+        . "$PSScriptRoot\..\Private\BattleEntityProperty.ps1"
+        Initialize-EldVars
+    }
+
+    It 'Returns a Player BEP Hit Points prefix when requested' {
+        (New-EldBepSuffix -P -S HitPoints) | Should -BeExactly 'PlayerBepHitPoints'
+    }
+
+    It 'Returns an Enemy BEP Hit Points prefix when requested' {
+        (New-EldBepSuffix -E -S HitPoints) | Should -BeExactly 'EnemyBepHitPoints'
+    }
+
+    It 'Returns a Player BEP Hit Points Base Augment Active prefix when requested' {
+        (New-EldBepSuffix -P -S HitPoints -Baa) | Should -BeExactly 'PlayerBepHitPointsBaseAugmentActive'
+    }
+
+    AfterAll {
+        Remove-EldVars
+    }
+}
+
 Describe 'Update-EldBep' {
     BeforeAll {
         . "$PSScriptRoot\..\Private\BattleEntityProperty.ps1"
@@ -102,6 +125,89 @@ Describe 'Update-EldBep' {
         Set-EldVar -Name 'PlayerBepHitPointsBasePre' -Data 0
         Set-EldVar -Name 'PlayerBepHitPointsAugmentTurnDuration' -Data 0
         Set-EldVar -Name 'PlayerBepHitPointsBaseAugmentActive' -Data $false
+    }
+
+    AfterAll {
+        Remove-EldVars
+    }
+}
+
+Describe 'Update-EldBepBase' {
+    BeforeAll {
+        . "$PSScriptRoot\..\Private\BattleEntityProperty.ps1"
+        Initialize-EldVars
+    }
+
+    It 'Increments Base by 100 if Base is less than Max (should be 600)' {
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 500
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 1500
+
+        Update-EldBepBase -Player -Stat HitPoints -IncAmt 100
+
+        ([Int](Get-EldVar -Name 'PlayerBepHitPointsBase').Value) | Should -BeExactly 600
+
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 0
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 0
+    }
+
+    It 'Decrements Base by 100 if Base is greater than zero (should be 400)' {
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 500
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 500
+
+        Update-EldBepBase -Player -Stat HitPoints -DecAmt 100
+
+        ([Int](Get-EldVar -Name 'PlayerBepHitPointsBase').Value) | Should -BeExactly 400
+
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 0
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 0
+    }
+
+    It 'Sets Base to Max if an increment result is greater than Max' {
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 400
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 500
+
+        Update-EldBepBase -Player -Stat HitPoints -IncAmt 500
+
+        ([Int](Get-EldVar -Name 'PlayerBepHitPointsBase').Value) | Should -BeExactly 500
+
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 0
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 0
+    }
+
+    It 'Sets Base to 0 if a decrement result is less than zero' {
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 500
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 500
+
+        Update-EldBepBase -Player -Stat HitPoints -DecAmt 600
+
+        ([Int](Get-EldVar -Name 'PlayerBepHitPointsBase').Value) | Should -BeExactly 0
+
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 0
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 0
+    }
+
+    It 'Does nothing if for an increment op IncAmt is less than or equal to zero' {
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 400
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 500
+
+        Update-EldBepBase -Player -Stat HitPoints -IncAmt -50
+
+        ([Int](Get-EldVar -Name 'PlayerBepHitPointsBase').Value) | Should -BeExactly 400
+
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 0
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 0
+    }
+
+    It 'Does nothing if for a decrement op DecAmt is less than or equal to zero' {
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 500
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 500
+
+        Update-EldBepBase -Player -Stat HitPoints -DecAmt -50
+
+        ([Int](Get-EldVar -Name 'PlayerBepHitPointsBase').Value) | Should -BeExactly 500
+
+        Set-EldVar -Name 'PlayerBepHitPointsBase' -Data 0
+        Set-EldVar -Name 'PlayerBepHitPointsMax' -Data 0
     }
 
     AfterAll {
