@@ -12865,25 +12865,6 @@ Class WindowBase {
         $this.UpdateDimensions()
     }
 
-    # WindowBase(
-    #     [ATCoordinates]$LeftTop,
-    #     [ATCoordinates]$RightBottom,
-    #     [ConsoleColor24[]]$BorderDrawColors,
-    #     [String[]]$BorderStrings,
-    #     [Boolean[]]$BorderDrawDirty
-    # ) {
-    #     $this.LeftTop          = $LeftTop
-    #     $this.RightBottom      = $RightBottom
-    #     $this.BorderDrawColors = $BorderDrawColors
-    #     $this.BorderStrings    = $BorderStrings
-    #     $this.BorderDrawDirty  = $BorderDrawDirty
-    #     $this.Title            = ''
-    #     $this.UseTitle         = $false
-    #     $this.TitleDirty       = $false
-    #     $this.TitleColor       = [CCTextDefault24]::new()
-    #     $this.UpdateDimensions()
-    # }
-
     [Void]Draw() {
         [ATString]$bt = [ATStringNone]::new()
         [ATString]$bb = [ATStringNone]::new()
