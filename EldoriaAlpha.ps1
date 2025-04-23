@@ -166,6 +166,17 @@ Enum FnlTransformType3D {
     DefaultOpenSimplex2
 }
 
+Enum WindowBorderPart {
+    TopLeft
+    Top
+    TopRight
+    Right
+    BottomRight
+    Bottom
+    BottomLeft
+    Left
+}
+
 
 
 
@@ -190,6 +201,8 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
 [String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
 [String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
+[Hashtable]                       $Script:SpectreBBPRounded            = @{}
+[Hashtable]                       $Script:SpectreBBPSquare             = @{}
 [String[]]                        $Script:BadCommandRetorts            = @()
 [StatusWindow]                    $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]                   $Script:TheCommandWindow             = [CommandWindow]::new()
@@ -343,6 +356,28 @@ $Script:BadCommandRetorts = @(
     'ceuwcnesckldsc',
     '843214385321832904'
 )
+
+$Script:SpectreBBPRounded = @{
+    [WindowBorderPart]::TopLeft     = '╭'
+    [WindowBorderPart]::Top         = '─'
+    [WindowBorderPart]::TopRight    = '╮'
+    [WindowBorderPart]::Left        = '│'
+    [WindowBorderPart]::Right       = '│'
+    [WindowBorderPart]::BottomLeft  = '╰'
+    [WindowBorderPart]::Bottom      = '─'
+    [WindowBorderPart]::BottomRight = '╯'
+}
+
+$Script:SpectreBBPSquare = @{
+    [WindowBorderPart]::TopLeft     = '┌'
+    [WindowBorderPart]::Top         = '─'
+    [WindowBorderPart]::TopRight    = '┐'
+    [WindowBorderPart]::Left        = '│'
+    [WindowBorderPart]::Right       = '│'
+    [WindowBorderPart]::BottomLeft  = '└'
+    [WindowBorderPart]::Bottom      = '─'
+    [WindowBorderPart]::BottomRight = '┘'
+}
 
 $Script:BattleEncounterRegionTable = @{
     0 = @(
@@ -12809,20 +12844,32 @@ Class BufferManager {
 # THE INCLUSION OF THE SECONDARY CONSTRUCTOR IS FOR POSTERITY. IT'S CURRENTLY
 # UNCLEAR IF THIS CONSTRUCTOR IS USED. THIS SHOULD BE CLEANED UP LATER.
 #
+# NEWER ADDITIONS TO THIS CODE ARE INTENDED TO ADD CORNER CHARACTERS TO THE
+# SPEC. THIS IS A DERIVATIVE OF PWSHSPECTRECONSOLE (THANKS TO TRACKD FOR THIS).
+# I WASN'T DOING THIS ORIGINALLY, AND IT SEEMS LIKE IT MAY GIVE A BIT OF A
+# BETTER VISUAL EXPERIENCE, ESPCIALLY SINCE I MAY NOT BE ABLE TO USE SAID
+# LIBRARY TO RENDER THE GAME AFTER TALKING WITH HIM.
+#
 ###############################################################################
 Class WindowBase {
-    Static [Int]$BorderDrawColorTop    = 0
-    Static [Int]$BorderDrawColorBottom = 1
-    Static [Int]$BorderDrawColorLeft   = 2
-    Static [Int]$BorderDrawColorRight  = 3
-    Static [Int]$BorderDirtyTop        = 0
-    Static [Int]$BorderDirtyBottom     = 1
-    Static [Int]$BorderDirtyLeft       = 2
-    Static [Int]$BorderDirtyRight      = 3
-    Static [Int]$BorderStringTop       = 0
-    Static [Int]$BorderStringBottom    = 1
-    Static [Int]$BorderStringLeft      = 2
-    Static [Int]$BorderStringRight     = 3
+    Static [Int]$BorderDrawColorTop            = 0
+    Static [Int]$BorderDrawColorBottom         = 1
+    Static [Int]$BorderDrawColorLeft           = 2
+    Static [Int]$BorderDrawColorRight          = 3
+
+    Static [Int]$BorderDirtyTop                = 0
+    Static [Int]$BorderDirtyBottom             = 1
+    Static [Int]$BorderDirtyLeft               = 2
+    Static [Int]$BorderDirtyRight              = 3
+
+    Static [Int]$BorderStringTop               = 0
+    Static [Int]$BorderStringBottom            = 1
+    Static [Int]$BorderStringLeft              = 2
+    Static [Int]$BorderStringRight             = 3
+    Static [Int]$BorderStringCornerTopLeft     = 4
+    Static [Int]$BorderStringCornerTopRight    = 5
+    Static [Int]$BorderStringCornerBottomLeft  = 6
+    Static [Int]$BorderStringCornerBottomRight = 7
 
     [ATCoordinates]$LeftTop
     [ATCoordinates]$RightBottom
@@ -12844,15 +12891,27 @@ Class WindowBase {
             [CCBlack24]::new(),
             [CCBlack24]::new(),
             [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
+            [CCBlack24]::new(),
             [CCBlack24]::new()
         )
         $this.BorderStrings = [String[]](
             '',
             '',
             '',
+            '',
+            '',
+            '',
+            '',
             ''
         )
         $this.BorderDrawDirty = [Boolean[]](
+            $true,
+            $true,
+            $true,
+            $true,
             $true,
             $true,
             $true,
