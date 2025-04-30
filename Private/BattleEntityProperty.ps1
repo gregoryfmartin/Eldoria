@@ -489,6 +489,25 @@ Function Update-EldBepBase {
     }
 }
 
+<#
+.SYNOPSIS
+Increments or decrements the Max property of a specific stat of a specific entity.
+
+.PARAMETER Player
+A Switch specifying if this function is considering the Player entity.
+
+.PARAMETER Enemy
+A Switch specifying if this function is considering the Enemy entity.
+
+.PARAMETER Stat
+The StatId of the stat to consider for this iteration.
+
+.PARAMETER IncAmt
+The amount to increment the Max property by. Mutually exclusive with the DecAmt parameter.
+
+.PARAMETER DecAmt
+The amount to decrement the Max property by. Mutually exclusive with the IncAmt parameter.
+#>
 Function Update-EldBepMax {
     [CmdletBinding()]
     Param(
