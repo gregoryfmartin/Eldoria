@@ -167,14 +167,26 @@ Enum FnlTransformType3D {
 }
 
 Enum WindowBorderPart {
-    TopLeft
+    LeftTop
     Top
-    TopRight
+    RightTop
     Right
-    BottomRight
+    RightBottom
     Bottom
-    BottomLeft
+    LeftBottom
     Left
+}
+
+Enum WindowBorderPartDirty {
+    Top
+    Bottom
+    Left
+    Right
+}
+
+Enum UIELayout {
+    Horizontal
+    Vertical
 }
 
 
@@ -203,6 +215,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
 [Hashtable]                       $Script:SpectreBBPRounded            = @{}
 [Hashtable]                       $Script:SpectreBBPSquare             = @{}
+[Hashtable]                       $Script:CurrentWindowDesign          = @{}
 [String[]]                        $Script:BadCommandRetorts            = @()
 [StatusWindow]                    $Script:TheStatusWindow              = [StatusWindow]::new()
 [CommandWindow]                   $Script:TheCommandWindow             = [CommandWindow]::new()
@@ -358,26 +371,28 @@ $Script:BadCommandRetorts = @(
 )
 
 $Script:SpectreBBPRounded = @{
-    [WindowBorderPart]::TopLeft     = '╭'
+    [WindowBorderPart]::LeftTop     = '╭'
     [WindowBorderPart]::Top         = '─'
-    [WindowBorderPart]::TopRight    = '╮'
+    [WindowBorderPart]::RightTop    = '╮'
     [WindowBorderPart]::Left        = '│'
     [WindowBorderPart]::Right       = '│'
-    [WindowBorderPart]::BottomLeft  = '╰'
+    [WindowBorderPart]::LeftBottom  = '╰'
     [WindowBorderPart]::Bottom      = '─'
-    [WindowBorderPart]::BottomRight = '╯'
+    [WindowBorderPart]::RightBottom = '╯'
 }
 
 $Script:SpectreBBPSquare = @{
-    [WindowBorderPart]::TopLeft     = '┌'
+    [WindowBorderPart]::LeftTop     = '┌'
     [WindowBorderPart]::Top         = '─'
-    [WindowBorderPart]::TopRight    = '┐'
+    [WindowBorderPart]::RightTop    = '┐'
     [WindowBorderPart]::Left        = '│'
     [WindowBorderPart]::Right       = '│'
-    [WindowBorderPart]::BottomLeft  = '└'
+    [WindowBorderPart]::LeftBottom  = '└'
     [WindowBorderPart]::Bottom      = '─'
-    [WindowBorderPart]::BottomRight = '┘'
+    [WindowBorderPart]::RightBottom = '┘'
 }
+
+$Script:CurrentWindowDesign = $SpectreBBPRounded
 
 $Script:BattleEncounterRegionTable = @{
     0 = @(
@@ -12831,6 +12846,97 @@ Class BufferManager {
 
 ###############################################################################
 #
+# UIE CONTAINER
+#
+# THE ROOT CONTAINER FOR ANY UI ELEMENT.
+#
+###############################################################################
+Class UIEContainer {
+    [ATCoordinates]$LeftTop
+    [ATCoordinates]$RightBottom
+    [Int]$Width
+    [Int]$Height
+    [Stack[UIEContainer]]$Children
+    [UIELayout]$Layout
+
+    UIEContainer() {
+        $this.LeftTop     = [ATCoordinates]::new()
+        $this.RightBottom = [ATCoordinates]::new()
+        $this.Width       = 0
+        $this.Height      = 0
+        $this.Children    = [Stack[UIEContainer]]::new()
+        $this.Layout      = [UIELayout]::Vertical
+    }
+
+    [Void]UpdateDimensions() {
+        If($this.Children.Count -EQ 0) {
+            $this.Width  = $this.LeftTop.Column + $this.RightBottom.Column
+            $this.Height = $this.LeftTop.Row + $this.RightBottom.Row
+        } Else {
+            $this.Width  = 0
+            $this.Height = 0
+    
+            Foreach($Child in $this.Children) {
+                $this.Width  += $Child.Width
+                $this.Height += $Child.Height
+            }
+        }
+    }
+
+    [Void]PushChild(
+        [UIEContainer]$Child
+    ) {
+        If($null -EQ $Child) {
+            # PROBABLY SHOULD DO SOMETHING A LITTLE DIFFERENT HERE, BUT WHATEVER
+            Return
+        }
+
+        Switch($this.Layout) {
+            ([UIELayout]::Horizontal) {
+                If($this.Children.Count -GT 1) {
+                    [UIEContainer]$Top = $this.Children.Peek()
+
+                    $Child.LeftTop.Column = $Top.RightBottom.Column + 2
+                    $Child.LeftTop.Row    = $Top.LeftTop.Row
+
+                    $this.Children.Push($Child)
+                    $this.UpdateDimensions()
+                } Else {
+                    $this.Children.Push($Child)
+                    $this.UpdateDimensions()
+                }
+            }
+
+            ([UIELayout]::Vertical) {
+                If($this.Children.Count -GT 1) {
+                    [UIEContainer]$Top = $this.Children.Peek()
+
+                    # THIS PADDING CALCULATION MIGHT NEED ADJUSTED
+                    $Child.LeftTop.Row = $Top.RightBottom.Row + 2
+
+                    # ALIGN LEFT TO THE ABOVE CONTAINER
+                    $Child.LeftTop.Column = $Top.LeftTop.Column
+
+                    $this.Children.Push($Child)
+
+                    $this.UpdateDimensions()
+                } Else {
+                    $this.Children.Push($Child)
+                    $this.UpdateDimensions()
+                }
+            }
+
+            Default {}
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
 # WINDOW BASE
 #
 # INTENDED TO BE USED AS THE FOUNDATION FOR MORE SPECIFIC "WINDOWS". THIS CLASS
@@ -12852,29 +12958,9 @@ Class BufferManager {
 #
 ###############################################################################
 Class WindowBase {
-    Static [Int]$BorderDrawColorTop            = 0
-    Static [Int]$BorderDrawColorBottom         = 1
-    Static [Int]$BorderDrawColorLeft           = 2
-    Static [Int]$BorderDrawColorRight          = 3
-
-    Static [Int]$BorderDirtyTop                = 0
-    Static [Int]$BorderDirtyBottom             = 1
-    Static [Int]$BorderDirtyLeft               = 2
-    Static [Int]$BorderDirtyRight              = 3
-
-    Static [Int]$BorderStringTop               = 0
-    Static [Int]$BorderStringBottom            = 1
-    Static [Int]$BorderStringLeft              = 2
-    Static [Int]$BorderStringRight             = 3
-    Static [Int]$BorderStringCornerTopLeft     = 4
-    Static [Int]$BorderStringCornerTopRight    = 5
-    Static [Int]$BorderStringCornerBottomLeft  = 6
-    Static [Int]$BorderStringCornerBottomRight = 7
-
     [ATCoordinates]$LeftTop
     [ATCoordinates]$RightBottom
     [ConsoleColor24[]]$BorderDrawColors
-    [String[]]$BorderStrings
     [Boolean[]]$BorderDrawDirty
     [Int]$Width
     [Int]$Height
@@ -12897,21 +12983,7 @@ Class WindowBase {
             [CCBlack24]::new(),
             [CCBlack24]::new()
         )
-        $this.BorderStrings = [String[]](
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            '',
-            ''
-        )
         $this.BorderDrawDirty = [Boolean[]](
-            $true,
-            $true,
-            $true,
-            $true,
             $true,
             $true,
             $true,
@@ -12925,94 +12997,190 @@ Class WindowBase {
     }
 
     [Void]Draw() {
-        [ATString]$bt = [ATStringNone]::new()
-        [ATString]$bb = [ATStringNone]::new()
-        [ATString]$bl = [ATStringNone]::new()
-        [ATString]$br = [ATStringNone]::new()
+        [ATStringComposite]$Bt = [ATStringComposite]::new()
+        [ATStringComposite]$Bb = [ATStringComposite]::new()
+        [ATStringComposite]$Bl = [ATStringComposite]::new()
+        [ATStringComposite]$Br = [ATStringComposite]::new()
 
-        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] -EQ $true) {
-            $bt = [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorTop]
-                    Coordinates     = $this.LeftTop
-                }
-                UserData = "$($this.BorderStrings[[WindowBase]::BorderStringTop])"
-            }
-            $this.BorderDrawDirty[[WindowBase]::BorderDirtyTop] = $false
-        }
-        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] -EQ $true) {
-            $bb = [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorBottom]
-                    Coordinates     = [ATCoordinates]@{
-                        Row    = $this.RightBottom.Row
-                        Column = $this.LeftTop.Column
+        If($this.BorderDrawDirty[[WindowBorderPart]::Top] -EQ $true) {
+            $Bt = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::LeftTop]
+                        Coordinates     = $this.LeftTop
                     }
-                }
-                UserData = "$($this.BorderStrings[[WindowBase]::BorderStringBottom])"
-            }
-            $this.BorderDrawDirty[[WindowBase]::BorderDirtyBottom] = $false
-        }
-        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] -EQ $true) {
-            $bl = [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft]
-                    Coordinates     = [ATCoordinates]@{
-                        Row    = $this.LeftTop.Row + 1
-                        Column = $this.LeftTop.Column
+                    UserData = $($Script:CurrentWindowDesign[[WindowBorderPart]::LeftTop])
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Top]
                     }
-                }
-                UserData = $(
-                    Invoke-Command -ScriptBlock {
-                        [String]$temp = ''
 
-                        For($a = 0; $a -LT $this.Height; $a++) {
-                            [ATCoordinates]$b = [ATCoordinates]@{
-                                Row    = ($this.LeftTop.Row + 1) + $a
-                                Column = $this.LeftTop.Column
-                            }
-                            $temp += "$($this.BorderStrings[[WindowBase]::BorderStringLeft])$($b.ToAnsiControlSequenceString())"
+                    # I HAVE OFFICIALLY COMMITTED THE CARDINAL SIN OF MULTIPLYING A STRING WITH AN INTEGER
+                    # TO REPEAT INLINE.
+                    # FUCK ME. FUCK ME. FUCK ME.
+                    UserData = $($Script:CurrentWindowDesign[[WindowBorderPart]::Top] * ($this.Width - 1))
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::RightTop]
+                    }
+                    UserData   = $($Script:CurrentWindowDesign[[WindowBorderPart]::RightTop])
+                    UseATReset = $true
+                }
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Top] = $false
+        }
+
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Bottom] -EQ $true) {
+            $Bb = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::LeftBottom]
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.RightBottom.Row
+                            Column = $this.LeftTop.Column
                         }
-
-                        Return $temp
                     }
-                )
-            }
-            $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
-        }
-        If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] -EQ $true) {
-            $br = [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight]
-                    Coordinates     = [ATCoordinates]@{
-                        Row    = $this.LeftTop.Row + 1
-                        Column = $this.RightBottom.Column + 1
+                    UserData = $($Script:CurrentWindowDesign[[WindowBorderPart]::LeftBottom])
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Bottom]
                     }
+                    UserData = $($Script:CurrentWindowDesign[[WindowBorderPart]::Bottom] * ($this.Width - 1))
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::RightBottom]
+                    }
+                    UserData   = $($Script:CurrentWindowDesign[[WindowBorderPart]::RightBottom])
+                    UseATReset = $true
                 }
-                UserData = $(
-                    Invoke-Command -ScriptBlock {
-                        [String]$temp = ''
-
-                        For($a = 0; $a -LT $this.Height; $a++) {
-                            [ATCoordinates]$b = [ATCoordinates]@{
-                                Row    = ($this.LeftTop.Row + 1) + $a
-                                Column = $this.RightBottom.Column + 1
-                            }
-                            $temp += "$($this.BorderStrings[[WindowBase]::BorderStringRight])$($b.ToAnsiControlSequenceString())"
-                        }
-
-                        Return $temp
-                    }
-                )
-            }
-            $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Bottom] = $false
         }
 
-        Write-Host "$($bt.ToAnsiControlSequenceString())$($bb.ToAnsiControlSequenceString())$($bl.ToAnsiControlSequenceString())$($br.ToAnsiControlSequenceString())"
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Left] -EQ $true) {
+            # THE CORNERS WILL ALREADY HAVE BEEN DRAWN AT THIS POINT, SO WE JUST NEED TO REPEAT THE LEFT CHARACTER VERTICALLY
+            $Bl = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Left]
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.LeftTop.Row + 1
+                            Column = $this.LeftTop.Column
+                        }
+                    }
+                    UserData = $(
+                        Invoke-Command -ScriptBlock {
+                            [String]$T = ''
+
+                            For($A = 0; $A -LT $this.Height; $A++) {
+                                [ATCoordinates]$B = [ATCoordinates]@{
+                                    Row    = ($this.LeftTop.Row + 1) + $A
+                                    Column = $this.LeftTop.Column
+                                }
+                                $T += "$($Script:CurrentWindowDesign[[WindowBorderPart]::Left])$($B.ToAnsiControlSequenceString())"
+                            }
+
+                            Return $T
+                        }
+                    )
+                }
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Left] = $true
+        }
+        # If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] -EQ $true) {
+        #     $bl = [ATString]@{
+        #         Prefix = [ATStringPrefix]@{
+        #             ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft]
+        #             Coordinates     = [ATCoordinates]@{
+        #                 Row    = $this.LeftTop.Row + 1
+        #                 Column = $this.LeftTop.Column
+        #             }
+        #         }
+        #         UserData = $(
+        #             Invoke-Command -ScriptBlock {
+        #                 [String]$temp = ''
+
+        #                 For($a = 0; $a -LT $this.Height; $a++) {
+        #                     [ATCoordinates]$b = [ATCoordinates]@{
+        #                         Row    = ($this.LeftTop.Row + 1) + $a
+        #                         Column = $this.LeftTop.Column
+        #                     }
+        #                     $temp += "$($this.BorderStrings[[WindowBase]::BorderStringLeft])$($b.ToAnsiControlSequenceString())"
+        #                 }
+
+        #                 Return $temp
+        #             }
+        #         )
+        #     }
+        #     $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
+        # }
+
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Right] -EQ $true) {
+            $Br = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Right]
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.LeftTop.Row + 1
+                            Column = $this.RightBottom.Column
+                        }
+                    }
+                    UserData = $(
+                        Invoke-Command -ScriptBlock {
+                            [String]$T = ''
+
+                            For($A = 0; $A -LT $this.Height; $A++) {
+                                [ATCoordinates]$B = [ATCoordinates]@{
+                                    Row    = ($this.LeftTop.Row + 1) + $A
+                                    Column = $this.RightBottom.Column
+                                }
+                                $T += "$($Script:CurrentWindowDesign[[WindowBorderPart]::Right])$($B.ToAnsiControlSequenceString())"
+                            }
+
+                            Return $T
+                        }
+                    )
+                }
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Right] = $false
+        }
+        # If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] -EQ $true) {
+        #     $br = [ATString]@{
+        #         Prefix = [ATStringPrefix]@{
+        #             ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight]
+        #             Coordinates     = [ATCoordinates]@{
+        #                 Row    = $this.LeftTop.Row + 1
+        #                 Column = $this.RightBottom.Column + 1
+        #             }
+        #         }
+        #         UserData = $(
+        #             Invoke-Command -ScriptBlock {
+        #                 [String]$temp = ''
+
+        #                 For($a = 0; $a -LT $this.Height; $a++) {
+        #                     [ATCoordinates]$b = [ATCoordinates]@{
+        #                         Row    = ($this.LeftTop.Row + 1) + $a
+        #                         Column = $this.RightBottom.Column + 1
+        #                     }
+        #                     $temp += "$($this.BorderStrings[[WindowBase]::BorderStringRight])$($b.ToAnsiControlSequenceString())"
+        #                 }
+
+        #                 Return $temp
+        #             }
+        #         )
+        #     }
+        #     $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
+        # }
+
+        Write-Host "$($Bt.ToAnsiControlSequenceString())$($Bb.ToAnsiControlSequenceString())$($Bl.ToAnsiControlSequenceString())$($Br.ToAnsiControlSequenceString())"
 
         If($this.UseTitle -EQ $true) {
             If($this.TitleDirty -EQ $true) {
-                [ATString]$a = [ATString]@{
+                [ATString]$A = [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = $this.TitleColor
                         Coordinates     = [ATCoordinates]@{
@@ -13024,7 +13192,7 @@ Class WindowBase {
                     UseATReset = $true
                 }
 
-                Write-Host "$($a.ToAnsiControlSequenceString())"
+                Write-Host "$($A.ToAnsiControlSequenceString())"
                 $this.TitleDirty = $false
             }
         }
@@ -13101,15 +13269,20 @@ Class StatusWindow : WindowBase {
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
             [CCTextDefault24]::new()
         )
-        $this.BorderStrings = [String[]](
-            [StatusWindow]::WindowBorderHorizontal,
-            [StatusWindow]::WindowBorderHorizontal,
-            [StatusWindow]::WindowBorderLeft,
-            [StatusWindow]::WindowBorderRight
-        )
+        # $this.BorderStrings = [String[]](
+        #     [StatusWindow]::WindowBorderHorizontal,
+        #     [StatusWindow]::WindowBorderHorizontal,
+        #     [StatusWindow]::WindowBorderLeft,
+        #     [StatusWindow]::WindowBorderRight
+        # )
         $this.UpdateDimensions()
+        $this.SetupTitle('Status', [CCTextDefault24]::new())
 
         $this.PlayerNameDrawDirty = $true
         $this.PlayerHpDrawDirty   = $true
@@ -13490,7 +13663,7 @@ Class CommandWindow : WindowBase {
     Static [String]$WindowBorderHorizontal = '@--~---~---~---~---@'
     Static [String]$WindowBorderLeft       = '|'
     Static [String]$WindowBorderRight      = '|'
-    Static [String]$WindowCommandDiv       = '``````````````````'
+    Static [String]$WindowCommandDiv       = '─────────────────'
 
     Static [ATCoordinates]$CommandDivDrawCoordinates      = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryEDrawCoordinates = [ATCoordinatesNone]::new()
@@ -13520,17 +13693,22 @@ Class CommandWindow : WindowBase {
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
             [CCWhite24]::new()
         )
 
-        $this.BorderStrings = [String[]](
-            [CommandWindow]::WindowBorderHorizontal,
-            [CommandWindow]::WindowBorderHorizontal,
-            [CommandWindow]::WindowBorderLeft,
-            [CommandWindow]::WindowBorderRight
-        )
+        # $this.BorderStrings = [String[]](
+        #     [CommandWindow]::WindowBorderHorizontal,
+        #     [CommandWindow]::WindowBorderHorizontal,
+        #     [CommandWindow]::WindowBorderLeft,
+        #     [CommandWindow]::WindowBorderRight
+        # )
 
         $this.UpdateDimensions()
+        $this.SetupTitle('Commands', [CCTextDefault24]::new())
 
         $this.CommandDivDirty     = $true
         $this.CommandHistoryDirty = $false
@@ -13574,14 +13752,14 @@ Class CommandWindow : WindowBase {
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CommandWindow]::HistoryBlankColor
             }
-            UserData   = '                  '
+            UserData   = '                 '
             UseATReset = $true
         }
         [CommandWindow]::CommandHistBlank = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CommandWindow]::HistoryBlankColor
             }
-            UserData   = '                  '
+            UserData   = '                 '
             UseATReset = $true
         }
 
@@ -13655,7 +13833,7 @@ Class CommandWindow : WindowBase {
         $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         While($keyCap.VirtualKeyCode -NE 13) {
             $cpx = $Script:Rui.CursorPosition.X
-            If($cpx -GE 19) {
+            If($cpx -GE 18) {
                 Break
             }
             Switch($keyCap.VirtualKeyCode) {
@@ -13779,7 +13957,7 @@ Class SceneWindow : WindowBase {
     Static [Int]$WindowLTRow           = 1
     Static [Int]$WindowLTColumn        = 30
     Static [Int]$WindowRBRow           = 20
-    Static [Int]$WindowRBColumn        = 78
+    Static [Int]$WindowRBColumn        = 79
     Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
 
@@ -13800,15 +13978,20 @@ Class SceneWindow : WindowBase {
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
             [CCWhite24]::new()
         )
-        $this.BorderStrings = [String[]](
-            [SceneWindow]::WindowBorderHorizontal,
-            [SceneWindow]::WindowBorderHorizontal,
-            [SceneWindow]::WindowBorderLeft,
-            [SceneWindow]::WindowBorderRight
-        )
+        # $this.BorderStrings = [String[]](
+        #     [SceneWindow]::WindowBorderHorizontal,
+        #     [SceneWindow]::WindowBorderHorizontal,
+        #     [SceneWindow]::WindowBorderLeft,
+        #     [SceneWindow]::WindowBorderRight
+        # )
         $this.UpdateDimensions()
+        $this.SetupTitle('Scene', [CCTextDefault24]::new())
 
         $this.SceneImageDirty = $true
         $this.Image           = [SIEmpty]::new()
@@ -13876,20 +14059,25 @@ Class MessageWindow : WindowBase {
 
     MessageWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
-        $this.RightBottom      = [ATCoordinates]::new(25, 78)
+        $this.RightBottom      = [ATCoordinates]::new(25, 79)
         $this.BorderDrawColors = [ConsoleColor24[]](
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
+            [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new(),
             [CCWhite24]::new()
         )
-        $this.BorderStrings = [String[]](
-            [MessageWindow]::WindowBorderHorizontal,
-            [MessageWindow]::WindowBorderHorizontal,
-            [MessageWindow]::WindowBorderLeft,
-            [MessageWindow]::WindowBorderRight
-        )
+        # $this.BorderStrings = [String[]](
+        #     [MessageWindow]::WindowBorderHorizontal,
+        #     [MessageWindow]::WindowBorderHorizontal,
+        #     [MessageWindow]::WindowBorderLeft,
+        #     [MessageWindow]::WindowBorderRight
+        # )
         $this.UpdateDimensions()
+        $this.SetupTitle('Messages', [CCTextDefault24]::new())
 
         [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]@{
             Row    = ($this.RightBottom.Row - 1)
@@ -20627,4 +20815,4 @@ $Script:ThePlayer.ActionInventory.Add([BASunfire]::new()) | Out-Null
 #     0
 # )
 
-$Script:TheGameCore.Run()
+# $Script:TheGameCore.Run()
