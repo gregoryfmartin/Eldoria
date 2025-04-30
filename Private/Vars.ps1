@@ -702,6 +702,46 @@ Function Initialize-EldVars {
         New-EldVar -Name 'PlayerBepLuckValidateFunction' -Data {}
         New-EldVar -Name 'PlayerBepAccuracyValidateFunction' -Data {}
 
+        # Variables that pertain to the Battle Action Punch
+        New-EldVar -Name 'BAPunchName' -Data 'Punch' -ReadOnly
+        New-EldVar -Name 'BAPunchDesc' -Data 'A punch. Just like data taught you.' -ReadOnly
+        New-EldVar -Name 'BAPunchType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAPunchMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAPunchEffectValue' -Data 50 -ReadOnly
+        New-EldVar -Name 'BAPunchChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Kick
+        New-EldVar -Name 'BAKickName' -Data 'Kick' -ReadOnly
+        New-EldVar -Name 'BAKickDesc' -Data 'A kick. Don''t stub your toe.'
+        New-EldVar -Name 'BAKickType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAKickMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAKickEffectValue' -Data 50 -ReadOnly
+        New-EldVar -Name 'BAKickChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Karate Chop
+        New-EldVar -Name 'BAKarateChopName' -Data 'Karate Chop' -ReadOnly
+        New-EldVar -Name 'BAKarateChopDesc' -Data 'Test your might!' -ReadOnly
+        New-EldVar -Name 'BAKarateChopType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAKarateChopMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAKarateChopEffectValue' -Data 60 -ReadOnly
+        New-EldVar -Name 'BAKarateChopChance' -Data 0.8 -ReadOnly
+
+        # Variables that pertain to the Battle Action Karate Kick
+        New-EldVar -Name 'BAKarateKickName' -Data 'Karate Kick' -ReadOnly
+        New-EldVar -Name 'BAKarateKickDesc' -Data 'I hope your shins are fit' -ReadOnly
+        New-EldVar -Name 'BAKarateKickType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAKarateKickMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAKarateKickEffectValue' -Data 65 -ReadOnly
+        New-EldVar -Name 'BAKarateKickChance' -Data 0.75 -ReadOnly
+
+        # Variables that pertain to the Battle Action Bash
+        New-EldVar -Name 'BABashName' -Data 'Bash' -ReadOnly
+        New-EldVar -Name 'BABashDesc' -Data 'HULK SMASH!' -ReadOnly
+        New-EldVar -Name 'BABashType' -Data [BattleActionType]::Physical
+        New-EldVar -Name 'BABashMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BABashEffectValue' -Data 75 -ReadOnly
+        New-EldVar -Name 'BABashChance' -Data 0.7 -ReadOnly
+
         Write-Progress -Activity 'Setting Up Globals' -Id 1 -PercentComplete -1 -Completed
     }
 }
