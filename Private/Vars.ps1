@@ -737,10 +737,474 @@ Function Initialize-EldVars {
         # Variables that pertain to the Battle Action Bash
         New-EldVar -Name 'BABashName' -Data 'Bash' -ReadOnly
         New-EldVar -Name 'BABashDesc' -Data 'HULK SMASH!' -ReadOnly
-        New-EldVar -Name 'BABashType' -Data [BattleActionType]::Physical
+        New-EldVar -Name 'BABashType' -Data [BattleActionType]::Physical -ReadOnly
         New-EldVar -Name 'BABashMpCost' -Data 0 -ReadOnly
         New-EldVar -Name 'BABashEffectValue' -Data 75 -ReadOnly
         New-EldVar -Name 'BABashChance' -Data 0.7 -ReadOnly
+
+        # Variables that pertain to the Battle Action Bite
+        New-EldVar -Name 'BABiteName' -Data 'Bite' -ReadOnly
+        New-EldVar -Name 'BABiteDesc' -Data 'When fists fail, teeth do just fine.' -ReadOnly
+        New-EldVar -Name 'BABiteType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BABiteMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BABiteEffectValue' -Data 40 -ReadOnly
+        New-EldVar -Name 'BABiteChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Scratch
+        New-EldVar -Name 'BAScratchName' -Data 'Scratch' -ReadOnly
+        New-EldVar -Name 'BAScratchDesc' -Data 'Nails are sometimes useful.' -ReadOnly
+        New-EldVar -Name 'BAScratchType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAScratchMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAScratchEffectValue' -Data 45 -ReadOnly
+        New-EldVar -Name 'BAScratchChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Double Scratch
+        New-EldVar -Name 'BADoubleScratchName' -Data 'Double Scratch' -ReadOnly
+        New-EldVar -Name 'BADoubleScratchDesc' -Data 'The manicure on these is lethal.' -ReadOnly
+        New-EldVar -Name 'BADoubleScratchType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BADoubleScratchMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BADoubleScratchEffectValue' -Data 85 -ReadOnly
+        New-EldVar -Name 'BADoubleScratchChance' -Data 0.75 -ReadOnly
+
+        # Variables that pertain to the Battle Action Headbutt
+        New-EldVar -Name 'BAHeadbuttName' -Data 'Headbutt' -ReadOnly
+        New-EldVar -Name 'BAHeadbuttDesc' -Data 'Put that noggin to work!' -ReadOnly
+        New-EldVar -Name 'BAHeadbuttType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAHeadbuttMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAHeadbuttEffectValue' -Data 160 -ReadOnly
+        New-EldVar -Name 'BAHeadbuttChance' -Data 0.4 -ReadOnly
+
+        # Variables that pertain to the Battle Action Drop Kick
+        New-EldVar -Name 'BADropKickName' -Data 'Drop Kick' -ReadOnly
+        New-EldVar -Name 'BADropKickDesc' -Data 'Don''t use this on Murphy.' -ReadOnly
+        New-EldVar -Name 'BADropKickType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BADropKickMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BADropKickEffectValue' -Data 120 -ReadOnly
+        New-EldVar -Name 'BADropKickChance' -Data 0.3 -ReadOnly
+
+        # Variables that pertain to the Battle Action Throw
+        New-EldVar -Name 'BAThrowName' -Data 'Throw' -ReadOnly
+        New-EldVar -Name 'BAThrowDesc' -Data 'One man''s trash is a useful weapon.' -ReadOnly
+        New-EldVar -Name 'BAThrowType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAThrowMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAThrowEffectValue' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAThrowChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Peck
+        New-EldVar -Name 'BAPeckName' -Data 'Peck' -ReadOnly
+        New-EldVar -Name 'BAPeckDesc' -Data 'One from Grandma usually means cookies later.' -ReadOnly
+        New-EldVar -Name 'BAPeckType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAPeckMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAPeckEffectValue' -Data 20 -ReadOnly
+        New-EldVar -Name 'BAPeckChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Talon Stab
+        New-EldVar -Name 'BATalonStabName' -Data 'Talon Stab' -ReadOnly
+        New-EldVar -Name 'BATalonStabDesc' -Data 'You don''t want a hug from these.' -ReadOnly
+        New-EldVar -Name 'BATalonStabType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BATalonStabMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BATalonStabEffectValue' -Data 70 -ReadOnly
+        New-EldVar -Name 'BATalonStabChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Sword Slash
+        New-EldVar -Name 'BASwordSlashName' -Data 'Sword Slash' -ReadOnly
+        New-EldVar -Name 'BASwordSlashDesc' -Data 'A basic sword attack.' -ReadOnly
+        New-EldVar -Name 'BASwordSlashType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BASwordSlashMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BASwordSlashEffectValue' -Data 60 -ReadOnly
+        New-EldVar -Name 'BASwordSlashChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Sword Stab
+        New-EldVar -Name 'BASwordStabName' -Data 'Sword Stab' -ReadOnly
+        New-EldVar -Name 'BASwordStabDesc' -Data 'This was practiced with toothpicks.' -ReadOnly
+        New-EldVar -Name 'BASwordStabType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BASwordStabMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BASwordStabEffectValue' -Data 80 -ReadOnly
+        New-EldVar -Name 'BASwordStabChance' -Data 0.7 -ReadOnly
+
+        # Variables that pertain to the Battle Action Axe Slash
+        New-EldVar -Name 'BAAxeSlashName' -Data 'Axe Slash' -ReadOnly
+        New-EldVar -Name 'BAAxeSlashDesc' -Data 'Chopping trees pays off.' -ReadOnly
+        New-EldVar -Name 'BAAxeSlashType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAAxeSlashMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAAxeSlashEffectValue' -Data 70 -ReadOnly
+        New-EldVar -Name 'BAAxeSlashChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Axe Cleave
+        New-EldVar -Name 'BAAxeCleaveName' -Data 'Axe Cleave' -ReadOnly
+        New-EldVar -Name 'BAAxeCleaveDesc' -Data 'Before his fury, the trees stood no chance.' -ReadOnly
+        New-EldVar -Name 'BAAxeCleaveType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAAxeCleaveMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAAxeCleaveEffectValue' -Data 90 -ReadOnly
+        New-EldVar -Name 'BAAxeCleaveChance' -Data 0.8 -ReadOnly
+
+        # Variables that pertain to the Battle Action Axe Throw
+        New-EldVar -Name 'BAAxeThrowName' -Data 'Axe Throw' -ReadOnly
+        New-EldVar -Name 'BAAxeThrowDesc' -Data 'Dont''t let one hit you on the way out.' -ReadOnly
+        New-EldVar -Name 'BAAxeThrowType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAAxeThrowMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAAxeThrowEffectValue' -Data 180 -ReadOnly
+        New-EldVar -Name 'BAAxeThrowChance' -Data 0.3 -ReadOnly
+
+        # Variables that pertain to the Battle Action Knife Stab
+        New-EldVar -Name 'BAKnifeStabName' -Data 'Knife Stab' -ReadOnly
+        New-EldVar -Name 'BAKnifeStabDesc' -Data 'Just a little prick, right?' -ReadOnly
+        New-EldVar -Name 'BAKnifeStabType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAKnifeStabMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAKnifeStabEffectValue' -Data 40 -ReadOnly
+        New-EldVar -Name 'BAKnifeStabChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Knife Throw
+        New-EldVar -Name 'BAKnifeThrowName' -Data 'Knife Throw' -ReadOnly
+        New-EldVar -Name 'BAKnifeThrowDesc' -Data 'Like throwing dats, but cooler.' -ReadOnly
+        New-EldVar -Name 'BAKnifeThrowType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAKnifeThrowMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAKnifeThrowEffectValue' -Data 80 -ReadOnly
+        New-EldVar -Name 'BAKnifeThrowChance' -Data 0.3 -ReadOnly
+
+        # Variables that pertain to the Battle Action Club Swing
+        New-EldVar -Name 'BAClubSwingName' -Data 'Club Swing' -ReadOnly
+        New-EldVar -Name 'BAClubSwingDesc' -Data 'Me Ooga. Me swing-um big-um sick.' -ReadOnly
+        New-EldVar -Name 'BAClubSwingType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAClubSwingMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAClubSwingEffectValue' -Data 70 -ReadOnly
+        New-EldVar -Name 'BAClubSwingChance' -Data 0.7 -ReadOnly
+
+        # Variables that pertain to the Battle Action Homerun Hit
+        New-EldVar -Name 'BAHomerunHitName' -Data 'Homerun Hit' -ReadOnly
+        New-EldVar -Name 'BAHomerunHitDesc' -Data 'Swing, batter... SWING!' -ReadOnly
+        New-EldVar -Name 'BAHomerunHitType' -Data [BattleActionType]::Physical -ReadOnly
+        New-EldVar -Name 'BAHomerunHitMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BAHomerunHitEffectValue' -Data 75 -ReadOnly
+        New-EldVar -Name 'BAHomerunHitChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Flame Punch
+        New-EldVar -Name 'BAFlamePunchName' -Data 'Flame Punch' -ReadOnly
+        New-EldVar -Name 'BAFlamePunchDesc' -Data 'Flaming fists of fury.' -ReadOnly
+        New-EldVar -Name 'BAFlamePunchType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAFlamePunchMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BAFlamePunchEffectChance' -Data 75 -ReadOnly
+        New-EldVar -Name 'BAFlamePunchChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Flame Kick
+        New-EldVar -Name 'BAFlameKickName' -Data 'Flame Kick' -ReadOnly
+        New-EldVar -Name 'BAFlameKickDesc' -Data 'I got canned heat on my heels.' -ReadOnly
+        New-EldVar -Name 'BAFlameKickType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAFlameKickMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BAFlameKickEffectChance' -Data 85 -ReadOnly
+        New-EldVar -Name 'BAFlameKickChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Fireball
+        New-EldVar -Name 'BAFireballName' -Data 'Fireball' -ReadOnly
+        New-EldVar -Name 'BAFireballDesc' -Data 'That''s a spicy meatball!' -ReadOnly
+        New-EldVar -Name 'BAFireballType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAFireballMpCost' -Data 7 -ReadOnly
+        New-EldVar -Name 'BAFireballEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BAFireballChance' -Data 0.75 -ReadOnly
+
+        # Variables that pertain to the Battle Action Mortar Toss
+        New-EldVar -Name 'BAMortarTossName' -Data 'Mortar Toss' -ReadOnly
+        New-EldVar -Name 'BAMortarTossDesc' -Data 'An esploozshun of firez.' -ReadOnly
+        New-EldVar -Name 'BAMortarTossType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAMortarTossMpCost' -Data 9 -ReadOnly
+        New-EldVar -Name 'BAMortarTossEffectChance' -Data 100 -ReadOnly
+        New-EldVar -Name 'BAMortarTossChance' -Data 0.7 -ReadOnly
+
+        # Variables that pertain to the Battle Action IKill
+        New-EldVar -Name 'BAIKillName' -Data 'IKill' -ReadOnly
+        New-EldVar -Name 'BAIKillDesc' -Data 'Insta death.' -ReadOnly
+        New-EldVar -Name 'BAIKillType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAIKillMpCost' -Data 0 -ReadOnly
+        New-EldVar -Name 'BAIKillEffectChance' -Data 50000 -ReadOnly
+        New-EldVar -Name 'BAIKillChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Blaze Burst
+        New-EldVar -Name 'BABlazeBurstName' -Data 'Blaze Burst' -ReadOnly
+        New-EldVar -Name 'BABlazeBurstDesc' -Data 'Like an arc flash, only worse.' -ReadOnly
+        New-EldVar -Name 'BABlazeBurstType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BABlazeBurstMpCost' -Data 10 -ReadOnly
+        New-EldVar -Name 'BABlazeBurstEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BABlazeBurstChance' -Data 0.8 -ReadOnly
+
+        # Variables that pertain to the Battle Action Flamethrower
+        New-EldVar -Name 'BAFlamethrowerName' -Data 'Flamethrower' -ReadOnly
+        New-EldVar -Name 'BAFlamethrowerDesc' -Data 'Our inspiration was Elon.' -ReadOnly
+        New-EldVar -Name 'BAFlamethrowerType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAFlamethrowerMpCost' -Data 10 -ReadOnly
+        New-EldVar -Name 'BAFlamethrowerEffectChance' -Data 90 -ReadOnly
+        New-EldVar -Name 'BAFlamethrowerChance' -Data 0.7 -ReadOnly
+
+        # Variables that pertain to the Battle Action Ember Slash
+        New-EldVar -Name 'BAEmberSlashName' -Data 'Ember Slash' -ReadOnly
+        New-EldVar -Name 'BAEmberSlashDesc' -Data 'At least the wound is cauterized.' -ReadOnly
+        New-EldVar -Name 'BAEmberSlashType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAEmberSlashMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BAEmberSlashEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BAEmberSlashChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Pyroblast
+        New-EldVar -Name 'BAPyroblastName' -Data 'Pyroblast' -ReadOnly
+        New-EldVar -Name 'BAPyroblastDesc' -Data 'Fireworks never looked so good.' -ReadOnly
+        New-EldVar -Name 'BAPyroblastType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAPyroblastMpCost' -Data 15 -ReadOnly
+        New-EldVar -Name 'BAPyroblastEffectChance' -Data 110 -ReadOnly
+        New-EldVar -Name 'BAPyroblastChance' -Data 0.6 -ReadOnly
+
+        # Variables that pertain to the Battle Action Ashen Nova
+        New-EldVar -Name 'BAAshenNovaName' -Data 'Ashen Nova' -ReadOnly
+        New-EldVar -Name 'BAAshenNovaDesc' -Data 'Reminds me of Pompeii. Only worse.' -ReadOnly
+        New-EldVar -Name 'BAAshenNovaType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAAshenNovaMpCost' -Data 50 -ReadOnly
+        New-EldVar -Name 'BAAshenNovaEffectChance' -Data 250 -ReadOnly
+        New-EldVar -Name 'BAAshenNovaChance' -Data 0.5 -ReadOnly
+
+        # Variables that pertain to the Battle Action Incenerate
+        New-EldVar -Name 'BAIncenerateName' -Data 'Incenerate' -ReadOnly
+        New-EldVar -Name 'BAIncenerateDesc' -Data 'Kill it with fire, they said.' -ReadOnly
+        New-EldVar -Name 'BAIncenerateType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BAIncenerateMpCost' -Data 20 -ReadOnly
+        New-EldVar -Name 'BAIncenerateEffectChance' -Data 120 -ReadOnly
+        New-EldVar -Name 'BAIncenerateChance' -Data 0.7 -ReadOnly
+
+        # Variables that pertain to the Battle Action Cinder Storm
+        New-EldVar -Name 'BACinderStormName' -Data 'Cinder Storm' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Hot coal hail. Yum.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 60 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Lava Surge
+        New-EldVar -Name 'BACinderStormName' -Data 'Lava Surge' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'It''s like a surge of love, only the molten kind.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 15 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 100 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 1.0 -ReadOnly
+
+        # Variables that pertain to the Battle Action Fire Cataclysm
+        New-EldVar -Name 'BACinderStormName' -Data "$((Get-EldVar -Name 'BATAdornmentCharTable').Value[[BattleActionType]::ElementalFire].Item1) Cataclysm" -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'It''s like a surge of love, only the molten kind.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalFire -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 50 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 250 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.5 -ReadOnly
+
+        # Variables that pertain to the Battle Action Ice Punch
+        New-EldVar -Name 'BACinderStormName' -Data 'Ice Punch' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Frigid AND stiff.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Frost Kick
+        New-EldVar -Name 'BACinderStormName' -Data 'Frost Kick' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Ice on the knee. It''s a thing.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Icicle Strike
+        New-EldVar -Name 'BACinderStormName' -Data 'Icicle Strike' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'When they''re this big, who needs a sword?' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Glacial Spike
+        New-EldVar -Name 'BACinderStormName' -Data 'Glacial Spike' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Global warming helped me make this one.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Chill Slash
+        New-EldVar -Name 'BACinderStormName' -Data 'Chill Slash' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Let''s all cool down, yeah?' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Ice Bolt
+        New-EldVar -Name 'BACinderStormName' -Data 'Ice Bolt' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Not the kind of bolt you secure things with.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Arctic Blast
+        New-EldVar -Name 'BACinderStormName' -Data 'Arctic Blast' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Oh you won''t be long for gettin'' frushbit, now!' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+        
+        # Variables that pertain to the Battle Action Frost Wave
+        New-EldVar -Name 'BACinderStormName' -Data 'Frost Wave' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Ride the wave, dude.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Arctic Fury
+        New-EldVar -Name 'BACinderStormName' -Data 'Arctic Fury' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'An ass whooping is a dish best served cold.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Frozen Spear
+        New-EldVar -Name 'BACinderStormName' -Data 'Frozen Spear' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'I found this spear in a fridge.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Hailstorm
+        New-EldVar -Name 'BACinderStormName' -Data 'Hailstorm' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'A common cause of insurance claims.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Icefall Slam
+        New-EldVar -Name 'BACinderStormName' -Data 'Icefall Slam' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Not avoiding the avalance is a bad idea.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Ice Cataclysm
+        New-EldVar -Name 'BACinderStormName' -Data "$((Get-EldVar -Name 'BATAdornmentCharTable').Value[[BattleActionType]::ElementalIce].Item1) Cataclysm" -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Frigid AND stiff' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalIce -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Aqua Jet
+        New-EldVar -Name 'BACinderStormName' -Data 'Aqua Jet' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'A Boeing 737 made entirely of water.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Tidal Surge
+        New-EldVar -Name 'BACinderStormName' -Data 'Tidal Surge' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'They ebb, they flow, they attac.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Water Whip
+        New-EldVar -Name 'BACinderStormName' -Data 'Water Whip' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Indiana Jones''s least favorite whip.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Mist Strike
+        New-EldVar -Name 'BACinderStormName' -Data 'Mist Strike' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Was it a cat I saw? Was I tac a ti saw?' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Hydro Slash
+        New-EldVar -Name 'BACinderStormName' -Data 'Hydro Slash' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'A moistened bint lobbed this scimitar at me' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Wave Punch
+        New-EldVar -Name 'BACinderStormName' -Data 'Wave Punch' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'The latest Hawaiian Punch flavor. Swelling aftertaste.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Aquatic Bolt
+        New-EldVar -Name 'BACinderStormName' -Data 'Aquatic Bolt' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Some watery things to pelt your neighbor with.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Aqua Sphere
+        New-EldVar -Name 'BACinderStormName' -Data 'Aqua Sphere' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Listen to ''Barbie Girl'' all day long. Enjoy.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Tidal Crush
+        New-EldVar -Name 'BACinderStormName' -Data 'Tidal Crush' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Your high school crush came to kill you, in water form.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Tsunami
+        New-EldVar -Name 'BACinderStormName' -Data 'Tsunami' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'WAVES!' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Seafoam Bolt
+        New-EldVar -Name 'BACinderStormName' -Data 'Seafoam Bolt' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Sometimes I see these white bubbles on the shore.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Typhoon
+        New-EldVar -Name 'BACinderStormName' -Data 'Typhoon' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Not to be confused with the infamous Tie Foon.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Raindance
+        New-EldVar -Name 'BACinderStormName' -Data 'Raindance' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Like Riverdance, only shit.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
+
+        # Variables that pertain to the Battle Action Watery Grave
+        New-EldVar -Name 'BACinderStormName' -Data 'Watery Grave' -ReadOnly
+        New-EldVar -Name 'BACinderStormDesc' -Data 'Davey Jones is holed up here.' -ReadOnly
+        New-EldVar -Name 'BACinderStormType' -Data [BattleActionType]::ElementalWater -ReadOnly
+        New-EldVar -Name 'BACinderStormMpCost' -Data 5 -ReadOnly
+        New-EldVar -Name 'BACinderStormEffectChance' -Data 80 -ReadOnly
+        New-EldVar -Name 'BACinderStormChance' -Data 0.9 -ReadOnly
 
         Write-Progress -Activity 'Setting Up Globals' -Id 1 -PercentComplete -1 -Completed
     }
