@@ -15664,7 +15664,7 @@ Class BattleEntityStatusWindow : WindowBase {
     Static [String]$WindowBorderHorizontal = '*------------------*'
     Static [String]$WindowBorderLeft       = '|'
     Static [String]$WindowBorderRight      = '|'
-    Static [String]$FullLineBlankActual    = '                 '
+    Static [String]$FullLineBlankActual    = '                '
 
     [ATCoordinates]$NameDrawCoordinates
     [ATCoordinates]$HpDrawCoordinates
@@ -16900,12 +16900,12 @@ Class BattleStatusMessageWindow : WindowBase {
     Static [Int]$WindowLTRow        = 18
     Static [Int]$WindowLTColumn     = 22
     Static [Int]$WindowRBRow        = 24
-    Static [Int]$WindowRBColumn     = 80
+    Static [Int]$WindowRBColumn     = 81
 
     Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
     Static [String]$WindowBorderLeft       = '|'
     Static [String]$WindowBorderRight      = '|'
-    Static [String]$MessageBlankActual     = '                                                          '
+    Static [String]$MessageBlankActual     = '                                                         '
 
     Static [Single]$MessageSleepTime = 0.2
 
@@ -18061,7 +18061,7 @@ Class BattleEnemyImageWindow : WindowBase {
     Static [Int]$WindowLTRow           = 1
     Static [Int]$WindowLTColumn        = 43
     Static [Int]$WindowRBRow           = 17
-    Static [Int]$WindowRBColumn        = 80
+    Static [Int]$WindowRBColumn        = 81
     Static [Int]$ImageDrawRowOffset    = [BattleEnemyImageWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [BattleEnemyImageWindow]::WindowLTColumn + 1
 
@@ -18092,12 +18092,6 @@ Class BattleEnemyImageWindow : WindowBase {
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     "$([BattleEnemyImageWindow]::WindowBorderHorizontal)",
-        #     "$([BattleEnemyImageWindow]::WindowBorderHorizontal)",
-        #     "$([BattleEnemyImageWindow]::WindowBorderLeft)",
-        #     "$([BattleEnemyImageWindow]::WindowBorderRight)"
-        # )
         $this.UpdateDimensions()
 
         $this.ImageDirty      = $true
