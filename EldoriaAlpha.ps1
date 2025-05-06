@@ -12968,6 +12968,7 @@ Class WindowBase {
     [String]$Title
     [Boolean]$UseTitle
     [Boolean]$TitleDirty
+    [Boolean]$ComplexTitle
     [ConsoleColor24]$TitleColor
 
     WindowBase() {
@@ -12989,10 +12990,11 @@ Class WindowBase {
             $true,
             $true
         )
-        $this.Title      = ''
-        $this.UseTitle   = $false
-        $this.TitleDirty = $false
-        $this.TitleColor = [CCTextDefault24]::new()
+        $this.Title        = ''
+        $this.UseTitle     = $false
+        $this.TitleDirty   = $false
+        $this.ComplexTitle = $false
+        $this.TitleColor   = [CCTextDefault24]::new()
         $this.UpdateDimensions()
     }
 
@@ -13128,8 +13130,8 @@ Class WindowBase {
             If($this.TitleDirty -EQ $true) {
                 [ATString]$A = [ATString]@{
                     Prefix = [ATStringPrefix]@{
-                        ForegroundColor = $this.TitleColor
-                        Coordinates     = [ATCoordinates]@{
+                        # ForegroundColor = $this.TitleColor
+                        Coordinates = [ATCoordinates]@{
                             Row    = $this.LeftTop.Row
                             Column = $this.LeftTop.Column + 2
                         }
@@ -15666,7 +15668,7 @@ Class BattleEntityStatusWindow : WindowBase {
     Static [String]$WindowBorderRight      = '|'
     Static [String]$FullLineBlankActual    = '                '
 
-    [ATCoordinates]$NameDrawCoordinates
+    # [ATCoordinates]$NameDrawCoordinates
     [ATCoordinates]$HpDrawCoordinates
     [ATCoordinates]$MpDrawCoordinates
     [ATCoordinates]$StatL1DrawCoordinates
@@ -15677,7 +15679,7 @@ Class BattleEntityStatusWindow : WindowBase {
     [Int]$WindowLTColumn
     [Int]$WindowRBRow
     [Int]$WindowRBColumn
-    [Boolean]$NameDrawDirty
+    # [Boolean]$NameDrawDirty
     [Boolean]$HpDrawDirty
     [Boolean]$MpDrawDirty
     [Boolean]$StatL1DrawDirty
@@ -15687,7 +15689,7 @@ Class BattleEntityStatusWindow : WindowBase {
     [Boolean]$EntityBattlePhaseActive
     [Boolean]$HasSetEntityActive
     [ATString]$FullLineBlank
-    [ATStringComposite]$NameDrawString
+    # [ATStringComposite]$NameDrawString
     [ATStringComposite]$HpDrawString
     [ATStringComposite]$MpDrawString
     [ATStringComposite]$StatL1DrawString
@@ -15728,12 +15730,12 @@ Class BattleEntityStatusWindow : WindowBase {
         $this.UpdateDimensions()
 
         [Int]$ColDef = $this.LeftTop.Column + 2
-        $this.NameDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 1
-            Column = $ColDef
-        }
+        # $this.NameDrawCoordinates = [ATCoordinates]@{
+        #     Row    = $this.LeftTop.Row + 1
+        #     Column = $ColDef
+        # }
         $this.HpDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.NameDrawCoordinates.Row + 2
+            Row    = $this.LeftTop.Row + 2
             Column = $ColDef
         }
         $this.MpDrawCoordinates = [ATCoordinates]@{
@@ -15756,7 +15758,7 @@ Class BattleEntityStatusWindow : WindowBase {
             Row    = $this.LeftTop.Row + 15
             Column = $ColDef
         }
-        $this.NameDrawDirty           = $true
+        # $this.NameDrawDirty           = $true
         $this.HpDrawDirty             = $true
         $this.MpDrawDirty             = $true
         $this.StatL1DrawDirty         = $true
@@ -15804,12 +15806,12 @@ Class BattleEntityStatusWindow : WindowBase {
         $this.UpdateDimensions()
 
         [Int]$ColDef = $this.LeftTop.Column + 2
-        $this.NameDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.LeftTop.Row + 1
-            Column = $ColDef
-        }
+        # $this.NameDrawCoordinates = [ATCoordinates]@{
+        #     Row    = $this.LeftTop.Row + 1
+        #     Column = $ColDef
+        # }
         $this.HpDrawCoordinates = [ATCoordinates]@{
-            Row    = $this.NameDrawCoordinates.Row + 2
+            Row    = $this.LeftTop.Row + 2
             Column = $ColDef
         }
         $this.MpDrawCoordinates = [ATCoordinates]@{
@@ -15832,7 +15834,7 @@ Class BattleEntityStatusWindow : WindowBase {
             Row    = $this.StatL3DrawCoordinates.Row + 2
             Column = $ColDef
         }
-        $this.NameDrawDirty           = $true
+        # $this.NameDrawDirty           = $true
         $this.HpDrawDirty             = $true
         $this.MpDrawDirty             = $true
         $this.StatL1DrawDirty         = $true
@@ -15847,6 +15849,27 @@ Class BattleEntityStatusWindow : WindowBase {
             UserData   = [BattleEntityStatusWindow]::FullLineBlankActual
             UseATReset = $true
         }
+
+        $this.SetupTitle("$(
+            (
+                [ATStringComposite]::new(@(
+                    [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item2
+                        }
+                        UserData   = "$($Script:BATAdornmentCharTable[$this.BERef.Affinity].Item1)"
+                        UseATReset = $true
+                    },
+                    [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = $this.BERef.NameDrawColor
+                        }
+                        UserData   = " $($this.BERef.Name)"
+                        UseATReset = $true
+                    }
+                ))
+            ).ToAnsiControlSequenceString()
+        )", $this.BERef.NameDrawColor)
     }
 
     [Void]Draw() {
@@ -15872,6 +15895,7 @@ Class BattleEntityStatusWindow : WindowBase {
                 $true
             )
             $this.HasSetEntityActive = $true
+            $this.TitleDirty         = $true
         } Elseif($this.EntityBattlePhaseActive -EQ $false) {
             $this.BorderDrawColors = [ConsoleColor24[]](
                 [CCTextDefault24]::new(),
@@ -15894,15 +15918,16 @@ Class BattleEntityStatusWindow : WindowBase {
                 $true
             )
             $this.HasSetEntityActive = $false
+            $this.TitleDirty         = $true
         }
 
         ([WindowBase]$this).Draw()
-        If($this.NameDrawDirty -EQ $true) {
-            $this.CreateNameDrawString()
-            $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.NameDrawCoordinates)
-            Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.NameDrawString.ToAnsiControlSequenceString())"
-            $this.NameDrawDirty = $false
-        }
+        # If($this.NameDrawDirty -EQ $true) {
+        #     $this.CreateNameDrawString()
+        #     $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.NameDrawCoordinates)
+        #     Write-Host "$($this.FullLineBlank.ToAnsiControlSequenceString())$($this.NameDrawString.ToAnsiControlSequenceString())"
+        #     $this.NameDrawDirty = $false
+        # }
         If($this.HpDrawDirty -EQ $true) {
             $this.CreateHpDrawString()
             $this.FullLineBlank.Prefix.Coordinates = [ATCoordinates]::new($this.HpDrawCoordinates)
@@ -15943,25 +15968,25 @@ Class BattleEntityStatusWindow : WindowBase {
         }
     }
 
-    [Void]CreateNameDrawString() {
-        $this.NameDrawString = [ATStringComposite]::new(@(
-            [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item2
-                    Coordinates     = $this.NameDrawCoordinates
-                }
-                UserData   = "$($Script:BATADornmentCharTable[$this.BERef.Affinity].Item1)"
-                UseATReset = $true
-            },
-            [ATString]@{
-                Prefix = [ATStringPrefix]@{
-                    ForegroundColor = $this.BERef.NameDrawColor
-                }
-                UserData   = " $($this.BERef.Name)"
-                UseATReset = $true
-            }
-        ))
-    }
+    # [Void]CreateNameDrawString() {
+    #     $this.NameDrawString = [ATStringComposite]::new(@(
+    #         [ATString]@{
+    #             Prefix = [ATStringPrefix]@{
+    #                 ForegroundColor = $Script:BATAdornmentCharTable[$this.BERef.Affinity].Item2
+    #                 Coordinates     = $this.NameDrawCoordinates
+    #             }
+    #             UserData   = "$($Script:BATADornmentCharTable[$this.BERef.Affinity].Item1)"
+    #             UseATReset = $true
+    #         },
+    #         [ATString]@{
+    #             Prefix = [ATStringPrefix]@{
+    #                 ForegroundColor = $this.BERef.NameDrawColor
+    #             }
+    #             UserData   = " $($this.BERef.Name)"
+    #             UseATReset = $true
+    #         }
+    #     ))
+    # }
 
     [Void]CreateHpDrawString() {
         [ConsoleColor24]$NumDrawColor = [CCTextDefault24]::new()
@@ -16461,7 +16486,7 @@ Class BattleEntityStatusWindow : WindowBase {
     }
 
     [Void]SetAllFlagsDirty() {
-        $this.NameDrawDirty   = $true
+        # $this.NameDrawDirty   = $true
         $this.HpDrawDirty     = $true
         $this.MpDrawDirty     = $true
         $this.StatL1DrawDirty = $true
