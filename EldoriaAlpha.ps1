@@ -13091,33 +13091,6 @@ Class WindowBase {
             ))
             $this.BorderDrawDirty[[WindowBorderPartDirty]::Left] = $true
         }
-        # If($this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] -EQ $true) {
-        #     $bl = [ATString]@{
-        #         Prefix = [ATStringPrefix]@{
-        #             ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorLeft]
-        #             Coordinates     = [ATCoordinates]@{
-        #                 Row    = $this.LeftTop.Row + 1
-        #                 Column = $this.LeftTop.Column
-        #             }
-        #         }
-        #         UserData = $(
-        #             Invoke-Command -ScriptBlock {
-        #                 [String]$temp = ''
-
-        #                 For($a = 0; $a -LT $this.Height; $a++) {
-        #                     [ATCoordinates]$b = [ATCoordinates]@{
-        #                         Row    = ($this.LeftTop.Row + 1) + $a
-        #                         Column = $this.LeftTop.Column
-        #                     }
-        #                     $temp += "$($this.BorderStrings[[WindowBase]::BorderStringLeft])$($b.ToAnsiControlSequenceString())"
-        #                 }
-
-        #                 Return $temp
-        #             }
-        #         )
-        #     }
-        #     $this.BorderDrawDirty[[WindowBase]::BorderDirtyLeft] = $false
-        # }
 
         If($this.BorderDrawDirty[[WindowBorderPartDirty]::Right] -EQ $true) {
             $Br = [ATStringComposite]::new(@(
@@ -13148,33 +13121,6 @@ Class WindowBase {
             ))
             $this.BorderDrawDirty[[WindowBorderPartDirty]::Right] = $false
         }
-        # If($this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] -EQ $true) {
-        #     $br = [ATString]@{
-        #         Prefix = [ATStringPrefix]@{
-        #             ForegroundColor = $this.BorderDrawColors[[WindowBase]::BorderDrawColorRight]
-        #             Coordinates     = [ATCoordinates]@{
-        #                 Row    = $this.LeftTop.Row + 1
-        #                 Column = $this.RightBottom.Column + 1
-        #             }
-        #         }
-        #         UserData = $(
-        #             Invoke-Command -ScriptBlock {
-        #                 [String]$temp = ''
-
-        #                 For($a = 0; $a -LT $this.Height; $a++) {
-        #                     [ATCoordinates]$b = [ATCoordinates]@{
-        #                         Row    = ($this.LeftTop.Row + 1) + $a
-        #                         Column = $this.RightBottom.Column + 1
-        #                     }
-        #                     $temp += "$($this.BorderStrings[[WindowBase]::BorderStringRight])$($b.ToAnsiControlSequenceString())"
-        #                 }
-
-        #                 Return $temp
-        #             }
-        #         )
-        #     }
-        #     $this.BorderDrawDirty[[WindowBase]::BorderDirtyRight] = $false
-        # }
 
         Write-Host "$($Bt.ToAnsiControlSequenceString())$($Bb.ToAnsiControlSequenceString())$($Bl.ToAnsiControlSequenceString())$($Br.ToAnsiControlSequenceString())"
 
@@ -13275,12 +13221,6 @@ Class StatusWindow : WindowBase {
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     [StatusWindow]::WindowBorderHorizontal,
-        #     [StatusWindow]::WindowBorderHorizontal,
-        #     [StatusWindow]::WindowBorderLeft,
-        #     [StatusWindow]::WindowBorderRight
-        # )
         $this.UpdateDimensions()
         $this.SetupTitle('Status', [CCTextDefault24]::new())
 
@@ -13699,14 +13639,6 @@ Class CommandWindow : WindowBase {
             [CCWhite24]::new(),
             [CCWhite24]::new()
         )
-
-        # $this.BorderStrings = [String[]](
-        #     [CommandWindow]::WindowBorderHorizontal,
-        #     [CommandWindow]::WindowBorderHorizontal,
-        #     [CommandWindow]::WindowBorderLeft,
-        #     [CommandWindow]::WindowBorderRight
-        # )
-
         $this.UpdateDimensions()
         $this.SetupTitle('Commands', [CCTextDefault24]::new())
 
@@ -13984,12 +13916,6 @@ Class SceneWindow : WindowBase {
             [CCWhite24]::new(),
             [CCWhite24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     [SceneWindow]::WindowBorderHorizontal,
-        #     [SceneWindow]::WindowBorderHorizontal,
-        #     [SceneWindow]::WindowBorderLeft,
-        #     [SceneWindow]::WindowBorderRight
-        # )
         $this.UpdateDimensions()
         $this.SetupTitle('Scene', [CCTextDefault24]::new())
 
@@ -14070,12 +13996,6 @@ Class MessageWindow : WindowBase {
             [CCWhite24]::new(),
             [CCWhite24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     [MessageWindow]::WindowBorderHorizontal,
-        #     [MessageWindow]::WindowBorderHorizontal,
-        #     [MessageWindow]::WindowBorderLeft,
-        #     [MessageWindow]::WindowBorderRight
-        # )
         $this.UpdateDimensions()
         $this.SetupTitle('Messages', [CCTextDefault24]::new())
 
@@ -14851,7 +14771,7 @@ Class InventoryWindow : WindowBase {
     Static [String]$PagingChevronLeftCharacter  = '<'
     Static [String]$PagingChevronBlankCharater  = ' '
 
-    Static [String]$DivLineHorizontalString = '----------------------------------------------------------------------------'
+    Static [String]$DivLineHorizontalString = '─────────────────────────────────────────────────────────────────────────────'
     Static [String]$ZpLineBlank             = '                                                                             '
     Static [String]$DescLineBlank           = '                                                                          '
     Static [String]$ItemLabelBlank          = '               '
@@ -14904,7 +14824,7 @@ Class InventoryWindow : WindowBase {
             ForegroundColor = [CCTextDefault24]::new()
             Coordinates     = [ATCoordinates]@{
                 Row    = 13
-                Column = 3
+                Column = 2
             }
         }
         UserData   = "$([InventoryWindow]::DivLineHorizontalString)"
@@ -14951,17 +14871,21 @@ Class InventoryWindow : WindowBase {
             Column = [InventoryWindow]::WindowBRColumn
         }
         $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new()
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new(),
+            [CCTextDefault24]::new()
         )
-        $this.BorderStrings = [String[]](
-            [InventoryWindow]::WindowBorderHorizontal,
-            [InventoryWindow]::WindowBorderHorizontal,
-            [InventoryWindow]::WindowBorderLeft,
-            [InventoryWindow]::WindowBorderRight
-        )
+        # $this.BorderStrings = [String[]](
+        #     [InventoryWindow]::WindowBorderHorizontal,
+        #     [InventoryWindow]::WindowBorderHorizontal,
+        #     [InventoryWindow]::WindowBorderLeft,
+        #     [InventoryWindow]::WindowBorderRight
+        # )
         $this.UpdateDimensions()
 
         $this.PlayerChevronDirty        = $true
@@ -20815,4 +20739,4 @@ $Script:ThePlayer.ActionInventory.Add([BASunfire]::new()) | Out-Null
 #     0
 # )
 
-# $Script:TheGameCore.Run()
+$Script:TheGameCore.Run()
