@@ -435,7 +435,7 @@ Function Update-EldBepBase {
                     Return
                 }
 
-                [Int]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -B)).Value) + $IncAmt
+                [Int64]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -B)).Value) + $IncAmt
                 $T      = [Math]::Clamp($T, 0, ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -M)).Value))
                 Set-EldVar -Name $(New-EldBepSuffix -P -S $Stat -B) -Data $T
             } Elseif($DecAmt) {
@@ -449,7 +449,7 @@ Function Update-EldBepBase {
                     Return
                 }
 
-                [Int]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -B)).Value) - $DecAmt
+                [Int64]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -B)).Value) - $DecAmt
                 $T      = [Math]::Clamp($T, 0, ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -M)).Value))
                 
                 Set-EldVar -Name $(New-EldBepSuffix -P -S $Stat -B) -Data $T
@@ -467,7 +467,7 @@ Function Update-EldBepBase {
                     Return
                 }
 
-                [Int]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B)).Value) + $IncAmt
+                [Int64]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B)).Value) + $IncAmt
                 $T      = [Math]::Clamp($T, 0, ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M)).Value))
                 Set-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B) -Data $T
             } Elseif($DecAmt) {
@@ -481,7 +481,7 @@ Function Update-EldBepBase {
                     Return
                 }
 
-                [Int]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B)).Value) - $DecAmt
+                [Int64]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B)).Value) - $DecAmt
                 $T      = [Math]::Clamp($T, 0, ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M)).Value))
                 Set-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B) -Data $T
             }
@@ -559,7 +559,7 @@ Function Update-EldBepMax {
                     Return $null
                 }
 
-                [Int]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -M)).Value) - $DecAmt
+                [Int64]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -P -S $Stat -M)).Value) - $DecAmt
                 $T      = [Math]::Clamp($T, 0, [Int]::MaxValue)
 
                 Set-EldVar -Name $(New-EldBepSuffix -P -S $Stat -M) -Data $T
@@ -573,7 +573,33 @@ Function Update-EldBepMax {
                 }
             }
         } Elseif($Enemy) {
+            If($IncAmt) {
+                If($IncAmt -LE 0) {
+                    Return $null
+                }
 
+                [Int64]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M)).Value) + $IncAmt
+                $T        = [Math]::Clamp($T, 0, [Int]::MaxValue)
+                
+                Set-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M) -Data $T
+            } Elseif($DecAmt) {
+                If($DecAmt -LE 0) {
+                    Return $null
+                }
+
+                [Int]$T = ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M)).Value) - $DecAmt
+                $T      = [Math]::Clamp($T, 0, [Int]::MaxValue)
+
+                Set-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M) -Data $T
+
+                If(([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M)).Value) `
+                        -LT ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B)).Value)) {
+                    
+                    Set-EldVar -Name $(New-EldBepSuffix -E -S $Stat -B) `
+                            -Data ([Int](Get-EldVar -Name $(New-EldBepSuffix -E -S $Stat -M)).Value)
+
+                }
+            }
         }
     }
 }
