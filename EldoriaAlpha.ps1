@@ -18346,7 +18346,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
     Static [String]$WindowBorderRight           = '|'
     Static [String]$PlayerChevronCharacter      = '>'
     Static [String]$PlayerChevronBlankCharacter = ' '
-    Static [String]$NameBlank                   = '               '
+    Static [String]$NameBlank                   = '              '
 
     Static [ATString]$PlayerChevron = [ATString]@{
         Prefix = [ATStringPrefix]@{
@@ -18398,12 +18398,6 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     [StatusTechniqueSelectionWindow]::WindowBorderHorizontal,
-        #     [StatusTechniqueSelectionWindow]::WindowBorderHorizontal,
-        #     [StatusTechniqueSelectionWindow]::WindowBorderLeft,
-        #     [StatusTechniqueSelectionWindow]::WindowBorderRight
-        # )
         $this.UpdateDimensions()
 
         $this.ActiveChevronIndex = 0
@@ -18749,9 +18743,9 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$PagingChevronRightCharacter = '>'
     Static [String]$PagingChevronLeftCharacter  = '<'
     Static [String]$PagingChevronBlankCharacter = ' '
-    Static [String]$DivLineHorizontalString     = '──────────────────────────────────────────────────────────'
-    Static [String]$ZpLineBlank                 = '                                                          '
-    Static [String]$DescLineBlank               = '                                                          '
+    Static [String]$DivLineHorizontalString     = '─────────────────────────────────────────────────────────'
+    Static [String]$ZpLineBlank                 = '                                                         '
+    Static [String]$DescLineBlank               = '                                                         '
     Static [String]$ZeroPagePrompt              = 'You have no techniques in your inventory.'
 
     Static [ATString]$PagingChevronRight = [ATString]@{
@@ -18825,12 +18819,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     [StatusTechniqueInventoryWindow]::WindowBorderHorizontal,
-        #     [StatusTechniqueInventoryWindow]::WindowBorderHorizontal,
-        #     [StatusTechniqueInventoryWindow]::WindowBorderLeft,
-        #     [StatusTechniqueInventoryWindow]::WindowBorderRight
-        # )
         $this.UpdateDimensions()
 
         $this.ItemsPerPage              = 10
