@@ -18136,12 +18136,6 @@ Class StatusHudWindow : WindowBase {
             [CCTextDefault24]::new(),
             [CCTextDefault24]::new()
         )
-        # $this.BorderStrings = [String[]](
-        #     [StatusHudWindow]::WindowBorderHorizontal,
-        #     [StatusHudWindow]::WindowBorderHorizontal,
-        #     [StatusHudWindow]::WindowBorderLeft,
-        #     [StatusHudWindow]::WindowBorderRight
-        # )
         $this.UpdateDimensions()
 
         $this.StatLineDrawDirty = $true
@@ -18157,6 +18151,8 @@ Class StatusHudWindow : WindowBase {
             Row    = 2
             Column = [StatusHudWindow]::WindowRBColumn - 48
         }
+
+        $this.SetupTitle('Status', [CCTextDefault24]::new())
     }
 
     [Void]Draw() {
@@ -18168,6 +18164,10 @@ Class StatusHudWindow : WindowBase {
             Write-Host "$($this.LineBlank.ToAnsiControlSequenceString())$($this.StatLineActual.ToAnsiControlSequenceString())"
             $this.StatLineDrawDirty = $false
         }
+
+        # FOR SOME REASON, THE SETUP TITLE CAUSES THE LEFT BAR TO DISAPPEAR?
+        # THIS IS REQUIRED TO DEAL WITH THAT.
+        ([WindowBase]$this).Draw()
     }
 
     [Void]ComposeStatLineString() {
@@ -18425,6 +18425,8 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             Column = $this.ActionCDrawCoords.Column
         }
         $this.CreateChevrons()
+
+        $this.SetupTitle('Equipped', [CCTextDefault24]::new())
     }
 
     [Void]CreateChevrons() {
@@ -18820,6 +18822,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             [CCTextDefault24]::new()
         )
         $this.UpdateDimensions()
+
+        $this.SetupTitle('Inventory', [CCTextDefault24]::new())
 
         $this.ItemsPerPage              = 10
         $this.NumPages                  = 1
@@ -19485,6 +19489,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
+                $this.DivLineDirty       = $true
             }
 
             40 {
@@ -19510,6 +19515,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
+                $this.DivLineDirty       = $true
             }
 
             39 {
@@ -19535,6 +19541,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
+                $this.DivLineDirty       = $true
             }
 
             37 {
@@ -19560,6 +19567,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
+                $this.DivLineDirty       = $true
             }
 
             68 {
