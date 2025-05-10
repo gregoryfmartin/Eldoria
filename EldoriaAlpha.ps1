@@ -2161,6 +2161,9 @@ Class CCTextDefault24 : CCAppleGrey5Light24 {}
 
 Class CCListItemCurrentHighlight24 : CCAppleNPinkLight24 {}
 
+Class CCWindowBorderDefault24 : CCTextDefault24 {}
+
+
 
 
 
@@ -12975,14 +12978,14 @@ Class WindowBase {
         $this.LeftTop          = [ATCoordinatesNone]::new()
         $this.RightBottom      = [ATCoordinatesNone]::new()
         $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCBlack24]::new(),
-            [CCBlack24]::new(),
-            [CCBlack24]::new(),
-            [CCBlack24]::new(),
-            [CCBlack24]::new(),
-            [CCBlack24]::new(),
-            [CCBlack24]::new(),
-            [CCBlack24]::new()
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new(),
+            [CCWindowBorderDefault24]::new()
         )
         $this.BorderDrawDirty = [Boolean[]](
             $true,
@@ -13213,16 +13216,7 @@ Class StatusWindow : WindowBase {
     StatusWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new([StatusWindow]::WindowLTRow, [StatusWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
         $this.SetupTitle('Status', [CCTextDefault24]::new())
 
@@ -13631,16 +13625,7 @@ Class CommandWindow : WindowBase {
     CommandWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new([CommandWindow]::WindowLTRow, [CommandWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new()
-        )
+
         $this.UpdateDimensions()
         $this.SetupTitle('Commands', [CCTextDefault24]::new())
 
@@ -13908,16 +13893,7 @@ Class SceneWindow : WindowBase {
     SceneWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
         $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new()
-        )
+
         $this.UpdateDimensions()
         $this.SetupTitle('Scene', [CCTextDefault24]::new())
 
@@ -13988,16 +13964,7 @@ Class MessageWindow : WindowBase {
     MessageWindow() : base() {
         $this.LeftTop          = [ATCoordinates]::new(21, 1)
         $this.RightBottom      = [ATCoordinates]::new(25, 79)
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new(),
-            [CCWhite24]::new()
-        )
+
         $this.UpdateDimensions()
         $this.SetupTitle('Messages', [CCTextDefault24]::new())
 
@@ -14872,16 +14839,7 @@ Class InventoryWindow : WindowBase {
             Row    = [InventoryWindow]::WindowBRRow
             Column = [InventoryWindow]::WindowBRColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         $this.PlayerChevronDirty        = $true
@@ -15708,16 +15666,7 @@ Class BattleEntityStatusWindow : WindowBase {
             Row    = $this.WindowRBRow
             Column = $this.WindowRBColumn
         }
-        $this.BorderDrawColors = @(
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         [Int]$ColDef = $this.LeftTop.Column + 2
@@ -15779,16 +15728,7 @@ Class BattleEntityStatusWindow : WindowBase {
             Row    = $this.WindowRBRow
             Column = $this.WindowRBColumn
         }
-        $this.BorderDrawColors = @(
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         [Int]$ColDef = $this.LeftTop.Column + 2
@@ -15879,14 +15819,14 @@ Class BattleEntityStatusWindow : WindowBase {
             $this.TitleDirty         = $true
         } Elseif($this.EntityBattlePhaseActive -EQ $false) {
             $this.BorderDrawColors = [ConsoleColor24[]](
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new(),
-                [CCTextDefault24]::new()
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new()
             )
             $this.BorderDrawDirty = [Boolean[]](
                 $true,
@@ -16505,22 +16445,7 @@ Class BattlePlayerActionWindow : WindowBase {
             Row    = [BattlePlayerActionWindow]::WindowRBRow
             Column = [BattlePlayerActionWindow]::WindowRBColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
-        # $this.BorderStrings = [String[]](
-        #     "$([BattlePlayerActionWindow]::WindowBorderHorizontal)",
-        #     "$([BattlePlayerActionWindow]::WindowBorderHorizontal)",
-        #     "$([BattlePlayerActionWindow]::WindowBorderLeft)",
-        #     "$([BattlePlayerActionWindow]::WindowBorderRight)"
-        # )
+
         $this.UpdateDimensions()
 
         $this.ActiveChevronIndex = 0
@@ -16910,22 +16835,7 @@ Class BattleStatusMessageWindow : WindowBase {
             Row    = [BattleStatusMessageWindow]::WindowRBRow
             Column = [BattleStatusMessageWindow]::WindowRBColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
-        # $this.BorderStrings = [String[]](
-        #     "$([BattleStatusMessageWindow]::WindowBorderHorizontal)",
-        #     "$([BattleStatusMessageWindow]::WindowBorderHorizontal)",
-        #     "$([BattleStatusMessageWindow]::WindowBorderLeft)",
-        #     "$([BattleStatusMessageWindow]::WindowBorderRight)"
-        # )
+
         $this.UpdateDimensions()
 
         $this.MessageADirty = $false
@@ -18061,16 +17971,7 @@ Class BattleEnemyImageWindow : WindowBase {
             Row    = [BattleEnemyImageWindow]::WindowRBRow
             Column = [BattleEnemyImageWindow]::WindowRBColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         $this.ImageDirty      = $true
@@ -18126,16 +18027,7 @@ Class StatusHudWindow : WindowBase {
             Row    = [StatusHudWindow]::WindowRBRow
             Column = [StatusHudWindow]::WindowRBColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         $this.StatLineDrawDirty = $true
@@ -18388,16 +18280,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
             Row    = [StatusTechniqueSelectionWindow]::WindowRBRow
             Column = [StatusTechniqueSelectionWindow]::WindowRBColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         $this.ActiveChevronIndex = 0
@@ -18811,16 +18694,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             Row    = [StatusTechniqueInventoryWindow]::WindowRBRow
             Column = [StatusTechniqueInventoryWindow]::WindowRBColumn
         }
-        $this.BorderDrawColors = [ConsoleColor24[]](
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new(),
-            [CCTextDefault24]::new()
-        )
+
         $this.UpdateDimensions()
 
         $this.SetupTitle('Inventory', [CCTextDefault24]::new())
