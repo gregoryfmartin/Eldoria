@@ -18865,7 +18865,20 @@ Class StatusTechniqueInventoryWindow : WindowBase {
                                     Column = $this.LeftTop.Column + 2
                                 }
                             }
-                            UserData   = "PWR: $($this.PageRefs[$this.ActiveIChevronIndex].EffectValue)   MP COST: $("{0:d2}" -F $this.PageRefs[$this.ActiveIChevronIndex].MpCost)   CHANCE: $("{0:f0}" -F ($this.PageRefs[$this.ActiveIChevronIndex].Chance * 100))%"
+                            UserData = 'AFF: '
+                        },
+                        [ATString]@{
+                            Prefix = [ATStringPrefix]@{
+                                ForegroundColor = $Script:BATAdornmentCharTable[$this.PageRefs[$this.ActiveIChevronIndex].Type].Item2
+                            }
+                            UserData   = "$($Script:BATAdornmentCharTable[$this.PageRefs[$this.ActiveIChevronIndex].Type].Item1)"
+                            UseATReset = $true
+                        },
+                        [ATString]@{
+                            Prefix = [ATStringPrefix]@{
+                                ForegroundColor = [CCTextDefault24]::new()
+                            }
+                            UserData   = "   PWR: $($this.PageRefs[$this.ActiveIChevronIndex].EffectValue)   MP COST: $("{0:d2}" -F $this.PageRefs[$this.ActiveIChevronIndex].MpCost)   CHANCE: $("{0:f0}" -F ($this.PageRefs[$this.ActiveIChevronIndex].Chance * 100))%"
                             UseATReset = $true
                         }
                     ))
