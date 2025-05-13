@@ -14734,10 +14734,10 @@ Class InventoryWindow : WindowBase {
     Static [String]$WindowBorderLeft       = '|'
     Static [String]$WindowBorderRight      = '|'
 
-    Static [String]$IChevronCharacter           = '>'
+    Static [String]$IChevronCharacter           = '❱'
     Static [String]$IChevronBlankCharacter      = ' '
-    Static [String]$PagingChevronRightCharacter = '>'
-    Static [String]$PagingChevronLeftCharacter  = '<'
+    Static [String]$PagingChevronRightCharacter = "`u{1433}"
+    Static [String]$PagingChevronLeftCharacter  = "`u{1438}"
     Static [String]$PagingChevronBlankCharater  = ' '
 
     Static [String]$DivLineHorizontalString = '─────────────────────────────────────────────────────────────────────────────'
@@ -14750,7 +14750,7 @@ Class InventoryWindow : WindowBase {
             ForegroundColor = [CCAppleYellowLight24]::new()
             Coordinates     = [ATCoordinates]@{
                 Row    = 2
-                Column = 78
+                Column = 77
             }
         }
         UserData   = "$([InventoryWindow]::PagingChevronRightCharacter)"
@@ -14772,7 +14772,7 @@ Class InventoryWindow : WindowBase {
             ForegroundColor = [CCAppleMintLight24]::new()
             Coordinates     = [ATCoordinates]@{
                 Row    = 2
-                Column = 78
+                Column = 77
             }
         }
         UserData   = "$([InventoryWindow]::PagingChevronBlankCharater)"
