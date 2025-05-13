@@ -18236,7 +18236,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
     Static [String]$WindowBorderHorizontal      = '*------------------*'
     Static [String]$WindowBorderLeft            = '|'
     Static [String]$WindowBorderRight           = '|'
-    Static [String]$PlayerChevronCharacter      = '>'
+    Static [String]$PlayerChevronCharacter      = '❱'
     Static [String]$PlayerChevronBlankCharacter = ' '
     Static [String]$NameBlank                   = '              '
 
@@ -18623,7 +18623,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$WindowBorderHorizontal      = '*----------------------------------------------------------*'
     Static [String]$WindowBorderLeft            = '|'
     Static [String]$WindowBorderRight           = '|'
-    Static [String]$IChevronCharacter           = '>'
+    Static [String]$IChevronCharacter           = '❱'
     Static [String]$IChevronCharacterBlank      = ' '
     Static [String]$PagingChevronRightCharacter = '>'
     Static [String]$PagingChevronLeftCharacter  = '<'
@@ -19470,7 +19470,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     [Void]ConfigurePagingChevrons() {
         [StatusTechniqueInventoryWindow]::PagingChevronRight.Prefix.Coordinates = [ATCoordinates]@{
             Row    = $this.LeftTop.Row + 1
-            Column = $this.RightBottom.Column - 1
+            Column = $this.RightBottom.Column - 2
         }
         [StatusTechniqueInventoryWindow]::PagingChevronRightBlank = [ATString]@{
             Prefix     = [ATStringPrefix]::new()
