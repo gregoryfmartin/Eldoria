@@ -18625,8 +18625,8 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$WindowBorderRight           = '|'
     Static [String]$IChevronCharacter           = '❱'
     Static [String]$IChevronCharacterBlank      = ' '
-    Static [String]$PagingChevronRightCharacter = '>'
-    Static [String]$PagingChevronLeftCharacter  = '<'
+    Static [String]$PagingChevronRightCharacter = "`u{1433}"
+    Static [String]$PagingChevronLeftCharacter  = "`u{1438}"
     Static [String]$PagingChevronBlankCharacter = ' '
     Static [String]$DivLineHorizontalString     = '─────────────────────────────────────────────────────────'
     Static [String]$ZpLineBlank                 = '                                                         '
