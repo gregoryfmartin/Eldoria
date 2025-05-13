@@ -16408,7 +16408,7 @@ Class BattlePlayerActionWindow : WindowBase {
     Static [String]$WindowBorderHorizontal      = '*------------------*'
     Static [String]$WindowBorderLeft            = '|'
     Static [String]$WindowBorderRight           = '|'
-    Static [String]$PlayerChevronCharacter      = '>'
+    Static [String]$PlayerChevronCharacter      = '❱'
     Static [String]$PlayerChevronBlankCharacter = ' '
 
     Static [ATString]$PlayerChevron = [ATString]@{
@@ -16447,6 +16447,8 @@ Class BattlePlayerActionWindow : WindowBase {
         }
 
         $this.UpdateDimensions()
+
+        $this.SetupTitle('Actions', [CCTextDefault24]::new())
 
         $this.ActiveChevronIndex = 0
         $this.PlayerChevronDirty = $true
@@ -16837,6 +16839,8 @@ Class BattleStatusMessageWindow : WindowBase {
         }
 
         $this.UpdateDimensions()
+
+        $this.SetupTitle('Log', [CCTextDefault24]::new())
 
         $this.MessageADirty = $false
         $this.MessageBDirty = $false
@@ -17973,6 +17977,8 @@ Class BattleEnemyImageWindow : WindowBase {
         }
 
         $this.UpdateDimensions()
+
+        $this.SetupTitle("$($Script:TheCurrentEnemy.Name)", [CCTextDefault24]::new())
 
         $this.ImageDirty      = $true
         $this.Image           = [EEIEmpty]::new()
