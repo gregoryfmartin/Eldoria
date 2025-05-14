@@ -13195,7 +13195,8 @@ Class StatusWindow : WindowBase {
     Static [Int]$WindowRBRow          = 10
     Static [Int]$WindowRBColumn       = 19
 
-    Static [String]$LineBlank = '                '
+    Static [String]$LineBlank   = '                '
+    Static [String]$WindowTitle = 'Status'
 
     Static [ATCoordinates]$PlayerNameDrawCoordinates = [ATCoordinates]::new([StatusWindow]::PlayerNameDrawRow, [StatusWindow]::PlayerStatDrawColumn)
     Static [ATCoordinates]$PlayerHpDrawCoordinates   = [ATCoordinates]::new([StatusWindow]::PlayerHpDrawRow, [StatusWindow]::PlayerStatDrawColumn)
@@ -13214,7 +13215,7 @@ Class StatusWindow : WindowBase {
         $this.RightBottom      = [ATCoordinates]::new([StatusWindow]::WindowRBRow, [StatusWindow]::WindowRBColumn)
 
         $this.UpdateDimensions()
-        $this.SetupTitle('Status', [CCTextDefault24]::new())
+        $this.SetupTitle([StatusWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.PlayerNameDrawDirty = $true
         $this.PlayerHpDrawDirty   = $true
