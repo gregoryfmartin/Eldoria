@@ -13247,7 +13247,7 @@ Class StatusWindow : WindowBase {
         }
 
         If($this.PlayerHpDrawDirty -EQ $true) {
-            [String]$a               = ''
+            [String]A$               = ''
             [ATStringComposite]$Line = [ATStringComposite]::new(@(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
@@ -13279,7 +13279,7 @@ Class StatusWindow : WindowBase {
 
             Switch($Script:ThePlayer.Stats[[StatId]::HitPoints].State) {
                 ([StatNumberState]::Normal) {
-                    $a += "$($Line.ToAnsiControlSequenceString())"
+                    A$ += "$($Line.ToAnsiControlSequenceString())"
 
                     Break
                 }
@@ -13287,7 +13287,7 @@ Class StatusWindow : WindowBase {
                 ([StatNumberState]::Caution) {
                     $Line.CompositeActual[1].Prefix.ForegroundColor = [BattleEntityProperty]::StatNumDrawColorCaution
                     $Line.CompositeActual[3].Prefix.ForegroundColor = [BattleEntityProperty]::StatNumDrawColorCaution
-                    $a += "$($Line.ToAnsiControlSequenceString())"
+                    A$ += "$($Line.ToAnsiControlSequenceString())"
 
                     Break
                 }
@@ -13295,13 +13295,13 @@ Class StatusWindow : WindowBase {
                 ([StatNumberState]::Danger) {
                     $Line.CompositeActual[1].Prefix.ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
                     $Line.CompositeActual[3].Prefix.ForegroundColor = [BattleEntityProperty]::StatNumDrawColorDanger
-                    $a += "$($Line.ToAnsiControlSequenceString())"
+                    A$ += "$($Line.ToAnsiControlSequenceString())"
 
                     Break
                 }
 
                 Default {
-                    $a += "$($Line.ToAnsiControlSequenceString())"
+                    A$ += "$($Line.ToAnsiControlSequenceString())"
 
                     Break
                 }
