@@ -13234,7 +13234,7 @@ Class StatusWindow : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.PlayerNameDrawDirty -EQ $true) {
-            [ATString]$a = [ATString]@{
+            [ATString]$A = [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:ThePlayer.NameDrawColor
                     Coordinates     = [StatusWindow]::PlayerNameDrawCoordinates
@@ -13243,7 +13243,7 @@ Class StatusWindow : WindowBase {
                 UseATReset = $true
             }
             $this.LineBlankActual.Prefix.Coordinates = [StatusWindow]::PlayerNameDrawCoordinates
-            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($a.ToAnsiControlSequenceString())"
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($A.ToAnsiControlSequenceString())"
             $this.PlayerNameDrawDirty = $false
         }
 
