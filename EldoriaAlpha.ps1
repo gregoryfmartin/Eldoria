@@ -13868,14 +13868,6 @@ Class MessageWindow : WindowBase {
         $this.MessageCDirty                                                       = $true
     }
 
-    ###########################################################################
-    #
-    # THE FOLLOWING METHODS ARE CONVENIENCE ABSTRACTIONS FOR 
-    # WRITEMESSAGECOMPOSITE THAT ARE INTENDED TO BE USED IN VERY SPECIFIC
-    # SITUATIONS. NOTE THAT AT THIS TIME, THE CONTINUED USE OF 
-    # ATSTRINGCOMPOSITESC IS SUBJECT TO SCRUTINY.
-    #
-    ###########################################################################
     [Void]WriteBadCommandMessage(
         [String]$Command
     ) {
