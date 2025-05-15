@@ -14539,9 +14539,7 @@ Class InventoryWindow : WindowBase {
     Static [Int]$WindowBRRow    = 20
     Static [Int]$WindowBRColumn = 79
 
-    Static [String]$WindowBorderHorizontal = '********************************************************************************'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
+    Static [String]$WindowTitle = 'Inventory'
 
     Static [String]$IChevronCharacter           = '❱'
     Static [String]$IChevronBlankCharacter      = ' '
@@ -14650,6 +14648,7 @@ Class InventoryWindow : WindowBase {
         }
 
         $this.UpdateDimensions()
+        $this.SetupTitle([InventoryWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.PlayerChevronDirty        = $true
         $this.PagingChevronRightDirty   = $true
