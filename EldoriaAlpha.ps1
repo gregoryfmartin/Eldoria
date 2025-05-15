@@ -13450,7 +13450,9 @@ Class CommandWindow : WindowBase {
     Static [Int]$DrawHistoryARowOffset = 6
     Static [Int]$DrawHistoryERowOffset = 7
 
+    Static [String]$CommandBlankData = '                 '
     Static [String]$WindowCommandDiv = '─────────────────'
+    Static [String]$WindowTitle      = 'Commands'
 
     Static [ATCoordinates]$CommandDivDrawCoordinates      = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryEDrawCoordinates = [ATCoordinatesNone]::new()
@@ -13459,10 +13461,10 @@ Class CommandWindow : WindowBase {
     Static [ATCoordinates]$CommandHistoryBDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryADrawCoordinates = [ATCoordinatesNone]::new()
 
-    Static [ConsoleColor24]$HistoryEntryValid   = [CCGreen24]::new()
-    Static [ConsoleColor24]$HistoryEntryError   = [CCRed24]::new()
+    Static [ConsoleColor24]$HistoryEntryValid   = [CCAppleNGreenLight24]::new()
+    Static [ConsoleColor24]$HistoryEntryError   = [CCAppleNRedLight24]::new()
     Static [ConsoleColor24]$HistoryBlankColor   = [CCBlack24]::new()
-    Static [ConsoleColor24]$CommandDivDrawColor = [CCWhite24]::new()
+    Static [ConsoleColor24]$CommandDivDrawColor = [CCTextDefault24]::new()
     Static [ATString]$CommandDiv                = [ATStringNone]::new()
     Static [ATString]$CommandBlank              = [ATStringNone]::new()
     Static [ATString]$CommandHistBlank          = [ATStringNone]::new()
@@ -13478,7 +13480,7 @@ Class CommandWindow : WindowBase {
         $this.RightBottom      = [ATCoordinates]::new([CommandWindow]::WindowRBRow, [CommandWindow]::WindowRBColumn)
 
         $this.UpdateDimensions()
-        $this.SetupTitle('Commands', [CCTextDefault24]::new())
+        $this.SetupTitle([CommandWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.CommandDivDirty     = $true
         $this.CommandHistoryDirty = $false
@@ -13515,21 +13517,21 @@ Class CommandWindow : WindowBase {
                 ForegroundColor = [CommandWindow]::CommandDivDrawColor
                 Coordinates     = [CommandWindow]::CommandDivDrawCoordinates
             }
-            UserData   = [CommandWindow]::WindowCommandDiv
+            UserData   = "$([CommandWindow]::WindowCommandDiv)"
             UseATReset = $true
         }
         [CommandWindow]::CommandBlank = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CommandWindow]::HistoryBlankColor
             }
-            UserData   = '                 '
+            UserData   = "$([CommandWindow]::CommandBlankData)"
             UseATReset = $true
         }
         [CommandWindow]::CommandHistBlank = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CommandWindow]::HistoryBlankColor
             }
-            UserData   = '                 '
+            UserData   = "$([CommandWindow]::CommandBlankData)"
             UseATReset = $true
         }
 
@@ -13540,7 +13542,7 @@ Class CommandWindow : WindowBase {
                 ForegroundColor = [CCTextDefault24]::new()
                 Coordinates     = [CommandWindow]::CommandHistoryADrawCoordinates
             }
-            UserData   = [CommandWindow]::CommandBlank.UserData
+            UserData   = "$([CommandWindow]::CommandBlank.UserData)"
             UseATReset = $true
         }
         $this.CommandHistory[[CommandWindow]::CommandHistoryBRef] = [ATString]@{
@@ -13548,7 +13550,7 @@ Class CommandWindow : WindowBase {
                 ForegroundColor = [CCTextDefault24]::new()
                 Coordinates     = [CommandWindow]::CommandHistoryBDrawCoordinates
             }
-            UserData   = [CommandWindow]::CommandBlank.UserData
+            UserData   = "$([CommandWindow]::CommandBlank.UserData)"
             UseATReset = $true
         }
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef] = [ATString]@{
@@ -13556,7 +13558,7 @@ Class CommandWindow : WindowBase {
                 ForegroundColor = [CCTextDefault24]::new()
                 Coordinates     = [CommandWindow]::CommandHistoryCDrawCoordinates
             }
-            UserData   = [CommandWindow]::CommandBlank.UserData
+            UserData   = "$([CommandWindow]::CommandBlank.UserData)"
             UseATReset = $true
         }
         $this.CommandHistory[[CommandWindow]::CommandHistoryDRef] = [ATString]@{
@@ -13564,7 +13566,7 @@ Class CommandWindow : WindowBase {
                 ForegroundColor = [CCTextDefault24]::new()
                 Coordinates     = [CommandWindow]::CommandHistoryDDrawCoordinates
             }
-            UserData   = [CommandWindow]::CommandBlank.UserData
+            UserData   = "$([CommandWindow]::CommandBlank.UserData)"
             UseATReset = $true
         }
         $this.CommandHistory[[CommandWindow]::CommandHistoryERef] = [ATString]@{
@@ -13572,7 +13574,7 @@ Class CommandWindow : WindowBase {
                 ForegroundColor = [CCTextDefault24]::new()
                 Coordinates     = [CommandWindow]::CommandHistoryEDrawCoordinates
             }
-            UserData   = [CommandWindow]::CommandBlank.UserData
+            UserData   = "$([CommandWindow]::CommandBlank.UserData)"
             UseATReset = $true
         }
     }
@@ -13637,6 +13639,7 @@ Class CommandWindow : WindowBase {
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
+
         If([String]::IsNullOrEmpty($this.CommandActual.UserData.Trim()) -EQ $true) {
             $Script:TheMessageWindow.WriteBadCommandRetortMessage()
             $this.CommandActual.UserData = ''
@@ -13674,13 +13677,6 @@ Class CommandWindow : WindowBase {
         }
     }
 
-    ###########################################################################
-    #
-    # THIS CLASS ORIGINALLY HAD SEVERAL FUNCTIONS THAT WOULD PROVIDE ACTIONS.
-    # THE CODE FOR THIS HAS BEEN REMOVED AND REPLACED INTO THE ACTION TABLE.
-    #
-    ###########################################################################
-
     [Void]UpdateCommandHistory(
         [Boolean]$CmdValid
     ) {
@@ -13696,7 +13692,7 @@ Class CommandWindow : WindowBase {
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].UserData               = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.Decorations     = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations
         $this.CommandHistory[[CommandWindow]::CommandHistoryCRef].Prefix.ForegroundColor = $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor
-        $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData = $this.CommandActual.UserData
+        $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].UserData               = $this.CommandActual.UserData
         If($CmdValid -EQ $true) {
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.ForegroundColor = [CommandWindow]::HistoryEntryValid
             $this.CommandHistory[[CommandWindow]::CommandHistoryDRef].Prefix.Decorations     = [ATDecorationNone]::new()
@@ -13731,10 +13727,7 @@ Class SceneWindow : WindowBase {
     Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
 
-
-    Static [String]$WindowBorderHorizontal = '@-<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>--<>-@'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
+    Static [String]$WindowTitle = 'Scene'
 
     Static [ATCoordinates]$SceneImageDrawCoordinates = [ATCoordinatesNone]::new()
 
@@ -13742,11 +13735,11 @@ Class SceneWindow : WindowBase {
     [SceneImage]$Image
 
     SceneWindow() : base() {
-        $this.LeftTop          = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
-        $this.RightBottom      = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
+        $this.LeftTop     = [ATCoordinates]::new([SceneWindow]::WindowLTRow, [SceneWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([SceneWindow]::WindowRBRow, [SceneWindow]::WindowRBColumn)
 
         $this.UpdateDimensions()
-        $this.SetupTitle('Scene', [CCTextDefault24]::new())
+        $this.SetupTitle([SceneWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.SceneImageDirty = $true
         $this.Image           = [SIEmpty]::new()
@@ -13793,12 +13786,10 @@ Class MessageWindow : WindowBase {
     Static [Int]$MessageHistoryCRef = 2
     Static [Int]$WindowLTRow        = 21
     Static [Int]$WindowLTColumn     = 1
-    Static [Int]$WindowBRRow        = 26
-    Static [Int]$WindowBRColumn     = 80
+    Static [Int]$WindowRBRow        = 25
+    Static [Int]$WindowRBColumn     = 79
 
-    Static [String]$WindowBorderHorizontal = '-------------------------------------------------------------------------------'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
+    Static [String]$WindowTitle = 'Messages'
 
     Static [ATCoordinates]$MessageADrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$MessageBDrawCoordinates = [ATCoordinatesNone]::new()
@@ -13813,11 +13804,11 @@ Class MessageWindow : WindowBase {
     [Boolean]$MessageCDirty
 
     MessageWindow() : base() {
-        $this.LeftTop          = [ATCoordinates]::new(21, 1)
-        $this.RightBottom      = [ATCoordinates]::new(25, 79)
+        $this.LeftTop     = [ATCoordinates]::new([MessageWindow]::WindowLTRow, [MessageWindow]::WindowLTColumn)
+        $this.RightBottom = [ATCoordinates]::new([MessageWindow]::WindowRBRow, [MessageWindow]::WindowRBColumn)
 
         $this.UpdateDimensions()
-        $this.SetupTitle('Messages', [CCTextDefault24]::new())
+        $this.SetupTitle([MessageWindow]::WindowTitle, [CCTextDefault24]::new())
 
         [MessageWindow]::MessageCDrawCoordinates = [ATCoordinates]@{
             Row    = ($this.RightBottom.Row - 1)
@@ -13864,31 +13855,6 @@ Class MessageWindow : WindowBase {
             Write-Host "$([MessageWindow]::MessageWindowBlank.ToAnsiControlSequenceString())$([MessageWindow]::MessageCDrawCoordinates.ToAnsiControlSequenceString())$($this.MessageHistory[[MessageWindow]::MessageHistoryCRef].ToAnsiControlSequenceString())"
             $this.MessageCDirty = $false
         }
-    }
-
-    ###########################################################################
-    #
-    # THIS METHOD IS LIKELY COMPLETELY DEPRECATED IN FAVOR OF
-    # WRITEMESSAGECOMPOSITE. IT'S KEPT UNTIL COVERAGE IS CONFIRMED.
-    #
-    ###########################################################################
-    [Void]WriteMessage(
-        [String]$Message,
-        [ATForegroundColor24]$ForegroundColor,
-        [ATDecoration]$Decoration
-    ) {
-        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData
-        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations
-        $this.MessageHistory[[MessageWindow]::MessageHistoryARef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor
-        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].UserData               = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData
-        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.Decorations     = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations
-        $this.MessageHistory[[MessageWindow]::MessageHistoryBRef].Prefix.ForegroundColor = $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor
-        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].UserData               = $Message
-        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.ForegroundColor = $ForegroundColor
-        $this.MessageHistory[[MessageWindow]::MessageHistoryCRef].Prefix.Decorations     = $Decoration
-        $this.MessageADirty                                                              = $true
-        $this.MessageBDirty                                                              = $true
-        $this.MessageCDirty                                                              = $true
     }
 
     [Void]WriteMessageComposite(
