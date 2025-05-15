@@ -15429,9 +15429,6 @@ Class InventoryWindow : WindowBase {
 #
 ###############################################################################
 Class BattleEntityStatusWindow : WindowBase {
-    Static [String]$WindowBorderHorizontal = '*------------------*'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
     Static [String]$FullLineBlankActual    = '                '
 
     [ATCoordinates]$HpDrawCoordinates
@@ -16213,11 +16210,9 @@ Class BattlePlayerActionWindow : WindowBase {
     Static [Int]$WindowRBRow    = 23
     Static [Int]$WindowRBCOlumn = 19
 
-    Static [String]$WindowBorderHorizontal      = '*------------------*'
-    Static [String]$WindowBorderLeft            = '|'
-    Static [String]$WindowBorderRight           = '|'
     Static [String]$PlayerChevronCharacter      = '❱'
     Static [String]$PlayerChevronBlankCharacter = ' '
+    Static [String]$WindowTitle                 = 'Actions'
 
     Static [ATString]$PlayerChevron = [ATString]@{
         Prefix = [ATStringPrefix]@{
@@ -16256,7 +16251,7 @@ Class BattlePlayerActionWindow : WindowBase {
 
         $this.UpdateDimensions()
 
-        $this.SetupTitle('Actions', [CCTextDefault24]::new())
+        $this.SetupTitle([BattlePlayerActionWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.ActiveChevronIndex = 0
         $this.PlayerChevronDirty = $true
@@ -16616,10 +16611,8 @@ Class BattleStatusMessageWindow : WindowBase {
     Static [Int]$WindowRBRow        = 24
     Static [Int]$WindowRBColumn     = 81
 
-    Static [String]$WindowBorderHorizontal = '*----------------------------------------------------------*'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
-    Static [String]$MessageBlankActual     = '                                                         '
+    Static [String]$MessageBlankActual = '                                                         '
+    Static [String]$WindowTitle        = 'Log'
 
     Static [Single]$MessageSleepTime = 0.2
 
@@ -16648,7 +16641,7 @@ Class BattleStatusMessageWindow : WindowBase {
 
         $this.UpdateDimensions()
 
-        $this.SetupTitle('Log', [CCTextDefault24]::new())
+        $this.SetupTitle([BattleStatusMessageWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.MessageADirty = $false
         $this.MessageBDirty = $false
@@ -17766,10 +17759,6 @@ Class BattleEnemyImageWindow : WindowBase {
     Static [Int]$ImageDrawRowOffset    = [BattleEnemyImageWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [BattleEnemyImageWindow]::WindowLTColumn + 1
 
-    Static [String]$WindowBorderHorizontal = '*-------------------------------------*'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
-
     [Boolean]$ImageDirty
     [ATCoordinates]$ImageDrawCoords
     [EnemyEntityImage]$Image
@@ -17821,10 +17810,8 @@ Class StatusHudWindow : WindowBase {
     Static [Int]$WindowRBRow    = 3
     Static [Int]$WindowRBColumn = 80
 
-    Static [String]$WindowBorderHorizontal = '*-------------------------------------------------------------------------------*'
-    Static [String]$WindowBorderLeft       = '|'
-    Static [String]$WindowBorderRight      = '|'
-    Static [String]$LineBlankStr           = '                                                                              '
+    Static [String]$LineBlankStr = '                                                                              '
+    Static [String]$WindowTitle  = 'Status'
 
     [Boolean]$StatLineDrawDirty
     [ATString]$LineBlank
@@ -17858,7 +17845,7 @@ Class StatusHudWindow : WindowBase {
             Column = [StatusHudWindow]::WindowRBColumn - 48
         }
 
-        $this.SetupTitle('Status', [CCTextDefault24]::new())
+        $this.SetupTitle([StatusHudWindow]::WindowTitle, [CCTextDefault24]::new())
     }
 
     [Void]Draw() {
@@ -18047,12 +18034,10 @@ Class StatusTechniqueSelectionWindow : WindowBase {
     Static [Int]$WindowRBRow    = 9
     Static [Int]$WindowRBColumn = 19
 
-    Static [String]$WindowBorderHorizontal      = '*------------------*'
-    Static [String]$WindowBorderLeft            = '|'
-    Static [String]$WindowBorderRight           = '|'
     Static [String]$PlayerChevronCharacter      = '❱'
     Static [String]$PlayerChevronBlankCharacter = ' '
     Static [String]$NameBlank                   = '              '
+    Static [String]$WindowTitle                 = 'Equipped'
 
     Static [ATString]$PlayerChevron = [ATString]@{
         Prefix = [ATStringPrefix]@{
@@ -18123,7 +18108,7 @@ Class StatusTechniqueSelectionWindow : WindowBase {
         }
         $this.CreateChevrons()
 
-        $this.SetupTitle('Equipped', [CCTextDefault24]::new())
+        $this.SetupTitle([StatusTechniqueSelectionWindow]::WindowTitle, [CCTextDefault24]::new())
     }
 
     [Void]CreateChevrons() {
@@ -18434,9 +18419,6 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [Int]$WindowRBRow    = 16
     Static [Int]$WindowRBColumn = 80
 
-    Static [String]$WindowBorderHorizontal      = '*----------------------------------------------------------*'
-    Static [String]$WindowBorderLeft            = '|'
-    Static [String]$WindowBorderRight           = '|'
     Static [String]$IChevronCharacter           = '❱'
     Static [String]$IChevronCharacterBlank      = ' '
     Static [String]$PagingChevronRightCharacter = "`u{1433}"
@@ -18446,6 +18428,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
     Static [String]$ZpLineBlank                 = '                                                         '
     Static [String]$DescLineBlank               = '                                                         '
     Static [String]$ZeroPagePrompt              = 'You have no techniques in your inventory.'
+    Static [String]$WindowTitle                 = 'Inventory'
 
     Static [ATString]$PagingChevronRight = [ATString]@{
         Prefix = [ATStringPrefix]@{
@@ -18511,7 +18494,7 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
         $this.UpdateDimensions()
 
-        $this.SetupTitle('Inventory', [CCTextDefault24]::new())
+        $this.SetupTitle([StatusTechniqueInventoryWindow]::WindowTitle, [CCTextDefault24]::new())
 
         $this.ItemsPerPage              = 10
         $this.NumPages                  = 1
