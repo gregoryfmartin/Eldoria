@@ -189,6 +189,16 @@ Enum UIELayout {
     Vertical
 }
 
+Enum TtySpeed {
+    SuperSlow = 1000000
+    Slow   = 750000
+    Normal = 100000
+    Moderate = 75000
+    Quick = 65000
+    Fast = 50000
+    SuperFast = 25000
+}
+
 
 
 
@@ -203,6 +213,8 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
 [Int]                             $Script:SceneImagesLoaded            = 0
 [Int]                             $Script:MaxWidth                     = 80
+[Int]                             $Script:SSAPECounter                 = 0
+[Int]                             $Script:SSAPETimeout                 = 1000
 [String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
 [String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
 [String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
@@ -215,6 +227,8 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
 [String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
 [String]                          $Script:BgmTitleThemeA               = "$(Get-Location)\Assets\BGM\Title Theme A.wav"
+[String]                          $Script:BgmTitleThemeB               = "$(Get-Location)\Assets\BGM\Title Theme B.wav"
+[String]                          $Script:TheGameSubtitle              = 'A NOT GARY GAME'
 [Hashtable]                       $Script:SpectreBBPRounded            = @{}
 [Hashtable]                       $Script:SpectreBBPSquare             = @{}
 [Hashtable]                       $Script:CurrentWindowDesign          = @{}
@@ -249,6 +263,10 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Boolean]                         $Script:GpsRestoredFromStaBackup     = $false
 [Boolean]                         $Script:BattleCursorVisible          = $false
 [Boolean]                         $Script:HasTitleBgmStarted           = $false
+[Boolean]                         $Script:HasSubtitleBeenWritten       = $false
+[Boolean]                         $Script:HasSubtitleBeenColored       = $false
+[Boolean]                         $Script:HasSSAPressEnterShown        = $false
+[Boolean]                         $Script:HasSSAPressEnterToggled      = $false
 [EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
 [EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
 [EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
@@ -271,6 +289,9 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Map]                             $Script:CurrentMap                   = $null
 [Map]                             $Script:PreviousMap                  = $null
 [SSAFiglet]                       $Script:TheTitleFiglet               = [SSAFiglet]::new()
+[SSASubtitle]                     $Script:TheSubtitleFiglet            = [SSASubtitle]::new()
+[SSAPressEnterPrompt]             $Script:TheSSAPressEnterPrompt       = [SSAPressEnterPrompt]::new()
+[TtySpeed]                        $Script:TeletypeSpeed                = [TtySpeed]::Slow
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
 Write-Progress -Activity 'Creating Scene Images' -Id 2 -PercentComplete 0
@@ -476,13 +497,60 @@ $Script:Rui = $(Get-Host).UI.RawUI
     If($Script:HasTitleBgmStarted -EQ $false) {
         Start-Sleep -Seconds 1
         Try {
-            $Script:TheBgmMPlayer.Open($Script:BgmTitleThemeA)
+            $Script:TheBgmMPlayer.Open($Script:BgmTitleThemeB)
             $Script:TheBgmMPlayer.Play()
         } Catch {}
         $Script:HasTitleBgmStarted = $true
     }
 
     $Script:TheTitleFiglet.Draw()
+
+    If($Script:HasSubtitleBeenWritten -EQ $false) {
+        [Char[]]$CharArr   = $Script:TheGameSubtitle.ToCharArray()
+        [Int]$PrintCounter = 0
+        [Int]$Probe        = 0
+        [Int]$PrintCol     = 33
+
+        While($Probe -LE ($CharArr.Count - 1)) {
+            $PrintCounter++
+            If($PrintCounter -GE $Script:TeletypeSpeed) {
+                $PrintCounter = 0
+                Write-Host "$([ATControlSequences]::GenerateCoordinateString(9, $PrintCol))$($CharArr[$Probe])" -NoNewline
+                $Probe++
+                $PrintCol++
+            }
+        }
+
+        $Script:HasSubtitleBeenWritten = $true
+    }
+
+    If($Script:HasSubtitleBeenColored -EQ $false) {
+        $Script:TheSubtitleFiglet.Draw()
+        $Script:HasSubtitleBeenColored = $true
+    }
+
+    If((Get-Random -Minimum 1 -Maximum 50000) -LT 250) {
+        $Script:HasSubtitleBeenColored  = $false
+        $Script:TheSubtitleFiglet.Dirty = $true
+    }
+
+    # Write-Host "$([ATControlSequences]::GenerateCoordinateString(15, 35))PRESS ENTER"
+
+    If($Script:HasSSAPressEnterShown -EQ $false) {
+        $Script:TheSSAPressEnterPrompt.Draw()
+        $Script:HasSSAPressEnterShown = $true
+    }
+
+    If($Script:HasSSAPressEnterShown -EQ $true) {
+        $Script:SSAPECounter++
+        If($Script:SSAPECounter -GE $Script:SSAPETimeout) {
+            $Script:SSAPECounter                    = 0
+            $Script:TheSSAPressEnterPrompt.DrawMode = -NOT $Script:TheSSAPressEnterPrompt.DrawMode
+            $Script:TheSSAPressEnterPrompt.Dirty    = $true
+            $Script:TheSSAPressEnterPrompt.Draw()
+        }
+    }
+
     Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 }
 
@@ -19538,17 +19606,458 @@ Class SSAFiglet {
     [Void]Draw() {
         If($this.Dirty -EQ $true) {
             Write-Host "$($this.Title.CompositeActual[0].ToAnsiControlSequenceString())$($this.Title.CompositeActual[1].ToAnsiControlSequenceString())"
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 0.75
             Write-Host "$($this.Title.CompositeActual[2].ToAnsiControlSequenceString())$($this.Title.CompositeActual[3].ToAnsiControlSequenceString())"
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 0.75
             Write-Host "$($this.Title.CompositeActual[4].ToAnsiControlSequenceString())$($this.Title.CompositeActual[5].ToAnsiControlSequenceString())"
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 0.75
             Write-Host "$($this.Title.CompositeActual[6].ToAnsiControlSequenceString())$($this.Title.CompositeActual[7].ToAnsiControlSequenceString())"
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 0.75
             Write-Host "$($this.Title.CompositeActual[8].ToAnsiControlSequenceString())$($this.Title.CompositeActual[9].ToAnsiControlSequenceString())"
-            Start-Sleep -Seconds 0.5
-            # Write-Host "$($this.Title.ToAnsiControlSequenceString())"
+            Start-Sleep -Seconds 0.75
             $this.Dirty = $false
+        }
+    }
+}
+
+Class SSASubtitle {
+    Static [Int]$DrawTop  = 9
+    Static [Int]$DrawLeft = 33
+
+    [Boolean]$Dirty
+    [ATStringComposite]$Text
+
+    SSASubtitle() {
+        $this.Dirty = $true
+        $this.Text  = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft
+                    }
+                }
+                UserData   = 'A'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 1
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 1
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 2
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 2
+                    }
+                }
+                UserData   = 'N'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 3
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 3
+                    }
+                }
+                UserData   = 'O'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 4
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 4
+                    }
+                }
+                UserData   = 'T'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 5
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 5
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 6
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 6
+                    }
+                }
+                UserData   = 'G'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 7
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 7
+                    }
+                }
+                UserData   = 'A'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 8
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 8
+                    }
+                }
+                UserData   = 'R'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 9
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 9
+                    }
+                }
+                UserData   = 'Y'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 10
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 10
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 11
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 11
+                    }
+                }
+                UserData   = 'G'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 12
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 12
+                    }
+                }
+                UserData   = 'A'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 13
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 13
+                    }
+                }
+                UserData   = 'M'
+                UseATReset = $true
+            },
+
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 14
+                    }
+                }
+                UserData   = ' '
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCRandom24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSASubtitle]::DrawTop
+                        Column = [SSASubtitle]::DrawLeft + 14
+                    }
+                }
+                UserData   = 'E'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]Draw() {
+        $this.Text.CompositeActual[1].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[5].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[7].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[9].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[13].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[15].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[17].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[19].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[23].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[25].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[27].Prefix.ForegroundColor = [CCRandom24]::new()
+        $this.Text.CompositeActual[29].Prefix.ForegroundColor = [CCRandom24]::new()
+
+        If($this.Dirty -EQ $true) {
+            Write-Host "$($this.Text.ToAnsiControlSequenceString())"
+            $this.Dirty = $false
+        }
+    }
+}
+
+Class SSAPressEnterPrompt {
+    Static [Int]$DrawTop    = 15
+    Static [Int]$DrawLeft   = 35
+    Static [Int]$DataLength = 11
+
+    Static [String]$LineBlankData = ' ' * [SSAPressEnterPrompt]::DataLength
+
+    [Boolean]$Dirty
+    [Boolean]$DrawMode
+    [ATStringComposite]$Text
+
+    SSAPressEnterPrompt() {
+        $this.Dirty    = $true
+        $this.DrawMode = $false
+        $this.Text     = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAPressEnterPrompt]::DrawTop
+                        Column = [SSAPressEnterPrompt]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAPressEnterPrompt]::LineBlankData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAPressEnterPrompt]::DrawTop
+                        Column = [SSAPressEnterPrompt]::DrawLeft
+                    }
+                }
+                UserData   = 'PRESS ENTER'
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]Draw() {
+        If($this.Dirty -EQ $true) {
+            If($this.DrawMode -EQ $false) {
+                Write-Host "$($this.Text.CompositeActual[0].ToAnsiControlSequenceString())"
+                $this.Dirty = $false
+            } Else {
+                Write-Host "$($this.Text.CompositeActual[1].ToAnsiControlSequenceString())"
+                $this.Dirty = $false
+            }
         }
     }
 }
