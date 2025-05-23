@@ -202,6 +202,7 @@ $PSStyle.Progress.View = 'Classic'
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
 [Int]                             $Script:SceneImagesLoaded            = 0
+[Int]                             $Script:MaxWidth                     = 80
 [String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
 [String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
 [String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
@@ -213,6 +214,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
 [String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
 [String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
+[String]                          $Script:BgmTitleThemeA               = "$(Get-Location)\Assets\BGM\Title Theme A.wav"
 [Hashtable]                       $Script:SpectreBBPRounded            = @{}
 [Hashtable]                       $Script:SpectreBBPSquare             = @{}
 [Hashtable]                       $Script:CurrentWindowDesign          = @{}
@@ -246,6 +248,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Boolean]                         $Script:GpsRestoredFromBatBackup     = $false
 [Boolean]                         $Script:GpsRestoredFromStaBackup     = $false
 [Boolean]                         $Script:BattleCursorVisible          = $false
+[Boolean]                         $Script:HasTitleBgmStarted           = $false
 [EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
 [EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
 [EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
@@ -260,13 +263,14 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::GamePlayScreen
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::SplashScreenA
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                    = $null
 [Map]                             $Script:SampleWarpMap01              = $null
 [Map]                             $Script:SampleWarpMap02              = $null
 [Map]                             $Script:CurrentMap                   = $null
 [Map]                             $Script:PreviousMap                  = $null
+[SSAFiglet]                       $Script:TheTitleFiglet               = [SSAFiglet]::new()
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
 Write-Progress -Activity 'Creating Scene Images' -Id 2 -PercentComplete 0
@@ -466,7 +470,20 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # THE STATE BLOCK TABLE SCRIPTBLOCK DEFINITIONS
 #
 ###############################################################################
-[ScriptBlock]$Script:TheSplashScreenAState = {}
+[ScriptBlock]$Script:TheSplashScreenAState = {
+    Write-Host "$([ATControlSequences]::CursorHide)"
+    $Script:TheTitleFiglet.Draw()
+    Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
+
+    If($Script:HasTitleBgmStarted -EQ $false) {
+        Start-Sleep -Seconds 1
+        Try {
+            $Script:TheBgmMPlayer.Open($Script:BgmTitleThemeA)
+            $Script:TheBgmMPlayer.Play()
+        } Catch {}
+        $Script:HasTitleBgmStarted = $true
+    }
+}
 
 [ScriptBlock]$Script:TheSplashScreenBState = {}
 
@@ -19361,6 +19378,166 @@ Class BattlePhaseIndicator {
             Write-Host "$($this.IndicatorStringBlank.ToAnsiControlSequenceString())$($this.IndicatorStringActual.ToAnsiControlSequenceString())"
             # I'M OMITTING THE ORIGINAL CALL I MADE HERE TO RESET THE CURSOR POSITION TO ORIGIN - SEEMS LIKE A SHIT CALL TO MAKE
             $this.IndicatorDrawDirty = $true
+        }
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# SPLASH SCREEN A (SSA) "FIGLET"
+#
+# I'M HIJACKING THE FIGLET!
+#
+# ... SORT OF. IT'S HARD CODED. DOES THIS STILL COUNT?
+#
+###############################################################################
+Class SSAFiglet {
+    # I DID IT AGAIN! FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    Static [String]$LineBlankData = ' ' * $Script:MaxWidth
+
+    # THIS LOOKS REALLY NEAT IN HERE
+    # DOESN'T LINE UP FOR SHIT IN THE CODE, BUT WHATEVS
+    Static [String]$TitleDataLine1 = '     ░        ░░  ░░░░░░░░       ░░░░      ░░░       ░░░        ░░░      ░░     '
+    Static [String]$TitleDataLine2 = '     ▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒  ▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒▒  ▒▒▒▒  ▒     '
+    Static [String]$TitleDataLine3 = '     ▓      ▓▓▓▓  ▓▓▓▓▓▓▓▓  ▓▓▓▓  ▓▓  ▓▓▓▓  ▓▓       ▓▓▓▓▓▓  ▓▓▓▓▓  ▓▓▓▓  ▓     '
+    Static [String]$TitleDataLine4 = '     █  ████████  ████████  ████  ██  ████  ██  ███  ██████  █████        █     '
+    Static [String]$TitleDataLine5 = '     █        ██        ██       ████      ███  ████  ██        ██  ████  █     '
+
+    Static [Int]$DrawTop  = 1
+    Static [Int]$DrawLeft = 1
+
+    [Boolean]$Dirty
+    [ATStringComposite]$Title
+
+    SSAFiglet() {
+        $this.Dirty = $true
+        $this.Title = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::LineBlankData)"
+                UseATReset = $true
+            }
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleNMintLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::TitleDataLine1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 1
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::LineBlankData)"
+                UseATReset = $true
+            }
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleNGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 1
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::TitleDataLine2)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 2
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::LineBlankData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleNMintLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 2
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::TitleDataLine3)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 3
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::LineBlankData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleNGreenLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 3
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::TitleDataLine4)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCBlack24]::new()
+                    BackgroundColor = [CCBlack24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 4
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::LineBlankData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleNMintLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = [SSAFiglet]::DrawTop + 4
+                        Column = [SSAFiglet]::DrawLeft
+                    }
+                }
+                UserData   = "$([SSAFiglet]::TitleDataLine5)"
+                UseATReset = $true
+            }
+        ))
+    }
+
+    [Void]Draw() {
+        If($this.Dirty -EQ $true) {
+            Write-Host "$($this.Title.ToAnsiControlSequenceString())"
+            $this.Dirty = $false
         }
     }
 }
