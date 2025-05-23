@@ -472,8 +472,6 @@ $Script:Rui = $(Get-Host).UI.RawUI
 ###############################################################################
 [ScriptBlock]$Script:TheSplashScreenAState = {
     Write-Host "$([ATControlSequences]::CursorHide)"
-    $Script:TheTitleFiglet.Draw()
-    Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 
     If($Script:HasTitleBgmStarted -EQ $false) {
         Start-Sleep -Seconds 1
@@ -483,6 +481,9 @@ $Script:Rui = $(Get-Host).UI.RawUI
         } Catch {}
         $Script:HasTitleBgmStarted = $true
     }
+
+    $Script:TheTitleFiglet.Draw()
+    Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 }
 
 [ScriptBlock]$Script:TheSplashScreenBState = {}
@@ -19536,7 +19537,17 @@ Class SSAFiglet {
 
     [Void]Draw() {
         If($this.Dirty -EQ $true) {
-            Write-Host "$($this.Title.ToAnsiControlSequenceString())"
+            Write-Host "$($this.Title.CompositeActual[0].ToAnsiControlSequenceString())$($this.Title.CompositeActual[1].ToAnsiControlSequenceString())"
+            Start-Sleep -Seconds 0.5
+            Write-Host "$($this.Title.CompositeActual[2].ToAnsiControlSequenceString())$($this.Title.CompositeActual[3].ToAnsiControlSequenceString())"
+            Start-Sleep -Seconds 0.5
+            Write-Host "$($this.Title.CompositeActual[4].ToAnsiControlSequenceString())$($this.Title.CompositeActual[5].ToAnsiControlSequenceString())"
+            Start-Sleep -Seconds 0.5
+            Write-Host "$($this.Title.CompositeActual[6].ToAnsiControlSequenceString())$($this.Title.CompositeActual[7].ToAnsiControlSequenceString())"
+            Start-Sleep -Seconds 0.5
+            Write-Host "$($this.Title.CompositeActual[8].ToAnsiControlSequenceString())$($this.Title.CompositeActual[9].ToAnsiControlSequenceString())"
+            Start-Sleep -Seconds 0.5
+            # Write-Host "$($this.Title.ToAnsiControlSequenceString())"
             $this.Dirty = $false
         }
     }
