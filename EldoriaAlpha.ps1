@@ -1089,6 +1089,7 @@ $Script:TheCommandTable = @{
     'l'         = $Script:TheLookCommand
     'inventory' = $Script:TheInventoryCommand
     'i'         = $Script:TheInventoryCommand
+    'inv'       = $Script:TheInventoryCommand
     'examine'   = $Script:TheExamineCommand
     'exa'       = $Script:TheExamineCommand
     'get'       = $Script:TheGetCommand
