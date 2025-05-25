@@ -580,6 +580,9 @@ $Script:Rui = $(Get-Host).UI.RawUI
             } Catch {}
             $Script:HasTitleBgmStarted = $false
 
+            $Script:TheOffThread.Dispose()
+            $Script:TheOffShell.Dispose()
+
             $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
             Start-Sleep -Seconds 1
