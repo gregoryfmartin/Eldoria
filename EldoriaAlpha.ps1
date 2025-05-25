@@ -2,6 +2,7 @@ using namespace System
 using namespace System.Collections
 using namespace System.Collections.Generic
 using namespace System.Management.Automation.Host
+using namespace System.Management.Automation.Runspaces
 using namespace System.Media
 
 Add-Type -AssemblyName PresentationCore
@@ -267,6 +268,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Boolean]                         $Script:HasSubtitleBeenColored       = $false
 [Boolean]                         $Script:HasSSAPressEnterShown        = $false
 [Boolean]                         $Script:HasSSAPressEnterToggled      = $false
+[Boolean]                         $Script:HasSSASetupRunspace          = $false
 [EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
 [EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
 [EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
@@ -292,6 +294,9 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [SSASubtitle]                     $Script:TheSubtitleFiglet            = [SSASubtitle]::new()
 [SSAPressEnterPrompt]             $Script:TheSSAPressEnterPrompt       = [SSAPressEnterPrompt]::new()
 [TtySpeed]                        $Script:TeletypeSpeed                = [TtySpeed]::Slow
+[Runspace]                        $Script:TheOffThread                 = [RunspaceFactory]::CreateRunspace()
+[PowerShell]                      $Script:TheOffShell                  = [PowerShell]::Create()
+[IAsyncResult]                    $Script:SSAInputAsr                  = $null
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
 Write-Progress -Activity 'Creating Scene Images' -Id 2 -PercentComplete 0
@@ -494,6 +499,21 @@ $Script:Rui = $(Get-Host).UI.RawUI
 [ScriptBlock]$Script:TheSplashScreenAState = {
     Write-Host "$([ATControlSequences]::CursorHide)"
 
+    If($Script:HasSSASetupRunspace -EQ $false) {
+        $Script:TheOffThread = [RunspaceFactory]::CreateRunspace()
+        $Script:TheOffShell  = [PowerShell]::Create()
+
+        $Script:TheOffThread.Open()
+        $Script:TheOffShell.Runspace = $Script:TheOffThread
+        $Script:TheOffShell.AddScript({
+            [Console]::ReadKey($true)
+        })
+
+        $Script:SSAInputAsr = $Script:TheOffShell.BeginInvoke()
+
+        $Script:HasSSASetupRunspace = $true
+    }
+
     If($Script:HasTitleBgmStarted -EQ $false) {
         Start-Sleep -Seconds 1
         Try {
@@ -534,8 +554,6 @@ $Script:Rui = $(Get-Host).UI.RawUI
         $Script:TheSubtitleFiglet.Dirty = $true
     }
 
-    # Write-Host "$([ATControlSequences]::GenerateCoordinateString(15, 35))PRESS ENTER"
-
     If($Script:HasSSAPressEnterShown -EQ $false) {
         $Script:TheSSAPressEnterPrompt.Draw()
         $Script:HasSSAPressEnterShown = $true
@@ -548,6 +566,26 @@ $Script:Rui = $(Get-Host).UI.RawUI
             $Script:TheSSAPressEnterPrompt.DrawMode = -NOT $Script:TheSSAPressEnterPrompt.DrawMode
             $Script:TheSSAPressEnterPrompt.Dirty    = $true
             $Script:TheSSAPressEnterPrompt.Draw()
+        }
+    }
+
+    If($Script:SSAInputAsr.IsCompleted -EQ $true) {
+        $SSAKeyPressInfo = $Script:TheOffShell.EndInvoke($Script:SSAInputAsr) | Select-Object -First 1
+        
+        If($SSAKeyPressInfo.Key -NE [ConsoleKey]::Enter) {
+            $Script:HasSSASetupRunspace = $false
+        } Else {
+            Try {
+                $Script:TheBgmMPlayer.Stop()
+            } Catch {}
+            $Script:HasTitleBgmStarted = $false
+
+            $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+
+            Start-Sleep -Seconds 1
+
+            $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+            $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen   
         }
     }
 
