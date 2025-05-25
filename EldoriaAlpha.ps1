@@ -4299,25 +4299,6 @@ Class BattleEntity {
         $this.Affinity        = [BattleActionType]::None
     }
 
-    # THIS CTOR CAN LIKELY GO AWAY
-    # BattleEntity(
-    #     [String]$Name,
-    #     [Hashtable]$Stats,
-    #     [Hashtable]$ActionListing,
-    #     [ScriptBlock]$SpoilsEffect,
-    #     [ActionSlot[]]$ActionMarbleBag,
-    #     [ConsoleColor24]$NameDrawColor,
-    #     [BattleActionType]$Affinity
-    # ) {
-    #     $this.Name            = $Name
-    #     $this.Stats           = $Stats
-    #     $this.ActionListing   = $ActionListing
-    #     $this.SpoilsEffect    = $SpoilsEffect
-    #     $this.ActionMarbleBag = $ActionMarbleBag
-    #     $this.NameDrawColor   = $NameDrawColor
-    #     $this.Affinity        = $Affinity
-    # }
-
     [Void]Update() {
         Foreach($a in $this.Stats.Values) {
             $a.Update()
@@ -4458,50 +4439,6 @@ Class Player : BattleEntity {
         $this.TargetOfFilter  = [List[String]]::new()
         $this.ActionInventory = [PlayerActionInventory]::new()
     }
-
-    # THIS CTOR IS LIKELY NOT NEEDED
-    # Player(
-    #     [Int]$CurrentGold,
-    #     [ATCoordinates]$MapCoordinates,
-    #     [List[MapTileObject]]$Inventory,
-    #     [String[]]$TargetOfFilter
-    # ) : base() {
-    #     $this.CurrentGold     = $CurrentGold
-    #     $this.MapCoordinates  = $MapCoordinates
-    #     $this.Inventory       = $Inventory
-    #     $this.TargetOfFilter  = [List[String]]::new()
-    #     $this.ActionInventory = [PlayerActionInventory]::new()
-    #
-    #     Foreach($a in $TargetOfFilter) {
-    #         $this.TargetOfFilter.Add($a) | Out-Null
-    #     }
-    # }
-    #
-    # THIS CTOR IS LIKELY NOT NEEDED
-    # Player(
-    #     [String]$Name,
-    #     [Int]$BaseHp,
-    #     [Int]$MaxHp,
-    #     [Int]$BaseMp,
-    #     [Int]$MaxMp,
-    #     [Int]$Gold,
-    #     [String[]]$TargetOfFilter
-    # ) : base() {
-    #     $this.Name                              = $Name
-    #     $this.CurrentGold                       = $Gold
-    #     $this.Stats[[StatId]::HitPoints].Base   = $BaseHp
-    #     $this.Stats[[StatId]::HitPoints].Max    = $MaxHp
-    #     $this.Stats[[StatId]::MagicPoints].Base = $BaseMp
-    #     $this.Stats[[StatId]::MagicPoints].Max  = $MaxMp
-    #     $this.MapCoordinates                    = [ATCoordinates]::new(0, 0)
-    #     $this.Inventory                         = [List[MapTileObject]]::new()
-    #     $this.TargetOfFilter                    = [List[String]]::new()
-    #     $this.ActionInventory                   = [PlayerActionInventory]::new()
-    #
-    #     Foreach($a in $TargetOfFilter) {
-    #         $this.TargetOfFilter.Add($a) | Out-Null
-    #     }
-    # }
 
     [Boolean]IsItemInInventory(
         [String]$ItemName
