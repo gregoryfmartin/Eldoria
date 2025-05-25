@@ -283,7 +283,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::SplashScreenA
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::TitleScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                    = $null
 [Map]                             $Script:SampleWarpMap01              = $null
@@ -496,7 +496,11 @@ $Script:Rui = $(Get-Host).UI.RawUI
 # THE STATE BLOCK TABLE SCRIPTBLOCK DEFINITIONS
 #
 ###############################################################################
-[ScriptBlock]$Script:TheSplashScreenAState = {
+[ScriptBlock]$Script:TheSplashScreenAState = {}
+
+[ScriptBlock]$Script:TheSplashScreenBState = {}
+
+[ScriptBlock]$Script:TheTitleScreenState = {
     Write-Host "$([ATControlSequences]::CursorHide)"
 
     If($Script:HasSSASetupRunspace -EQ $false) {
@@ -594,10 +598,6 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
     Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 }
-
-[ScriptBlock]$Script:TheSplashScreenBState = {}
-
-[ScriptBlock]$Script:TheTitleScreenState = {}
 
 [ScriptBlock]$Script:ThePlayerSetupState = {}
 
