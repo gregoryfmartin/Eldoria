@@ -18616,6 +18616,1948 @@ Class BEStarforgedFullPlate : BEArmor {
 
 
 
+###############################################################################
+#
+# BEPAULDRON SPECIALIZATIONS
+#
+###############################################################################
+Class BERustedSpaulders : BEPauldron {
+    BERustedSpaulders() : base() {
+        $this.Name               = 'Rusted Spaulders'
+        $this.MapObjName         = 'rustedspaulders'
+        $this.PurchasePrice      = 15
+        $this.SellPrice          = 7
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Barely hold together, but better than exposed shoulders.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEClothShoulderPads : BEPauldron {
+    BEClothShoulderPads() : base() {
+        $this.Name               = 'Cloth Shoulder Pads'
+        $this.MapObjName         = 'clothshoulderpads'
+        $this.PurchasePrice      = 20
+        $this.SellPrice          = 10
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple cloth pads offering minimal protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThinLeatherPads : BEPauldron {
+    BEThinLeatherPads() : base() {
+        $this.Name               = 'Thin Leather Pads'
+        $this.MapObjName         = 'thinleatherpads'
+        $this.PurchasePrice      = 25
+        $this.SellPrice          = 12
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thin pieces of leather strapped to the shoulders.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWornWoodenPauldrons : BEPauldron {
+    BEWornWoodenPauldrons() : base() {
+        $this.Name               = 'Worn Wooden Pauldrons'
+        $this.MapObjName         = 'wornwoodenpauldrons'
+        $this.PurchasePrice      = 35
+        $this.SellPrice          = 17
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Weathered wooden pieces offering slight shoulder defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEMakeshiftMetalPlates : BEPauldron {
+    BEMakeshiftMetalPlates() : base() {
+        $this.Name               = 'Makeshift Metal Plates'
+        $this.MapObjName         = 'makeshiftmetalplates'
+        $this.PurchasePrice      = 40
+        $this.SellPrice          = 20
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Crudely fashioned metal plates for the shoulders.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHardenedClothWraps : BEPauldron {
+    BEHardenedClothWraps() : base() {
+        $this.Name               = 'Hardened Cloth Wraps'
+        $this.MapObjName         = 'hardenedclothwraps'
+        $this.PurchasePrice      = 50
+        $this.SellPrice          = 25
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick cloth wraps, stiffened for better protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBoiledLeatherSpaulders : BEPauldron {
+    BEBoiledLeatherSpaulders() : base() {
+        $this.Name               = 'Boiled Leather Spaulders'
+        $this.MapObjName         = 'boiledleatherspaulders'
+        $this.PurchasePrice      = 60
+        $this.SellPrice          = 30
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders made from tough, boiled leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEApprenticeEpaulets : BEPauldron {
+    BEApprenticeEpaulets() : base() {
+        $this.Name               = 'Apprentice Epaulets'
+        $this.MapObjName         = 'apprenticeepaulets'
+        $this.PurchasePrice      = 55
+        $this.SellPrice          = 27
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple epaulets often worn by magic apprentices.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEReinforcedLeatherPads : BEPauldron {
+    BEReinforcedLeatherPads() : base() {
+        $this.Name               = 'Reinforced Leather Pads'
+        $this.MapObjName         = 'reinforcedleatherpads'
+        $this.PurchasePrice      = 70
+        $this.SellPrice          = 35
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather shoulder pads with extra layers for durability.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESmallIronPauldrons : BEPauldron {
+    BESmallIronPauldrons() : base() {
+        $this.Name               = 'Small Iron Pauldrons'
+        $this.MapObjName         = 'smallironpauldrons'
+        $this.PurchasePrice      = 80
+        $this.SellPrice          = 40
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Basic iron pauldrons, offering decent protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BETravelersShoulderCape : BEPauldron {
+    BETravelersShoulderCape() : base() {
+        $this.Name               = 'Traveler''s Shoulder Cape'
+        $this.MapObjName         = 'travelersshouldercape'
+        $this.PurchasePrice      = 75
+        $this.SellPrice          = 37
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sturdy cape offering some shoulder protection and elemental resistance.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStuddedHideShoulders : BEPauldron {
+    BEStuddedHideShoulders() : base() {
+        $this.Name               = 'Studded Hide Shoulders'
+        $this.MapObjName         = 'studdedhideshoulders'
+        $this.PurchasePrice      = 90
+        $this.SellPrice          = 45
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pieces made from animal hide, reinforced with studs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECopperGorgetAndSpaulders : BEPauldron {
+    BECopperGorgetAndSpaulders() : base() {
+        $this.Name               = 'Copper Gorget & Spaulders'
+        $this.MapObjName         = 'coppergorgetandspaulders'
+        $this.PurchasePrice      = 100
+        $this.SellPrice          = 50
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A set of copper spaulders with an attached gorget for neck protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BELightweightChainSpaulders : BEPauldron {
+    BELightweightChainSpaulders() : base() {
+        $this.Name               = 'Lightweight Chain Spaulders'
+        $this.MapObjName         = 'lightweightchainspaulders'
+        $this.PurchasePrice      = 120
+        $this.SellPrice          = 60
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders made of fine chain links, offering balanced protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBoneShoulderguards : BEPauldron {
+    BEBoneShoulderguards() : base() {
+        $this.Name               = 'Bone Shoulderguards'
+        $this.MapObjName         = 'boneshoulderguards'
+        $this.PurchasePrice      = 110
+        $this.SellPrice          = 55
+        $this.TargetStats        = @{
+            [StatId]::Defense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards crafted from sturdy animal bones.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEMysticWeavePads : BEPauldron {
+    BEMysticWeavePads() : base() {
+        $this.Name               = 'Mystic Weave Pads'
+        $this.MapObjName         = 'mysticweavepads'
+        $this.PurchasePrice      = 130
+        $this.SellPrice          = 65
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pads woven with threads that shimmer with faint magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBronzePauldrons : BEPauldron {
+    BEBronzePauldrons() : base() {
+        $this.Name               = 'Bronze Pauldrons'
+        $this.MapObjName         = 'bronzepauldrons'
+        $this.PurchasePrice      = 140
+        $this.SellPrice          = 70
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Solid bronze pauldrons offering good physical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGuardiansLeatherSpaulders : BEPauldron {
+    BEGuardiansLeatherSpaulders() : base() {
+        $this.Name               = 'Guardian''s Leather Spaulders'
+        $this.MapObjName         = 'guardiansleatherspaulders'
+        $this.PurchasePrice      = 150
+        $this.SellPrice          = 75
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sturdy leather spaulders favored by town guards.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFurLinedShoulderguards : BEPauldron {
+    BEFurLinedShoulderguards() : base() {
+        $this.Name               = 'Fur-Lined Shoulderguards'
+        $this.MapObjName         = 'furlinedshoulderguards'
+        $this.PurchasePrice      = 160
+        $this.SellPrice          = 80
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards lined with fur for warmth and some protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIronShoulderPlates : BEPauldron {
+    BEIronShoulderPlates() : base() {
+        $this.Name               = 'Iron Shoulder Plates'
+        $this.MapObjName         = 'ironshoulderplates'
+        $this.PurchasePrice      = 170
+        $this.SellPrice          = 85
+        $this.TargetStats        = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple but effective iron plates for shoulder defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEScaledLeatherEpaulets : BEPauldron {
+    BEScaledLeatherEpaulets() : base() {
+        $this.Name               = 'Scaled Leather Epaulets'
+        $this.MapObjName         = 'scaledleatherepaulets'
+        $this.PurchasePrice      = 180
+        $this.SellPrice          = 90
+        $this.TargetStats        = @{
+            [StatId]::Defense = 9
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets made of leather with overlapping small scales.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEnchantedLinenPads : BEPauldron {
+    BEEnchantedLinenPads() : base() {
+        $this.Name               = 'Enchanted Linen Pads'
+        $this.MapObjName         = 'enchantedlinenpads'
+        $this.PurchasePrice      = 190
+        $this.SellPrice          = 95
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Linen shoulder pads imbued with minor magical defenses.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavyWoodenPauldrons : BEPauldron {
+    BEHeavyWoodenPauldrons() : base() {
+        $this.Name               = 'Heavy Wooden Pauldrons'
+        $this.MapObjName         = 'heavywoodenpauldrons'
+        $this.PurchasePrice      = 200
+        $this.SellPrice          = 100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick, cumbersome wooden pauldrons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESpikedIronSpaulders : BEPauldron {
+    BESpikedIronSpaulders() : base() {
+        $this.Name               = 'Spiked Iron Spaulders'
+        $this.MapObjName         = 'spikedironspaulders'
+        $this.PurchasePrice      = 220
+        $this.SellPrice          = 110
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Iron spaulders adorned with intimidating spikes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BECeremonialShoulderDrapes : BEPauldron {
+    BECeremonialShoulderDrapes() : base() {
+        $this.Name               = 'Ceremonial Shoulder Drapes'
+        $this.MapObjName         = 'ceremonialshoulderdrapes'
+        $this.PurchasePrice      = 210
+        $this.SellPrice          = 105
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Ornate shoulder drapes used in ceremonies, offering some magical warding.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESteelPauldrons : BEPauldron {
+    BESteelPauldrons() : base() {
+        $this.Name               = 'Steel Pauldrons'
+        $this.MapObjName         = 'steelpauldrons'
+        $this.PurchasePrice      = 250
+        $this.SellPrice          = 125
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Well-crafted steel pauldrons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEReinforcedChainSpaulders : BEPauldron {
+    BEReinforcedChainSpaulders() : base() {
+        $this.Name               = 'Reinforced Chain Spaulders'
+        $this.MapObjName         = 'reinforcedchainspaulders'
+        $this.PurchasePrice      = 300
+        $this.SellPrice          = 150
+        $this.TargetStats        = @{
+            [StatId]::Defense = 11
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 9
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Chain spaulders with added plating for better protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKnightsShoulderguards : BEPauldron {
+    BEKnightsShoulderguards() : base() {
+        $this.Name               = 'Knight''s Shoulderguards'
+        $this.MapObjName         = 'knightsshoulderguards'
+        $this.PurchasePrice      = 320
+        $this.SellPrice          = 160
+        $this.TargetStats        = @{
+            [StatId]::Defense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sturdy shoulderguards befitting a knight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAdeptMageEpaulets : BEPauldron {
+    BEAdeptMageEpaulets() : base() {
+        $this.Name               = 'Adept Mage Epaulets'
+        $this.MapObjName         = 'adeptmageepaulets'
+        $this.PurchasePrice      = 350
+        $this.SellPrice          = 175
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets worn by adept mages, enhancing magical defenses.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavyLeatherPauldrons : BEPauldron {
+    BEHeavyLeatherPauldrons() : base() {
+        $this.Name               = 'Heavy Leather Pauldrons'
+        $this.MapObjName         = 'heavyleatherpauldrons'
+        $this.PurchasePrice      = 380
+        $this.SellPrice          = 190
+        $this.TargetStats        = @{
+            [StatId]::Defense = 13
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick and heavy leather pauldrons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrnateBronzeSpaulders : BEPauldron {
+    BEOrnateBronzeSpaulders() : base() {
+        $this.Name               = 'Ornate Bronze Spaulders'
+        $this.MapObjName         = 'ornatebronzespaulders'
+        $this.PurchasePrice      = 400
+        $this.SellPrice          = 200
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bronze spaulders with decorative engravings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESoldiersSteelPlates : BEPauldron {
+    BESoldiersSteelPlates() : base() {
+        $this.Name               = 'Soldier''s Steel Plates'
+        $this.MapObjName         = 'soldierssteelplates'
+        $this.PurchasePrice      = 420
+        $this.SellPrice          = 210
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Standard issue steel shoulder plates for soldiers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWolfHideShoulderPads : BEPauldron {
+    BEWolfHideShoulderPads() : base() {
+        $this.Name               = 'Wolf Hide Shoulder Pads'
+        $this.MapObjName         = 'wolfhideshoulderpads'
+        $this.PurchasePrice      = 450
+        $this.SellPrice          = 225
+        $this.TargetStats        = @{
+            [StatId]::Defense = 16
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 13
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pads made from tough wolf hide.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWardensPauldrons : BEPauldron {
+    BEWardensPauldrons() : base() {
+        $this.Name               = 'Warden''s Pauldrons'
+        $this.MapObjName         = 'wardenspauldrons'
+        $this.PurchasePrice      = 480
+        $this.SellPrice          = 240
+        $this.TargetStats        = @{
+            [StatId]::Defense = 14
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 11
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons worn by experienced wardens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEElvenLeafShoulders : BEPauldron {
+    BEElvenLeafShoulders() : base() {
+        $this.Name               = 'Elven Leaf Shoulders'
+        $this.MapObjName         = 'elvenleafshoulders'
+        $this.PurchasePrice      = 500
+        $this.SellPrice          = 250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Graceful shoulder pieces crafted in the likeness of leaves.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFullSteelSpaulders : BEPauldron {
+    BEFullSteelSpaulders() : base() {
+        $this.Name               = 'Full Steel Spaulders'
+        $this.MapObjName         = 'fullsteelspaulders'
+        $this.PurchasePrice      = 550
+        $this.SellPrice          = 275
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Large steel spaulders providing extensive shoulder coverage.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEngravedIronPauldrons : BEPauldron {
+    BEEngravedIronPauldrons() : base() {
+        $this.Name               = 'Engraved Iron Pauldrons'
+        $this.MapObjName         = 'engravedironpauldrons'
+        $this.PurchasePrice      = 580
+        $this.SellPrice          = 290
+        $this.TargetStats        = @{
+            [StatId]::Defense = 17
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 14
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Iron pauldrons with intricate engravings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBattlemageShoulderguards : BEPauldron {
+    BEBattlemageShoulderguards() : base() {
+        $this.Name               = 'Battlemage Shoulderguards'
+        $this.MapObjName         = 'battlemageshoulderguards'
+        $this.PurchasePrice      = 600
+        $this.SellPrice          = 300
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards designed for mages who frequent the front lines.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGryphonFeatherEpaulets : BEPauldron {
+    BEGryphonFeatherEpaulets() : base() {
+        $this.Name               = 'Gryphon Feather Epaulets'
+        $this.MapObjName         = 'gryphonfeatherepaulets'
+        $this.PurchasePrice      = 620
+        $this.SellPrice          = 310
+        $this.TargetStats        = @{
+            [StatId]::Defense = 19
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Lightweight epaulets adorned with gryphon feathers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEPlateShoulderPlates : BEPauldron {
+    BEPlateShoulderPlates() : base() {
+        $this.Name               = 'Plate Shoulder Plates'
+        $this.MapObjName         = 'plateshoulderplates'
+        $this.PurchasePrice      = 650
+        $this.SellPrice          = 325
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Solid metal plates designed to protect the shoulders.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEShadowSilkPads : BEPauldron {
+    BEShadowSilkPads() : base() {
+        $this.Name               = 'Shadow Silk Pads'
+        $this.MapObjName         = 'shadowsilkpads'
+        $this.PurchasePrice      = 680
+        $this.SellPrice          = 340
+        $this.TargetStats        = @{
+            [StatId]::Defense = 9
+            [StatId]::MagicDefense = 13
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pads made from dark, magically imbued silk.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDwarvenSteelPauldrons : BEPauldron {
+    BEDwarvenSteelPauldrons() : base() {
+        $this.Name               = 'Dwarven Steel Pauldrons'
+        $this.MapObjName         = 'dwarvensteelpauldrons'
+        $this.PurchasePrice      = 700
+        $this.SellPrice          = 350
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Masterfully crafted steel pauldrons of dwarven make.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESilverThreadEpaulets : BEPauldron {
+    BESilverThreadEpaulets() : base() {
+        $this.Name               = 'Silver Thread Epaulets'
+        $this.MapObjName         = 'silverthreadepaulets'
+        $this.PurchasePrice      = 720
+        $this.SellPrice          = 360
+        $this.TargetStats        = @{
+            [StatId]::Defense = 16
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 13
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Elegant epaulets woven with silver threads.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGladiatorsSpaulders : BEPauldron {
+    BEGladiatorsSpaulders() : base() {
+        $this.Name               = 'Gladiator''s Spaulders'
+        $this.MapObjName         = 'gladiatorsspaulders'
+        $this.PurchasePrice      = 750
+        $this.SellPrice          = 375
+        $this.TargetStats        = @{
+            [StatId]::Defense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders worn by arena champions, scarred from battle.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BERunicLeatherShoulders : BEPauldron {
+    BERunicLeatherShoulders() : base() {
+        $this.Name               = 'Runic Leather Shoulders'
+        $this.MapObjName         = 'runicleathershoulders'
+        $this.PurchasePrice      = 780
+        $this.SellPrice          = 390
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 11
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather shoulder pieces inscribed with protective runes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEObsidianChipPauldrons : BEPauldron {
+    BEObsidianChipPauldrons() : base() {
+        $this.Name               = 'Obsidian Chip Pauldrons'
+        $this.MapObjName         = 'obsidianchippauldrons'
+        $this.PurchasePrice      = 800
+        $this.SellPrice          = 400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 21
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 18
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons embedded with sharp obsidian chips.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEForestGuardMantle : BEPauldron {
+    BEForestGuardMantle() : base() {
+        $this.Name               = 'Forest Guard Mantle'
+        $this.MapObjName         = 'forestguardmantle'
+        $this.PurchasePrice      = 830
+        $this.SellPrice          = 415
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+            [StatId]::MagicDefense = 9
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mantle worn by guardians of the forest, blending protection and camouflage.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESpellWovenShoulderguards : BEPauldron {
+    BESpellWovenShoulderguards() : base() {
+        $this.Name               = 'Spell-Woven Shoulderguards'
+        $this.MapObjName         = 'spellwovenshoulderguards'
+        $this.PurchasePrice      = 850
+        $this.SellPrice          = 425
+        $this.TargetStats        = @{
+            [StatId]::Defense = 11
+            [StatId]::MagicDefense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 9
+            [StatId]::MagicDefense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards with magical enchantments woven into their fabric.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavySteelPauldrons : BEPauldron {
+    BEHeavySteelPauldrons() : base() {
+        $this.Name               = 'Heavy Steel Pauldrons'
+        $this.MapObjName         = 'heavysteelpauldrons'
+        $this.PurchasePrice      = 880
+        $this.SellPrice          = 440
+        $this.TargetStats        = @{
+            [StatId]::Defense = 24
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick, heavy steel pauldrons for maximum physical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWyrmScaleSpaulders : BEPauldron {
+    BEWyrmScaleSpaulders() : base() {
+        $this.Name               = 'Wyrm Scale Spaulders'
+        $this.MapObjName         = 'wyrmscalespaulders'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 23
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 19
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders crafted from the scales of a young wyrm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEEnchantedSteelEpaulets : BEPauldron {
+    BEEnchantedSteelEpaulets() : base() {
+        $this.Name               = 'Enchanted Steel Epaulets'
+        $this.MapObjName         = 'enchantedsteelepaulets'
+        $this.PurchasePrice      = 920
+        $this.SellPrice          = 460
+        $this.TargetStats        = @{
+            [StatId]::Defense = 17
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 14
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Steel epaulets imbued with protective enchantments.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBarbarianFurShoulders : BEPauldron {
+    BEBarbarianFurShoulders() : base() {
+        $this.Name               = 'Barbarian Fur Shoulders'
+        $this.MapObjName         = 'barbarianfurshoulders'
+        $this.PurchasePrice      = 950
+        $this.SellPrice          = 475
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 21
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick fur shoulder coverings favored by barbarians.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAncientGlyphPauldrons : BEPauldron {
+    BEAncientGlyphPauldrons() : base() {
+        $this.Name               = 'Ancient Glyph Pauldrons'
+        $this.MapObjName         = 'ancientglyphpauldrons'
+        $this.PurchasePrice      = 980
+        $this.SellPrice          = 490
+        $this.TargetStats        = @{
+            [StatId]::Defense = 19
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 16
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons marked with ancient, powerful glyphs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESorcerersShoulderDrapes : BEPauldron {
+    BESorcerersShoulderDrapes() : base() {
+        $this.Name               = 'Sorcerer''s Shoulder Drapes'
+        $this.MapObjName         = 'sorcerersshoulderdrapes'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 13
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Ornate drapes worn by sorcerers, offering magical protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKnightCommanderPauldrons : BEPauldron {
+    BEKnightCommanderPauldrons() : base() {
+        $this.Name               = 'Knight Commander Pauldrons'
+        $this.MapObjName         = 'knightcommanderpauldrons'
+        $this.PurchasePrice      = 1050
+        $this.SellPrice          = 525
+        $this.TargetStats        = @{
+            [StatId]::Defense = 26
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Impressive pauldrons worn by knight commanders.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEMithrilPauldrons : BEPauldron {
+    BEMithrilPauldrons() : base() {
+        $this.Name               = 'Mithril Pauldrons'
+        $this.MapObjName         = 'mithrilpauldrons'
+        $this.PurchasePrice      = 1100
+        $this.SellPrice          = 550
+        $this.TargetStats        = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 23
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Light yet incredibly strong pauldrons made of mithril.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiteSpaulders : BEPauldron {
+    BEAdamantiteSpaulders() : base() {
+        $this.Name               = 'Adamantite Spaulders'
+        $this.MapObjName         = 'adamantitespaulders'
+        $this.PurchasePrice      = 1200
+        $this.SellPrice          = 600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders forged from nearly indestructible adamantite.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEArchonsEpaulets : BEPauldron {
+    BEArchonsEpaulets() : base() {
+        $this.Name               = 'Archon''s Epaulets'
+        $this.MapObjName         = 'archonsepaulets'
+        $this.PurchasePrice      = 1250
+        $this.SellPrice          = 625
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets imbued with the power of an archon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonhideShoulderguards : BEPauldron {
+    BEDragonhideShoulderguards() : base() {
+        $this.Name               = 'Dragonhide Shoulderguards'
+        $this.MapObjName         = 'dragonhideshoulderguards'
+        $this.PurchasePrice      = 1300
+        $this.SellPrice          = 650
+        $this.TargetStats        = @{
+            [StatId]::Defense = 32
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 26
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards crafted from resilient dragonhide.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarSilverPauldrons : BEPauldron {
+    BEStarSilverPauldrons() : base() {
+        $this.Name               = 'Star Silver Pauldrons'
+        $this.MapObjName         = 'starsilverpauldrons'
+        $this.PurchasePrice      = 1350
+        $this.SellPrice          = 675
+        $this.TargetStats        = @{
+            [StatId]::Defense = 29
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 24
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons made from silver mined from a fallen star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPaladinsShoulderPlates : BEPauldron {
+    BEPaladinsShoulderPlates() : base() {
+        $this.Name               = 'Paladin''s Shoulder Plates'
+        $this.MapObjName         = 'paladinsshoulderplates'
+        $this.PurchasePrice      = 1400
+        $this.SellPrice          = 700
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 29
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Blessed shoulder plates worn by holy warriors.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEVoidtouchedMantle : BEPauldron {
+    BEVoidtouchedMantle() : base() {
+        $this.Name               = 'Void-touched Mantle'
+        $this.MapObjName         = 'voidtouchedmantle'
+        $this.PurchasePrice      = 1450
+        $this.SellPrice          = 725
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 17
+            [StatId]::MagicDefense = 18
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mantle that seems to shimmer with the emptiness of the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrichalcumSpaulders : BEPauldron {
+    BEOrichalcumSpaulders() : base() {
+        $this.Name               = 'Orichalcum Spaulders'
+        $this.MapObjName         = 'orichalcumspaulders'
+        $this.PurchasePrice      = 1500
+        $this.SellPrice          = 750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 33
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 27
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders crafted from the rare and magically conductive orichalcum.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGolemsHeartPauldrons : BEPauldron {
+    BEGolemsHeartPauldrons() : base() {
+        $this.Name               = 'Golem''s Heart Pauldrons'
+        $this.MapObjName         = 'golemsheartpauldrons'
+        $this.PurchasePrice      = 1550
+        $this.SellPrice          = 775
+        $this.TargetStats        = @{
+            [StatId]::Defense = 38
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 31
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Massive pauldrons, as if taken from the core of a golem.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BECelestialWeaveEpaulets : BEPauldron {
+    BECelestialWeaveEpaulets() : base() {
+        $this.Name               = 'Celestial Weave Epaulets'
+        $this.MapObjName         = 'celestialweaveepaulets'
+        $this.PurchasePrice      = 1600
+        $this.SellPrice          = 800
+        $this.TargetStats        = @{
+            [StatId]::Defense = 22
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 18
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets woven with threads of starlight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHellforgedShoulderguards : BEPauldron {
+    BEHellforgedShoulderguards() : base() {
+        $this.Name               = 'Hellforged Shoulderguards'
+        $this.MapObjName         = 'hellforgedshoulderguards'
+        $this.PurchasePrice      = 1650
+        $this.SellPrice          = 825
+        $this.TargetStats        = @{
+            [StatId]::Defense = 36
+            [StatId]::MagicDefense = 9
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards forged in infernal fires, radiating heat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFrostGiantPauldrons : BEPauldron {
+    BEFrostGiantPauldrons() : base() {
+        $this.Name               = 'Frost Giant Pauldrons'
+        $this.MapObjName         = 'frostgiantpauldrons'
+        $this.PurchasePrice      = 1700
+        $this.SellPrice          = 850
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 33
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Massive pauldrons taken from a frost giant, chilling to the touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEShadowLordSpaulders : BEPauldron {
+    BEShadowLordSpaulders() : base() {
+        $this.Name               = 'Shadow Lord Spaulders'
+        $this.MapObjName         = 'shadowlordspaulders'
+        $this.PurchasePrice      = 1750
+        $this.SellPrice          = 875
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 23
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders worn by a lord of shadows, difficult to see clearly.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStormTitanShoulders : BEPauldron {
+    BEStormTitanShoulders() : base() {
+        $this.Name               = 'Storm Titan Shoulders'
+        $this.MapObjName         = 'stormtitanshoulders'
+        $this.PurchasePrice      = 1800
+        $this.SellPrice          = 900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 39
+            [StatId]::MagicDefense = 11
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 32
+            [StatId]::MagicDefense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pieces from a storm titan, crackling with energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixAshMantle : BEPauldron {
+    BEPhoenixAshMantle() : base() {
+        $this.Name               = 'Phoenix Ash Mantle'
+        $this.MapObjName         = 'phoenixashmantle'
+        $this.PurchasePrice      = 1850
+        $this.SellPrice          = 925
+        $this.TargetStats        = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 23
+            [StatId]::MagicDefense = 23
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mantle woven from phoenix ash, warm to the touch and resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAncientKingsPauldrons : BEPauldron {
+    BEAncientKingsPauldrons() : base() {
+        $this.Name               = 'Ancient King''s Pauldrons'
+        $this.MapObjName         = 'ancientkingspauldrons'
+        $this.PurchasePrice      = 1900
+        $this.SellPrice          = 950
+        $this.TargetStats        = @{
+            [StatId]::Defense = 42
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 35
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Regal pauldrons belonging to a king from a bygone era.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEmpyreanGuardEpaulets : BEPauldron {
+    BEEmpyreanGuardEpaulets() : base() {
+        $this.Name               = 'Empyrean Guard Epaulets'
+        $this.MapObjName         = 'empyreanguardepaulets'
+        $this.PurchasePrice      = 1950
+        $this.SellPrice          = 975
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 26
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 21
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets worn by celestial guardians, shimmering with holy light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEColossalSteelSpaulders : BEPauldron {
+    BEColossalSteelSpaulders() : base() {
+        $this.Name               = 'Colossal Steel Spaulders'
+        $this.MapObjName         = 'colossalsteelspaulders'
+        $this.PurchasePrice      = 2000
+        $this.SellPrice          = 1000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 37
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders of immense size and weight, made of solid steel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWyrmLordShoulderPlates : BEPauldron {
+    BEWyrmLordShoulderPlates() : base() {
+        $this.Name               = 'Wyrm Lord Shoulder Plates'
+        $this.MapObjName         = 'wyrmlordshoulderplates'
+        $this.PurchasePrice      = 2100
+        $this.SellPrice          = 1050
+        $this.TargetStats        = @{
+            [StatId]::Defense = 38
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 31
+            [StatId]::MagicDefense = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder plates crafted from the scales of a powerful Wyrm Lord.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBloodRitualPauldrons : BEPauldron {
+    BEBloodRitualPauldrons() : base() {
+        $this.Name               = 'Blood Ritual Pauldrons'
+        $this.MapObjName         = 'bloodritualpauldrons'
+        $this.PurchasePrice      = 2200
+        $this.SellPrice          = 1100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 43
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 36
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons stained with blood from dark rituals, emanating a sinister aura.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOracleWeaveShoulders : BEPauldron {
+    BEOracleWeaveShoulders() : base() {
+        $this.Name               = 'Oracle Weave Shoulders'
+        $this.MapObjName         = 'oracleweaveshoulders'
+        $this.PurchasePrice      = 2300
+        $this.SellPrice          = 1150
+        $this.TargetStats        = @{
+            [StatId]::Defense = 27
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 22
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pieces woven with threads that grant foresight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiumPlatedPauldrons : BEPauldron {
+    BEAdamantiumPlatedPauldrons() : base() {
+        $this.Name               = 'Adamantium-Plated Pauldrons'
+        $this.MapObjName         = 'adamantiumplatedpauldrons'
+        $this.PurchasePrice      = 2400
+        $this.SellPrice          = 1200
+        $this.TargetStats        = @{
+            [StatId]::Defense = 48
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 39
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons reinforced with plates of nearly unbreakable adamantium.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEShadowmeldSpaulders : BEPauldron {
+    BEShadowmeldSpaulders() : base() {
+        $this.Name               = 'Shadowmeld Spaulders'
+        $this.MapObjName         = 'shadowmeldspaulders'
+        $this.PurchasePrice      = 2500
+        $this.SellPrice          = 1250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 29
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders that allow the wearer to blend into shadows.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderclapEpaulets : BEPauldron {
+    BEThunderclapEpaulets() : base() {
+        $this.Name               = 'Thunderclap Epaulets'
+        $this.MapObjName         = 'thunderclapepaulets'
+        $this.PurchasePrice      = 2600
+        $this.SellPrice          = 1300
+        $this.TargetStats        = @{
+            [StatId]::Defense = 41
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 34
+            [StatId]::MagicDefense = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets that crackle with the sound of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernalSoulPauldrons : BEPauldron {
+    BEInfernalSoulPauldrons() : base() {
+        $this.Name               = 'Infernal Soul Pauldrons'
+        $this.MapObjName         = 'infernalsoulpauldrons'
+        $this.PurchasePrice      = 2700
+        $this.SellPrice          = 1350
+        $this.TargetStats        = @{
+            [StatId]::Defense = 32
+            [StatId]::MagicDefense = 29
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 26
+            [StatId]::MagicDefense = 23
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons imbued with the tormented souls of the inferno.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChampionOfTheLightShoulders : BEPauldron {
+    BEChampionOfTheLightShoulders() : base() {
+        $this.Name               = 'Champion of the Light Shoulders'
+        $this.MapObjName         = 'championofthelightshoulders'
+        $this.PurchasePrice      = 2800
+        $this.SellPrice          = 1400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 41
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulderguards worn by a champion dedicated to the light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarfallMantle : BEPauldron {
+    BEStarfallMantle() : base() {
+        $this.Name               = 'Starfall Mantle'
+        $this.MapObjName         = 'starfallmantle'
+        $this.PurchasePrice      = 2850
+        $this.SellPrice          = 1425
+        $this.TargetStats        = @{
+            [StatId]::Defense = 38
+            [StatId]::MagicDefense = 32
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 31
+            [StatId]::MagicDefense = 26
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mantle that seems to capture the essence of falling stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGorgonScalePauldrons : BEPauldron {
+    BEGorgonScalePauldrons() : base() {
+        $this.Name               = 'Gorgon Scale Pauldrons'
+        $this.MapObjName         = 'gorgonscalepauldrons'
+        $this.PurchasePrice      = 2900
+        $this.SellPrice          = 1450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 46
+            [StatId]::MagicDefense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 38
+            [StatId]::MagicDefense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons crafted from the petrifying scales of a gorgon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidForgedSpaulders : BEPauldron {
+    BEVoidForgedSpaulders() : base() {
+        $this.Name               = 'Void-Forged Spaulders'
+        $this.MapObjName         = 'voidforgedspaulders'
+        $this.PurchasePrice      = 2950
+        $this.SellPrice          = 1475
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders seemingly forged from the emptiness of the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchonBlessedPauldrons : BEPauldron {
+    BEArchonBlessedPauldrons() : base() {
+        $this.Name               = 'Archon-Blessed Pauldrons'
+        $this.MapObjName         = 'archonblessedpauldrons'
+        $this.PurchasePrice      = 3000
+        $this.SellPrice          = 1500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 52
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 43
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons blessed by a powerful archon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEDivineGuardianShoulders : BEPauldron {
+    BEDivineGuardianShoulders() : base() {
+        $this.Name               = 'Divine Guardian Shoulders'
+        $this.MapObjName         = 'divineguardianshoulders'
+        $this.PurchasePrice      = 3500
+        $this.SellPrice          = 1750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 45
+            [StatId]::MagicDefense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pieces imbued with divine energy for ultimate protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKrakenbonePauldrons : BEPauldron {
+    BEKrakenbonePauldrons() : base() {
+        $this.Name               = 'Krakenbone Pauldrons'
+        $this.MapObjName         = 'krakenbonepauldrons'
+        $this.PurchasePrice      = 3800
+        $this.SellPrice          = 1900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 50
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons crafted from the bones of a mighty kraken.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWarlordsWarPauldrons : BEPauldron {
+    BEWarlordsWarPauldrons() : base() {
+        $this.Name               = 'Warlord''s War Pauldrons'
+        $this.MapObjName         = 'warlordswarpauldrons'
+        $this.PurchasePrice      = 4000
+        $this.SellPrice          = 2000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 48
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The imposing war pauldrons of a conquering warlord.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPrismaticAegisSpaulders : BEPauldron {
+    BEPrismaticAegisSpaulders() : base() {
+        $this.Name               = 'Prismatic Aegis Spaulders'
+        $this.MapObjName         = 'prismaticaegisspaulders'
+        $this.PurchasePrice      = 4200
+        $this.SellPrice          = 2100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 33
+            [StatId]::MagicDefense = 33
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders that shimmer with all colors, deflecting various energies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBehemothHideMantle : BEPauldron {
+    BEBehemothHideMantle() : base() {
+        $this.Name               = 'Behemoth Hide Mantle'
+        $this.MapObjName         = 'behemothhidemantle'
+        $this.PurchasePrice      = 4500
+        $this.SellPrice          = 2250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 54
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A massive mantle made from the hide of a colossal behemoth.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESeraphicWingEpaulets : BEPauldron {
+    BESeraphicWingEpaulets() : base() {
+        $this.Name               = 'Seraphic Wing Epaulets'
+        $this.MapObjName         = 'seraphicwingepaulets'
+        $this.PurchasePrice      = 4800
+        $this.SellPrice          = 2400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 37
+            [StatId]::MagicDefense = 37
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets shaped like seraphic wings, imbued with holy power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonSovereignPauldrons : BEPauldron {
+    BEDragonSovereignPauldrons() : base() {
+        $this.Name               = 'Dragon Sovereign Pauldrons'
+        $this.MapObjName         = 'dragonsovereignpauldrons'
+        $this.PurchasePrice      = 5200
+        $this.SellPrice          = 2600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons fit for a dragon sovereign, immensely powerful.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAstralGuardianShoulders : BEPauldron {
+    BEAstralGuardianShoulders() : base() {
+        $this.Name               = 'Astral Guardian Shoulders'
+        $this.MapObjName         = 'astralguardianshoulders'
+        $this.PurchasePrice      = 5500
+        $this.SellPrice          = 2750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 41
+            [StatId]::MagicDefense = 41
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pieces woven from astral threads, offering otherworldly protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInvincibleBulwarkSpaulders : BEPauldron {
+    BEInvincibleBulwarkSpaulders() : base() {
+        $this.Name               = 'Invincible Bulwark Spaulders'
+        $this.MapObjName         = 'invinciblebulwarkspaulders'
+        $this.PurchasePrice      = 6000
+        $this.SellPrice          = 3000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 62
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders fabled to make the wearer nearly impervious to harm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGodhandEmbraceEpaulets : BEPauldron {
+    BEGodhandEmbraceEpaulets() : base() {
+        $this.Name               = 'Godhand Embrace Epaulets'
+        $this.MapObjName         = 'godhandembraceepaulets'
+        $this.PurchasePrice      = 6500
+        $this.SellPrice          = 3250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 46
+            [StatId]::MagicDefense = 46
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Epaulets said to be touched by a divine entity, granting immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldTreeHeartwoodPauldrons : BEPauldron {
+    BEWorldTreeHeartwoodPauldrons() : base() {
+        $this.Name               = 'World Tree Heartwood Pauldrons'
+        $this.MapObjName         = 'worldtreeheartwoodpauldrons'
+        $this.PurchasePrice      = 7000
+        $this.SellPrice          = 3500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 68
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 56
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons crafted from the hardened heartwood of the World Tree.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixSoulSpaulders : BEPauldron {
+    BEPhoenixSoulSpaulders() : base() {
+        $this.Name               = 'Phoenix Soul Spaulders'
+        $this.MapObjName         = 'phoenixsoulspaulders'
+        $this.PurchasePrice      = 7500
+        $this.SellPrice          = 3750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 78
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Spaulders imbued with the fiery spirit and resilience of a phoenix.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalVoidMantle : BEPauldron {
+    BEAbyssalVoidMantle() : base() {
+        $this.Name               = 'Abyssal Void Mantle'
+        $this.MapObjName         = 'abyssalvoidmantle'
+        $this.PurchasePrice      = 8000
+        $this.SellPrice          = 4000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 50
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A dark mantle that seems to absorb all light and sound, offering profound protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedAegisPauldrons : BEPauldron {
+    BEStarforgedAegisPauldrons() : base() {
+        $this.Name               = 'Starforged Aegis Pauldrons'
+        $this.MapObjName         = 'starforgedaegispauldrons'
+        $this.PurchasePrice      = 9000
+        $this.SellPrice          = 4500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 68
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Pauldrons forged in the heart of a dying star, offering unparalleled defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAspectOfTheCreatorShoulders : BEPauldron {
+    BEAspectOfTheCreatorShoulders() : base() {
+        $this.Name               = 'Aspect of the Creator Shoulders'
+        $this.MapObjName         = 'aspectofthecreatorshoulders'
+        $this.PurchasePrice      = 10000
+        $this.SellPrice          = 5000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 58
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoulder pieces said to be a fragment of the Creator''s own power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+
+
+
+
+
 
 
 
