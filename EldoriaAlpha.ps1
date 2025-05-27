@@ -9640,10 +9640,8984 @@ Class Map {
 #
 # THE BASE CLASS FOR ITEMS INTENDED TO BE USED AS EQUIPMENT FOR THE PLAYER.
 #
+# INSTEAD OF USING ENUMERATIONS FOR THE DIFFERENT KINDS OF EQUIPMENT, I'LL
+# BE USING DIFFERENT BASE CLASSES.
+#
 ###############################################################################
-Class BattleEquipment : MapTileObject {
-    
+Class BattleEquipment : MapTileObject {    
+    [Int]$PurchasePrice
+    [Int]$SellPrice
+    [Hashtable]$TargetStats
+    [Hashtable]$RequiredStats
+
+    BattleEquipment() : base() {
+        $this.PurchasePrice = 0
+        $this.SellPrice     = 0
+        $this.TargetStats   = @{}
+        $this.RequiredStats = @{}
+    }
 }
+
+Class BEWeapon : BattleEquipment {}
+
+Class BEHelmet : BattleEquipment {}
+
+Class BEArmor : BattleEquipment {}
+
+Class BEPauldron : BattleEquipment {}
+
+Class BEGauntlets : BattleEquipment {}
+
+Class BEGreaves : BattleEquipment {}
+
+Class BEBoots : BattleEquipment {}
+
+Class BEJewelry : BattleEquipment {}
+
+Class BECape : BattleEquipment {}
+
+
+
+
+
+###############################################################################
+#
+# BATTLE EQUIPMENT - WEAPON SPECIALIZATIONS
+#
+###############################################################################
+
+Class BERustyDagger : BEWeapon {
+    BERustyDagger() : base() {
+        $this.Name               = 'Rusty Dagger'
+        $this.MapObjName         = 'rustydagger'
+        $this.PurchasePrice      = 50
+        $this.SellPrice          = 25
+        $this.TargetStats        = @{
+            [StatId]::Attack = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A somewhat dull and rusted dagger.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEWoodenClub : BEWeapon {
+    BEWoodenClub() : base() {
+        $this.Name               = 'Wooden Club'
+        $this.MapObjName         = 'woodenclub'
+        $this.PurchasePrice      = 70
+        $this.SellPrice          = 35
+        $this.TargetStats        = @{
+            [StatId]::Attack = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sturdy club made of wood.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEShortBow : BEWeapon {
+    BEShortBow() : base() {
+        $this.Name               = 'Short Bow'
+        $this.MapObjName         = 'shortbow'
+        $this.PurchasePrice      = 100
+        $this.SellPrice          = 50
+        $this.TargetStats        = @{
+            [StatId]::Attack = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A simple short bow, good for beginners.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEBronzeSword : BEWeapon {
+    BEBronzeSword() : base() {
+        $this.Name               = 'Bronze Sword'
+        $this.MapObjName         = 'bronzesword'
+        $this.PurchasePrice      = 150
+        $this.SellPrice          = 75
+        $this.TargetStats        = @{
+            [StatId]::Attack = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A basic sword forged from bronze.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BETrainingSpear : BEWeapon {
+    BETrainingSpear() : base() {
+        $this.Name               = 'Training Spear'
+        $this.MapObjName         = 'trainingspear'
+        $this.PurchasePrice      = 120
+        $this.SellPrice          = 60
+        $this.TargetStats        = @{
+            [StatId]::Attack = 9
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A spear used for training purposes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEWornGauntlets : BEWeapon {
+    BEWornGauntlets() : base() {
+        $this.Name               = 'Worn Gauntlets'
+        $this.MapObjName         = 'worngauntlets'
+        $this.PurchasePrice      = 80
+        $this.SellPrice          = 40
+        $this.TargetStats        = @{
+            [StatId]::Attack = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Old, worn gauntlets that offer minimal protection and striking power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BESimpleStaff : BEWeapon {
+    BESimpleStaff() : base() {
+        $this.Name               = 'Simple Staff'
+        $this.MapObjName         = 'simplestaff'
+        $this.PurchasePrice      = 200
+        $this.SellPrice          = 100
+        $this.TargetStats        = @{
+            [StatId]::Attack = 12 # Staves might also boost MagicAttack, consider adding to TargetStats
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A basic wooden staff, sometimes used by mages.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEIronAxe : BEWeapon {
+    BEIronAxe() : base() {
+        $this.Name               = 'Iron Axe'
+        $this.MapObjName         = 'ironaxe'
+        $this.PurchasePrice      = 300
+        $this.SellPrice          = 150
+        $this.TargetStats        = @{
+            [StatId]::Attack = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hefty axe made of iron.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BELeatherWhip : BEWeapon {
+    BELeatherWhip() : base() {
+        $this.Name               = 'Leather Whip'
+        $this.MapObjName         = 'leatherwhip'
+        $this.PurchasePrice      = 250
+        $this.SellPrice          = 125
+        $this.TargetStats        = @{
+            [StatId]::Attack = 13
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A whip made of tough leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEPointyStick : BEWeapon {
+    BEPointyStick() : base() {
+        $this.Name               = 'Pointy Stick'
+        $this.MapObjName         = 'pointystick'
+        $this.PurchasePrice      = 30
+        $this.SellPrice          = 15
+        $this.TargetStats        = @{
+            [StatId]::Attack = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'It''s a stick, and it''s pointy. Surprisingly effective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BESteelDagger : BEWeapon {
+    BESteelDagger() : base() {
+        $this.Name               = 'Steel Dagger'
+        $this.MapObjName         = 'steeldagger'
+        $this.PurchasePrice      = 600
+        $this.SellPrice          = 300
+        $this.TargetStats        = @{
+            [StatId]::Attack = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sharp dagger forged from steel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BESpikedMace : BEWeapon {
+    BESpikedMace() : base() {
+        $this.Name               = 'Spiked Mace'
+        $this.MapObjName         = 'spikedmace'
+        $this.PurchasePrice      = 750
+        $this.SellPrice          = 375
+        $this.TargetStats        = @{
+            [StatId]::Attack = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mace with dangerous-looking spikes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEHuntersBow : BEWeapon { # Apostrophe removed for class name
+    BEHuntersBow() : base() {
+        $this.Name               = 'Hunter''s Bow'
+        $this.MapObjName         = 'huntersbow'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{
+            [StatId]::Attack = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A bow favored by skilled hunters.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEIronSword : BEWeapon {
+    BEIronSword() : base() {
+        $this.Name               = 'Iron Sword'
+        $this.MapObjName         = 'ironsword'
+        $this.PurchasePrice      = 1200
+        $this.SellPrice          = 600
+        $this.TargetStats        = @{
+            [StatId]::Attack = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A reliable sword made of iron.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BESoldiersSpear : BEWeapon {
+    BESoldiersSpear() : base() {
+        $this.Name               = 'Soldier''s Spear'
+        $this.MapObjName         = 'soldiersspear'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 29
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Standard issue spear for soldiers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEReinforcedGauntlets : BEWeapon {
+    BEReinforcedGauntlets() : base() {
+        $this.Name               = 'Reinforced Gauntlets'
+        $this.MapObjName         = 'reinforcedgauntlets'
+        $this.PurchasePrice      = 700
+        $this.SellPrice          = 350
+        $this.TargetStats        = @{
+            [StatId]::Attack = 24
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets reinforced with metal plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEAdeptsStaff : BEWeapon {
+    BEAdeptsStaff() : base() {
+        $this.Name               = 'Adept''s Staff'
+        $this.MapObjName         = 'adeptsstaff'
+        $this.PurchasePrice      = 1500
+        $this.SellPrice          = 750
+        $this.TargetStats        = @{
+            [StatId]::Attack      = 35
+            [StatId]::MagicAttack = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack      = 18
+            [StatId]::MagicAttack = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A staff wielded by an adept magic user.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power :: +$($this.TargetStats[[StatId]::MagicAttack]) Magic Attack"
+    }
+}
+
+Class BEBattleAxe : BEWeapon {
+    BEBattleAxe() : base() {
+        $this.Name               = 'Battle Axe'
+        $this.MapObjName         = 'battleaxe'
+        $this.PurchasePrice      = 2000
+        $this.SellPrice          = 1000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A large axe designed for combat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEChainWhip : BEWeapon {
+    BEChainWhip() : base() {
+        $this.Name               = 'Chain Whip'
+        $this.MapObjName         = 'chainwhip'
+        $this.PurchasePrice      = 1800
+        $this.SellPrice          = 900
+        $this.TargetStats        = @{
+            [StatId]::Attack = 38
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A whip made of interlocking metal chains.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEBroadsword : BEWeapon {
+    BEBroadsword() : base() {
+        $this.Name               = 'Broadsword'
+        $this.MapObjName         = 'broadsword'
+        $this.PurchasePrice      = 2200
+        $this.SellPrice          = 1100
+        $this.TargetStats        = @{
+            [StatId]::Attack = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A wide-bladed sword, effective for slashing.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEAssassinsBlade : BEWeapon {
+    BEAssassinsBlade() : base() {
+        $this.Name               = 'Assassin''s Blade'
+        $this.MapObjName         = 'assassinsblade'
+        $this.PurchasePrice      = 3000
+        $this.SellPrice          = 1500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A blade designed for swift and silent takedowns.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEWarHammer : BEWeapon {
+    BEWarHammer() : base() {
+        $this.Name               = 'War Hammer'
+        $this.MapObjName         = 'warhammer'
+        $this.PurchasePrice      = 4000
+        $this.SellPrice          = 2000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 30
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A heavy hammer built for crushing armor.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEElvenBow : BEWeapon {
+    BEElvenBow() : base() {
+        $this.Name               = 'Elven Bow'
+        $this.MapObjName         = 'elvenbow'
+        $this.PurchasePrice      = 5000
+        $this.SellPrice          = 2500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An elegantly crafted bow of elven make.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEKnightsSword : BEWeapon {
+    BEKnightsSword() : base() {
+        $this.Name               = 'Knight''s Sword'
+        $this.MapObjName         = 'knightssword'
+        $this.PurchasePrice      = 6000
+        $this.SellPrice          = 3000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 35
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A noble sword befitting a knight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BELancersPike : BEWeapon {
+    BELancersPike() : base() {
+        $this.Name               = 'Lancer''s Pike'
+        $this.MapObjName         = 'lancerspike'
+        $this.PurchasePrice      = 5500
+        $this.SellPrice          = 2750
+        $this.TargetStats        = @{
+            [StatId]::Attack = 68
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A long pike used by mounted lancers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BETigerClaws : BEWeapon {
+    BETigerClaws() : base() {
+        $this.Name               = 'Tiger Claws'
+        $this.MapObjName         = 'tigerclaws'
+        $this.PurchasePrice      = 3500
+        $this.SellPrice          = 1750
+        $this.TargetStats        = @{
+            [StatId]::Attack = 58
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 26
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sharp claws that mimic a tiger''s ferocity.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BESorcerersRod : BEWeapon {
+    BESorcerersRod() : base() {
+        $this.Name               = 'Sorcerer''s Rod'
+        $this.MapObjName         = 'sorcerersrod'
+        $this.PurchasePrice      = 7000
+        $this.SellPrice          = 3500
+        $this.TargetStats        = @{
+            [StatId]::Attack      = 75
+            [StatId]::MagicAttack = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A rod imbued with potent sorcery.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power :: +$($this.TargetStats[[StatId]::MagicAttack]) Magic Power"
+    }
+}
+
+Class BEDwarvenGreataxe : BEWeapon {
+    BEDwarvenGreataxe() : base() {
+        $this.Name               = 'Dwarven Greataxe'
+        $this.MapObjName         = 'dwarvengreataxe'
+        $this.PurchasePrice      = 8000
+        $this.SellPrice          = 4000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 42
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A masterfully crafted greataxe of dwarven origin.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEThornedVineWhip : BEWeapon {
+    BEThornedVineWhip() : base() {
+        $this.Name               = 'Thorned Vine Whip'
+        $this.MapObjName         = 'thornedvinewhip'
+        $this.PurchasePrice      = 6500
+        $this.SellPrice          = 3250
+        $this.TargetStats        = @{
+            [StatId]::Attack = 72
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A whip made from a thorny vine, surprisingly resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEFlamberge : BEWeapon {
+    BEFlamberge() : base() {
+        $this.Name               = 'Flamberge'
+        $this.MapObjName         = 'flamberge'
+        $this.PurchasePrice      = 9000
+        $this.SellPrice          = 4500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 45
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A two-handed sword with a distinctive wave-bladed design.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEShadowfangDirk : BEWeapon {
+    BEShadowfangDirk() : base() {
+        $this.Name               = 'Shadowfang Dirk'
+        $this.MapObjName         = 'shadowfangdirk'
+        $this.PurchasePrice      = 12000
+        $this.SellPrice          = 6000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 50
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A dirk that seems to absorb light, favored by rogues.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BETitansMaul : BEWeapon {
+    BETitansMaul() : base() {
+        $this.Name               = 'Titan''s Maul'
+        $this.MapObjName         = 'titansmaul'
+        $this.PurchasePrice      = 15000
+        $this.SellPrice          = 7500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 55
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A maul of immense size and weight, as if made for a titan.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEGriffinsTalonBow : BEWeapon {
+    BEGriffinsTalonBow() : base() {
+        $this.Name               = 'Griffin''s Talon Bow'
+        $this.MapObjName         = 'griffinstalonbow'
+        $this.PurchasePrice      = 18000
+        $this.SellPrice          = 9000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 105
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A bow adorned with griffin talons, known for its accuracy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEPaladinsBlade : BEWeapon {
+    BEPaladinsBlade() : base() {
+        $this.Name               = 'Paladin''s Blade'
+        $this.MapObjName         = 'paladinsblade'
+        $this.PurchasePrice      = 25000
+        $this.SellPrice          = 12500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sacred blade wielded by champions of justice.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEDragoonLance : BEWeapon {
+    BEDragoonLance() : base() {
+        $this.Name               = 'Dragoon Lance'
+        $this.MapObjName         = 'dragoonlance'
+        $this.PurchasePrice      = 22000
+        $this.SellPrice          = 11000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 58
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A lance designed for aerial combat, used by dragoons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEWyvernKnuckles : BEWeapon {
+    BEWyvernKnuckles() : base() {
+        $this.Name               = 'Wyvern Knuckles'
+        $this.MapObjName         = 'wyvernknuckles'
+        $this.PurchasePrice      = 16000
+        $this.SellPrice          = 8000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 100
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 50
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Knuckles crafted from wyvern scales, delivering powerful blows.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEArchmagesStaff : BEWeapon {
+    BEArchmagesStaff() : base() {
+        $this.Name               = 'Archmage''s Staff'
+        $this.MapObjName         = 'archmagesstaff'
+        $this.PurchasePrice      = 30000
+        $this.SellPrice          = 15000
+        $this.TargetStats        = @{
+            [StatId]::Attack      = 130
+            [StatId]::MagicAttack = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack      = 65
+            [StatId]::MagicAttack = 70
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The staff of a powerful archmage, crackling with energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power :: +$($this.TargetStats[[StatId]::MagicAttack]) Magic Power"
+    }
+}
+
+Class BEExecutionersAxe : BEWeapon {
+    BEExecutionersAxe() : base() {
+        $this.Name               = 'Executioner''s Axe'
+        $this.MapObjName         = 'executionersaxe'
+        $this.PurchasePrice      = 40000
+        $this.SellPrice          = 20000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 145
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 72
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A grim axe designed for a single, decisive blow.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEScourgeOfTheSands : BEWeapon {
+    BEScourgeOfTheSands() : base() {
+        $this.Name               = 'Scourge of the Sands'
+        $this.MapObjName         = 'scourgeofthesands'
+        $this.PurchasePrice      = 35000
+        $this.SellPrice          = 17500
+        $this.TargetStats        = @{
+            [StatId]::Attack = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 68
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A weapon feared in desert lands, capable of stirring sandstorms.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEMasamune : BEWeapon {
+    BEMasamune() : base() {
+        $this.Name               = 'Masamune'
+        $this.MapObjName         = 'masamune'
+        $this.PurchasePrice      = 50000
+        $this.SellPrice          = 25000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 75
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A legendary katana of unparalleled sharpness.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BESoulReaver : BEWeapon {
+    BESoulReaver() : base() {
+        $this.Name               = 'Soul Reaver'
+        $this.MapObjName         = 'soulreaver'
+        $this.PurchasePrice      = 70000
+        $this.SellPrice          = 35000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 160
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 80
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A terrifying blade said to consume the souls of its victims.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEEarthshaker : BEWeapon {
+    BEEarthshaker() : base() {
+        $this.Name               = 'Earthshaker'
+        $this.MapObjName         = 'earthshaker'
+        $this.PurchasePrice      = 90000
+        $this.SellPrice          = 45000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 180
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 90
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mighty weapon capable of causing tremors with each strike.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BECelestialBow : BEWeapon {
+    BECelestialBow() : base() {
+        $this.Name               = 'Celestial Bow'
+        $this.MapObjName         = 'celestialbow'
+        $this.PurchasePrice      = 120000
+        $this.SellPrice          = 60000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 170
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 85
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A bow blessed by the stars, firing arrows of pure light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEExcalibur : BEWeapon {
+    BEExcalibur() : base() {
+        $this.Name               = 'Excalibur'
+        $this.MapObjName         = 'excalibur'
+        $this.PurchasePrice      = 150000
+        $this.SellPrice          = 75000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 200
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The legendary sword of kings, radiating immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEGungnir : BEWeapon {
+    BEGungnir() : base() {
+        $this.Name               = 'Gungnir'
+        $this.MapObjName         = 'gungnir'
+        $this.PurchasePrice      = 130000
+        $this.SellPrice          = 65000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 190
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 95
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A mythical spear that never misses its mark.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEKaiserKnuckles : BEWeapon {
+    BEKaiserKnuckles() : base() {
+        $this.Name               = 'Kaiser Knuckles'
+        $this.MapObjName         = 'kaiserknuckles'
+        $this.PurchasePrice      = 100000
+        $this.SellPrice          = 50000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 175
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 88
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Powerful knuckles fit for an emperor, capable of shattering defenses.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEStaffOfTheCosmos : BEWeapon {
+    BEStaffOfTheCosmos() : base() {
+        $this.Name               = 'Staff of the Cosmos'
+        $this.MapObjName         = 'staffofthecosmos'
+        $this.PurchasePrice      = 180000
+        $this.SellPrice          = 90000
+        $this.TargetStats        = @{
+            [StatId]::Attack      = 220
+            [StatId]::MagicAttack = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack      = 110
+            [StatId]::MagicAttack = 90
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A staff that channels the very power of the cosmos.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BERagnarok : BEWeapon {
+    BERagnarok() : base() {
+        $this.Name               = 'Ragnarok'
+        $this.MapObjName         = 'ragnarok'
+        $this.PurchasePrice      = 200000
+        $this.SellPrice          = 100000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 240
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sword prophesied to bring about the end of the world, or at least your enemies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEVampireKiller : BEWeapon {
+    BEVampireKiller() : base() {
+        $this.Name               = 'Vampire Killer'
+        $this.MapObjName         = 'vampirekiller'
+        $this.PurchasePrice      = 160000
+        $this.SellPrice          = 80000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 210
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 105
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sacred whip, bane of the undead and creatures of the night.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+Class BEMuramasa : BEWeapon {
+    BEMuramasa() : base() {
+        $this.Name               = 'Muramasa'
+        $this.MapObjName         = 'muramasa'
+        $this.PurchasePrice      = 250000
+        $this.SellPrice          = 125000
+        $this.TargetStats        = @{
+            [StatId]::Attack = 250
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Attack = 125
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A cursed blade of incredible sharpness, thirsting for battle.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) Attack Power"
+    }
+}
+
+
+
+
+
+###############################################################################
+#
+# BATTLE EQUIPMENT - HELMET SPECIALIZATIONS
+#
+###############################################################################
+
+Class BELeatherCap : BEHelmet {
+    BELeatherCap() : base() {
+        $this.Name               = 'Leather Cap'
+        $this.MapObjName         = 'leathercap'
+        $this.PurchasePrice      = 60
+        $this.SellPrice          = 30
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A simple cap made of treated leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEClothHood : BEHelmet {
+    BEClothHood() : base() {
+        $this.Name               = 'Cloth Hood'
+        $this.MapObjName         = 'clothhood'
+        $this.PurchasePrice      = 55
+        $this.SellPrice          = 27
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A light hood offering minimal physical protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIronHelm : BEHelmet {
+    BEIronHelm() : base() {
+        $this.Name               = 'Iron Helm'
+        $this.MapObjName         = 'ironhelm'
+        $this.PurchasePrice      = 180
+        $this.SellPrice          = 90
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A basic iron helmet.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBronzeCirclet : BEHelmet {
+    BEBronzeCirclet() : base() {
+        $this.Name               = 'Bronze Circlet'
+        $this.MapObjName         = 'bronzecirclet'
+        $this.PurchasePrice      = 120
+        $this.SellPrice          = 60
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A simple bronze circlet, often used by apprentices.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStuddedLeatherCap : BEHelmet {
+    BEStuddedLeatherCap() : base() {
+        $this.Name               = 'Studded Leather Cap'
+        $this.MapObjName         = 'studdedleathercap'
+        $this.PurchasePrice      = 250
+        $this.SellPrice          = 125
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A leather cap reinforced with metal studs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChainCoif : BEHelmet {
+    BEChainCoif() : base() {
+        $this.Name               = 'Chain Coif'
+        $this.MapObjName         = 'chaincoif'
+        $this.PurchasePrice      = 350
+        $this.SellPrice          = 175
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood made of interlocking metal rings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESteelHelm : BEHelmet {
+    BESteelHelm() : base() {
+        $this.Name               = 'Steel Helm'
+        $this.MapObjName         = 'steelhelm'
+        $this.PurchasePrice      = 500
+        $this.SellPrice          = 250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sturdy helmet forged from steel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESilverCirclet : BEHelmet {
+    BESilverCirclet() : base() {
+        $this.Name               = 'Silver Circlet'
+        $this.MapObjName         = 'silvercirclet'
+        $this.PurchasePrice      = 450
+        $this.SellPrice          = 225
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet made of polished silver, favored by mages.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPlateHelm : BEHelmet {
+    BEPlateHelm() : base() {
+        $this.Name               = 'Plate Helm'
+        $this.MapObjName         = 'platehelm'
+        $this.PurchasePrice      = 700
+        $this.SellPrice          = 350
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A heavy helmet offering significant physical protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWizardHat : BEHelmet {
+    BEWizardHat() : base() {
+        $this.Name               = 'Wizard Hat'
+        $this.MapObjName         = 'wizardhat'
+        $this.PurchasePrice      = 650
+        $this.SellPrice          = 325
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A tall, pointed hat often worn by wizards.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDwarvenHelm : BEHelmet {
+    BEDwarvenHelm() : base() {
+        $this.Name               = 'Dwarven Helm'
+        $this.MapObjName         = 'dwarvenhelm'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 18
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sturdy, often horned, helmet crafted by dwarves.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEElvenHood : BEHelmet {
+    BEElvenHood() : base() {
+        $this.Name               = 'Elven Hood'
+        $this.MapObjName         = 'elvenhood'
+        $this.PurchasePrice      = 850
+        $this.SellPrice          = 425
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A light, finely woven hood of elven design.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGoldenCirclet : BEHelmet {
+    BEGoldenCirclet() : base() {
+        $this.Name               = 'Golden Circlet'
+        $this.MapObjName         = 'goldencirclet'
+        $this.PurchasePrice      = 1100
+        $this.SellPrice          = 550
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet made of pure gold, shimmering with magical energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFullPlateHelm : BEHelmet {
+    BEFullPlateHelm() : base() {
+        $this.Name               = 'Full Plate Helm'
+        $this.MapObjName         = 'fullplatehelm'
+        $this.PurchasePrice      = 1300
+        $this.SellPrice          = 650
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A complete helmet covering the entire head and face.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESilkenHood : BEHelmet {
+    BESilkenHood() : base() {
+        $this.Name               = 'Silken Hood'
+        $this.MapObjName         = 'silkenhood'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood made of fine silk, surprisingly resistant to magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVikingHelm : BEHelmet {
+    BEVikingHelm() : base() {
+        $this.Name               = 'Viking Helm'
+        $this.MapObjName         = 'vikinghelm'
+        $this.PurchasePrice      = 1500
+        $this.SellPrice          = 750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A horned helmet, perfect for raiding.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchmageCirclet : BEHelmet {
+    BEArchmageCirclet() : base() {
+        $this.Name               = 'Archmage Circlet'
+        $this.MapObjName         = 'archmagecirclet'
+        $this.PurchasePrice      = 1800
+        $this.SellPrice          = 900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A powerful circlet worn by archmages.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKnightHelm : BEHelmet {
+    BEKnightHelm() : base() {
+        $this.Name               = 'Knight Helm'
+        $this.MapObjName         = 'knighthelm'
+        $this.PurchasePrice      = 2000
+        $this.SellPrice          = 1000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A polished helm fit for a knight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAssassinHood : BEHelmet {
+    BEAssassinHood() : base() {
+        $this.Name               = 'Assassin Hood'
+        $this.MapObjName         = 'assassinhood'
+        $this.PurchasePrice      = 1700
+        $this.SellPrice          = 850
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 32
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A dark hood that helps conceal the wearer.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonScaleHelm : BEHelmet {
+    BEDragonScaleHelm() : base() {
+        $this.Name               = 'Dragon Scale Helm'
+        $this.MapObjName         = 'dragonscalehelm'
+        $this.PurchasePrice      = 2500
+        $this.SellPrice          = 1250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 30
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm crafted from the tough scales of a dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixFeatherCirclet : BEHelmet {
+    BEPhoenixFeatherCirclet() : base() {
+        $this.Name               = 'Phoenix Feather Circlet'
+        $this.MapObjName         = 'phoenixfeathercirclet'
+        $this.PurchasePrice      = 2800
+        $this.SellPrice          = 1400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 48
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet adorned with phoenix feathers, humming with restorative magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BETitanHelm : BEHelmet {
+    BETitanHelm() : base() {
+        $this.Name               = 'Titan Helm'
+        $this.MapObjName         = 'titanhelm'
+        $this.PurchasePrice      = 3200
+        $this.SellPrice          = 1600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 35
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A massive helm, seemingly forged for a giant.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEShadowSilkHood : BEHelmet {
+    BEShadowSilkHood() : base() {
+        $this.Name               = 'Shadow Silk Hood'
+        $this.MapObjName         = 'shadowsilkhood'
+        $this.PurchasePrice      = 3000
+        $this.SellPrice          = 1500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood woven from threads of pure shadow.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKingHelm : BEHelmet {
+    BEKingHelm() : base() {
+        $this.Name               = 'King Helm'
+        $this.MapObjName         = 'kinghelm'
+        $this.PurchasePrice      = 4000
+        $this.SellPrice          = 2000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A majestic helm fit for a king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarweaveCirclet : BEHelmet {
+    BEStarweaveCirclet() : base() {
+        $this.Name               = 'Starweave Circlet'
+        $this.MapObjName         = 'starweavecirclet'
+        $this.PurchasePrice      = 4500
+        $this.SellPrice          = 2250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet woven from starlight, granting celestial protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosHelm : BEHelmet {
+    BEChaosHelm() : base() {
+        $this.Name               = 'Chaos Helm'
+        $this.MapObjName         = 'chaoshelm'
+        $this.PurchasePrice      = 5000
+        $this.SellPrice          = 2500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm pulsating with chaotic energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHolyHood : BEHelmet {
+    BEHolyHood() : base() {
+        $this.Name               = 'Holy Hood'
+        $this.MapObjName         = 'holyhood'
+        $this.PurchasePrice      = 4800
+        $this.SellPrice          = 2400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 18
+            [StatId]::MagicDefense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood blessed with divine protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAncientHelm : BEHelmet {
+    BEAncientHelm() : base() {
+        $this.Name               = 'Ancient Helm'
+        $this.MapObjName         = 'ancienthelm'
+        $this.PurchasePrice      = 6000
+        $this.SellPrice          = 3000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 45
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm from a forgotten era, surprisingly durable.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArcaneCirclet : BEHelmet {
+    BEArcaneCirclet() : base() {
+        $this.Name               = 'Arcane Circlet'
+        $this.MapObjName         = 'arcanecirclet'
+        $this.PurchasePrice      = 6500
+        $this.SellPrice          = 3250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 30
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet humming with raw arcane power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBarbarianHelm : BEHelmet {
+    BEBarbarianHelm() : base() {
+        $this.Name               = 'Barbarian Helm'
+        $this.MapObjName         = 'barbarianhelm'
+        $this.PurchasePrice      = 7000
+        $this.SellPrice          = 3500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 50
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A brutal-looking helm, favored by fierce warriors.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWitchHood : BEHelmet {
+    BEWitchHood() : base() {
+        $this.Name               = 'Witch Hood'
+        $this.MapObjName         = 'witchhood'
+        $this.PurchasePrice      = 6800
+        $this.SellPrice          = 3400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A dark hood often worn by witches.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGuardianHelm : BEHelmet {
+    BEGuardianHelm() : base() {
+        $this.Name               = 'Guardian Helm'
+        $this.MapObjName         = 'guardianhelm'
+        $this.PurchasePrice      = 8000
+        $this.SellPrice          = 4000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 55
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm worn by protectors, radiating a sense of safety.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEProphetCirclet : BEHelmet {
+    BEProphetCirclet() : base() {
+        $this.Name               = 'Prophet Circlet'
+        $this.MapObjName         = 'prophetcirclet'
+        $this.PurchasePrice      = 8500
+        $this.SellPrice          = 4250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 35
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet said to grant glimpses of the future.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWarLordHelm : BEHelmet {
+    BEWarLordHelm() : base() {
+        $this.Name               = 'War Lord Helm'
+        $this.MapObjName         = 'warlordhelm'
+        $this.PurchasePrice      = 9000
+        $this.SellPrice          = 4500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A fearsome helm worn by great war leaders.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWraithHood : BEHelmet {
+    BEWraithHood() : base() {
+        $this.Name               = 'Wraith Hood'
+        $this.MapObjName         = 'wraithhood'
+        $this.PurchasePrice      = 8800
+        $this.SellPrice          = 4400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 22
+            [StatId]::MagicDefense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 22
+            [StatId]::MagicDefense = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A spectral hood that seems to drain the warmth from the air.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChampionHelm : BEHelmet {
+    BEChampionHelm() : base() {
+        $this.Name               = 'Champion Helm'
+        $this.MapObjName         = 'championhelm'
+        $this.PurchasePrice      = 10000
+        $this.SellPrice          = 5000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 85
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 65
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm worn by undefeated champions.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECelestialCirclet : BEHelmet {
+    BECelestialCirclet() : base() {
+        $this.Name               = 'Celestial Circlet'
+        $this.MapObjName         = 'celestialcirclet'
+        $this.PurchasePrice      = 11000
+        $this.SellPrice          = 5500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet blessed by celestial beings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDoomHelm : BEHelmet {
+    BEDoomHelm() : base() {
+        $this.Name               = 'Doom Helm'
+        $this.MapObjName         = 'doomhelm'
+        $this.PurchasePrice      = 12000
+        $this.SellPrice          = 6000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 70
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A cursed helm that brings despair to enemies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEVampireHood : BEHelmet {
+    BEVampireHood() : base() {
+        $this.Name               = 'Vampire Hood'
+        $this.MapObjName         = 'vampirehood'
+        $this.PurchasePrice      = 11500
+        $this.SellPrice          = 5750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 42
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood favored by vampires, offering protection against holy magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGladiatorHelm : BEHelmet {
+    BEGladiatorHelm() : base() {
+        $this.Name               = 'Gladiator Helm'
+        $this.MapObjName         = 'gladiatorhelm'
+        $this.PurchasePrice      = 13000
+        $this.SellPrice          = 6500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 95
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 75
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm worn by gladiators, scarred from countless battles.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGrandmasterCirclet : BEHelmet {
+    BEGrandmasterCirclet() : base() {
+        $this.Name               = 'Grandmaster Circlet'
+        $this.MapObjName         = 'grandmastercirclet'
+        $this.PurchasePrice      = 14000
+        $this.SellPrice          = 7000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 45
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet worn by the most powerful magic users.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEImperialHelm : BEHelmet {
+    BEImperialHelm() : base() {
+        $this.Name               = 'Imperial Helm'
+        $this.MapObjName         = 'imperialhelm'
+        $this.PurchasePrice      = 15000
+        $this.SellPrice          = 7500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 100
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 80
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm worn by the emperor''s elite guard.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESorcererHood : BEHelmet {
+    BESorcererHood() : base() {
+        $this.Name               = 'Sorcerer Hood'
+        $this.MapObjName         = 'sorcererhood'
+        $this.PurchasePrice      = 14500
+        $this.SellPrice          = 7250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 32
+            [StatId]::MagicDefense = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 32
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that enhances magical abilities.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalHelm : BEHelmet {
+    BEAbyssalHelm() : base() {
+        $this.Name               = 'Abyssal Helm'
+        $this.MapObjName         = 'abyssalhelm'
+        $this.PurchasePrice      = 16000
+        $this.SellPrice          = 8000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 105
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 85
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm forged in the depths of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchdruidCirclet : BEHelmet {
+    BEArchdruidCirclet() : base() {
+        $this.Name               = 'Archdruid Circlet'
+        $this.MapObjName         = 'archdruidcirclet'
+        $this.PurchasePrice      = 17000
+        $this.SellPrice          = 8500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 100
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 50
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet woven from living vines, connected to nature''s power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBloodHelm : BEHelmet {
+    BEBloodHelm() : base() {
+        $this.Name               = 'Blood Helm'
+        $this.MapObjName         = 'bloodhelm'
+        $this.PurchasePrice      = 18000
+        $this.SellPrice          = 9000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 110
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 90
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm stained crimson, said to be quenched in blood.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostweaveHood : BEHelmet {
+    BEFrostweaveHood() : base() {
+        $this.Name               = 'Frostweave Hood'
+        $this.MapObjName         = 'frostweavehood'
+        $this.PurchasePrice      = 17500
+        $this.SellPrice          = 8750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 38
+            [StatId]::MagicDefense = 105
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 38
+            [StatId]::MagicDefense = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood woven from icy threads, offering protection against fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderHelm : BEHelmet {
+    BEThunderHelm() : base() {
+        $this.Name               = 'Thunder Helm'
+        $this.MapObjName         = 'thunderhelm'
+        $this.PurchasePrice      = 19000
+        $this.SellPrice          = 9500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 115
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 95
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm crackling with electrical energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidCirclet : BEHelmet {
+    BEVoidCirclet() : base() {
+        $this.Name               = 'Void Circlet'
+        $this.MapObjName         = 'voidcirclet'
+        $this.PurchasePrice      = 20000
+        $this.SellPrice          = 10000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+            [StatId]::MagicDefense = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 45
+            [StatId]::MagicDefense = 55
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet that seems to absorb all light around it.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernoHelm : BEHelmet {
+    BEInfernoHelm() : base() {
+        $this.Name               = 'Inferno Helm'
+        $this.MapObjName         = 'infernohelm'
+        $this.PurchasePrice      = 21000
+        $this.SellPrice          = 10500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 120
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm radiating intense heat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStormcallerHood : BEHelmet {
+    BEStormcallerHood() : base() {
+        $this.Name               = 'Stormcaller Hood'
+        $this.MapObjName         = 'stormcallerhood'
+        $this.PurchasePrice      = 20500
+        $this.SellPrice          = 10250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 42
+            [StatId]::MagicDefense = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 42
+            [StatId]::MagicDefense = 58
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that seems to whisper with the sound of wind and rain.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantHelm : BEHelmet {
+    BEAdamantHelm() : base() {
+        $this.Name               = 'Adamant Helm'
+        $this.MapObjName         = 'adamanthelm'
+        $this.PurchasePrice      = 22000
+        $this.SellPrice          = 11000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 125
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 105
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm forged from nearly unbreakable adamant.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDivineCirclet : BEHelmet {
+    BEDivineCirclet() : base() {
+        $this.Name               = 'Divine Circlet'
+        $this.MapObjName         = 'divinecirclet'
+        $this.PurchasePrice      = 23000
+        $this.SellPrice          = 11500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet radiating holy light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWarlordPlate : BEHelmet {
+    BEWarlordPlate() : base() {
+        $this.Name               = 'Warlord Plate'
+        $this.MapObjName         = 'warlordplate'
+        $this.PurchasePrice      = 24000
+        $this.SellPrice          = 12000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 130
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 110
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Heavy plate armor for the head, designed for maximum defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAbjurationHood : BEHelmet {
+    BEAbjurationHood() : base() {
+        $this.Name               = 'Abjuration Hood'
+        $this.MapObjName         = 'abjurationhood'
+        $this.PurchasePrice      = 23500
+        $this.SellPrice          = 11750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 48
+            [StatId]::MagicDefense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 48
+            [StatId]::MagicDefense = 62
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood enchanted to ward off magical attacks.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosPlate : BEHelmet {
+    BEChaosPlate() : base() {
+        $this.Name               = 'Chaos Plate'
+        $this.MapObjName         = 'chaosplate'
+        $this.PurchasePrice      = 25000
+        $this.SellPrice          = 12500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 135
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 115
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor infused with chaotic power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchonCirclet : BEHelmet {
+    BEArchonCirclet() : base() {
+        $this.Name               = 'Archon Circlet'
+        $this.MapObjName         = 'archoncirclet'
+        $this.PurchasePrice      = 26000
+        $this.SellPrice          = 13000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+            [StatId]::MagicDefense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 55
+            [StatId]::MagicDefense = 65
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet of immense power, once worn by an archon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonboneHelm : BEHelmet {
+    BEDragonboneHelm() : base() {
+        $this.Name               = 'Dragonbone Helm'
+        $this.MapObjName         = 'dragonbonehelm'
+        $this.PurchasePrice      = 27000
+        $this.SellPrice          = 13500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 140
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm crafted from the bones of a dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostbiteHood : BEHelmet {
+    BEFrostbiteHood() : base() {
+        $this.Name               = 'Frostbite Hood'
+        $this.MapObjName         = 'frostbitehood'
+        $this.PurchasePrice      = 26500
+        $this.SellPrice          = 13250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 52
+            [StatId]::MagicDefense = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 52
+            [StatId]::MagicDefense = 68
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that emanates a chilling aura.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderclapHelm : BEHelmet {
+    BEThunderclapHelm() : base() {
+        $this.Name               = 'Thunderclap Helm'
+        $this.MapObjName         = 'thunderclaphelm'
+        $this.PurchasePrice      = 28000
+        $this.SellPrice          = 14000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 145
+            [StatId]::MagicDefense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 125
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that resonates with the power of a thunderstorm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAstralCirclet : BEHelmet {
+    BEAstralCirclet() : base() {
+        $this.Name               = 'Astral Circlet'
+        $this.MapObjName         = 'astralcirclet'
+        $this.PurchasePrice      = 29000
+        $this.SellPrice          = 14500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 140
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 70
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet that seems to hold the essence of the stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernalHelm : BEHelmet {
+    BEInfernalHelm() : base() {
+        $this.Name               = 'Infernal Helm'
+        $this.MapObjName         = 'infernalhelm'
+        $this.PurchasePrice      = 30000
+        $this.SellPrice          = 15000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 150
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 130
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm forged in the deepest pits of the inferno.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEZephyrHood : BEHelmet {
+    BEZephyrHood() : base() {
+        $this.Name               = 'Zephyr Hood'
+        $this.MapObjName         = 'zephyrhood'
+        $this.PurchasePrice      = 29500
+        $this.SellPrice          = 14750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 145
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 72
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood as light as air, offering swift protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVanguardHelm : BEHelmet {
+    BEVanguardHelm() : base() {
+        $this.Name               = 'Vanguard Helm'
+        $this.MapObjName         = 'vanguardhelm'
+        $this.PurchasePrice      = 31000
+        $this.SellPrice          = 15500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 155
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 135
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm worn by the leaders of the vanguard.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOracleCirclet : BEHelmet {
+    BEOracleCirclet() : base() {
+        $this.Name               = 'Oracle Circlet'
+        $this.MapObjName         = 'oraclecirclet'
+        $this.PurchasePrice      = 32000
+        $this.SellPrice          = 16000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 75
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet that hums with prophetic visions.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEColossusHelm : BEHelmet {
+    BEColossusHelm() : base() {
+        $this.Name               = 'Colossus Helm'
+        $this.MapObjName         = 'colossushelm'
+        $this.PurchasePrice      = 33000
+        $this.SellPrice          = 16500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 160
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 140
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm of immense size and strength.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWhisperwindHood : BEHelmet {
+    BEWhisperwindHood() : base() {
+        $this.Name               = 'Whisperwind Hood'
+        $this.MapObjName         = 'whisperwindhood'
+        $this.PurchasePrice      = 32500
+        $this.SellPrice          = 16250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 62
+            [StatId]::MagicDefense = 155
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 62
+            [StatId]::MagicDefense = 78
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that carries the whispers of the wind.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBloodmoonHelm : BEHelmet {
+    BEBloodmoonHelm() : base() {
+        $this.Name               = 'Bloodmoon Helm'
+        $this.MapObjName         = 'bloodmoonhelm'
+        $this.PurchasePrice      = 34000
+        $this.SellPrice          = 17000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 165
+            [StatId]::MagicDefense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 145
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that glows faintly under the bloodmoon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESunstoneCirclet : BEHelmet {
+    BESunstoneCirclet() : base() {
+        $this.Name               = 'Sunstone Circlet'
+        $this.MapObjName         = 'sunstonecirclet'
+        $this.PurchasePrice      = 35000
+        $this.SellPrice          = 17500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 160
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 80
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet embedded with a sunstone, radiating warmth and light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidwalkerHelm : BEHelmet {
+    BEVoidwalkerHelm() : base() {
+        $this.Name               = 'Voidwalker Helm'
+        $this.MapObjName         = 'voidwalkerhelm'
+        $this.PurchasePrice      = 36000
+        $this.SellPrice          = 18000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 170
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 150
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that seems to phase in and out of reality.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostlordHood : BEHelmet {
+    BEFrostlordHood() : base() {
+        $this.Name               = 'Frostlord Hood'
+        $this.MapObjName         = 'frostlordhood'
+        $this.PurchasePrice      = 35500
+        $this.SellPrice          = 17750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 68
+            [StatId]::MagicDefense = 165
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 68
+            [StatId]::MagicDefense = 82
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood fit for a lord of frost and ice.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStormkingHelm : BEHelmet {
+    BEStormkingHelm() : base() {
+        $this.Name               = 'Stormking Helm'
+        $this.MapObjName         = 'stormkinghelm'
+        $this.PurchasePrice      = 37000
+        $this.SellPrice          = 18500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 175
+            [StatId]::MagicDefense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 155
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that commands the very storms.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarlightCirclet : BEHelmet {
+    BEStarlightCirclet() : base() {
+        $this.Name               = 'Starlight Circlet'
+        $this.MapObjName         = 'starlightcirclet'
+        $this.PurchasePrice      = 38000
+        $this.SellPrice          = 19000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+            [StatId]::MagicDefense = 170
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 75
+            [StatId]::MagicDefense = 85
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet that captures the light of distant stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHellfireHelm : BEHelmet {
+    BEHellfireHelm() : base() {
+        $this.Name               = 'Hellfire Helm'
+        $this.MapObjName         = 'hellfirehelm'
+        $this.PurchasePrice      = 39000
+        $this.SellPrice          = 19500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 180
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 160
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm burning with the fires of hell.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWindrunnerHood : BEHelmet {
+    BEWindrunnerHood() : base() {
+        $this.Name               = 'Windrunner Hood'
+        $this.MapObjName         = 'windrunnerhood'
+        $this.PurchasePrice      = 38500
+        $this.SellPrice          = 19250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 72
+            [StatId]::MagicDefense = 175
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 72
+            [StatId]::MagicDefense = 88
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that grants the wearer incredible speed.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEImmortalHelm : BEHelmet {
+    BEImmortalHelm() : base() {
+        $this.Name               = 'Immortal Helm'
+        $this.MapObjName         = 'immortalhelm'
+        $this.PurchasePrice      = 40000
+        $this.SellPrice          = 20000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 185
+            [StatId]::MagicDefense = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 165
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm said to grant immortality to its wearer.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECosmicCirclet : BEHelmet {
+    BECosmicCirclet() : base() {
+        $this.Name               = 'Cosmic Circlet'
+        $this.MapObjName         = 'cosmiccirclet'
+        $this.PurchasePrice      = 41000
+        $this.SellPrice          = 20500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+            [StatId]::MagicDefense = 180
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 80
+            [StatId]::MagicDefense = 90
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet that hums with the energy of the cosmos.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHelm : BEHelmet {
+    BEApocalypseHelm() : base() {
+        $this.Name               = 'Apocalypse Helm'
+        $this.MapObjName         = 'apocalypsehelm'
+        $this.PurchasePrice      = 42000
+        $this.SellPrice          = 21000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 190
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 170
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm foretelling the end times.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAbyssalHood : BEHelmet {
+    BEAbyssalHood() : base() {
+        $this.Name               = 'Abyssal Hood'
+        $this.MapObjName         = 'abyssalhood'
+        $this.PurchasePrice      = 41500
+        $this.SellPrice          = 20750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 78
+            [StatId]::MagicDefense = 185
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 78
+            [StatId]::MagicDefense = 92
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that whispers secrets from the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyHelm : BEHelmet {
+    BEHeavenlyHelm() : base() {
+        $this.Name               = 'Heavenly Helm'
+        $this.MapObjName         = 'heavenlyhelm'
+        $this.PurchasePrice      = 43000
+        $this.SellPrice          = 21500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 195
+            [StatId]::MagicDefense = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 175
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelCirclet : BEHelmet {
+    BEArchangelCirclet() : base() {
+        $this.Name               = 'Archangel Circlet'
+        $this.MapObjName         = 'archangelcirclet'
+        $this.PurchasePrice      = 44000
+        $this.SellPrice          = 22000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 85
+            [StatId]::MagicDefense = 190
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 85
+            [StatId]::MagicDefense = 95
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldbreakerHelm : BEHelmet {
+    BEWorldbreakerHelm() : base() {
+        $this.Name               = 'Worldbreaker Helm'
+        $this.MapObjName         = 'worldbreakerhelm'
+        $this.PurchasePrice      = 45000
+        $this.SellPrice          = 22500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 200
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 180
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm said to be capable of shattering worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarfallHood : BEHelmet {
+    BEStarfallHood() : base() {
+        $this.Name               = 'Starfall Hood'
+        $this.MapObjName         = 'starfallhood'
+        $this.PurchasePrice      = 44500
+        $this.SellPrice          = 22250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 82
+            [StatId]::MagicDefense = 195
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 82
+            [StatId]::MagicDefense = 98
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that seems to draw power from falling stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingHelm : BEHelmet {
+    BEGodkingHelm() : base() {
+        $this.Name               = 'Godking Helm'
+        $this.MapObjName         = 'godkinghelm'
+        $this.PurchasePrice      = 46000
+        $this.SellPrice          = 23000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 205
+            [StatId]::MagicDefense = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 185
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorCirclet : BEHelmet {
+    BECreatorCirclet() : base() {
+        $this.Name               = 'Creator Circlet'
+        $this.MapObjName         = 'creatorcirclet'
+        $this.PurchasePrice      = 47000
+        $this.SellPrice          = 23500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 200
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet said to hold the power of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartHelm : BEHelmet {
+    BEVoidheartHelm() : base() {
+        $this.Name               = 'Voidheart Helm'
+        $this.MapObjName         = 'voidhearthelm'
+        $this.PurchasePrice      = 48000
+        $this.SellPrice          = 24000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 210
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 190
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that seems to draw power from the void itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHood : BEHelmet {
+    BEFrostfireHood() : base() {
+        $this.Name               = 'Frostfire Hood'
+        $this.MapObjName         = 'frostfirehood'
+        $this.PurchasePrice      = 47500
+        $this.SellPrice          = 23750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 88
+            [StatId]::MagicDefense = 205
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 88
+            [StatId]::MagicDefense = 102
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that crackles with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikeHelm : BEHelmet {
+    BEThunderstrikeHelm() : base() {
+        $this.Name               = 'Thunderstrike Helm'
+        $this.MapObjName         = 'thunderstrikehelm'
+        $this.PurchasePrice      = 49000
+        $this.SellPrice          = 24500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 215
+            [StatId]::MagicDefense = 100
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 195
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that calls down lightning upon enemies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperCirclet : BEHelmet {
+    BEWorldshaperCirclet() : base() {
+        $this.Name               = 'Worldshaper Circlet'
+        $this.MapObjName         = 'worldshapercirclet'
+        $this.PurchasePrice      = 50000
+        $this.SellPrice          = 25000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 95
+            [StatId]::MagicDefense = 210
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 95
+            [StatId]::MagicDefense = 105
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet said to have shaped the world itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalPlate : BEHelmet {
+    BEAbyssalPlate() : base() {
+        $this.Name               = 'Abyssal Plate'
+        $this.MapObjName         = 'abyssalplate'
+        $this.PurchasePrice      = 51000
+        $this.SellPrice          = 25500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 220
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 200
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor from the deepest abyss, cold and dark.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerHood : BEHelmet {
+    BEStarcallerHood() : base() {
+        $this.Name               = 'Starcaller Hood'
+        $this.MapObjName         = 'starcallerhood'
+        $this.PurchasePrice      = 50500
+        $this.SellPrice          = 25250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 92
+            [StatId]::MagicDefense = 215
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 92
+            [StatId]::MagicDefense = 108
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodslayerHelm : BEHelmet {
+    BEGodslayerHelm() : base() {
+        $this.Name               = 'Godslayer Helm'
+        $this.MapObjName         = 'godslayerhelm'
+        $this.PurchasePrice      = 52000
+        $this.SellPrice          = 26000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 225
+            [StatId]::MagicDefense = 105
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 205
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm worn by those who dare challenge deities.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCirclet : BEHelmet {
+    BEUniverseCirclet() : base() {
+        $this.Name               = 'Universe Circlet'
+        $this.MapObjName         = 'universecirclet'
+        $this.PurchasePrice      = 53000
+        $this.SellPrice          = 26500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 100
+            [StatId]::MagicDefense = 220
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 100
+            [StatId]::MagicDefense = 110
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosLordHelm : BEHelmet {
+    BEChaosLordHelm() : base() {
+        $this.Name               = 'Chaos Lord Helm'
+        $this.MapObjName         = 'chaoslordhelm'
+        $this.PurchasePrice      = 54000
+        $this.SellPrice          = 27000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 230
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 210
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm fit for a lord of chaos.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostmourneHood : BEHelmet {
+    BEFrostmourneHood() : base() {
+        $this.Name               = 'Frostmourne Hood'
+        $this.MapObjName         = 'frostmournehood'
+        $this.PurchasePrice      = 53500
+        $this.SellPrice          = 26750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 98
+            [StatId]::MagicDefense = 225
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 98
+            [StatId]::MagicDefense = 112
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood as cold as death itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodHelm : BEHelmet {
+    BEThundergodHelm() : base() {
+        $this.Name               = 'Thundergod Helm'
+        $this.MapObjName         = 'thundergodhelm'
+        $this.PurchasePrice      = 55000
+        $this.SellPrice          = 27500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 235
+            [StatId]::MagicDefense = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 215
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidlordCirclet : BEHelmet {
+    BEVoidlordCirclet() : base() {
+        $this.Name               = 'Voidlord Circlet'
+        $this.MapObjName         = 'voidlordcirclet'
+        $this.PurchasePrice      = 56000
+        $this.SellPrice          = 28000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 105
+            [StatId]::MagicDefense = 230
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 105
+            [StatId]::MagicDefense = 115
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet fit for a lord of the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernalPlate : BEHelmet {
+    BEInfernalPlate() : base() {
+        $this.Name               = 'Infernal Plate'
+        $this.MapObjName         = 'infernalplate'
+        $this.PurchasePrice      = 57000
+        $this.SellPrice          = 28500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 240
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 220
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor burning with infernal energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWindlordHood : BEHelmet {
+    BEWindlordHood() : base() {
+        $this.Name               = 'Windlord Hood'
+        $this.MapObjName         = 'windlordhood'
+        $this.PurchasePrice      = 56500
+        $this.SellPrice          = 28250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 102
+            [StatId]::MagicDefense = 235
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 102
+            [StatId]::MagicDefense = 118
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood fit for a lord of the winds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEImmortalPlate : BEHelmet {
+    BEImmortalPlate() : base() {
+        $this.Name               = 'Immortal Plate'
+        $this.MapObjName         = 'immortalplate'
+        $this.PurchasePrice      = 58000
+        $this.SellPrice          = 29000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 245
+            [StatId]::MagicDefense = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 225
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor that seems impervious to damage.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECosmicHood : BEHelmet {
+    BECosmicHood() : base() {
+        $this.Name               = 'Cosmic Hood'
+        $this.MapObjName         = 'cosmichood'
+        $this.PurchasePrice      = 58500
+        $this.SellPrice          = 29250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 108
+            [StatId]::MagicDefense = 240
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 108
+            [StatId]::MagicDefense = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood woven from cosmic dust.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypsePlate : BEHelmet {
+    BEApocalypsePlate() : base() {
+        $this.Name               = 'Apocalypse Plate'
+        $this.MapObjName         = 'apocalypseplate'
+        $this.PurchasePrice      = 59000
+        $this.SellPrice          = 29500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 250
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 230
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor that heralds the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHeavenlyHood : BEHelmet {
+    BEHeavenlyHood() : base() {
+        $this.Name               = 'Heavenly Hood'
+        $this.MapObjName         = 'heavenlyhood'
+        $this.PurchasePrice      = 59500
+        $this.SellPrice          = 29750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 112
+            [StatId]::MagicDefense = 245
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 112
+            [StatId]::MagicDefense = 122
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood woven from divine threads.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelm : BEHelmet {
+    BEArchangelHelm() : base() {
+        $this.Name               = 'Archangel Helm'
+        $this.MapObjName         = 'archangelhelm'
+        $this.PurchasePrice      = 60000
+        $this.SellPrice          = 30000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 255
+            [StatId]::MagicDefense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 235
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelm : BEHelmet {
+    BEWorldeaterHelm() : base() {
+        $this.Name               = 'Worldeater Helm'
+        $this.MapObjName         = 'worldeaterhelm'
+        $this.PurchasePrice      = 61000
+        $this.SellPrice          = 30500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 260
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 240
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCirclet : BEHelmet {
+    BEStarforgedCirclet() : base() {
+        $this.Name               = 'Starforged Circlet'
+        $this.MapObjName         = 'starforgedcirclet'
+        $this.PurchasePrice      = 61500
+        $this.SellPrice          = 30750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 118
+            [StatId]::MagicDefense = 250
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 118
+            [StatId]::MagicDefense = 125
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelm : BEHelmet {
+    BEGodkillerHelm() : base() {
+        $this.Name               = 'Godkiller Helm'
+        $this.MapObjName         = 'godkillerhelm'
+        $this.PurchasePrice      = 62000
+        $this.SellPrice          = 31000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 265
+            [StatId]::MagicDefense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 245
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHood : BEHelmet {
+    BEUniverseHood() : base() {
+        $this.Name               = 'Universe Hood'
+        $this.MapObjName         = 'universehood'
+        $this.PurchasePrice      = 62500
+        $this.SellPrice          = 31250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 122
+            [StatId]::MagicDefense = 255
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 122
+            [StatId]::MagicDefense = 128
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelm : BEHelmet {
+    BEChaosbringerHelm() : base() {
+        $this.Name               = 'Chaosbringer Helm'
+        $this.MapObjName         = 'chaosbringerhelm'
+        $this.PurchasePrice      = 63000
+        $this.SellPrice          = 31500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 270
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelm : BEHelmet {
+    BEFrostfallHelm() : base() {
+        $this.Name               = 'Frostfall Helm'
+        $this.MapObjName         = 'frostfallhelm'
+        $this.PurchasePrice      = 63500
+        $this.SellPrice          = 31750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 128
+            [StatId]::MagicDefense = 260
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 128
+            [StatId]::MagicDefense = 130
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlate : BEHelmet {
+    BEThunderstrikePlate() : base() {
+        $this.Name               = 'Thunderstrike Plate'
+        $this.MapObjName         = 'thunderstrikeplate'
+        $this.PurchasePrice      = 64000
+        $this.SellPrice          = 32000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 275
+            [StatId]::MagicDefense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 255
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHood : BEHelmet {
+    BEWorldshaperHood() : base() {
+        $this.Name               = 'Worldshaper Hood'
+        $this.MapObjName         = 'worldshaperhood'
+        $this.PurchasePrice      = 64500
+        $this.SellPrice          = 32250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 132
+            [StatId]::MagicDefense = 265
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 132
+            [StatId]::MagicDefense = 132
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelm : BEHelmet {
+    BEAbyssalLordHelm() : base() {
+        $this.Name               = 'Abyssal Lord Helm'
+        $this.MapObjName         = 'abyssallordhelm'
+        $this.PurchasePrice      = 65000
+        $this.SellPrice          = 32500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 280
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 260
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCirclet : BEHelmet {
+    BEStarcallerCirclet() : base() {
+        $this.Name               = 'Starcaller Circlet'
+        $this.MapObjName         = 'starcallercirclet'
+        $this.PurchasePrice      = 65500
+        $this.SellPrice          = 32750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 138
+            [StatId]::MagicDefense = 270
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 138
+            [StatId]::MagicDefense = 135
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlate : BEHelmet {
+    BEGodkingPlate() : base() {
+        $this.Name               = 'Godking Plate'
+        $this.MapObjName         = 'godkingplate'
+        $this.PurchasePrice      = 66000
+        $this.SellPrice          = 33000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 285
+            [StatId]::MagicDefense = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 265
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHood : BEHelmet {
+    BECreatorHood() : base() {
+        $this.Name               = 'Creator Hood'
+        $this.MapObjName         = 'creatorhood'
+        $this.PurchasePrice      = 66500
+        $this.SellPrice          = 33250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 142
+            [StatId]::MagicDefense = 275
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 142
+            [StatId]::MagicDefense = 138
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlate : BEHelmet {
+    BEVoidheartPlate() : base() {
+        $this.Name               = 'Voidheart Plate'
+        $this.MapObjName         = 'voidheartplate'
+        $this.PurchasePrice      = 67000
+        $this.SellPrice          = 33500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 290
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 270
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelm : BEHelmet {
+    BEFrostfireHelm() : base() {
+        $this.Name               = 'Frostfire Helm'
+        $this.MapObjName         = 'frostfirehelm'
+        $this.PurchasePrice      = 67500
+        $this.SellPrice          = 33750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 148
+            [StatId]::MagicDefense = 280
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 148
+            [StatId]::MagicDefense = 140
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlate : BEHelmet {
+    BEThundergodPlate() : base() {
+        $this.Name               = 'Thundergod Plate'
+        $this.MapObjName         = 'thundergodplate'
+        $this.PurchasePrice      = 68000
+        $this.SellPrice          = 34000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 295
+            [StatId]::MagicDefense = 140
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 275
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniversePlate : BEHelmet {
+    BEUniversePlate() : base() {
+        $this.Name               = 'Universe Plate'
+        $this.MapObjName         = 'universeplate'
+        $this.PurchasePrice      = 68500
+        $this.SellPrice          = 34250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 152
+            [StatId]::MagicDefense = 285
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 152
+            [StatId]::MagicDefense = 142
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHood : BEHelmet {
+    BEApocalypseHood() : base() {
+        $this.Name               = 'Apocalypse Hood'
+        $this.MapObjName         = 'apocalypsehood'
+        $this.PurchasePrice      = 69000
+        $this.SellPrice          = 34500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 158
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 158
+            [StatId]::MagicDefense = 145
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlate : BEHelmet {
+    BEHeavenlyPlate() : base() {
+        $this.Name               = 'Heavenly Plate'
+        $this.MapObjName         = 'heavenlyplate'
+        $this.PurchasePrice      = 69500
+        $this.SellPrice          = 34750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 300
+            [StatId]::MagicDefense = 145
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 280
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelPlate : BEHelmet {
+    BEArchangelPlate() : base() {
+        $this.Name               = 'Archangel Plate'
+        $this.MapObjName         = 'archangelplate'
+        $this.PurchasePrice      = 70000
+        $this.SellPrice          = 35000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 305
+            [StatId]::MagicDefense = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 285
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterPlate : BEHelmet {
+    BEWorldeaterPlate() : base() {
+        $this.Name               = 'Worldeater Plate'
+        $this.MapObjName         = 'worldeaterplate'
+        $this.PurchasePrice      = 71000
+        $this.SellPrice          = 35500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 310
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 290
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedHood : BEHelmet {
+    BEStarforgedHood() : base() {
+        $this.Name               = 'Starforged Hood'
+        $this.MapObjName         = 'starforgedhood'
+        $this.PurchasePrice      = 71500
+        $this.SellPrice          = 35750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 162
+            [StatId]::MagicDefense = 295
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 162
+            [StatId]::MagicDefense = 148
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood woven from the essence of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerPlate : BEHelmet {
+    BEGodkillerPlate() : base() {
+        $this.Name               = 'Godkiller Plate'
+        $this.MapObjName         = 'godkillerplate'
+        $this.PurchasePrice      = 72000
+        $this.SellPrice          = 36000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 315
+            [StatId]::MagicDefense = 155
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 295
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHelm : BEHelmet {
+    BEUniverseHelm() : base() {
+        $this.Name               = 'Universe Helm'
+        $this.MapObjName         = 'universehelm'
+        $this.PurchasePrice      = 72500
+        $this.SellPrice          = 36250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 168
+            [StatId]::MagicDefense = 300
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 168
+            [StatId]::MagicDefense = 150
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A helm containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerPlate : BEHelmet {
+    BEChaosbringerPlate() : base() {
+        $this.Name               = 'Chaosbringer Plate'
+        $this.MapObjName         = 'chaosbringerplate'
+        $this.PurchasePrice      = 73000
+        $this.SellPrice          = 36500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 320
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 300
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHood : BEHelmet {
+    BEFrostfallHood() : base() {
+        $this.Name               = 'Frostfall Hood'
+        $this.MapObjName         = 'frostfallhood'
+        $this.PurchasePrice      = 73500
+        $this.SellPrice          = 36750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 172
+            [StatId]::MagicDefense = 305
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 172
+            [StatId]::MagicDefense = 152
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hood that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikeHelmII : BEHelmet {
+    BEThunderstrikeHelmII() : base() {
+        $this.Name               = 'Thunderstrike Helm II'
+        $this.MapObjName         = 'thunderstrikehelmii'
+        $this.PurchasePrice      = 74000
+        $this.SellPrice          = 37000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 325
+            [StatId]::MagicDefense = 160
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 305
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm that calls down lightning upon enemies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperCircletII : BEHelmet {
+    BEWorldshaperCircletII() : base() {
+        $this.Name               = 'Worldshaper Circlet II'
+        $this.MapObjName         = 'worldshapercircletii'
+        $this.PurchasePrice      = 74500
+        $this.SellPrice          = 37250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 178
+            [StatId]::MagicDefense = 310
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 178
+            [StatId]::MagicDefense = 155
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved circlet said to have shaped the world itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordPlate : BEHelmet {
+    BEAbyssalLordPlate() : base() {
+        $this.Name               = 'Abyssal Lord Plate'
+        $this.MapObjName         = 'abyssallordplate'
+        $this.PurchasePrice      = 75000
+        $this.SellPrice          = 37500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 330
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 310
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerHoodII : BEHelmet {
+    BEStarcallerHoodII() : base() {
+        $this.Name               = 'Starcaller Hood II'
+        $this.MapObjName         = 'starcallerhoodii'
+        $this.PurchasePrice      = 75500
+        $this.SellPrice          = 37750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 182
+            [StatId]::MagicDefense = 315
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 182
+            [StatId]::MagicDefense = 158
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingHelmII : BEHelmet {
+    BEGodkingHelmII() : base() {
+        $this.Name               = 'Godking Helm II'
+        $this.MapObjName         = 'godkinghelmii'
+        $this.PurchasePrice      = 76000
+        $this.SellPrice          = 38000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 335
+            [StatId]::MagicDefense = 165
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 315
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorCircletII : BEHelmet {
+    BECreatorCircletII() : base() {
+        $this.Name               = 'Creator Circlet II'
+        $this.MapObjName         = 'creatorcircletii'
+        $this.PurchasePrice      = 76500
+        $this.SellPrice          = 38250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 188
+            [StatId]::MagicDefense = 320
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 188
+            [StatId]::MagicDefense = 160
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved circlet said to hold the power of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartHelmII : BEHelmet {
+    BEVoidheartHelmII() : base() {
+        $this.Name               = 'Voidheart Helm II'
+        $this.MapObjName         = 'voidhearthelmii'
+        $this.PurchasePrice      = 77000
+        $this.SellPrice          = 38500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 340
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 320
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm that seems to draw power from the void itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHoodII : BEHelmet {
+    BEFrostfireHoodII() : base() {
+        $this.Name               = 'Frostfire Hood II'
+        $this.MapObjName         = 'frostfirehoodii'
+        $this.PurchasePrice      = 77500
+        $this.SellPrice          = 38750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 192
+            [StatId]::MagicDefense = 325
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 192
+            [StatId]::MagicDefense = 162
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood that crackles with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodHelmII : BEHelmet {
+    BEThundergodHelmII() : base() {
+        $this.Name               = 'Thundergod Helm II'
+        $this.MapObjName         = 'thundergodhelmii'
+        $this.PurchasePrice      = 78000
+        $this.SellPrice          = 39000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 345
+            [StatId]::MagicDefense = 170
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 325
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletII : BEHelmet {
+    BEUniverseCircletII() : base() {
+        $this.Name               = 'Universe Circlet II'
+        $this.MapObjName         = 'universecircletii'
+        $this.PurchasePrice      = 78500
+        $this.SellPrice          = 39250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 198
+            [StatId]::MagicDefense = 330
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 198
+            [StatId]::MagicDefense = 165
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypsePlateII : BEHelmet {
+    BEApocalypsePlateII() : base() {
+        $this.Name               = 'Apocalypse Plate II'
+        $this.MapObjName         = 'apocalypseplateii'
+        $this.PurchasePrice      = 79000
+        $this.SellPrice          = 39500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 350
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 330
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved plate armor that heralds the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHeavenlyHoodII : BEHelmet {
+    BEHeavenlyHoodII() : base() {
+        $this.Name               = 'Heavenly Hood II'
+        $this.MapObjName         = 'heavenlyhoodii'
+        $this.PurchasePrice      = 79500
+        $this.SellPrice          = 39750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 202
+            [StatId]::MagicDefense = 335
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 202
+            [StatId]::MagicDefense = 168
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood woven from divine threads.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmII : BEHelmet {
+    BEArchangelHelmII() : base() {
+        $this.Name               = 'Archangel Helm II'
+        $this.MapObjName         = 'archangelhelmii'
+        $this.PurchasePrice      = 80000
+        $this.SellPrice          = 40000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 355
+            [StatId]::MagicDefense = 175
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 335
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelmII : BEHelmet {
+    BEWorldeaterHelmII() : base() {
+        $this.Name               = 'Worldeater Helm II'
+        $this.MapObjName         = 'worldeaterhelmii'
+        $this.PurchasePrice      = 81000
+        $this.SellPrice          = 40500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 360
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 340
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCircletII : BEHelmet {
+    BEStarforgedCircletII() : base() {
+        $this.Name               = 'Starforged Circlet II'
+        $this.MapObjName         = 'starforgedcircletii'
+        $this.PurchasePrice      = 81500
+        $this.SellPrice          = 40750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 208
+            [StatId]::MagicDefense = 340
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 208
+            [StatId]::MagicDefense = 170
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelmII : BEHelmet {
+    BEGodkillerHelmII() : base() {
+        $this.Name               = 'Godkiller Helm II'
+        $this.MapObjName         = 'godkillerhelmii'
+        $this.PurchasePrice      = 82000
+        $this.SellPrice          = 41000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 365
+            [StatId]::MagicDefense = 180
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 345
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHoodII : BEHelmet {
+    BEUniverseHoodII() : base() {
+        $this.Name               = 'Universe Hood II'
+        $this.MapObjName         = 'universehoodii'
+        $this.PurchasePrice      = 82500
+        $this.SellPrice          = 41250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 212
+            [StatId]::MagicDefense = 345
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 212
+            [StatId]::MagicDefense = 172
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelmII : BEHelmet {
+    BEChaosbringerHelmII() : base() {
+        $this.Name               = 'Chaosbringer Helm II'
+        $this.MapObjName         = 'chaosbringerhelmii'
+        $this.PurchasePrice      = 83000
+        $this.SellPrice          = 41500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 370
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 350
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelmII : BEHelmet {
+    BEFrostfallHelmII() : base() {
+        $this.Name               = 'Frostfall Helm II'
+        $this.MapObjName         = 'frostfallhelmii'
+        $this.PurchasePrice      = 83500
+        $this.SellPrice          = 41750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 218
+            [StatId]::MagicDefense = 350
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 218
+            [StatId]::MagicDefense = 175
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlateII : BEHelmet {
+    BEThunderstrikePlateII() : base() {
+        $this.Name               = 'Thunderstrike Plate II'
+        $this.MapObjName         = 'thunderstrikeplateii'
+        $this.PurchasePrice      = 84000
+        $this.SellPrice          = 42000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 375
+            [StatId]::MagicDefense = 185
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 355
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHoodII : BEHelmet {
+    BEWorldshaperHoodII() : base() {
+        $this.Name               = 'Worldshaper Hood II'
+        $this.MapObjName         = 'worldshaperhoodii'
+        $this.PurchasePrice      = 84500
+        $this.SellPrice          = 42250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 222
+            [StatId]::MagicDefense = 355
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 222
+            [StatId]::MagicDefense = 178
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelmII : BEHelmet {
+    BEAbyssalLordHelmII() : base() {
+        $this.Name               = 'Abyssal Lord Helm II'
+        $this.MapObjName         = 'abyssallordhelmii'
+        $this.PurchasePrice      = 85000
+        $this.SellPrice          = 42500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 380
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 360
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCircletII : BEHelmet {
+    BEStarcallerCircletII() : base() {
+        $this.Name               = 'Starcaller Circlet II'
+        $this.MapObjName         = 'starcallercircletii'
+        $this.PurchasePrice      = 85500
+        $this.SellPrice          = 42750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 228
+            [StatId]::MagicDefense = 360
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 228
+            [StatId]::MagicDefense = 180
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlateII : BEHelmet {
+    BEGodkingPlateII() : base() {
+        $this.Name               = 'Godking Plate II'
+        $this.MapObjName         = 'godkingplateii'
+        $this.PurchasePrice      = 86000
+        $this.SellPrice          = 43000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 385
+            [StatId]::MagicDefense = 190
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 365
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHoodII : BEHelmet {
+    BECreatorHoodII() : base() {
+        $this.Name               = 'Creator Hood II'
+        $this.MapObjName         = 'creatorhoodii'
+        $this.PurchasePrice      = 86500
+        $this.SellPrice          = 43250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 232
+            [StatId]::MagicDefense = 365
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 232
+            [StatId]::MagicDefense = 182
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlateII : BEHelmet {
+    BEVoidheartPlateII() : base() {
+        $this.Name               = 'Voidheart Plate II'
+        $this.MapObjName         = 'voidheartplateii'
+        $this.PurchasePrice      = 87000
+        $this.SellPrice          = 43500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 390
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 370
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelmII : BEHelmet {
+    BEFrostfireHelmII() : base() {
+        $this.Name               = 'Frostfire Helm II'
+        $this.MapObjName         = 'frostfirehelmii'
+        $this.PurchasePrice      = 87500
+        $this.SellPrice          = 43750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 238
+            [StatId]::MagicDefense = 370
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 238
+            [StatId]::MagicDefense = 185
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateII : BEHelmet {
+    BEThundergodPlateII() : base() {
+        $this.Name               = 'Thundergod Plate II'
+        $this.MapObjName         = 'thundergodplateii'
+        $this.PurchasePrice      = 88000
+        $this.SellPrice          = 44000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 395
+            [StatId]::MagicDefense = 195
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 375
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletIII : BEHelmet {
+    BEUniverseCircletIII() : base() {
+        $this.Name               = 'Universe Circlet III'
+        $this.MapObjName         = 'universecircletiii'
+        $this.PurchasePrice      = 88500
+        $this.SellPrice          = 44250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 242
+            [StatId]::MagicDefense = 375
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 242
+            [StatId]::MagicDefense = 188
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodII : BEHelmet {
+    BEApocalypseHoodII() : base() {
+        $this.Name               = 'Apocalypse Hood II'
+        $this.MapObjName         = 'apocalypsehoodii'
+        $this.PurchasePrice      = 89000
+        $this.SellPrice          = 44500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 248
+            [StatId]::MagicDefense = 380
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 248
+            [StatId]::MagicDefense = 190
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateII : BEHelmet {
+    BEHeavenlyPlateII() : base() {
+        $this.Name               = 'Heavenly Plate II'
+        $this.MapObjName         = 'heavenlyplateii'
+        $this.PurchasePrice      = 89500
+        $this.SellPrice          = 44750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 400
+            [StatId]::MagicDefense = 200
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 380
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmIII : BEHelmet {
+    BEArchangelHelmIII() : base() {
+        $this.Name               = 'Archangel Helm III'
+        $this.MapObjName         = 'archangelhelm iii'
+        $this.PurchasePrice      = 90000
+        $this.SellPrice          = 45000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 405
+            [StatId]::MagicDefense = 205
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 385
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelmIII : BEHelmet {
+    BEWorldeaterHelmIII() : base() {
+        $this.Name               = 'Worldeater Helm III'
+        $this.MapObjName         = 'worldeaterhelm iii'
+        $this.PurchasePrice      = 91000
+        $this.SellPrice          = 45500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 410
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 390
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCircletIII : BEHelmet {
+    BEStarforgedCircletIII() : base() {
+        $this.Name               = 'Starforged Circlet III'
+        $this.MapObjName         = 'starforgedcirclet iii'
+        $this.PurchasePrice      = 91500
+        $this.SellPrice          = 45750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 258
+            [StatId]::MagicDefense = 385
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 258
+            [StatId]::MagicDefense = 192
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelmIII : BEHelmet {
+    BEGodkillerHelmIII() : base() {
+        $this.Name               = 'Godkiller Helm III'
+        $this.MapObjName         = 'godkillerhelm iii'
+        $this.PurchasePrice      = 92000
+        $this.SellPrice          = 46000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 415
+            [StatId]::MagicDefense = 210
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 395
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHoodIII : BEHelmet {
+    BEUniverseHoodIII() : base() {
+        $this.Name               = 'Universe Hood III'
+        $this.MapObjName         = 'universehood iii'
+        $this.PurchasePrice      = 92500
+        $this.SellPrice          = 46250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 262
+            [StatId]::MagicDefense = 390
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 262
+            [StatId]::MagicDefense = 195
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelmIII : BEHelmet {
+    BEChaosbringerHelmIII() : base() {
+        $this.Name               = 'Chaosbringer Helm III'
+        $this.MapObjName         = 'chaosbringerhelm iii'
+        $this.PurchasePrice      = 93000
+        $this.SellPrice          = 46500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 420
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 400
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelmIII : BEHelmet {
+    BEFrostfallHelmIII() : base() {
+        $this.Name               = 'Frostfall Helm III'
+        $this.MapObjName         = 'frostfallhelm iii'
+        $this.PurchasePrice      = 93500
+        $this.SellPrice          = 46750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 268
+            [StatId]::MagicDefense = 395
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 268
+            [StatId]::MagicDefense = 198
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlateIII : BEHelmet {
+    BEThunderstrikePlateIII() : base() {
+        $this.Name               = 'Thunderstrike Plate III'
+        $this.MapObjName         = 'thunderstrikeplate iii'
+        $this.PurchasePrice      = 94000
+        $this.SellPrice          = 47000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 425
+            [StatId]::MagicDefense = 215
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 405
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHoodIII : BEHelmet {
+    BEWorldshaperHoodIII() : base() {
+        $this.Name               = 'Worldshaper Hood III'
+        $this.MapObjName         = 'worldshaperhood iii'
+        $this.PurchasePrice      = 94500
+        $this.SellPrice          = 47250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 272
+            [StatId]::MagicDefense = 400
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 272
+            [StatId]::MagicDefense = 200
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelmIII : BEHelmet {
+    BEAbyssalLordHelmIII() : base() {
+        $this.Name               = 'Abyssal Lord Helm III'
+        $this.MapObjName         = 'abyssallordhelm iii'
+        $this.PurchasePrice      = 95000
+        $this.SellPrice          = 47500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 430
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 410
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCircletIII : BEHelmet {
+    BEStarcallerCircletIII() : base() {
+        $this.Name               = 'Starcaller Circlet III'
+        $this.MapObjName         = 'starcallercirclet iii'
+        $this.PurchasePrice      = 95500
+        $this.SellPrice          = 47750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 278
+            [StatId]::MagicDefense = 405
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 278
+            [StatId]::MagicDefense = 202
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlateIII : BEHelmet {
+    BEGodkingPlateIII() : base() {
+        $this.Name               = 'Godking Plate III'
+        $this.MapObjName         = 'godkingplate iii'
+        $this.PurchasePrice      = 96000
+        $this.SellPrice          = 48000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 435
+            [StatId]::MagicDefense = 220
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 415
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHoodIII : BEHelmet {
+    BECreatorHoodIII() : base() {
+        $this.Name               = 'Creator Hood III'
+        $this.MapObjName         = 'creatorhood iii'
+        $this.PurchasePrice      = 96500
+        $this.SellPrice          = 48250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 282
+            [StatId]::MagicDefense = 410
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 282
+            [StatId]::MagicDefense = 205
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlateIII : BEHelmet {
+    BEVoidheartPlateIII() : base() {
+        $this.Name               = 'Voidheart Plate III'
+        $this.MapObjName         = 'voidheartplate iii'
+        $this.PurchasePrice      = 97000
+        $this.SellPrice          = 48500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 440
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 420
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelmIII : BEHelmet {
+    BEFrostfireHelmIII() : base() {
+        $this.Name               = 'Frostfire Helm III'
+        $this.MapObjName         = 'frostfirehelm iii'
+        $this.PurchasePrice      = 97500
+        $this.SellPrice          = 48750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 288
+            [StatId]::MagicDefense = 415
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 288
+            [StatId]::MagicDefense = 208
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateIII : BEHelmet {
+    BEThundergodPlateIII() : base() {
+        $this.Name               = 'Thundergod Plate III'
+        $this.MapObjName         = 'thundergodplate iii'
+        $this.PurchasePrice      = 98000
+        $this.SellPrice          = 49000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 445
+            [StatId]::MagicDefense = 225
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 425
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletIV : BEHelmet {
+    BEUniverseCircletIV() : base() {
+        $this.Name               = 'Universe Circlet IV'
+        $this.MapObjName         = 'universecirclet iv'
+        $this.PurchasePrice      = 98500
+        $this.SellPrice          = 49250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 292
+            [StatId]::MagicDefense = 420
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 292
+            [StatId]::MagicDefense = 210
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodIII : BEHelmet {
+    BEApocalypseHoodIII() : base() {
+        $this.Name               = 'Apocalypse Hood III'
+        $this.MapObjName         = 'apocalypsehood iii'
+        $this.PurchasePrice      = 99000
+        $this.SellPrice          = 49500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 298
+            [StatId]::MagicDefense = 425
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 298
+            [StatId]::MagicDefense = 212
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A greatly improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateIII : BEHelmet {
+    BEHeavenlyPlateIII() : base() {
+        $this.Name               = 'Heavenly Plate III'
+        $this.MapObjName         = 'heavenlyplate iii'
+        $this.PurchasePrice      = 99500
+        $this.SellPrice          = 49750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 450
+            [StatId]::MagicDefense = 230
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 430
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmIV : BEHelmet {
+    BEArchangelHelmIV() : base() {
+        $this.Name               = 'Archangel Helm IV'
+        $this.MapObjName         = 'archangelhelm iv'
+        $this.PurchasePrice      = 100000
+        $this.SellPrice          = 50000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 455
+            [StatId]::MagicDefense = 235
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 435
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelmIV : BEHelmet {
+    BEWorldeaterHelmIV() : base() {
+        $this.Name               = 'Worldeater Helm IV'
+        $this.MapObjName         = 'worldeaterhelm iv'
+        $this.PurchasePrice      = 101000
+        $this.SellPrice          = 50500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 460
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 440
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCircletIV : BEHelmet {
+    BEStarforgedCircletIV() : base() {
+        $this.Name               = 'Starforged Circlet IV'
+        $this.MapObjName         = 'starforgedcirclet iv'
+        $this.PurchasePrice      = 101500
+        $this.SellPrice          = 50750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 308
+            [StatId]::MagicDefense = 430
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 308
+            [StatId]::MagicDefense = 215
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelmIV : BEHelmet {
+    BEGodkillerHelmIV() : base() {
+        $this.Name               = 'Godkiller Helm IV'
+        $this.MapObjName         = 'godkillerhelm iv'
+        $this.PurchasePrice      = 102000
+        $this.SellPrice          = 51000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 465
+            [StatId]::MagicDefense = 240
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 445
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHoodIV : BEHelmet {
+    BEUniverseHoodIV() : base() {
+        $this.Name               = 'Universe Hood IV'
+        $this.MapObjName         = 'universehood iv'
+        $this.PurchasePrice      = 102500
+        $this.SellPrice          = 51250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 312
+            [StatId]::MagicDefense = 435
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 312
+            [StatId]::MagicDefense = 218
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelmIV : BEHelmet {
+    BEChaosbringerHelmIV() : base() {
+        $this.Name               = 'Chaosbringer Helm IV'
+        $this.MapObjName         = 'chaosbringerhelm iv'
+        $this.PurchasePrice      = 103000
+        $this.SellPrice          = 51500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 470
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 450
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelmIV : BEHelmet {
+    BEFrostfallHelmIV() : base() {
+        $this.Name               = 'Frostfall Helm IV'
+        $this.MapObjName         = 'frostfallhelm iv'
+        $this.PurchasePrice      = 103500
+        $this.SellPrice          = 51750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 318
+            [StatId]::MagicDefense = 440
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 318
+            [StatId]::MagicDefense = 220
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlateIV : BEHelmet {
+    BEThunderstrikePlateIV() : base() {
+        $this.Name               = 'Thunderstrike Plate IV'
+        $this.MapObjName         = 'thunderstrikeplate iv'
+        $this.PurchasePrice      = 104000
+        $this.SellPrice          = 52000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 475
+            [StatId]::MagicDefense = 245
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 455
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHoodIV : BEHelmet {
+    BEWorldshaperHoodIV() : base() {
+        $this.Name               = 'Worldshaper Hood IV'
+        $this.MapObjName         = 'worldshaperhood iv'
+        $this.PurchasePrice      = 104500
+        $this.SellPrice          = 52250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 322
+            [StatId]::MagicDefense = 445
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 322
+            [StatId]::MagicDefense = 222
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelmIV : BEHelmet {
+    BEAbyssalLordHelmIV() : base() {
+        $this.Name               = 'Abyssal Lord Helm IV'
+        $this.MapObjName         = 'abyssallordhelm iv'
+        $this.PurchasePrice      = 105000
+        $this.SellPrice          = 52500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 480
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 460
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCircletIV : BEHelmet {
+    BEStarcallerCircletIV() : base() {
+        $this.Name               = 'Starcaller Circlet IV'
+        $this.MapObjName         = 'starcallercirclet iv'
+        $this.PurchasePrice      = 105500
+        $this.SellPrice          = 52750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 328
+            [StatId]::MagicDefense = 450
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 328
+            [StatId]::MagicDefense = 225
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlateIV : BEHelmet {
+    BEGodkingPlateIV() : base() {
+        $this.Name               = 'Godking Plate IV'
+        $this.MapObjName         = 'godkingplate iv'
+        $this.PurchasePrice      = 106000
+        $this.SellPrice          = 53000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 485
+            [StatId]::MagicDefense = 250
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 465
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHoodIV : BEHelmet {
+    BECreatorHoodIV() : base() {
+        $this.Name               = 'Creator Hood IV'
+        $this.MapObjName         = 'creatorhood iv'
+        $this.PurchasePrice      = 106500
+        $this.SellPrice          = 53250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 332
+            [StatId]::MagicDefense = 455
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 332
+            [StatId]::MagicDefense = 228
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFrostfireHelmIV : BEHelmet {
+    BEFrostfireHelmIV() : base() {
+        $this.Name               = 'Frostfire Helm IV'
+        $this.MapObjName         = 'frostfirehelm iv'
+        $this.PurchasePrice      = 107500
+        $this.SellPrice          = 53750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 338
+            [StatId]::MagicDefense = 460
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 338
+            [StatId]::MagicDefense = 230
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletV : BEHelmet {
+    BEUniverseCircletV() : base() {
+        $this.Name               = 'Universe Circlet V'
+        $this.MapObjName         = 'universecirclet v'
+        $this.PurchasePrice      = 108500
+        $this.SellPrice          = 54250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 342
+            [StatId]::MagicDefense = 465
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 342
+            [StatId]::MagicDefense = 232
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodIV : BEHelmet {
+    BEApocalypseHoodIV() : base() {
+        $this.Name               = 'Apocalypse Hood IV'
+        $this.MapObjName         = 'apocalypsehood iv'
+        $this.PurchasePrice      = 109000
+        $this.SellPrice          = 54500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 348
+            [StatId]::MagicDefense = 470
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 348
+            [StatId]::MagicDefense = 235
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlateIV : BEHelmet {
+    BEVoidheartPlateIV() : base() {
+        $this.Name               = 'Voidheart Plate IV'
+        $this.MapObjName         = 'voidheartplate iv'
+        $this.PurchasePrice      = 117000
+        $this.SellPrice          = 58500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 540
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 520
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEFrostfireHelmIV_Alt() : base() {
+        $this.Name               = 'Frostfire Helm IV'
+        $this.MapObjName         = 'frostfirehelm iv alt'
+        $this.PurchasePrice      = 117500
+        $this.SellPrice          = 58750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 505
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 255
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateIV : BEHelmet {
+    BEThundergodPlateIV() : base() {
+        $this.Name               = 'Thundergod Plate IV'
+        $this.MapObjName         = 'thundergodplate iv'
+        $this.PurchasePrice      = 118000
+        $this.SellPrice          = 59000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 545
+            [StatId]::MagicDefense = 285
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 525
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletVI : BEHelmet {
+    BEUniverseCircletVI() : base() {
+        $this.Name               = 'Universe Circlet VI'
+        $this.MapObjName         = 'universecirclet vi'
+        $this.PurchasePrice      = 118500
+        $this.SellPrice          = 59250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 510
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 258
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodV : BEHelmet {
+    BEApocalypseHoodV() : base() {
+        $this.Name               = 'Apocalypse Hood V'
+        $this.MapObjName         = 'apocalypsehood v'
+        $this.PurchasePrice      = 119000
+        $this.SellPrice          = 59500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 515
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 260
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateIV : BEHelmet {
+    BEHeavenlyPlateIV() : base() {
+        $this.Name               = 'Heavenly Plate IV'
+        $this.MapObjName         = 'heavenlyplate iv'
+        $this.PurchasePrice      = 119500
+        $this.SellPrice          = 59750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 550
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 530
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEArchangelHelmIV_Alt() : base() {
+        $this.Name               = 'Archangel Helm IV'
+        $this.MapObjName         = 'archangelhelm iv alt'
+        $this.PurchasePrice      = 120000
+        $this.SellPrice          = 60000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 555
+            [StatId]::MagicDefense = 295
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 535
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEWorldeaterHelmIV_Alt() : base() {
+        $this.Name               = 'Worldeater Helm IV'
+        $this.MapObjName         = 'worldeaterhelm iv alt'
+        $this.PurchasePrice      = 121000
+        $this.SellPrice          = 60500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 560
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 540
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCircletIV_Alt : BEHelmet { # Name clash, renaming
+    BEStarforgedCircletIV_Alt() : base() {
+        $this.Name               = 'Starforged Circlet IV'
+        $this.MapObjName         = 'starforgedcirclet iv alt'
+        $this.PurchasePrice      = 121500
+        $this.SellPrice          = 60750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 368
+            [StatId]::MagicDefense = 490
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 368
+            [StatId]::MagicDefense = 245
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEGodkillerHelmIV_Alt() : base() {
+        $this.Name               = 'Godkiller Helm IV'
+        $this.MapObjName         = 'godkillerhelm iv alt'
+        $this.PurchasePrice      = 122000
+        $this.SellPrice          = 61000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 565
+            [StatId]::MagicDefense = 280
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 545
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHoodIV_Alt : BEHelmet { # Name clash, renaming
+    BEUniverseHoodIV_Alt() : base() {
+        $this.Name               = 'Universe Hood IV'
+        $this.MapObjName         = 'universehood iv alt'
+        $this.PurchasePrice      = 122500
+        $this.SellPrice          = 61250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 372
+            [StatId]::MagicDefense = 495
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 372
+            [StatId]::MagicDefense = 248
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEChaosbringerHelmIV_Alt() : base() {
+        $this.Name               = 'Chaosbringer Helm IV'
+        $this.MapObjName         = 'chaosbringerhelm iv alt'
+        $this.PurchasePrice      = 123000
+        $this.SellPrice          = 61500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 570
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 550
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEFrostfallHelmIV_Alt() : base() {
+        $this.Name               = 'Frostfall Helm IV'
+        $this.MapObjName         = 'frostfallhelm iv alt'
+        $this.PurchasePrice      = 123500
+        $this.SellPrice          = 61750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 378
+            [StatId]::MagicDefense = 500
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 378
+            [StatId]::MagicDefense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlateIV_Alt : BEHelmet { # Name clash, renaming
+    BEThunderstrikePlateIV_Alt() : base() {
+        $this.Name               = 'Thunderstrike Plate IV'
+        $this.MapObjName         = 'thunderstrikeplate iv alt'
+        $this.PurchasePrice      = 124000
+        $this.SellPrice          = 62000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 575
+            [StatId]::MagicDefense = 285
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 555
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHoodIV_Alt : BEHelmet { # Name clash, renaming
+    BEWorldshaperHoodIV_Alt() : base() {
+        $this.Name               = 'Worldshaper Hood IV'
+        $this.MapObjName         = 'worldshaperhood iv alt'
+        $this.PurchasePrice      = 124500
+        $this.SellPrice          = 62250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 382
+            [StatId]::MagicDefense = 505
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 382
+            [StatId]::MagicDefense = 252
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelmIV_Alt : BEHelmet { # Name clash, renaming
+    BEAbyssalLordHelmIV_Alt() : base() {
+        $this.Name               = 'Abyssal Lord Helm IV'
+        $this.MapObjName         = 'abyssallordhelm iv alt'
+        $this.PurchasePrice      = 125000
+        $this.SellPrice          = 62500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 580
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 560
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCircletIV_Alt : BEHelmet { # Name clash, renaming
+    BEStarcallerCircletIV_Alt() : base() {
+        $this.Name               = 'Starcaller Circlet IV'
+        $this.MapObjName         = 'starcallercirclet iv alt'
+        $this.PurchasePrice      = 125500
+        $this.SellPrice          = 62750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 510
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 255
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlateIV_Alt : BEHelmet { # Name clash, renaming
+    BEGodkingPlateIV_Alt() : base() {
+        $this.Name               = 'Godking Plate IV'
+        $this.MapObjName         = 'godkingplate iv alt'
+        $this.PurchasePrice      = 126000
+        $this.SellPrice          = 63000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 585
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 565
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHoodIV_Alt : BEHelmet { # Name clash, renaming
+    BECreatorHoodIV_Alt() : base() {
+        $this.Name               = 'Creator Hood IV'
+        $this.MapObjName         = 'creatorhood iv alt'
+        $this.PurchasePrice      = 126500
+        $this.SellPrice          = 63250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 515
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 258
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlateIV_Alt : BEHelmet { # Name clash, renaming
+    BEVoidheartPlateIV_Alt() : base() {
+        $this.Name               = 'Voidheart Plate IV'
+        $this.MapObjName         = 'voidheartplate iv alt'
+        $this.PurchasePrice      = 127000
+        $this.SellPrice          = 63500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 590
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 570
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEFrostfireHelmIV_Alt2() : base() {
+        $this.Name               = 'Frostfire Helm IV'
+        $this.MapObjName         = 'frostfirehelm iv alt2'
+        $this.PurchasePrice      = 127500
+        $this.SellPrice          = 63750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 520
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 260
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateIV_Alt : BEHelmet { # Name clash, renaming
+    BEThundergodPlateIV_Alt() : base() {
+        $this.Name               = 'Thundergod Plate IV'
+        $this.MapObjName         = 'thundergodplate iv alt'
+        $this.PurchasePrice      = 128000
+        $this.SellPrice          = 64000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 595
+            [StatId]::MagicDefense = 300
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 575
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletV_Alt : BEHelmet { # Name clash, renaming
+    BEUniverseCircletV_Alt() : base() {
+        $this.Name               = 'Universe Circlet V'
+        $this.MapObjName         = 'universecirclet v alt'
+        $this.PurchasePrice      = 128500
+        $this.SellPrice          = 64250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 402
+            [StatId]::MagicDefense = 525
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 402
+            [StatId]::MagicDefense = 262
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodV_Alt : BEHelmet { # Name clash, renaming
+    BEApocalypseHoodV_Alt() : base() {
+        $this.Name               = 'Apocalypse Hood V'
+        $this.MapObjName         = 'apocalypsehood v alt'
+        $this.PurchasePrice      = 129000
+        $this.SellPrice          = 64500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 408
+            [StatId]::MagicDefense = 530
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 408
+            [StatId]::MagicDefense = 265
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateIV_Alt : BEHelmet { # Name clash, renaming
+    BEHeavenlyPlateIV_Alt() : base() {
+        $this.Name               = 'Heavenly Plate IV'
+        $this.MapObjName         = 'heavenlyplate iv alt'
+        $this.PurchasePrice      = 129500
+        $this.SellPrice          = 64750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 550
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 530
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEArchangelHelmIV_Alt2() : base() {
+        $this.Name               = 'Archangel Helm IV'
+        $this.MapObjName         = 'archangelhelm iv alt2'
+        $this.PurchasePrice      = 130000
+        $this.SellPrice          = 65000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 555
+            [StatId]::MagicDefense = 295
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 535
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEWorldeaterHelmIV_Alt2() : base() {
+        $this.Name               = 'Worldeater Helm IV'
+        $this.MapObjName         = 'worldeaterhelm iv alt2'
+        $this.PurchasePrice      = 131000
+        $this.SellPrice          = 65500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 560
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 540
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCircletIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEStarforgedCircletIV_Alt2() : base() {
+        $this.Name               = 'Starforged Circlet IV'
+        $this.MapObjName         = 'starforgedcirclet iv alt2'
+        $this.PurchasePrice      = 131500
+        $this.SellPrice          = 65750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 368
+            [StatId]::MagicDefense = 490
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 368
+            [StatId]::MagicDefense = 245
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEGodkillerHelmIV_Alt2() : base() {
+        $this.Name               = 'Godkiller Helm IV'
+        $this.MapObjName         = 'godkillerhelm iv alt2'
+        $this.PurchasePrice      = 132000
+        $this.SellPrice          = 66000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 565
+            [StatId]::MagicDefense = 280
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 545
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHoodIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEUniverseHoodIV_Alt2() : base() {
+        $this.Name               = 'Universe Hood IV'
+        $this.MapObjName         = 'universehood iv alt2'
+        $this.PurchasePrice      = 132500
+        $this.SellPrice          = 66250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 372
+            [StatId]::MagicDefense = 495
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 372
+            [StatId]::MagicDefense = 248
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEChaosbringerHelmIV_Alt2() : base() {
+        $this.Name               = 'Chaosbringer Helm IV'
+        $this.MapObjName         = 'chaosbringerhelm iv alt2'
+        $this.PurchasePrice      = 133000
+        $this.SellPrice          = 66500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 570
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 550
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEFrostfallHelmIV_Alt3() : base() {
+        $this.Name               = 'Frostfall Helm IV'
+        $this.MapObjName         = 'frostfallhelm iv alt3'
+        $this.PurchasePrice      = 133500
+        $this.SellPrice          = 66750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 378
+            [StatId]::MagicDefense = 500
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 378
+            [StatId]::MagicDefense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlateIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEThunderstrikePlateIV_Alt2() : base() {
+        $this.Name               = 'Thunderstrike Plate IV'
+        $this.MapObjName         = 'thunderstrikeplate iv alt2'
+        $this.PurchasePrice      = 134000
+        $this.SellPrice          = 67000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 575
+            [StatId]::MagicDefense = 285
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 555
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHoodIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEWorldshaperHoodIV_Alt2() : base() {
+        $this.Name               = 'Worldshaper Hood IV'
+        $this.MapObjName         = 'worldshaperhood iv alt2'
+        $this.PurchasePrice      = 134500
+        $this.SellPrice          = 67250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 382
+            [StatId]::MagicDefense = 505
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 382
+            [StatId]::MagicDefense = 252
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEAbyssalLordHelmIV_Alt2() : base() {
+        $this.Name               = 'Abyssal Lord Helm IV'
+        $this.MapObjName         = 'abyssallordhelm iv alt2'
+        $this.PurchasePrice      = 135000
+        $this.SellPrice          = 67500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 580
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 560
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCircletIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEStarcallerCircletIV_Alt2() : base() {
+        $this.Name               = 'Starcaller Circlet IV'
+        $this.MapObjName         = 'starcallercirclet iv alt2'
+        $this.PurchasePrice      = 135500
+        $this.SellPrice          = 67750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 510
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 255
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEGodkingPlateIV_Alt2() : base() {
+        $this.Name               = 'Godking Plate IV'
+        $this.MapObjName         = 'godkingplate iv alt2'
+        $this.PurchasePrice      = 136000
+        $this.SellPrice          = 68000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 585
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 565
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHoodIV_Alt2 : BEHelmet { # Name clash, renaming
+    BECreatorHoodIV_Alt2() : base() {
+        $this.Name               = 'Creator Hood IV'
+        $this.MapObjName         = 'creatorhood iv alt2'
+        $this.PurchasePrice      = 136500
+        $this.SellPrice          = 68250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 515
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 258
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEVoidheartPlateIV_Alt2() : base() {
+        $this.Name               = 'Voidheart Plate IV'
+        $this.MapObjName         = 'voidheartplate iv alt2'
+        $this.PurchasePrice      = 137000
+        $this.SellPrice          = 68500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 590
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 570
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEFrostfireHelmIV_Alt3() : base() {
+        $this.Name               = 'Frostfire Helm IV'
+        $this.MapObjName         = 'frostfirehelm iv alt3'
+        $this.PurchasePrice      = 137500
+        $this.SellPrice          = 68750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 520
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 260
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEThundergodPlateIV_Alt2() : base() {
+        $this.Name               = 'Thundergod Plate IV'
+        $this.MapObjName         = 'thundergodplate iv alt2'
+        $this.PurchasePrice      = 138000
+        $this.SellPrice          = 69000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 595
+            [StatId]::MagicDefense = 300
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 575
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletV_Alt2 : BEHelmet { # Name clash, renaming
+    BEUniverseCircletV_Alt2() : base() {
+        $this.Name               = 'Universe Circlet V'
+        $this.MapObjName         = 'universecirclet v alt2'
+        $this.PurchasePrice      = 138500
+        $this.SellPrice          = 69250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 402
+            [StatId]::MagicDefense = 525
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 402
+            [StatId]::MagicDefense = 262
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodV_Alt2 : BEHelmet { # Name clash, renaming
+    BEApocalypseHoodV_Alt2() : base() {
+        $this.Name               = 'Apocalypse Hood V'
+        $this.MapObjName         = 'apocalypsehood v alt2'
+        $this.PurchasePrice      = 139000
+        $this.SellPrice          = 69500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 408
+            [StatId]::MagicDefense = 530
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 408
+            [StatId]::MagicDefense = 265
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+    BEHeavenlyPlateIV_Alt2() : base() {
+        $this.Name               = 'Heavenly Plate IV'
+        $this.MapObjName         = 'heavenlyplate iv alt2'
+        $this.PurchasePrice      = 139500
+        $this.SellPrice          = 69750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 550
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 530
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEArchangelHelmIV_Alt3() : base() {
+        $this.Name               = 'Archangel Helm IV'
+        $this.MapObjName         = 'archangelhelm iv alt3'
+        $this.PurchasePrice      = 140000
+        $this.SellPrice          = 70000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 555
+            [StatId]::MagicDefense = 295
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 535
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldeaterHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEWorldeaterHelmIV_Alt3() : base() {
+        $this.Name               = 'Worldeater Helm IV'
+        $this.MapObjName         = 'worldeaterhelm iv alt3'
+        $this.PurchasePrice      = 141000
+        $this.SellPrice          = 70500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 560
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 540
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm said to devour worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarforgedCircletIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEStarforgedCircletIV_Alt3() : base() {
+        $this.Name               = 'Starforged Circlet IV'
+        $this.MapObjName         = 'starforgedcirclet iv alt3'
+        $this.PurchasePrice      = 141500
+        $this.SellPrice          = 70750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 368
+            [StatId]::MagicDefense = 490
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 368
+            [StatId]::MagicDefense = 245
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet forged from the heart of a star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEGodkillerHelmIV_Alt3() : base() {
+        $this.Name               = 'Godkiller Helm IV'
+        $this.MapObjName         = 'godkillerhelm iv alt3'
+        $this.PurchasePrice      = 142000
+        $this.SellPrice          = 71000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 565
+            [StatId]::MagicDefense = 280
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 545
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseHoodIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEUniverseHoodIV_Alt3() : base() {
+        $this.Name               = 'Universe Hood IV'
+        $this.MapObjName         = 'universehood iv alt3'
+        $this.PurchasePrice      = 142500
+        $this.SellPrice          = 71250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 372
+            [StatId]::MagicDefense = 495
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 372
+            [StatId]::MagicDefense = 248
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood that seems to contain the vastness of the universe.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosbringerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEChaosbringerHelmIV_Alt3() : base() {
+        $this.Name               = 'Chaosbringer Helm IV'
+        $this.MapObjName         = 'chaosbringerhelm iv alt3'
+        $this.PurchasePrice      = 143000
+        $this.SellPrice          = 71500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 570
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 550
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings chaos wherever it goes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfallHelmIV_Alt4 : BEHelmet { # Name clash, renaming
+    BEFrostfallHelmIV_Alt4() : base() {
+        $this.Name               = 'Frostfall Helm IV'
+        $this.MapObjName         = 'frostfallhelm iv alt4'
+        $this.PurchasePrice      = 143500
+        $this.SellPrice          = 71750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 378
+            [StatId]::MagicDefense = 500
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 378
+            [StatId]::MagicDefense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm that brings the chill of winter.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderstrikePlateIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEThunderstrikePlateIV_Alt3() : base() {
+        $this.Name               = 'Thunderstrike Plate IV'
+        $this.MapObjName         = 'thunderstrikeplate iv alt3'
+        $this.PurchasePrice      = 144000
+        $this.SellPrice          = 72000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 575
+            [StatId]::MagicDefense = 285
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 555
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperHoodIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEWorldshaperHoodIV_Alt3() : base() {
+        $this.Name               = 'Worldshaper Hood IV'
+        $this.MapObjName         = 'worldshaperhood iv alt3'
+        $this.PurchasePrice      = 144500
+        $this.SellPrice          = 72250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 382
+            [StatId]::MagicDefense = 505
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 382
+            [StatId]::MagicDefense = 252
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood said to have been worn by those who shaped the world.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalLordHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEAbyssalLordHelmIV_Alt3() : base() {
+        $this.Name               = 'Abyssal Lord Helm IV'
+        $this.MapObjName         = 'abyssallordhelm iv alt3'
+        $this.PurchasePrice      = 145000
+        $this.SellPrice          = 72500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 580
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 560
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm fit for a lord of the abyss.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerCircletIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEStarcallerCircletIV_Alt3() : base() {
+        $this.Name               = 'Starcaller Circlet IV'
+        $this.MapObjName         = 'starcallercirclet iv alt3'
+        $this.PurchasePrice      = 145500
+        $this.SellPrice          = 72750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 510
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 388
+            [StatId]::MagicDefense = 255
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved circlet that allows the wearer to call upon the power of stars.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEGodkingPlateIV_Alt3() : base() {
+        $this.Name               = 'Godking Plate IV'
+        $this.MapObjName         = 'godkingplate iv alt3'
+        $this.PurchasePrice      = 146000
+        $this.SellPrice          = 73000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 585
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 565
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorHoodIV_Alt3 : BEHelmet { # Name clash, renaming
+    BECreatorHoodIV_Alt3() : base() {
+        $this.Name               = 'Creator Hood IV'
+        $this.MapObjName         = 'creatorhood iv alt3'
+        $this.PurchasePrice      = 146500
+        $this.SellPrice          = 73250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 515
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 392
+            [StatId]::MagicDefense = 258
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved hood woven from the threads of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEVoidheartPlateIV_Alt3() : base() {
+        $this.Name               = 'Voidheart Plate IV'
+        $this.MapObjName         = 'voidheartplate iv alt3'
+        $this.PurchasePrice      = 147000
+        $this.SellPrice          = 73500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 590
+            [StatId]::MagicDefense = 0
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 570
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Incredibly improved plate armor drawing power from the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireHelmIV_Alt4 : BEHelmet { # Name clash, renaming
+    BEFrostfireHelmIV_Alt4() : base() {
+        $this.Name               = 'Frostfire Helm IV'
+        $this.MapObjName         = 'frostfirehelm iv alt4'
+        $this.PurchasePrice      = 147500
+        $this.SellPrice          = 73750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 520
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 398
+            [StatId]::MagicDefense = 260
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm crackling with both frost and fire.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEThundergodPlateIV_Alt3() : base() {
+        $this.Name               = 'Thundergod Plate IV'
+        $this.MapObjName         = 'thundergodplate iv alt3'
+        $this.PurchasePrice      = 148000
+        $this.SellPrice          = 74000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 595
+            [StatId]::MagicDefense = 300
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 575
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseCircletV_Alt3 : BEHelmet { # Name clash, renaming
+    BEUniverseCircletV_Alt3() : base() {
+        $this.Name               = 'Universe Circlet V'
+        $this.MapObjName         = 'universecirclet v alt3'
+        $this.PurchasePrice      = 148500
+        $this.SellPrice          = 74250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 402
+            [StatId]::MagicDefense = 525
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 402
+            [StatId]::MagicDefense = 262
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved circlet containing a miniature universe within.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseHoodV_Alt3 : BEHelmet { # Name clash, renaming
+    BEApocalypseHoodV_Alt3() : base() {
+        $this.Name               = 'Apocalypse Hood V'
+        $this.MapObjName         = 'apocalypsehood v alt3'
+        $this.PurchasePrice      = 149000
+        $this.SellPrice          = 74500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 408
+            [StatId]::MagicDefense = 530
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 408
+            [StatId]::MagicDefense = 265
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A supremely improved hood that whispers of the apocalypse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+    BEHeavenlyPlateIV_Alt3() : base() {
+        $this.Name               = 'Heavenly Plate IV'
+        $this.MapObjName         = 'heavenlyplate iv alt3'
+        $this.PurchasePrice      = 149500
+        $this.SellPrice          = 74750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 550
+            [StatId]::MagicDefense = 290
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 530
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelHelmIV_Alt4 : BEHelmet { # Name clash, renaming
+    BEArchangelHelmIV_Alt4() : base() {
+        $this.Name               = 'Archangel Helm IV'
+        $this.MapObjName         = 'archangelhelm iv alt4'
+        $this.PurchasePrice      = 150000
+        $this.SellPrice          = 75000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 555
+            [StatId]::MagicDefense = 295
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 535
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+
+
+
+###############################################################################
+#
+# BEARMOR SPECIALIZATIONS
+#
+###############################################################################
+Class BERags : BEArmor {
+    BERags() : base() {
+        $this.Name               = 'Tattered Rags'
+        $this.MapObjName         = 'tatteredrags'
+        $this.PurchasePrice      = 10
+        $this.SellPrice          = 5
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Barely holds together. Better than nothing, perhaps.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEPaddedClothTunic : BEArmor {
+    BEPaddedClothTunic() : base() {
+        $this.Name               = 'Padded Cloth Tunic'
+        $this.MapObjName         = 'paddedclothtunic'
+        $this.PurchasePrice      = 25
+        $this.SellPrice          = 12
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple cloth tunic with some padding for extra protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BELeatherJerkin : BEArmor {
+    BELeatherJerkin() : base() {
+        $this.Name               = 'Leather Jerkin'
+        $this.MapObjName         = 'leatherjerkin'
+        $this.PurchasePrice      = 40
+        $this.SellPrice          = 20
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sturdy jerkin made of boiled leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BERobesOfApprentice : BEArmor {
+    BERobesOfApprentice() : base() {
+        $this.Name               = 'Robes of Apprentice'
+        $this.MapObjName         = 'robesofapprentice'
+        $this.PurchasePrice      = 35
+        $this.SellPrice          = 17
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple robes worn by novice magic users.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHideArmor : BEArmor {
+    BEHideArmor() : base() {
+        $this.Name               = 'Hide Armor'
+        $this.MapObjName         = 'hidearmor'
+        $this.PurchasePrice      = 50
+        $this.SellPrice          = 25
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor crafted from tough animal hides.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEQuiltedDoublet : BEArmor {
+    BEQuiltedDoublet() : base() {
+        $this.Name               = 'Quilted Doublet'
+        $this.MapObjName         = 'quilteddoublet'
+        $this.PurchasePrice      = 60
+        $this.SellPrice          = 30
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A thick, quilted doublet offering modest protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BETravelersGarb : BEArmor {
+    BETravelersGarb() : base() {
+        $this.Name               = 'Traveler''s Garb'
+        $this.MapObjName         = 'travelersgarb'
+        $this.PurchasePrice      = 70
+        $this.SellPrice          = 35
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Durable clothing suitable for long journeys.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStuddedLeatherCuirass : BEArmor {
+    BEStuddedLeatherCuirass() : base() {
+        $this.Name               = 'Studded Leather Cuirass'
+        $this.MapObjName         = 'studdedleathercuirass'
+        $this.PurchasePrice      = 90
+        $this.SellPrice          = 45
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather armor reinforced with metal studs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAcolytesRobes : BEArmor {
+    BEAcolytesRobes() : base() {
+        $this.Name               = 'Acolyte''s Robes'
+        $this.MapObjName         = 'acolytesrobes'
+        $this.PurchasePrice      = 80
+        $this.SellPrice          = 40
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes worn by those dedicated to spiritual practices.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBrigandine : BEArmor {
+    BEBrigandine() : base() {
+        $this.Name               = 'Brigandine'
+        $this.MapObjName         = 'brigandine'
+        $this.PurchasePrice      = 110
+        $this.SellPrice          = 55
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made of canvas or leather, lined with small steel plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFurLinedCloak : BEArmor {
+    BEFurLinedCloak() : base() {
+        $this.Name               = 'Fur-Lined Cloak'
+        $this.MapObjName         = 'furlinedcloak'
+        $this.PurchasePrice      = 100
+        $this.SellPrice          = 50
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A warm cloak lined with fur, offering some protection from the elements and blows.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BERingMail : BEArmor {
+    BERingMail() : base() {
+        $this.Name               = 'Ring Mail'
+        $this.MapObjName         = 'ringmail'
+        $this.PurchasePrice      = 130
+        $this.SellPrice          = 65
+        $this.TargetStats        = @{
+            [StatId]::Defense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made by sewing heavy rings to a leather backing.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEnchantedTunic : BEArmor {
+    BEEnchantedTunic() : base() {
+        $this.Name               = 'Enchanted Tunic'
+        $this.MapObjName         = 'enchantedtunic'
+        $this.PurchasePrice      = 120
+        $this.SellPrice          = 60
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A simple tunic imbued with minor protective enchantments.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEScaleVest : BEArmor {
+    BEScaleVest() : base() {
+        $this.Name               = 'Scale Vest'
+        $this.MapObjName         = 'scalevest'
+        $this.PurchasePrice      = 150
+        $this.SellPrice          = 75
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A vest made of overlapping metal scales.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHardLeatherArmor : BEArmor {
+    BEHardLeatherArmor() : base() {
+        $this.Name               = 'Hard Leather Armor'
+        $this.MapObjName         = 'hardleatherarmor'
+        $this.PurchasePrice      = 140
+        $this.SellPrice          = 70
+        $this.TargetStats        = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather armor that has been specially treated for increased toughness.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChainShirt : BEArmor {
+    BEChainShirt() : base() {
+        $this.Name               = 'Chain Shirt'
+        $this.MapObjName         = 'chainshirt'
+        $this.PurchasePrice      = 200
+        $this.SellPrice          = 100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A shirt made of interlocking metal rings, offering good protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESilkRobes : BEArmor {
+    BESilkRobes() : base() {
+        $this.Name               = 'Silk Robes'
+        $this.MapObjName         = 'silkrobes'
+        $this.PurchasePrice      = 180
+        $this.SellPrice          = 90
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Elegant robes made of fine silk, surprisingly resilient to magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBronzeCuirass : BEArmor {
+    BEBronzeCuirass() : base() {
+        $this.Name               = 'Bronze Cuirass'
+        $this.MapObjName         = 'bronzecuirass'
+        $this.PurchasePrice      = 250
+        $this.SellPrice          = 125
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A breastplate and backplate made of bronze.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEReinforcedRobes : BEArmor {
+    BEReinforcedRobes() : base() {
+        $this.Name               = 'Reinforced Robes'
+        $this.MapObjName         = 'reinforcedrobes'
+        $this.PurchasePrice      = 220
+        $this.SellPrice          = 110
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes interwoven with metallic threads for added defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIronHauberk : BEArmor {
+    BEIronHauberk() : base() {
+        $this.Name               = 'Iron Hauberk'
+        $this.MapObjName         = 'ironhauberk'
+        $this.PurchasePrice      = 300
+        $this.SellPrice          = 150
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A long coat of iron chainmail.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGambeson : BEArmor {
+    BEGambeson() : base() {
+        $this.Name               = 'Gambeson'
+        $this.MapObjName         = 'gambeson'
+        $this.PurchasePrice      = 160
+        $this.SellPrice          = 80
+        $this.TargetStats        = @{
+            [StatId]::Defense = 9
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A padded defensive jacket, worn alone or under other armor.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESplintMail : BEArmor {
+    BESplintMail() : base() {
+        $this.Name               = 'Splint Mail'
+        $this.MapObjName         = 'splintmail'
+        $this.PurchasePrice      = 350
+        $this.SellPrice          = 175
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made of overlapping metal splints riveted to a backing.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBattlemageRobes : BEArmor {
+    BEBattlemageRobes() : base() {
+        $this.Name               = 'Battlemage Robes'
+        $this.MapObjName         = 'battlemagerobes'
+        $this.PurchasePrice      = 320
+        $this.SellPrice          = 160
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+            [StatId]::MagicDefense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes designed for mages who expect to see close combat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESteelCuirass : BEArmor {
+    BESteelCuirass() : base() {
+        $this.Name               = 'Steel Cuirass'
+        $this.MapObjName         = 'steelcuirass'
+        $this.PurchasePrice      = 420
+        $this.SellPrice          = 210
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A well-crafted cuirass made of polished steel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWarriorsTunic : BEArmor {
+    BEWarriorsTunic() : base() {
+        $this.Name               = 'Warrior''s Tunic'
+        $this.MapObjName         = 'warriorstunic'
+        $this.PurchasePrice      = 280
+        $this.SellPrice          = 140
+        $this.TargetStats        = @{
+            [StatId]::Defense = 13
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 11
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A rugged tunic favored by seasoned warriors.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFullChainMail : BEArmor {
+    BEFullChainMail() : base() {
+        $this.Name               = 'Full Chain Mail'
+        $this.MapObjName         = 'fullchainmail'
+        $this.PurchasePrice      = 500
+        $this.SellPrice          = 250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 23
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A complete suit of chainmail, covering the torso and limbs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESorcerersCloak : BEArmor {
+    BESorcerersCloak() : base() {
+        $this.Name               = 'Sorcerer''s Cloak'
+        $this.MapObjName         = 'sorcererscloak'
+        $this.PurchasePrice      = 450
+        $this.SellPrice          = 225
+        $this.TargetStats        = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+            [StatId]::MagicDefense = 13
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A cloak imbued with arcane energies, offering magical protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPlateArmor : BEArmor {
+    BEPlateArmor() : base() {
+        $this.Name               = 'Plate Armor'
+        $this.MapObjName         = 'platearmor'
+        $this.PurchasePrice      = 600
+        $this.SellPrice          = 300
+        $this.TargetStats        = @{
+            [StatId]::Defense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Heavy armor consisting of large, interlocking steel plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEElvenChainmail : BEArmor {
+    BEElvenChainmail() : base() {
+        $this.Name               = 'Elven Chainmail'
+        $this.MapObjName         = 'elvenchainmail'
+        $this.PurchasePrice      = 550
+        $this.SellPrice          = 275
+        $this.TargetStats        = @{
+            [StatId]::Defense = 16
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 13
+            [StatId]::MagicDefense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Finely crafted chainmail of elven make, surprisingly light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDwarvenPlate : BEArmor {
+    BEDwarvenPlate() : base() {
+        $this.Name               = 'Dwarven Plate'
+        $this.MapObjName         = 'dwarvenplate'
+        $this.PurchasePrice      = 750
+        $this.SellPrice          = 375
+        $this.TargetStats        = @{
+            [StatId]::Defense = 33
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick, masterfully crafted plate armor of dwarven origin.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEMagesRobes : BEArmor {
+    BEMagesRobes() : base() {
+        $this.Name               = 'Mage''s Robes'
+        $this.MapObjName         = 'magesrobes'
+        $this.PurchasePrice      = 680
+        $this.SellPrice          = 340
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+            [StatId]::MagicDefense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Ornate robes worn by skilled mages, enhancing their magical defenses.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKnightsArmor : BEArmor {
+    BEKnightsArmor() : base() {
+        $this.Name               = 'Knight''s Armor'
+        $this.MapObjName         = 'knightsarmor'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 38
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Full plate armor befitting a noble knight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEShadowWeaveArmor : BEArmor {
+    BEShadowWeaveArmor() : base() {
+        $this.Name               = 'Shadow Weave Armor'
+        $this.MapObjName         = 'shadowweavearmor'
+        $this.PurchasePrice      = 800
+        $this.SellPrice          = 400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 16
+            [StatId]::MagicDefense = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor woven from shadowy threads, offering stealth and protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEMithrilChainmail : BEArmor {
+    BEMithrilChainmail() : base() {
+        $this.Name               = 'Mithril Chainmail'
+        $this.MapObjName         = 'mithrilchainmail'
+        $this.PurchasePrice      = 1100
+        $this.SellPrice          = 550
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 21
+            [StatId]::MagicDefense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Chainmail crafted from lightweight and durable mithril.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchmageRobes : BEArmor {
+    BEArchmageRobes() : base() {
+        $this.Name               = 'Archmage Robes'
+        $this.MapObjName         = 'archmagerobes'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 9
+            [StatId]::MagicDefense = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The robes of a master magic wielder, potent with enchantments.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantitePlate : BEArmor {
+    BEAdamantitePlate() : base() {
+        $this.Name               = 'Adamantite Plate'
+        $this.MapObjName         = 'adamantiteplate'
+        $this.PurchasePrice      = 1300
+        $this.SellPrice          = 650
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Extremely hard plate armor made from adamantite ore.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEDragonscaleMail : BEArmor {
+    BEDragonscaleMail() : base() {
+        $this.Name               = 'Dragonscale Mail'
+        $this.MapObjName         = 'dragonscalemail'
+        $this.PurchasePrice      = 1500
+        $this.SellPrice          = 750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor crafted from the resilient scales of a dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrichalcumCuirass : BEArmor {
+    BEOrichalcumCuirass() : base() {
+        $this.Name               = 'Orichalcum Cuirass'
+        $this.MapObjName         = 'orichalcumcuirass'
+        $this.PurchasePrice      = 1200
+        $this.SellPrice          = 600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 42
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A cuirass made of the rare and magically conductive orichalcum.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixDownRobes : BEArmor {
+    BEPhoenixDownRobes() : base() {
+        $this.Name               = 'Phoenix Down Robes'
+        $this.MapObjName         = 'phoenixdownrobes'
+        $this.PurchasePrice      = 1400
+        $this.SellPrice          = 700
+        $this.TargetStats        = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 11
+            [StatId]::MagicDefense = 26
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven with phoenix down, offering resilience and magical protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGryphonHideArmor : BEArmor {
+    BEGryphonHideArmor() : base() {
+        $this.Name               = 'Gryphon Hide Armor'
+        $this.MapObjName         = 'gryphonhidearmor'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made from the tough hide of a gryphon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPaladinsPlateMail : BEArmor {
+    BEPaladinsPlateMail() : base() {
+        $this.Name               = 'Paladin''s Plate Mail'
+        $this.MapObjName         = 'paladinsplatemail'
+        $this.PurchasePrice      = 1800
+        $this.SellPrice          = 900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 42
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Heavy plate mail blessed to protect a holy warrior.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BERunicVestments : BEArmor {
+    BERunicVestments() : base() {
+        $this.Name               = 'Runic Vestments'
+        $this.MapObjName         = 'runicvestments'
+        $this.PurchasePrice      = 1600
+        $this.SellPrice          = 800
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 14
+            [StatId]::MagicDefense = 30
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Vestments inscribed with powerful defensive runes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEObsidianPlate : BEArmor {
+    BEObsidianPlate() : base() {
+        $this.Name               = 'Obsidian Plate'
+        $this.MapObjName         = 'obsidianplate'
+        $this.PurchasePrice      = 2000
+        $this.SellPrice          = 1000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 46
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor forged from volcanic obsidian, surprisingly resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWyrmhideArmor : BEArmor {
+    BEWyrmhideArmor() : base() {
+        $this.Name               = 'Wyrmhide Armor'
+        $this.MapObjName         = 'wyrmhidearmor'
+        $this.PurchasePrice      = 1700
+        $this.SellPrice          = 850
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 33
+            [StatId]::MagicDefense = 18
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor crafted from the scales of a lesser dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarSilverMail : BEArmor {
+    BEStarSilverMail() : base() {
+        $this.Name               = 'Star Silver Mail'
+        $this.MapObjName         = 'starsilvermail'
+        $this.PurchasePrice      = 2200
+        $this.SellPrice          = 1100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail forged from silver mined from a fallen star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidSilkRobes : BEArmor {
+    BEVoidSilkRobes() : base() {
+        $this.Name               = 'Void Silk Robes'
+        $this.MapObjName         = 'voidsilkrobes'
+        $this.PurchasePrice      = 2400
+        $this.SellPrice          = 1200
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 15
+            [StatId]::MagicDefense = 35
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven from silk touched by the void, offering eerie protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGolemPlate : BEArmor {
+    BEGolemPlate() : base() {
+        $this.Name               = 'Golem Plate'
+        $this.MapObjName         = 'golemplate'
+        $this.PurchasePrice      = 2800
+        $this.SellPrice          = 1400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Massive plate armor, as if taken from a stone golem.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECelestialRaiment : BEArmor {
+    BECelestialRaiment() : base() {
+        $this.Name               = 'Celestial Raiment'
+        $this.MapObjName         = 'celestialraiment'
+        $this.PurchasePrice      = 3000
+        $this.SellPrice          = 1500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Clothing that seems to shimmer with starlight.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDemonHideArmor : BEArmor {
+    BEDemonHideArmor() : base() {
+        $this.Name               = 'Demon Hide Armor'
+        $this.MapObjName         = 'demonhidearmor'
+        $this.PurchasePrice      = 2600
+        $this.SellPrice          = 1300
+        $this.TargetStats        = @{
+            [StatId]::Defense = 48
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor crafted from the tough, leathery hide of a demon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchonRobes : BEArmor {
+    BEArchonRobes() : base() {
+        $this.Name               = 'Archon Robes'
+        $this.MapObjName         = 'archonrobes'
+        $this.PurchasePrice      = 3200
+        $this.SellPrice          = 1600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 22
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 17
+            [StatId]::MagicDefense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes worn by powerful, otherworldly beings of order.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BETitaniumMail : BEArmor {
+    BETitaniumMail() : base() {
+        $this.Name               = 'Titanium Mail'
+        $this.MapObjName         = 'titaniummail'
+        $this.PurchasePrice      = 3500
+        $this.SellPrice          = 1750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 54
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made from exceptionally strong and light titanium.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostweaveRobes : BEArmor {
+    BEFrostweaveRobes() : base() {
+        $this.Name               = 'Frostweave Robes'
+        $this.MapObjName         = 'frostweaverobes'
+        $this.PurchasePrice      = 3300
+        $this.SellPrice          = 1650
+        $this.TargetStats        = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 48
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 22
+            [StatId]::MagicDefense = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven with threads of enchanted ice, cool to the touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHellforgedPlate : BEArmor {
+    BEHellforgedPlate() : base() {
+        $this.Name               = 'Hellforged Plate'
+        $this.MapObjName         = 'hellforgedplate'
+        $this.PurchasePrice      = 4000
+        $this.SellPrice          = 2000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor forged in infernal fires, radiating heat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESpiritWalkerRobes : BEArmor {
+    BESpiritWalkerRobes() : base() {
+        $this.Name               = 'Spirit Walker Robes'
+        $this.MapObjName         = 'spiritwalkerrobes'
+        $this.PurchasePrice      = 3800
+        $this.SellPrice          = 1900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 26
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes that allow the wearer to commune with spirits.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGuardianPlate : BEArmor {
+    BEGuardianPlate() : base() {
+        $this.Name               = 'Guardian Plate'
+        $this.MapObjName         = 'guardianplate'
+        $this.PurchasePrice      = 4500
+        $this.SellPrice          = 2250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 62
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Imposing plate armor worn by elite protectors.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStormcallerMail : BEArmor {
+    BEStormcallerMail() : base() {
+        $this.Name               = 'Stormcaller Mail'
+        $this.MapObjName         = 'stormcallermail'
+        $this.PurchasePrice      = 4200
+        $this.SellPrice          = 2100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 41
+            [StatId]::MagicDefense = 23
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail that crackles with the energy of a brewing storm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAncientKingsMail : BEArmor {
+    BEAncientKingsMail() : base() {
+        $this.Name               = 'Ancient King''s Mail'
+        $this.MapObjName         = 'ancientkingsmail'
+        $this.PurchasePrice      = 5000
+        $this.SellPrice          = 2500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 66
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The regal and time-worn mail of a long-dead king.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEEmpyreanRobes : BEArmor {
+    BEEmpyreanRobes() : base() {
+        $this.Name               = 'Empyrean Robes'
+        $this.MapObjName         = 'empyreanrobes'
+        $this.PurchasePrice      = 4800
+        $this.SellPrice          = 2400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+            [StatId]::MagicDefense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 24
+            [StatId]::MagicDefense = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes that shimmer with a heavenly light, offering divine protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEColossalPlate : BEArmor {
+    BEColossalPlate() : base() {
+        $this.Name               = 'Colossal Plate'
+        $this.MapObjName         = 'colossalplate'
+        $this.PurchasePrice      = 5500
+        $this.SellPrice          = 2750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 70
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor of immense size and thickness, incredibly resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWyvernLordMail : BEArmor {
+    BEWyvernLordMail() : base() {
+        $this.Name               = 'Wyvern Lord Mail'
+        $this.MapObjName         = 'wyvernlordmail'
+        $this.PurchasePrice      = 5200
+        $this.SellPrice          = 2600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail reinforced with the scales of a powerful Wyvern Lord.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBloodforgedArmor : BEArmor {
+    BEBloodforgedArmor() : base() {
+        $this.Name               = 'Bloodforged Armor'
+        $this.MapObjName         = 'bloodforgedarmor'
+        $this.PurchasePrice      = 6200
+        $this.SellPrice          = 3100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 75
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor quenched in blood, said to draw strength from fallen foes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOracleRobes : BEArmor {
+    BEOracleRobes() : base() {
+        $this.Name               = 'Oracle Robes'
+        $this.MapObjName         = 'oraclerobes'
+        $this.PurchasePrice      = 5800
+        $this.SellPrice          = 2900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 28
+            [StatId]::MagicDefense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes worn by seers, granting glimpses into the flow of battle.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiumFullPlate : BEArmor {
+    BEAdamantiumFullPlate() : base() {
+        $this.Name               = 'Adamantium Full Plate'
+        $this.MapObjName         = 'adamantiumfullplate'
+        $this.PurchasePrice      = 7000
+        $this.SellPrice          = 3500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 78
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A full suit of plate armor made from nearly indestructible adamantium.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEShadowmeldArmor : BEArmor {
+    BEShadowmeldArmor() : base() {
+        $this.Name               = 'Shadowmeld Armor'
+        $this.MapObjName         = 'shadowmeldarmor'
+        $this.PurchasePrice      = 6500
+        $this.SellPrice          = 3250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 54
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor that allows the wearer to blend into shadows.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderforgedMail : BEArmor {
+    BEThunderforgedMail() : base() {
+        $this.Name               = 'Thunderforged Mail'
+        $this.MapObjName         = 'thunderforgedmail'
+        $this.PurchasePrice      = 7200
+        $this.SellPrice          = 3600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 58
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail forged in a mystical thunderstorm, crackling with latent energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernalRobes : BEArmor {
+    BEInfernalRobes() : base() {
+        $this.Name               = 'Infernal Robes'
+        $this.MapObjName         = 'infernalrobes'
+        $this.PurchasePrice      = 6900
+        $this.SellPrice          = 3450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 32
+            [StatId]::MagicDefense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes imbued with the essence of hellfire, offering potent magical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChampionPlate : BEArmor {
+    BEChampionPlate() : base() {
+        $this.Name               = 'Champion Plate'
+        $this.MapObjName         = 'championplate'
+        $this.PurchasePrice      = 8000
+        $this.SellPrice          = 4000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 100
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 82
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The distinguished plate armor of a renowned champion.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarweaveRobes : BEArmor {
+    BEStarweaveRobes() : base() {
+        $this.Name               = 'Starweave Robes'
+        $this.MapObjName         = 'starweaverobes'
+        $this.PurchasePrice      = 7500
+        $this.SellPrice          = 3750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+            [StatId]::MagicDefense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 36
+            [StatId]::MagicDefense = 64
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven from threads of starlight, offering celestial protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGorgonScaleArmor : BEArmor {
+    BEGorgonScaleArmor() : base() {
+        $this.Name               = 'Gorgon Scale Armor'
+        $this.MapObjName         = 'gorgonscalearmor'
+        $this.PurchasePrice      = 8200
+        $this.SellPrice          = 4100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 78
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made from the petrifying scales of a gorgon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidPlateArmor : BEArmor {
+    BEVoidPlateArmor() : base() {
+        $this.Name               = 'Void Plate Armor'
+        $this.MapObjName         = 'voidplatearmor'
+        $this.PurchasePrice      = 9000
+        $this.SellPrice          = 4500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 105
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 86
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor seemingly forged from the emptiness of the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchonPlate : BEArmor {
+    BEArchonPlate() : base() {
+        $this.Name               = 'Archon Plate'
+        $this.MapObjName         = 'archonplate'
+        $this.PurchasePrice      = 9500
+        $this.SellPrice          = 4750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 85
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor imbued with the power and authority of an Archon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDivineRaiment : BEArmor {
+    BEDivineRaiment() : base() {
+        $this.Name               = 'Divine Raiment'
+        $this.MapObjName         = 'divineraiment'
+        $this.PurchasePrice      = 8500
+        $this.SellPrice          = 4250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+            [StatId]::MagicDefense = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 40
+            [StatId]::MagicDefense = 68
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Clothing blessed by a deity, radiating holy energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKrakenHideArmor : BEArmor {
+    BEKrakenHideArmor() : base() {
+        $this.Name               = 'Kraken Hide Armor'
+        $this.MapObjName         = 'krakenhidearmor'
+        $this.PurchasePrice      = 9200
+        $this.SellPrice          = 4600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 82
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 68
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor crafted from the incredibly tough hide of a kraken.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWarlordArmor : BEArmor {
+    BEWarlordArmor() : base() {
+        $this.Name               = 'Warlord Armor'
+        $this.MapObjName         = 'warlordarmor'
+        $this.PurchasePrice      = 10000
+        $this.SellPrice          = 5000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 90
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The formidable armor of a conquering warlord.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEPrismaticRobes : BEArmor {
+    BEPrismaticRobes() : base() {
+        $this.Name               = 'Prismatic Robes'
+        $this.MapObjName         = 'prismaticrobes'
+        $this.PurchasePrice      = 9800
+        $this.SellPrice          = 4900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+            [StatId]::MagicDefense = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 44
+            [StatId]::MagicDefense = 72
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes that shimmer with all colors of the rainbow, deflecting various energies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBehemothPlate : BEArmor {
+    BEBehemothPlate() : base() {
+        $this.Name               = 'Behemoth Plate'
+        $this.MapObjName         = 'behemothplate'
+        $this.PurchasePrice      = 11000
+        $this.SellPrice          = 5500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 115
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 94
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor made from the plates of a colossal behemoth.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESeraphicVestments : BEArmor {
+    BESeraphicVestments() : base() {
+        $this.Name               = 'Seraphic Vestments'
+        $this.MapObjName         = 'seraphicvestments'
+        $this.PurchasePrice      = 10500
+        $this.SellPrice          = 5250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 48
+            [StatId]::MagicDefense = 76
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Vestments imbued with the grace and power of a seraph.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonbonePlate : BEArmor {
+    BEDragonbonePlate() : base() {
+        $this.Name               = 'Dragonbone Plate'
+        $this.MapObjName         = 'dragonboneplate'
+        $this.PurchasePrice      = 12000
+        $this.SellPrice          = 6000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 98
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor crafted from the dense bones of ancient dragons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAstralWeaveRobes : BEArmor {
+    BEAstralWeaveRobes() : base() {
+        $this.Name               = 'Astral Weave Robes'
+        $this.MapObjName         = 'astralweaverobes'
+        $this.PurchasePrice      = 11500
+        $this.SellPrice          = 5750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+            [StatId]::MagicDefense = 100
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 52
+            [StatId]::MagicDefense = 80
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven from threads gathered from the astral plane.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInvincibleArmor : BEArmor {
+    BEInvincibleArmor() : base() {
+        $this.Name               = 'Invincible Armor'
+        $this.MapObjName         = 'invinciblearmor'
+        $this.PurchasePrice      = 13500
+        $this.SellPrice          = 6750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 125
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 102
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor fabled to make its wearer nearly impervious to harm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodhandRobes : BEArmor {
+    BEGodhandRobes() : base() {
+        $this.Name               = 'Godhand Robes'
+        $this.MapObjName         = 'godhandrobes'
+        $this.PurchasePrice      = 13000
+        $this.SellPrice          = 6500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+            [StatId]::MagicDefense = 105
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 56
+            [StatId]::MagicDefense = 84
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes said to be touched by a divine entity, granting immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldTreeBarkArmor : BEArmor {
+    BEWorldTreeBarkArmor() : base() {
+        $this.Name               = 'World Tree Bark Armor'
+        $this.MapObjName         = 'worldtreebarkarmor'
+        $this.PurchasePrice      = 14000
+        $this.SellPrice          = 7000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 74
+            [StatId]::MagicDefense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor crafted from the hardened bark of the World Tree.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixPlate : BEArmor {
+    BEPhoenixPlate() : base() {
+        $this.Name               = 'Phoenix Plate'
+        $this.MapObjName         = 'phoenixplate'
+        $this.PurchasePrice      = 15000
+        $this.SellPrice          = 7500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 130
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 106
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor imbued with the fiery spirit of a phoenix.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAbyssalWrappings : BEArmor {
+    BEAbyssalWrappings() : base() {
+        $this.Name               = 'Abyssal Wrappings'
+        $this.MapObjName         = 'abyssalwrappings'
+        $this.PurchasePrice      = 14500
+        $this.SellPrice          = 7250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+            [StatId]::MagicDefense = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 60
+            [StatId]::MagicDefense = 88
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Dark wrappings that seem to absorb light and muffle sound.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiteFullPlate : BEArmor {
+    BEAdamantiteFullPlate() : base() {
+        $this.Name               = 'Adamantite Full Plate'
+        $this.MapObjName         = 'adamantitefullplate'
+        $this.PurchasePrice      = 16000
+        $this.SellPrice          = 8000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 110
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A complete suit of nearly indestructible Adamantite plate armor.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESunstoneRobes : BEArmor {
+    BESunstoneRobes() : base() {
+        $this.Name               = 'Sunstone Robes'
+        $this.MapObjName         = 'sunstonerobes'
+        $this.PurchasePrice      = 15500
+        $this.SellPrice          = 7750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+            [StatId]::MagicDefense = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 64
+            [StatId]::MagicDefense = 92
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes embedded with sunstones, radiating warmth and protective light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidwalkerArmor : BEArmor {
+    BEVoidwalkerArmor() : base() {
+        $this.Name               = 'Voidwalker Armor'
+        $this.MapObjName         = 'voidwalkerarmor'
+        $this.PurchasePrice      = 17000
+        $this.SellPrice          = 8500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 100
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 82
+            [StatId]::MagicDefense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor that allows brief passage through the void, making the wearer elusive.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFrostlordPlate : BEArmor {
+    BEFrostlordPlate() : base() {
+        $this.Name               = 'Frostlord Plate'
+        $this.MapObjName         = 'frostlordplate'
+        $this.PurchasePrice      = 18000
+        $this.SellPrice          = 9000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 140
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 115
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor of a Frostlord, emanating an unnatural chill.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodRobes : BEArmor {
+    BEThundergodRobes() : base() {
+        $this.Name               = 'Thundergod Robes'
+        $this.MapObjName         = 'thundergodrobes'
+        $this.PurchasePrice      = 17500
+        $this.SellPrice          = 8750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 85
+            [StatId]::MagicDefense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 68
+            [StatId]::MagicDefense = 96
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes crackling with the power of a thunder deity.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldshaperPlate : BEArmor {
+    BEWorldshaperPlate() : base() {
+        $this.Name               = 'Worldshaper Plate'
+        $this.MapObjName         = 'worldshaperplate'
+        $this.PurchasePrice      = 19000
+        $this.SellPrice          = 9500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 145
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 118
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor said to be worn by those who shaped the very land.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarcallerArmor : BEArmor {
+    BEStarcallerArmor() : base() {
+        $this.Name               = 'Starcaller Armor'
+        $this.MapObjName         = 'starcallerarmor'
+        $this.PurchasePrice      = 18500
+        $this.SellPrice          = 9250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 105
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 86
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor that resonates with the music of the spheres.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkingArmor : BEArmor {
+    BEGodkingArmor() : base() {
+        $this.Name               = 'Godking Armor'
+        $this.MapObjName         = 'godkingarmor'
+        $this.PurchasePrice      = 20000
+        $this.SellPrice          = 10000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 150
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 123
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The legendary armor of a divine ruler.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECreatorRobes : BEArmor {
+    BECreatorRobes() : base() {
+        $this.Name               = 'Creator Robes'
+        $this.MapObjName         = 'creatorrobes'
+        $this.PurchasePrice      = 19500
+        $this.SellPrice          = 9750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 72
+            [StatId]::MagicDefense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes said to be woven from the fabric of creation itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidheartPlate : BEArmor {
+    BEVoidheartPlate() : base() {
+        $this.Name               = 'Voidheart Plate'
+        $this.MapObjName         = 'voidheartplate'
+        $this.PurchasePrice      = 21000
+        $this.SellPrice          = 10500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 155
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 127
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor with a core of pure void, absorbing impacts.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostfireMail : BEArmor {
+    BEFrostfireMail() : base() {
+        $this.Name               = 'Frostfire Mail'
+        $this.MapObjName         = 'frostfiremail'
+        $this.PurchasePrice      = 20500
+        $this.SellPrice          = 10250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 110
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 90
+            [StatId]::MagicDefense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail that shifts between icy cold and burning hot to the touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThunderclapPlate : BEArmor {
+    BEThunderclapPlate() : base() {
+        $this.Name               = 'Thunderclap Plate'
+        $this.MapObjName         = 'thunderclapplate'
+        $this.PurchasePrice      = 22000
+        $this.SellPrice          = 11000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 160
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 131
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor that emits a deafening clap of thunder when struck.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseRobes : BEArmor {
+    BEUniverseRobes() : base() {
+        $this.Name               = 'Universe Robes'
+        $this.MapObjName         = 'universerobes'
+        $this.PurchasePrice      = 21500
+        $this.SellPrice          = 10750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 95
+            [StatId]::MagicDefense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 76
+            [StatId]::MagicDefense = 104
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes that seem to contain the entirety of the cosmos within their folds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseArmor : BEArmor {
+    BEApocalypseArmor() : base() {
+        $this.Name               = 'Apocalypse Armor'
+        $this.MapObjName         = 'apocalypsearmor'
+        $this.PurchasePrice      = 23000
+        $this.SellPrice          = 11500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 165
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 135
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor heralding the end of all things, terrifyingly strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHeavenlyMail : BEArmor {
+    BEHeavenlyMail() : base() {
+        $this.Name               = 'Heavenly Mail'
+        $this.MapObjName         = 'heavenlymail'
+        $this.PurchasePrice      = 22500
+        $this.SellPrice          = 11250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 115
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 94
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail blessed by celestial beings, offering divine protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelPlate : BEArmor {
+    BEArchangelPlate() : base() {
+        $this.Name               = 'Archangel Plate'
+        $this.MapObjName         = 'archangelplate'
+        $this.PurchasePrice      = 24000
+        $this.SellPrice          = 12000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 170
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 139
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor imbued with the might of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldEaterRobes : BEArmor {
+    BEWorldEaterRobes() : base() {
+        $this.Name               = 'World Eater Robes'
+        $this.MapObjName         = 'worldeaterrobes'
+        $this.PurchasePrice      = 23500
+        $this.SellPrice          = 11750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 100
+            [StatId]::MagicDefense = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 80
+            [StatId]::MagicDefense = 108
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes worn by entities capable of consuming worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedPlate : BEArmor {
+    BEStarforgedPlate() : base() {
+        $this.Name               = 'Starforged Plate'
+        $this.MapObjName         = 'starforgedplate'
+        $this.PurchasePrice      = 25000
+        $this.SellPrice          = 12500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 175
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 143
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor forged in the heart of a dying star.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGodkillerMail : BEArmor {
+    BEGodkillerMail() : base() {
+        $this.Name               = 'Godkiller Mail'
+        $this.MapObjName         = 'godkillermail'
+        $this.PurchasePrice      = 24500
+        $this.SellPrice          = 12250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 120
+            [StatId]::MagicDefense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 98
+            [StatId]::MagicDefense = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail specifically designed to hunt and slay deities.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosLordPlate : BEArmor {
+    BEChaosLordPlate() : base() {
+        $this.Name               = 'Chaos Lord Plate'
+        $this.MapObjName         = 'chaoslordplate'
+        $this.PurchasePrice      = 26000
+        $this.SellPrice          = 13000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 180
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 147
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The imposing plate armor of a lord who revels in chaos.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFrostmourneRobes : BEArmor {
+    BEFrostmourneRobes() : base() {
+        $this.Name               = 'Frostmourne Robes'
+        $this.MapObjName         = 'frostmournerobes'
+        $this.PurchasePrice      = 25500
+        $this.SellPrice          = 12750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 105
+            [StatId]::MagicDefense = 140
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 84
+            [StatId]::MagicDefense = 112
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes that whisper with the chilling power of a legendary, cursed blade.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodPlateMail : BEArmor {
+    BEThundergodPlateMail() : base() {
+        $this.Name               = 'Thundergod Plate Mail'
+        $this.MapObjName         = 'thundergodplatemail'
+        $this.PurchasePrice      = 27000
+        $this.SellPrice          = 13500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 185
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 151
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail blessed by a god of thunder, crackling with immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEUniverseMail : BEArmor {
+    BEUniverseMail() : base() {
+        $this.Name               = 'Universe Mail'
+        $this.MapObjName         = 'universemail'
+        $this.PurchasePrice      = 26500
+        $this.SellPrice          = 13250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 125
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 102
+            [StatId]::MagicDefense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Mail that seems to reflect the vastness of the universe itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypsePlateMail : BEArmor {
+    BEApocalypsePlateMail() : base() {
+        $this.Name               = 'Apocalypse Plate Mail'
+        $this.MapObjName         = 'apocalypseplatemail'
+        $this.PurchasePrice      = 28000
+        $this.SellPrice          = 14000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 190
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 155
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate defensive gear, heralding doom for your foes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyRobes : BEArmor {
+    BEHeavenlyRobes() : base() {
+        $this.Name               = 'Heavenly Robes'
+        $this.MapObjName         = 'heavenlyrobes'
+        $this.PurchasePrice      = 27500
+        $this.SellPrice          = 13750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 110
+            [StatId]::MagicDefense = 145
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 88
+            [StatId]::MagicDefense = 116
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven from pure light, offering unparalleled magical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelArmor : BEArmor {
+    BEArchangelArmor() : base() {
+        $this.Name               = 'Archangel Armor'
+        $this.MapObjName         = 'archangelarmor'
+        $this.PurchasePrice      = 29000
+        $this.SellPrice          = 14500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 195
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 159
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor blessed by an archangel, radiating holy power and resilience.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWorldEaterPlateMail : BEArmor {
+    BEWorldEaterPlateMail() : base() {
+        $this.Name               = 'World Eater Plate Mail'
+        $this.MapObjName         = 'worldeaterplatemail'
+        $this.PurchasePrice      = 28500
+        $this.SellPrice          = 14250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 130
+            [StatId]::MagicDefense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 106
+            [StatId]::MagicDefense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail of an entity that consumes worlds, terrifyingly strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedArmor : BEArmor {
+    BEStarforgedArmor() : base() {
+        $this.Name               = 'Starforged Armor'
+        $this.MapObjName         = 'starforgedarmor'
+        $this.PurchasePrice      = 30000
+        $this.SellPrice          = 15000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 200
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 164
+            [StatId]::MagicDefense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor forged from the very heart of a star, glowing with cosmic energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerRobes : BEArmor {
+    BEGodkillerRobes() : base() {
+        $this.Name               = 'Godkiller Robes'
+        $this.MapObjName         = 'godkillerrobes'
+        $this.PurchasePrice      = 29500
+        $this.SellPrice          = 14750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 115
+            [StatId]::MagicDefense = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 92
+            [StatId]::MagicDefense = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes imbued with power capable of slaying gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosLordArmor : BEArmor {
+    BEChaosLordArmor() : base() {
+        $this.Name               = 'Chaos Lord Armor'
+        $this.MapObjName         = 'chaoslordarmor'
+        $this.PurchasePrice      = 31000
+        $this.SellPrice          = 15500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 205
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 168
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate armor for a master of chaos, exuding raw, untamed power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostmournePlate : BEArmor {
+    BEFrostmournePlate() : base() {
+        $this.Name               = 'Frostmourne Plate'
+        $this.MapObjName         = 'frostmourneplate'
+        $this.PurchasePrice      = 30500
+        $this.SellPrice          = 15250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 135
+            [StatId]::MagicDefense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 110
+            [StatId]::MagicDefense = 64
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate armor that carries the chilling aura of the legendary runeblade.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodArmor : BEArmor {
+    BEThundergodArmor() : base() {
+        $this.Name               = 'Thundergod Armor'
+        $this.MapObjName         = 'thundergodarmor'
+        $this.PurchasePrice      = 32000
+        $this.SellPrice          = 16000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 210
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 172
+            [StatId]::MagicDefense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor blessed by the god of thunder, crackling with divine lightning.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseArmor : BEArmor {
+    BEUniverseArmor() : base() {
+        $this.Name               = 'Universe Armor'
+        $this.MapObjName         = 'universearmor'
+        $this.PurchasePrice      = 31500
+        $this.SellPrice          = 15750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 120
+            [StatId]::MagicDefense = 155
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 96
+            [StatId]::MagicDefense = 124
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor that holds a fragment of the universe''s power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseRobes : BEArmor {
+    BEApocalypseRobes() : base() {
+        $this.Name               = 'Apocalypse Robes'
+        $this.MapObjName         = 'apocalypserobes'
+        $this.PurchasePrice      = 33000
+        $this.SellPrice          = 16500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 125
+            [StatId]::MagicDefense = 160
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 100
+            [StatId]::MagicDefense = 128
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven with threads of impending doom, offering terrifying protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyPlateMail : BEArmor {
+    BEHeavenlyPlateMail() : base() {
+        $this.Name               = 'Heavenly Plate Mail'
+        $this.MapObjName         = 'heavenlyplatemail'
+        $this.PurchasePrice      = 32500
+        $this.SellPrice          = 16250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 215
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 176
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail so pure it seems to have descended from the heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEArchangelRaiment : BEArmor {
+    BEArchangelRaiment() : base() {
+        $this.Name               = 'Archangel Raiment'
+        $this.MapObjName         = 'archangelraiment'
+        $this.PurchasePrice      = 34000
+        $this.SellPrice          = 17000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 130
+            [StatId]::MagicDefense = 165
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 104
+            [StatId]::MagicDefense = 132
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Raiment blessed by an archangel, glowing with protective light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldEaterArmor : BEArmor {
+    BEWorldEaterArmor() : base() {
+        $this.Name               = 'World Eater Armor'
+        $this.MapObjName         = 'worldeaterarmor'
+        $this.PurchasePrice      = 33500
+        $this.SellPrice          = 16750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 220
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 180
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor of an entity that consumes worlds, impossibly resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedRobes : BEArmor {
+    BEStarforgedRobes() : base() {
+        $this.Name               = 'Starforged Robes'
+        $this.MapObjName         = 'starforgedrobes'
+        $this.PurchasePrice      = 35000
+        $this.SellPrice          = 17500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 135
+            [StatId]::MagicDefense = 170
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 108
+            [StatId]::MagicDefense = 136
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Robes woven from stardust, offering cosmic protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerPlateMail : BEArmor {
+    BEGodkillerPlateMail() : base() {
+        $this.Name               = 'Godkiller Plate Mail'
+        $this.MapObjName         = 'godkillerplatemail'
+        $this.PurchasePrice      = 34500
+        $this.SellPrice          = 17250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 225
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 184
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail designed for the sole purpose of slaying gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEChaosLordRobes : BEArmor {
+    BEChaosLordRobes() : base() {
+        $this.Name               = 'Chaos Lord Robes'
+        $this.MapObjName         = 'chaoslordrobes'
+        $this.PurchasePrice      = 36000
+        $this.SellPrice          = 18000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 140
+            [StatId]::MagicDefense = 175
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 112
+            [StatId]::MagicDefense = 140
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The robes of a being who commands absolute chaos.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFrostmourneArmor : BEArmor {
+    BEFrostmourneArmor() : base() {
+        $this.Name               = 'Frostmourne Armor'
+        $this.MapObjName         = 'frostmournearmor'
+        $this.PurchasePrice      = 35500
+        $this.SellPrice          = 17750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 230
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 188
+            [StatId]::MagicDefense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor that echoes the chilling power of the legendary runeblade Frostmourne.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodArmorII : BEArmor { # Renamed to avoid clash
+    BEThundergodArmorII() : base() {
+        $this.Name               = 'Thundergod Armor II'
+        $this.MapObjName         = 'thundergodarmorii'
+        $this.PurchasePrice      = 37000
+        $this.SellPrice          = 18500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 235
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 192
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Even more powerful armor blessed by the god of thunder.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEUniversePlateMail : BEArmor {
+    BEUniversePlateMail() : base() {
+        $this.Name               = 'Universe Plate Mail'
+        $this.MapObjName         = 'universeplatemail'
+        $this.PurchasePrice      = 36500
+        $this.SellPrice          = 18250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 145
+            [StatId]::MagicDefense = 180
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 116
+            [StatId]::MagicDefense = 144
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail that seems to hold the cosmos within its structure.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseFullPlate : BEArmor {
+    BEApocalypseFullPlate() : base() {
+        $this.Name               = 'Apocalypse Full Plate'
+        $this.MapObjName         = 'apocalypsefullplate'
+        $this.PurchasePrice      = 38000
+        $this.SellPrice          = 19000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 240
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 196
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate suit of armor, heralding the end for all who oppose its wearer.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyGarb : BEArmor {
+    BEHeavenlyGarb() : base() {
+        $this.Name               = 'Heavenly Garb'
+        $this.MapObjName         = 'heavenlygarb'
+        $this.PurchasePrice      = 37500
+        $this.SellPrice          = 18750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 150
+            [StatId]::MagicDefense = 185
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 120
+            [StatId]::MagicDefense = 148
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Garb so pure and radiant, it seems to have descended from the highest heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelPlateMail : BEArmor {
+    BEArchangelPlateMail() : base() {
+        $this.Name               = 'Archangel Plate Mail'
+        $this.MapObjName         = 'archangelplatemail'
+        $this.PurchasePrice      = 39000
+        $this.SellPrice          = 19500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 245
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 200
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail infused with the divine essence of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWorldEaterRobesII : BEArmor { # Renamed to avoid clash
+    BEWorldEaterRobesII() : base() {
+        $this.Name               = 'World Eater Robes II'
+        $this.MapObjName         = 'worldeaterrobesii'
+        $this.PurchasePrice      = 38500
+        $this.SellPrice          = 19250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 155
+            [StatId]::MagicDefense = 190
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 124
+            [StatId]::MagicDefense = 152
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Even more terrifying robes of an entity that consumes worlds.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedPlateMail : BEArmor {
+    BEStarforgedPlateMail() : base() {
+        $this.Name               = 'Starforged Plate Mail'
+        $this.MapObjName         = 'starforgedplatemail'
+        $this.PurchasePrice      = 40000
+        $this.SellPrice          = 20000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 250
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 205
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Plate mail forged from the core of a collapsed star, incredibly dense and protective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodkillerArmor : BEArmor {
+    BEGodkillerArmor() : base() {
+        $this.Name               = 'Godkiller Armor'
+        $this.MapObjName         = 'godkillerarmor'
+        $this.PurchasePrice      = 39500
+        $this.SellPrice          = 19750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 160
+            [StatId]::MagicDefense = 195
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 128
+            [StatId]::MagicDefense = 156
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armor specifically enchanted to withstand and counter divine powers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosLordFullPlate : BEArmor {
+    BEChaosLordFullPlate() : base() {
+        $this.Name               = 'Chaos Lord Full Plate'
+        $this.MapObjName         = 'chaoslordfullplate'
+        $this.PurchasePrice      = 41000
+        $this.SellPrice          = 20500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 255
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 209
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate chaotic plate, offering unparalleled physical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFrostmourneRaiment : BEArmor {
+    BEFrostmourneRaiment() : base() {
+        $this.Name               = 'Frostmourne Raiment'
+        $this.MapObjName         = 'frostmourneraiment'
+        $this.PurchasePrice      = 40500
+        $this.SellPrice          = 20250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 165
+            [StatId]::MagicDefense = 200
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 132
+            [StatId]::MagicDefense = 160
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Raiment that seems to weep icy tears, imbued with the sorrow of Frostmourne.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodFullPlate : BEArmor {
+    BEThundergodFullPlate() : base() {
+        $this.Name               = 'Thundergod Full Plate'
+        $this.MapObjName         = 'thundergodfullplate'
+        $this.PurchasePrice      = 42000
+        $this.SellPrice          = 21000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 260
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 213
+            [StatId]::MagicDefense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Full plate armor that crackles with the unbridled fury of a thunder god.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEUniverseRaiment : BEArmor {
+    BEUniverseRaiment() : base() {
+        $this.Name               = 'Universe Raiment'
+        $this.MapObjName         = 'universeraiment'
+        $this.PurchasePrice      = 41500
+        $this.SellPrice          = 20750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 170
+            [StatId]::MagicDefense = 205
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 136
+            [StatId]::MagicDefense = 164
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Raiment that seems to hold the entirety of the cosmos within its fabric.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseBattlePlate : BEArmor {
+    BEApocalypseBattlePlate() : base() {
+        $this.Name               = 'Apocalypse Battle Plate'
+        $this.MapObjName         = 'apocalypsebattleplate'
+        $this.PurchasePrice      = 43000
+        $this.SellPrice          = 21500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 265
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 217
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate battle plate, signifying the end of all conflict for its wearer.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHeavenlyBattleRobes : BEArmor {
+    BEHeavenlyBattleRobes() : base() {
+        $this.Name               = 'Heavenly Battle Robes'
+        $this.MapObjName         = 'heavenlybattlerobes'
+        $this.PurchasePrice      = 42500
+        $this.SellPrice          = 21250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 175
+            [StatId]::MagicDefense = 210
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 140
+            [StatId]::MagicDefense = 168
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle robes blessed by the highest heavens, offering supreme protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelFullPlate : BEArmor {
+    BEArchangelFullPlate() : base() {
+        $this.Name               = 'Archangel Full Plate'
+        $this.MapObjName         = 'archangelfullplate'
+        $this.PurchasePrice      = 44000
+        $this.SellPrice          = 22000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 270
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 221
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate defensive gear, blessed by an archangel''s might.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorldEaterBattleMail : BEArmor {
+    BEWorldEaterBattleMail() : base() {
+        $this.Name               = 'World Eater Battle Mail'
+        $this.MapObjName         = 'worldeaterbattlemail'
+        $this.PurchasePrice      = 43500
+        $this.SellPrice          = 21750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 180
+            [StatId]::MagicDefense = 215
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 144
+            [StatId]::MagicDefense = 172
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle mail of an entity that consumes worlds, terrifyingly resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedBattlePlate : BEArmor {
+    BEStarforgedBattlePlate() : base() {
+        $this.Name               = 'Starforged Battle Plate'
+        $this.MapObjName         = 'starforgedbattleplate'
+        $this.PurchasePrice      = 45000
+        $this.SellPrice          = 22500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 275
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 225
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle plate forged from the heart of a star, radiating immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGodkillerBattleRobes : BEArmor {
+    BEGodkillerBattleRobes() : base() {
+        $this.Name               = 'Godkiller Battle Robes'
+        $this.MapObjName         = 'godkillerbattlerobes'
+        $this.PurchasePrice      = 44500
+        $this.SellPrice          = 22250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 185
+            [StatId]::MagicDefense = 220
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 148
+            [StatId]::MagicDefense = 176
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle robes imbued with the power to slay gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChaosLordBattlePlate : BEArmor {
+    BEChaosLordBattlePlate() : base() {
+        $this.Name               = 'Chaos Lord Battle Plate'
+        $this.MapObjName         = 'chaoslordbattleplate'
+        $this.PurchasePrice      = 46000
+        $this.SellPrice          = 23000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 280
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 229
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate battle plate for a master of chaos.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFrostmourneBattleMail : BEArmor {
+    BEFrostmourneBattleMail() : base() {
+        $this.Name               = 'Frostmourne Battle Mail'
+        $this.MapObjName         = 'frostmournebattlemail'
+        $this.PurchasePrice      = 45500
+        $this.SellPrice          = 22750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 190
+            [StatId]::MagicDefense = 225
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 152
+            [StatId]::MagicDefense = 180
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle mail that carries the chilling aura of the legendary runeblade Frostmourne.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEThundergodBattleArmor : BEArmor {
+    BEThundergodBattleArmor() : base() {
+        $this.Name               = 'Thundergod Battle Armor'
+        $this.MapObjName         = 'thundergodbattlearmor'
+        $this.PurchasePrice      = 47000
+        $this.SellPrice          = 23500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 285
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 233
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle armor blessed by the god of thunder, crackling with divine lightning.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEUniverseBattlePlate : BEArmor {
+    BEUniverseBattlePlate() : base() {
+        $this.Name               = 'Universe Battle Plate'
+        $this.MapObjName         = 'universebattleplate'
+        $this.PurchasePrice      = 46500
+        $this.SellPrice          = 23250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 195
+            [StatId]::MagicDefense = 230
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 156
+            [StatId]::MagicDefense = 184
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle plate that seems to hold the cosmos within its structure.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEApocalypseFullMail : BEArmor {
+    BEApocalypseFullMail() : base() {
+        $this.Name               = 'Apocalypse Full Mail'
+        $this.MapObjName         = 'apocalypsefullmail'
+        $this.PurchasePrice      = 48000
+        $this.SellPrice          = 24000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 290
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 237
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate suit of mail, heralding doom for your foes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavenlyBattleGarb : BEArmor {
+    BEHeavenlyBattleGarb() : base() {
+        $this.Name               = 'Heavenly Battle Garb'
+        $this.MapObjName         = 'heavenlybattlegarb'
+        $this.PurchasePrice      = 47500
+        $this.SellPrice          = 23750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 200
+            [StatId]::MagicDefense = 235
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 160
+            [StatId]::MagicDefense = 188
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle garb so pure and radiant, it seems to have descended from the highest heavens.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchangelBattlePlate : BEArmor {
+    BEArchangelBattlePlate() : base() {
+        $this.Name               = 'Archangel Battle Plate'
+        $this.MapObjName         = 'archangelbattleplate'
+        $this.PurchasePrice      = 49000
+        $this.SellPrice          = 24500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 295
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 241
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Battle plate infused with the divine essence of an archangel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWorldEaterFullMail : BEArmor {
+    BEWorldEaterFullMail() : base() {
+        $this.Name               = 'World Eater Full Mail'
+        $this.MapObjName         = 'worldeaterfullmail'
+        $this.PurchasePrice      = 48500
+        $this.SellPrice          = 24250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 205
+            [StatId]::MagicDefense = 240
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 164
+            [StatId]::MagicDefense = 192
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Full mail of an entity that consumes worlds, terrifyingly strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedFullPlate : BEArmor {
+    BEStarforgedFullPlate() : base() {
+        $this.Name               = 'Starforged Full Plate'
+        $this.MapObjName         = 'starforgedfullplate'
+        $this.PurchasePrice      = 50000
+        $this.SellPrice          = 25000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 300
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 246
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Full plate armor forged from the core of a collapsed star, incredibly dense and protective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+
+
+
+
+
+
 
 
 
