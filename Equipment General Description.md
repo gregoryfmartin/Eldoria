@@ -15,6 +15,8 @@ Each piece of equipment has the following properties:
 
 Considering the Player, it will have the following Equipment Slots augmented to it:
 
+    Weapon
+        The current weapon. There are a few kinds that can be equipped, each with their own specific effects.
     Helmet
         Worn on the head
     Armor
