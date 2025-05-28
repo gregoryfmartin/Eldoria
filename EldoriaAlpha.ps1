@@ -12980,25 +12980,6 @@ Class BEHeavenlyPlate : BEHelmet {
     }
 }
 
-Class BEArchangelPlate : BEHelmet {
-    BEArchangelPlate() : base() {
-        $this.Name               = 'Archangel Plate'
-        $this.MapObjName         = 'archangelplate'
-        $this.PurchasePrice      = 70000
-        $this.SellPrice          = 35000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 305
-            [StatId]::MagicDefense = 150
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 285
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Plate armor radiating the power of an archangel.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
 Class BEWorldeaterPlate : BEHelmet {
     BEWorldeaterPlate() : base() {
         $this.Name               = 'Worldeater Plate'
@@ -17462,24 +17443,6 @@ Class BECreatorRobes : BEArmor {
     }
 }
 
-Class BEVoidheartPlate : BEArmor {
-    BEVoidheartPlate() : base() {
-        $this.Name               = 'Voidheart Plate'
-        $this.MapObjName         = 'voidheartplate'
-        $this.PurchasePrice      = 21000
-        $this.SellPrice          = 10500
-        $this.TargetStats        = @{
-            [StatId]::Defense = 155
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 127
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Plate armor with a core of pure void, absorbing impacts.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
 Class BEFrostfireMail : BEArmor {
     BEFrostfireMail() : base() {
         $this.Name               = 'Frostfire Mail'
@@ -20552,6 +20515,2305 @@ Class BEAspectOfTheCreatorShoulders : BEPauldron {
         $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
     }
 }
+
+
+
+
+
+###############################################################################
+#
+# BATTLE EQUIPMENT - GAUNTLET SPECIALIZATIONS
+#
+###############################################################################
+Class BEWornLeatherGloves : BEGauntlets {
+    BEWornLeatherGloves() : base() {
+        $this.Name               = 'Worn Leather Gloves'
+        $this.MapObjName         = 'wornleathergloves'
+        $this.PurchasePrice      = 15
+        $this.SellPrice          = 7
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Old, worn leather gloves. Offer minimal protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEClothHandwraps : BEGauntlets {
+    BEClothHandwraps() : base() {
+        $this.Name               = 'Cloth Handwraps'
+        $this.MapObjName         = 'clothhandwraps'
+        $this.PurchasePrice      = 20
+        $this.SellPrice          = 10
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 0
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple cloth wraps for the hands.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BERoughHideGauntlets : BEGauntlets {
+    BERoughHideGauntlets() : base() {
+        $this.Name               = 'Rough Hide Gauntlets'
+        $this.MapObjName         = 'roughhidegauntlets'
+        $this.PurchasePrice      = 25
+        $this.SellPrice          = 12
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Crudely made gauntlets from untanned hide.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEPaddedGloves : BEGauntlets {
+    BEPaddedGloves() : base() {
+        $this.Name               = 'Padded Gloves'
+        $this.MapObjName         = 'paddedgloves'
+        $this.PurchasePrice      = 30
+        $this.SellPrice          = 15
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 2
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves with some extra padding for minor impacts.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESimpleWoodenBracers : BEGauntlets {
+    BESimpleWoodenBracers() : base() {
+        $this.Name               = 'Simple Wooden Bracers'
+        $this.MapObjName         = 'simplewoodenbracers'
+        $this.PurchasePrice      = 35
+        $this.SellPrice          = 17
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Basic wooden bracers, better than nothing.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BERustedIronMitts : BEGauntlets {
+    BERustedIronMitts() : base() {
+        $this.Name               = 'Rusted Iron Mitts'
+        $this.MapObjName         = 'rustedironmitts'
+        $this.PurchasePrice      = 40
+        $this.SellPrice          = 20
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Iron mitts, heavily rusted but still somewhat protective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEThinLeatherCuffs : BEGauntlets {
+    BEThinLeatherCuffs() : base() {
+        $this.Name               = 'Thin Leather Cuffs'
+        $this.MapObjName         = 'thinleathercuffs'
+        $this.PurchasePrice      = 45
+        $this.SellPrice          = 22
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 2
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thin cuffs made of treated leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWorkmansGloves : BEGauntlets {
+    BEWorkmansGloves() : base() {
+        $this.Name               = 'Workman''s Gloves'
+        $this.MapObjName         = 'workmansgloves'
+        $this.PurchasePrice      = 50
+        $this.SellPrice          = 25
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sturdy gloves designed for manual labor, offering some protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBanditHideGloves : BEGauntlets {
+    BEBanditHideGloves() : base() {
+        $this.Name               = 'Bandit Hide Gloves'
+        $this.MapObjName         = 'bandithidegloves'
+        $this.PurchasePrice      = 55
+        $this.SellPrice          = 27
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves crudely fashioned from various animal hides, common among bandits.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEInitiatesHandwraps : BEGauntlets {
+    BEInitiatesHandwraps() : base() {
+        $this.Name               = 'Initiate''s Handwraps'
+        $this.MapObjName         = 'initiateshandwraps'
+        $this.PurchasePrice      = 60
+        $this.SellPrice          = 30
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 2
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Handwraps given to new initiates of a mystical order.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStuddedLeatherGloves : BEGauntlets {
+    BEStuddedLeatherGloves() : base() {
+        $this.Name               = 'Studded Leather Gloves'
+        $this.MapObjName         = 'studdedleathergloves'
+        $this.PurchasePrice      = 75
+        $this.SellPrice          = 37
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather gloves reinforced with metal studs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBronzeKnuckles : BEGauntlets {
+    BEBronzeKnuckles() : base() {
+        $this.Name               = 'Bronze Knuckles'
+        $this.MapObjName         = 'bronzeknuckles'
+        $this.PurchasePrice      = 80
+        $this.SellPrice          = 40
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bronze knuckles that add a bit of punch and protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEIronGauntletsLight : BEGauntlets {
+    BEIronGauntletsLight() : base() {
+        $this.Name               = 'Light Iron Gauntlets'
+        $this.MapObjName         = 'lightirongauntlets'
+        $this.PurchasePrice      = 100
+        $this.SellPrice          = 50
+        $this.TargetStats        = @{
+            [StatId]::Defense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets made of thin iron plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHardenedLeatherBracers : BEGauntlets {
+    BEHardenedLeatherBracers() : base() {
+        $this.Name               = 'Hardened Leather Bracers'
+        $this.MapObjName         = 'hardenedleatherbracers'
+        $this.PurchasePrice      = 110
+        $this.SellPrice          = 55
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 6
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 4
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bracers made of specially treated, hardened leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBonePlatedGloves : BEGauntlets {
+    BEBonePlatedGloves() : base() {
+        $this.Name               = 'Bone-Plated Gloves'
+        $this.MapObjName         = 'boneplatedgloves'
+        $this.PurchasePrice      = 120
+        $this.SellPrice          = 60
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves reinforced with plates of animal bone.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEThickFurMittens : BEGauntlets {
+    BEThickFurMittens() : base() {
+        $this.Name               = 'Thick Fur Mittens'
+        $this.MapObjName         = 'thickfurmittens'
+        $this.PurchasePrice      = 130
+        $this.SellPrice          = 65
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 4
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 3
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Very thick mittens made of animal fur, surprisingly protective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECopperGauntlets : BEGauntlets {
+    BECopperGauntlets() : base() {
+        $this.Name               = 'Copper Gauntlets'
+        $this.MapObjName         = 'coppergauntlets'
+        $this.PurchasePrice      = 140
+        $this.SellPrice          = 70
+        $this.TargetStats        = @{
+            [StatId]::Defense = 9
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets crafted from beaten copper.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEnchantedLeatherGloves : BEGauntlets {
+    BEEnchantedLeatherGloves() : base() {
+        $this.Name               = 'Enchanted Leather Gloves'
+        $this.MapObjName         = 'enchantedleathergloves'
+        $this.PurchasePrice      = 150
+        $this.SellPrice          = 75
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 4
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather gloves imbued with a faint magical aura.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIronHandguards : BEGauntlets {
+    BEIronHandguards() : base() {
+        $this.Name               = 'Iron Handguards'
+        $this.MapObjName         = 'ironhandguards'
+        $this.PurchasePrice      = 160
+        $this.SellPrice          = 80
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Solid iron guards that protect the back of the hands.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWolfskinGloves : BEGauntlets {
+    BEWolfskinGloves() : base() {
+        $this.Name               = 'Wolfskin Gloves'
+        $this.MapObjName         = 'wolfskingloves'
+        $this.PurchasePrice      = 170
+        $this.SellPrice          = 85
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves made from tough wolfskin, offering decent protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESteelGauntlets : BEGauntlets {
+    BESteelGauntlets() : base() {
+        $this.Name               = 'Steel Gauntlets'
+        $this.MapObjName         = 'steelgauntlets'
+        $this.PurchasePrice      = 200
+        $this.SellPrice          = 100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Well-made gauntlets of polished steel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEChainmailGloves : BEGauntlets {
+    BEChainmailGloves() : base() {
+        $this.Name               = 'Chainmail Gloves'
+        $this.MapObjName         = 'chainmailgloves'
+        $this.PurchasePrice      = 220
+        $this.SellPrice          = 110
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 10
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 8
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves made of interlocking metal rings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEReinforcedIronGauntlets : BEGauntlets {
+    BEReinforcedIronGauntlets() : base() {
+        $this.Name               = 'Reinforced Iron Gauntlets'
+        $this.MapObjName         = 'reinforcedirongauntlets'
+        $this.PurchasePrice      = 240
+        $this.SellPrice          = 120
+        $this.TargetStats        = @{
+            [StatId]::Defense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Iron gauntlets with extra plating for improved defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEScaleGauntlets : BEGauntlets {
+    BEScaleGauntlets() : base() {
+        $this.Name               = 'Scale Gauntlets'
+        $this.MapObjName         = 'scalegauntlets'
+        $this.PurchasePrice      = 260
+        $this.SellPrice          = 130
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 11
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 9
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets covered in small, overlapping metal scales.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFineLeatherGloves : BEGauntlets {
+    BEFineLeatherGloves() : base() {
+        $this.Name               = 'Fine Leather Gloves'
+        $this.MapObjName         = 'fineleathergloves'
+        $this.PurchasePrice      = 280
+        $this.SellPrice          = 140
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 8
+            [StatId]::MagicDefense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 6
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves crafted from high-quality, supple leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWarriorsBracers : BEGauntlets {
+    BEWarriorsBracers() : base() {
+        $this.Name               = 'Warrior''s Bracers'
+        $this.MapObjName         = 'warriorsbracers'
+        $this.PurchasePrice      = 300
+        $this.SellPrice          = 150
+        $this.TargetStats        = @{
+            [StatId]::Defense = 16
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sturdy bracers favored by experienced warriors.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGuardsGauntlets : BEGauntlets {
+    BEGuardsGauntlets() : base() {
+        $this.Name               = 'Guard''s Gauntlets'
+        $this.MapObjName         = 'guardsgauntlets'
+        $this.PurchasePrice      = 320
+        $this.SellPrice          = 160
+        $this.TargetStats        = @{
+            [StatId]::Defense = 17
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 13
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Standard issue gauntlets for city guards.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAcolytesGloves : BEGauntlets {
+    BEAcolytesGloves() : base() {
+        $this.Name               = 'Acolyte''s Gloves'
+        $this.MapObjName         = 'acolytesgloves'
+        $this.PurchasePrice      = 340
+        $this.SellPrice          = 170
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves worn by acolytes, offering some magical protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavyIronGauntlets : BEGauntlets {
+    BEHeavyIronGauntlets() : base() {
+        $this.Name               = 'Heavy Iron Gauntlets'
+        $this.MapObjName         = 'heavyirongauntlets'
+        $this.PurchasePrice      = 360
+        $this.SellPrice          = 180
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bulky iron gauntlets providing substantial defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBearClawGauntlets : BEGauntlets {
+    BEBearClawGauntlets() : base() {
+        $this.Name               = 'Bear Claw Gauntlets'
+        $this.MapObjName         = 'bearclawgauntlets'
+        $this.PurchasePrice      = 380
+        $this.SellPrice          = 190
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 15
+            [StatId]::MagicDefense = 2 
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets fashioned with bear claws, intimidating and protective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESteelPlateGauntlets : BEGauntlets {
+    BESteelPlateGauntlets() : base() {
+        $this.Name               = 'Steel Plate Gauntlets'
+        $this.MapObjName         = 'steelplategauntlets'
+        $this.PurchasePrice      = 450
+        $this.SellPrice          = 225
+        $this.TargetStats        = @{
+            [StatId]::Defense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets made of solid steel plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESilveredGauntlets : BEGauntlets {
+    BESilveredGauntlets() : base() {
+        $this.Name               = 'Silvered Gauntlets'
+        $this.MapObjName         = 'silveredgauntlets'
+        $this.PurchasePrice      = 480
+        $this.SellPrice          = 240
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 15
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Steel gauntlets coated with a layer of silver.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDwarvenBronzeGauntlets : BEGauntlets {
+    BEDwarvenBronzeGauntlets() : base() {
+        $this.Name               = 'Dwarven Bronze Gauntlets'
+        $this.MapObjName         = 'dwarvenbronzegauntlets'
+        $this.PurchasePrice      = 500
+        $this.SellPrice          = 250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sturdy bronze gauntlets of Dwarven make.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEElvenLeatherBracers : BEGauntlets {
+    BEElvenLeatherBracers() : base() {
+        $this.Name               = 'Elven Leather Bracers'
+        $this.MapObjName         = 'elvenleatherbracers'
+        $this.PurchasePrice      = 520
+        $this.SellPrice          = 260
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 9
+            [StatId]::MagicDefense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Finely crafted leather bracers of Elven design, light and agile.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHuntersGloves : BEGauntlets {
+    BEHuntersGloves() : base() {
+        $this.Name               = 'Hunter''s Gloves'
+        $this.MapObjName         = 'huntersgloves'
+        $this.PurchasePrice      = 540
+        $this.SellPrice          = 270
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves favored by hunters for their grip and durability.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFortifiedGauntlets : BEGauntlets {
+    BEFortifiedGauntlets() : base() {
+        $this.Name               = 'Fortified Gauntlets'
+        $this.MapObjName         = 'fortifiedgauntlets'
+        $this.PurchasePrice      = 560
+        $this.SellPrice          = 280
+        $this.TargetStats        = @{
+            [StatId]::Defense = 24
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets heavily reinforced for maximum protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BERunicHandguards : BEGauntlets {
+    BERunicHandguards() : base() {
+        $this.Name               = 'Runic Handguards'
+        $this.MapObjName         = 'runichandguards'
+        $this.PurchasePrice      = 580
+        $this.SellPrice          = 290
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 14
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 11
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Handguards inscribed with protective runes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESoldiersSteelGauntlets : BEGauntlets {
+    BESoldiersSteelGauntlets() : base() {
+        $this.Name               = 'Soldier''s Steel Gauntlets'
+        $this.MapObjName         = 'soldierssteelgauntlets'
+        $this.PurchasePrice      = 600
+        $this.SellPrice          = 300
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Standard issue steel gauntlets for soldiers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFineChainGloves : BEGauntlets {
+    BEFineChainGloves() : base() {
+        $this.Name               = 'Fine Chain Gloves'
+        $this.MapObjName         = 'finechaingloves'
+        $this.PurchasePrice      = 620
+        $this.SellPrice          = 310
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 18
+            [StatId]::MagicDefense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 14
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves made of finely woven, high-quality chainmail.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavyBronzeGauntlets : BEGauntlets {
+    BEHeavyBronzeGauntlets() : base() {
+        $this.Name               = 'Heavy Bronze Gauntlets'
+        $this.MapObjName         = 'heavybronzegauntlets'
+        $this.PurchasePrice      = 640
+        $this.SellPrice          = 320
+        $this.TargetStats        = @{
+            [StatId]::Defense = 26
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 21
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thick and heavy bronze gauntlets offering substantial protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEMithrilGloves : BEGauntlets {
+    BEMithrilGloves() : base() {
+        $this.Name               = 'Mithril Gloves'
+        $this.MapObjName         = 'mithrilgloves'
+        $this.PurchasePrice      = 750
+        $this.SellPrice          = 375
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 20
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 16
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Lightweight yet incredibly strong gloves made of mithril.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEKnightsGauntlets : BEGauntlets {
+    BEKnightsGauntlets() : base() {
+        $this.Name               = 'Knight''s Gauntlets'
+        $this.MapObjName         = 'knightsgauntlets'
+        $this.PurchasePrice      = 800
+        $this.SellPrice          = 400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets befitting a knight, offering excellent protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEnchantersGloves : BEGauntlets {
+    BEEnchantersGloves() : base() {
+        $this.Name               = 'Enchanter''s Gloves'
+        $this.MapObjName         = 'enchantersgloves'
+        $this.PurchasePrice      = 850
+        $this.SellPrice          = 425
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 15
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves favored by enchanters, woven with threads of magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDwarvenSteelGauntlets : BEGauntlets {
+    BEDwarvenSteelGauntlets() : base() {
+        $this.Name               = 'Dwarven Steel Gauntlets'
+        $this.MapObjName         = 'dwarvensteelgauntlets'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 32
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 26
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Masterfully crafted steel gauntlets of Dwarven make.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEElvenMithrilBracers : BEGauntlets {
+    BEElvenMithrilBracers() : base() {
+        $this.Name               = 'Elven Mithril Bracers'
+        $this.MapObjName         = 'elvenmithrilbracers'
+        $this.PurchasePrice      = 950
+        $this.SellPrice          = 475
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 22
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 18
+            [StatId]::MagicDefense = 13
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Elegant mithril bracers of Elven design, light and strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPlateGauntlets : BEGauntlets {
+    BEPlateGauntlets() : base() {
+        $this.Name               = 'Plate Gauntlets'
+        $this.MapObjName         = 'plategauntlets'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Heavy gauntlets made of interlocking steel plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBattlemageGauntlets : BEGauntlets {
+    BEBattlemageGauntlets() : base() {
+        $this.Name               = 'Battlemage Gauntlets'
+        $this.MapObjName         = 'battlemagegauntlets'
+        $this.PurchasePrice      = 1050
+        $this.SellPrice          = 525
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 20
+            [StatId]::MagicDefense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 16
+            [StatId]::MagicDefense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets designed for mages who engage in close combat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGryphonClawGloves : BEGauntlets {
+    BEGryphonClawGloves() : base() {
+        $this.Name               = 'Gryphon Claw Gloves'
+        $this.MapObjName         = 'gryphonclawgloves'
+        $this.PurchasePrice      = 1100
+        $this.SellPrice          = 550
+        $this.TargetStats        = @{
+            [StatId]::Defense = 33
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 27
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves reinforced with sharp gryphon talons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEShadowSilkGloves : BEGauntlets {
+    BEShadowSilkGloves() : base() {
+        $this.Name               = 'Shadow Silk Gloves'
+        $this.MapObjName         = 'shadowsilkgloves'
+        $this.PurchasePrice      = 1150
+        $this.SellPrice          = 575
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 18
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 14
+            [StatId]::MagicDefense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves woven from enchanted shadow silk, muffling sound.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrnateSteelGauntlets : BEGauntlets {
+    BEOrnateSteelGauntlets() : base() {
+        $this.Name               = 'Ornate Steel Gauntlets'
+        $this.MapObjName         = 'ornatesteelgauntlets'
+        $this.PurchasePrice      = 1200
+        $this.SellPrice          = 600
+        $this.TargetStats        = @{
+            [StatId]::Defense = 36
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 29
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Steel gauntlets with intricate, decorative engravings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEDragonscaleGloves : BEGauntlets {
+    BEDragonscaleGloves() : base() {
+        $this.Name               = 'Dragonscale Gloves'
+        $this.MapObjName         = 'dragonscalegloves'
+        $this.PurchasePrice      = 1500
+        $this.SellPrice          = 750
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 30
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 24
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves crafted from the tough scales of a dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEObsidianGauntlets : BEGauntlets {
+    BEObsidianGauntlets() : base() {
+        $this.Name               = 'Obsidian Gauntlets'
+        $this.MapObjName         = 'obsidiangauntlets'
+        $this.PurchasePrice      = 1600
+        $this.SellPrice          = 800
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets carved from volcanic obsidian, sharp and resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEOrichalcumBracers : BEGauntlets {
+    BEOrichalcumBracers() : base() {
+        $this.Name               = 'Orichalcum Bracers'
+        $this.MapObjName         = 'orichalcumbracers'
+        $this.PurchasePrice      = 1700
+        $this.SellPrice          = 850
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 28
+            [StatId]::MagicDefense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 22
+            [StatId]::MagicDefense = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bracers made of the rare and magically conductive orichalcum.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiteGloves : BEGauntlets {
+    BEAdamantiteGloves() : base() {
+        $this.Name               = 'Adamantite Gloves'
+        $this.MapObjName         = 'adamantitegloves'
+        $this.PurchasePrice      = 1800
+        $this.SellPrice          = 900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 42
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 34
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves woven with adamantite threads, incredibly durable.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BECrystalGauntlets : BEGauntlets {
+    BECrystalGauntlets() : base() {
+        $this.Name               = 'Crystal Gauntlets'
+        $this.MapObjName         = 'crystalgauntlets'
+        $this.PurchasePrice      = 1900
+        $this.SellPrice          = 950
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 25
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 20
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets crafted from enchanted crystal, resonating with magical energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWyvernBoneGauntlets : BEGauntlets {
+    BEWyvernBoneGauntlets() : base() {
+        $this.Name               = 'Wyvern Bone Gauntlets'
+        $this.MapObjName         = 'wyvernbonegauntlets'
+        $this.PurchasePrice      = 2000
+        $this.SellPrice          = 1000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets made from the dense bones of a wyvern.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBlessedSteelGauntlets : BEGauntlets {
+    BEBlessedSteelGauntlets() : base() {
+        $this.Name               = 'Blessed Steel Gauntlets'
+        $this.MapObjName         = 'blessedsteelgauntlets'
+        $this.PurchasePrice      = 2100
+        $this.SellPrice          = 1050
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 32
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 26
+            [StatId]::MagicDefense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Steel gauntlets blessed by a holy cleric, offering divine protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGolemFragmentGauntlets : BEGauntlets {
+    BEGolemFragmentGauntlets() : base() {
+        $this.Name               = 'Golem Fragment Gauntlets'
+        $this.MapObjName         = 'golemfragmentgauntlets'
+        $this.PurchasePrice      = 2200
+        $this.SellPrice          = 1100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 48
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets fashioned from fragments of a powerful stone golem.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESpiritGuardBracers : BEGauntlets {
+    BESpiritGuardBracers() : base() {
+        $this.Name               = 'Spirit Guard Bracers'
+        $this.MapObjName         = 'spiritguardbracers'
+        $this.PurchasePrice      = 2300
+        $this.SellPrice          = 1150
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 28
+            [StatId]::MagicDefense = 32
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 22
+            [StatId]::MagicDefense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bracers that ward off malevolent spirits and magical attacks.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVolcanicRockGauntlets : BEGauntlets {
+    BEVolcanicRockGauntlets() : base() {
+        $this.Name               = 'Volcanic Rock Gauntlets'
+        $this.MapObjName         = 'volcanicrockgauntlets'
+        $this.PurchasePrice      = 2400
+        $this.SellPrice          = 1200
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets made from hardened volcanic rock, still warm to the touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BETitaniumGauntlets : BEGauntlets {
+    BETitaniumGauntlets() : base() {
+        $this.Name               = 'Titanium Gauntlets'
+        $this.MapObjName         = 'titaniumgauntlets'
+        $this.PurchasePrice      = 3000
+        $this.SellPrice          = 1500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets forged from exceptionally strong and light titanium.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarMetalBracers : BEGauntlets {
+    BEStarMetalBracers() : base() {
+        $this.Name               = 'Star Metal Bracers'
+        $this.MapObjName         = 'starmetalbracers'
+        $this.PurchasePrice      = 3200
+        $this.SellPrice          = 1600
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 40
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 32
+            [StatId]::MagicDefense = 28
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bracers made from metal fallen from the stars, humming with energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidTouchedGauntlets : BEGauntlets {
+    BEVoidTouchedGauntlets() : base() {
+        $this.Name               = 'Void-Touched Gauntlets'
+        $this.MapObjName         = 'voidtouchedgauntlets'
+        $this.PurchasePrice      = 3400
+        $this.SellPrice          = 1700
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 35
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 28
+            [StatId]::MagicDefense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that seem to absorb light, touched by the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAncientRunicGauntlets : BEGauntlets {
+    BEAncientRunicGauntlets() : base() {
+        $this.Name               = 'Ancient Runic Gauntlets'
+        $this.MapObjName         = 'ancientrunicgauntlets'
+        $this.PurchasePrice      = 3600
+        $this.SellPrice          = 1800
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 45
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 36
+            [StatId]::MagicDefense = 24
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets covered in ancient, powerful runes of protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDrakeScaleGauntlets : BEGauntlets {
+    BEDrakeScaleGauntlets() : base() {
+        $this.Name               = 'Drake Scale Gauntlets'
+        $this.MapObjName         = 'drakescalegauntlets'
+        $this.PurchasePrice      = 3800
+        $this.SellPrice          = 1900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets crafted from the tough scales of a fire drake.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEPaladinsGauntlets : BEGauntlets {
+    BEPaladinsGauntlets() : base() {
+        $this.Name               = 'Paladin''s Gauntlets'
+        $this.MapObjName         = 'paladinsgauntlets'
+        $this.PurchasePrice      = 4000
+        $this.SellPrice          = 2000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 50
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 40
+            [StatId]::MagicDefense = 20
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets blessed for a holy warrior, radiating divine protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchmagesHandguards : BEGauntlets {
+    BEArchmagesHandguards() : base() {
+        $this.Name               = 'Archmage''s Handguards'
+        $this.MapObjName         = 'archmageshandguards'
+        $this.PurchasePrice      = 4200
+        $this.SellPrice          = 2100
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 30
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 24
+            [StatId]::MagicDefense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Handguards worn by powerful archmages, crackling with arcane energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBlacksteelGauntlets : BEGauntlets {
+    BEBlacksteelGauntlets() : base() {
+        $this.Name               = 'Blacksteel Gauntlets'
+        $this.MapObjName         = 'blacksteelgauntlets'
+        $this.PurchasePrice      = 4400
+        $this.SellPrice          = 2200
+        $this.TargetStats        = @{
+            [StatId]::Defense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets forged from rare blacksteel, known for its resilience.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGryphonKnightGauntlets : BEGauntlets {
+    BEGryphonKnightGauntlets() : base() {
+        $this.Name               = 'Gryphon Knight Gauntlets'
+        $this.MapObjName         = 'gryphonknightgauntlets'
+        $this.PurchasePrice      = 4600
+        $this.SellPrice          = 2300
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 58
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 46
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets worn by knights who ride gryphons into battle.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESunstoneInfusedGloves : BEGauntlets {
+    BESunstoneInfusedGloves() : base() {
+        $this.Name               = 'Sunstone-Infused Gloves'
+        $this.MapObjName         = 'sunstoneinfusedgloves'
+        $this.PurchasePrice      = 4800
+        $this.SellPrice          = 2400
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 38
+            [StatId]::MagicDefense = 42
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 30
+            [StatId]::MagicDefense = 33
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves infused with the radiant energy of sunstones.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonboneGauntlets : BEGauntlets {
+    BEDragonboneGauntlets() : base() {
+        $this.Name               = 'Dragonbone Gauntlets'
+        $this.MapObjName         = 'dragonbonegauntlets'
+        $this.PurchasePrice      = 6000
+        $this.SellPrice          = 3000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets crafted from the ancient bones of a powerful dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BECelestialVambraces : BEGauntlets {
+    BECelestialVambraces() : base() {
+        $this.Name               = 'Celestial Vambraces'
+        $this.MapObjName         = 'celestialvambraces'
+        $this.PurchasePrice      = 6500
+        $this.SellPrice          = 3250
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 50
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 40
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Vambraces that shimmer with celestial light, offering balanced protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDemonicClaws : BEGauntlets {
+    BEDemonicClaws() : base() {
+        $this.Name               = 'Demonic Claws'
+        $this.MapObjName         = 'demonicclaws'
+        $this.PurchasePrice      = 6800
+        $this.SellPrice          = 3400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets ending in wicked demonic claws, surprisingly defensive.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAbyssalGauntlets : BEGauntlets {
+    BEAbyssalGauntlets() : base() {
+        $this.Name               = 'Abyssal Gauntlets'
+        $this.MapObjName         = 'abyssalgauntlets'
+        $this.PurchasePrice      = 7000
+        $this.SellPrice          = 3500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 60
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 48
+            [StatId]::MagicDefense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets forged in the abyss, cold to the touch and unnervingly silent.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixTalonGloves : BEGauntlets {
+    BEPhoenixTalonGloves() : base() {
+        $this.Name               = 'Phoenix Talon Gloves'
+        $this.MapObjName         = 'phoenixtalongloves'
+        $this.PurchasePrice      = 7200
+        $this.SellPrice          = 3600
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 55
+            [StatId]::MagicDefense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 44
+            [StatId]::MagicDefense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves adorned with phoenix talons, warm and imbued with regenerative magic.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BETitanForgedGauntlets : BEGauntlets {
+    BETitanForgedGauntlets() : base() {
+        $this.Name               = 'Titan-Forged Gauntlets'
+        $this.MapObjName         = 'titanforgedgauntlets'
+        $this.PurchasePrice      = 7500
+        $this.SellPrice          = 3750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 64
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Massive gauntlets, as if forged by titans themselves.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStormheraldGauntlets : BEGauntlets {
+    BEStormheraldGauntlets() : base() {
+        $this.Name               = 'Stormherald Gauntlets'
+        $this.MapObjName         = 'stormheraldgauntlets'
+        $this.PurchasePrice      = 7800
+        $this.SellPrice          = 3900
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 65
+            [StatId]::MagicDefense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 52
+            [StatId]::MagicDefense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that crackle with the energy of a coming storm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHolyVindicatorGauntlets : BEGauntlets {
+    BEHolyVindicatorGauntlets() : base() {
+        $this.Name               = 'Holy Vindicator Gauntlets'
+        $this.MapObjName         = 'holyvindicatorgauntlets'
+        $this.PurchasePrice      = 8000
+        $this.SellPrice          = 4000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 68
+            [StatId]::MagicDefense = 38
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 54
+            [StatId]::MagicDefense = 30
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets worn by holy vindicators, radiating righteous power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernalGraspGauntlets : BEGauntlets {
+    BEInfernalGraspGauntlets() : base() {
+        $this.Name               = 'Infernal Grasp Gauntlets'
+        $this.MapObjName         = 'infernalgraspgauntlets'
+        $this.PurchasePrice      = 8200
+        $this.SellPrice          = 4100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 82
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 66
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that seem to burn with an inner fire, offering fearsome protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWorldTreeVambraces : BEGauntlets {
+    BEWorldTreeVambraces() : base() {
+        $this.Name               = 'World Tree Vambraces'
+        $this.MapObjName         = 'worldtreevambraces'
+        $this.PurchasePrice      = 8500
+        $this.SellPrice          = 4250
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 62
+            [StatId]::MagicDefense = 58
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 50
+            [StatId]::MagicDefense = 46
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Vambraces crafted from the living wood of the World Tree.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+# Tier 9: Artifact Tier
+Class BEGauntletsOfOdin : BEGauntlets {
+    BEGauntletsOfOdin() : base() {
+        $this.Name               = 'Gauntlets of Odin'
+        $this.MapObjName         = 'gauntletsofodin'
+        $this.PurchasePrice      = 10000
+        $this.SellPrice          = 5000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 80
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 64
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Legendary gauntlets said to have been worn by the Allfather Odin.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFistsOfHephaestus : BEGauntlets {
+    BEFistsOfHephaestus() : base() {
+        $this.Name               = 'Fists of Hephaestus'
+        $this.MapObjName         = 'fistsofhephaestus'
+        $this.PurchasePrice      = 10500
+        $this.SellPrice          = 5250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90 # More offensive, but still armor
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 72
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets forged by the smith god Hephaestus, nearly indestructible.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHandsOfMidas : BEGauntlets { # Could have a special gold-finding property in-game
+    BEHandsOfMidas() : base() {
+        $this.Name               = 'Hands of Midas'
+        $this.MapObjName         = 'handsofmidas'
+        $this.PurchasePrice      = 11000
+        $this.SellPrice          = 5500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 70
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 56
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Golden gauntlets rumored to turn whatever they touch to gold... or just offer good defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfHercules : BEGauntlets {
+    BEGauntletsOfHercules() : base() {
+        $this.Name               = 'Gauntlets of Hercules'
+        $this.MapObjName         = 'gauntletsofhercules'
+        $this.PurchasePrice      = 11500
+        $this.SellPrice          = 5750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 76
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets imbued with the immense strength of Hercules.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEVambracesOfZeus : BEGauntlets {
+    BEVambracesOfZeus() : base() {
+        $this.Name               = 'Vambraces of Zeus'
+        $this.MapObjName         = 'vambracesofzeus'
+        $this.PurchasePrice      = 12000
+        $this.SellPrice          = 6000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 75
+            [StatId]::MagicDefense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 60
+            [StatId]::MagicDefense = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Vambraces crackling with the power of Zeus, king of the gods.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEClawsOfBahamut : BEGauntlets {
+    BEClawsOfBahamut() : base() {
+        $this.Name               = 'Claws of Bahamut'
+        $this.MapObjName         = 'clawsofbahamut'
+        $this.PurchasePrice      = 12500
+        $this.SellPrice          = 6250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 98
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 78
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets shaped like the talons of the dragon king, Bahamut.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGlovesOfTiamat : BEGauntlets {
+    BEGlovesOfTiamat() : base() {
+        $this.Name               = 'Gloves of Tiamat'
+        $this.MapObjName         = 'glovesoftiamat'
+        $this.PurchasePrice      = 13000
+        $this.SellPrice          = 6500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 78
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 62
+            [StatId]::MagicDefense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves imbued with the chaotic elemental power of the dragon queen, Tiamat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfTheValkyrie : BEGauntlets {
+    BEGauntletsOfTheValkyrie() : base() {
+        $this.Name               = 'Gauntlets of the Valkyrie'
+        $this.MapObjName         = 'gauntletsofthevalkyrie'
+        $this.PurchasePrice      = 13500
+        $this.SellPrice          = 6750
+        $this.TargetStats        = @{
+            [StatId]::Defense = 102
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 81
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets worn by the choosers of the slain, strong and swift.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBracersOfAnubis : BEGauntlets {
+    BEBracersOfAnubis() : base() {
+        $this.Name               = 'Bracers of Anubis'
+        $this.MapObjName         = 'bracersofanubis'
+        $this.PurchasePrice      = 14000
+        $this.SellPrice          = 7000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 82
+            [StatId]::MagicDefense = 72
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 66
+            [StatId]::MagicDefense = 58
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bracers bearing the mark of Anubis, guardian of the afterlife.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHandsOfPrometheus : BEGauntlets {
+    BEHandsOfPrometheus() : base() {
+        $this.Name               = 'Hands of Prometheus'
+        $this.MapObjName         = 'handsofprometheus'
+        $this.PurchasePrice      = 14500
+        $this.SellPrice          = 7250
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 85
+            [StatId]::MagicDefense = 70 
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 68
+            [StatId]::MagicDefense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that carry the spark of forbidden fire, gifted by Prometheus.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodslayerGauntlets : BEGauntlets {
+    BEGodslayerGauntlets() : base() {
+        $this.Name               = 'Godslayer Gauntlets'
+        $this.MapObjName         = 'godslayergauntlets'
+        $this.PurchasePrice      = 20000
+        $this.SellPrice          = 10000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 88
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets imbued with the power to fell deities.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEArmguardsOfTheCosmos : BEGauntlets {
+    BEArmguardsOfTheCosmos() : base() {
+        $this.Name               = 'Armguards of the Cosmos'
+        $this.MapObjName         = 'armguardsofthecosmos'
+        $this.PurchasePrice      = 21000
+        $this.SellPrice          = 10500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 90
+            [StatId]::MagicDefense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 72
+            [StatId]::MagicDefense = 64
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armguards that seem to hold the vastness of the cosmos within them.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfEternalNight : BEGauntlets {
+    BEGauntletsOfEternalNight() : base() {
+        $this.Name               = 'Gauntlets of Eternal Night'
+        $this.MapObjName         = 'gauntletsofeternalnight'
+        $this.PurchasePrice      = 22000
+        $this.SellPrice          = 11000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 85
+            [StatId]::MagicDefense = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 68
+            [StatId]::MagicDefense = 68
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets woven from the fabric of endless night, granting mastery over shadows.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHandsOfTheWorldSerpent : BEGauntlets {
+    BEHandsOfTheWorldSerpent() : base() {
+        $this.Name               = 'Hands of the World Serpent'
+        $this.MapObjName         = 'handsoftheworldserpent'
+        $this.PurchasePrice      = 23000
+        $this.SellPrice          = 11500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 92
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets crafted from the scales of Jormungandr, the World Serpent.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfTimelessness : BEGauntlets {
+    BEGauntletsOfTimelessness() : base() {
+        $this.Name               = 'Gauntlets of Timelessness'
+        $this.MapObjName         = 'gauntletsoftimelessness'
+        $this.PurchasePrice      = 24000
+        $this.SellPrice          = 12000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 95
+            [StatId]::MagicDefense = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 76
+            [StatId]::MagicDefense = 72
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that seem to exist outside of time, offering profound protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFistsOfThePrimordials : BEGauntlets {
+    BEFistsOfThePrimordials() : base() {
+        $this.Name               = 'Fists of the Primordials'
+        $this.MapObjName         = 'fistsoftheprimordials'
+        $this.PurchasePrice      = 25000
+        $this.SellPrice          = 12500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 96
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets imbued with the raw power of the first beings of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfDivineAscension : BEGauntlets {
+    BEGauntletsOfDivineAscension() : base() {
+        $this.Name               = 'Gauntlets of Divine Ascension'
+        $this.MapObjName         = 'gauntletsofdivineascension'
+        $this.PurchasePrice      = 26000
+        $this.SellPrice          = 13000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 100
+            [StatId]::MagicDefense = 100
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 80
+            [StatId]::MagicDefense = 80
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that signify the wearer''s path to godhood.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArmguardsOfOblivion : BEGauntlets {
+    BEArmguardsOfOblivion() : base() {
+        $this.Name               = 'Armguards of Oblivion'
+        $this.MapObjName         = 'armguardsofoblivion'
+        $this.PurchasePrice      = 27000
+        $this.SellPrice          = 13500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armguards that whisper of the void, capable of unmaking foes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfTheUnblinkingEye : BEGauntlets {
+    BEGauntletsOfTheUnblinkingEye() : base() {
+        $this.Name               = 'Gauntlets of the Unblinking Eye'
+        $this.MapObjName         = 'gauntletsoftheunblinkingeye'
+        $this.PurchasePrice      = 28000
+        $this.SellPrice          = 14000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 105
+            [StatId]::MagicDefense = 105
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 84
+            [StatId]::MagicDefense = 84
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that grant clarity and insight, revealing all truths.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHandsOfTheCreator : BEGauntlets {
+    BEHandsOfTheCreator() : base() {
+        $this.Name               = 'Hands of the Creator'
+        $this.MapObjName         = 'handsofthecreator'
+        $this.PurchasePrice      = 30000
+        $this.SellPrice          = 15000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 110
+            [StatId]::MagicDefense = 110
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 88
+            [StatId]::MagicDefense = 88
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets said to have been worn by the entity that shaped all existence.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiumCoreGauntlets : BEGauntlets {
+    BEAdamantiumCoreGauntlets() : base() {
+        $this.Name               = 'Adamantium Core Gauntlets'
+        $this.MapObjName         = 'adamantiumcoregauntlets'
+        $this.PurchasePrice      = 32000
+        $this.SellPrice          = 16000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 104
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets with a core of pure Adamantium, offering unmatched physical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarlightWeaveGloves : BEGauntlets {
+    BEStarlightWeaveGloves() : base() {
+        $this.Name               = 'Starlight Weave Gloves'
+        $this.MapObjName         = 'starlightweavegloves'
+        $this.PurchasePrice      = 33000
+        $this.SellPrice          = 16500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 110
+            [StatId]::MagicDefense = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 88
+            [StatId]::MagicDefense = 92
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves woven from concentrated starlight, shimmering with protective energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfResoluteMight : BEGauntlets {
+    BEGauntletsOfResoluteMight() : base() {
+        $this.Name               = 'Gauntlets of Resolute Might'
+        $this.MapObjName         = 'gauntletsofresolutemight'
+        $this.PurchasePrice      = 34000
+        $this.SellPrice          = 17000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 108
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that embody unyielding strength and determination.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWrapsOfAncientWisdom : BEGauntlets {
+    BEWrapsOfAncientWisdom() : base() {
+        $this.Name               = 'Wraps of Ancient Wisdom'
+        $this.MapObjName         = 'wrapsofancientwisdom'
+        $this.PurchasePrice      = 35000
+        $this.SellPrice          = 17500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 112
+            [StatId]::MagicDefense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 90
+            [StatId]::MagicDefense = 96
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Handwraps inscribed with the lost knowledge of ancient sages.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfTheSunkenKing : BEGauntlets {
+    BEGauntletsOfTheSunkenKing() : base() {
+        $this.Name               = 'Gauntlets of the Sunken King'
+        $this.MapObjName         = 'gauntletsofthesunkenking'
+        $this.PurchasePrice      = 36000
+        $this.SellPrice          = 18000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 140
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 112
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets recovered from a lost, underwater kingdom, encrusted with barnacles and power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGlovesOfEtherealTouch : BEGauntlets {
+    BEGlovesOfEtherealTouch() : base() {
+        $this.Name               = 'Gloves of Ethereal Touch'
+        $this.MapObjName         = 'glovesofetherealtouch'
+        $this.PurchasePrice      = 37000
+        $this.SellPrice          = 18500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 115
+            [StatId]::MagicDefense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 92
+            [StatId]::MagicDefense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gloves that allow the wearer to interact with the ethereal plane, offering unique defenses.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfShatteredRealms : BEGauntlets {
+    BEGauntletsOfShatteredRealms() : base() {
+        $this.Name               = 'Gauntlets of Shattered Realms'
+        $this.MapObjName         = 'gauntletsofshatteredrealms'
+        $this.PurchasePrice      = 38000
+        $this.SellPrice          = 19000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 145
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 116
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets pieced together from fragments of broken dimensions.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBracersOfTheSilentMonk : BEGauntlets {
+    BEBracersOfTheSilentMonk() : base() {
+        $this.Name               = 'Bracers of the Silent Monk'
+        $this.MapObjName         = 'bracersofthesilentmonk'
+        $this.PurchasePrice      = 39000
+        $this.SellPrice          = 19500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 118
+            [StatId]::MagicDefense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 94
+            [StatId]::MagicDefense = 104
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bracers worn by monks who have taken a vow of silence, imbued with focused energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfTheEclipse : BEGauntlets {
+    BEGauntletsOfTheEclipse() : base() {
+        $this.Name               = 'Gauntlets of the Eclipse'
+        $this.MapObjName         = 'gauntletsoftheeclipse'
+        $this.PurchasePrice      = 40000
+        $this.SellPrice          = 20000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 120
+            [StatId]::MagicDefense = 120
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 96
+            [StatId]::MagicDefense = 96
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that embody the power of both sun and moon during an eclipse.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHandsOfObliteration : BEGauntlets {
+    BEHandsOfObliteration() : base() {
+        $this.Name               = 'Hands of Obliteration'
+        $this.MapObjName         = 'handsofobliteration'
+        $this.PurchasePrice      = 41000
+        $this.SellPrice          = 20500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets capable of reducing foes to dust with a mere touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfCelestialHarmony : BEGauntlets {
+    BEGauntletsOfCelestialHarmony() : base() {
+        $this.Name               = 'Gauntlets of Celestial Harmony'
+        $this.MapObjName         = 'gauntletsofcelestialharmony'
+        $this.PurchasePrice      = 45000
+        $this.SellPrice          = 22500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 125
+            [StatId]::MagicDefense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 100
+            [StatId]::MagicDefense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that resonate with the perfect harmony of the celestial spheres.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFistsOfRagnarok : BEGauntlets {
+    BEFistsOfRagnarok() : base() {
+        $this.Name               = 'Fists of Ragnarok'
+        $this.MapObjName         = 'fistsofragnarok'
+        $this.PurchasePrice      = 46000
+        $this.SellPrice          = 23000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 155
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 124
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that herald the end of days, imbued with apocalyptic power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfTheInfiniteVoid : BEGauntlets {
+    BEGauntletsOfTheInfiniteVoid() : base() {
+        $this.Name               = 'Gauntlets of the Infinite Void'
+        $this.MapObjName         = 'gauntletsoftheinfinitevoid'
+        $this.PurchasePrice      = 47000
+        $this.SellPrice          = 23500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 128
+            [StatId]::MagicDefense = 128
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 102
+            [StatId]::MagicDefense = 102
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that seem to contain an endless void, absorbing all forms of attack.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHandsOfTheFirstFlame : BEGauntlets {
+    BEHandsOfTheFirstFlame() : base() {
+        $this.Name               = 'Hands of the First Flame'
+        $this.MapObjName         = 'handsofthefirstflame'
+        $this.PurchasePrice      = 48000
+        $this.SellPrice          = 24000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 130
+            [StatId]::MagicDefense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 104
+            [StatId]::MagicDefense = 104
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that burn with the primordial fire of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGauntletsOfAbsoluteZero : BEGauntlets {
+    BEGauntletsOfAbsoluteZero() : base() {
+        $this.Name               = 'Gauntlets of Absolute Zero'
+        $this.MapObjName         = 'gauntletsofabsolutezero'
+        $this.PurchasePrice      = 49000
+        $this.SellPrice          = 24500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 132
+            [StatId]::MagicDefense = 132
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 106
+            [StatId]::MagicDefense = 106
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets so cold they can freeze time itself, offering ultimate magical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArmguardsOfTheWorldForge : BEGauntlets {
+    BEArmguardsOfTheWorldForge() : base() {
+        $this.Name               = 'Armguards of the World Forge'
+        $this.MapObjName         = 'armguardsoftheworldforge'
+        $this.PurchasePrice      = 50000
+        $this.SellPrice          = 25000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 160
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 128
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armguards crafted at the legendary World Forge, embodying creation''s might.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfAscendedPower : BEGauntlets {
+    BEGauntletsOfAscendedPower() : base() {
+        $this.Name               = 'Gauntlets of Ascended Power'
+        $this.MapObjName         = 'gauntletsofascendedpower'
+        $this.PurchasePrice      = 52000
+        $this.SellPrice          = 26000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 135
+            [StatId]::MagicDefense = 135
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 108
+            [StatId]::MagicDefense = 108
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets worn by a mortal who achieved godhood, radiating immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHandsOfUnmaking : BEGauntlets {
+    BEHandsOfUnmaking() : base() {
+        $this.Name               = 'Hands of Unmaking'
+        $this.MapObjName         = 'handsofunmaking'
+        $this.PurchasePrice      = 54000
+        $this.SellPrice          = 27000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 165
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 132
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets capable of unraveling the fabric of reality, terrifyingly defensive.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGauntletsOfTheFinalTruth : BEGauntlets {
+    BEGauntletsOfTheFinalTruth() : base() {
+        $this.Name               = 'Gauntlets of the Final Truth'
+        $this.MapObjName         = 'gauntletsofthefinaltruth'
+        $this.PurchasePrice      = 56000
+        $this.SellPrice          = 28000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 140
+            [StatId]::MagicDefense = 140
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 112
+            [StatId]::MagicDefense = 112
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Gauntlets that reveal the ultimate truth of existence, offering unparalleled insight and protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOmegaGauntlets : BEGauntlets {
+    BEOmegaGauntlets() : base() {
+        $this.Name               = 'Omega Gauntlets'
+        $this.MapObjName         = 'omegagauntlets'
+        $this.PurchasePrice      = 60000
+        $this.SellPrice          = 30000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 150
+            [StatId]::MagicDefense = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 120
+            [StatId]::MagicDefense = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate gauntlets, signifying the end of all challenges.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
 
 
 
