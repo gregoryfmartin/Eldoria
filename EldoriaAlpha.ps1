@@ -11739,12 +11739,12 @@ Class BEFrostbiteHood : BEHelmet {
         $this.PurchasePrice      = 26500
         $this.SellPrice          = 13250
         $this.TargetStats        = @{
-            [StatId]::Defense = 52
+            [StatId]::Defense      = 52
             [StatId]::MagicDefense = 135
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 52
-            [StatId]::MagicDefense = 68
+            [StatId]::Defense      = 42
+            [StatId]::MagicDefense = 108
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood that emanates a chilling aura.'
@@ -11759,11 +11759,12 @@ Class BEThunderclapHelm : BEHelmet {
         $this.PurchasePrice      = 28000
         $this.SellPrice          = 14000
         $this.TargetStats        = @{
-            [StatId]::Defense = 145
+            [StatId]::Defense      = 145
             [StatId]::MagicDefense = 65
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 125
+            [StatId]::Defense      = 116
+            [StatId]::MagicDefense = 52
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm that resonates with the power of a thunderstorm.'
@@ -11778,12 +11779,12 @@ Class BEAstralCirclet : BEHelmet {
         $this.PurchasePrice      = 29000
         $this.SellPrice          = 14500
         $this.TargetStats        = @{
-            [StatId]::Defense = 60
+            [StatId]::Defense      = 60
             [StatId]::MagicDefense = 140
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 60
-            [StatId]::MagicDefense = 70
+            [StatId]::Defense      = 48
+            [StatId]::MagicDefense = 112
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet that seems to hold the essence of the stars.'
@@ -11799,10 +11800,9 @@ Class BEInfernalHelm : BEHelmet {
         $this.SellPrice          = 15000
         $this.TargetStats        = @{
             [StatId]::Defense = 150
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 130
+            [StatId]::Defense = 120
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm forged in the deepest pits of the inferno.'
@@ -11817,12 +11817,12 @@ Class BEZephyrHood : BEHelmet {
         $this.PurchasePrice      = 29500
         $this.SellPrice          = 14750
         $this.TargetStats        = @{
-            [StatId]::Defense = 58
+            [StatId]::Defense      = 58
             [StatId]::MagicDefense = 145
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 58
-            [StatId]::MagicDefense = 72
+            [StatId]::Defense      = 47
+            [StatId]::MagicDefense = 116
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood as light as air, offering swift protection.'
@@ -11837,11 +11837,12 @@ Class BEVanguardHelm : BEHelmet {
         $this.PurchasePrice      = 31000
         $this.SellPrice          = 15500
         $this.TargetStats        = @{
-            [StatId]::Defense = 155
+            [StatId]::Defense      = 155
             [StatId]::MagicDefense = 70
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 135
+            [StatId]::Defense      = 124
+            [StatId]::MagicDefense = 56
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm worn by the leaders of the vanguard.'
@@ -11856,12 +11857,12 @@ Class BEOracleCirclet : BEHelmet {
         $this.PurchasePrice      = 32000
         $this.SellPrice          = 16000
         $this.TargetStats        = @{
-            [StatId]::Defense = 65
+            [StatId]::Defense      = 65
             [StatId]::MagicDefense = 150
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 65
-            [StatId]::MagicDefense = 75
+            [StatId]::Defense      = 52
+            [StatId]::MagicDefense = 120
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet that hums with prophetic visions.'
@@ -11877,10 +11878,9 @@ Class BEColossusHelm : BEHelmet {
         $this.SellPrice          = 16500
         $this.TargetStats        = @{
             [StatId]::Defense = 160
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 140
+            [StatId]::Defense = 128
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm of immense size and strength.'
@@ -11895,12 +11895,12 @@ Class BEWhisperwindHood : BEHelmet {
         $this.PurchasePrice      = 32500
         $this.SellPrice          = 16250
         $this.TargetStats        = @{
-            [StatId]::Defense = 62
+            [StatId]::Defense      = 62
             [StatId]::MagicDefense = 155
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 62
-            [StatId]::MagicDefense = 78
+            [StatId]::Defense      = 50
+            [StatId]::MagicDefense = 124
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood that carries the whispers of the wind.'
@@ -11915,11 +11915,12 @@ Class BEBloodmoonHelm : BEHelmet {
         $this.PurchasePrice      = 34000
         $this.SellPrice          = 17000
         $this.TargetStats        = @{
-            [StatId]::Defense = 165
+            [StatId]::Defense      = 165
             [StatId]::MagicDefense = 75
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 145
+            [StatId]::Defense      = 132
+            [StatId]::MagicDefense = 60
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm that glows faintly under the bloodmoon.'
@@ -11934,12 +11935,12 @@ Class BESunstoneCirclet : BEHelmet {
         $this.PurchasePrice      = 35000
         $this.SellPrice          = 17500
         $this.TargetStats        = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 160
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 70
-            [StatId]::MagicDefense = 80
+            [StatId]::Defense      = 56
+            [StatId]::MagicDefense = 128
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet embedded with a sunstone, radiating warmth and light.'
@@ -11955,10 +11956,9 @@ Class BEVoidwalkerHelm : BEHelmet {
         $this.SellPrice          = 18000
         $this.TargetStats        = @{
             [StatId]::Defense = 170
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 150
+            [StatId]::Defense = 136
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm that seems to phase in and out of reality.'
@@ -11973,12 +11973,12 @@ Class BEFrostlordHood : BEHelmet {
         $this.PurchasePrice      = 35500
         $this.SellPrice          = 17750
         $this.TargetStats        = @{
-            [StatId]::Defense = 68
+            [StatId]::Defense      = 68
             [StatId]::MagicDefense = 165
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 68
-            [StatId]::MagicDefense = 82
+            [StatId]::Defense      = 55
+            [StatId]::MagicDefense = 132
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood fit for a lord of frost and ice.'
@@ -11993,11 +11993,12 @@ Class BEStormkingHelm : BEHelmet {
         $this.PurchasePrice      = 37000
         $this.SellPrice          = 18500
         $this.TargetStats        = @{
-            [StatId]::Defense = 175
+            [StatId]::Defense      = 175
             [StatId]::MagicDefense = 80
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 155
+            [StatId]::Defense      = 140
+            [StatId]::MagicDefense = 64
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm that commands the very storms.'
@@ -12012,12 +12013,12 @@ Class BEStarlightCirclet : BEHelmet {
         $this.PurchasePrice      = 38000
         $this.SellPrice          = 19000
         $this.TargetStats        = @{
-            [StatId]::Defense = 75
+            [StatId]::Defense      = 75
             [StatId]::MagicDefense = 170
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 75
-            [StatId]::MagicDefense = 85
+            [StatId]::Defense      = 60
+            [StatId]::MagicDefense = 136
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet that captures the light of distant stars.'
@@ -12033,10 +12034,9 @@ Class BEHellfireHelm : BEHelmet {
         $this.SellPrice          = 19500
         $this.TargetStats        = @{
             [StatId]::Defense = 180
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 160
+            [StatId]::Defense = 144
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm burning with the fires of hell.'
@@ -12051,12 +12051,12 @@ Class BEWindrunnerHood : BEHelmet {
         $this.PurchasePrice      = 38500
         $this.SellPrice          = 19250
         $this.TargetStats        = @{
-            [StatId]::Defense = 72
+            [StatId]::Defense      = 72
             [StatId]::MagicDefense = 175
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 72
-            [StatId]::MagicDefense = 88
+            [StatId]::Defense      = 58
+            [StatId]::MagicDefense = 140
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood that grants the wearer incredible speed.'
@@ -12071,11 +12071,12 @@ Class BEImmortalHelm : BEHelmet {
         $this.PurchasePrice      = 40000
         $this.SellPrice          = 20000
         $this.TargetStats        = @{
-            [StatId]::Defense = 185
+            [StatId]::Defense      = 185
             [StatId]::MagicDefense = 85
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 165
+            [StatId]::Defense      = 165
+            [StatId]::MagicDefense = 68
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm said to grant immortality to its wearer.'
@@ -12090,12 +12091,12 @@ Class BECosmicCirclet : BEHelmet {
         $this.PurchasePrice      = 41000
         $this.SellPrice          = 20500
         $this.TargetStats        = @{
-            [StatId]::Defense = 80
+            [StatId]::Defense      = 80
             [StatId]::MagicDefense = 180
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 80
-            [StatId]::MagicDefense = 90
+            [StatId]::Defense      = 64
+            [StatId]::MagicDefense = 144
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet that hums with the energy of the cosmos.'
@@ -12111,7 +12112,6 @@ Class BEApocalypseHelm : BEHelmet {
         $this.SellPrice          = 21000
         $this.TargetStats        = @{
             [StatId]::Defense = 190
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 170
@@ -12129,12 +12129,12 @@ Class BEAbyssalHood : BEHelmet {
         $this.PurchasePrice      = 41500
         $this.SellPrice          = 20750
         $this.TargetStats        = @{
-            [StatId]::Defense = 78
+            [StatId]::Defense      = 78
             [StatId]::MagicDefense = 185
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 78
-            [StatId]::MagicDefense = 92
+            [StatId]::Defense      = 78
+            [StatId]::MagicDefense = 148
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood that whispers secrets from the abyss.'
@@ -12149,11 +12149,12 @@ Class BEHeavenlyHelm : BEHelmet {
         $this.PurchasePrice      = 43000
         $this.SellPrice          = 21500
         $this.TargetStats        = @{
-            [StatId]::Defense = 195
+            [StatId]::Defense      = 195
             [StatId]::MagicDefense = 90
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 175
+            [StatId]::Defense      = 175
+            [StatId]::MagicDefense = 72
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm blessed by the heavens.'
@@ -12168,12 +12169,12 @@ Class BEArchangelCirclet : BEHelmet {
         $this.PurchasePrice      = 44000
         $this.SellPrice          = 22000
         $this.TargetStats        = @{
-            [StatId]::Defense = 85
+            [StatId]::Defense      = 85
             [StatId]::MagicDefense = 190
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 85
-            [StatId]::MagicDefense = 95
+            [StatId]::Defense      = 85
+            [StatId]::MagicDefense = 152
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet radiating the power of an archangel.'
@@ -12189,7 +12190,6 @@ Class BEWorldbreakerHelm : BEHelmet {
         $this.SellPrice          = 22500
         $this.TargetStats        = @{
             [StatId]::Defense = 200
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 180
@@ -12207,12 +12207,12 @@ Class BEStarfallHood : BEHelmet {
         $this.PurchasePrice      = 44500
         $this.SellPrice          = 22250
         $this.TargetStats        = @{
-            [StatId]::Defense = 82
+            [StatId]::Defense      = 82
             [StatId]::MagicDefense = 195
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 82
-            [StatId]::MagicDefense = 98
+            [StatId]::Defense      = 82
+            [StatId]::MagicDefense = 156
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A hood that seems to draw power from falling stars.'
@@ -12227,11 +12227,12 @@ Class BEGodkingHelm : BEHelmet {
         $this.PurchasePrice      = 46000
         $this.SellPrice          = 23000
         $this.TargetStats        = @{
-            [StatId]::Defense = 205
+            [StatId]::Defense      = 205
             [StatId]::MagicDefense = 95
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 185
+            [StatId]::Defense      = 185
+            [StatId]::MagicDefense = 76
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm fit for a god-king.'
@@ -12246,12 +12247,12 @@ Class BECreatorCirclet : BEHelmet {
         $this.PurchasePrice      = 47000
         $this.SellPrice          = 23500
         $this.TargetStats        = @{
-            [StatId]::Defense = 90
+            [StatId]::Defense      = 90
             [StatId]::MagicDefense = 200
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 90
-            [StatId]::MagicDefense = 100
+            [StatId]::Defense      = 90
+            [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A circlet said to hold the power of creation.'
@@ -12267,7 +12268,6 @@ Class BEVoidheartHelm : BEHelmet {
         $this.SellPrice          = 24000
         $this.TargetStats        = @{
             [StatId]::Defense = 210
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 190
@@ -12285,11 +12285,11 @@ Class BEFrostfireHood : BEHelmet {
         $this.PurchasePrice      = 47500
         $this.SellPrice          = 23750
         $this.TargetStats        = @{
-            [StatId]::Defense = 88
+            [StatId]::Defense      = 88
             [StatId]::MagicDefense = 205
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 88
+            [StatId]::Defense      = 88
             [StatId]::MagicDefense = 102
         }
         $this.CanAddToInventory  = $true
@@ -12305,11 +12305,12 @@ Class BEThunderstrikeHelm : BEHelmet {
         $this.PurchasePrice      = 49000
         $this.SellPrice          = 24500
         $this.TargetStats        = @{
-            [StatId]::Defense = 215
+            [StatId]::Defense      = 215
             [StatId]::MagicDefense = 100
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 195
+            [StatId]::Defense      = 195
+            [StatId]::MagicDefense = 80
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm that calls down lightning upon enemies.'
@@ -12324,11 +12325,11 @@ Class BEWorldshaperCirclet : BEHelmet {
         $this.PurchasePrice      = 50000
         $this.SellPrice          = 25000
         $this.TargetStats        = @{
-            [StatId]::Defense = 95
+            [StatId]::Defense      = 95
             [StatId]::MagicDefense = 210
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 95
+            [StatId]::Defense      = 95
             [StatId]::MagicDefense = 105
         }
         $this.CanAddToInventory  = $true
@@ -12345,7 +12346,6 @@ Class BEAbyssalPlate : BEHelmet {
         $this.SellPrice          = 25500
         $this.TargetStats        = @{
             [StatId]::Defense = 220
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 200
@@ -12363,11 +12363,11 @@ Class BEStarcallerHood : BEHelmet {
         $this.PurchasePrice      = 50500
         $this.SellPrice          = 25250
         $this.TargetStats        = @{
-            [StatId]::Defense = 92
+            [StatId]::Defense      = 92
             [StatId]::MagicDefense = 215
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 92
+            [StatId]::Defense      = 92
             [StatId]::MagicDefense = 108
         }
         $this.CanAddToInventory  = $true
@@ -12383,11 +12383,12 @@ Class BEGodslayerHelm : BEHelmet {
         $this.PurchasePrice      = 52000
         $this.SellPrice          = 26000
         $this.TargetStats        = @{
-            [StatId]::Defense = 225
+            [StatId]::Defense      = 225
             [StatId]::MagicDefense = 105
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 205
+            [StatId]::Defense      = 205
+            [StatId]::MagicDefense = 84
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm worn by those who dare challenge deities.'
@@ -12402,11 +12403,11 @@ Class BEUniverseCirclet : BEHelmet {
         $this.PurchasePrice      = 53000
         $this.SellPrice          = 26500
         $this.TargetStats        = @{
-            [StatId]::Defense = 100
+            [StatId]::Defense      = 100
             [StatId]::MagicDefense = 220
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 100
+            [StatId]::Defense      = 100
             [StatId]::MagicDefense = 110
         }
         $this.CanAddToInventory  = $true
@@ -12423,7 +12424,6 @@ Class BEChaosLordHelm : BEHelmet {
         $this.SellPrice          = 27000
         $this.TargetStats        = @{
             [StatId]::Defense = 230
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 210
@@ -12441,11 +12441,11 @@ Class BEFrostmourneHood : BEHelmet {
         $this.PurchasePrice      = 53500
         $this.SellPrice          = 26750
         $this.TargetStats        = @{
-            [StatId]::Defense = 98
+            [StatId]::Defense      = 98
             [StatId]::MagicDefense = 225
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 98
+            [StatId]::Defense      = 98
             [StatId]::MagicDefense = 112
         }
         $this.CanAddToInventory  = $true
@@ -12461,11 +12461,12 @@ Class BEThundergodHelm : BEHelmet {
         $this.PurchasePrice      = 55000
         $this.SellPrice          = 27500
         $this.TargetStats        = @{
-            [StatId]::Defense = 235
+            [StatId]::Defense      = 235
             [StatId]::MagicDefense = 110
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 215
+            [StatId]::Defense      = 215
+            [StatId]::MagicDefense = 85
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm imbued with the power of a thunder god.'
@@ -12480,11 +12481,11 @@ Class BEVoidlordCirclet : BEHelmet {
         $this.PurchasePrice      = 56000
         $this.SellPrice          = 28000
         $this.TargetStats        = @{
-            [StatId]::Defense = 105
+            [StatId]::Defense      = 105
             [StatId]::MagicDefense = 230
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 105
+            [StatId]::Defense      = 105
             [StatId]::MagicDefense = 115
         }
         $this.CanAddToInventory  = $true
@@ -12501,7 +12502,6 @@ Class BEInfernalPlate : BEHelmet {
         $this.SellPrice          = 28500
         $this.TargetStats        = @{
             [StatId]::Defense = 240
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 220
@@ -12519,11 +12519,11 @@ Class BEWindlordHood : BEHelmet {
         $this.PurchasePrice      = 56500
         $this.SellPrice          = 28250
         $this.TargetStats        = @{
-            [StatId]::Defense = 102
+            [StatId]::Defense      = 102
             [StatId]::MagicDefense = 235
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 102
+            [StatId]::Defense      = 102
             [StatId]::MagicDefense = 118
         }
         $this.CanAddToInventory  = $true
@@ -12539,11 +12539,12 @@ Class BEImmortalPlate : BEHelmet {
         $this.PurchasePrice      = 58000
         $this.SellPrice          = 29000
         $this.TargetStats        = @{
-            [StatId]::Defense = 245
+            [StatId]::Defense      = 245
             [StatId]::MagicDefense = 115
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 225
+            [StatId]::Defense      = 225
+            [StatId]::MagicDefense = 83
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Plate armor that seems impervious to damage.'
@@ -12558,11 +12559,11 @@ Class BECosmicHood : BEHelmet {
         $this.PurchasePrice      = 58500
         $this.SellPrice          = 29250
         $this.TargetStats        = @{
-            [StatId]::Defense = 108
+            [StatId]::Defense      = 108
             [StatId]::MagicDefense = 240
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 108
+            [StatId]::Defense      = 108
             [StatId]::MagicDefense = 120
         }
         $this.CanAddToInventory  = $true
@@ -12579,7 +12580,6 @@ Class BEApocalypsePlate : BEHelmet {
         $this.SellPrice          = 29500
         $this.TargetStats        = @{
             [StatId]::Defense = 250
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 230
@@ -12597,11 +12597,11 @@ Class BEHeavenlyHood : BEHelmet {
         $this.PurchasePrice      = 59500
         $this.SellPrice          = 29750
         $this.TargetStats        = @{
-            [StatId]::Defense = 112
+            [StatId]::Defense      = 112
             [StatId]::MagicDefense = 245
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 112
+            [StatId]::Defense      = 112
             [StatId]::MagicDefense = 122
         }
         $this.CanAddToInventory  = $true
@@ -12617,11 +12617,12 @@ Class BEArchangelHelm : BEHelmet {
         $this.PurchasePrice      = 60000
         $this.SellPrice          = 30000
         $this.TargetStats        = @{
-            [StatId]::Defense = 255
+            [StatId]::Defense      = 255
             [StatId]::MagicDefense = 120
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 235
+            [StatId]::Defense      = 235
+            [StatId]::MagicDefense = 85
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm radiating the power of an archangel.'
@@ -12637,7 +12638,6 @@ Class BEWorldeaterHelm : BEHelmet {
         $this.SellPrice          = 30500
         $this.TargetStats        = @{
             [StatId]::Defense = 260
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 240
@@ -12655,11 +12655,11 @@ Class BEStarforgedCirclet : BEHelmet {
         $this.PurchasePrice      = 61500
         $this.SellPrice          = 30750
         $this.TargetStats        = @{
-            [StatId]::Defense = 118
+            [StatId]::Defense      = 118
             [StatId]::MagicDefense = 250
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 118
+            [StatId]::Defense      = 118
             [StatId]::MagicDefense = 125
         }
         $this.CanAddToInventory  = $true
@@ -12675,11 +12675,12 @@ Class BEGodkillerHelm : BEHelmet {
         $this.PurchasePrice      = 62000
         $this.SellPrice          = 31000
         $this.TargetStats        = @{
-            [StatId]::Defense = 265
+            [StatId]::Defense      = 265
             [StatId]::MagicDefense = 125
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 245
+            [StatId]::Defense      = 245
+            [StatId]::MagicDefense = 89
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A helm designed to slay gods.'
@@ -12694,11 +12695,11 @@ Class BEUniverseHood : BEHelmet {
         $this.PurchasePrice      = 62500
         $this.SellPrice          = 31250
         $this.TargetStats        = @{
-            [StatId]::Defense = 122
+            [StatId]::Defense      = 122
             [StatId]::MagicDefense = 255
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 122
+            [StatId]::Defense      = 122
             [StatId]::MagicDefense = 128
         }
         $this.CanAddToInventory  = $true
@@ -12715,7 +12716,6 @@ Class BEChaosbringerHelm : BEHelmet {
         $this.SellPrice          = 31500
         $this.TargetStats        = @{
             [StatId]::Defense = 270
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 250
@@ -12733,11 +12733,11 @@ Class BEFrostfallHelm : BEHelmet {
         $this.PurchasePrice      = 63500
         $this.SellPrice          = 31750
         $this.TargetStats        = @{
-            [StatId]::Defense = 128
+            [StatId]::Defense      = 128
             [StatId]::MagicDefense = 260
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 128
+            [StatId]::Defense      = 128
             [StatId]::MagicDefense = 130
         }
         $this.CanAddToInventory  = $true
@@ -12753,11 +12753,12 @@ Class BEThunderstrikePlate : BEHelmet {
         $this.PurchasePrice      = 64000
         $this.SellPrice          = 32000
         $this.TargetStats        = @{
-            [StatId]::Defense = 275
+            [StatId]::Defense      = 275
             [StatId]::MagicDefense = 130
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 255
+            [StatId]::Defense      = 255
+            [StatId]::MagicDefense = 95
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Plate armor that channels the power of thunder.'
@@ -12772,11 +12773,11 @@ Class BEWorldshaperHood : BEHelmet {
         $this.PurchasePrice      = 64500
         $this.SellPrice          = 32250
         $this.TargetStats        = @{
-            [StatId]::Defense = 132
+            [StatId]::Defense      = 132
             [StatId]::MagicDefense = 265
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 132
+            [StatId]::Defense      = 132
             [StatId]::MagicDefense = 132
         }
         $this.CanAddToInventory  = $true
@@ -12793,7 +12794,6 @@ Class BEAbyssalLordHelm : BEHelmet {
         $this.SellPrice          = 32500
         $this.TargetStats        = @{
             [StatId]::Defense = 280
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 260
@@ -12811,11 +12811,11 @@ Class BEStarcallerCirclet : BEHelmet {
         $this.PurchasePrice      = 65500
         $this.SellPrice          = 32750
         $this.TargetStats        = @{
-            [StatId]::Defense = 138
+            [StatId]::Defense      = 138
             [StatId]::MagicDefense = 270
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 138
+            [StatId]::Defense      = 138
             [StatId]::MagicDefense = 135
         }
         $this.CanAddToInventory  = $true
@@ -12831,11 +12831,12 @@ Class BEGodkingPlate : BEHelmet {
         $this.PurchasePrice      = 66000
         $this.SellPrice          = 33000
         $this.TargetStats        = @{
-            [StatId]::Defense = 285
+            [StatId]::Defense      = 285
             [StatId]::MagicDefense = 135
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 265
+            [StatId]::Defense      = 265
+            [StatId]::MagicDefense = 98
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Plate armor fit for a god-king.'
@@ -12850,11 +12851,11 @@ Class BECreatorHood : BEHelmet {
         $this.PurchasePrice      = 66500
         $this.SellPrice          = 33250
         $this.TargetStats        = @{
-            [StatId]::Defense = 142
+            [StatId]::Defense      = 142
             [StatId]::MagicDefense = 275
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 142
+            [StatId]::Defense      = 142
             [StatId]::MagicDefense = 138
         }
         $this.CanAddToInventory  = $true
@@ -12871,7 +12872,6 @@ Class BEVoidheartPlate : BEHelmet {
         $this.SellPrice          = 33500
         $this.TargetStats        = @{
             [StatId]::Defense = 290
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 270
@@ -12889,11 +12889,11 @@ Class BEFrostfireHelm : BEHelmet {
         $this.PurchasePrice      = 67500
         $this.SellPrice          = 33750
         $this.TargetStats        = @{
-            [StatId]::Defense = 148
+            [StatId]::Defense      = 148
             [StatId]::MagicDefense = 280
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 148
+            [StatId]::Defense      = 148
             [StatId]::MagicDefense = 140
         }
         $this.CanAddToInventory  = $true
@@ -12909,11 +12909,12 @@ Class BEThundergodPlate : BEHelmet {
         $this.PurchasePrice      = 68000
         $this.SellPrice          = 34000
         $this.TargetStats        = @{
-            [StatId]::Defense = 295
+            [StatId]::Defense      = 295
             [StatId]::MagicDefense = 140
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 275
+            [StatId]::Defense      = 275
+            [StatId]::MagicDefense = 100
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Plate armor imbued with the power of a thunder god.'
@@ -12928,11 +12929,11 @@ Class BEUniversePlate : BEHelmet {
         $this.PurchasePrice      = 68500
         $this.SellPrice          = 34250
         $this.TargetStats        = @{
-            [StatId]::Defense = 152
+            [StatId]::Defense      = 152
             [StatId]::MagicDefense = 285
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 152
+            [StatId]::Defense      = 152
             [StatId]::MagicDefense = 142
         }
         $this.CanAddToInventory  = $true
@@ -12948,11 +12949,11 @@ Class BEApocalypseHood : BEHelmet {
         $this.PurchasePrice      = 69000
         $this.SellPrice          = 34500
         $this.TargetStats        = @{
-            [StatId]::Defense = 158
+            [StatId]::Defense      = 158
             [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 158
+            [StatId]::Defense      = 158
             [StatId]::MagicDefense = 145
         }
         $this.CanAddToInventory  = $true
@@ -12968,11 +12969,12 @@ Class BEHeavenlyPlate : BEHelmet {
         $this.PurchasePrice      = 69500
         $this.SellPrice          = 34750
         $this.TargetStats        = @{
-            [StatId]::Defense = 300
+            [StatId]::Defense      = 300
             [StatId]::MagicDefense = 145
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 280
+            [StatId]::Defense      = 280
+            [StatId]::MagicDefense = 100
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Plate armor blessed by the heavens.'
@@ -12988,7 +12990,6 @@ Class BEWorldeaterPlate : BEHelmet {
         $this.SellPrice          = 35500
         $this.TargetStats        = @{
             [StatId]::Defense = 310
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 290
@@ -13006,11 +13007,11 @@ Class BEStarforgedHood : BEHelmet {
         $this.PurchasePrice      = 71500
         $this.SellPrice          = 35750
         $this.TargetStats        = @{
-            [StatId]::Defense = 162
+            [StatId]::Defense      = 162
             [StatId]::MagicDefense = 295
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 162
+            [StatId]::Defense      = 162
             [StatId]::MagicDefense = 148
         }
         $this.CanAddToInventory  = $true
@@ -13026,11 +13027,12 @@ Class BEGodkillerPlate : BEHelmet {
         $this.PurchasePrice      = 72000
         $this.SellPrice          = 36000
         $this.TargetStats        = @{
-            [StatId]::Defense = 315
+            [StatId]::Defense      = 315
             [StatId]::MagicDefense = 155
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 295
+            [StatId]::Defense      = 295
+            [StatId]::MagicDefense = 95
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Plate armor designed to slay gods.'
@@ -13045,11 +13047,11 @@ Class BEUniverseHelm : BEHelmet {
         $this.PurchasePrice      = 72500
         $this.SellPrice          = 36250
         $this.TargetStats        = @{
-            [StatId]::Defense = 168
+            [StatId]::Defense      = 168
             [StatId]::MagicDefense = 300
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 168
+            [StatId]::Defense      = 168
             [StatId]::MagicDefense = 150
         }
         $this.CanAddToInventory  = $true
@@ -13066,7 +13068,6 @@ Class BEChaosbringerPlate : BEHelmet {
         $this.SellPrice          = 36500
         $this.TargetStats        = @{
             [StatId]::Defense = 320
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 300
@@ -13084,11 +13085,11 @@ Class BEFrostfallHood : BEHelmet {
         $this.PurchasePrice      = 73500
         $this.SellPrice          = 36750
         $this.TargetStats        = @{
-            [StatId]::Defense = 172
+            [StatId]::Defense      = 172
             [StatId]::MagicDefense = 305
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 172
+            [StatId]::Defense      = 172
             [StatId]::MagicDefense = 152
         }
         $this.CanAddToInventory  = $true
@@ -13104,11 +13105,12 @@ Class BEThunderstrikeHelmII : BEHelmet {
         $this.PurchasePrice      = 74000
         $this.SellPrice          = 37000
         $this.TargetStats        = @{
-            [StatId]::Defense = 325
+            [StatId]::Defense      = 325
             [StatId]::MagicDefense = 160
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 305
+            [StatId]::Defense      = 305
+            [StatId]::MagicDefense = 110
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An improved helm that calls down lightning upon enemies.'
@@ -13123,11 +13125,11 @@ Class BEWorldshaperCircletII : BEHelmet {
         $this.PurchasePrice      = 74500
         $this.SellPrice          = 37250
         $this.TargetStats        = @{
-            [StatId]::Defense = 178
+            [StatId]::Defense      = 178
             [StatId]::MagicDefense = 310
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 178
+            [StatId]::Defense      = 178
             [StatId]::MagicDefense = 155
         }
         $this.CanAddToInventory  = $true
@@ -13144,7 +13146,6 @@ Class BEAbyssalLordPlate : BEHelmet {
         $this.SellPrice          = 37500
         $this.TargetStats        = @{
             [StatId]::Defense = 330
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 310
@@ -13162,11 +13163,11 @@ Class BEStarcallerHoodII : BEHelmet {
         $this.PurchasePrice      = 75500
         $this.SellPrice          = 37750
         $this.TargetStats        = @{
-            [StatId]::Defense = 182
+            [StatId]::Defense      = 182
             [StatId]::MagicDefense = 315
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 182
+            [StatId]::Defense      = 182
             [StatId]::MagicDefense = 158
         }
         $this.CanAddToInventory  = $true
@@ -13182,11 +13183,12 @@ Class BEGodkingHelmII : BEHelmet {
         $this.PurchasePrice      = 76000
         $this.SellPrice          = 38000
         $this.TargetStats        = @{
-            [StatId]::Defense = 335
+            [StatId]::Defense      = 335
             [StatId]::MagicDefense = 165
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 315
+            [StatId]::Defense      = 315
+            [StatId]::MagicDefense = 105
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An improved helm fit for a god-king.'
@@ -13201,11 +13203,11 @@ Class BECreatorCircletII : BEHelmet {
         $this.PurchasePrice      = 76500
         $this.SellPrice          = 38250
         $this.TargetStats        = @{
-            [StatId]::Defense = 188
+            [StatId]::Defense      = 188
             [StatId]::MagicDefense = 320
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 188
+            [StatId]::Defense      = 188
             [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
@@ -13222,7 +13224,6 @@ Class BEVoidheartHelmII : BEHelmet {
         $this.SellPrice          = 38500
         $this.TargetStats        = @{
             [StatId]::Defense = 340
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 320
@@ -13240,11 +13241,11 @@ Class BEFrostfireHoodII : BEHelmet {
         $this.PurchasePrice      = 77500
         $this.SellPrice          = 38750
         $this.TargetStats        = @{
-            [StatId]::Defense = 192
+            [StatId]::Defense      = 192
             [StatId]::MagicDefense = 325
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 192
+            [StatId]::Defense      = 192
             [StatId]::MagicDefense = 162
         }
         $this.CanAddToInventory  = $true
@@ -13260,11 +13261,12 @@ Class BEThundergodHelmII : BEHelmet {
         $this.PurchasePrice      = 78000
         $this.SellPrice          = 39000
         $this.TargetStats        = @{
-            [StatId]::Defense = 345
+            [StatId]::Defense      = 345
             [StatId]::MagicDefense = 170
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 325
+            [StatId]::Defense      = 325
+            [StatId]::MagicDefense = 105
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An improved helm imbued with the power of a thunder god.'
@@ -13279,11 +13281,11 @@ Class BEUniverseCircletII : BEHelmet {
         $this.PurchasePrice      = 78500
         $this.SellPrice          = 39250
         $this.TargetStats        = @{
-            [StatId]::Defense = 198
+            [StatId]::Defense      = 198
             [StatId]::MagicDefense = 330
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 198
+            [StatId]::Defense      = 198
             [StatId]::MagicDefense = 165
         }
         $this.CanAddToInventory  = $true
@@ -13300,7 +13302,6 @@ Class BEApocalypsePlateII : BEHelmet {
         $this.SellPrice          = 39500
         $this.TargetStats        = @{
             [StatId]::Defense = 350
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 330
@@ -13318,11 +13319,11 @@ Class BEHeavenlyHoodII : BEHelmet {
         $this.PurchasePrice      = 79500
         $this.SellPrice          = 39750
         $this.TargetStats        = @{
-            [StatId]::Defense = 202
+            [StatId]::Defense      = 202
             [StatId]::MagicDefense = 335
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 202
+            [StatId]::Defense      = 202
             [StatId]::MagicDefense = 168
         }
         $this.CanAddToInventory  = $true
@@ -13338,11 +13339,12 @@ Class BEArchangelHelmII : BEHelmet {
         $this.PurchasePrice      = 80000
         $this.SellPrice          = 40000
         $this.TargetStats        = @{
-            [StatId]::Defense = 355
+            [StatId]::Defense      = 355
             [StatId]::MagicDefense = 175
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 335
+            [StatId]::Defense      = 335
+            [StatId]::MagicDefense = 100
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An improved helm radiating the power of an archangel.'
@@ -13358,7 +13360,6 @@ Class BEWorldeaterHelmII : BEHelmet {
         $this.SellPrice          = 40500
         $this.TargetStats        = @{
             [StatId]::Defense = 360
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 340
@@ -13376,11 +13377,11 @@ Class BEStarforgedCircletII : BEHelmet {
         $this.PurchasePrice      = 81500
         $this.SellPrice          = 40750
         $this.TargetStats        = @{
-            [StatId]::Defense = 208
+            [StatId]::Defense      = 208
             [StatId]::MagicDefense = 340
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 208
+            [StatId]::Defense      = 208
             [StatId]::MagicDefense = 170
         }
         $this.CanAddToInventory  = $true
@@ -13396,11 +13397,12 @@ Class BEGodkillerHelmII : BEHelmet {
         $this.PurchasePrice      = 82000
         $this.SellPrice          = 41000
         $this.TargetStats        = @{
-            [StatId]::Defense = 365
+            [StatId]::Defense      = 365
             [StatId]::MagicDefense = 180
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 345
+            [StatId]::Defense      = 345
+            [StatId]::MagicDefense = 100
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An improved helm designed to slay gods.'
@@ -13415,11 +13417,11 @@ Class BEUniverseHoodII : BEHelmet {
         $this.PurchasePrice      = 82500
         $this.SellPrice          = 41250
         $this.TargetStats        = @{
-            [StatId]::Defense = 212
+            [StatId]::Defense      = 212
             [StatId]::MagicDefense = 345
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 212
+            [StatId]::Defense      = 212
             [StatId]::MagicDefense = 172
         }
         $this.CanAddToInventory  = $true
@@ -13436,7 +13438,6 @@ Class BEChaosbringerHelmII : BEHelmet {
         $this.SellPrice          = 41500
         $this.TargetStats        = @{
             [StatId]::Defense = 370
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 350
@@ -13454,11 +13455,11 @@ Class BEFrostfallHelmII : BEHelmet {
         $this.PurchasePrice      = 83500
         $this.SellPrice          = 41750
         $this.TargetStats        = @{
-            [StatId]::Defense = 218
+            [StatId]::Defense      = 218
             [StatId]::MagicDefense = 350
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 218
+            [StatId]::Defense      = 218
             [StatId]::MagicDefense = 175
         }
         $this.CanAddToInventory  = $true
@@ -13474,11 +13475,12 @@ Class BEThunderstrikePlateII : BEHelmet {
         $this.PurchasePrice      = 84000
         $this.SellPrice          = 42000
         $this.TargetStats        = @{
-            [StatId]::Defense = 375
+            [StatId]::Defense      = 375
             [StatId]::MagicDefense = 185
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 355
+            [StatId]::Defense      = 355
+            [StatId]::MagicDefense = 110
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Improved plate armor that channels the power of thunder.'
@@ -13493,11 +13495,11 @@ Class BEWorldshaperHoodII : BEHelmet {
         $this.PurchasePrice      = 84500
         $this.SellPrice          = 42250
         $this.TargetStats        = @{
-            [StatId]::Defense = 222
+            [StatId]::Defense      = 222
             [StatId]::MagicDefense = 355
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 222
+            [StatId]::Defense      = 222
             [StatId]::MagicDefense = 178
         }
         $this.CanAddToInventory  = $true
@@ -13514,7 +13516,6 @@ Class BEAbyssalLordHelmII : BEHelmet {
         $this.SellPrice          = 42500
         $this.TargetStats        = @{
             [StatId]::Defense = 380
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 360
@@ -13532,11 +13533,11 @@ Class BEStarcallerCircletII : BEHelmet {
         $this.PurchasePrice      = 85500
         $this.SellPrice          = 42750
         $this.TargetStats        = @{
-            [StatId]::Defense = 228
+            [StatId]::Defense      = 228
             [StatId]::MagicDefense = 360
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 228
+            [StatId]::Defense      = 228
             [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
@@ -13552,11 +13553,12 @@ Class BEGodkingPlateII : BEHelmet {
         $this.PurchasePrice      = 86000
         $this.SellPrice          = 43000
         $this.TargetStats        = @{
-            [StatId]::Defense = 385
+            [StatId]::Defense      = 385
             [StatId]::MagicDefense = 190
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 365
+            [StatId]::Defense      = 365
+            [StatId]::MagicDefense = 110
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Improved plate armor fit for a god-king.'
@@ -13571,11 +13573,11 @@ Class BECreatorHoodII : BEHelmet {
         $this.PurchasePrice      = 86500
         $this.SellPrice          = 43250
         $this.TargetStats        = @{
-            [StatId]::Defense = 232
+            [StatId]::Defense      = 232
             [StatId]::MagicDefense = 365
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 232
+            [StatId]::Defense      = 232
             [StatId]::MagicDefense = 182
         }
         $this.CanAddToInventory  = $true
@@ -13592,7 +13594,6 @@ Class BEVoidheartPlateII : BEHelmet {
         $this.SellPrice          = 43500
         $this.TargetStats        = @{
             [StatId]::Defense = 390
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 370
@@ -13610,11 +13611,11 @@ Class BEFrostfireHelmII : BEHelmet {
         $this.PurchasePrice      = 87500
         $this.SellPrice          = 43750
         $this.TargetStats        = @{
-            [StatId]::Defense = 238
+            [StatId]::Defense      = 238
             [StatId]::MagicDefense = 370
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 238
+            [StatId]::Defense      = 238
             [StatId]::MagicDefense = 185
         }
         $this.CanAddToInventory  = $true
@@ -13630,11 +13631,12 @@ Class BEThundergodPlateII : BEHelmet {
         $this.PurchasePrice      = 88000
         $this.SellPrice          = 44000
         $this.TargetStats        = @{
-            [StatId]::Defense = 395
+            [StatId]::Defense      = 395
             [StatId]::MagicDefense = 195
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 375
+            [StatId]::Defense      = 375
+            [StatId]::MagicDefense = 130
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Improved plate armor imbued with the power of a thunder god.'
@@ -13649,11 +13651,11 @@ Class BEUniverseCircletIII : BEHelmet {
         $this.PurchasePrice      = 88500
         $this.SellPrice          = 44250
         $this.TargetStats        = @{
-            [StatId]::Defense = 242
+            [StatId]::Defense      = 242
             [StatId]::MagicDefense = 375
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 242
+            [StatId]::Defense      = 242
             [StatId]::MagicDefense = 188
         }
         $this.CanAddToInventory  = $true
@@ -13669,11 +13671,11 @@ Class BEApocalypseHoodII : BEHelmet {
         $this.PurchasePrice      = 89000
         $this.SellPrice          = 44500
         $this.TargetStats        = @{
-            [StatId]::Defense = 248
+            [StatId]::Defense      = 248
             [StatId]::MagicDefense = 380
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 248
+            [StatId]::Defense      = 248
             [StatId]::MagicDefense = 190
         }
         $this.CanAddToInventory  = $true
@@ -13689,11 +13691,12 @@ Class BEHeavenlyPlateII : BEHelmet {
         $this.PurchasePrice      = 89500
         $this.SellPrice          = 44750
         $this.TargetStats        = @{
-            [StatId]::Defense = 400
+            [StatId]::Defense      = 400
             [StatId]::MagicDefense = 200
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 380
+            [StatId]::Defense      = 380
+            [StatId]::MagicDefense = 100
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Improved plate armor blessed by the heavens.'
@@ -13708,11 +13711,12 @@ Class BEArchangelHelmIII : BEHelmet {
         $this.PurchasePrice      = 90000
         $this.SellPrice          = 45000
         $this.TargetStats        = @{
-            [StatId]::Defense = 405
+            [StatId]::Defense      = 405
             [StatId]::MagicDefense = 205
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 385
+            [StatId]::Defense      = 385
+            [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A greatly improved helm radiating the power of an archangel.'
@@ -13728,7 +13732,6 @@ Class BEWorldeaterHelmIII : BEHelmet {
         $this.SellPrice          = 45500
         $this.TargetStats        = @{
             [StatId]::Defense = 410
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 390
@@ -13746,11 +13749,11 @@ Class BEStarforgedCircletIII : BEHelmet {
         $this.PurchasePrice      = 91500
         $this.SellPrice          = 45750
         $this.TargetStats        = @{
-            [StatId]::Defense = 258
+            [StatId]::Defense      = 258
             [StatId]::MagicDefense = 385
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 258
+            [StatId]::Defense      = 258
             [StatId]::MagicDefense = 192
         }
         $this.CanAddToInventory  = $true
@@ -13766,11 +13769,12 @@ Class BEGodkillerHelmIII : BEHelmet {
         $this.PurchasePrice      = 92000
         $this.SellPrice          = 46000
         $this.TargetStats        = @{
-            [StatId]::Defense = 415
+            [StatId]::Defense      = 415
             [StatId]::MagicDefense = 210
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 395
+            [StatId]::Defense      = 395
+            [StatId]::MagicDefense = 150
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'A greatly improved helm designed to slay gods.'
@@ -13785,11 +13789,11 @@ Class BEUniverseHoodIII : BEHelmet {
         $this.PurchasePrice      = 92500
         $this.SellPrice          = 46250
         $this.TargetStats        = @{
-            [StatId]::Defense = 262
+            [StatId]::Defense      = 262
             [StatId]::MagicDefense = 390
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 262
+            [StatId]::Defense      = 262
             [StatId]::MagicDefense = 195
         }
         $this.CanAddToInventory  = $true
@@ -13806,7 +13810,6 @@ Class BEChaosbringerHelmIII : BEHelmet {
         $this.SellPrice          = 46500
         $this.TargetStats        = @{
             [StatId]::Defense = 420
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 400
@@ -13824,11 +13827,11 @@ Class BEFrostfallHelmIII : BEHelmet {
         $this.PurchasePrice      = 93500
         $this.SellPrice          = 46750
         $this.TargetStats        = @{
-            [StatId]::Defense = 268
+            [StatId]::Defense      = 268
             [StatId]::MagicDefense = 395
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 268
+            [StatId]::Defense      = 268
             [StatId]::MagicDefense = 198
         }
         $this.CanAddToInventory  = $true
@@ -13844,11 +13847,12 @@ Class BEThunderstrikePlateIII : BEHelmet {
         $this.PurchasePrice      = 94000
         $this.SellPrice          = 47000
         $this.TargetStats        = @{
-            [StatId]::Defense = 425
+            [StatId]::Defense      = 425
             [StatId]::MagicDefense = 215
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 405
+            [StatId]::Defense      = 405
+            [StatId]::MagicDefense = 150
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor that channels the power of thunder.'
@@ -13863,11 +13867,11 @@ Class BEWorldshaperHoodIII : BEHelmet {
         $this.PurchasePrice      = 94500
         $this.SellPrice          = 47250
         $this.TargetStats        = @{
-            [StatId]::Defense = 272
+            [StatId]::Defense      = 272
             [StatId]::MagicDefense = 400
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 272
+            [StatId]::Defense      = 272
             [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
@@ -13884,7 +13888,6 @@ Class BEAbyssalLordHelmIII : BEHelmet {
         $this.SellPrice          = 47500
         $this.TargetStats        = @{
             [StatId]::Defense = 430
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 410
@@ -13902,11 +13905,11 @@ Class BEStarcallerCircletIII : BEHelmet {
         $this.PurchasePrice      = 95500
         $this.SellPrice          = 47750
         $this.TargetStats        = @{
-            [StatId]::Defense = 278
+            [StatId]::Defense      = 278
             [StatId]::MagicDefense = 405
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 278
+            [StatId]::Defense      = 278
             [StatId]::MagicDefense = 202
         }
         $this.CanAddToInventory  = $true
@@ -13922,11 +13925,12 @@ Class BEGodkingPlateIII : BEHelmet {
         $this.PurchasePrice      = 96000
         $this.SellPrice          = 48000
         $this.TargetStats        = @{
-            [StatId]::Defense = 435
+            [StatId]::Defense      = 435
             [StatId]::MagicDefense = 220
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 415
+            [StatId]::Defense      = 415
+            [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor fit for a god-king.'
@@ -13941,11 +13945,11 @@ Class BECreatorHoodIII : BEHelmet {
         $this.PurchasePrice      = 96500
         $this.SellPrice          = 48250
         $this.TargetStats        = @{
-            [StatId]::Defense = 282
+            [StatId]::Defense      = 282
             [StatId]::MagicDefense = 410
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 282
+            [StatId]::Defense      = 282
             [StatId]::MagicDefense = 205
         }
         $this.CanAddToInventory  = $true
@@ -13962,7 +13966,6 @@ Class BEVoidheartPlateIII : BEHelmet {
         $this.SellPrice          = 48500
         $this.TargetStats        = @{
             [StatId]::Defense = 440
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 420
@@ -13980,11 +13983,11 @@ Class BEFrostfireHelmIII : BEHelmet {
         $this.PurchasePrice      = 97500
         $this.SellPrice          = 48750
         $this.TargetStats        = @{
-            [StatId]::Defense = 288
+            [StatId]::Defense      = 288
             [StatId]::MagicDefense = 415
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 288
+            [StatId]::Defense      = 288
             [StatId]::MagicDefense = 208
         }
         $this.CanAddToInventory  = $true
@@ -14000,11 +14003,12 @@ Class BEThundergodPlateIII : BEHelmet {
         $this.PurchasePrice      = 98000
         $this.SellPrice          = 49000
         $this.TargetStats        = @{
-            [StatId]::Defense = 445
+            [StatId]::Defense      = 445
             [StatId]::MagicDefense = 225
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 425
+            [StatId]::Defense      = 425
+            [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
@@ -14019,11 +14023,11 @@ Class BEUniverseCircletIV : BEHelmet {
         $this.PurchasePrice      = 98500
         $this.SellPrice          = 49250
         $this.TargetStats        = @{
-            [StatId]::Defense = 292
+            [StatId]::Defense      = 292
             [StatId]::MagicDefense = 420
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 292
+            [StatId]::Defense      = 292
             [StatId]::MagicDefense = 210
         }
         $this.CanAddToInventory  = $true
@@ -14039,11 +14043,11 @@ Class BEApocalypseHoodIII : BEHelmet {
         $this.PurchasePrice      = 99000
         $this.SellPrice          = 49500
         $this.TargetStats        = @{
-            [StatId]::Defense = 298
+            [StatId]::Defense      = 298
             [StatId]::MagicDefense = 425
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 298
+            [StatId]::Defense      = 298
             [StatId]::MagicDefense = 212
         }
         $this.CanAddToInventory  = $true
@@ -14059,11 +14063,12 @@ Class BEHeavenlyPlateIII : BEHelmet {
         $this.PurchasePrice      = 99500
         $this.SellPrice          = 49750
         $this.TargetStats        = @{
-            [StatId]::Defense = 450
+            [StatId]::Defense      = 450
             [StatId]::MagicDefense = 230
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 430
+            [StatId]::Defense      = 430
+            [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
@@ -14078,11 +14083,12 @@ Class BEArchangelHelmIV : BEHelmet {
         $this.PurchasePrice      = 100000
         $this.SellPrice          = 50000
         $this.TargetStats        = @{
-            [StatId]::Defense = 455
+            [StatId]::Defense      = 455
             [StatId]::MagicDefense = 235
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 435
+            [StatId]::Defense      = 435
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
@@ -14098,7 +14104,6 @@ Class BEWorldeaterHelmIV : BEHelmet {
         $this.SellPrice          = 50500
         $this.TargetStats        = @{
             [StatId]::Defense = 460
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 440
@@ -14116,11 +14121,11 @@ Class BEStarforgedCircletIV : BEHelmet {
         $this.PurchasePrice      = 101500
         $this.SellPrice          = 50750
         $this.TargetStats        = @{
-            [StatId]::Defense = 308
+            [StatId]::Defense      = 308
             [StatId]::MagicDefense = 430
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 308
+            [StatId]::Defense      = 308
             [StatId]::MagicDefense = 215
         }
         $this.CanAddToInventory  = $true
@@ -14136,11 +14141,12 @@ Class BEGodkillerHelmIV : BEHelmet {
         $this.PurchasePrice      = 102000
         $this.SellPrice          = 51000
         $this.TargetStats        = @{
-            [StatId]::Defense = 465
+            [StatId]::Defense      = 465
             [StatId]::MagicDefense = 240
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 445
+            [StatId]::Defense      = 445
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
@@ -14155,11 +14161,11 @@ Class BEUniverseHoodIV : BEHelmet {
         $this.PurchasePrice      = 102500
         $this.SellPrice          = 51250
         $this.TargetStats        = @{
-            [StatId]::Defense = 312
+            [StatId]::Defense      = 312
             [StatId]::MagicDefense = 435
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 312
+            [StatId]::Defense      = 312
             [StatId]::MagicDefense = 218
         }
         $this.CanAddToInventory  = $true
@@ -14176,7 +14182,6 @@ Class BEChaosbringerHelmIV : BEHelmet {
         $this.SellPrice          = 51500
         $this.TargetStats        = @{
             [StatId]::Defense = 470
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 450
@@ -14194,11 +14199,11 @@ Class BEFrostfallHelmIV : BEHelmet {
         $this.PurchasePrice      = 103500
         $this.SellPrice          = 51750
         $this.TargetStats        = @{
-            [StatId]::Defense = 318
+            [StatId]::Defense      = 318
             [StatId]::MagicDefense = 440
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 318
+            [StatId]::Defense      = 318
             [StatId]::MagicDefense = 220
         }
         $this.CanAddToInventory  = $true
@@ -14214,11 +14219,12 @@ Class BEThunderstrikePlateIV : BEHelmet {
         $this.PurchasePrice      = 104000
         $this.SellPrice          = 52000
         $this.TargetStats        = @{
-            [StatId]::Defense = 475
+            [StatId]::Defense      = 475
             [StatId]::MagicDefense = 245
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 455
+            [StatId]::Defense      = 455
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
@@ -14233,11 +14239,11 @@ Class BEWorldshaperHoodIV : BEHelmet {
         $this.PurchasePrice      = 104500
         $this.SellPrice          = 52250
         $this.TargetStats        = @{
-            [StatId]::Defense = 322
+            [StatId]::Defense      = 322
             [StatId]::MagicDefense = 445
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 322
+            [StatId]::Defense      = 322
             [StatId]::MagicDefense = 222
         }
         $this.CanAddToInventory  = $true
@@ -14254,7 +14260,6 @@ Class BEAbyssalLordHelmIV : BEHelmet {
         $this.SellPrice          = 52500
         $this.TargetStats        = @{
             [StatId]::Defense = 480
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 460
@@ -14272,11 +14277,11 @@ Class BEStarcallerCircletIV : BEHelmet {
         $this.PurchasePrice      = 105500
         $this.SellPrice          = 52750
         $this.TargetStats        = @{
-            [StatId]::Defense = 328
+            [StatId]::Defense      = 328
             [StatId]::MagicDefense = 450
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 328
+            [StatId]::Defense      = 328
             [StatId]::MagicDefense = 225
         }
         $this.CanAddToInventory  = $true
@@ -14292,11 +14297,12 @@ Class BEGodkingPlateIV : BEHelmet {
         $this.PurchasePrice      = 106000
         $this.SellPrice          = 53000
         $this.TargetStats        = @{
-            [StatId]::Defense = 485
+            [StatId]::Defense      = 485
             [StatId]::MagicDefense = 250
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 465
+            [StatId]::Defense      = 465
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
@@ -14311,11 +14317,11 @@ Class BECreatorHoodIV : BEHelmet {
         $this.PurchasePrice      = 106500
         $this.SellPrice          = 53250
         $this.TargetStats        = @{
-            [StatId]::Defense = 332
+            [StatId]::Defense      = 332
             [StatId]::MagicDefense = 455
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 332
+            [StatId]::Defense      = 332
             [StatId]::MagicDefense = 228
         }
         $this.CanAddToInventory  = $true
@@ -14331,11 +14337,11 @@ Class BEFrostfireHelmIV : BEHelmet {
         $this.PurchasePrice      = 107500
         $this.SellPrice          = 53750
         $this.TargetStats        = @{
-            [StatId]::Defense = 338
+            [StatId]::Defense      = 338
             [StatId]::MagicDefense = 460
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 338
+            [StatId]::Defense      = 338
             [StatId]::MagicDefense = 230
         }
         $this.CanAddToInventory  = $true
@@ -14351,11 +14357,11 @@ Class BEUniverseCircletV : BEHelmet {
         $this.PurchasePrice      = 108500
         $this.SellPrice          = 54250
         $this.TargetStats        = @{
-            [StatId]::Defense = 342
+            [StatId]::Defense      = 342
             [StatId]::MagicDefense = 465
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 342
+            [StatId]::Defense      = 342
             [StatId]::MagicDefense = 232
         }
         $this.CanAddToInventory  = $true
@@ -14371,11 +14377,11 @@ Class BEApocalypseHoodIV : BEHelmet {
         $this.PurchasePrice      = 109000
         $this.SellPrice          = 54500
         $this.TargetStats        = @{
-            [StatId]::Defense = 348
+            [StatId]::Defense      = 348
             [StatId]::MagicDefense = 470
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 348
+            [StatId]::Defense      = 348
             [StatId]::MagicDefense = 235
         }
         $this.CanAddToInventory  = $true
@@ -14392,7 +14398,6 @@ Class BEVoidheartPlateIV : BEHelmet {
         $this.SellPrice          = 58500
         $this.TargetStats        = @{
             [StatId]::Defense = 540
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 520
@@ -14403,18 +14408,18 @@ Class BEVoidheartPlateIV : BEHelmet {
     }
 }
 
-Class BEFrostfireHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEFrostfireHelmIV_Alt : BEHelmet {
     BEFrostfireHelmIV_Alt() : base() {
         $this.Name               = 'Frostfire Helm IV'
         $this.MapObjName         = 'frostfirehelm iv alt'
         $this.PurchasePrice      = 117500
         $this.SellPrice          = 58750
         $this.TargetStats        = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 505
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 255
         }
         $this.CanAddToInventory  = $true
@@ -14430,11 +14435,12 @@ Class BEThundergodPlateIV : BEHelmet {
         $this.PurchasePrice      = 118000
         $this.SellPrice          = 59000
         $this.TargetStats        = @{
-            [StatId]::Defense = 545
+            [StatId]::Defense      = 545
             [StatId]::MagicDefense = 285
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 525
+            [StatId]::Defense      = 525
+            [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
@@ -14449,11 +14455,11 @@ Class BEUniverseCircletVI : BEHelmet {
         $this.PurchasePrice      = 118500
         $this.SellPrice          = 59250
         $this.TargetStats        = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 510
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 258
         }
         $this.CanAddToInventory  = $true
@@ -14469,11 +14475,11 @@ Class BEApocalypseHoodV : BEHelmet {
         $this.PurchasePrice      = 119000
         $this.SellPrice          = 59500
         $this.TargetStats        = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 515
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 260
         }
         $this.CanAddToInventory  = $true
@@ -14489,11 +14495,12 @@ Class BEHeavenlyPlateIV : BEHelmet {
         $this.PurchasePrice      = 119500
         $this.SellPrice          = 59750
         $this.TargetStats        = @{
-            [StatId]::Defense = 550
+            [StatId]::Defense      = 550
             [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 530
+            [StatId]::Defense      = 530
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
@@ -14501,18 +14508,19 @@ Class BEHeavenlyPlateIV : BEHelmet {
     }
 }
 
-Class BEArchangelHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEArchangelHelmIV_Alt : BEHelmet {
     BEArchangelHelmIV_Alt() : base() {
         $this.Name               = 'Archangel Helm IV'
         $this.MapObjName         = 'archangelhelm iv alt'
         $this.PurchasePrice      = 120000
         $this.SellPrice          = 60000
         $this.TargetStats        = @{
-            [StatId]::Defense = 555
+            [StatId]::Defense      = 555
             [StatId]::MagicDefense = 295
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 535
+            [StatId]::Defense      = 535
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
@@ -14520,7 +14528,7 @@ Class BEArchangelHelmIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEWorldeaterHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEWorldeaterHelmIV_Alt : BEHelmet {
     BEWorldeaterHelmIV_Alt() : base() {
         $this.Name               = 'Worldeater Helm IV'
         $this.MapObjName         = 'worldeaterhelm iv alt'
@@ -14528,7 +14536,6 @@ Class BEWorldeaterHelmIV_Alt : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 60500
         $this.TargetStats        = @{
             [StatId]::Defense = 560
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 540
@@ -14539,18 +14546,18 @@ Class BEWorldeaterHelmIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEStarforgedCircletIV_Alt : BEHelmet { # Name clash, renaming
+Class BEStarforgedCircletIV_Alt : BEHelmet {
     BEStarforgedCircletIV_Alt() : base() {
         $this.Name               = 'Starforged Circlet IV'
         $this.MapObjName         = 'starforgedcirclet iv alt'
         $this.PurchasePrice      = 121500
         $this.SellPrice          = 60750
         $this.TargetStats        = @{
-            [StatId]::Defense = 368
+            [StatId]::Defense      = 368
             [StatId]::MagicDefense = 490
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 368
+            [StatId]::Defense      = 368
             [StatId]::MagicDefense = 245
         }
         $this.CanAddToInventory  = $true
@@ -14559,18 +14566,19 @@ Class BEStarforgedCircletIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEGodkillerHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEGodkillerHelmIV_Alt : BEHelmet {
     BEGodkillerHelmIV_Alt() : base() {
         $this.Name               = 'Godkiller Helm IV'
         $this.MapObjName         = 'godkillerhelm iv alt'
         $this.PurchasePrice      = 122000
         $this.SellPrice          = 61000
         $this.TargetStats        = @{
-            [StatId]::Defense = 565
+            [StatId]::Defense      = 565
             [StatId]::MagicDefense = 280
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 545
+            [StatId]::Defense      = 545
+            [StatId]::MagicDefense = 150
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
@@ -14578,18 +14586,18 @@ Class BEGodkillerHelmIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEUniverseHoodIV_Alt : BEHelmet { # Name clash, renaming
+Class BEUniverseHoodIV_Alt : BEHelmet {
     BEUniverseHoodIV_Alt() : base() {
         $this.Name               = 'Universe Hood IV'
         $this.MapObjName         = 'universehood iv alt'
         $this.PurchasePrice      = 122500
         $this.SellPrice          = 61250
         $this.TargetStats        = @{
-            [StatId]::Defense = 372
+            [StatId]::Defense      = 372
             [StatId]::MagicDefense = 495
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 372
+            [StatId]::Defense      = 372
             [StatId]::MagicDefense = 248
         }
         $this.CanAddToInventory  = $true
@@ -14598,7 +14606,7 @@ Class BEUniverseHoodIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEChaosbringerHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEChaosbringerHelmIV_Alt : BEHelmet {
     BEChaosbringerHelmIV_Alt() : base() {
         $this.Name               = 'Chaosbringer Helm IV'
         $this.MapObjName         = 'chaosbringerhelm iv alt'
@@ -14606,7 +14614,6 @@ Class BEChaosbringerHelmIV_Alt : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 61500
         $this.TargetStats        = @{
             [StatId]::Defense = 570
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 550
@@ -14617,18 +14624,18 @@ Class BEChaosbringerHelmIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEFrostfallHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEFrostfallHelmIV_Alt : BEHelmet {
     BEFrostfallHelmIV_Alt() : base() {
         $this.Name               = 'Frostfall Helm IV'
         $this.MapObjName         = 'frostfallhelm iv alt'
         $this.PurchasePrice      = 123500
         $this.SellPrice          = 61750
         $this.TargetStats        = @{
-            [StatId]::Defense = 378
+            [StatId]::Defense      = 378
             [StatId]::MagicDefense = 500
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 378
+            [StatId]::Defense      = 378
             [StatId]::MagicDefense = 250
         }
         $this.CanAddToInventory  = $true
@@ -14637,18 +14644,19 @@ Class BEFrostfallHelmIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEThunderstrikePlateIV_Alt : BEHelmet { # Name clash, renaming
+Class BEThunderstrikePlateIV_Alt : BEHelmet {
     BEThunderstrikePlateIV_Alt() : base() {
         $this.Name               = 'Thunderstrike Plate IV'
         $this.MapObjName         = 'thunderstrikeplate iv alt'
         $this.PurchasePrice      = 124000
         $this.SellPrice          = 62000
         $this.TargetStats        = @{
-            [StatId]::Defense = 575
+            [StatId]::Defense      = 575
             [StatId]::MagicDefense = 285
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 555
+            [StatId]::Defense      = 555
+            [StatId]::MagicDefense = 190
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
@@ -14656,18 +14664,18 @@ Class BEThunderstrikePlateIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEWorldshaperHoodIV_Alt : BEHelmet { # Name clash, renaming
+Class BEWorldshaperHoodIV_Alt : BEHelmet {
     BEWorldshaperHoodIV_Alt() : base() {
         $this.Name               = 'Worldshaper Hood IV'
         $this.MapObjName         = 'worldshaperhood iv alt'
         $this.PurchasePrice      = 124500
         $this.SellPrice          = 62250
         $this.TargetStats        = @{
-            [StatId]::Defense = 382
+            [StatId]::Defense      = 382
             [StatId]::MagicDefense = 505
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 382
+            [StatId]::Defense      = 382
             [StatId]::MagicDefense = 252
         }
         $this.CanAddToInventory  = $true
@@ -14676,7 +14684,7 @@ Class BEWorldshaperHoodIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEAbyssalLordHelmIV_Alt : BEHelmet { # Name clash, renaming
+Class BEAbyssalLordHelmIV_Alt : BEHelmet {
     BEAbyssalLordHelmIV_Alt() : base() {
         $this.Name               = 'Abyssal Lord Helm IV'
         $this.MapObjName         = 'abyssallordhelm iv alt'
@@ -14684,7 +14692,6 @@ Class BEAbyssalLordHelmIV_Alt : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 62500
         $this.TargetStats        = @{
             [StatId]::Defense = 580
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 560
@@ -14695,18 +14702,18 @@ Class BEAbyssalLordHelmIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEStarcallerCircletIV_Alt : BEHelmet { # Name clash, renaming
+Class BEStarcallerCircletIV_Alt : BEHelmet {
     BEStarcallerCircletIV_Alt() : base() {
         $this.Name               = 'Starcaller Circlet IV'
         $this.MapObjName         = 'starcallercirclet iv alt'
         $this.PurchasePrice      = 125500
         $this.SellPrice          = 62750
         $this.TargetStats        = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 510
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 255
         }
         $this.CanAddToInventory  = $true
@@ -14715,7 +14722,7 @@ Class BEStarcallerCircletIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEGodkingPlateIV_Alt : BEHelmet { # Name clash, renaming
+Class BEGodkingPlateIV_Alt : BEHelmet {
     BEGodkingPlateIV_Alt() : base() {
         $this.Name               = 'Godking Plate IV'
         $this.MapObjName         = 'godkingplate iv alt'
@@ -14723,7 +14730,6 @@ Class BEGodkingPlateIV_Alt : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 63000
         $this.TargetStats        = @{
             [StatId]::Defense = 585
-            [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 565
@@ -14734,18 +14740,18 @@ Class BEGodkingPlateIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BECreatorHoodIV_Alt : BEHelmet { # Name clash, renaming
+Class BECreatorHoodIV_Alt : BEHelmet {
     BECreatorHoodIV_Alt() : base() {
         $this.Name               = 'Creator Hood IV'
         $this.MapObjName         = 'creatorhood iv alt'
         $this.PurchasePrice      = 126500
         $this.SellPrice          = 63250
         $this.TargetStats        = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 515
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 258
         }
         $this.CanAddToInventory  = $true
@@ -14754,7 +14760,7 @@ Class BECreatorHoodIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEVoidheartPlateIV_Alt : BEHelmet { # Name clash, renaming
+Class BEVoidheartPlateIV_Alt : BEHelmet {
     BEVoidheartPlateIV_Alt() : base() {
         $this.Name               = 'Voidheart Plate IV'
         $this.MapObjName         = 'voidheartplate iv alt'
@@ -14762,7 +14768,6 @@ Class BEVoidheartPlateIV_Alt : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 63500
         $this.TargetStats        = @{
             [StatId]::Defense = 590
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 570
@@ -14773,18 +14778,18 @@ Class BEVoidheartPlateIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEFrostfireHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEFrostfireHelmIV_Alt2 : BEHelmet {
     BEFrostfireHelmIV_Alt2() : base() {
         $this.Name               = 'Frostfire Helm IV'
         $this.MapObjName         = 'frostfirehelm iv alt2'
         $this.PurchasePrice      = 127500
         $this.SellPrice          = 63750
         $this.TargetStats        = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 520
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 260
         }
         $this.CanAddToInventory  = $true
@@ -14793,18 +14798,19 @@ Class BEFrostfireHelmIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEThundergodPlateIV_Alt : BEHelmet { # Name clash, renaming
+Class BEThundergodPlateIV_Alt : BEHelmet {
     BEThundergodPlateIV_Alt() : base() {
         $this.Name               = 'Thundergod Plate IV'
         $this.MapObjName         = 'thundergodplate iv alt'
         $this.PurchasePrice      = 128000
         $this.SellPrice          = 64000
         $this.TargetStats        = @{
-            [StatId]::Defense = 595
+            [StatId]::Defense      = 595
             [StatId]::MagicDefense = 300
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 575
+            [StatId]::Defense      = 575
+            [StatId]::MagicDefense = 175
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
@@ -14812,18 +14818,18 @@ Class BEThundergodPlateIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEUniverseCircletV_Alt : BEHelmet { # Name clash, renaming
+Class BEUniverseCircletV_Alt : BEHelmet {
     BEUniverseCircletV_Alt() : base() {
         $this.Name               = 'Universe Circlet V'
         $this.MapObjName         = 'universecirclet v alt'
         $this.PurchasePrice      = 128500
         $this.SellPrice          = 64250
         $this.TargetStats        = @{
-            [StatId]::Defense = 402
+            [StatId]::Defense      = 402
             [StatId]::MagicDefense = 525
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 402
+            [StatId]::Defense      = 402
             [StatId]::MagicDefense = 262
         }
         $this.CanAddToInventory  = $true
@@ -14832,18 +14838,18 @@ Class BEUniverseCircletV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEApocalypseHoodV_Alt : BEHelmet { # Name clash, renaming
+Class BEApocalypseHoodV_Alt : BEHelmet {
     BEApocalypseHoodV_Alt() : base() {
         $this.Name               = 'Apocalypse Hood V'
         $this.MapObjName         = 'apocalypsehood v alt'
         $this.PurchasePrice      = 129000
         $this.SellPrice          = 64500
         $this.TargetStats        = @{
-            [StatId]::Defense = 408
+            [StatId]::Defense      = 408
             [StatId]::MagicDefense = 530
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 408
+            [StatId]::Defense      = 408
             [StatId]::MagicDefense = 265
         }
         $this.CanAddToInventory  = $true
@@ -14852,18 +14858,19 @@ Class BEApocalypseHoodV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEHeavenlyPlateIV_Alt : BEHelmet { # Name clash, renaming
+Class BEHeavenlyPlateIV_Alt : BEHelmet {
     BEHeavenlyPlateIV_Alt() : base() {
         $this.Name               = 'Heavenly Plate IV'
         $this.MapObjName         = 'heavenlyplate iv alt'
         $this.PurchasePrice      = 129500
         $this.SellPrice          = 64750
         $this.TargetStats        = @{
-            [StatId]::Defense = 550
+            [StatId]::Defense      = 550
             [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 530
+            [StatId]::Defense     = 530
+            [StatId]::MagicDefese = 185
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
@@ -14871,18 +14878,19 @@ Class BEHeavenlyPlateIV_Alt : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEArchangelHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEArchangelHelmIV_Alt2 : BEHelmet {
     BEArchangelHelmIV_Alt2() : base() {
         $this.Name               = 'Archangel Helm IV'
         $this.MapObjName         = 'archangelhelm iv alt2'
         $this.PurchasePrice      = 130000
         $this.SellPrice          = 65000
         $this.TargetStats        = @{
-            [StatId]::Defense = 555
+            [StatId]::Defense      = 555
             [StatId]::MagicDefense = 295
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 535
+            [StatId]::Defense      = 535
+            [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
@@ -14890,7 +14898,7 @@ Class BEArchangelHelmIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEWorldeaterHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEWorldeaterHelmIV_Alt2 : BEHelmet {
     BEWorldeaterHelmIV_Alt2() : base() {
         $this.Name               = 'Worldeater Helm IV'
         $this.MapObjName         = 'worldeaterhelm iv alt2'
@@ -14898,7 +14906,6 @@ Class BEWorldeaterHelmIV_Alt2 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 65500
         $this.TargetStats        = @{
             [StatId]::Defense = 560
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 540
@@ -14909,18 +14916,18 @@ Class BEWorldeaterHelmIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEStarforgedCircletIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEStarforgedCircletIV_Alt2 : BEHelmet {
     BEStarforgedCircletIV_Alt2() : base() {
         $this.Name               = 'Starforged Circlet IV'
         $this.MapObjName         = 'starforgedcirclet iv alt2'
         $this.PurchasePrice      = 131500
         $this.SellPrice          = 65750
         $this.TargetStats        = @{
-            [StatId]::Defense = 368
+            [StatId]::Defense      = 368
             [StatId]::MagicDefense = 490
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 368
+            [StatId]::Defense      = 368
             [StatId]::MagicDefense = 245
         }
         $this.CanAddToInventory  = $true
@@ -14929,18 +14936,19 @@ Class BEStarforgedCircletIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEGodkillerHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEGodkillerHelmIV_Alt2 : BEHelmet {
     BEGodkillerHelmIV_Alt2() : base() {
         $this.Name               = 'Godkiller Helm IV'
         $this.MapObjName         = 'godkillerhelm iv alt2'
         $this.PurchasePrice      = 132000
         $this.SellPrice          = 66000
         $this.TargetStats        = @{
-            [StatId]::Defense = 565
+            [StatId]::Defense      = 565
             [StatId]::MagicDefense = 280
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 545
+            [StatId]::Defense      = 545
+            [StatId]::MagicDefense = 170
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
@@ -14948,18 +14956,18 @@ Class BEGodkillerHelmIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEUniverseHoodIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEUniverseHoodIV_Alt2 : BEHelmet {
     BEUniverseHoodIV_Alt2() : base() {
         $this.Name               = 'Universe Hood IV'
         $this.MapObjName         = 'universehood iv alt2'
         $this.PurchasePrice      = 132500
         $this.SellPrice          = 66250
         $this.TargetStats        = @{
-            [StatId]::Defense = 372
+            [StatId]::Defense      = 372
             [StatId]::MagicDefense = 495
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 372
+            [StatId]::Defense      = 372
             [StatId]::MagicDefense = 248
         }
         $this.CanAddToInventory  = $true
@@ -14976,7 +14984,6 @@ Class BEChaosbringerHelmIV_Alt2 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 66500
         $this.TargetStats        = @{
             [StatId]::Defense = 570
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 550
@@ -14994,11 +15001,11 @@ Class BEFrostfallHelmIV_Alt3 : BEHelmet { # Name clash, renaming
         $this.PurchasePrice      = 133500
         $this.SellPrice          = 66750
         $this.TargetStats        = @{
-            [StatId]::Defense = 378
+            [StatId]::Defense      = 378
             [StatId]::MagicDefense = 500
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 378
+            [StatId]::Defense      = 378
             [StatId]::MagicDefense = 250
         }
         $this.CanAddToInventory  = $true
@@ -15007,18 +15014,19 @@ Class BEFrostfallHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEThunderstrikePlateIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEThunderstrikePlateIV_Alt2 : BEHelmet {
     BEThunderstrikePlateIV_Alt2() : base() {
         $this.Name               = 'Thunderstrike Plate IV'
         $this.MapObjName         = 'thunderstrikeplate iv alt2'
         $this.PurchasePrice      = 134000
         $this.SellPrice          = 67000
         $this.TargetStats        = @{
-            [StatId]::Defense = 575
+            [StatId]::Defense      = 575
             [StatId]::MagicDefense = 285
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 555
+            [StatId]::Defense      = 555
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
@@ -15026,18 +15034,18 @@ Class BEThunderstrikePlateIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEWorldshaperHoodIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEWorldshaperHoodIV_Alt2 : BEHelmet {
     BEWorldshaperHoodIV_Alt2() : base() {
         $this.Name               = 'Worldshaper Hood IV'
         $this.MapObjName         = 'worldshaperhood iv alt2'
         $this.PurchasePrice      = 134500
         $this.SellPrice          = 67250
         $this.TargetStats        = @{
-            [StatId]::Defense = 382
+            [StatId]::Defense      = 382
             [StatId]::MagicDefense = 505
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 382
+            [StatId]::Defense      = 382
             [StatId]::MagicDefense = 252
         }
         $this.CanAddToInventory  = $true
@@ -15046,7 +15054,7 @@ Class BEWorldshaperHoodIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEAbyssalLordHelmIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEAbyssalLordHelmIV_Alt2 : BEHelmet {
     BEAbyssalLordHelmIV_Alt2() : base() {
         $this.Name               = 'Abyssal Lord Helm IV'
         $this.MapObjName         = 'abyssallordhelm iv alt2'
@@ -15054,7 +15062,6 @@ Class BEAbyssalLordHelmIV_Alt2 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 67500
         $this.TargetStats        = @{
             [StatId]::Defense = 580
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 560
@@ -15065,18 +15072,18 @@ Class BEAbyssalLordHelmIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEStarcallerCircletIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEStarcallerCircletIV_Alt2 : BEHelmet {
     BEStarcallerCircletIV_Alt2() : base() {
         $this.Name               = 'Starcaller Circlet IV'
         $this.MapObjName         = 'starcallercirclet iv alt2'
         $this.PurchasePrice      = 135500
         $this.SellPrice          = 67750
         $this.TargetStats        = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 510
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 255
         }
         $this.CanAddToInventory  = $true
@@ -15085,18 +15092,19 @@ Class BEStarcallerCircletIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEGodkingPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEGodkingPlateIV_Alt2 : BEHelmet {
     BEGodkingPlateIV_Alt2() : base() {
         $this.Name               = 'Godking Plate IV'
         $this.MapObjName         = 'godkingplate iv alt2'
         $this.PurchasePrice      = 136000
         $this.SellPrice          = 68000
         $this.TargetStats        = @{
-            [StatId]::Defense = 585
+            [StatId]::Defense      = 585
             [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 565
+            [StatId]::Defense      = 565
+            [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
@@ -15104,18 +15112,18 @@ Class BEGodkingPlateIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BECreatorHoodIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BECreatorHoodIV_Alt2 : BEHelmet {
     BECreatorHoodIV_Alt2() : base() {
         $this.Name               = 'Creator Hood IV'
         $this.MapObjName         = 'creatorhood iv alt2'
         $this.PurchasePrice      = 136500
         $this.SellPrice          = 68250
         $this.TargetStats        = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 515
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 258
         }
         $this.CanAddToInventory  = $true
@@ -15124,7 +15132,7 @@ Class BECreatorHoodIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEVoidheartPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEVoidheartPlateIV_Alt2 : BEHelmet {
     BEVoidheartPlateIV_Alt2() : base() {
         $this.Name               = 'Voidheart Plate IV'
         $this.MapObjName         = 'voidheartplate iv alt2'
@@ -15132,7 +15140,6 @@ Class BEVoidheartPlateIV_Alt2 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 68500
         $this.TargetStats        = @{
             [StatId]::Defense = 590
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 570
@@ -15143,18 +15150,18 @@ Class BEVoidheartPlateIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEFrostfireHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEFrostfireHelmIV_Alt3 : BEHelmet {
     BEFrostfireHelmIV_Alt3() : base() {
         $this.Name               = 'Frostfire Helm IV'
         $this.MapObjName         = 'frostfirehelm iv alt3'
         $this.PurchasePrice      = 137500
         $this.SellPrice          = 68750
         $this.TargetStats        = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 520
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 260
         }
         $this.CanAddToInventory  = $true
@@ -15163,18 +15170,19 @@ Class BEFrostfireHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEThundergodPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEThundergodPlateIV_Alt2 : BEHelmet {
     BEThundergodPlateIV_Alt2() : base() {
         $this.Name               = 'Thundergod Plate IV'
         $this.MapObjName         = 'thundergodplate iv alt2'
         $this.PurchasePrice      = 138000
         $this.SellPrice          = 69000
         $this.TargetStats        = @{
-            [StatId]::Defense = 595
+            [StatId]::Defense      = 595
             [StatId]::MagicDefense = 300
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 575
+            [StatId]::Defense      = 575
+            [StatId]::MagicDefense = 150
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor imbued with the power of a thunder god.'
@@ -15182,18 +15190,18 @@ Class BEThundergodPlateIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEUniverseCircletV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEUniverseCircletV_Alt2 : BEHelmet {
     BEUniverseCircletV_Alt2() : base() {
         $this.Name               = 'Universe Circlet V'
         $this.MapObjName         = 'universecirclet v alt2'
         $this.PurchasePrice      = 138500
         $this.SellPrice          = 69250
         $this.TargetStats        = @{
-            [StatId]::Defense = 402
+            [StatId]::Defense      = 402
             [StatId]::MagicDefense = 525
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 402
+            [StatId]::Defense      = 402
             [StatId]::MagicDefense = 262
         }
         $this.CanAddToInventory  = $true
@@ -15202,18 +15210,18 @@ Class BEUniverseCircletV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEApocalypseHoodV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEApocalypseHoodV_Alt2 : BEHelmet {
     BEApocalypseHoodV_Alt2() : base() {
         $this.Name               = 'Apocalypse Hood V'
         $this.MapObjName         = 'apocalypsehood v alt2'
         $this.PurchasePrice      = 139000
         $this.SellPrice          = 69500
         $this.TargetStats        = @{
-            [StatId]::Defense = 408
+            [StatId]::Defense      = 408
             [StatId]::MagicDefense = 530
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 408
+            [StatId]::Defense      = 408
             [StatId]::MagicDefense = 265
         }
         $this.CanAddToInventory  = $true
@@ -15222,18 +15230,19 @@ Class BEApocalypseHoodV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEHeavenlyPlateIV_Alt2 : BEHelmet { # Name clash, renaming
+Class BEHeavenlyPlateIV_Alt2 : BEHelmet {
     BEHeavenlyPlateIV_Alt2() : base() {
         $this.Name               = 'Heavenly Plate IV'
         $this.MapObjName         = 'heavenlyplate iv alt2'
         $this.PurchasePrice      = 139500
         $this.SellPrice          = 69750
         $this.TargetStats        = @{
-            [StatId]::Defense = 550
+            [StatId]::Defense      = 550
             [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 530
+            [StatId]::Defense      = 530
+            [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Greatly improved plate armor blessed by the heavens.'
@@ -15241,18 +15250,19 @@ Class BEHeavenlyPlateIV_Alt2 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEArchangelHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEArchangelHelmIV_Alt3 : BEHelmet {
     BEArchangelHelmIV_Alt3() : base() {
         $this.Name               = 'Archangel Helm IV'
         $this.MapObjName         = 'archangelhelm iv alt3'
         $this.PurchasePrice      = 140000
         $this.SellPrice          = 70000
         $this.TargetStats        = @{
-            [StatId]::Defense = 555
+            [StatId]::Defense      = 555
             [StatId]::MagicDefense = 295
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 535
+            [StatId]::Defense      = 535
+            [StatId]::MagicDefense = 205
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm radiating the power of an archangel.'
@@ -15260,7 +15270,7 @@ Class BEArchangelHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEWorldeaterHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEWorldeaterHelmIV_Alt3 : BEHelmet {
     BEWorldeaterHelmIV_Alt3() : base() {
         $this.Name               = 'Worldeater Helm IV'
         $this.MapObjName         = 'worldeaterhelm iv alt3'
@@ -15268,7 +15278,6 @@ Class BEWorldeaterHelmIV_Alt3 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 70500
         $this.TargetStats        = @{
             [StatId]::Defense = 560
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 540
@@ -15279,18 +15288,18 @@ Class BEWorldeaterHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEStarforgedCircletIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEStarforgedCircletIV_Alt3 : BEHelmet {
     BEStarforgedCircletIV_Alt3() : base() {
         $this.Name               = 'Starforged Circlet IV'
         $this.MapObjName         = 'starforgedcirclet iv alt3'
         $this.PurchasePrice      = 141500
         $this.SellPrice          = 70750
         $this.TargetStats        = @{
-            [StatId]::Defense = 368
+            [StatId]::Defense      = 368
             [StatId]::MagicDefense = 490
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 368
+            [StatId]::Defense      = 368
             [StatId]::MagicDefense = 245
         }
         $this.CanAddToInventory  = $true
@@ -15299,18 +15308,19 @@ Class BEStarforgedCircletIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEGodkillerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEGodkillerHelmIV_Alt3 : BEHelmet {
     BEGodkillerHelmIV_Alt3() : base() {
         $this.Name               = 'Godkiller Helm IV'
         $this.MapObjName         = 'godkillerhelm iv alt3'
         $this.PurchasePrice      = 142000
         $this.SellPrice          = 71000
         $this.TargetStats        = @{
-            [StatId]::Defense = 565
+            [StatId]::Defense      = 565
             [StatId]::MagicDefense = 280
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 545
+            [StatId]::Defense      = 545
+            [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'An incredibly improved helm designed to slay gods.'
@@ -15318,18 +15328,18 @@ Class BEGodkillerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEUniverseHoodIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEUniverseHoodIV_Alt3 : BEHelmet {
     BEUniverseHoodIV_Alt3() : base() {
         $this.Name               = 'Universe Hood IV'
         $this.MapObjName         = 'universehood iv alt3'
         $this.PurchasePrice      = 142500
         $this.SellPrice          = 71250
         $this.TargetStats        = @{
-            [StatId]::Defense = 372
+            [StatId]::Defense      = 372
             [StatId]::MagicDefense = 495
         }
+        [StatId]::Defense      = 372
         $this.RequiredStats      = @{
-            [StatId]::Defense = 372
             [StatId]::MagicDefense = 248
         }
         $this.CanAddToInventory  = $true
@@ -15338,7 +15348,7 @@ Class BEUniverseHoodIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEChaosbringerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEChaosbringerHelmIV_Alt3 : BEHelmet {
     BEChaosbringerHelmIV_Alt3() : base() {
         $this.Name               = 'Chaosbringer Helm IV'
         $this.MapObjName         = 'chaosbringerhelm iv alt3'
@@ -15346,7 +15356,6 @@ Class BEChaosbringerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 71500
         $this.TargetStats        = @{
             [StatId]::Defense = 570
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 550
@@ -15357,18 +15366,18 @@ Class BEChaosbringerHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEFrostfallHelmIV_Alt4 : BEHelmet { # Name clash, renaming
+Class BEFrostfallHelmIV_Alt4 : BEHelmet {
     BEFrostfallHelmIV_Alt4() : base() {
         $this.Name               = 'Frostfall Helm IV'
         $this.MapObjName         = 'frostfallhelm iv alt4'
         $this.PurchasePrice      = 143500
         $this.SellPrice          = 71750
         $this.TargetStats        = @{
-            [StatId]::Defense = 378
+            [StatId]::Defense      = 378
             [StatId]::MagicDefense = 500
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 378
+            [StatId]::Defense      = 378
             [StatId]::MagicDefense = 250
         }
         $this.CanAddToInventory  = $true
@@ -15377,18 +15386,19 @@ Class BEFrostfallHelmIV_Alt4 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEThunderstrikePlateIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEThunderstrikePlateIV_Alt3 : BEHelmet {
     BEThunderstrikePlateIV_Alt3() : base() {
         $this.Name               = 'Thunderstrike Plate IV'
         $this.MapObjName         = 'thunderstrikeplate iv alt3'
         $this.PurchasePrice      = 144000
         $this.SellPrice          = 72000
         $this.TargetStats        = @{
-            [StatId]::Defense = 575
+            [StatId]::Defense      = 575
             [StatId]::MagicDefense = 285
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 555
+            [StatId]::Defense      = 555
+            [StatId]::MagicDefense = 200
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor that channels the power of thunder.'
@@ -15396,18 +15406,18 @@ Class BEThunderstrikePlateIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEWorldshaperHoodIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEWorldshaperHoodIV_Alt3 : BEHelmet {
     BEWorldshaperHoodIV_Alt3() : base() {
         $this.Name               = 'Worldshaper Hood IV'
         $this.MapObjName         = 'worldshaperhood iv alt3'
         $this.PurchasePrice      = 144500
         $this.SellPrice          = 72250
         $this.TargetStats        = @{
-            [StatId]::Defense = 382
+            [StatId]::Defense      = 382
             [StatId]::MagicDefense = 505
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 382
+            [StatId]::Defense      = 382
             [StatId]::MagicDefense = 252
         }
         $this.CanAddToInventory  = $true
@@ -15416,7 +15426,7 @@ Class BEWorldshaperHoodIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEAbyssalLordHelmIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEAbyssalLordHelmIV_Alt3 : BEHelmet {
     BEAbyssalLordHelmIV_Alt3() : base() {
         $this.Name               = 'Abyssal Lord Helm IV'
         $this.MapObjName         = 'abyssallordhelm iv alt3'
@@ -15424,7 +15434,6 @@ Class BEAbyssalLordHelmIV_Alt3 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 72500
         $this.TargetStats        = @{
             [StatId]::Defense = 580
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 560
@@ -15435,18 +15444,18 @@ Class BEAbyssalLordHelmIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEStarcallerCircletIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEStarcallerCircletIV_Alt3 : BEHelmet {
     BEStarcallerCircletIV_Alt3() : base() {
         $this.Name               = 'Starcaller Circlet IV'
         $this.MapObjName         = 'starcallercirclet iv alt3'
         $this.PurchasePrice      = 145500
         $this.SellPrice          = 72750
         $this.TargetStats        = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 510
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 388
+            [StatId]::Defense      = 388
             [StatId]::MagicDefense = 255
         }
         $this.CanAddToInventory  = $true
@@ -15455,18 +15464,19 @@ Class BEStarcallerCircletIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEGodkingPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEGodkingPlateIV_Alt3 : BEHelmet {
     BEGodkingPlateIV_Alt3() : base() {
         $this.Name               = 'Godking Plate IV'
         $this.MapObjName         = 'godkingplate iv alt3'
         $this.PurchasePrice      = 146000
         $this.SellPrice          = 73000
         $this.TargetStats        = @{
-            [StatId]::Defense = 585
+            [StatId]::Defense      = 585
             [StatId]::MagicDefense = 290
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 565
+            [StatId]::Defense      = 565
+            [StatId]::MagicDefense = 250
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Incredibly improved plate armor fit for a god-king.'
@@ -15474,18 +15484,18 @@ Class BEGodkingPlateIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BECreatorHoodIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BECreatorHoodIV_Alt3 : BEHelmet {
     BECreatorHoodIV_Alt3() : base() {
         $this.Name               = 'Creator Hood IV'
         $this.MapObjName         = 'creatorhood iv alt3'
         $this.PurchasePrice      = 146500
         $this.SellPrice          = 73250
         $this.TargetStats        = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 515
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 392
+            [StatId]::Defense      = 392
             [StatId]::MagicDefense = 258
         }
         $this.CanAddToInventory  = $true
@@ -15494,7 +15504,7 @@ Class BECreatorHoodIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEVoidheartPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEVoidheartPlateIV_Alt3 : BEHelmet {
     BEVoidheartPlateIV_Alt3() : base() {
         $this.Name               = 'Voidheart Plate IV'
         $this.MapObjName         = 'voidheartplate iv alt3'
@@ -15502,7 +15512,6 @@ Class BEVoidheartPlateIV_Alt3 : BEHelmet { # Name clash, renaming
         $this.SellPrice          = 73500
         $this.TargetStats        = @{
             [StatId]::Defense = 590
-            [StatId]::MagicDefense = 0
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 570
@@ -15513,18 +15522,18 @@ Class BEVoidheartPlateIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEFrostfireHelmIV_Alt4 : BEHelmet { # Name clash, renaming
+Class BEFrostfireHelmIV_Alt4 : BEHelmet {
     BEFrostfireHelmIV_Alt4() : base() {
         $this.Name               = 'Frostfire Helm IV'
         $this.MapObjName         = 'frostfirehelm iv alt4'
         $this.PurchasePrice      = 147500
         $this.SellPrice          = 73750
         $this.TargetStats        = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 520
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 398
+            [StatId]::Defense      = 398
             [StatId]::MagicDefense = 260
         }
         $this.CanAddToInventory  = $true
@@ -15533,7 +15542,7 @@ Class BEFrostfireHelmIV_Alt4 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEThundergodPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEThundergodPlateIV_Alt3 : BEHelmet {
     BEThundergodPlateIV_Alt3() : base() {
         $this.Name               = 'Thundergod Plate IV'
         $this.MapObjName         = 'thundergodplate iv alt3'
@@ -15552,18 +15561,18 @@ Class BEThundergodPlateIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEUniverseCircletV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEUniverseCircletV_Alt3 : BEHelmet {
     BEUniverseCircletV_Alt3() : base() {
         $this.Name               = 'Universe Circlet V'
         $this.MapObjName         = 'universecirclet v alt3'
         $this.PurchasePrice      = 148500
         $this.SellPrice          = 74250
         $this.TargetStats        = @{
-            [StatId]::Defense = 402
+            [StatId]::Defense      = 402
             [StatId]::MagicDefense = 525
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 402
+            [StatId]::Defense      = 402
             [StatId]::MagicDefense = 262
         }
         $this.CanAddToInventory  = $true
@@ -15572,18 +15581,18 @@ Class BEUniverseCircletV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEApocalypseHoodV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEApocalypseHoodV_Alt3 : BEHelmet {
     BEApocalypseHoodV_Alt3() : base() {
         $this.Name               = 'Apocalypse Hood V'
         $this.MapObjName         = 'apocalypsehood v alt3'
         $this.PurchasePrice      = 149000
         $this.SellPrice          = 74500
         $this.TargetStats        = @{
-            [StatId]::Defense = 408
+            [StatId]::Defense      = 408
             [StatId]::MagicDefense = 530
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 408
+            [StatId]::Defense      = 408
             [StatId]::MagicDefense = 265
         }
         $this.CanAddToInventory  = $true
@@ -15592,7 +15601,7 @@ Class BEApocalypseHoodV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEHeavenlyPlateIV_Alt3 : BEHelmet { # Name clash, renaming
+Class BEHeavenlyPlateIV_Alt3 : BEHelmet {
     BEHeavenlyPlateIV_Alt3() : base() {
         $this.Name               = 'Heavenly Plate IV'
         $this.MapObjName         = 'heavenlyplate iv alt3'
@@ -15611,7 +15620,7 @@ Class BEHeavenlyPlateIV_Alt3 : BEHelmet { # Name clash, renaming
     }
 }
 
-Class BEArchangelHelmIV_Alt4 : BEHelmet { # Name clash, renaming
+Class BEArchangelHelmIV_Alt4 : BEHelmet {
     BEArchangelHelmIV_Alt4() : base() {
         $this.Name               = 'Archangel Helm IV'
         $this.MapObjName         = 'archangelhelm iv alt4'
@@ -15633,6 +15642,7 @@ Class BEArchangelHelmIV_Alt4 : BEHelmet { # Name clash, renaming
 
 
 
+#region BEArmor Specializations
 ###############################################################################
 #
 # BEARMOR SPECIALIZATIONS
@@ -15660,7 +15670,7 @@ Class BEPaddedClothTunic : BEArmor {
         $this.PurchasePrice      = 25
         $this.SellPrice          = 12
         $this.TargetStats        = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
@@ -15734,11 +15744,11 @@ Class BEQuiltedDoublet : BEArmor {
         $this.PurchasePrice      = 60
         $this.SellPrice          = 30
         $this.TargetStats        = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 2
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 1
         }
         $this.CanAddToInventory  = $true
@@ -15754,12 +15764,11 @@ Class BETravelersGarb : BEArmor {
         $this.PurchasePrice      = 70
         $this.SellPrice          = 35
         $this.TargetStats        = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 3
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Durable clothing suitable for long journeys.'
@@ -15792,11 +15801,11 @@ Class BEAcolytesRobes : BEArmor {
         $this.PurchasePrice      = 80
         $this.SellPrice          = 40
         $this.TargetStats        = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 1
+            [StatId]::Defense      = 1
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -15812,12 +15821,11 @@ Class BEBrigandine : BEArmor {
         $this.PurchasePrice      = 110
         $this.SellPrice          = 55
         $this.TargetStats        = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 5
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Armor made of canvas or leather, lined with small steel plates.'
@@ -15832,11 +15840,11 @@ Class BEFurLinedCloak : BEArmor {
         $this.PurchasePrice      = 100
         $this.SellPrice          = 50
         $this.TargetStats        = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 4
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 2
         }
         $this.CanAddToInventory  = $true
@@ -15870,11 +15878,11 @@ Class BEEnchantedTunic : BEArmor {
         $this.PurchasePrice      = 120
         $this.SellPrice          = 60
         $this.TargetStats        = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 6
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 4
         }
         $this.CanAddToInventory  = $true
@@ -15908,11 +15916,11 @@ Class BEHardLeatherArmor : BEArmor {
         $this.PurchasePrice      = 140
         $this.SellPrice          = 70
         $this.TargetStats        = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 2
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 1
         }
         $this.CanAddToInventory  = $true
@@ -15946,11 +15954,11 @@ Class BESilkRobes : BEArmor {
         $this.PurchasePrice      = 180
         $this.SellPrice          = 90
         $this.TargetStats        = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 8
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 5
         }
         $this.CanAddToInventory  = $true
@@ -15984,11 +15992,11 @@ Class BEReinforcedRobes : BEArmor {
         $this.PurchasePrice      = 220
         $this.SellPrice          = 110
         $this.TargetStats        = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -16022,11 +16030,11 @@ Class BEGambeson : BEArmor {
         $this.PurchasePrice      = 160
         $this.SellPrice          = 80
         $this.TargetStats        = @{
-            [StatId]::Defense = 9
+            [StatId]::Defense      = 9
             [StatId]::MagicDefense = 3
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 1
         }
         $this.CanAddToInventory  = $true
@@ -16060,11 +16068,11 @@ Class BEBattlemageRobes : BEArmor {
         $this.PurchasePrice      = 320
         $this.SellPrice          = 160
         $this.TargetStats        = @{
-            [StatId]::Defense = 8
+            [StatId]::Defense      = 8
             [StatId]::MagicDefense = 14
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -16098,11 +16106,11 @@ Class BEWarriorsTunic : BEArmor {
         $this.PurchasePrice      = 280
         $this.SellPrice          = 140
         $this.TargetStats        = @{
-            [StatId]::Defense = 13
+            [StatId]::Defense      = 13
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 11
+            [StatId]::Defense      = 11
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -16136,11 +16144,11 @@ Class BESorcerersCloak : BEArmor {
         $this.PurchasePrice      = 450
         $this.SellPrice          = 225
         $this.TargetStats        = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 18
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 5
+            [StatId]::Defense      = 5
             [StatId]::MagicDefense = 13
         }
         $this.CanAddToInventory  = $true
@@ -16174,11 +16182,11 @@ Class BEElvenChainmail : BEArmor {
         $this.PurchasePrice      = 550
         $this.SellPrice          = 275
         $this.TargetStats        = @{
-            [StatId]::Defense = 16
+            [StatId]::Defense      = 16
             [StatId]::MagicDefense = 12
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 13
+            [StatId]::Defense      = 13
             [StatId]::MagicDefense = 9
         }
         $this.CanAddToInventory  = $true
@@ -16194,11 +16202,11 @@ Class BEDwarvenPlate : BEArmor {
         $this.PurchasePrice      = 750
         $this.SellPrice          = 375
         $this.TargetStats        = @{
-            [StatId]::Defense = 33
+            [StatId]::Defense      = 33
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 28
+            [StatId]::Defense      = 28
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -16214,11 +16222,11 @@ Class BEMagesRobes : BEArmor {
         $this.PurchasePrice      = 680
         $this.SellPrice          = 340
         $this.TargetStats        = @{
-            [StatId]::Defense = 10
+            [StatId]::Defense      = 10
             [StatId]::MagicDefense = 22
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 16
         }
         $this.CanAddToInventory  = $true
@@ -16252,11 +16260,11 @@ Class BEShadowWeaveArmor : BEArmor {
         $this.PurchasePrice      = 800
         $this.SellPrice          = 400
         $this.TargetStats        = @{
-            [StatId]::Defense = 20
+            [StatId]::Defense      = 20
             [StatId]::MagicDefense = 18
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 16
+            [StatId]::Defense      = 16
             [StatId]::MagicDefense = 14
         }
         $this.CanAddToInventory  = $true
@@ -16272,11 +16280,11 @@ Class BEMithrilChainmail : BEArmor {
         $this.PurchasePrice      = 1100
         $this.SellPrice          = 550
         $this.TargetStats        = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 21
+            [StatId]::Defense      = 21
             [StatId]::MagicDefense = 11
         }
         $this.CanAddToInventory  = $true
@@ -16292,11 +16300,11 @@ Class BEArchmageRobes : BEArmor {
         $this.PurchasePrice      = 1000
         $this.SellPrice          = 500
         $this.TargetStats        = @{
-            [StatId]::Defense = 12
+            [StatId]::Defense      = 12
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 9
+            [StatId]::Defense      = 9
             [StatId]::MagicDefense = 22
         }
         $this.CanAddToInventory  = $true
@@ -16330,11 +16338,11 @@ Class BEDragonscaleMail : BEArmor {
         $this.PurchasePrice      = 1500
         $this.SellPrice          = 750
         $this.TargetStats        = @{
-            [StatId]::Defense = 35
+            [StatId]::Defense      = 35
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 15
         }
         $this.CanAddToInventory  = $true
@@ -16350,11 +16358,11 @@ Class BEOrichalcumCuirass : BEArmor {
         $this.PurchasePrice      = 1200
         $this.SellPrice          = 600
         $this.TargetStats        = @{
-            [StatId]::Defense = 42
+            [StatId]::Defense      = 42
             [StatId]::MagicDefense = 8
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 35
+            [StatId]::Defense      = 35
             [StatId]::MagicDefense = 5
         }
         $this.CanAddToInventory  = $true
@@ -16370,11 +16378,11 @@ Class BEPhoenixDownRobes : BEArmor {
         $this.PurchasePrice      = 1400
         $this.SellPrice          = 700
         $this.TargetStats        = @{
-            [StatId]::Defense = 15
+            [StatId]::Defense      = 15
             [StatId]::MagicDefense = 35
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 11
+            [StatId]::Defense      = 11
             [StatId]::MagicDefense = 26
         }
         $this.CanAddToInventory  = $true
@@ -16390,11 +16398,11 @@ Class BEGryphonHideArmor : BEArmor {
         $this.PurchasePrice      = 1000
         $this.SellPrice          = 500
         $this.TargetStats        = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -16410,11 +16418,11 @@ Class BEPaladinsPlateMail : BEArmor {
         $this.PurchasePrice      = 1800
         $this.SellPrice          = 900
         $this.TargetStats        = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 42
+            [StatId]::Defense      = 42
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -16430,11 +16438,11 @@ Class BERunicVestments : BEArmor {
         $this.PurchasePrice      = 1600
         $this.SellPrice          = 800
         $this.TargetStats        = @{
-            [StatId]::Defense = 18
+            [StatId]::Defense      = 18
             [StatId]::MagicDefense = 40
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 14
+            [StatId]::Defense      = 14
             [StatId]::MagicDefense = 30
         }
         $this.CanAddToInventory  = $true
@@ -16468,11 +16476,11 @@ Class BEWyrmhideArmor : BEArmor {
         $this.PurchasePrice      = 1700
         $this.SellPrice          = 850
         $this.TargetStats        = @{
-            [StatId]::Defense = 40
+            [StatId]::Defense      = 40
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 33
+            [StatId]::Defense      = 33
             [StatId]::MagicDefense = 18
         }
         $this.CanAddToInventory  = $true
@@ -16488,11 +16496,11 @@ Class BEStarSilverMail : BEArmor {
         $this.PurchasePrice      = 2200
         $this.SellPrice          = 1100
         $this.TargetStats        = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 25
         }
         $this.CanAddToInventory  = $true
@@ -16508,11 +16516,11 @@ Class BEVoidSilkRobes : BEArmor {
         $this.PurchasePrice      = 2400
         $this.SellPrice          = 1200
         $this.TargetStats        = @{
-            [StatId]::Defense = 20
+            [StatId]::Defense      = 20
             [StatId]::MagicDefense = 45
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 15
+            [StatId]::Defense      = 15
             [StatId]::MagicDefense = 35
         }
         $this.CanAddToInventory  = $true
@@ -16528,11 +16536,11 @@ Class BEGolemPlate : BEArmor {
         $this.PurchasePrice      = 2800
         $this.SellPrice          = 1400
         $this.TargetStats        = @{
-            [StatId]::Defense = 60
+            [StatId]::Defense      = 60
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -16548,11 +16556,11 @@ Class BECelestialRaiment : BEArmor {
         $this.PurchasePrice      = 3000
         $this.SellPrice          = 1500
         $this.TargetStats        = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 50
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 20
+            [StatId]::Defense      = 20
             [StatId]::MagicDefense = 40
         }
         $this.CanAddToInventory  = $true
@@ -16568,11 +16576,11 @@ Class BEDemonHideArmor : BEArmor {
         $this.PurchasePrice      = 2600
         $this.SellPrice          = 1300
         $this.TargetStats        = @{
-            [StatId]::Defense = 48
+            [StatId]::Defense      = 48
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 40
+            [StatId]::Defense      = 40
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -16588,11 +16596,11 @@ Class BEArchonRobes : BEArmor {
         $this.PurchasePrice      = 3200
         $this.SellPrice          = 1600
         $this.TargetStats        = @{
-            [StatId]::Defense = 22
+            [StatId]::Defense      = 22
             [StatId]::MagicDefense = 55
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 17
+            [StatId]::Defense      = 17
             [StatId]::MagicDefense = 44
         }
         $this.CanAddToInventory  = $true
@@ -16626,11 +16634,11 @@ Class BEFrostweaveRobes : BEArmor {
         $this.PurchasePrice      = 3300
         $this.SellPrice          = 1650
         $this.TargetStats        = @{
-            [StatId]::Defense = 28
+            [StatId]::Defense      = 28
             [StatId]::MagicDefense = 48
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 22
+            [StatId]::Defense      = 22
             [StatId]::MagicDefense = 38
         }
         $this.CanAddToInventory  = $true
@@ -16646,11 +16654,11 @@ Class BEHellforgedPlate : BEArmor {
         $this.PurchasePrice      = 4000
         $this.SellPrice          = 2000
         $this.TargetStats        = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 58
+            [StatId]::Defense      = 58
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -16666,11 +16674,11 @@ Class BESpiritWalkerRobes : BEArmor {
         $this.PurchasePrice      = 3800
         $this.SellPrice          = 1900
         $this.TargetStats        = @{
-            [StatId]::Defense = 26
+            [StatId]::Defense      = 26
             [StatId]::MagicDefense = 60
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 20
+            [StatId]::Defense      = 20
             [StatId]::MagicDefense = 48
         }
         $this.CanAddToInventory  = $true
@@ -16704,11 +16712,11 @@ Class BEStormcallerMail : BEArmor {
         $this.PurchasePrice      = 4200
         $this.SellPrice          = 2100
         $this.TargetStats        = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 41
+            [StatId]::Defense      = 41
             [StatId]::MagicDefense = 23
         }
         $this.CanAddToInventory  = $true
@@ -16724,11 +16732,11 @@ Class BEAncientKingsMail : BEArmor {
         $this.PurchasePrice      = 5000
         $this.SellPrice          = 2500
         $this.TargetStats        = @{
-            [StatId]::Defense = 80
+            [StatId]::Defense      = 80
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 66
+            [StatId]::Defense      = 66
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -16744,11 +16752,11 @@ Class BEEmpyreanRobes : BEArmor {
         $this.PurchasePrice      = 4800
         $this.SellPrice          = 2400
         $this.TargetStats        = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 65
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 24
+            [StatId]::Defense      = 24
             [StatId]::MagicDefense = 52
         }
         $this.CanAddToInventory  = $true
@@ -16782,11 +16790,11 @@ Class BEWyvernLordMail : BEArmor {
         $this.PurchasePrice      = 5200
         $this.SellPrice          = 2600
         $this.TargetStats        = @{
-            [StatId]::Defense = 60
+            [StatId]::Defense      = 60
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 24
         }
         $this.CanAddToInventory  = $true
@@ -16802,11 +16810,11 @@ Class BEBloodforgedArmor : BEArmor {
         $this.PurchasePrice      = 6200
         $this.SellPrice          = 3100
         $this.TargetStats        = @{
-            [StatId]::Defense = 90
+            [StatId]::Defense      = 90
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 75
+            [StatId]::Defense      = 75
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -16822,11 +16830,11 @@ Class BEOracleRobes : BEArmor {
         $this.PurchasePrice      = 5800
         $this.SellPrice          = 2900
         $this.TargetStats        = @{
-            [StatId]::Defense = 35
+            [StatId]::Defense      = 35
             [StatId]::MagicDefense = 70
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 28
+            [StatId]::Defense      = 28
             [StatId]::MagicDefense = 56
         }
         $this.CanAddToInventory  = $true
@@ -16860,11 +16868,11 @@ Class BEShadowmeldArmor : BEArmor {
         $this.PurchasePrice      = 6500
         $this.SellPrice          = 3250
         $this.TargetStats        = @{
-            [StatId]::Defense = 65
+            [StatId]::Defense      = 65
             [StatId]::MagicDefense = 35
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 54
+            [StatId]::Defense      = 54
             [StatId]::MagicDefense = 28
         }
         $this.CanAddToInventory  = $true
@@ -16880,11 +16888,11 @@ Class BEThunderforgedMail : BEArmor {
         $this.PurchasePrice      = 7200
         $this.SellPrice          = 3600
         $this.TargetStats        = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 58
+            [StatId]::Defense      = 58
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -16900,11 +16908,11 @@ Class BEInfernalRobes : BEArmor {
         $this.PurchasePrice      = 6900
         $this.SellPrice          = 3450
         $this.TargetStats        = @{
-            [StatId]::Defense = 40
+            [StatId]::Defense      = 40
             [StatId]::MagicDefense = 75
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 32
+            [StatId]::Defense      = 32
             [StatId]::MagicDefense = 60
         }
         $this.CanAddToInventory  = $true
@@ -16938,11 +16946,11 @@ Class BEStarweaveRobes : BEArmor {
         $this.PurchasePrice      = 7500
         $this.SellPrice          = 3750
         $this.TargetStats        = @{
-            [StatId]::Defense = 45
+            [StatId]::Defense      = 45
             [StatId]::MagicDefense = 80
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 36
+            [StatId]::Defense      = 36
             [StatId]::MagicDefense = 64
         }
         $this.CanAddToInventory  = $true
@@ -16958,11 +16966,11 @@ Class BEGorgonScaleArmor : BEArmor {
         $this.PurchasePrice      = 8200
         $this.SellPrice          = 4100
         $this.TargetStats        = @{
-            [StatId]::Defense = 78
+            [StatId]::Defense      = 78
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 65
+            [StatId]::Defense      = 65
             [StatId]::MagicDefense = 24
         }
         $this.CanAddToInventory  = $true
@@ -16978,11 +16986,11 @@ Class BEVoidPlateArmor : BEArmor {
         $this.PurchasePrice      = 9000
         $this.SellPrice          = 4500
         $this.TargetStats        = @{
-            [StatId]::Defense = 105
+            [StatId]::Defense      = 105
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 86
+            [StatId]::Defense      = 86
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -16998,11 +17006,11 @@ Class BEArchonPlate : BEArmor {
         $this.PurchasePrice      = 9500
         $this.SellPrice          = 4750
         $this.TargetStats        = @{
-            [StatId]::Defense = 85
+            [StatId]::Defense      = 85
             [StatId]::MagicDefense = 40
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 32
         }
         $this.CanAddToInventory  = $true
@@ -17018,11 +17026,11 @@ Class BEDivineRaiment : BEArmor {
         $this.PurchasePrice      = 8500
         $this.SellPrice          = 4250
         $this.TargetStats        = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 85
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 40
+            [StatId]::Defense      = 40
             [StatId]::MagicDefense = 68
         }
         $this.CanAddToInventory  = $true
@@ -17038,11 +17046,11 @@ Class BEKrakenHideArmor : BEArmor {
         $this.PurchasePrice      = 9200
         $this.SellPrice          = 4600
         $this.TargetStats        = @{
-            [StatId]::Defense = 82
+            [StatId]::Defense      = 82
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 68
+            [StatId]::Defense      = 68
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -17076,11 +17084,11 @@ Class BEPrismaticRobes : BEArmor {
         $this.PurchasePrice      = 9800
         $this.SellPrice          = 4900
         $this.TargetStats        = @{
-            [StatId]::Defense = 55
+            [StatId]::Defense      = 55
             [StatId]::MagicDefense = 90
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 44
+            [StatId]::Defense      = 44
             [StatId]::MagicDefense = 72
         }
         $this.CanAddToInventory  = $true
@@ -17096,11 +17104,11 @@ Class BEBehemothPlate : BEArmor {
         $this.PurchasePrice      = 11000
         $this.SellPrice          = 5500
         $this.TargetStats        = @{
-            [StatId]::Defense = 115
+            [StatId]::Defense      = 115
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 94
+            [StatId]::Defense      = 94
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -17116,11 +17124,11 @@ Class BESeraphicVestments : BEArmor {
         $this.PurchasePrice      = 10500
         $this.SellPrice          = 5250
         $this.TargetStats        = @{
-            [StatId]::Defense = 60
+            [StatId]::Defense      = 60
             [StatId]::MagicDefense = 95
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 48
+            [StatId]::Defense      = 48
             [StatId]::MagicDefense = 76
         }
         $this.CanAddToInventory  = $true
@@ -17154,11 +17162,11 @@ Class BEAstralWeaveRobes : BEArmor {
         $this.PurchasePrice      = 11500
         $this.SellPrice          = 5750
         $this.TargetStats        = @{
-            [StatId]::Defense = 65
+            [StatId]::Defense      = 65
             [StatId]::MagicDefense = 100
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 52
+            [StatId]::Defense      = 52
             [StatId]::MagicDefense = 80
         }
         $this.CanAddToInventory  = $true
@@ -17174,11 +17182,11 @@ Class BEInvincibleArmor : BEArmor {
         $this.PurchasePrice      = 13500
         $this.SellPrice          = 6750
         $this.TargetStats        = @{
-            [StatId]::Defense = 125
+            [StatId]::Defense      = 125
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 102
+            [StatId]::Defense      = 102
             [StatId]::MagicDefense = 15
         }
         $this.CanAddToInventory  = $true
@@ -17194,11 +17202,11 @@ Class BEGodhandRobes : BEArmor {
         $this.PurchasePrice      = 13000
         $this.SellPrice          = 6500
         $this.TargetStats        = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 105
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 56
+            [StatId]::Defense      = 56
             [StatId]::MagicDefense = 84
         }
         $this.CanAddToInventory  = $true
@@ -17214,11 +17222,11 @@ Class BEWorldTreeBarkArmor : BEArmor {
         $this.PurchasePrice      = 14000
         $this.SellPrice          = 7000
         $this.TargetStats        = @{
-            [StatId]::Defense = 90
+            [StatId]::Defense      = 90
             [StatId]::MagicDefense = 45
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 74
+            [StatId]::Defense      = 74
             [StatId]::MagicDefense = 36
         }
         $this.CanAddToInventory  = $true
@@ -17234,11 +17242,11 @@ Class BEPhoenixPlate : BEArmor {
         $this.PurchasePrice      = 15000
         $this.SellPrice          = 7500
         $this.TargetStats        = @{
-            [StatId]::Defense = 130
+            [StatId]::Defense      = 130
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 106
+            [StatId]::Defense      = 106
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -17254,11 +17262,11 @@ Class BEAbyssalWrappings : BEArmor {
         $this.PurchasePrice      = 14500
         $this.SellPrice          = 7250
         $this.TargetStats        = @{
-            [StatId]::Defense = 75
+            [StatId]::Defense      = 75
             [StatId]::MagicDefense = 110
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 60
+            [StatId]::Defense      = 60
             [StatId]::MagicDefense = 88
         }
         $this.CanAddToInventory  = $true
@@ -17292,11 +17300,11 @@ Class BESunstoneRobes : BEArmor {
         $this.PurchasePrice      = 15500
         $this.SellPrice          = 7750
         $this.TargetStats        = @{
-            [StatId]::Defense = 80
+            [StatId]::Defense      = 80
             [StatId]::MagicDefense = 115
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 64
+            [StatId]::Defense      = 64
             [StatId]::MagicDefense = 92
         }
         $this.CanAddToInventory  = $true
@@ -17312,11 +17320,11 @@ Class BEVoidwalkerArmor : BEArmor {
         $this.PurchasePrice      = 17000
         $this.SellPrice          = 8500
         $this.TargetStats        = @{
-            [StatId]::Defense = 100
+            [StatId]::Defense      = 100
             [StatId]::MagicDefense = 40
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 82
+            [StatId]::Defense      = 82
             [StatId]::MagicDefense = 32
         }
         $this.CanAddToInventory  = $true
@@ -17332,11 +17340,11 @@ Class BEFrostlordPlate : BEArmor {
         $this.PurchasePrice      = 18000
         $this.SellPrice          = 9000
         $this.TargetStats        = @{
-            [StatId]::Defense = 140
+            [StatId]::Defense      = 140
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 115
+            [StatId]::Defense      = 115
             [StatId]::MagicDefense = 16
         }
         $this.CanAddToInventory  = $true
@@ -17352,11 +17360,11 @@ Class BEThundergodRobes : BEArmor {
         $this.PurchasePrice      = 17500
         $this.SellPrice          = 8750
         $this.TargetStats        = @{
-            [StatId]::Defense = 85
+            [StatId]::Defense      = 85
             [StatId]::MagicDefense = 120
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 68
+            [StatId]::Defense      = 68
             [StatId]::MagicDefense = 96
         }
         $this.CanAddToInventory  = $true
@@ -17390,11 +17398,11 @@ Class BEStarcallerArmor : BEArmor {
         $this.PurchasePrice      = 18500
         $this.SellPrice          = 9250
         $this.TargetStats        = @{
-            [StatId]::Defense = 105
+            [StatId]::Defense      = 105
             [StatId]::MagicDefense = 50
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 86
+            [StatId]::Defense      = 86
             [StatId]::MagicDefense = 40
         }
         $this.CanAddToInventory  = $true
@@ -17410,11 +17418,11 @@ Class BEGodkingArmor : BEArmor {
         $this.PurchasePrice      = 20000
         $this.SellPrice          = 10000
         $this.TargetStats        = @{
-            [StatId]::Defense = 150
+            [StatId]::Defense      = 150
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 123
+            [StatId]::Defense      = 123
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -17430,11 +17438,11 @@ Class BECreatorRobes : BEArmor {
         $this.PurchasePrice      = 19500
         $this.SellPrice          = 9750
         $this.TargetStats        = @{
-            [StatId]::Defense = 90
+            [StatId]::Defense      = 90
             [StatId]::MagicDefense = 125
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 72
+            [StatId]::Defense      = 72
             [StatId]::MagicDefense = 100
         }
         $this.CanAddToInventory  = $true
@@ -17450,11 +17458,11 @@ Class BEFrostfireMail : BEArmor {
         $this.PurchasePrice      = 20500
         $this.SellPrice          = 10250
         $this.TargetStats        = @{
-            [StatId]::Defense = 110
+            [StatId]::Defense      = 110
             [StatId]::MagicDefense = 55
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 90
+            [StatId]::Defense      = 90
             [StatId]::MagicDefense = 44
         }
         $this.CanAddToInventory  = $true
@@ -17470,11 +17478,11 @@ Class BEThunderclapPlate : BEArmor {
         $this.PurchasePrice      = 22000
         $this.SellPrice          = 11000
         $this.TargetStats        = @{
-            [StatId]::Defense = 160
+            [StatId]::Defense      = 160
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 131
+            [StatId]::Defense      = 131
             [StatId]::MagicDefense = 24
         }
         $this.CanAddToInventory  = $true
@@ -17490,11 +17498,11 @@ Class BEUniverseRobes : BEArmor {
         $this.PurchasePrice      = 21500
         $this.SellPrice          = 10750
         $this.TargetStats        = @{
-            [StatId]::Defense = 95
+            [StatId]::Defense      = 95
             [StatId]::MagicDefense = 130
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 76
+            [StatId]::Defense      = 76
             [StatId]::MagicDefense = 104
         }
         $this.CanAddToInventory  = $true
@@ -17528,11 +17536,11 @@ Class BEHeavenlyMail : BEArmor {
         $this.PurchasePrice      = 22500
         $this.SellPrice          = 11250
         $this.TargetStats        = @{
-            [StatId]::Defense = 115
+            [StatId]::Defense      = 115
             [StatId]::MagicDefense = 60
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 94
+            [StatId]::Defense      = 94
             [StatId]::MagicDefense = 48
         }
         $this.CanAddToInventory  = $true
@@ -17548,11 +17556,11 @@ Class BEArchangelPlate : BEArmor {
         $this.PurchasePrice      = 24000
         $this.SellPrice          = 12000
         $this.TargetStats        = @{
-            [StatId]::Defense = 170
+            [StatId]::Defense      = 170
             [StatId]::MagicDefense = 35
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 139
+            [StatId]::Defense      = 139
             [StatId]::MagicDefense = 28
         }
         $this.CanAddToInventory  = $true
@@ -17568,11 +17576,11 @@ Class BEWorldEaterRobes : BEArmor {
         $this.PurchasePrice      = 23500
         $this.SellPrice          = 11750
         $this.TargetStats        = @{
-            [StatId]::Defense = 100
+            [StatId]::Defense      = 100
             [StatId]::MagicDefense = 135
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 80
+            [StatId]::Defense      = 80
             [StatId]::MagicDefense = 108
         }
         $this.CanAddToInventory  = $true
@@ -17606,11 +17614,11 @@ Class BEGodkillerMail : BEArmor {
         $this.PurchasePrice      = 24500
         $this.SellPrice          = 12250
         $this.TargetStats        = @{
-            [StatId]::Defense = 120
+            [StatId]::Defense      = 120
             [StatId]::MagicDefense = 65
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 98
+            [StatId]::Defense      = 98
             [StatId]::MagicDefense = 52
         }
         $this.CanAddToInventory  = $true
@@ -17626,11 +17634,11 @@ Class BEChaosLordPlate : BEArmor {
         $this.PurchasePrice      = 26000
         $this.SellPrice          = 13000
         $this.TargetStats        = @{
-            [StatId]::Defense = 180
+            [StatId]::Defense      = 180
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 147
+            [StatId]::Defense      = 147
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -17646,11 +17654,11 @@ Class BEFrostmourneRobes : BEArmor {
         $this.PurchasePrice      = 25500
         $this.SellPrice          = 12750
         $this.TargetStats        = @{
-            [StatId]::Defense = 105
+            [StatId]::Defense      = 105
             [StatId]::MagicDefense = 140
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 84
+            [StatId]::Defense      = 84
             [StatId]::MagicDefense = 112
         }
         $this.CanAddToInventory  = $true
@@ -17684,11 +17692,11 @@ Class BEUniverseMail : BEArmor {
         $this.PurchasePrice      = 26500
         $this.SellPrice          = 13250
         $this.TargetStats        = @{
-            [StatId]::Defense = 125
+            [StatId]::Defense      = 125
             [StatId]::MagicDefense = 70
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 102
+            [StatId]::Defense      = 102
             [StatId]::MagicDefense = 56
         }
         $this.CanAddToInventory  = $true
@@ -17704,11 +17712,11 @@ Class BEApocalypsePlateMail : BEArmor {
         $this.PurchasePrice      = 28000
         $this.SellPrice          = 14000
         $this.TargetStats        = @{
-            [StatId]::Defense = 190
+            [StatId]::Defense      = 190
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 155
+            [StatId]::Defense      = 155
             [StatId]::MagicDefense = 16
         }
         $this.CanAddToInventory  = $true
@@ -17724,11 +17732,11 @@ Class BEHeavenlyRobes : BEArmor {
         $this.PurchasePrice      = 27500
         $this.SellPrice          = 13750
         $this.TargetStats        = @{
-            [StatId]::Defense = 110
+            [StatId]::Defense      = 110
             [StatId]::MagicDefense = 145
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 88
+            [StatId]::Defense      = 88
             [StatId]::MagicDefense = 116
         }
         $this.CanAddToInventory  = $true
@@ -17762,11 +17770,11 @@ Class BEWorldEaterPlateMail : BEArmor {
         $this.PurchasePrice      = 28500
         $this.SellPrice          = 14250
         $this.TargetStats        = @{
-            [StatId]::Defense = 130
+            [StatId]::Defense      = 130
             [StatId]::MagicDefense = 75
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 106
+            [StatId]::Defense      = 106
             [StatId]::MagicDefense = 60
         }
         $this.CanAddToInventory  = $true
@@ -17782,11 +17790,11 @@ Class BEStarforgedArmor : BEArmor {
         $this.PurchasePrice      = 30000
         $this.SellPrice          = 15000
         $this.TargetStats        = @{
-            [StatId]::Defense = 200
+            [StatId]::Defense      = 200
             [StatId]::MagicDefense = 40
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 164
+            [StatId]::Defense      = 164
             [StatId]::MagicDefense = 32
         }
         $this.CanAddToInventory  = $true
@@ -17802,11 +17810,11 @@ Class BEGodkillerRobes : BEArmor {
         $this.PurchasePrice      = 29500
         $this.SellPrice          = 14750
         $this.TargetStats        = @{
-            [StatId]::Defense = 115
+            [StatId]::Defense      = 115
             [StatId]::MagicDefense = 150
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 92
+            [StatId]::Defense      = 92
             [StatId]::MagicDefense = 120
         }
         $this.CanAddToInventory  = $true
@@ -17840,11 +17848,11 @@ Class BEFrostmournePlate : BEArmor {
         $this.PurchasePrice      = 30500
         $this.SellPrice          = 15250
         $this.TargetStats        = @{
-            [StatId]::Defense = 135
+            [StatId]::Defense      = 135
             [StatId]::MagicDefense = 80
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 110
+            [StatId]::Defense      = 110
             [StatId]::MagicDefense = 64
         }
         $this.CanAddToInventory  = $true
@@ -17860,11 +17868,11 @@ Class BEThundergodArmor : BEArmor {
         $this.PurchasePrice      = 32000
         $this.SellPrice          = 16000
         $this.TargetStats        = @{
-            [StatId]::Defense = 210
+            [StatId]::Defense      = 210
             [StatId]::MagicDefense = 45
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 172
+            [StatId]::Defense      = 172
             [StatId]::MagicDefense = 36
         }
         $this.CanAddToInventory  = $true
@@ -17880,11 +17888,11 @@ Class BEUniverseArmor : BEArmor {
         $this.PurchasePrice      = 31500
         $this.SellPrice          = 15750
         $this.TargetStats        = @{
-            [StatId]::Defense = 120
+            [StatId]::Defense      = 120
             [StatId]::MagicDefense = 155
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 96
+            [StatId]::Defense      = 96
             [StatId]::MagicDefense = 124
         }
         $this.CanAddToInventory  = $true
@@ -17900,11 +17908,11 @@ Class BEApocalypseRobes : BEArmor {
         $this.PurchasePrice      = 33000
         $this.SellPrice          = 16500
         $this.TargetStats        = @{
-            [StatId]::Defense = 125
+            [StatId]::Defense      = 125
             [StatId]::MagicDefense = 160
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 100
+            [StatId]::Defense      = 100
             [StatId]::MagicDefense = 128
         }
         $this.CanAddToInventory  = $true
@@ -17938,11 +17946,11 @@ Class BEArchangelRaiment : BEArmor {
         $this.PurchasePrice      = 34000
         $this.SellPrice          = 17000
         $this.TargetStats        = @{
-            [StatId]::Defense = 130
+            [StatId]::Defense      = 130
             [StatId]::MagicDefense = 165
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 104
+            [StatId]::Defense      = 104
             [StatId]::MagicDefense = 132
         }
         $this.CanAddToInventory  = $true
@@ -17958,11 +17966,11 @@ Class BEWorldEaterArmor : BEArmor {
         $this.PurchasePrice      = 33500
         $this.SellPrice          = 16750
         $this.TargetStats        = @{
-            [StatId]::Defense = 220
+            [StatId]::Defense      = 220
             [StatId]::MagicDefense = 50
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 180
+            [StatId]::Defense      = 180
             [StatId]::MagicDefense = 40
         }
         $this.CanAddToInventory  = $true
@@ -17978,11 +17986,11 @@ Class BEStarforgedRobes : BEArmor {
         $this.PurchasePrice      = 35000
         $this.SellPrice          = 17500
         $this.TargetStats        = @{
-            [StatId]::Defense = 135
+            [StatId]::Defense      = 135
             [StatId]::MagicDefense = 170
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 108
+            [StatId]::Defense      = 108
             [StatId]::MagicDefense = 136
         }
         $this.CanAddToInventory  = $true
@@ -18016,11 +18024,11 @@ Class BEChaosLordRobes : BEArmor {
         $this.PurchasePrice      = 36000
         $this.SellPrice          = 18000
         $this.TargetStats        = @{
-            [StatId]::Defense = 140
+            [StatId]::Defense      = 140
             [StatId]::MagicDefense = 175
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 112
+            [StatId]::Defense      = 112
             [StatId]::MagicDefense = 140
         }
         $this.CanAddToInventory  = $true
@@ -18036,11 +18044,11 @@ Class BEFrostmourneArmor : BEArmor {
         $this.PurchasePrice      = 35500
         $this.SellPrice          = 17750
         $this.TargetStats        = @{
-            [StatId]::Defense = 230
+            [StatId]::Defense      = 230
             [StatId]::MagicDefense = 55
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 188
+            [StatId]::Defense      = 188
             [StatId]::MagicDefense = 44
         }
         $this.CanAddToInventory  = $true
@@ -18074,11 +18082,11 @@ Class BEUniversePlateMail : BEArmor {
         $this.PurchasePrice      = 36500
         $this.SellPrice          = 18250
         $this.TargetStats        = @{
-            [StatId]::Defense = 145
+            [StatId]::Defense      = 145
             [StatId]::MagicDefense = 180
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 116
+            [StatId]::Defense      = 116
             [StatId]::MagicDefense = 144
         }
         $this.CanAddToInventory  = $true
@@ -18094,11 +18102,11 @@ Class BEApocalypseFullPlate : BEArmor {
         $this.PurchasePrice      = 38000
         $this.SellPrice          = 19000
         $this.TargetStats        = @{
-            [StatId]::Defense = 240
+            [StatId]::Defense      = 240
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 196
+            [StatId]::Defense      = 196
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -18114,11 +18122,11 @@ Class BEHeavenlyGarb : BEArmor {
         $this.PurchasePrice      = 37500
         $this.SellPrice          = 18750
         $this.TargetStats        = @{
-            [StatId]::Defense = 150
+            [StatId]::Defense      = 150
             [StatId]::MagicDefense = 185
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 120
+            [StatId]::Defense      = 120
             [StatId]::MagicDefense = 148
         }
         $this.CanAddToInventory  = $true
@@ -18152,11 +18160,11 @@ Class BEWorldEaterRobesII : BEArmor { # Renamed to avoid clash
         $this.PurchasePrice      = 38500
         $this.SellPrice          = 19250
         $this.TargetStats        = @{
-            [StatId]::Defense = 155
+            [StatId]::Defense      = 155
             [StatId]::MagicDefense = 190
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 124
+            [StatId]::Defense      = 124
             [StatId]::MagicDefense = 152
         }
         $this.CanAddToInventory  = $true
@@ -18172,11 +18180,11 @@ Class BEStarforgedPlateMail : BEArmor {
         $this.PurchasePrice      = 40000
         $this.SellPrice          = 20000
         $this.TargetStats        = @{
-            [StatId]::Defense = 250
+            [StatId]::Defense      = 250
             [StatId]::MagicDefense = 50
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 205
+            [StatId]::Defense      = 205
             [StatId]::MagicDefense = 40
         }
         $this.CanAddToInventory  = $true
@@ -18192,11 +18200,11 @@ Class BEGodkillerArmor : BEArmor {
         $this.PurchasePrice      = 39500
         $this.SellPrice          = 19750
         $this.TargetStats        = @{
-            [StatId]::Defense = 160
+            [StatId]::Defense      = 160
             [StatId]::MagicDefense = 195
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 128
+            [StatId]::Defense      = 128
             [StatId]::MagicDefense = 156
         }
         $this.CanAddToInventory  = $true
@@ -18230,11 +18238,11 @@ Class BEFrostmourneRaiment : BEArmor {
         $this.PurchasePrice      = 40500
         $this.SellPrice          = 20250
         $this.TargetStats        = @{
-            [StatId]::Defense = 165
+            [StatId]::Defense      = 165
             [StatId]::MagicDefense = 200
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 132
+            [StatId]::Defense      = 132
             [StatId]::MagicDefense = 160
         }
         $this.CanAddToInventory  = $true
@@ -18250,11 +18258,11 @@ Class BEThundergodFullPlate : BEArmor {
         $this.PurchasePrice      = 42000
         $this.SellPrice          = 21000
         $this.TargetStats        = @{
-            [StatId]::Defense = 260
+            [StatId]::Defense      = 260
             [StatId]::MagicDefense = 55
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 213
+            [StatId]::Defense      = 213
             [StatId]::MagicDefense = 44
         }
         $this.CanAddToInventory  = $true
@@ -18270,11 +18278,11 @@ Class BEUniverseRaiment : BEArmor {
         $this.PurchasePrice      = 41500
         $this.SellPrice          = 20750
         $this.TargetStats        = @{
-            [StatId]::Defense = 170
+            [StatId]::Defense      = 170
             [StatId]::MagicDefense = 205
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 136
+            [StatId]::Defense      = 136
             [StatId]::MagicDefense = 164
         }
         $this.CanAddToInventory  = $true
@@ -18308,11 +18316,11 @@ Class BEHeavenlyBattleRobes : BEArmor {
         $this.PurchasePrice      = 42500
         $this.SellPrice          = 21250
         $this.TargetStats        = @{
-            [StatId]::Defense = 175
+            [StatId]::Defense      = 175
             [StatId]::MagicDefense = 210
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 140
+            [StatId]::Defense      = 140
             [StatId]::MagicDefense = 168
         }
         $this.CanAddToInventory  = $true
@@ -18328,11 +18336,11 @@ Class BEArchangelFullPlate : BEArmor {
         $this.PurchasePrice      = 44000
         $this.SellPrice          = 22000
         $this.TargetStats        = @{
-            [StatId]::Defense = 270
+            [StatId]::Defense      = 270
             [StatId]::MagicDefense = 60
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 221
+            [StatId]::Defense      = 221
             [StatId]::MagicDefense = 48
         }
         $this.CanAddToInventory  = $true
@@ -18348,11 +18356,11 @@ Class BEWorldEaterBattleMail : BEArmor {
         $this.PurchasePrice      = 43500
         $this.SellPrice          = 21750
         $this.TargetStats        = @{
-            [StatId]::Defense = 180
+            [StatId]::Defense      = 180
             [StatId]::MagicDefense = 215
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 144
+            [StatId]::Defense      = 144
             [StatId]::MagicDefense = 172
         }
         $this.CanAddToInventory  = $true
@@ -18386,11 +18394,11 @@ Class BEGodkillerBattleRobes : BEArmor {
         $this.PurchasePrice      = 44500
         $this.SellPrice          = 22250
         $this.TargetStats        = @{
-            [StatId]::Defense = 185
+            [StatId]::Defense      = 185
             [StatId]::MagicDefense = 220
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 148
+            [StatId]::Defense      = 148
             [StatId]::MagicDefense = 176
         }
         $this.CanAddToInventory  = $true
@@ -18406,11 +18414,11 @@ Class BEChaosLordBattlePlate : BEArmor {
         $this.PurchasePrice      = 46000
         $this.SellPrice          = 23000
         $this.TargetStats        = @{
-            [StatId]::Defense = 280
+            [StatId]::Defense      = 280
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 229
+            [StatId]::Defense      = 229
             [StatId]::MagicDefense = 24
         }
         $this.CanAddToInventory  = $true
@@ -18426,11 +18434,11 @@ Class BEFrostmourneBattleMail : BEArmor {
         $this.PurchasePrice      = 45500
         $this.SellPrice          = 22750
         $this.TargetStats        = @{
-            [StatId]::Defense = 190
+            [StatId]::Defense      = 190
             [StatId]::MagicDefense = 225
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 152
+            [StatId]::Defense      = 152
             [StatId]::MagicDefense = 180
         }
         $this.CanAddToInventory  = $true
@@ -18464,11 +18472,11 @@ Class BEUniverseBattlePlate : BEArmor {
         $this.PurchasePrice      = 46500
         $this.SellPrice          = 23250
         $this.TargetStats        = @{
-            [StatId]::Defense = 195
+            [StatId]::Defense      = 195
             [StatId]::MagicDefense = 230
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 156
+            [StatId]::Defense      = 156
             [StatId]::MagicDefense = 184
         }
         $this.CanAddToInventory  = $true
@@ -18484,11 +18492,11 @@ Class BEApocalypseFullMail : BEArmor {
         $this.PurchasePrice      = 48000
         $this.SellPrice          = 24000
         $this.TargetStats        = @{
-            [StatId]::Defense = 290
+            [StatId]::Defense      = 290
             [StatId]::MagicDefense = 35
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 237
+            [StatId]::Defense      = 237
             [StatId]::MagicDefense = 28
         }
         $this.CanAddToInventory  = $true
@@ -18504,11 +18512,11 @@ Class BEHeavenlyBattleGarb : BEArmor {
         $this.PurchasePrice      = 47500
         $this.SellPrice          = 23750
         $this.TargetStats        = @{
-            [StatId]::Defense = 200
+            [StatId]::Defense      = 200
             [StatId]::MagicDefense = 235
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 160
+            [StatId]::Defense      = 160
             [StatId]::MagicDefense = 188
         }
         $this.CanAddToInventory  = $true
@@ -18542,11 +18550,11 @@ Class BEWorldEaterFullMail : BEArmor {
         $this.PurchasePrice      = 48500
         $this.SellPrice          = 24250
         $this.TargetStats        = @{
-            [StatId]::Defense = 205
+            [StatId]::Defense      = 205
             [StatId]::MagicDefense = 240
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 164
+            [StatId]::Defense      = 164
             [StatId]::MagicDefense = 192
         }
         $this.CanAddToInventory  = $true
@@ -18562,11 +18570,11 @@ Class BEStarforgedFullPlate : BEArmor {
         $this.PurchasePrice      = 50000
         $this.SellPrice          = 25000
         $this.TargetStats        = @{
-            [StatId]::Defense = 300
+            [StatId]::Defense      = 300
             [StatId]::MagicDefense = 60
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 246
+            [StatId]::Defense      = 246
             [StatId]::MagicDefense = 48
         }
         $this.CanAddToInventory  = $true
@@ -18574,11 +18582,13 @@ Class BEStarforgedFullPlate : BEArmor {
         $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
     }
 }
+#endregion
 
 
 
 
 
+#region BEPauldron Specializations
 ###############################################################################
 #
 # BEPAULDRON SPECIALIZATIONS
@@ -18592,9 +18602,6 @@ Class BERustedSpaulders : BEPauldron {
         $this.SellPrice          = 7
         $this.TargetStats        = @{
             [StatId]::Defense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Barely hold together, but better than exposed shoulders.'
@@ -18611,10 +18618,6 @@ Class BEClothShoulderPads : BEPauldron {
         $this.TargetStats        = @{
             [StatId]::Defense = 1
             [StatId]::MagicDefense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 0
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Simple cloth pads offering minimal protection.'
@@ -18647,12 +18650,11 @@ Class BEWornWoodenPauldrons : BEPauldron {
         $this.PurchasePrice      = 35
         $this.SellPrice          = 17
         $this.TargetStats        = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 1
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Weathered wooden pieces offering slight shoulder defense.'
@@ -18685,11 +18687,11 @@ Class BEHardenedClothWraps : BEPauldron {
         $this.PurchasePrice      = 50
         $this.SellPrice          = 25
         $this.TargetStats        = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 2
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 1
+            [StatId]::Defense      = 1
             [StatId]::MagicDefense = 1
         }
         $this.CanAddToInventory  = $true
@@ -18723,11 +18725,10 @@ Class BEApprenticeEpaulets : BEPauldron {
         $this.PurchasePrice      = 55
         $this.SellPrice          = 27
         $this.TargetStats        = @{
-            [StatId]::Defense = 1
+            [StatId]::Defense      = 1
             [StatId]::MagicDefense = 3
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 0
             [StatId]::MagicDefense = 2
         }
         $this.CanAddToInventory  = $true
@@ -18743,12 +18744,11 @@ Class BEReinforcedLeatherPads : BEPauldron {
         $this.PurchasePrice      = 70
         $this.SellPrice          = 35
         $this.TargetStats        = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 2
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Leather shoulder pads with extra layers for durability.'
@@ -18781,11 +18781,11 @@ Class BETravelersShoulderCape : BEPauldron {
         $this.PurchasePrice      = 75
         $this.SellPrice          = 37
         $this.TargetStats        = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 3
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 1
+            [StatId]::Defense      = 1
             [StatId]::MagicDefense = 2
         }
         $this.CanAddToInventory  = $true
@@ -18801,12 +18801,11 @@ Class BEStuddedHideShoulders : BEPauldron {
         $this.PurchasePrice      = 90
         $this.SellPrice          = 45
         $this.TargetStats        = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 3
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Shoulder pieces made from animal hide, reinforced with studs.'
@@ -18839,11 +18838,11 @@ Class BELightweightChainSpaulders : BEPauldron {
         $this.PurchasePrice      = 120
         $this.SellPrice          = 60
         $this.TargetStats        = @{
-            [StatId]::Defense = 5
+            [StatId]::Defense      = 5
             [StatId]::MagicDefense = 2
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 1
         }
         $this.CanAddToInventory  = $true
@@ -18877,11 +18876,11 @@ Class BEMysticWeavePads : BEPauldron {
         $this.PurchasePrice      = 130
         $this.SellPrice          = 65
         $this.TargetStats        = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 4
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -18897,12 +18896,11 @@ Class BEBronzePauldrons : BEPauldron {
         $this.PurchasePrice      = 140
         $this.SellPrice          = 70
         $this.TargetStats        = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 5
-            [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
         $this.ExamineString      = 'Solid bronze pauldrons offering good physical defense.'
@@ -18935,11 +18933,11 @@ Class BEFurLinedShoulderguards : BEPauldron {
         $this.PurchasePrice      = 160
         $this.SellPrice          = 80
         $this.TargetStats        = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 3
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 2
         }
         $this.CanAddToInventory  = $true
@@ -18955,11 +18953,11 @@ Class BEIronShoulderPlates : BEPauldron {
         $this.PurchasePrice      = 170
         $this.SellPrice          = 85
         $this.TargetStats        = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 2
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 1
         }
         $this.CanAddToInventory  = $true
@@ -18993,11 +18991,11 @@ Class BEEnchantedLinenPads : BEPauldron {
         $this.PurchasePrice      = 190
         $this.SellPrice          = 95
         $this.TargetStats        = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 2
+            [StatId]::Defense      = 2
             [StatId]::MagicDefense = 4
         }
         $this.CanAddToInventory  = $true
@@ -19013,11 +19011,11 @@ Class BEHeavyWoodenPauldrons : BEPauldron {
         $this.PurchasePrice      = 200
         $this.SellPrice          = 100
         $this.TargetStats        = @{
-            [StatId]::Defense = 8
+            [StatId]::Defense      = 8
             [StatId]::MagicDefense = 1
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 0
         }
         $this.CanAddToInventory  = $true
@@ -19051,11 +19049,11 @@ Class BECeremonialShoulderDrapes : BEPauldron {
         $this.PurchasePrice      = 210
         $this.SellPrice          = 105
         $this.TargetStats        = @{
-            [StatId]::Defense = 4
+            [StatId]::Defense      = 4
             [StatId]::MagicDefense = 6
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 3
+            [StatId]::Defense      = 3
             [StatId]::MagicDefense = 5
         }
         $this.CanAddToInventory  = $true
@@ -19089,11 +19087,11 @@ Class BEReinforcedChainSpaulders : BEPauldron {
         $this.PurchasePrice      = 300
         $this.SellPrice          = 150
         $this.TargetStats        = @{
-            [StatId]::Defense = 11
+            [StatId]::Defense      = 11
             [StatId]::MagicDefense = 4
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 9
+            [StatId]::Defense      = 9
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -19147,11 +19145,11 @@ Class BEHeavyLeatherPauldrons : BEPauldron {
         $this.PurchasePrice      = 380
         $this.SellPrice          = 190
         $this.TargetStats        = @{
-            [StatId]::Defense = 13
+            [StatId]::Defense      = 13
             [StatId]::MagicDefense = 3
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 10
+            [StatId]::Defense      = 10
             [StatId]::MagicDefense = 2
         }
         $this.CanAddToInventory  = $true
@@ -19185,11 +19183,11 @@ Class BESoldiersSteelPlates : BEPauldron {
         $this.PurchasePrice      = 420
         $this.SellPrice          = 210
         $this.TargetStats        = @{
-            [StatId]::Defense = 12
+            [StatId]::Defense      = 12
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 10
+            [StatId]::Defense      = 10
             [StatId]::MagicDefense = 4
         }
         $this.CanAddToInventory  = $true
@@ -19223,11 +19221,11 @@ Class BEWardensPauldrons : BEPauldron {
         $this.PurchasePrice      = 480
         $this.SellPrice          = 240
         $this.TargetStats        = @{
-            [StatId]::Defense = 14
+            [StatId]::Defense      = 14
             [StatId]::MagicDefense = 6
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 11
+            [StatId]::Defense      = 11
             [StatId]::MagicDefense = 5
         }
         $this.CanAddToInventory  = $true
@@ -19243,11 +19241,11 @@ Class BEElvenLeafShoulders : BEPauldron {
         $this.PurchasePrice      = 500
         $this.SellPrice          = 250
         $this.TargetStats        = @{
-            [StatId]::Defense = 8
+            [StatId]::Defense      = 8
             [StatId]::MagicDefense = 12
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 6
+            [StatId]::Defense      = 6
             [StatId]::MagicDefense = 9
         }
         $this.CanAddToInventory  = $true
@@ -19281,11 +19279,11 @@ Class BEEngravedIronPauldrons : BEPauldron {
         $this.PurchasePrice      = 580
         $this.SellPrice          = 290
         $this.TargetStats        = @{
-            [StatId]::Defense = 17
+            [StatId]::Defense      = 17
             [StatId]::MagicDefense = 4
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 14
+            [StatId]::Defense      = 14
             [StatId]::MagicDefense = 3
         }
         $this.CanAddToInventory  = $true
@@ -19301,11 +19299,11 @@ Class BEBattlemageShoulderguards : BEPauldron {
         $this.PurchasePrice      = 600
         $this.SellPrice          = 300
         $this.TargetStats        = @{
-            [StatId]::Defense = 10
+            [StatId]::Defense      = 10
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 8
+            [StatId]::Defense      = 8
             [StatId]::MagicDefense = 8
         }
         $this.CanAddToInventory  = $true
@@ -19339,11 +19337,11 @@ Class BEPlateShoulderPlates : BEPauldron {
         $this.PurchasePrice      = 650
         $this.SellPrice          = 325
         $this.TargetStats        = @{
-            [StatId]::Defense = 15
+            [StatId]::Defense      = 15
             [StatId]::MagicDefense = 7
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 12
+            [StatId]::Defense      = 12
             [StatId]::MagicDefense = 5
         }
         $this.CanAddToInventory  = $true
@@ -19359,11 +19357,11 @@ Class BEShadowSilkPads : BEPauldron {
         $this.PurchasePrice      = 680
         $this.SellPrice          = 340
         $this.TargetStats        = @{
-            [StatId]::Defense = 9
+            [StatId]::Defense      = 9
             [StatId]::MagicDefense = 13
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 7
+            [StatId]::Defense      = 7
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -19397,11 +19395,11 @@ Class BESilverThreadEpaulets : BEPauldron {
         $this.PurchasePrice      = 720
         $this.SellPrice          = 360
         $this.TargetStats        = @{
-            [StatId]::Defense = 16
+            [StatId]::Defense      = 16
             [StatId]::MagicDefense = 8
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 13
+            [StatId]::Defense      = 13
             [StatId]::MagicDefense = 6
         }
         $this.CanAddToInventory  = $true
@@ -19435,11 +19433,11 @@ Class BERunicLeatherShoulders : BEPauldron {
         $this.PurchasePrice      = 780
         $this.SellPrice          = 390
         $this.TargetStats        = @{
-            [StatId]::Defense = 12
+            [StatId]::Defense      = 12
             [StatId]::MagicDefense = 11
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 10
+            [StatId]::Defense      = 10
             [StatId]::MagicDefense = 9
         }
         $this.CanAddToInventory  = $true
@@ -19455,11 +19453,11 @@ Class BEObsidianChipPauldrons : BEPauldron {
         $this.PurchasePrice      = 800
         $this.SellPrice          = 400
         $this.TargetStats        = @{
-            [StatId]::Defense = 21
+            [StatId]::Defense      = 21
             [StatId]::MagicDefense = 5
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 18
+            [StatId]::Defense      = 18
             [StatId]::MagicDefense = 4
         }
         $this.CanAddToInventory  = $true
@@ -19475,11 +19473,11 @@ Class BEForestGuardMantle : BEPauldron {
         $this.PurchasePrice      = 830
         $this.SellPrice          = 415
         $this.TargetStats        = @{
-            [StatId]::Defense = 18
+            [StatId]::Defense      = 18
             [StatId]::MagicDefense = 9
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 15
+            [StatId]::Defense      = 15
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -19495,11 +19493,11 @@ Class BESpellWovenShoulderguards : BEPauldron {
         $this.PurchasePrice      = 850
         $this.SellPrice          = 425
         $this.TargetStats        = @{
-            [StatId]::Defense = 11
+            [StatId]::Defense      = 11
             [StatId]::MagicDefense = 14
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 9
+            [StatId]::Defense      = 9
             [StatId]::MagicDefense = 11
         }
         $this.CanAddToInventory  = $true
@@ -19533,11 +19531,11 @@ Class BEWyrmScaleSpaulders : BEPauldron {
         $this.PurchasePrice      = 900
         $this.SellPrice          = 450
         $this.TargetStats        = @{
-            [StatId]::Defense = 23
+            [StatId]::Defense      = 23
             [StatId]::MagicDefense = 6
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 19
+            [StatId]::Defense      = 19
             [StatId]::MagicDefense = 5
         }
         $this.CanAddToInventory  = $true
@@ -19553,11 +19551,11 @@ Class BEEnchantedSteelEpaulets : BEPauldron {
         $this.PurchasePrice      = 920
         $this.SellPrice          = 460
         $this.TargetStats        = @{
-            [StatId]::Defense = 17
+            [StatId]::Defense      = 17
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 14
+            [StatId]::Defense      = 14
             [StatId]::MagicDefense = 8
         }
         $this.CanAddToInventory  = $true
@@ -19591,11 +19589,11 @@ Class BEAncientGlyphPauldrons : BEPauldron {
         $this.PurchasePrice      = 980
         $this.SellPrice          = 490
         $this.TargetStats        = @{
-            [StatId]::Defense = 19
+            [StatId]::Defense      = 19
             [StatId]::MagicDefense = 12
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 16
+            [StatId]::Defense      = 16
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -19611,11 +19609,11 @@ Class BESorcerersShoulderDrapes : BEPauldron {
         $this.PurchasePrice      = 1000
         $this.SellPrice          = 500
         $this.TargetStats        = @{
-            [StatId]::Defense = 13
+            [StatId]::Defense      = 13
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 10
+            [StatId]::Defense      = 10
             [StatId]::MagicDefense = 12
         }
         $this.CanAddToInventory  = $true
@@ -19649,11 +19647,11 @@ Class BEMithrilPauldrons : BEPauldron {
         $this.PurchasePrice      = 1100
         $this.SellPrice          = 550
         $this.TargetStats        = @{
-            [StatId]::Defense = 28
+            [StatId]::Defense      = 28
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 23
+            [StatId]::Defense      = 23
             [StatId]::MagicDefense = 8
         }
         $this.CanAddToInventory  = $true
@@ -19687,11 +19685,11 @@ Class BEArchonsEpaulets : BEPauldron {
         $this.PurchasePrice      = 1250
         $this.SellPrice          = 625
         $this.TargetStats        = @{
-            [StatId]::Defense = 15
+            [StatId]::Defense      = 15
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 12
+            [StatId]::Defense      = 12
             [StatId]::MagicDefense = 16
         }
         $this.CanAddToInventory  = $true
@@ -19707,11 +19705,11 @@ Class BEDragonhideShoulderguards : BEPauldron {
         $this.PurchasePrice      = 1300
         $this.SellPrice          = 650
         $this.TargetStats        = @{
-            [StatId]::Defense = 32
+            [StatId]::Defense      = 32
             [StatId]::MagicDefense = 8
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 26
+            [StatId]::Defense      = 26
             [StatId]::MagicDefense = 6
         }
         $this.CanAddToInventory  = $true
@@ -19727,11 +19725,11 @@ Class BEStarSilverPauldrons : BEPauldron {
         $this.PurchasePrice      = 1350
         $this.SellPrice          = 675
         $this.TargetStats        = @{
-            [StatId]::Defense = 29
+            [StatId]::Defense      = 29
             [StatId]::MagicDefense = 12
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 24
+            [StatId]::Defense      = 24
             [StatId]::MagicDefense = 10
         }
         $this.CanAddToInventory  = $true
@@ -19765,11 +19763,11 @@ Class BEVoidtouchedMantle : BEPauldron {
         $this.PurchasePrice      = 1450
         $this.SellPrice          = 725
         $this.TargetStats        = @{
-            [StatId]::Defense = 20
+            [StatId]::Defense      = 20
             [StatId]::MagicDefense = 22
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 17
+            [StatId]::Defense      = 17
             [StatId]::MagicDefense = 18
         }
         $this.CanAddToInventory  = $true
@@ -19785,11 +19783,11 @@ Class BEOrichalcumSpaulders : BEPauldron {
         $this.PurchasePrice      = 1500
         $this.SellPrice          = 750
         $this.TargetStats        = @{
-            [StatId]::Defense = 33
+            [StatId]::Defense      = 33
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 27
+            [StatId]::Defense      = 27
             [StatId]::MagicDefense = 8
         }
         $this.CanAddToInventory  = $true
@@ -19823,11 +19821,11 @@ Class BECelestialWeaveEpaulets : BEPauldron {
         $this.PurchasePrice      = 1600
         $this.SellPrice          = 800
         $this.TargetStats        = @{
-            [StatId]::Defense = 22
+            [StatId]::Defense      = 22
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 18
+            [StatId]::Defense      = 18
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -19843,11 +19841,11 @@ Class BEHellforgedShoulderguards : BEPauldron {
         $this.PurchasePrice      = 1650
         $this.SellPrice          = 825
         $this.TargetStats        = @{
-            [StatId]::Defense = 36
+            [StatId]::Defense      = 36
             [StatId]::MagicDefense = 9
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 7
         }
         $this.CanAddToInventory  = $true
@@ -19881,11 +19879,11 @@ Class BEShadowLordSpaulders : BEPauldron {
         $this.PurchasePrice      = 1750
         $this.SellPrice          = 875
         $this.TargetStats        = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 23
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 20
+            [StatId]::Defense      = 20
             [StatId]::MagicDefense = 19
         }
         $this.CanAddToInventory  = $true
@@ -19901,11 +19899,11 @@ Class BEStormTitanShoulders : BEPauldron {
         $this.PurchasePrice      = 1800
         $this.SellPrice          = 900
         $this.TargetStats        = @{
-            [StatId]::Defense = 39
+            [StatId]::Defense      = 39
             [StatId]::MagicDefense = 11
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 32
+            [StatId]::Defense      = 32
             [StatId]::MagicDefense = 9
         }
         $this.CanAddToInventory  = $true
@@ -19921,11 +19919,11 @@ Class BEPhoenixAshMantle : BEPauldron {
         $this.PurchasePrice      = 1850
         $this.SellPrice          = 925
         $this.TargetStats        = @{
-            [StatId]::Defense = 28
+            [StatId]::Defense      = 28
             [StatId]::MagicDefense = 28
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 23
+            [StatId]::Defense      = 23
             [StatId]::MagicDefense = 23
         }
         $this.CanAddToInventory  = $true
@@ -19959,11 +19957,11 @@ Class BEEmpyreanGuardEpaulets : BEPauldron {
         $this.PurchasePrice      = 1950
         $this.SellPrice          = 975
         $this.TargetStats        = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 26
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 21
         }
         $this.CanAddToInventory  = $true
@@ -19997,11 +19995,11 @@ Class BEWyrmLordShoulderPlates : BEPauldron {
         $this.PurchasePrice      = 2100
         $this.SellPrice          = 1050
         $this.TargetStats        = @{
-            [StatId]::Defense = 38
+            [StatId]::Defense      = 38
             [StatId]::MagicDefense = 15
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 31
+            [StatId]::Defense      = 31
             [StatId]::MagicDefense = 12
         }
         $this.CanAddToInventory  = $true
@@ -20017,11 +20015,11 @@ Class BEBloodRitualPauldrons : BEPauldron {
         $this.PurchasePrice      = 2200
         $this.SellPrice          = 1100
         $this.TargetStats        = @{
-            [StatId]::Defense = 43
+            [StatId]::Defense      = 43
             [StatId]::MagicDefense = 10
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 36
+            [StatId]::Defense      = 36
             [StatId]::MagicDefense = 8
         }
         $this.CanAddToInventory  = $true
@@ -20037,11 +20035,11 @@ Class BEOracleWeaveShoulders : BEPauldron {
         $this.PurchasePrice      = 2300
         $this.SellPrice          = 1150
         $this.TargetStats        = @{
-            [StatId]::Defense = 27
+            [StatId]::Defense      = 27
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 22
+            [StatId]::Defense      = 22
             [StatId]::MagicDefense = 24
         }
         $this.CanAddToInventory  = $true
@@ -20075,11 +20073,11 @@ Class BEShadowmeldSpaulders : BEPauldron {
         $this.PurchasePrice      = 2500
         $this.SellPrice          = 1250
         $this.TargetStats        = @{
-            [StatId]::Defense = 35
+            [StatId]::Defense      = 35
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 29
+            [StatId]::Defense      = 29
             [StatId]::MagicDefense = 16
         }
         $this.CanAddToInventory  = $true
@@ -20095,11 +20093,11 @@ Class BEThunderclapEpaulets : BEPauldron {
         $this.PurchasePrice      = 2600
         $this.SellPrice          = 1300
         $this.TargetStats        = @{
-            [StatId]::Defense = 41
+            [StatId]::Defense      = 41
             [StatId]::MagicDefense = 18
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 34
+            [StatId]::Defense      = 34
             [StatId]::MagicDefense = 14
         }
         $this.CanAddToInventory  = $true
@@ -20115,11 +20113,11 @@ Class BEInfernalSoulPauldrons : BEPauldron {
         $this.PurchasePrice      = 2700
         $this.SellPrice          = 1350
         $this.TargetStats        = @{
-            [StatId]::Defense = 32
+            [StatId]::Defense      = 32
             [StatId]::MagicDefense = 29
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 26
+            [StatId]::Defense      = 26
             [StatId]::MagicDefense = 23
         }
         $this.CanAddToInventory  = $true
@@ -20153,11 +20151,11 @@ Class BEStarfallMantle : BEPauldron {
         $this.PurchasePrice      = 2850
         $this.SellPrice          = 1425
         $this.TargetStats        = @{
-            [StatId]::Defense = 38
+            [StatId]::Defense      = 38
             [StatId]::MagicDefense = 32
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 31
+            [StatId]::Defense      = 31
             [StatId]::MagicDefense = 26
         }
         $this.CanAddToInventory  = $true
@@ -20173,11 +20171,11 @@ Class BEGorgonScalePauldrons : BEPauldron {
         $this.PurchasePrice      = 2900
         $this.SellPrice          = 1450
         $this.TargetStats        = @{
-            [StatId]::Defense = 46
+            [StatId]::Defense      = 46
             [StatId]::MagicDefense = 14
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 38
+            [StatId]::Defense      = 38
             [StatId]::MagicDefense = 11
         }
         $this.CanAddToInventory  = $true
@@ -20193,11 +20191,11 @@ Class BEVoidForgedSpaulders : BEPauldron {
         $this.PurchasePrice      = 2950
         $this.SellPrice          = 1475
         $this.TargetStats        = @{
-            [StatId]::Defense = 30
+            [StatId]::Defense      = 30
             [StatId]::MagicDefense = 35
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 25
+            [StatId]::Defense      = 25
             [StatId]::MagicDefense = 28
         }
         $this.CanAddToInventory  = $true
@@ -20231,11 +20229,11 @@ Class BEDivineGuardianShoulders : BEPauldron {
         $this.PurchasePrice      = 3500
         $this.SellPrice          = 1750
         $this.TargetStats        = @{
-            [StatId]::Defense = 55
+            [StatId]::Defense      = 55
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 45
+            [StatId]::Defense      = 45
             [StatId]::MagicDefense = 25
         }
         $this.CanAddToInventory  = $true
@@ -20269,11 +20267,11 @@ Class BEWarlordsWarPauldrons : BEPauldron {
         $this.PurchasePrice      = 4000
         $this.SellPrice          = 2000
         $this.TargetStats        = @{
-            [StatId]::Defense = 58
+            [StatId]::Defense      = 58
             [StatId]::MagicDefense = 20
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 48
+            [StatId]::Defense      = 48
             [StatId]::MagicDefense = 15
         }
         $this.CanAddToInventory  = $true
@@ -20289,11 +20287,11 @@ Class BEPrismaticAegisSpaulders : BEPauldron {
         $this.PurchasePrice      = 4200
         $this.SellPrice          = 2100
         $this.TargetStats        = @{
-            [StatId]::Defense = 40
+            [StatId]::Defense      = 40
             [StatId]::MagicDefense = 40
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 33
+            [StatId]::Defense      = 33
             [StatId]::MagicDefense = 33
         }
         $this.CanAddToInventory  = $true
@@ -20327,11 +20325,11 @@ Class BESeraphicWingEpaulets : BEPauldron {
         $this.PurchasePrice      = 4800
         $this.SellPrice          = 2400
         $this.TargetStats        = @{
-            [StatId]::Defense = 45
+            [StatId]::Defense      = 45
             [StatId]::MagicDefense = 45
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 37
+            [StatId]::Defense      = 37
             [StatId]::MagicDefense = 37
         }
         $this.CanAddToInventory  = $true
@@ -20347,11 +20345,11 @@ Class BEDragonSovereignPauldrons : BEPauldron {
         $this.PurchasePrice      = 5200
         $this.SellPrice          = 2600
         $this.TargetStats        = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 25
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 58
+            [StatId]::Defense      = 58
             [StatId]::MagicDefense = 20
         }
         $this.CanAddToInventory  = $true
@@ -20367,11 +20365,11 @@ Class BEAstralGuardianShoulders : BEPauldron {
         $this.PurchasePrice      = 5500
         $this.SellPrice          = 2750
         $this.TargetStats        = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 50
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 41
+            [StatId]::Defense      = 41
             [StatId]::MagicDefense = 41
         }
         $this.CanAddToInventory  = $true
@@ -20405,11 +20403,11 @@ Class BEGodhandEmbraceEpaulets : BEPauldron {
         $this.PurchasePrice      = 6500
         $this.SellPrice          = 3250
         $this.TargetStats        = @{
-            [StatId]::Defense = 55
+            [StatId]::Defense      = 55
             [StatId]::MagicDefense = 55
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 46
+            [StatId]::Defense      = 46
             [StatId]::MagicDefense = 46
         }
         $this.CanAddToInventory  = $true
@@ -20425,11 +20423,11 @@ Class BEWorldTreeHeartwoodPauldrons : BEPauldron {
         $this.PurchasePrice      = 7000
         $this.SellPrice          = 3500
         $this.TargetStats        = @{
-            [StatId]::Defense = 68
+            [StatId]::Defense      = 68
             [StatId]::MagicDefense = 35
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 56
+            [StatId]::Defense      = 56
             [StatId]::MagicDefense = 28
         }
         $this.CanAddToInventory  = $true
@@ -20445,11 +20443,11 @@ Class BEPhoenixSoulSpaulders : BEPauldron {
         $this.PurchasePrice      = 7500
         $this.SellPrice          = 3750
         $this.TargetStats        = @{
-            [StatId]::Defense = 78
+            [StatId]::Defense      = 78
             [StatId]::MagicDefense = 30
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 65
+            [StatId]::Defense      = 65
             [StatId]::MagicDefense = 24
         }
         $this.CanAddToInventory  = $true
@@ -20465,11 +20463,11 @@ Class BEAbyssalVoidMantle : BEPauldron {
         $this.PurchasePrice      = 8000
         $this.SellPrice          = 4000
         $this.TargetStats        = @{
-            [StatId]::Defense = 60
+            [StatId]::Defense      = 60
             [StatId]::MagicDefense = 60
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 50
+            [StatId]::Defense      = 50
             [StatId]::MagicDefense = 50
         }
         $this.CanAddToInventory  = $true
@@ -20503,11 +20501,11 @@ Class BEAspectOfTheCreatorShoulders : BEPauldron {
         $this.PurchasePrice      = 10000
         $this.SellPrice          = 5000
         $this.TargetStats        = @{
-            [StatId]::Defense = 70
+            [StatId]::Defense      = 70
             [StatId]::MagicDefense = 70
         }
         $this.RequiredStats      = @{
-            [StatId]::Defense = 58
+            [StatId]::Defense      = 58
             [StatId]::MagicDefense = 58
         }
         $this.CanAddToInventory  = $true
@@ -20515,11 +20513,13 @@ Class BEAspectOfTheCreatorShoulders : BEPauldron {
         $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
     }
 }
+#endregion
 
 
 
 
 
+#region BEGauntlets Specializations
 ###############################################################################
 #
 # BATTLE EQUIPMENT - GAUNTLET SPECIALIZATIONS
@@ -22045,7 +22045,6 @@ Class BEWorldTreeVambraces : BEGauntlets {
     }
 }
 
-# Tier 9: Artifact Tier
 Class BEGauntletsOfOdin : BEGauntlets {
     BEGauntletsOfOdin() : base() {
         $this.Name               = 'Gauntlets of Odin'
@@ -22073,7 +22072,7 @@ Class BEFistsOfHephaestus : BEGauntlets {
         $this.PurchasePrice      = 10500
         $this.SellPrice          = 5250
         $this.TargetStats        = @{
-            [StatId]::Defense = 90 # More offensive, but still armor
+            [StatId]::Defense = 90
         }
         $this.RequiredStats      = @{
             [StatId]::Defense = 72
@@ -22084,7 +22083,7 @@ Class BEFistsOfHephaestus : BEGauntlets {
     }
 }
 
-Class BEHandsOfMidas : BEGauntlets { # Could have a special gold-finding property in-game
+Class BEHandsOfMidas : BEGauntlets {
     BEHandsOfMidas() : base() {
         $this.Name               = 'Hands of Midas'
         $this.MapObjName         = 'handsofmidas'
@@ -22813,7 +22812,1942 @@ Class BEOmegaGauntlets : BEGauntlets {
         $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
     }
 }
+#endregion
 
+
+
+
+
+#region BEGreaves Specializations
+###############################################################################
+#
+# BEGREAVES SPECIALIZATIONS
+#
+###############################################################################
+Class BEWornClothGreaves : BEGreaves {
+    BEWornClothGreaves() : base() {
+        $this.Name               = 'Worn Cloth Greaves'
+        $this.MapObjName         = 'wornclothgreaves'
+        $this.PurchasePrice      = 10
+        $this.SellPrice          = 5
+        $this.TargetStats        = @{
+            [StatId]::Defense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Patched up cloth wrappings for the legs. Barely offers protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BERustedMetalShinguards : BEGreaves {
+    BERustedMetalShinguards() : base() {
+        $this.Name               = 'Rusted Metal Shinguards'
+        $this.MapObjName         = 'rustedmetalshinguards'
+        $this.PurchasePrice      = 20
+        $this.SellPrice          = 10
+        $this.TargetStats        = @{
+            [StatId]::Defense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shoddily made metal shinguards, covered in rust.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEThinLeatherLeggings : BEGreaves {
+    BEThinLeatherLeggings() : base() {
+        $this.Name               = 'Thin Leather Leggings'
+        $this.MapObjName         = 'thinleatherleggings'
+        $this.PurchasePrice      = 30
+        $this.SellPrice          = 15
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 2
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple leggings made from thin, treated leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPaddedTravelersGreaves : BEGreaves {
+    BEPaddedTravelersGreaves() : base() {
+        $this.Name               = 'Padded Traveler''s Greaves'
+        $this.MapObjName         = 'paddedtravelersgreaves'
+        $this.PurchasePrice      = 45
+        $this.SellPrice          = 22
+        $this.TargetStats        = @{
+            [StatId]::Defense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves with extra padding, suitable for long journeys.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHardenedClothShinWraps : BEGreaves {
+    BEHardenedClothShinWraps() : base() {
+        $this.Name               = 'Hardened Cloth Shin Wraps'
+        $this.MapObjName         = 'hardenedclothshinwraps'
+        $this.PurchasePrice      = 55
+        $this.SellPrice          = 27
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 3
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 2
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Cloth wraps stiffened with resin for better leg protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBasicWoodenGreaves : BEGreaves {
+    BEBasicWoodenGreaves() : base() {
+        $this.Name               = 'Basic Wooden Greaves'
+        $this.MapObjName         = 'basicwoodengreaves'
+        $this.PurchasePrice      = 70
+        $this.SellPrice          = 35
+        $this.TargetStats        = @{
+            [StatId]::Defense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Simple greaves carved from sturdy wood.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBoiledLeatherGreaves : BEGreaves {
+    BEBoiledLeatherGreaves() : base() {
+        $this.Name               = 'Boiled Leather Greaves'
+        $this.MapObjName         = 'boiledleathergreaves'
+        $this.PurchasePrice      = 85
+        $this.SellPrice          = 42
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 4
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 3
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves made from leather hardened by boiling.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BECopperPlatedGreaves : BEGreaves {
+    BECopperPlatedGreaves() : base() {
+        $this.Name               = 'Copper-Plated Greaves'
+        $this.MapObjName         = 'copperplatedgreaves'
+        $this.PurchasePrice      = 100
+        $this.SellPrice          = 50
+        $this.TargetStats        = @{
+            [StatId]::Defense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather greaves reinforced with thin copper plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEApprenticeLeggings : BEGreaves {
+    BEApprenticeLeggings() : base() {
+        $this.Name               = 'Apprentice Leggings'
+        $this.MapObjName         = 'apprenticeleggings'
+        $this.PurchasePrice      = 90
+        $this.SellPrice          = 45
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 2
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 1
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leggings worn by novice magic users, offering slight magical resistance.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHideAndFurGreaves : BEGreaves {
+    BEHideAndFurGreaves() : base() {
+        $this.Name               = 'Hide and Fur Greaves'
+        $this.MapObjName         = 'hideandfurgreaves'
+        $this.PurchasePrice      = 110
+        $this.SellPrice          = 55
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 3
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves made from animal hides and lined with fur for warmth.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESturdyLeatherGreaves : BEGreaves {
+    BESturdyLeatherGreaves() : base() {
+        $this.Name               = 'Sturdy Leather Greaves'
+        $this.MapObjName         = 'sturdyleathergreaves'
+        $this.PurchasePrice      = 130
+        $this.SellPrice          = 65
+        $this.TargetStats        = @{
+            [StatId]::Defense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Well-made greaves from thick, sturdy leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEBronzeShinguards : BEGreaves {
+    BEBronzeShinguards() : base() {
+        $this.Name               = 'Bronze Shinguards'
+        $this.MapObjName         = 'bronzeshinguards'
+        $this.PurchasePrice      = 150
+        $this.SellPrice          = 75
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Shinguards crafted from beaten bronze.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIronReinforcedGreaves : BEGreaves {
+    BEIronReinforcedGreaves() : base() {
+        $this.Name               = 'Iron-Reinforced Greaves'
+        $this.MapObjName         = 'ironreinforcedgreaves'
+        $this.PurchasePrice      = 180
+        $this.SellPrice          = 90
+        $this.TargetStats        = @{
+            [StatId]::Defense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather greaves reinforced with strips of iron.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEQuiltedLegGuards : BEGreaves {
+    BEQuiltedLegGuards() : base() {
+        $this.Name               = 'Quilted Leg Guards'
+        $this.MapObjName         = 'quiltedlegguards'
+        $this.PurchasePrice      = 200
+        $this.SellPrice          = 100
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 6
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 4
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Thickly quilted guards providing decent leg protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBanditChiefsGreaves : BEGreaves {
+    BEBanditChiefsGreaves() : base() {
+        $this.Name               = 'Bandit Chief''s Greaves'
+        $this.MapObjName         = 'banditchiefsgreaves'
+        $this.PurchasePrice      = 230
+        $this.SellPrice          = 115
+        $this.TargetStats        = @{
+            [StatId]::Defense = 9
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Stolen and repurposed greaves, surprisingly effective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEForestWalkersGreaves : BEGreaves {
+    BEForestWalkersGreaves() : base() {
+        $this.Name               = 'Forest Walker''s Greaves'
+        $this.MapObjName         = 'forestwalkersgreaves'
+        $this.PurchasePrice      = 250
+        $this.SellPrice          = 125
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves designed for quiet movement through forests.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESoldiersIronGreaves : BEGreaves {
+    BESoldiersIronGreaves() : base() {
+        $this.Name               = 'Soldier''s Iron Greaves'
+        $this.MapObjName         = 'soldiersirongreaves'
+        $this.PurchasePrice      = 280
+        $this.SellPrice          = 140
+        $this.TargetStats        = @{
+            [StatId]::Defense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 7
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Standard issue iron greaves for foot soldiers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEnchantedBronzeGreaves : BEGreaves {
+    BEEnchantedBronzeGreaves() : base() {
+        $this.Name               = 'Enchanted Bronze Greaves'
+        $this.MapObjName         = 'enchantedbronzegreaves'
+        $this.PurchasePrice      = 300
+        $this.SellPrice          = 150
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 8
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 6
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Bronze greaves imbued with minor protective enchantments.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavyHideGreaves : BEGreaves {
+    BEHeavyHideGreaves() : base() {
+        $this.Name               = 'Heavy Hide Greaves'
+        $this.MapObjName         = 'heavyhidegreaves'
+        $this.PurchasePrice      = 260
+        $this.SellPrice          = 130
+        $this.TargetStats        = @{
+            [StatId]::Defense = 9
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves made from thick, tough animal hides.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEJourneymansGreaves : BEGreaves {
+    BEJourneymansGreaves() : base() {
+        $this.Name               = 'Journeyman''s Greaves'
+        $this.MapObjName         = 'journeymansgreaves'
+        $this.PurchasePrice      = 320
+        $this.SellPrice          = 160
+        $this.TargetStats        = @{
+            [StatId]::Defense = 11
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Reliable greaves for an experienced adventurer.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEReinforcedLeatherLegGuards : BEGreaves {
+    BEReinforcedLeatherLegGuards() : base() {
+        $this.Name               = 'Reinforced Leather Leg Guards'
+        $this.MapObjName         = 'reinforcedleatherlegguards'
+        $this.PurchasePrice      = 350
+        $this.SellPrice          = 175
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 10
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather leg guards with internal metal plates for added protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIronGreaves : BEGreaves {
+    BEIronGreaves() : base() {
+        $this.Name               = 'Iron Greaves'
+        $this.MapObjName         = 'irongreaves'
+        $this.PurchasePrice      = 400
+        $this.SellPrice          = 200
+        $this.TargetStats        = @{
+            [StatId]::Defense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Solid iron greaves offering good physical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStuddedIronGreaves : BEGreaves {
+    BEStuddedIronGreaves() : base() {
+        $this.Name               = 'Studded Iron Greaves'
+        $this.MapObjName         = 'studdedirongreaves'
+        $this.PurchasePrice      = 450
+        $this.SellPrice          = 225
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 13
+            [StatId]::MagicDefense = 2
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 10
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Iron greaves reinforced with prominent metal studs.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChainmailLeggings : BEGreaves {
+    BEChainmailLeggings() : base() {
+        $this.Name               = 'Chainmail Leggings'
+        $this.MapObjName         = 'chainmailleggings'
+        $this.PurchasePrice      = 500
+        $this.SellPrice          = 250
+        $this.TargetStats        = @{
+            [StatId]::Defense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 11
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leggings made of interlocking metal rings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGuardiansGreaves : BEGreaves {
+    BEGuardiansGreaves() : base() {
+        $this.Name               = 'Guardian''s Greaves'
+        $this.MapObjName         = 'guardiansgreaves'
+        $this.PurchasePrice      = 550
+        $this.SellPrice          = 275
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 15
+            [StatId]::MagicDefense = 4
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 2
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by city guardians, polished and well-maintained.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAcolytesBoots : BEGreaves {
+    BEAcolytesBoots() : base() {
+        $this.Name               = 'Acolyte''s Boots'
+        $this.MapObjName         = 'acolytesboots'
+        $this.PurchasePrice      = 480
+        $this.SellPrice          = 240
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 3
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sturdy boots often worn by acolytes, offering magical resistance.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEScaleMailGreaves : BEGreaves {
+    BEScaleMailGreaves() : base() {
+        $this.Name               = 'Scale Mail Greaves'
+        $this.MapObjName         = 'scalemailgreaves'
+        $this.PurchasePrice      = 600
+        $this.SellPrice          = 300
+        $this.TargetStats        = @{
+            [StatId]::Defense = 16
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 12
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves constructed from overlapping metal scales.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEHuntersLeatherTreads : BEGreaves {
+    BEHuntersLeatherTreads() : base() {
+        $this.Name               = 'Hunter''s Leather Treads'
+        $this.MapObjName         = 'huntersleathertreads'
+        $this.PurchasePrice      = 650
+        $this.SellPrice          = 325
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 14
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 11
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Durable leather treads designed for tracking through rough terrain.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFortifiedWoodenGreaves : BEGreaves {
+    BEFortifiedWoodenGreaves() : base() {
+        $this.Name               = 'Fortified Wooden Greaves'
+        $this.MapObjName         = 'fortifiedwoodengreaves'
+        $this.PurchasePrice      = 520
+        $this.SellPrice          = 260
+        $this.TargetStats        = @{
+            [StatId]::Defense = 13
+            [StatId]::MagicDefense = 1
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 10
+            [StatId]::MagicDefense = 0
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Wooden greaves reinforced with metal bands.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEIroncladGreaves : BEGreaves {
+    BEIroncladGreaves() : base() {
+        $this.Name               = 'Ironclad Greaves'
+        $this.MapObjName         = 'ironcladgreaves'
+        $this.PurchasePrice      = 700
+        $this.SellPrice          = 350
+        $this.TargetStats        = @{
+            [StatId]::Defense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 14
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Heavy iron greaves offering substantial protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BESteelGreaves : BEGreaves {
+    BESteelGreaves() : base() {
+        $this.Name               = 'Steel Greaves'
+        $this.MapObjName         = 'steelgreaves'
+        $this.PurchasePrice      = 750
+        $this.SellPrice          = 375
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 19
+            [StatId]::MagicDefense = 3
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 15
+            [StatId]::MagicDefense = 1
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Well-crafted greaves made of polished steel.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHardenedLeatherLeggingsMarkII : BEGreaves {
+    BEHardenedLeatherLeggingsMarkII() : base() {
+        $this.Name               = 'Hardened Leather Leggings II'
+        $this.MapObjName         = 'hardenedleatherleggingsii'
+        $this.PurchasePrice      = 800
+        $this.SellPrice          = 400
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 16
+            [StatId]::MagicDefense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Improved leggings made from specially treated, hardened leather.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEChainmailAndPlateGreaves : BEGreaves {
+    BEChainmailAndPlateGreaves() : base() {
+        $this.Name               = 'Chainmail and Plate Greaves'
+        $this.MapObjName         = 'chainmailandplategreaves'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{
+            [StatId]::Defense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves combining chainmail flexibility with plate protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWarriorsLeatherGreaves : BEGreaves {
+    BEWarriorsLeatherGreaves() : base() {
+        $this.Name               = 'Warrior''s Leather Greaves'
+        $this.MapObjName         = 'warriorsleathergreaves'
+        $this.PurchasePrice      = 950
+        $this.SellPrice          = 475
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 20
+            [StatId]::MagicDefense = 5
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 16
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Tough leather greaves favored by seasoned warriors.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEScholarsBoots : BEGreaves {
+    BEScholarsBoots() : base() {
+        $this.Name               = 'Scholar''s Boots'
+        $this.MapObjName         = 'scholarsboots'
+        $this.PurchasePrice      = 850
+        $this.SellPrice          = 425
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 5
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Comfortable boots often worn by scholars, offering some magical warding.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHeavyChainGreaves : BEGreaves {
+    BEHeavyChainGreaves() : base() {
+        $this.Name               = 'Heavy Chain Greaves'
+        $this.MapObjName         = 'heavychaingreaves'
+        $this.PurchasePrice      = 1100
+        $this.SellPrice          = 550
+        $this.TargetStats        = @{
+            [StatId]::Defense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves made from thick, heavy chainmail links.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEFineSteelGreaves : BEGreaves {
+    BEFineSteelGreaves() : base() {
+        $this.Name               = 'Fine Steel Greaves'
+        $this.MapObjName         = 'finesteelgreaves'
+        $this.PurchasePrice      = 1200
+        $this.SellPrice          = 600
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 24
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 18
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves crafted from high-quality steel, offering excellent protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEEnchantedTravelersBoots : BEGreaves {
+    BEEnchantedTravelersBoots() : base() {
+        $this.Name               = 'Enchanted Traveler''s Boots'
+        $this.MapObjName         = 'enchantedtravelersboots'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 10
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 7
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots enchanted for long journeys, providing magical resistance.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPlateAndMailGreaves : BEGreaves {
+    BEPlateAndMailGreaves() : base() {
+        $this.Name               = 'Plate and Mail Greaves'
+        $this.MapObjName         = 'plateandmailgreaves'
+        $this.PurchasePrice      = 1350
+        $this.SellPrice          = 675
+        $this.TargetStats        = @{
+            [StatId]::Defense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 22
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A hybrid design combining the strength of plate with chainmail flexibility.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEVeteranSoldiersGreaves : BEGreaves {
+    BEVeteranSoldiersGreaves() : base() {
+        $this.Name               = 'Veteran Soldier''s Greaves'
+        $this.MapObjName         = 'veteransoldiersgreaves'
+        $this.PurchasePrice      = 1500
+        $this.SellPrice          = 750
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 26
+            [StatId]::MagicDefense = 7
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 20
+            [StatId]::MagicDefense = 4
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by battle-hardened veteran soldiers.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEMithrilThreadedGreaves : BEGreaves {
+    BEMithrilThreadedGreaves() : base() {
+        $this.Name               = 'Mithril-Threaded Greaves'
+        $this.MapObjName         = 'mithrilthreadedgreaves'
+        $this.PurchasePrice      = 1600
+        $this.SellPrice          = 800
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 25
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 19
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leather greaves interwoven with threads of mithril for lightness and strength.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEFullSteelPlateGreaves : BEGreaves {
+    BEFullSteelPlateGreaves() : base() {
+        $this.Name               = 'Full Steel Plate Greaves'
+        $this.MapObjName         = 'fullsteelplategreaves'
+        $this.PurchasePrice      = 1800
+        $this.SellPrice          = 900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 32
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 25
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves offering complete leg protection with articulated steel plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEEnchantedKnightGreaves : BEGreaves {
+    BEEnchantedKnightGreaves() : base() {
+        $this.Name               = 'Enchanted Knight Greaves'
+        $this.MapObjName         = 'enchantedknightgreaves'
+        $this.PurchasePrice      = 2000
+        $this.SellPrice          = 1000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 30
+            [StatId]::MagicDefense = 8
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 23
+            [StatId]::MagicDefense = 5
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Steel greaves of a knight, imbued with protective enchantments.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWyrmScaleLeggings : BEGreaves {
+    BEWyrmScaleLeggings() : base() {
+        $this.Name               = 'Wyrm Scale Leggings'
+        $this.MapObjName         = 'wyrmscaleleggings'
+        $this.PurchasePrice      = 2200
+        $this.SellPrice          = 1100
+        $this.TargetStats        = @{
+            [StatId]::Defense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 27
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Leggings crafted from the scales of a young dragon or wyrm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEMagesGuildBoots : BEGreaves {
+    BEMagesGuildBoots() : base() {
+        $this.Name               = 'Mage''s Guild Boots'
+        $this.MapObjName         = 'magesguildboots'
+        $this.PurchasePrice      = 1900
+        $this.SellPrice          = 950
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 12
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 8
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots issued to members of a mage''s guild, enchanted for magical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrnateSteelLegguards : BEGreaves {
+    BEOrnateSteelLegguards() : base() {
+        $this.Name               = 'Ornate Steel Legguards'
+        $this.MapObjName         = 'ornatesteellegguards'
+        $this.PurchasePrice      = 2500
+        $this.SellPrice          = 1250
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 34
+            [StatId]::MagicDefense = 6
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 26
+            [StatId]::MagicDefense = 3
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Steel legguards with intricate, decorative carvings.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGryphonFeatherBoots : BEGreaves {
+    BEGryphonFeatherBoots() : base() {
+        $this.Name               = 'Gryphon Feather Boots'
+        $this.MapObjName         = 'gryphonfeatherboots'
+        $this.PurchasePrice      = 2300
+        $this.SellPrice          = 1150
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 20
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 15
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Lightweight boots adorned with gryphon feathers, said to enhance agility.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDwarvenForgedGreaves : BEGreaves {
+    BEDwarvenForgedGreaves() : base() {
+        $this.Name               = 'Dwarven Forged Greaves'
+        $this.MapObjName         = 'dwarvenforgedgreaves'
+        $this.PurchasePrice      = 2800
+        $this.SellPrice          = 1400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 38
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 30
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves masterfully forged by dwarven smiths, exceptionally durable.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEElvenScoutsBoots : BEGreaves {
+    BEElvenScoutsBoots() : base() {
+        $this.Name               = 'Elven Scout''s Boots'
+        $this.MapObjName         = 'elvenscoutsboots'
+        $this.PurchasePrice      = 2600
+        $this.SellPrice          = 1300
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 22
+            [StatId]::MagicDefense = 14
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 17
+            [StatId]::MagicDefense = 9
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots crafted for elven scouts, allowing for silent movement.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiteWeaveGreaves : BEGreaves {
+    BEAdamantiteWeaveGreaves() : base() {
+        $this.Name               = 'Adamantite Weave Greaves'
+        $this.MapObjName         = 'adamantiteweavegreaves'
+        $this.PurchasePrice      = 3000
+        $this.SellPrice          = 1500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 40
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 32
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves with an underlying weave of adamantite threads for superior protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEMithrilPlateGreaves : BEGreaves {
+    BEMithrilPlateGreaves() : base() {
+        $this.Name               = 'Mithril Plate Greaves'
+        $this.MapObjName         = 'mithrilplategreaves'
+        $this.PurchasePrice      = 3200
+        $this.SellPrice          = 1600
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 38
+            [StatId]::MagicDefense = 12
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 30
+            [StatId]::MagicDefense = 8
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves made from plates of shining mithril, light and strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBattlemageReinforcedBoots : BEGreaves {
+    BEBattlemageReinforcedBoots() : base() {
+        $this.Name               = 'Battlemage Reinforced Boots'
+        $this.MapObjName         = 'battlemagereinforcedboots'
+        $this.PurchasePrice      = 3500
+        $this.SellPrice          = 1750
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 28
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 22
+            [StatId]::MagicDefense = 13
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots reinforced with metal and enchantments for battle mages.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrnateDwarvenGreaves : BEGreaves {
+    BEOrnateDwarvenGreaves() : base() {
+        $this.Name               = 'Ornate Dwarven Greaves'
+        $this.MapObjName         = 'ornatedwarvengreaves'
+        $this.PurchasePrice      = 3800
+        $this.SellPrice          = 1900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Heavily ornamented greaves showcasing masterful dwarven craftsmanship.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEElvenKnightGreaves : BEGreaves {
+    BEElvenKnightGreaves() : base() {
+        $this.Name               = 'Elven Knight Greaves'
+        $this.MapObjName         = 'elvenknightgreaves'
+        $this.PurchasePrice      = 4200
+        $this.SellPrice          = 2100
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 35
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 27
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Elegant yet sturdy greaves worn by elven knights.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEShadowWalkerBoots : BEGreaves {
+    BEShadowWalkerBoots() : base() {
+        $this.Name               = 'Shadow Walker Boots'
+        $this.MapObjName         = 'shadowwalkerboots'
+        $this.PurchasePrice      = 4000
+        $this.SellPrice          = 2000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 25
+            [StatId]::MagicDefense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 19
+            [StatId]::MagicDefense = 16
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots that allow the wearer to move like a shadow, silent and unseen.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantitePlatedGreaves : BEGreaves {
+    BEAdamantitePlatedGreaves() : base() {
+        $this.Name               = 'Adamantite-Plated Greaves'
+        $this.MapObjName         = 'adamantiteplatedgreaves'
+        $this.PurchasePrice      = 4800
+        $this.SellPrice          = 2400
+        $this.TargetStats        = @{
+            [StatId]::Defense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves reinforced with nearly unbreakable adamantite plates.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGreavesOfResilience : BEGreaves {
+    BEGreavesOfResilience() : base() {
+        $this.Name               = 'Greaves of Resilience'
+        $this.MapObjName         = 'greavesofresilience'
+        $this.PurchasePrice      = 5200
+        $this.SellPrice          = 2600
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 48
+            [StatId]::MagicDefense = 10
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 38
+            [StatId]::MagicDefense = 6
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves enchanted to withstand tremendous punishment.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBootsOfSwiftStriking : BEGreaves {
+    BEBootsOfSwiftStriking() : base() {
+        $this.Name               = 'Boots of Swift Striking'
+        $this.MapObjName         = 'bootsofswiftstriking'
+        $this.PurchasePrice      = 5000
+        $this.SellPrice          = 2500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 30
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 23
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots that enhance the wearer''s speed and reflexes in combat.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEWyrmboneGreaves : BEGreaves {
+    BEWyrmboneGreaves() : base() {
+        $this.Name               = 'Wyrmbone Greaves'
+        $this.MapObjName         = 'wyrmbonegreaves'
+        $this.PurchasePrice      = 5800
+        $this.SellPrice          = 2900
+        $this.TargetStats        = @{
+            [StatId]::Defense = 55
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 44
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves carved from the bones of a powerful wyrm.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEArchmagesEnchantedBoots : BEGreaves {
+    BEArchmagesEnchantedBoots() : base() {
+        $this.Name               = 'Archmage''s Enchanted Boots'
+        $this.MapObjName         = 'archmagesenchantedboots'
+        $this.PurchasePrice      = 6000
+        $this.SellPrice          = 3000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 25
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 19
+            [StatId]::MagicDefense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots heavily enchanted by an archmage for superior magical defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonscaleGreaves : BEGreaves {
+    BEDragonscaleGreaves() : base() {
+        $this.Name               = 'Dragonscale Greaves'
+        $this.MapObjName         = 'dragonscalegreaves'
+        $this.PurchasePrice      = 6500
+        $this.SellPrice          = 3250
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 52
+            [StatId]::MagicDefense = 15
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 41
+            [StatId]::MagicDefense = 10
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves meticulously crafted from individual dragon scales.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOrichalcumPlatedGreaves : BEGreaves {
+    BEOrichalcumPlatedGreaves() : base() {
+        $this.Name               = 'Orichalcum-Plated Greaves'
+        $this.MapObjName         = 'orichalcumplatedgreaves'
+        $this.PurchasePrice      = 7000
+        $this.SellPrice          = 3500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 45
+            [StatId]::MagicDefense = 20
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 36
+            [StatId]::MagicDefense = 15
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves plated with the rare and magically resonant orichalcum.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixRiderGreaves : BEGreaves {
+    BEPhoenixRiderGreaves() : base() {
+        $this.Name               = 'Phoenix Rider Greaves'
+        $this.MapObjName         = 'phoenixridergreaves'
+        $this.PurchasePrice      = 7500
+        $this.SellPrice          = 3750
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 40
+            [StatId]::MagicDefense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 32
+            [StatId]::MagicDefense = 21
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by legendary riders of phoenixes, imbued with fire resistance.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAdamantiumCoreGreaves : BEGreaves {
+    BEAdamantiumCoreGreaves() : base() {
+        $this.Name               = 'Adamantium Core Greaves'
+        $this.MapObjName         = 'adamantiumcoregreaves'
+        $this.PurchasePrice      = 8000
+        $this.SellPrice          = 4000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves with a solid core of nearly unbreakable adamantite.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGreavesOfTheSilentGuardian : BEGreaves {
+    BEGreavesOfTheSilentGuardian() : base() {
+        $this.Name               = 'Greaves of the Silent Guardian'
+        $this.MapObjName         = 'greavesofthesilentguardian'
+        $this.PurchasePrice      = 8500
+        $this.SellPrice          = 4250
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 58
+            [StatId]::MagicDefense = 18
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 46
+            [StatId]::MagicDefense = 13
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by guardians who protect sacred, silent places.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarSilverLegplates : BEGreaves {
+    BEStarSilverLegplates() : base() {
+        $this.Name               = 'Star Silver Legplates'
+        $this.MapObjName         = 'starsilverlegplates'
+        $this.PurchasePrice      = 9000
+        $this.SellPrice          = 4500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 42
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 33
+            [StatId]::MagicDefense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Legplates forged from silver mined from a fallen star, cool to the touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidtouchedGreaves : BEGreaves {
+    BEVoidtouchedGreaves() : base() {
+        $this.Name               = 'Void-Touched Greaves'
+        $this.MapObjName         = 'voidtouchedgreaves'
+        $this.PurchasePrice      = 9500
+        $this.SellPrice          = 4750
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 50
+            [StatId]::MagicDefense = 22
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 40
+            [StatId]::MagicDefense = 17
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves that seem to absorb light, touched by the emptiness of the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGolemsHeartGreaves : BEGreaves {
+    BEGolemsHeartGreaves() : base() {
+        $this.Name               = 'Golem''s Heart Greaves'
+        $this.MapObjName         = 'golemsheartgreaves'
+        $this.PurchasePrice      = 10000
+        $this.SellPrice          = 5000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 68
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 54
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Massive greaves, as if taken from the core of a powerful stone golem.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BECelestialKnightGreaves : BEGreaves {
+    BECelestialKnightGreaves() : base() {
+        $this.Name               = 'Celestial Knight Greaves'
+        $this.MapObjName         = 'celestialknightgreaves'
+        $this.PurchasePrice      = 11000
+        $this.SellPrice          = 5500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 55
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 44
+            [StatId]::MagicDefense = 23
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by knights who serve celestial beings, shimmering with holy light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDemonboneGreaves : BEGreaves {
+    BEDemonboneGreaves() : base() {
+        $this.Name               = 'Demonbone Greaves'
+        $this.MapObjName         = 'demonbonegreaves'
+        $this.PurchasePrice      = 12000
+        $this.SellPrice          = 6000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves crafted from the bones of powerful demons, unnervingly strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEArchonForgedGreaves : BEGreaves {
+    BEArchonForgedGreaves() : base() {
+        $this.Name               = 'Archon-Forged Greaves'
+        $this.MapObjName         = 'archonforgedgreaves'
+        $this.PurchasePrice      = 13000
+        $this.SellPrice          = 6500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 65
+            [StatId]::MagicDefense = 35
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 52
+            [StatId]::MagicDefense = 27
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves forged by Archons, imbued with immense protective power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BETitaniumPlateGreaves : BEGreaves {
+    BETitaniumPlateGreaves() : base() {
+        $this.Name               = 'Titanium Plate Greaves'
+        $this.MapObjName         = 'titaniumplategreaves'
+        $this.PurchasePrice      = 14000
+        $this.SellPrice          = 7000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 64
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves made from solid plates of exceptionally strong titanium.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStarMetalLegplates : BEGreaves {
+    BEStarMetalLegplates() : base() {
+        $this.Name               = 'Star Metal Legplates'
+        $this.MapObjName         = 'starmetallegplates'
+        $this.PurchasePrice      = 15000
+        $this.SellPrice          = 7500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 70
+            [StatId]::MagicDefense = 38
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 56
+            [StatId]::MagicDefense = 29
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Legplates forged from metal fallen from the stars, humming with cosmic energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEVoidtouchedPlatelegs : BEGreaves {
+    BEVoidtouchedPlatelegs() : base() {
+        $this.Name               = 'Void-Touched Platelegs'
+        $this.MapObjName         = 'voidtouchedplatelegs'
+        $this.PurchasePrice      = 16000
+        $this.SellPrice          = 8000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 78
+            [StatId]::MagicDefense = 25
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 62
+            [StatId]::MagicDefense = 19
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Platelegs that seem to absorb light, touched by the emptiness of the void.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEAncientRunicLegguards : BEGreaves {
+    BEAncientRunicLegguards() : base() {
+        $this.Name               = 'Ancient Runic Legguards'
+        $this.MapObjName         = 'ancientruniclegguards'
+        $this.PurchasePrice      = 17500
+        $this.SellPrice          = 8750
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 68
+            [StatId]::MagicDefense = 42
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 54
+            [StatId]::MagicDefense = 33
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Legguards covered in ancient, powerful runes of warding.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDrakeLordGreaves : BEGreaves {
+    BEDrakeLordGreaves() : base() {
+        $this.Name               = 'Drake Lord Greaves'
+        $this.MapObjName         = 'drakelordgreaves'
+        $this.PurchasePrice      = 19000
+        $this.SellPrice          = 9500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 90
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 72
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves crafted from the scales of a mighty Drake Lord.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEPaladinsSacredGreaves : BEGreaves {
+    BEPaladinsSacredGreaves() : base() {
+        $this.Name               = 'Paladin''s Sacred Greaves'
+        $this.MapObjName         = 'paladinssacredgreaves'
+        $this.PurchasePrice      = 20000
+        $this.SellPrice          = 10000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 80
+            [StatId]::MagicDefense = 30
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 64
+            [StatId]::MagicDefense = 23
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Sacred greaves blessed to protect a holy champion of justice.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEArchmagesWardBoots : BEGreaves {
+    BEArchmagesWardBoots() : base() {
+        $this.Name               = 'Archmage''s Ward Boots'
+        $this.MapObjName         = 'archmageswardboots'
+        $this.PurchasePrice      = 22000
+        $this.SellPrice          = 11000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 45
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 36
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Boots heavily enchanted by an archmage, creating a powerful magical ward.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEBlacksteelPlatelegs : BEGreaves {
+    BEBlacksteelPlatelegs() : base() {
+        $this.Name               = 'Blacksteel Platelegs'
+        $this.MapObjName         = 'blacksteelplatelegs'
+        $this.PurchasePrice      = 24000
+        $this.SellPrice          = 12000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 95
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 76
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Platelegs forged from rare blacksteel, offering superior resilience.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGryphonKingsGreaves : BEGreaves {
+    BEGryphonKingsGreaves() : base() {
+        $this.Name               = 'Gryphon King''s Greaves'
+        $this.MapObjName         = 'gryphonkingsgreaves'
+        $this.PurchasePrice      = 25000
+        $this.SellPrice          = 12500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 85
+            [StatId]::MagicDefense = 28
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 68
+            [StatId]::MagicDefense = 21
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by the king of gryphons, light yet incredibly strong.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BESunstonePlatedGreaves : BEGreaves {
+    BESunstonePlatedGreaves() : base() {
+        $this.Name               = 'Sunstone-Plated Greaves'
+        $this.MapObjName         = 'sunstoneplatedgreaves'
+        $this.PurchasePrice      = 27000
+        $this.SellPrice          = 13500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 75
+            [StatId]::MagicDefense = 45
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 60
+            [StatId]::MagicDefense = 36
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves plated with radiant sunstones, warm to the touch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDragonbonePlatelegs : BEGreaves {
+    BEDragonbonePlatelegs() : base() {
+        $this.Name               = 'Dragonbone Platelegs'
+        $this.MapObjName         = 'dragonboneplatelegs'
+        $this.PurchasePrice      = 30000
+        $this.SellPrice          = 15000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 105
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 84
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Platelegs crafted from the ancient bones of a powerful dragon.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BECelestialGuardianGreaves : BEGreaves {
+    BECelestialGuardianGreaves() : base() {
+        $this.Name               = 'Celestial Guardian Greaves'
+        $this.MapObjName         = 'celestialguardiangreaves'
+        $this.PurchasePrice      = 33000
+        $this.SellPrice          = 16500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 90
+            [StatId]::MagicDefense = 50
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 72
+            [StatId]::MagicDefense = 40
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by celestial guardians, shimmering with divine light.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEDemonicLordGreaves : BEGreaves {
+    BEDemonicLordGreaves() : base() {
+        $this.Name               = 'Demonic Lord Greaves'
+        $this.MapObjName         = 'demoniclordgreaves'
+        $this.PurchasePrice      = 36000
+        $this.SellPrice          = 18000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 115
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 92
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves once worn by a powerful demon lord, radiating malevolence.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAbyssalWalkerGreaves : BEGreaves {
+    BEAbyssalWalkerGreaves() : base() {
+        $this.Name               = 'Abyssal Walker Greaves'
+        $this.MapObjName         = 'abyssalwalkergreaves'
+        $this.PurchasePrice      = 39000
+        $this.SellPrice          = 19500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 95
+            [StatId]::MagicDefense = 48
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 76
+            [StatId]::MagicDefense = 38
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves that allow one to tread the paths of the abyss unharmed.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEPhoenixEmperorGreaves : BEGreaves {
+    BEPhoenixEmperorGreaves() : base() {
+        $this.Name               = 'Phoenix Emperor Greaves'
+        $this.MapObjName         = 'phoenixemperorgreaves'
+        $this.PurchasePrice      = 42000
+        $this.SellPrice          = 21000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 80
+            [StatId]::MagicDefense = 58
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 64
+            [StatId]::MagicDefense = 46
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves of a legendary emperor who commanded phoenixes, imbued with eternal flame.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BETitanSlayerGreaves : BEGreaves {
+    BETitanSlayerGreaves() : base() {
+        $this.Name               = 'Titan Slayer Greaves'
+        $this.MapObjName         = 'titanslayergreaves'
+        $this.PurchasePrice      = 45000
+        $this.SellPrice          = 22500
+        $this.TargetStats        = @{
+            [StatId]::Defense = 125
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 100
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by heroes who have slain titans, incredibly resilient.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEStormLordGreaves : BEGreaves {
+    BEStormLordGreaves() : base() {
+        $this.Name               = 'Storm Lord Greaves'
+        $this.MapObjName         = 'stormlordgreaves'
+        $this.PurchasePrice      = 48000
+        $this.SellPrice          = 24000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 100
+            [StatId]::MagicDefense = 52
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 80
+            [StatId]::MagicDefense = 41
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves of a lord who commands the fury of storms, crackling with power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEHolyAvengerGreaves : BEGreaves {
+    BEHolyAvengerGreaves() : base() {
+        $this.Name               = 'Holy Avenger Greaves'
+        $this.MapObjName         = 'holyavengergreaves'
+        $this.PurchasePrice      = 50000
+        $this.SellPrice          = 25000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 90
+            [StatId]::MagicDefense = 60
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 72
+            [StatId]::MagicDefense = 48
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves of a divine avenger, radiating pure holy energy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEInfernalTyrantGreaves : BEGreaves {
+    BEInfernalTyrantGreaves() : base() {
+        $this.Name               = 'Infernal Tyrant Greaves'
+        $this.MapObjName         = 'infernaltyrantgreaves'
+        $this.PurchasePrice      = 52000
+        $this.SellPrice          = 26000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 130
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 104
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves worn by a tyrant of the infernal realms, exuding dread.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEWorldTreeRootGreaves : BEGreaves {
+    BEWorldTreeRootGreaves() : base() {
+        $this.Name               = 'World Tree Root Greaves'
+        $this.MapObjName         = 'worldtreerootgreaves'
+        $this.PurchasePrice      = 55000
+        $this.SellPrice          = 27500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 110
+            [StatId]::MagicDefense = 65
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 88
+            [StatId]::MagicDefense = 52
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves crafted from the ancient roots of the World Tree itself.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEStarforgedAegisGreaves : BEGreaves {
+    BEStarforgedAegisGreaves() : base() {
+        $this.Name               = 'Starforged Aegis Greaves'
+        $this.MapObjName         = 'starforgedaegisgreaves'
+        $this.PurchasePrice      = 60000
+        $this.SellPrice          = 30000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 140
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 112
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves forged in the heart of a dying star, offering unparalleled defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEAspectOfTheCreatorGreaves : BEGreaves {
+    BEAspectOfTheCreatorGreaves() : base() {
+        $this.Name               = 'Aspect of the Creator Greaves'
+        $this.MapObjName         = 'aspectofthecreatorgreaves'
+        $this.PurchasePrice      = 65000
+        $this.SellPrice          = 32500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 120
+            [StatId]::MagicDefense = 70
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 96
+            [StatId]::MagicDefense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves said to be a fragment of the Creator''s own power and resilience.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGodslayerWarboots : BEGreaves {
+    BEGodslayerWarboots() : base() {
+        $this.Name               = 'Godslayer Warboots'
+        $this.MapObjName         = 'godslayerwarboots'
+        $this.PurchasePrice      = 70000
+        $this.SellPrice          = 35000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 150
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 120
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Warboots imbued with the power to fell deities, offering unmatched protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEArmguardsofEternalNight : BEGreaves {
+    BEArmguardsofEternalNight() : base() {
+        $this.Name               = 'Armguards of Eternal Night'
+        $this.MapObjName         = 'armguardsofeternalnight'
+        $this.PurchasePrice      = 75000
+        $this.SellPrice          = 37500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 125
+            [StatId]::MagicDefense = 75
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 100
+            [StatId]::MagicDefense = 60
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Armguards woven from the fabric of endless night, granting mastery over shadows and defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGreavesOfTheWorldSerpent : BEGreaves {
+    BEGreavesOfTheWorldSerpent() : base() {
+        $this.Name               = 'Greaves of the World Serpent'
+        $this.MapObjName         = 'greavesoftheworldserpent'
+        $this.PurchasePrice      = 80000
+        $this.SellPrice          = 40000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 160
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 128
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves crafted from the scales of Jormungandr, the World Serpent, impossibly tough.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGreavesOfTimelessness : BEGreaves {
+    BEGreavesOfTimelessness() : base() {
+        $this.Name               = 'Greaves of Timelessness'
+        $this.MapObjName         = 'greavesoftimelessness'
+        $this.PurchasePrice      = 85000
+        $this.SellPrice          = 42500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 130
+            [StatId]::MagicDefense = 80
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 104
+            [StatId]::MagicDefense = 64
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves that seem to exist outside of time, offering profound protection.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEGreavesOfThePrimordials : BEGreaves {
+    BEGreavesOfThePrimordials() : base() {
+        $this.Name               = 'Greaves of the Primordials'
+        $this.MapObjName         = 'greavesoftheprimordials'
+        $this.PurchasePrice      = 90000
+        $this.SellPrice          = 45000
+        $this.TargetStats        = @{
+            [StatId]::Defense = 170
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense = 136
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves imbued with the raw power of the first beings of creation.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
+    }
+}
+
+Class BEGreavesOfDivineAscension : BEGreaves {
+    BEGreavesOfDivineAscension() : base() {
+        $this.Name               = 'Greaves of Divine Ascension'
+        $this.MapObjName         = 'greavesofdivineascension'
+        $this.PurchasePrice      = 95000
+        $this.SellPrice          = 47500
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 140
+            [StatId]::MagicDefense = 85
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 112
+            [StatId]::MagicDefense = 68
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Greaves that signify the wearer''s path to godhood, radiating immense power.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+
+Class BEOmegaGreaves : BEGreaves {
+    BEOmegaGreaves() : base() {
+        $this.Name               = 'Omega Greaves'
+        $this.MapObjName         = 'omegagreaves'
+        $this.PurchasePrice      = 100000
+        $this.SellPrice          = 50000
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 150
+            [StatId]::MagicDefense = 70 # Omega items should be powerful in all aspects
+        }
+        $this.RequiredStats      = @{
+            [StatId]::Defense      = 120
+            [StatId]::MagicDefense = 56
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate greaves, signifying the end of all challenges to the wearer''s defense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
+    }
+}
+#endregion
 
 
 
