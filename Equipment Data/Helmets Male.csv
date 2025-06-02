@@ -1,0 +1,129 @@
+Name,Purchase Price,Sell Price,Defensive Power,Magic Defensive Power,Applicable Gender,Req. Def. Power,Req. Magic Def. Power,Examine String
+Leather Cap (M),100,50,5,0,Male,3,-,A simple cap made of tanned leather. Offers minimal protection.
+Iron Helmet (M),250,125,10,0,Male,6,-,A sturdy helmet forged from iron. Provides basic physical defense.
+Bronze Helm (M),300,150,9,2,Male,5,1,"A helm crafted from bronze, offering a touch of magical resistance."
+Spiked Helmet (M),380,190,12,0,Male,7,-,An intimidating helmet adorned with sharp spikes. Focuses on physical defense.
+Steel Helm (M),450,225,15,0,Male,9,-,"A well-made helmet of steel, providing reliable protection."
+Great Helm (M),700,350,22,0,Male,13,-,A full-face helmet offering excellent physical protection. Limits visibility.
+Dragon Scale Helm (M),900,450,25,10,Male,15,6,"A helm crafted from tough dragon scales, offering both physical and magical defense."
+Holy Helm (M),1100,550,28,15,Male,17,9,"A blessed helmet radiating a faint holy aura, providing good defense."
+Knight's Helm (M),1200,600,30,0,Male,18,-,"A classic knight's helm, symbolizing bravery and offering strong defense."
+War Helm (M),1350,675,32,5,Male,19,3,"A rugged helmet designed for battle, with slight magical resilience."
+Demon Helm (M),1750,875,35,10,Male,21,6,"A sinister helm imbued with dark energy, offering potent defenses."
+Obsidian Helm (M),2000,1000,38,0,Male,22,-,"A heavy helmet carved from obsidian, providing superb physical protection."
+Champion's Helm (M),2200,1100,40,8,Male,24,5,"A helm worn by champions, offering significant physical and some magical defense."
+Conqueror's Helm (M),2600,1300,45,0,Male,27,-,"A helm fit for a conqueror, granting exceptional physical fortitude."
+Guardian Helm (M),2800,1400,48,10,Male,29,6,"A sturdy helm favored by guardians, providing strong all-around protection."
+Royal Helm (M),3000,1500,50,5,Male,30,3,"A regal helmet signifying authority, with balanced defensive capabilities."
+Dread Helm (M),3500,1750,55,0,Male,33,-,"A terrifying helm that instills fear, offering superior physical defense."
+Paladin's Helm (M),3800,1900,58,12,Male,34,7,"A gleaming helm worn by paladins, blessed with strong defenses."
+Legendary Helm (M),4000,2000,60,15,Male,36,9,"A legendary helm spoken of in tales, offering remarkable protection."
+Dragonbone Helm (M),4500,2250,65,0,Male,39,-,"A helm crafted from the bones of a mighty dragon, incredibly resilient."
+Imperial Helm (M),4800,2400,68,10,Male,40,6,"A majestic helm worn by imperial soldiers, providing excellent defense."
+Runeplate Helm (M),5000,2500,70,18,Male,42,10,"A helm inscribed with ancient runes, granting strong physical and magical defense."
+Void Helm (M),5500,2750,75,0,Male,45,-,"A dark helm emanating void energy, offering exceptional physical protection."
+Colossal Helm (M),5800,2900,78,12,Male,46,7,A massive helmet providing overwhelming physical defense.
+Divine Helm (M),6000,3000,80,20,Male,48,12,"A radiant helm touched by divine power, offering superb all-around defense."
+Conqueror's Crown (M),6500,3250,85,0,Male,51,-,"The ultimate symbol of conquest, granting peerless physical defense."
+Titan Helm (M),6800,3400,88,15,Male,52,9,"A helm befitting a titan, offering immense physical and some magical defense."
+Empyrean Helm (M),7000,3500,90,25,Male,54,15,"A heavenly helm radiating celestial energy, providing exceptional defense."
+Doom Helm (M),7500,3750,95,0,Male,57,-,"A cursed helm promising unmatched physical power, but at what cost?"
+Valor Helm (M),7800,3900,98,18,Male,58,10,"A helm embodying valor, offering remarkable physical and some magical defense."
+Sovereign Helm (M),8000,4000,100,30,Male,60,18,"A majestic helm signifying supreme rule, with outstanding all-around defense."
+War God's Helm (M),8500,4250,105,0,Male,63,-,"A helm blessed by the god of war, granting unparalleled physical might."
+Indomitable Helm (M),8800,4400,108,20,Male,64,12,An unbreakable helm offering incredible physical and magical resistance.
+Overlord's Helm (M),9000,4500,110,35,Male,66,21,"A helm worn by the ultimate ruler, granting supreme defensive power."
+Celestial King's Helm (M),9500,4750,115,0,Male,69,-,"A helm befitting a king of the heavens, with unmatched physical defense."
+Immortal Helm (M),9800,4900,118,22,Male,70,13,"A helm rumored to grant a degree of immortality, offering superb defense."
+Radiant Helm (M),10000,5000,120,40,Male,72,24,A brilliantly shining helm offering exceptional physical and magical defense.
+Ethereal Helm (M),10500,5250,125,0,Male,75,-,"A helm seemingly formed from pure energy, incredibly physically resilient."
+World Breaker Helm (M),10800,5400,128,25,Male,76,15,"A helm said to have the power to shatter worlds, offering incredible defense."
+Divine Aegis Helm (M),11000,5500,130,45,Male,78,27,"A helm blessed with divine protection, offering outstanding all-around defense."
+Apex Helm (M),11500,5750,135,0,Male,81,-,"The ultimate physical helm, representing the peak of protective gear."
+Phoenix Helm (M),11800,5900,138,28,Male,82,16,"A helm imbued with the fiery spirit of a phoenix, granting great defense."
+Dragonfire Helm (M),12000,6000,140,50,Male,84,30,"A helm forged in dragonfire, offering exceptional resistance to all threats."
+Glimmering Helm (M),12500,6250,145,0,Male,87,-,"A brightly glimmering helm, offering unmatched physical resilience."
+Unyielding Helm (M),12800,6400,148,30,Male,88,18,"A helm that will not yield, providing incredible physical and magical defense."
+Sunken King's Helm (M),13000,6500,150,55,Male,90,33,"A helm from a long-lost underwater kingdom, offering superb protection."
+Abyssal Helm (M),13500,6750,155,0,Male,93,-,"A helm from the deepest abyss, granting phenomenal physical protection."
+Primal Helm (M),13800,6900,158,32,Male,94,19,"A helm resonating with primal energy, offering exceptional all-around defense."
+Zenith Helm (M),14000,7000,160,60,Male,96,36,"The ultimate helm, representing the zenith of protective craftsmanship."
+Celestial Warlord's Helm (M),14500,7250,165,0,Male,99,-,"A helm befitting a warlord of the heavens, with supreme physical defense."
+Absolute Helm (M),14800,7400,168,35,Male,100,21,"The ultimate in protection, offering absolute physical and magical defense."
+Godsbane Helm (M),15000,7500,170,65,Male,102,39,"A helm said to be capable of harming gods, offering unparalleled protection."
+World's End Helm (M),15500,7750,175,0,Male,105,-,"A helm rumored to have witnessed the end of worlds, incredibly resilient."
+Barbarian Helm (M),400,200,13,0,Male,8,-,A crude but sturdy helmet favored by barbarians. Offers decent physical defense.
+Crusader Helm (M),950,475,26,5,Male,15,3,A gleaming helmet worn by crusaders. Offers good physical and some magical defense.
+Warlord's Visage (M),1500,750,33,0,Male,19,-,A menacing helmet worn by warlords. Provides significant physical protection.
+Griffin Helm (M),2100,1050,42,10,Male,25,6,A majestic helm adorned with griffin feathers. Offers strong all-around defense.
+Dreadnought Helm (M),2700,1350,49,0,Male,29,-,A heavily armored helmet favored by dreadnoughts. Provides excellent physical defense.
+Berserker's Helm (M),3400,1700,56,5,Male,33,3,A fierce helmet that empowers berserkers. Offers great physical and some magical defense.
+Stormlord's Helm (M),4100,2050,62,12,Male,37,7,A helm crackling with storm energy. Provides superior all-around defense.
+Earthshaker Helm (M),4900,2450,72,0,Male,43,-,A solid helmet said to withstand earthquakes. Offers exceptional physical defense.
+Skyfang Helm (M),5600,2800,82,15,Male,49,9,A helm crafted from the tooth of a sky serpent. Offers remarkable all-around defense.
+Gladiator's Helm (M),6400,3200,89,0,Male,53,-,A battle-worn helmet favored by gladiators. Provides outstanding physical defense.
+Royal Guard Helm (M),7100,3550,92,20,Male,55,12,A distinguished helmet worn by the royal guard. Offers superb all-around defense.
+Draconian Helm (M),7900,3950,102,0,Male,61,-,A powerful helm forged in the image of a dragon. Grants peerless physical defense.
+Sunstone Helm (M),8700,4350,112,25,Male,67,15,A radiant helm powered by a sunstone. Offers excellent physical and magical defense.
+Shadowflame Helm (M),9400,4700,117,0,Male,70,-,A dark helm wreathed in shadowy flames. Provides incredible physical protection.
+Lionheart Helm (M),10200,5100,122,30,Male,73,18,A courageous helm said to embolden the wearer. Offers superior all-around defense.
+Drakonus Helm (M),10900,5450,130,0,Male,78,-,An imposing helm crafted from dragon hide. Grants unmatched physical resilience.
+Vanguard Helm (M),11600,5800,136,35,Male,81,21,A protective helm favored by vanguards. Offers exceptional all-around defense.
+Paragon Helm (M),12300,6150,142,0,Male,85,-,The epitome of physical protection. A paragon among helms.
+Soulforged Helm (M),13000,6500,147,40,Male,88,24,A helm bound with arcane energies. Offers incredible physical and magical defense.
+Oblivion Helm (M),13700,6850,152,0,Male,91,-,A dark and silent helm from the realm of oblivion. Provides phenomenal physical defense.
+Ebonsteel Helm (M),14400,7200,158,45,Male,94,27,A helm forged from rare ebonsteel. Offers superb all-around defense.
+Zenith Guard Helm (M),15100,7550,162,0,Male,97,-,A top-tier helm favored by elite guards. Grants unmatched physical resilience.
+Thunderclap Helm (M),15800,7900,168,50,Male,100,30,A helm that resonates with the power of thunder. Offers exceptional all-around defense.
+Wyrmhide Helm (M),16500,8250,172,0,Male,103,-,A resilient helm crafted from the hide of a great wyrm. Provides peerless physical defense.
+Frostbound Helm (M),17200,8600,178,55,Male,106,33,A helm encased in eternal ice. Offers incredible physical and magical defense.
+Solar Helm (M),17900,8950,182,0,Male,109,-,A radiant helm powered by the sun's energy. Grants unmatched physical resilience.
+Moonshard Helm (M),18600,9300,188,60,Male,112,36,A helm crafted from a shard of the moon. Offers superb all-around defense.
+Ancient Defender Helm (M),19300,9650,192,0,Male,115,-,A relic from an ancient protector. Provides phenomenal physical defense.
+Cosmic Guardian Helm (M),20000,10000,198,65,Male,118,39,A helm imbued with cosmic energies. Offers exceptional all-around defense.
+Doomslayer Helm (M),20700,10350,202,0,Male,121,-,A legendary helm said to be worn by those who slay doom. Incredibly resilient.
+Starfell Helm (M),21400,10700,208,70,Male,124,42,A helm that fell from the stars. Offers incredible physical and magical defense.
+Hellfire Helm (M),22100,11050,212,0,Male,127,-,A terrifying helm wreathed in hellfire. Grants unmatched physical resilience.
+Divine Crusader Helm (M),22800,11400,218,75,Male,130,45,A holy helm blessed for divine crusaders. Offers superb all-around defense.
+Obsidian Skull Helm (M),23500,11750,222,0,Male,133,-,A sinister helm crafted from an obsidian skull. Provides phenomenal physical defense.
+Empyrean Champion Helm (M),24200,12100,228,80,Male,136,48,A helm befitting a champion of the empyrean. Offers exceptional all-around defense.
+Valhallan Helm (M),24900,12450,232,0,Male,139,-,A glorious helm from the halls of Valhalla. Grants peerless physical resilience.
+Drakonbane Helm (M),25600,12800,238,85,Male,142,51,A powerful helm specifically designed to slay dragons. Offers incredible defense.
+Titanforged Helm (M),26300,13150,242,0,Male,145,-,A helm forged in the heart of a titan. Provides unmatched physical protection.
+Celestial Dread Helm (M),27000,13500,248,90,Male,148,54,A terrifying helm from the celestial realm. Offers superb all-around defense.
+World's Core Helm (M),27700,13850,252,0,Male,151,-,A helm said to contain a fragment of the world's core. Phenomenally resilient.
+Cosmic Nova Helm (M),28400,14200,258,95,Male,154,57,A helm radiating the power of a cosmic nova. Offers exceptional all-around defense.
+Immortal King's Helm (M),29100,14550,262,0,Male,157,-,A helm worn by an immortal king. Grants peerless physical protection.
+Soul Reaver Helm (M),29800,14900,268,100,Male,160,60,A sinister helm that drains the souls of foes. Offers incredible defense.
+Zenith Apex Helm (M),30500,15250,272,0,Male,163,-,"The ultimate helm, representing the zenith of apex protection. Unmatched resilience."
+Divine Judgment Helm (M),31200,15600,278,105,Male,166,63,A helm used to deliver divine judgment. Offers superb all-around defense.
+Cataclysm Helm (M),31900,15950,282,0,Male,169,-,A helm that survived a cataclysm. Provides phenomenal physical protection.
+Starfall Guardian (M),32600,16300,288,110,Male,172,66,A helm that guards against falling stars. Offers exceptional all-around defense.
+Hellborne Helm (M),33300,16650,292,0,Male,175,-,A helm forged in the depths of hell. Grants peerless physical resilience.
+Lightbringer Helm (M),34000,17000,298,115,Male,178,69,A radiant helm that banishes darkness. Offers incredible defense.
+Abyssal Protector Helm (M),34700,17350,302,0,Male,181,-,A helm that protects against the abyss. Provides unmatched physical protection.
+Phoenix Guardian Helm (M),35400,17700,308,120,Male,184,72,A helm guarded by the spirit of a phoenix. Offers superb all-around defense.
+Void Walker Helm (M),36100,18050,312,0,Male,187,-,A helm worn by those who walk the void. Phenomenally resilient.
+Sovereign Emperor Helm (M),36800,18400,318,125,Male,190,75,A helm befitting a sovereign emperor. Offers exceptional all-around defense.
+Cosmic Conqueror Helm (M),37500,18750,322,0,Male,193,-,A helm for those who conquer the cosmos. Grants peerless physical resilience.
+Grandmaster Helm (M),38200,19100,328,130,Male,196,78,A helm worn by grandmasters. Offers incredible defense.
+God King's Helm (M),38900,19450,332,0,Male,199,-,A helm fit for a king among gods. Provides unmatched physical protection.
+True Hero Helm (M),39600,19800,338,135,Male,202,81,A helm worn by true heroes. Offers superb all-around defense.
+Legendary Titan Helm (M),40300,20150,342,0,Male,205,-,A legendary helm forged by titans. Phenomenally resilient.
+Divine Champion Helm (M),41000,20500,348,140,Male,208,84,A helm worn by divine champions. Offers exceptional all-around defense.
+Elemental Lord Helm (M),41700,20850,352,0,Male,211,-,A helm befitting a lord of the elements. Grants peerless physical resilience.
+Dragonlord Helm (M),42400,21200,358,145,Male,214,87,A helm worn by a dragonlord. Offers incredible defense.
+Skybreaker Helm (M),43100,21550,362,0,Male,217,-,A helm that can break the very sky. Provides unmatched physical protection.
+World's Warden Helm (M),43800,21900,368,150,Male,220,90,A helm that guards the world. Offers superb all-around defense.
+Cosmic Sentinel Helm (M),44500,22250,372,0,Male,223,-,A sentinel against cosmic threats. Phenomenally resilient.
+Absolute Dominator Helm (M),45200,22600,378,155,Male,226,93,A helm for the absolute dominator. Offers exceptional all-around defense.
+Starfire Helm (M),45900,22950,382,0,Male,229,-,A helm burning with starfire. Grants peerless physical resilience.
+Soulbound Protector (M),46600,23300,388,160,Male,232,96,A helm bound to the wearer's soul. Offers incredible defense.
+Eternity Helm (M),47300,23650,392,0,Male,235,-,A helm that seems to last for eternity. Provides unmatched physical protection.
+Legendary Defender (M),48000,24000,398,165,Male,238,99,A helm worn by legendary defenders. Offers superb all-around defense.
+Divine Creator Helm (M),48700,24350,402,0,Male,241,-,A helm blessed by a divine creator. Phenomenally resilient.
+Genesis Helm (M),49400,24700,408,170,Male,244,102,A helm from the very beginning. Offers exceptional all-around defense.
+Oblivion Sentinel (M),50100,25050,412,0,Male,247,-,A sentinel against the void of oblivion. Grants peerless physical resilience.
+Cosmic Genesis Helm (M),50800,25400,418,175,Male,250,105,A helm from the genesis of the cosmos. Offers incredible defense.
+Ultimate Helm (M),51500,25750,422,0,Male,253,-,The ultimate physical helm. Provides unmatched physical protection.
+Absolute God Helm (M),52200,26100,428,180,Male,256,108,The absolute in head protection. Offers superb all-around defense.
