@@ -13,11 +13,8 @@ Set-StrictMode -Version Latest
 
 
 
-###############################################################################
-#
-# ENUMERATION DEFINITIONS
-#
-###############################################################################
+#region Enumerations
+
 Enum GameStatePrimary {
     SplashScreenA
     SplashScreenB
@@ -206,15 +203,14 @@ Enum Gender {
     Unisex # INTENDED FOR EQUIPMENT PURPOSES
 }
 
+#endregion
 
 
 
 
-###############################################################################
-#
-# GLOBAL VARIABLE DECLARATIONS
-#
-###############################################################################
+
+#region Global Variables
+
 $PSStyle.Progress.View = 'Classic'
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
@@ -1556,9 +1552,13 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::Cleanup            = $Script:TheCleanupState
 }
 
+#endregion
 
 
 
+
+
+#region Console Colors
 
 ###############################################################################
 #
@@ -2297,10 +2297,14 @@ Class CCListItemCurrentHighlight24 : CCAppleNPinkLight24 {}
 
 Class CCWindowBorderDefault24 : CCTextDefault24 {}
 
+#endregion
 
 
 
 
+
+
+#region AT Structures
 
 ###############################################################################
 #
@@ -2739,9 +2743,13 @@ Class ATSceneImageString : ATString {
     }
 }
 
+#endregion
 
 
 
+
+
+#region Combat Engine Primitives
 
 ###############################################################################
 #
@@ -9066,9 +9074,13 @@ Class EEDuskbane : EEBat {
     }
 }
 
+#endregion
 
 
 
+
+
+#region Map Primitives
 
 ###############################################################################
 #
@@ -9636,9 +9648,244 @@ Class Map {
     }
 }
 
+###############################################################################
+#
+# MAP TILE OBJECT ABSTRACTIONS
+#
+# THESE ABSTRACTIONS SERVE TO BUILD UP ACTUAL ITEMS THAT THE PLAYER CAN 
+# INTERACT WITH. THESE CONSTRUCTS CAN BE A LITTLE CUMBERSOME TO SETUP.
+#
+###############################################################################
+Class MTOTree : MapTileObject {
+    [Boolean]$HasRopeTied
+
+    MTOTree() {
+        $this.Name              = 'Tree'
+        $this.MapObjName        = 'tree'
+        $this.CanAddToInventory = $false
+        $this.ExamineString     = 'It''s a tree. Looks like all the other ones.'
+        $this.Effect = {
+            <#
+            Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments:
+            A reference to the object itself, and the source. AFAIK, this is because of how the ScriptBlock gets invoked. The $this reference
+            doesn't work as it references the CommandWindow instance rather than the owning object (in this case, MTOTree). Because of this
+            somewhat counterintuitive nature, the caller (in this case, the 'use' command) will invoke the ScriptBlock with two arguments that
+            match the signature here. State changes can be inflicted upon Self (passed as a reference), and Source gets removed from the Player's
+            Inventory.
+            #>
+            Param(
+                [MTOTree]$Self,
+                [Object]$Source
+            )
+
+            Switch($Source.PSTypeNames[0]) {
+                'MTORope' {
+                    $Script:TheMessageWindow.WriteTiedRopeToTreeMessage()
+
+                    <#
+                    It's important to note that this action *SHOULD* cause a state change with this object. To be more specific,
+                    prior to running this action, it's assumed that the Tree did NOT have a Rope tied to it. After this action,
+                    it does. So the questions now are (A) can you tie another Rope to the Tree, and (B) what can you do with the Tree
+                    now that it has a Rope tied to it?
+
+                    Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
+
+                    UPDATE: I have this functionality in place.
+                    #>
+                    $Self.HasRopeTied   = $true
+                    $Self.ExamineString = 'A rope is tied to this tree. Wee.'
+                    $Script:ThePlayer.RemoveInventoryItemByName($Source.Name)
+                }
+            }
+        }
+        $this.TargetOfFilter = @(
+            'MTORope'
+        )
+        $this.HasRopeTied = $false
+    }
+}
+
+Class MTOLadder : MapTileObject {
+    MTOLadder() {
+        $this.Name              = 'Ladder'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $false
+        $this.ExamineString     = 'Used to climb things. Just don''t walk under one.'
+    }
+}
+
+Class MTORope : MapTileObject {
+    MTORope() {
+        $this.Name              = 'Rope'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'It''s not a snake. Hopefully.'
+    }
+}
+
+Class MTOStairs : MapTileObject {
+    MTOStairs() {
+        $this.Name              = 'Stairs'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'A faithful ally for elevating one''s position.'
+    }
+}
+
+Class MTOPole : MapTileObject {
+    MTOPole() {
+        $this.Name              = 'Pole'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $false
+        $this.ExamineString     = 'Not the north or the south one.'
+    }
+}
+
+Class MTOBacon : MapTileObject {
+    MTOBacon() {
+        $this.Name              = 'Bacon'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'Shredded swine flesh. Cholesterol never tasted so good.'
+        $this.KeyItem           = $true
+    }
+}
+
+Class MTOApple : MapTileObject {
+    MTOApple() {
+        $this.Name              = 'Apple'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'A big, juicy, red apple. Worm not included.'
+    }
+}
+
+Class MTOStick : MapTileObject {
+    MTOStick() {
+        $this.Name              = 'Stick'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'Be careful not to poke your eye out with it.'
+    }
+}
+
+Class MTOYogurt : MapTileObject {
+    MTOYogurt() {
+        $this.Name              = 'Yogurt'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'For some reason, people enjoy this spoiled milk.'
+    }
+}
+
+Class MTORock : MapTileObject {
+    MTORock() {
+        $this.Name              = 'Rock'
+        $this.MapObjName        = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString     = 'A garden variety rock. Good for taunting raccoons with.'
+    }
+}
+
+Class MTOMilk : MapTileObject {
+    [Int]$PlayerHpBonus
+    [Boolean]$IsSpoiled
+
+    MTOMilk() {
+        $this.Name = 'Milk'
+        $this.MapObjName = $this.Name.ToLower()
+        $this.CanAddToInventory = $true
+        $this.ExamineString = '2%. We don''t take kindly to whole milk ''round here.'
+        $this.Effect = {
+            Param(
+                [MTOMilk]$Self,
+                [Object]$Source
+            )
+
+            Switch($Source.PSTypeNames[0]) {
+                'Player' {
+                    <#
+                    Now we're getting into some pretty esoteric stuff here.
+
+                    First, we need to check and see if the Milk is spoiled.
+                    #>
+                    If($Self.IsSpoiled -EQ $true) {
+                        # It is - this will cause the Player's Hp to decrease
+                        # Attempt to decrement the Player's Hp by the Hp Bonus
+                        If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
+                            $Script:TheMessageWindow.WriteMilkUseSpoiledMessage()
+                            $Source.RemoveInventoryItemByName($Self.Name)
+                        } Else {
+                            $Script:TheMessageWindow.WriteMilkUseNotNowMessage()
+                        }
+                    } Else {
+                        # The milk isn't spoiled - attempt to increment the Player's Hp by the Hp Bonus
+                        # Attempt to increment the Player's HP by the Hp Bonus
+                        If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
+                            $Script:TheMessageWindow.WriteMilkUseOkayMessage()
+                            $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
+                        } Else {
+                            $Script:TheMessageWindow.WriteMilkUseNotNowMessage()
+                        }
+                    }
+                }
+            }
+        }
+
+        # THIS LOOKS STRANGE, BUT NOW WE'RE STILL IN THE CTOR AND THIS SETS, RANDOMLY, SOME STUFF ABOUT THE MLIK
+        $a                  = $(Get-Random -Minimum 0 -Maximum 10)
+        $this.PlayerHpBonus = 75
+        $this.IsSpoiled     = $($a -GE 6 ? $true : $false)
+        
+        If($this.IsSpoiled -EQ $true) {
+            $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
+            $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
+        } Else {
+            $this.PlayerEffectString = "+$($this.PlayerHpBonus) HP"
+        }
+    }
+}
+
+Class MTOWarpable : MapTileObject {
+    [Ref]$WarpToReference
+    [Int]$WarpToX
+    [Int]$WarpToY
+
+    MTOWarpable() {
+        $this.WarpToReference = $null
+        $this.WarpToX         = 0
+        $this.WarpToY         = 0
+        $this.Effect          = $Script:MapWarpHandler
+    }
+}
+
+Class MTODoor : MTOWarpable {
+    MTODoor() {
+        $this.Name       = 'Door'
+        $this.MapObjName = 'door'
+    }
+}
+
+Class MTODoor00001 : MTODoor {
+    MTODoor00001() {
+        $this.WarpToReference = ([Ref]$Script:SampleWarpMap02)
+    }
+}
+
+Class MTODoor00002 : MTODoor {
+    MTODoor00002() {
+        $this.WarpToReference = ([Ref]$Script:SampleWarpMap01)
+        $this.WarpToX         = 3
+    }
+}
+
+#endregion
 
 
 
+
+
+#region Equipment
 
 ###############################################################################
 #
@@ -23065,17 +23312,12 @@ Class BEOmegaGreaves : BEGreaves {
 }
 #endregion
 
+#endregion
 
 
 
 
-
-
-
-
-
-
-
+#region Fast Noise Lite
 
 ###############################################################################
 #
@@ -25986,245 +26228,13 @@ Class FastNoiseLite {
     }
 }
 
+#endregion
 
 
 
 
 
-###############################################################################
-#
-# MAP TILE OBJECT ABSTRACTIONS
-#
-# THESE ABSTRACTIONS SERVE TO BUILD UP ACTUAL ITEMS THAT THE PLAYER CAN 
-# INTERACT WITH. THESE CONSTRUCTS CAN BE A LITTLE CUMBERSOME TO SETUP.
-#
-###############################################################################
-Class MTOTree : MapTileObject {
-    [Boolean]$HasRopeTied
-
-    MTOTree() {
-        $this.Name              = 'Tree'
-        $this.MapObjName        = 'tree'
-        $this.CanAddToInventory = $false
-        $this.ExamineString     = 'It''s a tree. Looks like all the other ones.'
-        $this.Effect = {
-            <#
-            Note the pattern here for the params. In order for state changes to work, the ScriptBlock will need to have two arguments:
-            A reference to the object itself, and the source. AFAIK, this is because of how the ScriptBlock gets invoked. The $this reference
-            doesn't work as it references the CommandWindow instance rather than the owning object (in this case, MTOTree). Because of this
-            somewhat counterintuitive nature, the caller (in this case, the 'use' command) will invoke the ScriptBlock with two arguments that
-            match the signature here. State changes can be inflicted upon Self (passed as a reference), and Source gets removed from the Player's
-            Inventory.
-            #>
-            Param(
-                [MTOTree]$Self,
-                [Object]$Source
-            )
-
-            Switch($Source.PSTypeNames[0]) {
-                'MTORope' {
-                    $Script:TheMessageWindow.WriteTiedRopeToTreeMessage()
-
-                    <#
-                    It's important to note that this action *SHOULD* cause a state change with this object. To be more specific,
-                    prior to running this action, it's assumed that the Tree did NOT have a Rope tied to it. After this action,
-                    it does. So the questions now are (A) can you tie another Rope to the Tree, and (B) what can you do with the Tree
-                    now that it has a Rope tied to it?
-
-                    Also, the Rope should be removed from the Player's Inventory, but I don't yet have that functionality in place.
-
-                    UPDATE: I have this functionality in place.
-                    #>
-                    $Self.HasRopeTied   = $true
-                    $Self.ExamineString = 'A rope is tied to this tree. Wee.'
-                    $Script:ThePlayer.RemoveInventoryItemByName($Source.Name)
-                }
-            }
-        }
-        $this.TargetOfFilter = @(
-            'MTORope'
-        )
-        $this.HasRopeTied = $false
-    }
-}
-
-Class MTOLadder : MapTileObject {
-    MTOLadder() {
-        $this.Name              = 'Ladder'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $false
-        $this.ExamineString     = 'Used to climb things. Just don''t walk under one.'
-    }
-}
-
-Class MTORope : MapTileObject {
-    MTORope() {
-        $this.Name              = 'Rope'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'It''s not a snake. Hopefully.'
-    }
-}
-
-Class MTOStairs : MapTileObject {
-    MTOStairs() {
-        $this.Name              = 'Stairs'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'A faithful ally for elevating one''s position.'
-    }
-}
-
-Class MTOPole : MapTileObject {
-    MTOPole() {
-        $this.Name              = 'Pole'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $false
-        $this.ExamineString     = 'Not the north or the south one.'
-    }
-}
-
-Class MTOBacon : MapTileObject {
-    MTOBacon() {
-        $this.Name              = 'Bacon'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'Shredded swine flesh. Cholesterol never tasted so good.'
-        $this.KeyItem           = $true
-    }
-}
-
-Class MTOApple : MapTileObject {
-    MTOApple() {
-        $this.Name              = 'Apple'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'A big, juicy, red apple. Worm not included.'
-    }
-}
-
-Class MTOStick : MapTileObject {
-    MTOStick() {
-        $this.Name              = 'Stick'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'Be careful not to poke your eye out with it.'
-    }
-}
-
-Class MTOYogurt : MapTileObject {
-    MTOYogurt() {
-        $this.Name              = 'Yogurt'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'For some reason, people enjoy this spoiled milk.'
-    }
-}
-
-Class MTORock : MapTileObject {
-    MTORock() {
-        $this.Name              = 'Rock'
-        $this.MapObjName        = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString     = 'A garden variety rock. Good for taunting raccoons with.'
-    }
-}
-
-Class MTOMilk : MapTileObject {
-    [Int]$PlayerHpBonus
-    [Boolean]$IsSpoiled
-
-    MTOMilk() {
-        $this.Name = 'Milk'
-        $this.MapObjName = $this.Name.ToLower()
-        $this.CanAddToInventory = $true
-        $this.ExamineString = '2%. We don''t take kindly to whole milk ''round here.'
-        $this.Effect = {
-            Param(
-                [MTOMilk]$Self,
-                [Object]$Source
-            )
-
-            Switch($Source.PSTypeNames[0]) {
-                'Player' {
-                    <#
-                    Now we're getting into some pretty esoteric stuff here.
-
-                    First, we need to check and see if the Milk is spoiled.
-                    #>
-                    If($Self.IsSpoiled -EQ $true) {
-                        # It is - this will cause the Player's Hp to decrease
-                        # Attempt to decrement the Player's Hp by the Hp Bonus
-                        If($Source.DecrementHitPoints(-$Self.PlayerHpBonus) -EQ $true) {
-                            $Script:TheMessageWindow.WriteMilkUseSpoiledMessage()
-                            $Source.RemoveInventoryItemByName($Self.Name)
-                        } Else {
-                            $Script:TheMessageWindow.WriteMilkUseNotNowMessage()
-                        }
-                    } Else {
-                        # The milk isn't spoiled - attempt to increment the Player's Hp by the Hp Bonus
-                        # Attempt to increment the Player's HP by the Hp Bonus
-                        If($Script:ThePlayer.IncrementHitPoints($Self.PlayerHpBonus) -EQ $true) {
-                            $Script:TheMessageWindow.WriteMilkUseOkayMessage()
-                            $Script:ThePlayer.RemoveInventoryItemByName($Self.Name)
-                        } Else {
-                            $Script:TheMessageWindow.WriteMilkUseNotNowMessage()
-                        }
-                    }
-                }
-            }
-        }
-
-        # THIS LOOKS STRANGE, BUT NOW WE'RE STILL IN THE CTOR AND THIS SETS, RANDOMLY, SOME STUFF ABOUT THE MLIK
-        $a                  = $(Get-Random -Minimum 0 -Maximum 10)
-        $this.PlayerHpBonus = 75
-        $this.IsSpoiled     = $($a -GE 6 ? $true : $false)
-        
-        If($this.IsSpoiled -EQ $true) {
-            $this.ExamineString      = 'This looks funny. Should I really be drinking this?'
-            $this.PlayerEffectString = "-$($this.PlayerHpBonus) HP, 10% chance to inflict Poison"
-        } Else {
-            $this.PlayerEffectString = "+$($this.PlayerHpBonus) HP"
-        }
-    }
-}
-
-Class MTOWarpable : MapTileObject {
-    [Ref]$WarpToReference
-    [Int]$WarpToX
-    [Int]$WarpToY
-
-    MTOWarpable() {
-        $this.WarpToReference = $null
-        $this.WarpToX         = 0
-        $this.WarpToY         = 0
-        $this.Effect          = $Script:MapWarpHandler
-    }
-}
-
-Class MTODoor : MTOWarpable {
-    MTODoor() {
-        $this.Name       = 'Door'
-        $this.MapObjName = 'door'
-    }
-}
-
-Class MTODoor00001 : MTODoor {
-    MTODoor00001() {
-        $this.WarpToReference = ([Ref]$Script:SampleWarpMap02)
-    }
-}
-
-Class MTODoor00002 : MTODoor {
-    MTODoor00002() {
-        $this.WarpToReference = ([Ref]$Script:SampleWarpMap01)
-        $this.WarpToX         = 3
-    }
-}
-
-
-
-
+#region Buffer Support
 
 ###############################################################################
 #
@@ -26281,9 +26291,13 @@ Class BufferManager {
     }
 }
 
+#endregion
 
 
 
+
+
+#region UI
 
 ###############################################################################
 #
@@ -33413,9 +33427,13 @@ Class SSAPressEnterPrompt {
     }
 }
 
+#endregion
 
 
 
+
+
+#region Battle Manager
 
 ###############################################################################
 #
@@ -34305,6 +34323,8 @@ Class BattleManager {
         $Script:HasBattleLostChimePlayed     = $false
     }
 }
+
+#endregion
 
 
 
