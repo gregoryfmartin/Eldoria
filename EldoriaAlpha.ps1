@@ -10236,6 +10236,266 @@ Class BEFarmersScythe : BEWeapon {
     }
 }
 
+Class BEBrokenBottle : BEWeapon {
+    BEBrokenBottle() : base() {
+        $this.Name               = 'Broken Bottle'
+        $this.MapObjName         = 'brokenbottle'
+        $this.PurchasePrice      = 25
+        $this.SellPrice          = 12
+        $this.TargetStats        = @{ [StatId]::Attack = 3 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A shattered bottle. Very sharp, but fragile.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BECandlestick : BEWeapon {
+    BECandlestick() : base() {
+        $this.Name               = 'Candlestick'
+        $this.MapObjName         = 'candlestick'
+        $this.PurchasePrice      = 50
+        $this.SellPrice          = 25
+        $this.TargetStats        = @{ [StatId]::Attack = 7 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A heavy metal candlestick.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEGardeningHoe : BEWeapon {
+    BEGardeningHoe() : base() {
+        $this.Name               = 'Gardening Hoe'
+        $this.MapObjName         = 'gardeninghoe'
+        $this.PurchasePrice      = 60
+        $this.SellPrice          = 30
+        $this.TargetStats        = @{ [StatId]::Attack = 8 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A tool for digging and weeding. Can be swung.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BESturdyStick : BEWeapon {
+    BESturdyStick() : base() {
+        $this.Name               = 'Sturdy Stick'
+        $this.MapObjName         = 'sturdystick'
+        $this.PurchasePrice      = 30
+        $this.SellPrice          = 15
+        $this.TargetStats        = @{ [StatId]::Attack = 4 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A thick, durable branch.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BESewerPipe : BEWeapon {
+    BESewerPipe() : base() {
+        $this.Name               = 'Sewer Pipe'
+        $this.MapObjName         = 'sewerpipe'
+        $this.PurchasePrice      = 70
+        $this.SellPrice          = 35
+        $this.TargetStats        = @{ [StatId]::Attack = 9 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A discarded pipe from the sewers. Surprisingly robust.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEOldBroom : BEWeapon {
+    BEOldBroom() : base() {
+        $this.Name               = 'Old Broom'
+        $this.MapObjName         = 'oldbroom'
+        $this.PurchasePrice      = 20
+        $this.SellPrice          = 10
+        $this.TargetStats        = @{ [StatId]::Attack = 2 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A worn-out broom. Not very effective.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEToySword : BEWeapon {
+    BEToySword() : base() {
+        $this.Name               = 'Toy Sword'
+        $this.MapObjName         = 'toysword'
+        $this.PurchasePrice      = 10
+        $this.SellPrice          = 5
+        $this.TargetStats        = @{ [StatId]::Attack = 1 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A harmless replica of a sword.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEMythrilSword : BEWeapon {
+    BEMythrilSword() : base() {
+        $this.Name               = 'Mythril Sword'
+        $this.MapObjName         = 'mythrilsword'
+        $this.PurchasePrice      = 800
+        $this.SellPrice          = 400
+        $this.TargetStats        = @{ [StatId]::Attack = 45 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A finely crafted sword made from rare mythril, light and sharp.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BESilverDagger : BEWeapon {
+    BESilverDagger() : base() {
+        $this.Name               = 'Silver Dagger'
+        $this.MapObjName         = 'silverdagger'
+        $this.PurchasePrice      = 750
+        $this.SellPrice          = 375
+        $this.TargetStats        = @{ [StatId]::Attack = 40; [StatId]::MagicAttack = 5 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A dagger made of pure silver, effective against supernatural foes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MDF"
+    }
+}
+
+Class BEGreatSword : BEWeapon {
+    BEGreatSword() : base() {
+        $this.Name               = 'Great Sword'
+        $this.MapObjName         = 'greatsword'
+        $this.PurchasePrice      = 900
+        $this.SellPrice          = 450
+        $this.TargetStats        = @{ [StatId]::Attack = 55 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A massive two-handed sword, capable of cleaving through enemies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEDragonAxe : BEWeapon {
+    BEDragonAxe() : base() {
+        $this.Name               = 'Dragon Axe'
+        $this.MapObjName         = 'dragonaxe'
+        $this.PurchasePrice      = 1000
+        $this.SellPrice          = 500
+        $this.TargetStats        = @{ [StatId]::Attack = 60; [StatId]::MagicAttack = 10 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'An axe forged in dragonfire, capable of burning foes.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+    }
+}
+
+Class BEWizardsStaff : BEWeapon {
+    BEWizardsStaff() : base() {
+        $this.Name               = 'Wizard''s Staff'
+        $this.MapObjName         = 'wizardsstaff'
+        $this.PurchasePrice      = 850
+        $this.SellPrice          = 425
+        $this.TargetStats        = @{ [StatId]::Attack = 10; [StatId]::MagicAttack = 50 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A staff crackling with magical energy, favored by powerful mages.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+    }
+}
+
+Class BEHolyLance : BEWeapon {
+    BEHolyLance() : base() {
+        $this.Name               = 'Holy Lance'
+        $this.MapObjName         = 'holylance'
+        $this.PurchasePrice      = 950
+        $this.SellPrice          = 475
+        $this.TargetStats        = @{ [StatId]::Attack = 50; [StatId]::MagicAttack = 15 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A blessed spear said to smite evil.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+    }
+}
+
+Class BERepeatingCrossbow : BEWeapon {
+    BERepeatingCrossbow() : base() {
+        $this.Name               = 'Repeating Crossbow'
+        $this.MapObjName         = 'repeatingcrossbow'
+        $this.PurchasePrice      = 1100
+        $this.SellPrice          = 550
+        $this.TargetStats        = @{ [StatId]::Attack = 58 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A complex crossbow capable of rapid firing.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEElvenBow : BEWeapon {
+    BEElvenBow() : base() {
+        $this.Name               = 'Elven Bow'
+        $this.MapObjName         = 'elvenbow'
+        $this.PurchasePrice      = 1200
+        $this.SellPrice          = 600
+        $this.TargetStats        = @{ [StatId]::Attack = 62 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A gracefully crafted bow, known for its incredible accuracy.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEScourgeWhip : BEWeapon {
+    BEScourgeWhip() : base() {
+        $this.Name               = 'Scourge Whip'
+        $this.MapObjName         = 'scourgewhip'
+        $this.PurchasePrice      = 700
+        $this.SellPrice          = 350
+        $this.TargetStats        = @{ [StatId]::Attack = 35; [StatId]::MagicAttack = 20 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A whip enchanted with dark magic, draining foes'' vitality.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MDF"
+    }
+}
+
+Class BEMeteorHammer : BEWeapon {
+    BEMeteorHammer() : base() {
+        $this.Name               = 'Meteor Hammer'
+        $this.MapObjName         = 'meteorhammer'
+        $this.PurchasePrice      = 880
+        $this.SellPrice          = 440
+        $this.TargetStats        = @{ [StatId]::Attack = 52 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A heavy ball and chain, strikes with incredible force.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEAdamantKnuckles : BEWeapon {
+    BEAdamantKnuckles() : base() {
+        $this.Name               = 'Adamant Knuckles'
+        $this.MapObjName         = 'adamantknuckles'
+        $this.PurchasePrice      = 920
+        $this.SellPrice          = 460
+        $this.TargetStats        = @{ [StatId]::Attack = 56 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'Knuckles crafted from the legendary adamant, virtually unbreakable.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+    }
+}
+
+Class BEFlameBlade : BEWeapon {
+    BEFlameBlade() : base() {
+        $this.Name               = 'Flame Blade'
+        $this.MapObjName         = 'flameblade'
+        $this.PurchasePrice      = 780
+        $this.SellPrice          = 390
+        $this.TargetStats        = @{ [StatId]::Attack = 48; [StatId]::MagicAttack = 8 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sword wreathed in fire, dealing burn damage.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MDF"
+    }
+}
+
+Class BEIceBrand : BEWeapon {
+    BEIceBrand() : base() {
+        $this.Name               = 'Ice Brand'
+        $this.MapObjName         = 'icebrand'
+        $this.PurchasePrice      = 780
+        $this.SellPrice          = 390
+        $this.TargetStats        = @{ [StatId]::Attack = 48; [StatId]::MagicAttack = 8 }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'A sword imbued with the essence of ice, capable of freezing enemies.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MDF"
+    }
+}
+
 #endregion
 
 
