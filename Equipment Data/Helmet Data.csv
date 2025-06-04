@@ -1,0 +1,376 @@
+Name,Description,Purchase Price,Sell Price,Defense Power,Magic Defense Power,Gender
+Leather Cap,"A simple cap made from hardened leather, offering basic protection.",50,25,2,0,Unisex
+Iron Helm,"A sturdy iron helmet, common among foot soldiers.",120,60,5,0,Unisex
+Steel Helmet,"Forged from resilient steel, providing superior defense.",280,140,8,0,Unisex
+Mythril Coif,"A lightweight and strong coif made from mythril, favored by adventurers.",600,300,12,5,Unisex
+Dragonhide Helm,"Crafted from the scales of a dragon, offering exceptional protection against fire.",1500,750,18,8,Unisex
+Crown of Heroes,"A legendary crown worn by ancient heroes, said to inspire courage.",5000,2500,25,15,Unisex
+Royal Circlet,"An elegant circlet adorned with jewels, worn by royalty.",800,400,0,10,Female
+Warrior's Greathelm,"A heavy greathelm designed for powerful warriors, offering maximum frontal defense.",350,175,10,0,Male
+Archer's Hood,"A light hood that provides camouflage and enhances an archer's precision.",100,50,3,0,Unisex
+Mage's Hat,"A pointed hat worn by mages, rumored to amplify magical energies.",90,45,0,7,Unisex
+Helm of Wisdom,"A helmet imbued with ancient knowledge, boosting a mage's intellect.",700,350,0,12,Unisex
+Paladin's Helm,"A gleaming helmet worn by holy warriors, radiating divine protection.",1800,900,15,10,Male
+Dark Knight's Visor,"A menacing visor worn by dark knights, instilling fear in enemies.",1750,875,16,5,Male
+Thief's Bandana,"A discreet bandana that aids stealth and agility.",70,35,3,0,Unisex
+Assassin's Cowl,"A dark cowl that grants the wearer enhanced senses and deadly precision.",900,450,12,3,Unisex
+Hunter's Cap,"A practical cap for hunters, designed for wilderness survival.",110,55,4,0,Unisex
+Berserker's Headpiece,"A brutal headpiece that amplifies a warrior's raw strength.",400,200,13,0,Male
+Guardian's Helm,"A heavy, defensive helmet worn by guardians, deflecting blows.",650,325,10,0,Unisex
+Healer's Tiara,"A delicate tiara that enhances healing spells and provides comfort.",150,75,0,8,Female
+Scholar's Mortarboard,"A traditional academic hat, said to improve focus and memory.",80,40,0,5,Unisex
+Gladiator's Helmet,"A fearsome helmet worn by gladiators, designed for arena combat.",550,275,14,0,Unisex
+Sorceress's Veil,"A mysterious veil that conceals the wearer's identity and enhances dark magic.",850,425,0,13,Female
+Crusader's Helm,"A cross-emblazoned helm worn by crusaders, symbolizing faith and might.",1600,800,14,7,Male
+Barbarian's Skullcap,"A crude skullcap fashioned from animal hide, favored by fierce barbarians.",200,100,7,0,Unisex
+Knight's Bascinet,"A classic knight's helmet with a pointed visor, offering good protection.",300,150,9,0,Male
+Enchanter's Hood,"A mystical hood that aids in the art of enchantment.",130,65,0,6,Unisex
+Viking's Helmet,"A horned helmet worn by fierce Viking warriors, inspiring dread.",450,225,11,0,Unisex
+Druid's Circlet,"A nature-infused circlet that boosts connection to the earth's magic.",250,125,0,9,Unisex
+Scout's Hat,"A lightweight hat for scouts, providing good visibility and protection from elements.",60,30,2,0,Unisex
+Brigandine Helmet,"A helmet reinforced with metal plates, offering improved defense.",220,110,7,0,Unisex
+Samurai Kabuto,"A traditional samurai helmet, symbolizing honor and discipline.",1200,600,16,4,Male
+Ninja Hood,"A stealthy hood worn by ninjas, aiding in clandestine operations.",300,150,8,2,Unisex
+Priest's Mitre,"A ceremonial mitre worn by priests, enhancing divine blessings.",180,90,0,10,Unisex
+Cleric's Coif,"A simple coif worn by clerics, providing modest protection and spiritual focus.",100,50,0,6,Unisex
+Spellweaver's Tiara,"A sparkling tiara that amplifies the power of complex spells.",950,475,0,14,Female
+Warlord's Helm,"A formidable helm worn by military commanders, inspiring loyalty and fear.",2000,1000,20,5,Male
+Sentinel's Helmet,"A heavy, defensive helmet worn by vigilant sentinels, guarding key locations.",750,375,11,0,Unisex
+Minstrel's Cap,"A whimsical cap worn by minstrels, adding charm to their performances.",40,20,1,1,Unisex
+Dancer's Headpiece,"An elaborate headpiece that complements a dancer's movements and grace.",70,35,0,2,Female
+Jester's Hat,"A colorful, three-pointed hat worn by jesters, spreading mirth.",30,15,0,0,Unisex
+Alchemist's Goggles,"Goggles designed to protect the eyes of alchemists during experiments.",50,25,0,3,Unisex
+Engineer's Hard Hat,"A durable hard hat worn by engineers, providing protection in hazardous environments.",150,75,5,0,Unisex
+Artisan's Beret,"A stylish beret worn by artisans, inspiring creativity.",60,30,0,1,Unisex
+Monk's Headband,"A simple headband worn by monks, aiding in focus and meditation.",80,40,2,2,Unisex
+Acolyte's Hood,"A humble hood worn by acolytes, signifying their dedication.",70,35,0,4,Unisex
+Sage's Turban,"A wise turban worn by sages, imbued with ancient knowledge.",1100,550,0,15,Unisex
+Necromancer's Hood,"A dark, tattered hood worn by necromancers, enhancing their control over the undead.",1000,500,5,16,Unisex
+Warlock's Helm,"A menacing helm favored by warlocks, amplifying their dark powers.",1300,650,8,17,Male
+Shaman's Headdress,"A feathered headdress worn by shamans, connecting them to ancestral spirits.",600,300,4,11,Unisex
+Beastmaster's Cap,"A rugged cap worn by beastmasters, aiding in animal taming.",170,85,6,0,Unisex
+Inquisitor's Hood,"A somber hood worn by inquisitors, projecting authority and sternness.",1400,700,10,12,Unisex
+Oracle's Circlet,"A shimmering circlet worn by oracles, granting glimpses of the future.",1600,800,0,18,Female
+Prophet's Headwrap,"A simple headwrap worn by prophets, aiding in divine communication.",1200,600,0,16,Unisex
+Champion's Helm,"A grand helmet worn by champions, symbolizing their triumphs.",2200,1100,22,10,Male
+Valkyrie's Helm,"A winged helm worn by valkyries, granting them courage and strength.",1900,950,17,10,Female
+Dreadnought Helm,"A massive, heavily armored helm designed for ultimate defense.",2500,1250,20,0,Unisex
+Ghostly Visage,"A spectral helm that grants the wearer ethereal properties.",1700,850,7,14,Unisex
+Sunstone Circlet,"A radiant circlet made of sunstone, imbued with healing light.",800,400,0,12,Female
+Moonlight Tiara,"A luminous tiara that glows with moonlight, enhancing nocturnal magic.",800,400,0,12,Female
+Starfall Helm,"A helm said to be forged from fallen stars, possessing cosmic power.",3000,1500,28,20,Unisex
+Oceanic Helmet,"A helmet crafted from deep-sea materials, providing protection against water-based attacks.",900,450,10,7,Unisex
+Volcanic Helm,"A helm forged in volcanic fire, granting resistance to heat.",900,450,10,7,Unisex
+Forest Dweller's Hood,"A hood woven from leaves and vines, providing camouflage in forests.",120,60,4,0,Unisex
+Desert Nomad's Turban,"A practical turban for desert dwellers, protecting against sand and sun.",130,65,3,0,Unisex
+Frostbite Helm,"A helm enchanted with ice magic, chilling enemies upon impact.",1100,550,13,9,Unisex
+Thunderclap Helm,"A helm infused with storm energy, allowing the wearer to channel lightning.",1100,550,13,9,Unisex
+Earthshaker Helm,"A heavy helm that resonates with the power of the earth, increasing physical might.",1000,500,15,0,Unisex
+Skywalker Helm,"A lightweight helm that seems to defy gravity, aiding in agility.",950,475,8,6,Unisex
+Spiritwalker Mask,"A ceremonial mask that allows communion with spirits.",1500,750,0,15,Unisex
+Shadow Weaver's Hood,"A dark hood that allows the wearer to manipulate shadows.",1450,725,6,14,Unisex
+Dream Catcher's Tiara,"A mystical tiara that protects against nightmares and enhances lucid dreaming.",700,350,0,11,Female
+Nightfall Helm,"A helm as dark as night, granting stealth and improved vision in darkness.",1600,800,15,5,Unisex
+Daybreak Circlet,"A radiant circlet that harnesses the power of the rising sun, dispelling darkness.",1600,800,0,15,Female
+Golem's Headpiece,"A sturdy headpiece made from golem fragments, offering immense durability.",1800,900,18,0,Unisex
+Fairy's Garland,"A delicate garland woven from enchanted flowers, granting subtle magical abilities.",300,150,0,5,Female
+Gnome's Helmet,"A small, sturdy helmet crafted by gnomes, surprisingly resilient.",180,90,6,0,Unisex
+Dwarven Helmet,"A finely crafted, heavy helmet made by master dwarven smiths.",700,350,12,0,Unisex
+Elven Circlet,"An exquisitely crafted circlet worn by elves, enhancing their natural grace.",400,200,0,8,Female
+Orcish Warhelm,"A crude but brutal warhelm, favored by orcish warriors.",250,125,9,0,Unisex
+Goblin's Pot Helm,"A makeshift helmet fashioned from a cooking pot, offering minimal protection.",30,15,1,0,Unisex
+Kobold's Helmet,"A small, spiky helmet worn by kobolds.",40,20,2,0,Unisex
+Griffin Rider's Helm,"A specialized helm for riders of griffins, designed for aerial combat.",1100,550,10,5,Unisex
+Hippogriff Trainer's Cap,"A practical cap worn by hippogriff trainers, aiding in communication with the creatures.",100,50,3,0,Unisex
+Harpy's Feathered Helm,"A light helm adorned with harpy feathers, granting enhanced senses.",200,100,5,3,Female
+Siren's Headband,"A shimmering headband worn by sirens, subtly enhancing their enchanting voices.",150,75,0,7,Female
+Minotaur's Horned Helm,"A massive, horned helm that mimics a minotaur's might.",1300,650,17,0,Male
+Centaur's Headguard,"A protective headguard designed for centaur warriors.",600,300,10,0,Unisex
+Dryad's Wreath,"A beautiful wreath of living plants worn by dryads, connecting them to nature.",250,125,0,9,Female
+Naga's Headpiece,"A serpentine headpiece worn by naga, enhancing their aquatic abilities.",800,400,8,6,Unisex
+Sphinx's Mask,"An enigmatic mask that grants cryptic wisdom and a connection to ancient riddles.",1700,850,0,19,Unisex
+Phoenix Feather Crown,"A vibrant crown adorned with phoenix feathers, granting regenerative powers.",2800,1400,10,22,Unisex
+Unicorn Horn Circlet,"A pure circlet with a small unicorn horn, enhancing healing and purity.",2000,1000,0,20,Female
+Basilisk Scale Helm,"A helm made from basilisk scales, offering resistance to petrification.",1500,750,12,8,Unisex
+Griffin Scale Helm,"A helm made from griffin scales, offering light yet sturdy protection.",1400,700,11,6,Unisex
+Cockatrice Plume Helm,"A helm adorned with cockatrice plumes, offering minor protection against petrification.",1300,650,9,7,Unisex
+Wyvern Bone Helm,"A rugged helm fashioned from wyvern bones, imparting a primal ferocity.",1600,800,16,0,Unisex
+Roc Feather Helm,"A light helm adorned with roc feathers, granting keen eyesight.",1000,500,7,4,Unisex
+Kraken Tentacle Helm,"A strange helm made from kraken tentacles, allowing some control over water.",1700,850,10,13,Unisex
+Leviathan Scale Helm,"A massive helm made from leviathan scales, offering immense protection in water.",2000,1000,14,10,Unisex
+Hydra Head Helm,"A monstrous helm adorned with a hydra head, granting multiple perspectives.",1900,950,15,9,Unisex
+Chimera Horn Helm,"A helm adorned with chimera horns, embodying the ferocity of multiple beasts.",1800,900,17,0,Unisex
+Manticore Spike Helm,"A spiky helm made from manticore spikes, inflicting poison on attackers.",1750,875,16,3,Unisex
+Gorgon Hair Helm,"A chilling helm adorned with gorgon hair, capable of partially paralyzing foes.",1650,825,8,12,Female
+Cerberus Skull Helm,"A fearsome helm made from a cerberus skull, instilling terror.",2100,1050,19,0,Male
+Lich's Phylactery Helm,"A cursed helm containing a lich's phylactery, granting dark powers.",2500,1250,5,25,Unisex
+Angel's Halo,"A shimmering halo radiating divine energy, protecting against evil.",3000,1500,0,25,Unisex
+Demon's Horned Helm,"A dark, horned helm imbued with demonic power, granting destructive capabilities.",2800,1400,22,18,Male
+Specter's Shroud Helm,"A ghostly helm that allows the wearer to phase through solid objects.",2300,1150,0,18,Unisex
+Vampire's Coffin Lid Helm,"A macabre helm fashioned from a coffin lid, granting life-draining abilities.",2400,1200,18,15,Unisex
+Werewolf Pelt Helm,"A rugged helm made from werewolf pelt, granting increased strength under the moon.",1500,750,15,0,Unisex
+Goblin Shaman's Skullcap,"A crude skullcap adorned with goblin shaman trinkets, enhancing their rudimentary magic.",90,45,0,5,Unisex
+Ogre's Club Helm,"A massive helm fashioned from an ogre's club, offering blunt force protection.",350,175,10,0,Unisex
+Trollhide Cap,"A thick cap made from troll hide, offering good regeneration.",180,90,5,0,Unisex
+Giant's Kettle Helm,"A colossal helm made from a giant's kettle, providing immense defense.",1200,600,14,0,Unisex
+Sprite's Leaf Hat,"A tiny hat woven from magical leaves, granting illusionary abilities.",80,40,0,4,Unisex
+Brownie's Acorn Cap,"A small cap made from an acorn, offering minor protection.",50,25,1,1,Unisex
+Leprechaun's Top Hat,"A charming top hat that brings good luck.",100,50,0,3,Unisex
+Banshee's Wail Mask,"A haunting mask that amplifies a banshee's terrifying scream.",1600,800,0,17,Female
+Ghoul's Grave Shroud,"A tattered shroud that grants the wearer partial invisibility in darkness.",1400,700,6,10,Unisex
+Zombie's Brain Bucket,"A gruesome bucket worn by zombies, protecting their brains.",100,50,3,0,Unisex
+Mummy's Linen Wrap,"An ancient linen wrap that offers minor protection against curses.",200,100,0,5,Unisex
+Frankenstein's Monster Headpiece,"A patched-together headpiece that offers immense resilience.",1700,850,19,0,Unisex
+Gargoyle Stone Helm,"A helm carved from gargoyle stone, offering resistance to physical damage.",1500,750,16,0,Unisex
+Dragon Turtle Shell Helm,"A massive helm made from a dragon turtle's shell, offering exceptional defense.",2200,1100,18,0,Unisex
+Fire Elemental Core Helm,"A helm infused with a fire elemental core, granting fire immunity.",2000,1000,10,15,Unisex
+Water Elemental Core Helm,"A helm infused with a water elemental core, granting water breathing.",2000,1000,10,15,Unisex
+Air Elemental Core Helm,"A helm infused with an air elemental core, granting enhanced agility.",2000,1000,10,15,Unisex
+Earth Elemental Core Helm,"A helm infused with an earth elemental core, granting increased fortitude.",2000,1000,10,15,Unisex
+Light Elemental Core Helm,"A helm infused with a light elemental core, radiating holy energy.",2500,1250,5,20,Unisex
+Dark Elemental Core Helm,"A helm infused with a dark elemental core, manipulating shadows.",2500,1250,5,20,Unisex
+Arcane Orb Helm,"A helm with a floating arcane orb, significantly boosting magical power.",2800,1400,0,25,Unisex
+Chaos Fragment Helm,"A chaotic helm formed from fragments of pure chaos, granting unpredictable power.",3200,1600,20,20,Unisex
+Void Gaze Helm,"A helm that allows the wearer to glimpse into the void, potentially driving them mad.",2700,1350,0,23,Unisex
+Astral Projection Helm,"A helm that aids in astral projection, allowing the wearer to explore beyond their body.",2600,1300,0,22,Unisex
+Chronos Helm,"A helm infused with the power of time, allowing minor temporal manipulation.",3500,1750,15,28,Unisex
+Aetherial Veil,"A translucent veil that grants partial etherealness, making the wearer harder to hit.",2100,1050,0,17,Female
+Celestial Diadem,"A diadem adorned with fragments of starlight, radiating divine protection.",3100,1550,0,26,Female
+Abyssal Crown,"A dark crown from the abyss, granting control over deep-sea creatures.",2900,1450,18,19,Unisex
+Ethereal Hood,"A shimmering hood that makes the wearer nearly invisible to the naked eye.",2000,1000,5,16,Unisex
+Soulforged Helm,"A helm forged from captured souls, granting immense dark power.",3300,1650,25,10,Male
+Spiritbond Circlet,"A circlet that creates a strong bond with a companion spirit.",1000,500,0,14,Unisex
+Dreamthorn Helm,"A helm with sharp, dream-infused thorns, inflicting nightmares on enemies.",1800,900,14,10,Unisex
+Wispwood Helm,"A light helm made from wispwood, granting improved awareness.",900,450,5,7,Unisex
+Crystal Bloom Tiara,"A tiara made of blossoming crystals, enhancing natural magic.",1100,550,0,16,Female
+Stone Golem Helm,"A heavy helm made from golem stone, offering robust defense.",1600,800,17,0,Unisex
+Obsidian Helm,"A helm carved from dark obsidian, absorbing magical attacks.",1700,850,15,8,Unisex
+Jade Crown,"A crown made of pure jade, enhancing wisdom and longevity.",1900,950,0,18,Female
+Ruby Helm,"A helm adorned with a large ruby, radiating fiery energy.",1800,900,13,11,Unisex
+Sapphire Tiara,"A tiara with a brilliant sapphire, enhancing water and ice magic.",1800,900,0,17,Female
+Emerald Circlet,"A circlet with a gleaming emerald, boosting nature-based magic.",1800,900,0,17,Female
+Diamond Crown,"A crown encrusted with diamonds, offering unparalleled defense and prestige.",3800,1900,10,20,Unisex
+Amethyst Helm,"A helm with an amethyst, enhancing mental clarity and resistance to mind-control.",1600,800,0,16,Unisex
+Topaz Circlet,"A circlet with a golden topaz, enhancing agility and swiftness.",1500,750,0,15,Female
+Garnet Helm,"A helm with a deep red garnet, boosting vitality and inner strength.",1500,750,12,0,Unisex
+Pearl Tiara,"A delicate tiara with lustrous pearls, enhancing healing and purity.",1300,650,0,13,Female
+Opal Helm,"A shimmering helm with an opal, granting minor illusionary abilities.",1400,700,0,14,Unisex
+Tourmaline Crown,"A crown with a multi-colored tourmaline, granting resistance to various elemental attacks.",2000,1000,0,19,Unisex
+Bloodstone Helm,"A grim helm with bloodstone, enhancing offensive capabilities at a cost to health.",1600,800,18,0,Unisex
+Moonstone Circlet,"A circlet with moonstone, granting enhanced intuition and nocturnal magic.",1200,600,0,12,Female
+Sunstone Helm,"A helm with sunstone, radiating warmth and light, countering darkness.",1200,600,0,12,Unisex
+Adamantite Helm,"A supremely strong helm made from adamantite, offering near-invincible defense.",4500,2250,30,0,Unisex
+Orichalcum Circlet,"A legendary circlet made from orichalcum, amplifying all magical abilities.",4200,2100,5,30,Unisex
+Titanium Helm,"A lightweight yet incredibly strong helm made from titanium.",1500,750,15,0,Unisex
+Mithril Chain Coif,"A light and flexible coif made of mithril chain, offering good protection.",550,275,10,3,Unisex
+Vibranium Helm,"A helm made from vibranium, absorbing kinetic energy and returning it as force.",5000,2500,35,0,Unisex
+Netherite Helm,"A helm forged from netherite, resistant to fire and powerful in the nether.",4800,2400,32,15,Unisex
+Etherium Helm,"A helm made of ethereal material, granting resistance to magical effects.",4000,2000,10,28,Unisex
+Quantum Helm,"A helm incorporating quantum technology, allowing minor reality manipulation.",6000,3000,25,35,Unisex
+Stardust Circlet,"A circlet crafted from condensed stardust, granting cosmic awareness.",3500,1750,0,28,Female
+Comet Tail Helm,"A helm with a streaking comet tail effect, enhancing speed and agility.",3400,1700,20,10,Unisex
+Black Hole Helm,"A helm that seems to absorb light, granting control over gravitational forces.",7000,3500,40,40,Unisex
+Galaxy Helm,"A helm that contains a swirling galaxy within, granting immense power.",8000,4000,50,50,Unisex
+Nebula Crown,"A crown that shimmers with the colors of a nebula, granting astral powers.",7500,3750,30,45,Female
+Solar Flare Helm,"A helm that bursts with solar energy, incinerating foes with light.",6500,3250,35,30,Unisex
+Lunar Eclipse Helm,"A helm shrouded in the darkness of a lunar eclipse, granting shadowy powers.",6500,3250,30,35,Unisex
+Cosmic Helm,"A helm that seems to transcend dimensions, granting omnipotent abilities.",9000,4500,60,60,Unisex
+Voidwalker Helm,"A helm for those who walk the void, granting protection from its horrors.",5500,2750,25,30,Unisex
+Time Weaver's Hood,"A hood that allows the wearer to subtly manipulate the flow of time.",5000,2500,10,30,Unisex
+Reality Bender's Tiara,"A tiara that allows the wearer to bend reality to their will, within limits.",6000,3000,0,38,Female
+Dimension Shifter's Helm,"A helm that allows the wearer to shift between dimensions.",5800,2900,20,32,Unisex
+Graviton Helm,"A helm that manipulates gravity, allowing the wearer to float or crush foes.",5200,2600,28,28,Unisex
+Anti-Matter Helm,"A helm crafted from anti-matter, highly destructive but dangerous to wear.",7000,3500,45,20,Unisex
+Singularity Helm,"A helm that creates a miniature singularity, pulling enemies in.",8500,4250,55,55,Unisex
+Eldritch Visage,"A helm of disturbing appearance, granting maddening powers.",4500,2250,15,35,Unisex
+Crystalline Helm,"A helm made of pure crystal, offering excellent protection and magic amplification.",1900,950,10,15,Unisex
+Forge Lord's Helm,"A heavy helm worn by master blacksmiths, radiating immense heat.",1800,900,18,0,Male
+Artificer's Goggles,"Goggles designed for artificers, enhancing their crafting precision.",150,75,0,5,Unisex
+Runesmith's Helmet,"A helmet inscribed with powerful runes, enhancing runic magic.",2000,1000,10,20,Unisex
+Glimmersteel Helm,"A helm made of glimmersteel, reflecting light and dazzling enemies.",1700,850,14,7,Unisex
+Soulstone Helm,"A helm with an embedded soulstone, capable of absorbing stray souls for power.",2100,1050,15,18,Unisex
+Spirit Warden's Helm,"A helm worn by those who guard spirits, offering protection from malevolent entities.",2200,1100,10,20,Unisex
+Abjurer's Hood,"A hood worn by abjurers, specializing in defensive magic.",1300,650,0,15,Unisex
+Conjurer's Cap,"A cap worn by conjurers, aiding in summoning creatures.",1400,700,0,16,Unisex
+Diviner's Headband,"A headband worn by diviners, enhancing their foresight.",1500,750,0,17,Unisex
+Enchantress's Circlet,"A circlet worn by enchantresses, boosting charming spells.",1600,800,0,18,Female
+Illusionist's Mask,"A mask worn by illusionists, making their illusions more convincing.",1700,850,0,19,Unisex
+Evoker's Helm,"A helm worn by evokers, amplifying their destructive spells.",1800,900,5,20,Unisex
+Transmuter's Hood,"A hood worn by transmuters, aiding in altering physical properties.",1900,950,0,21,Unisex
+Necromancer's Skull Mask,"A chilling skull mask worn by necromancers, granting greater control over the undead.",2000,1000,8,22,Unisex
+Warlord's Greathelm,"A massive greathelm worn by powerful warlords, dominating the battlefield.",2500,1250,25,0,Male
+Conqueror's Crown,"A magnificent crown worn by conquerors, inspiring loyalty and fear in their armies.",2700,1350,20,10,Male
+Emperor's Laurel,"A golden laurel wreath worn by emperors, symbolizing absolute power.",2900,1450,15,15,Unisex
+Empress's Tiara,"A regal tiara worn by empresses, radiating grace and authority.",2800,1400,0,20,Female
+King's Crown,"A noble crown worn by kings, inspiring bravery in their subjects.",2600,1300,10,10,Male
+Queen's Diadem,"A beautiful diadem worn by queens, symbolizing wisdom and benevolence.",2500,1250,0,18,Female
+Baron's Helmet,"A sturdy helmet worn by barons, providing protection in battle.",400,200,10,0,Male
+Baroness's Circlet,"An elegant circlet worn by baronesses, suitable for court.",350,175,0,5,Female
+Duke's Greathelm,"A grand greathelm worn by dukes, signifying their martial prowess.",700,350,15,0,Male
+Duchess's Tiara,"A sophisticated tiara worn by duchesses, befitting their noble status.",600,300,0,8,Female
+Count's Helmet,"A finely crafted helmet worn by counts, symbolizing their standing.",500,250,12,0,Male
+Countess's Headband,"A stylish headband worn by countesses, adorned with minor jewels.",450,225,0,7,Female
+Knight-Captain's Helm,"A distinguished helm worn by knight-captains, leading their brethren.",1000,500,15,5,Male
+Sergeant's Helmet,"A practical helmet worn by sergeants, designed for frontline leadership.",250,125,8,0,Unisex
+Recruit's Cap,"A basic cap given to new recruits, offering minimal protection.",20,10,1,0,Unisex
+Veteran's Helm,"A battle-scarred helm worn by veterans, showing their experience.",800,400,12,0,Unisex
+Elite Guard Helm,"A polished helm worn by elite guards, offering superior defense.",1300,650,16,0,Unisex
+Royal Guard Helm,"A highly ornate helm worn by royal guards, signifying their loyalty.",1500,750,18,0,Unisex
+Temple Guard Helm,"A sacred helm worn by temple guards, imbued with divine protection.",1400,700,12,8,Unisex
+Shadow Guard Helm,"A dark helm worn by shadow guards, aiding in stealth and ambush.",1350,675,10,6,Unisex
+Arena Champion's Helm,"A fearsome helm worn by arena champions, inspiring awe and fear.",1900,950,20,0,Unisex
+Grandmaster's Helm,"A legendary helm worn by grandmasters of a martial art or order.",2800,1400,25,10,Unisex
+Sacred Helm,"A helm blessed by ancient deities, offering immense spiritual protection.",2700,1350,10,25,Unisex
+Profane Helm,"A helm cursed by dark powers, granting immense destructive capabilities.",2600,1300,22,15,Unisex
+Blessed Circlet,"A simple circlet blessed by a cleric, offering minor protection.",80,40,0,3,Female
+Cursed Headband,"A headband imbued with a minor curse, granting some power at a cost.",70,35,3,0,Unisex
+Demonic Circlet,"A circlet forged in hellfire, granting control over minor demons.",2300,1150,12,20,Unisex
+Angelic Halo,"A luminous halo of pure light, granting divine blessings.",2400,1200,0,22,Unisex
+Fiery Helm,"A helm wreathed in eternal flames, burning enemies on contact.",1800,900,15,9,Unisex
+Icy Helm,"A helm covered in permafrost, freezing enemies with each blow.",1800,900,15,9,Unisex
+Shocking Helm,"A helm crackling with electricity, paralyzing foes with lightning.",1800,900,15,9,Unisex
+Poisonous Helm,"A helm dripping with venom, poisoning enemies upon contact.",1800,900,15,9,Unisex
+Stone Skin Helm,"A helm that turns the wearer's skin to stone, providing immense defense.",1700,850,12,0,Unisex
+Wind's Embrace Helm,"A light helm that allows the wearer to move with the swiftness of wind.",1600,800,10,8,Unisex
+Void Touched Helm,"A helm that has touched the void, granting resistance to void energies.",2000,1000,10,15,Unisex
+Lightforged Helm,"A helm forged with holy light, devastating to dark creatures.",2100,1050,15,10,Unisex
+Darkforged Helm,"A helm forged in darkness, powerful against light creatures.",2100,1050,15,10,Unisex
+Rune of Strength Helm,"A helm inscribed with a rune of strength, greatly boosting physical power.",1900,950,20,0,Male
+Rune of Magic Helm,"A helm inscribed with a rune of magic, greatly boosting magical power.",1900,950,0,20,Unisex
+Rune of Protection Helm,"A helm inscribed with a rune of protection, significantly increasing defense.",1900,950,10,10,Unisex
+Rune of Speed Helm,"A helm inscribed with a rune of speed, increasing agility.",1900,950,5,5,Unisex
+Rune of Wisdom Helm,"A helm inscribed with a rune of wisdom, boosting intellect.",1900,950,0,18,Unisex
+Rune of Vitality Helm,"A helm inscribed with a rune of vitality, increasing health.",1900,950,0,0,Unisex
+Rune of Fury Helm,"A helm inscribed with a rune of fury, increasing attack at low health.",2000,1000,22,0,Male
+Rune of Serenity Helm,"A helm inscribed with a rune of serenity, calming the mind and boosting magic.",2000,1000,0,22,Unisex
+Heroic Helm,"A helm of ancient heroes, inspiring allies and striking fear in foes.",3000,1500,25,15,Male
+Legendary Helm,"A helm from forgotten legends, imbued with immense, mysterious power.",3500,1750,30,20,Unisex
+Mythic Helm,"A helm from the age of myths, possessing unparalleled power.",4000,2000,35,25,Unisex
+Divine Helm,"A helm of divine origin, granting godly powers.",4500,2250,40,30,Unisex
+Abyssal Helm,"A helm from the darkest depths of the abyss, granting unholy power.",4300,2150,38,28,Unisex
+Celestial Helm,"A helm descended from the heavens, radiating pure light.",4200,2100,30,38,Unisex
+Dreamer's Veil,"A veil that allows the wearer to enter and manipulate dreams.",1000,500,0,15,Female
+Wanderer's Cap,"A practical cap for a long journey, providing comfort and minor protection.",90,45,2,0,Unisex
+Pioneer's Hat,"A sturdy hat for pioneers, essential for exploration.",120,60,3,0,Unisex
+Pathfinder's Helm,"A helm that helps pathfinders navigate treacherous terrain.",150,75,4,2,Unisex
+Explorer's Goggles,"Goggles that aid explorers in spotting hidden details.",100,50,0,3,Unisex
+Adventurer's Helmet,"A reliable helmet for any adventurer, offering balanced protection.",200,100,6,0,Unisex
+Relic Hunter's Headband,"A headband that subtly hums when near ancient relics.",180,90,0,4,Unisex
+Treasure Seeker's Helm,"A helm that occasionally gleams when hidden treasure is nearby.",220,110,5,3,Unisex
+Grave Robber's Mask,"A dark mask worn by grave robbers, aiding in stealth in tombs.",160,80,4,0,Unisex
+Dungeon Delver's Helm,"A robust helm for dungeon delvers, protecting against traps.",280,140,7,0,Unisex
+Dragon Slayer's Helm,"A helm specifically designed for slaying dragons, enhancing anti-dragon abilities.",2000,1000,20,5,Male
+Giant Killer's Helm,"A helm that enhances the wearer's ability to fight giants.",1900,950,18,0,Male
+Monster Hunter's Helm,"A general-purpose helm for hunting all manner of monsters.",1700,850,16,0,Unisex
+Beast Tamer's Bridle Helm,"A unique helm that aids in taming wild beasts.",1500,750,5,10,Unisex
+Familiar's Bond Helm,"A helm that strengthens the bond with a magical familiar.",1200,600,0,12,Unisex
+Summoner's Crown,"A crown that amplifies summoning magic, allowing for more powerful summons.",2100,1050,0,21,Unisex
+Puppet Master's Visage,"A grim visage that allows control over puppets and constructs.",1800,900,8,18,Unisex
+Golem Commander's Helm,"A helm that allows direct mental control over nearby golems.",2000,1000,10,19,Unisex
+Automaton Pilot's Helm,"A helm for piloting large automatons, providing necessary controls.",1900,950,15,0,Unisex
+Clockwork Engineer's Goggles,"Goggles that aid in precise clockwork construction and repair.",170,85,0,6,Unisex
+Artificer's Crown,"A crown worn by master artificers, greatly enhancing their creations.",2200,1100,5,22,Unisex
+Inventor's Helm,"A helm that inspires grand inventions and complex designs.",1800,900,0,18,Unisex
+Mad Scientist's Headgear,"Erratic headgear that amplifies chaotic experiments.",1600,800,8,16,Unisex
+Apothecary's Mortar Cap,"A cap worn by apothecaries, aiding in the creation of potent concoctions.",130,65,0,7,Unisex
+Herbalist's Woven Hat,"A hat woven from herbs, enhancing knowledge of plants.",110,55,0,6,Unisex
+Chef's Toque Helm,"A surprisingly sturdy helm designed for battle-chefs, offering a surprising amount of protection.",150,75,4,0,Unisex
+Fisherman's Hat,"A wide-brimmed hat that protects fishermen from the elements.",50,25,1,0,Unisex
+Farmer's Straw Hat,"A simple straw hat, offering basic sun protection.",30,15,0,0,Unisex
+Miner's Hard Hat,"A hard hat with a lamp, essential for mining.",100,50,3,0,Unisex
+Lumberjack's Cap,"A rugged cap for lumberjacks, offering protection from falling debris.",80,40,2,0,Unisex
+Hunter's Fur Hood,"A warm fur hood for hunters, providing warmth and stealth in cold climates.",150,75,5,0,Unisex
+Fisherman's Knit Cap,"A warm knit cap for fishermen, warding off the cold.",60,30,1,0,Unisex
+Shepherd's Wool Cap,"A simple wool cap worn by shepherds, providing warmth.",40,20,0,0,Unisex
+Farmer's Sun Hat,"A wide sun hat for farmers, protecting from the sun's glare.",35,17,0,0,Unisex
+Brewer's Cap,"A traditional cap worn by brewers, ensuring good spirits.",70,35,0,1,Unisex
+Baker's Toque,"A tall white hat worn by bakers, protecting their hair and symbolizing their craft.",60,30,0,0,Unisex
+Innkeeper's Headband,"A simple headband worn by innkeepers, offering a welcoming demeanor.",40,20,0,1,Unisex
+Merchant's Turban,"A practical turban worn by merchants, suitable for travel.",90,45,0,2,Unisex
+Caravan Master's Helm,"A sturdy helm worn by caravan masters, protecting during long journeys.",200,100,6,0,Unisex
+Sailor's Sou'wester,"A waterproof hat worn by sailors, protecting from spray and rain.",70,35,1,0,Unisex
+Pirate Captain's Tricorne,"A classic pirate captain's hat, inspiring fear and loyalty.",300,150,7,0,Unisex
+Buccaneer's Bandana,"A colorful bandana worn by buccaneers, signifying their adventurous spirit.",50,25,2,0,Unisex
+Explorer's Pith Helmet,"A classic pith helmet for explorers, offering sun protection in exotic lands.",120,60,3,0,Unisex
+Big Game Hunter's Hat,"A distinctive hat worn by big game hunters, indicating their prowess.",250,125,8,0,Unisex
+Safari Hat,"A practical hat for safaris, providing sun protection and camouflage.",100,50,2,0,Unisex
+Forester's Cap,"A cap for foresters, blending in with nature and providing light protection.",80,40,2,0,Unisex
+Gardener's Hat,"A wide-brimmed hat for gardeners, protecting from the sun.",30,15,0,0,Unisex
+Florist's Garland,"A delicate garland of flowers worn by florists, imbued with subtle nature magic.",90,45,0,4,Female
+Zoologist's Headband,"A headband that aids zoologists in understanding animal behavior.",100,50,0,3,Unisex
+Botanist's Circlet,"A circlet that enhances a botanist's knowledge of plants and their properties.",110,55,0,5,Unisex
+Geologist's Hard Hat,"A hard hat used by geologists, protecting from falling rocks.",100,50,3,0,Unisex
+Astronomer's Hood,"A hood that aids astronomers in observing the night sky.",120,60,0,6,Unisex
+Historian's Spectacles,"Spectacles that aid historians in deciphering ancient texts.",80,40,0,2,Unisex
+Librarian's Eye-shade,"An eye-shade that helps librarians focus on their reading.",50,25,0,1,Unisex
+Cartographer's Compass Helm,"A helm with an integrated compass, aiding cartographers in mapping.",150,75,0,4,Unisex
+Artist's Beret,"A classic beret worn by artists, inspiring creativity and vision.",60,30,0,1,Unisex
+Musician's Headband,"A headband that helps musicians maintain rhythm and harmony.",70,35,0,2,Unisex
+Poet's Laurel Wreath,"A laurel wreath worn by poets, inspiring eloquence.",90,45,0,3,Unisex
+Writer's Quill Cap,"A cap with a quill, aiding writers in their craft.",80,40,0,2,Unisex
+Orator's Headpiece,"A stately headpiece worn by orators, enhancing their persuasive abilities.",130,65,0,5,Unisex
+Diplomat's Hat,"A refined hat worn by diplomats, conveying respect and authority.",140,70,0,4,Unisex
+Negotiator's Headband,"A headband that aids negotiators in finding common ground.",110,55,0,3,Unisex
+Spy's Disguise Hat,"A simple hat used by spies to blend into crowds.",40,20,0,0,Unisex
+Infiltrator's Mask,"A dark mask worn by infiltrators, aiding in covert operations.",160,80,3,0,Unisex
+Sentry's Helmet,"A standard helmet for sentries, providing reliable protection.",180,90,5,0,Unisex
+Bodyguard's Helm,"A heavy helm for bodyguards, ensuring the protection of their charge.",250,125,8,0,Male
+Executioner's Hood,"A grim hood worn by executioners, concealing their identity.",300,150,9,0,Unisex
+Jailer's Helmet,"A sturdy helmet for jailers, protecting them from inmates.",190,95,6,0,Unisex
+Judge's Wig,"A formal wig worn by judges, symbolizing justice and authority.",100,50,0,2,Unisex
+Lawyer's Headband,"A modest headband for lawyers, aiding in quick thinking.",80,40,0,1,Unisex
+Doctor's Head Mirror,"A reflective mirror worn by doctors, aiding in examinations.",70,35,0,2,Unisex
+Nurse's Cap,"A simple cap worn by nurses, symbolizing care and dedication.",50,25,0,1,Female
+Patient's Headwrap,"A soft headwrap for patients, offering comfort.",20,10,0,0,Unisex
+Apothecary's Goggles,"Protective goggles worn by apothecaries, for handling volatile concoctions.",100,50,0,4,Unisex
+Undertaker's Top Hat,"A solemn top hat worn by undertakers, reflecting their profession.",90,45,0,0,Unisex
+Gravekeeper's Lantern Helm,"A helm with an integrated lantern, aiding gravekeepers at night.",150,75,4,0,Unisex
+Funeral Director's Bowler Hat,"A formal bowler hat worn by funeral directors, conveying professionalism.",80,40,0,0,Unisex
+Mourner's Veil,"A dark veil worn by mourners, symbolizing grief.",70,35,0,0,Female
+Spirit Medium's Headband,"A headband that aids spirit mediums in communicating with the deceased.",160,80,0,8,Unisex
+Exorcist's Headpiece,"A holy headpiece worn by exorcists, warding off demonic influence.",180,90,0,9,Unisex
+Inquisitor's Blindfold,"A blindfold worn by certain inquisitors, allowing them to focus on inner vision.",170,85,0,7,Unisex
+Zealot's Headwrap,"A simple headwrap worn by zealots, signifying their fervent devotion.",90,45,0,3,Unisex
+Fanatic's Mask,"A terrifying mask worn by fanatics, inspiring fear and unwavering loyalty.",200,100,6,0,Unisex
+Heretic's Mark Headband,"A cursed headband that marks the wearer as a heretic.",100,50,0,0,Unisex
+Apostate's Hood,"A dark hood worn by apostates, symbolizing their rejection of faith.",120,60,0,2,Unisex
+Cultist's Hood,"A sinister hood worn by cultists, aiding in dark rituals.",150,75,0,6,Unisex
+Sacrifice's Shroud,"A simple shroud for ritual sacrifices, offering no protection.",10,5,0,0,Unisex
+Ritualist's Mask,"A ceremonial mask worn by ritualists, enhancing their arcane ceremonies.",180,90,0,9,Unisex
+Divination Orb Helm,"A helm with a scrying orb, aiding in divination.",220,110,0,11,Unisex
+Seer's Eyepatch,"An eyepatch worn by seers, sometimes to focus their prophetic visions.",130,65,0,7,Unisex
+Mystic's Headband,"A simple headband worn by mystics, aiding in meditation and enlightenment.",140,70,0,8,Unisex
+Enlightened One's Crown,"A crown worn by those who have achieved enlightenment, radiating inner peace.",2500,1250,0,25,Unisex
+Ascendant's Halo,"A halo that signifies ascension to a higher plane of existence.",2800,1400,0,28,Unisex
+Nirvana Helm,"A helm that grants the wearer a state of ultimate peace and detachment.",3000,1500,0,30,Unisex
+Sage's Circlet of Ages,"A circlet that grants access to the wisdom of all ages.",3200,1600,0,32,Unisex
+Prophet's Crown of Foretelling,"A crown that grants glimpses of future events, both good and ill.",3500,1750,0,35,Unisex
+Oracle's Divine Sight Orb,"An orb integrated into a helm, granting omniscient vision.",3800,1900,0,38,Unisex
+Cosmic Wanderer's Hood,"A hood that aids wanderers across the cosmos, protecting them from stellar energies.",4000,2000,10,30,Unisex
+Starlight Helm,"A helm that gathers starlight, empowering the wearer with celestial energy.",4200,2100,12,32,Unisex
+Nebula Veil,"A veil that shimmers with the colors of a nebula, concealing the wearer's true form.",4500,2250,0,35,Female
+Solar Flare Diadem,"A diadem that radiates solar energy, providing protection and offensive power.",4800,2400,15,38,Female
+Lunar Embrace Tiara,"A tiara that glows with moonlight, enhancing nocturnal abilities and grace.",4700,2350,0,37,Female
+Galactic Core Helm,"A helm infused with the power of a galactic core, granting immense cosmic power.",5000,2500,20,40,Unisex
+Universe Shard Helm,"A helm made from fragments of the universe itself, granting unimaginable power.",5500,2750,25,45,Unisex
+Reality Anchor Helm,"A helm that anchors the wearer to reality, preventing temporal or dimensional displacement.",6000,3000,30,50,Unisex
+Dream Weaver's Tiara,"A tiara that allows the wearer to weave dreams into reality.",6500,3250,0,55,Female
+Nightmare King's Crown,"A crown that harnesses nightmares, turning them into tangible fear for enemies.",7000,3500,35,60,Male
+Eternal Slumber Helm,"A helm that puts enemies into an eternal slumber, rendering them harmless.",7500,3750,0,65,Unisex
+Void Gazer's Crown,"A crown that allows deep gazes into the void, granting forbidden knowledge.",8000,4000,40,70,Unisex
+Chaos Lord's Helm,"A helm of pure chaos, granting unpredictable and devastating power.",8500,4250,45,75,Male
+Order Keeper's Helm,"A helm that imposes order on chaos, suppressing unruly energies.",9000,4500,50,80,Unisex
+Balance Keeper's Helm,"A helm that maintains the balance between light and darkness, good and evil.",9500,4750,55,85,Unisex
+Truth Seeker's Helm,"A helm that reveals the truth, cutting through illusions and lies.",10000,5000,0,90,Unisex
+Knowledge Bringer's Crown,"A crown that bestows immense knowledge upon the wearer.",10500,5250,0,95,Unisex
+Wisdom Giver's Helm,"A helm that grants profound wisdom, allowing the wearer to see beyond.",11000,5500,0,100,Unisex
+Destruction Helm,"A helm that embodies pure destruction, increasing offensive power exponentially.",12000,6000,100,0,Male
+Creation Helm,"A helm that embodies pure creation, allowing for the manifestation of wonders.",12000,6000,0,100,Female
+Life Bringer's Circlet,"A circlet that radiates life energy, healing all around the wearer.",11500,5750,0,98,Female
+Death Giver's Helm,"A helm that radiates death energy, bringing ruin to enemies.",11500,5750,98,0,Male
+Light's Beacon Helm,"A helm that acts as a beacon of pure light, dispelling all darkness.",13000,6500,0,105,Unisex
+Shadow's Embrace Helm,"A helm that embodies pure shadow, allowing the wearer to command darkness.",13000,6500,105,0,Unisex
+Elemental Lord's Crown,"A crown that grants mastery over all four classical elements.",14000,7000,50,50,Unisex
+Time Lord's Helm,"A helm that grants absolute control over time itself, allowing reality rewriting.",15000,7500,75,75,Unisex
+Space Lord's Helm,"A helm that grants absolute control over space, allowing teleportation and reality warping.",15000,7500,75,75,Unisex
+Cosmic Lord's Helm,"A helm that grants dominion over both time and space, truly omnipotent.",20000,10000,100,100,Unisex
