@@ -1,0 +1,481 @@
+Name,Description,Purchase Price,Sell Price,Attack Power,Magic Attack Power,Gender
+Cotton Tunic,"A simple tunic made of soft cotton, comfortable for everyday wear.",50,25,0,5,Unisex
+Leather Vest,"A basic leather vest offering minimal protection.",80,40,2,0,Unisex
+Padded Shirt,"A quilted shirt providing light defense.",120,60,0,0,Unisex
+Linen Robe,"A loose-fitting robe suitable for mages.",100,50,0,10,Unisex
+Studded Leather Armor,"Leather armor reinforced with metal studs.",200,100,5,0,Unisex
+Chainmail Vest,"A vest made of interlocking metal rings.",350,175,8,0,Unisex
+Iron Breastplate,"A solid iron plate protecting the chest.",500,250,12,0,Unisex
+Silk Robe,"A luxurious robe woven from fine silk, enhancing magical prowess.",450,225,0,15,Unisex
+Bronze Cuirass,"A sturdy chest piece crafted from bronze.",600,300,15,0,Unisex
+Mithril Chainmail,"Lightweight yet incredibly strong chainmail.",800,400,10,5,Unisex
+Steel Plate Armor,"Heavy and reliable steel plate armor.",1000,500,20,0,Unisex
+Enchanted Robe,"A robe imbued with minor magical properties.",750,375,0,20,Unisex
+Dragonhide Vest,"A vest crafted from the tough hide of a dragon.",1200,600,18,0,Unisex
+Knight's Cuirass,"The polished chest plate of a valiant knight.",1500,750,25,0,Unisex
+Mystic Robe,"A robe pulsating with arcane energy.",1300,650,0,25,Unisex
+Adamantite Plate,"Extremely durable armor forged from adamantite.",2000,1000,30,0,Unisex
+Celestial Tunic,"A tunic said to be woven from starlight, offering slight protection.",150,75,0,8,Unisex
+Traveler's Shirt,"A comfortable and durable shirt for long journeys.",70,35,1,0,Unisex
+Fisherman's Vest,"A practical vest with many pockets, surprisingly resilient.",90,45,2,0,Unisex
+Woolen Tunic,"A warm tunic, ideal for colder climates.",60,30,0,0,Unisex
+Leather Jacket,"A stylish leather jacket offering modest defense.",180,90,4,0,Unisex
+Brigandine Vest,"A vest made of small metal plates riveted to cloth or leather.",300,150,7,0,Unisex
+Scale Mail,"Armor made from overlapping scales of metal or hardened leather.",400,200,10,0,Unisex
+Dark Robe,"A foreboding robe, favored by shadow mages.",380,190,0,18,Unisex
+Guardian's Breastplate,"A sturdy breastplate designed for protectors.",700,350,18,0,Unisex
+Elven Chainmail,"Delicately crafted chainmail, light and resilient.",900,450,12,7,Unisex
+Paladin's Cuirass,"A blessed cuirass, offering both defense and spiritual resistance.",1100,550,22,5,Unisex
+Sorcerer's Robe,"A robe designed to amplify magical incantations.",950,475,0,22,Unisex
+Dwarven Plate,"Heavy and robust plate armor, masterfully forged.",1400,700,28,0,Unisex
+Phoenix Robe,"A vibrant robe said to grant its wearer renewed vigor.",1600,800,0,30,Unisex
+Hero's Plate,"The legendary plate armor of a true hero.",2500,1250,35,0,Unisex
+Simple Dress,"A basic dress, comfortable for daily wear.",60,30,0,3,Female
+Maiden's Blouse,"A delicate blouse often worn by young women.",75,38,0,2,Female
+Chef's Apron,"A surprisingly durable apron, good for resisting minor damage.",85,42,1,0,Unisex
+Merchant's Vest,"A simple vest with hidden pockets, provides little defense.",95,48,0,0,Unisex
+Apprentice's Robe,"A plain robe worn by aspiring mages.",110,55,0,12,Unisex
+Hunter's Tunic,"A rugged tunic, ideal for tracking and stealth.",160,80,3,0,Unisex
+Reinforced Leather,"Leather armor with additional plating for better defense.",250,125,6,0,Unisex
+Bandit's Jerkin,"A patched-up jerkin, good for mobility.",280,140,5,0,Unisex
+Mage's Tunic,"A comfortable tunic that aids in spellcasting.",220,110,0,14,Unisex
+Gothic Plate,"Dark, imposing plate armor with sharp edges.",800,400,20,0,Unisex
+Acolyte's Robe,"A solemn robe worn by those devoted to ancient deities.",600,300,0,18,Unisex
+Crusader's Breastplate,"A holy breastplate, blessed against evil.",1000,500,23,3,Unisex
+Royal Gown,"An elegant gown, offering prestige more than protection.",500,250,0,5,Female
+Warrior's Tunic,"A sturdy tunic designed for frontline combatants.",190,95,4,0,Unisex
+Thief's Vest,"A lightweight vest designed for agility and concealment.",210,105,3,0,Unisex
+Cleric's Vestments,"Blessed vestments providing spiritual protection.",400,200,0,16,Unisex
+Gladiator's Harness,"A minimal but tough harness designed for arena combat.",550,275,13,0,Unisex
+Samurai Armor,"Intricate and strong armor, balanced for offense and defense.",1300,650,20,0,Unisex
+Ninja Garb,"Dark, flexible clothing for stealth and swift movement.",1100,550,15,5,Unisex
+Vest of the Wild,"A vest made from beast hides, ideal for wilderness survival.",230,115,4,0,Unisex
+Court Wizard's Robe,"A finely embroidered robe, befitting a royal mage.",850,425,0,23,Unisex
+Heavy Leather Armor,"Thick layers of leather for enhanced defense.",320,160,7,0,Unisex
+Silver Chainmail,"Chainmail woven with strands of silver, effective against dark creatures.",700,350,10,3,Unisex
+Golden Cuirass,"A polished gold-plated cuirass, more for show than defense.",900,450,16,2,Unisex
+Spirit Robe,"A translucent robe that shimmers with ethereal energy.",1000,500,0,28,Unisex
+Obsidian Plate,"Armor crafted from solidified volcanic glass, very strong.",1800,900,28,0,Unisex
+Sage's Robe,"A simple yet powerful robe, worn by wise mystics.",1500,750,0,32,Unisex
+Battle-Worn Tunic,"A torn but resilient tunic, seen many skirmishes.",40,20,1,0,Unisex
+Farmer's Smock,"A rough smock, offering almost no protection.",30,15,0,0,Unisex
+Ranger's Vest,"A practical vest with many pockets, good for outdoor life.",170,85,3,0,Unisex
+Scholar's Robe,"A comfortable robe for long hours of study.",130,65,0,13,Unisex
+Hard Leather Vest,"A stiff leather vest, slightly more protective.",150,75,3,0,Unisex
+Light Chainmail,"A lighter version of chainmail, for increased mobility.",280,140,6,0,Unisex
+Steel Breastplate,"A standard issue breastplate for soldiers.",450,225,11,0,Unisex
+Arcane Robe,"A dark robe crackling with uncontrolled magical energy.",550,275,0,21,Unisex
+Reinforced Cuirass,"A cuirass with extra plating in vital areas.",750,375,17,0,Unisex
+Mystical Chainmail,"Chainmail imbued with minor protective enchantments.",950,475,11,6,Unisex
+Full Plate Armor,"Complete and heavy plate armor, offering superior defense.",1200,600,23,0,Unisex
+Shadow Robe,"A robe that allows the wearer to blend into shadows.",1100,550,0,26,Unisex
+Wyvernhide Vest,"A vest crafted from the tough hide of a wyvern.",1400,700,20,0,Unisex
+Emperor's Cuirass,"A ceremonial cuirass, intricately decorated.",1700,850,27,0,Unisex
+Astral Robe,"A robe said to be woven from threads of the cosmos.",1800,900,0,35,Unisex
+Legendary Plate,"Plate armor of unfathomable strength, rumored to be divine.",3000,1500,40,0,Unisex
+Nurse's Uniform,"A simple white uniform, surprisingly durable.",65,33,0,4,Female
+Ball Gown,"A magnificent gown, offers no protection but great charm.",400,200,0,5,Female
+Dancer's Veil,"A light, flowing garment that enhances agility.",90,45,1,1,Female
+Priestess's Robe,"A pure white robe, blessed with divine protection.",480,240,0,19,Female
+Spellbinder's Robe,"A vibrant robe that hums with magical power.",1200,600,0,29,Female
+Matriarch's Gown,"An imposing gown worn by powerful female leaders.",700,350,0,10,Female
+Valkyrie's Cuirass,"A golden cuirass worn by valiant warrior women.",1600,800,26,0,Female
+Enchantress's Gown,"A gown of exquisite design, perfect for casting powerful spells.",1400,700,0,33,Female
+Amazonian Breastplate,"A light but sturdy breastplate for female warriors.",850,425,19,0,Female
+Queen's Regalia,"The ceremonial robes of a queen, imbued with subtle magic.",1100,550,0,24,Female
+Huntress's Vest,"A rugged vest designed for female hunters.",200,100,4,0,Female
+Druidess's Robe,"A robe made of natural fibers, attuned to nature's magic.",650,325,0,20,Female
+Sorceress's Gown,"A darkly elegant gown, enhancing destructive spells.",1350,675,0,31,Female
+Warrior Princess's Cuirass,"A decorative yet strong cuirass for a royal warrior.",1700,850,27,0,Female
+Maiden's Plate,"Light plate armor designed for female combatants.",950,475,20,0,Female
+Spirit Weaver's Robe,"A robe used to commune with spirits, enhancing spiritual magic.",1550,775,0,34,Female
+Battle Dress,"A functional dress designed for combat.",300,150,3,0,Female
+Silk Blouse,"A fine silk blouse, comfortable but offers no defense.",80,40,0,2,Female
+Fairy Tale Gown,"A whimsical gown that offers a slight magic boost.",550,275,0,7,Female
+Celestial Dress,"A dress adorned with celestial patterns, granting minor magical resistance.",600,300,0,9,Female
+Moonlight Robe,"A robe that glows faintly in the dark, enhancing lunar magic.",900,450,0,26,Female
+Sunstone Vest,"A vest embedded with sunstone fragments, offering fire resistance.",270,135,5,0,Unisex
+Oceanic Robe,"A robe woven from kelp and enchanted shells, good for water magic.",700,350,0,22,Unisex
+Gloom Vest,"A dark vest that helps the wearer blend into shadows.",240,120,4,0,Unisex
+Blaze Cuirass,"A cuirass imbued with fire magic, protecting against heat.",850,425,16,0,Unisex
+Frost Chainmail,"Chainmail that shimmers with icy energy, resisting cold.",1050,525,13,4,Unisex
+Thunder Robe,"A robe that crackles with static, enhancing lightning spells.",1250,625,0,27,Unisex
+Earth Plate,"Heavy plate armor forged from enchanted earth, very sturdy.",1900,950,29,0,Unisex
+Wind Tunic,"A light tunic that makes the wearer feel swifter.",180,90,2,0,Unisex
+Poison Vest,"A vest coated in a subtle, non-toxic venom, useful for rogues.",290,145,6,0,Unisex
+Holy Breastplate,"A breastplate blessed by the church, resisting dark attacks.",800,400,17,0,Unisex
+Cursed Robe,"A powerful but dangerous robe, drains health but boosts magic.",1000,500,-5,30,Unisex
+Demonic Cuirass,"A dark, imposing cuirass said to be forged in hellfire.",1600,800,28,-5,Unisex
+Angel's Robe,"A radiant robe that offers powerful divine protection.",1900,950,0,38,Unisex
+Dragon Scale Plate,"Plate armor crafted from genuine dragon scales, incredibly tough.",2800,1400,38,0,Unisex
+Elemental Vest,"A vest that shifts color based on the nearest element, offering minor resistance.",400,200,6,6,Unisex
+Clockwork Cuirass,"A cuirass made of intricate gears and metal, offers decent defense.",700,350,14,0,Unisex
+Alchemist's Robe,"A stained but resilient robe, with many hidden pockets.",600,300,0,17,Unisex
+Plague Doctor's Coat,"A long, thick coat offering protection against miasma.",350,175,5,0,Unisex
+Specter's Robe,"A ghostly robe that grants a small chance to evade attacks.",1150,575,0,25,Unisex
+Berserker's Harness,"A minimal harness that allows for unrestrained movement and boosts attack.",600,300,16,-3,Unisex
+Warden's Vest,"A robust vest for patrolling guards, with good defense.",260,130,5,0,Unisex
+Siren's Robe,"A shimmering robe that enthralls those nearby, enhancing charm magic.",1000,500,0,28,Female
+Vampire's Coat,"An elegant dark coat, said to sustain the wearer's life.",1300,650,10,10,Unisex
+Werewolf Hide Vest,"A vest made from the hide of a werewolf, offers minor strength boost.",1500,750,22,0,Unisex
+Golem Plate,"Extremely heavy and tough plate armor, slows movement.",2200,1100,32,0,Unisex
+Cosmic Robe,"A robe depicting constellations, allowing glimpses of future spells.",2000,1000,0,40,Unisex
+Soul Weaver's Robe,"A dark robe allowing manipulation of souls, boosts dark magic.",1700,850,0,36,Unisex
+Void Plate,"Armor that seems to absorb light, offering ultimate protection.",3500,1750,45,0,Unisex
+Novice's Tunic,"A simple tunic worn by those beginning their adventure.",45,23,0,0,Unisex
+Old Leather Armor,"Worn and patched leather armor, still offers some defense.",100,50,3,0,Unisex
+Ragged Shirt,"A tattered shirt, barely offering any protection.",20,10,0,0,Unisex
+Dirty Robe,"A grimy robe, suitable for beggars or desperate mages.",70,35,0,8,Unisex
+Rusty Chainmail,"Old and rusted chainmail, prone to breaking.",250,125,5,0,Unisex
+Dented Breastplate,"A breastplate that has seen better days, but still functions.",400,200,9,0,Unisex
+Woven Robe,"A simple robe made from woven plant fibers.",90,45,0,11,Unisex
+Crude Cuirass,"A poorly made cuirass, offers basic defense.",500,250,13,0,Unisex
+Gilded Chainmail,"Chainmail with decorative gold plating, less practical.",600,300,8,2,Unisex
+Ornate Plate Armor,"Highly decorative plate armor, more for ceremonies.",800,400,18,0,Unisex
+Whisper Robe,"A robe that makes a soft rustling sound, used for quiet movement.",650,325,0,19,Unisex
+Flesh Golem Vest,"A repulsive vest made from stitched together flesh, surprisingly tough.",1000,500,15,0,Unisex
+Baron's Cuirass,"A fancy cuirass, symbolizing minor nobility.",1300,650,22,0,Unisex
+Dreamweaver's Robe,"A robe that helps its wearer control dreams, useful for illusions.",1100,550,0,28,Unisex
+Titanium Plate,"Lightweight yet incredibly strong plate armor.",1700,850,25,0,Unisex
+Serpenthide Robe,"A robe made from the scales of a giant serpent, offers resistance to poison.",1400,700,0,30,Unisex
+Amulet Vest,"A vest embedded with various protective amulets.",350,175,7,7,Unisex
+Goblin Hide Tunic,"A crude tunic made from goblin hides, smells faintly of swamp.",70,35,2,0,Unisex
+Ogre Bone Cuirass,"A heavy cuirass made from ogre bones, very intimidating.",950,475,20,0,Unisex
+Harpy Feather Robe,"A light robe adorned with harpy feathers, allows graceful movement.",800,400,0,24,Female
+Unicorn Horn Plate,"Plate armor inlaid with fragments of unicorn horn, very rare.",2500,1250,30,10,Unisex
+Chiffon Gown,"A delicate and sheer gown, provides no protection.",50,25,0,1,Female
+Bridal Gown,"A beautiful white gown, worn for ceremonies.",150,75,0,3,Female
+Fortune Teller's Robe,"A colorful robe with mystical symbols, enhances foresight.",700,350,0,21,Female
+Bard's Vest,"A flashy vest that helps with performances, slight charm boost.",100,50,1,0,Unisex
+Scholar's Gown,"A dignified gown for intellectual pursuits, very comfortable.",120,60,0,8,Female
+Court Jester's Tunic,"A brightly colored tunic, offers no protection, purely cosmetic.",30,15,0,0,Unisex
+Artisan's Apron,"A practical apron with many pockets, good for crafting.",80,40,1,0,Unisex
+Miner's Vest,"A thick vest, offers protection against falling debris.",160,80,4,0,Unisex
+Inquisitor's Robe,"A grim robe worn by those who seek out evil.",900,450,0,25,Unisex
+Reaper's Shroud,"A dark, flowing shroud that seems to absorb light, feared by many.",1500,750,0,32,Unisex
+Barbarian's Fur Vest,"A rugged vest made of thick fur, offers warmth and protection.",220,110,6,0,Unisex
+Nomad's Tunic,"A simple, durable tunic for desert wanderers.",90,45,1,0,Unisex
+Zephyr Vest,"A light vest that makes the wearer feel faster.",130,65,2,0,Unisex
+Stone Breastplate,"A heavy breastplate carved from a single piece of stone.",600,300,14,0,Unisex
+Nether Robe,"A dark robe from the underworld, radiating ominous energy.",1100,550,0,29,Unisex
+Wyrmscale Vest,"A vest crafted from the scales of a smaller wyrm.",1100,550,17,0,Unisex
+Crimson Robe,"A vivid red robe, associated with powerful fire mages.",1300,650,0,30,Unisex
+Silver Plate Armor,"Plate armor forged from pure silver, shines brightly.",2000,1000,28,0,Unisex
+Runesmith's Robe,"A heavy robe adorned with glowing runes, enhances enchanting.",1600,800,0,34,Unisex
+Chitin Cuirass,"A cuirass made from the hard exoskeleton of a giant insect.",700,350,16,0,Unisex
+Golem Heart Breastplate,"A breastplate embedded with the pulsating core of a golem.",2300,1150,33,0,Unisex
+Starfall Robe,"A robe said to be woven from threads of falling stars, grants incredible power.",2200,1100,0,42,Unisex
+Ethereal Vest,"A semi-transparent vest that seems to flicker in and out of existence.",1200,600,10,10,Unisex
+Specter Vest,"A vest that offers slight resistance to spiritual attacks.",200,100,3,3,Unisex
+Shaman's Robe,"A ceremonial robe adorned with totems and charms.",750,375,0,23,Unisex
+Cultist's Robe,"A dark and ominous robe, often worn by followers of dark deities.",300,150,0,15,Unisex
+Executioner's Plate,"Heavy and dark plate armor, designed for maximum intimidation.",1700,850,29,0,Unisex
+Blood Robe,"A robe stained with ancient blood, granting power through sacrifice.",1400,700,5,30,Unisex
+Dragon King's Cuirass,"The legendary cuirass of a dragon ruler, immensely powerful.",3000,1500,40,5,Unisex
+Divine Robe,"A robe of unparalleled purity, offering divine protection.",2500,1250,0,45,Unisex
+Warlord's Plate,"The battle-hardened plate armor of a seasoned warlord.",2800,1400,38,0,Unisex
+Mist Robe,"A robe that seems to shimmer like mist, enhancing stealth.",950,475,0,27,Unisex
+Stone Skin Vest,"A vest that makes the wearer's skin as hard as stone.",600,300,12,0,Unisex
+Enigma Robe,"A robe that constantly changes its magical properties.",1800,900,0,37,Unisex
+Champion's Breastplate,"The shining breastplate of a revered champion.",1900,950,30,0,Unisex
+Sorcerer's Tunic,"A simple tunic, often worn under a robe, with minor magical properties.",170,85,0,12,Unisex
+Adventurer's Jacket,"A versatile jacket with many pockets, good for general exploration.",200,100,3,0,Unisex
+Hermit's Robe,"A plain, patched robe, worn by reclusive wise individuals.",110,55,0,10,Unisex
+Guard's Uniform,"The standard uniform of a town guard, offers moderate protection.",150,75,4,0,Unisex
+Executioner's Vest,"A sturdy, dark vest worn by those carrying out justice.",240,120,6,0,Unisex
+Necromancer's Robe,"A chilling robe that pulses with unholy energy, enhancing dark magic.",1000,500,0,28,Unisex
+Blessed Chainmail,"Chainmail consecrated by holy rites, effective against evil.",800,400,11,4,Unisex
+Obsidian Cuirass,"A cuirass carved from pure obsidian, incredibly durable.",1700,850,26,0,Unisex
+Sunken Robe,"A robe recovered from deep sea ruins, still damp but enchanted.",1200,600,0,30,Unisex
+Titan's Plate,"Plate armor said to be forged by ancient titans, immense defense.",2700,1350,36,0,Unisex
+Ember Robe,"A robe that radiates a faint warmth, hinting at fire magic.",1500,750,0,32,Unisex
+Crystal Cuirass,"A cuirass made from hardened magical crystals, somewhat fragile.",1600,800,24,8,Unisex
+Vindicator's Plate,"Plate armor worn by those who seek justice, glows faintly.",2100,1050,32,0,Unisex
+Phantom Robe,"A robe that makes the wearer partially incorporeal, enhancing evasion.",1800,900,0,35,Unisex
+Soulbound Vest,"A vest that has formed a mystical link with its wearer, gaining power over time.",500,250,8,8,Unisex
+Glacial Robe,"A robe radiating intense cold, perfect for ice mages.",1400,700,0,31,Unisex
+Dragon Slayer's Plate,"Plate armor designed specifically to combat dragons, immensely strong.",3200,1600,42,0,Unisex
+Monk's Gi,"A simple, loose-fitting martial arts uniform.",100,50,2,0,Unisex
+Traveler's Cloak,"A multi-purpose cloak that can be worn like a tunic.",90,45,0,0,Unisex
+Herbalist's Tunic,"A tunic with many pockets for herbs, slightly protective.",110,55,0,5,Unisex
+Engineer's Vest,"A vest with various tools and pockets, offers minor defense.",140,70,3,0,Unisex
+Glittering Robe,"A robe woven with fine silver threads, sparkles in the light.",600,300,0,18,Unisex
+Swashbuckler's Vest,"A flashy vest that helps with agility and charm.",280,140,5,0,Unisex
+Beastmaster's Tunic,"A tunic made from tough animal hides, enhances communication with beasts.",230,115,4,0,Unisex
+Bard's Tunic,"A comfortable and stylish tunic for performers.",160,80,1,0,Unisex
+Gloom Robe,"A dark, plain robe for those who prefer to remain unnoticed.",300,150,0,14,Unisex
+Stonehide Vest,"A vest that feels as tough as stone, surprisingly flexible.",450,225,9,0,Unisex
+Coral Cuirass,"A cuirass made from hardened coral, offers water resistance.",800,400,15,3,Unisex
+Star Sapphire Robe,"A deep blue robe embedded with star sapphires, very potent.",1500,750,0,33,Unisex
+Valiant Cuirass,"A shining cuirass worn by courageous warriors.",1000,500,20,0,Unisex
+Warlock's Robe,"A dark, ominous robe, often associated with forbidden magic.",1200,600,0,29,Unisex
+Griffin Feather Vest,"A vest made from the feathers of a griffin, allows for light fall.",1100,550,16,0,Unisex
+Frostfire Robe,"A robe that shimmers with both ice and fire, very volatile.",1600,800,0,35,Unisex
+Eternal Plate,"Armor said to be from another dimension, unbreakable.",4000,2000,50,0,Unisex
+Crimson Chainmail,"Chainmail dyed crimson, favored by elite guards.",900,450,14,0,Unisex
+Azure Robe,"A brilliant blue robe, often worn by powerful water mages.",1350,675,0,31,Unisex
+Forest Dweller's Tunic,"A green tunic that blends in with natural environments.",120,60,2,0,Unisex
+Poacher's Vest,"A stealthy vest with many hidden compartments.",180,90,4,0,Unisex
+Glacial Breastplate,"A breastplate emanating a freezing aura, good against fire.",1100,550,22,0,Unisex
+Volcanic Robe,"A robe made from cooled lava, resisting extreme heat.",1700,850,0,36,Unisex
+Abyssal Plate,"Plate armor from the deepest parts of the ocean, incredibly tough.",2500,1250,34,0,Unisex
+Skyforged Cuirass,"A cuirass said to be hammered from clouds, very light and strong.",1900,950,28,0,Unisex
+Sunken Treasure Robe,"A robe encrusted with pearls and gems from sunken ships, carries a sea enchantment.",1400,700,0,33,Unisex
+Onyx Plate,"Armor crafted from polished black onyx, very heavy and strong.",2100,1050,31,0,Unisex
+Silver-Threaded Robe,"A robe intricately woven with silver threads, enhances defense against dark magic.",880,440,0,25,Unisex
+Ironbound Vest,"A vest with iron plates sewn into the fabric for added protection.",310,155,7,0,Unisex
+Whisperwind Tunic,"A lightweight tunic that barely rustles, ideal for stealth and speed.",140,70,1,0,Unisex
+Solar Cuirass,"A cuirass that radiates a gentle warmth, offering minor fire resistance.",920,460,17,2,Unisex
+Moonstone Robe,"A robe adorned with glowing moonstones, boosting lunar magic.",1150,575,0,29,Female
+Gargoyle Plate,"Heavy, grotesque plate armor carved to resemble a gargoyle.",1750,875,29,0,Unisex
+Spiritwalker's Vest,"A vest that aids in traversing spiritual realms, light but protective.",650,325,9,9,Unisex
+Arcane Weave Robe,"A robe woven with pure arcane energy, granting significant magical power.",1900,950,0,38,Unisex
+Blackened Steel Cuirass,"Steel cuirass treated to a dark, menacing finish.",1050,525,21,0,Unisex
+Fey-Touched Tunic,"A tunic seemingly woven from forest leaves, offering minor magical resistance.",260,130,0,6,Unisex
+Shadow-Stitched Vest,"A vest sewn with threads of shadow, enhancing stealth and evasion.",320,160,5,0,Unisex
+Divine Aegis Breastplate,"A breastplate radiating holy light, offering strong defense against evil.",1250,625,24,6,Unisex
+Elemental Master's Robe,"A robe imbued with the essence of all four elements, highly versatile.",2100,1050,5,40,Unisex
+Venomhide Cuirass,"A cuirass made from poisonous beast hide, offering minor toxin resistance.",980,490,18,0,Unisex
+Astral Silk Robe,"A robe made from ethereal silk, allowing slight glimpses into other dimensions.",1650,825,0,35,Female
+Crystaline Breastplate,"A breastplate forged from compressed magical crystals, very durable.",1850,925,27,10,Unisex
+Chronos Robe,"A robe that seems to slightly bend time around the wearer, boosting speed.",2000,1000,0,39,Unisex
+Abyssal Chainmail,"Chainmail found in the deepest parts of the ocean, resistant to pressure.",1300,650,15,0,Unisex
+Desert Wanderer's Robe,"A light, breathable robe ideal for hot climates, offers minor sun protection.",190,95,0,7,Unisex
+Stone Guard Tunic,"A tunic reinforced with small stone plates for basic defense.",160,80,3,0,Unisex
+Pilgrim's Vest,"A simple, durable vest for long journeys of faith.",110,55,0,0,Unisex
+Alchemist's Apron,"A sturdy apron with many pockets, useful for potion crafting.",100,50,1,0,Unisex
+Dreamer's Robe,"A soft robe that aids in lucid dreaming, enhancing magical recovery.",250,125,0,13,Unisex
+Riverstone Vest,"A vest embedded with smooth river stones, offering minor water resistance.",220,110,4,0,Unisex
+Frostweave Robe,"A robe woven from icy fibers, providing cold resistance.",780,390,0,22,Unisex
+Glimmering Chainmail,"Chainmail that catches the light and subtly disorients foes.",850,425,12,1,Unisex
+Wyvern Bone Cuirass,"A cuirass crafted from the bones of a wyvern, lightweight yet strong.",1500,750,23,0,Unisex
+Celestial Messenger's Robe,"A robe said to be worn by celestial beings, granting wisdom and foresight.",1750,875,0,36,Unisex
+Golem Plating,"Sections of golem plating fashioned into a heavy torso armor.",2400,1200,34,0,Unisex
+Soulfire Robe,"A robe imbued with captured souls, radiating dark energy and boosting spells.",1950,975,0,37,Unisex
+Obsidian Guard Vest,"A vest reinforced with shards of obsidian, offering sharp defense.",480,240,10,0,Unisex
+Emerald Robe,"A vibrant green robe adorned with emeralds, enhancing nature magic.",1000,500,0,26,Unisex
+Runic Breastplate,"A breastplate etched with protective runes, offering strong magical defense.",1400,700,25,5,Unisex
+Stardust Robe,"A robe that shimmers like scattered stardust, boosting cosmic magic.",1600,800,0,34,Unisex
+Viking Chainmail,"Heavy, sturdy chainmail favored by northern warriors.",750,375,13,0,Unisex
+Dread Knight's Cuirass,"A terrifying black cuirass, instilling fear in enemies.",1800,900,29,0,Unisex
+Aether Robe,"A translucent robe that seems to shift with air currents, very light.",1300,650,0,30,Unisex
+Chimera Hide Vest,"A vest made from the hides of various monstrous creatures, granting varied resistances.",1700,850,20,0,Unisex
+Vampiric Robe,"A robe that subtly drains life from enemies during combat.",1550,775,3,32,Unisex
+Stormforged Plate,"Plate armor that hums with static electricity, resisting lightning.",2600,1300,35,0,Unisex
+Echoing Robe,"A robe that amplifies spells, but leaves residual magical echoes.",1700,850,0,38,Unisex
+Titan's Legacy Breastplate,"A breastplate said to be a fragment of a titan's armor, immense.",2900,1450,39,0,Unisex
+Dreamcatcher Vest,"A vest woven with mystical strands, protecting against magical sleep.",380,190,0,10,Unisex
+Sunken Plate,"Heavy plate armor encrusted with barnacles, very resistant to water.",2200,1100,33,0,Unisex
+Crimson Witch's Gown,"A deep crimson gown, enhancing dark and fire-based magic.",1300,650,0,30,Female
+Rose Silk Robe,"A delicate pink silk robe, often worn by charming mages.",600,300,0,17,Female
+Maiden's Chainmail,"Lighter, more flexible chainmail designed for female warriors.",650,325,9,0,Female
+Enchanted Corset,"A reinforced corset imbued with minor protective enchantments.",280,140,2,5,Female
+Goddess's Gown,"A radiant gown said to be blessed by a deity, offering divine protection.",2000,1000,0,40,Female
+Vixen's Vest,"A sleek, dark vest, often worn by agile and cunning female rogues.",250,125,5,0,Female
+Empress's Robe,"A regal robe, richly embroidered and imbued with subtle power.",1500,750,0,32,Female
+Moonlit Dress,"A flowing dress that glows softly in the moonlight, enhancing illusion magic.",750,375,0,23,Female
+Diamond Cuirass,"A sparkling cuirass inlaid with diamonds, very durable and beautiful.",1800,900,28,0,Female
+Forest Nymph's Tunic,"A tunic made from living leaves and moss, blending with nature.",150,75,0,6,Female
+Battle Maiden's Plate,"Sturdy plate armor designed for female warriors, allowing flexibility.",1100,550,21,0,Female
+Queen of Thorns Robe,"A dark, thorny robe, providing protection and minor offensive capabilities.",1450,725,2,31,Female
+Spirit Dancer's Blouse,"A light blouse that enhances agility and spiritual connection.",120,60,0,7,Female
+Crimson Court Gown,"A luxurious crimson gown, granting slight magical allure.",500,250,0,10,Female
+Shadow Huntress's Vest,"A dark vest optimized for stealth and ranged attacks.",280,140,6,0,Female
+Celestial Sorceress Gown,"A magnificent gown adorned with celestial patterns, immensely powerful for magic.",2300,1150,0,44,Female
+Desert Rose Dress,"A light, airy dress, comfortable in hot climates, with minor fire resistance.",180,90,0,4,Female
+Winter Maiden's Robe,"A robe that emanates a chilling aura, providing strong cold resistance.",950,475,0,27,Female
+Warrior Queen's Breastplate,"A fearsome breastplate worn by a powerful female leader.",2000,1000,31,0,Female
+Gothic Vest,"A dark, layered vest with ornate buckles, offers good defense.",380,190,8,0,Unisex
+Bone Plate,"Armor crafted from hardened bones, eerie but effective.",600,300,13,0,Unisex
+Deep Sea Robe,"A robe woven from rare deep-sea fibers, offers strong water resistance.",1000,500,0,28,Unisex
+Volatile Vest,"A vest that sometimes explodes with magical energy, risky but powerful.",420,210,7,7,Unisex
+Eldritch Robe,"A robe that subtly shifts patterns, enhancing forbidden magic.",1700,850,0,36,Unisex
+Void Weaver's Cuirass,"A cuirass that seems to absorb all light, making the wearer harder to hit.",2000,1000,30,0,Unisex
+Golem Plate,"Extremely heavy and tough plate armor, slows movement.",2200,1100,32,0,Unisex
+Cosmic Robe,"A robe depicting constellations, allowing glimpses of future spells.",2000,1000,0,40,Unisex
+Soul Weaver's Robe,"A dark robe allowing manipulation of souls, boosts dark magic.",1700,850,0,36,Unisex
+Void Plate,"Armor that seems to absorb light, offering ultimate protection.",3500,1750,45,0,Unisex
+Sunken Robe,"A robe recovered from deep sea ruins, still damp but enchanted.",1200,600,0,30,Unisex
+Elemental Vest,"A vest that shifts color based on the nearest element, offering minor resistance.",400,200,6,6,Unisex
+Clockwork Cuirass,"A cuirass made of intricate gears and metal, offers decent defense.",700,350,14,0,Unisex
+Alchemist's Robe,"A stained but resilient robe, with many hidden pockets.",600,300,0,17,Unisex
+Plague Doctor's Coat,"A long, thick coat offering protection against miasma.",350,175,5,0,Unisex
+Specter's Robe,"A ghostly robe that grants a small chance to evade attacks.",1150,575,0,25,Unisex
+Berserker's Harness,"A minimal harness that allows for unrestrained movement and boosts attack.",600,300,16,-3,Unisex
+Warden's Vest,"A robust vest for patrolling guards, with good defense.",260,130,5,0,Unisex
+Siren's Robe,"A shimmering robe that enthralls those nearby, enhancing charm magic.",1000,500,0,28,Female
+Vampire's Coat,"An elegant dark coat, said to sustain the wearer's life.",1300,650,10,10,Unisex
+Werewolf Hide Vest,"A vest made from the hide of a werewolf, offers minor strength boost.",1500,750,22,0,Unisex
+Golem Plate,"Extremely heavy and tough plate armor, slows movement.",2200,1100,32,0,Unisex
+Cosmic Robe,"A robe depicting constellations, allowing glimpses of future spells.",2000,1000,0,40,Unisex
+Soul Weaver's Robe,"A dark robe allowing manipulation of souls, boosts dark magic.",1700,850,0,36,Unisex
+Void Plate,"Armor that seems to absorb light, offering ultimate protection.",3500,1750,45,0,Unisex
+Novice's Tunic,"A simple tunic worn by those beginning their adventure.",45,23,0,0,Unisex
+Old Leather Armor,"Worn and patched leather armor, still offers some defense.",100,50,3,0,Unisex
+Ragged Shirt,"A tattered shirt, barely offering any protection.",20,10,0,0,Unisex
+Dirty Robe,"A grimy robe, suitable for beggars or desperate mages.",70,35,0,8,Unisex
+Rusty Chainmail,"Old and rusted chainmail, prone to breaking.",250,125,5,0,Unisex
+Dented Breastplate,"A breastplate that has seen better days, but still functions.",400,200,9,0,Unisex
+Woven Robe,"A simple robe made from woven plant fibers.",90,45,0,11,Unisex
+Crude Cuirass,"A poorly made cuirass, offers basic defense.",500,250,13,0,Unisex
+Gilded Chainmail,"Chainmail with decorative gold plating, less practical.",600,300,8,2,Unisex
+Ornate Plate Armor,"Highly decorative plate armor, more for ceremonies.",800,400,18,0,Unisex
+Whisper Robe,"A robe that makes a soft rustling sound, used for quiet movement.",650,325,0,19,Unisex
+Flesh Golem Vest,"A repulsive vest made from stitched together flesh, surprisingly tough.",1000,500,15,0,Unisex
+Baron's Cuirass,"A fancy cuirass, symbolizing minor nobility.",1300,650,22,0,Unisex
+Dreamweaver's Robe,"A robe that helps its wearer control dreams, useful for illusions.",1100,550,0,28,Unisex
+Titanium Plate,"Lightweight yet incredibly strong plate armor.",1700,850,25,0,Unisex
+Serpenthide Robe,"A robe made from the scales of a giant serpent, offers resistance to poison.",1400,700,0,30,Unisex
+Amulet Vest,"A vest embedded with various protective amulets.",350,175,7,7,Unisex
+Goblin Hide Tunic,"A crude tunic made from goblin hides, smells faintly of swamp.",70,35,2,0,Unisex
+Ogre Bone Cuirass,"A heavy cuirass made from ogre bones, very intimidating.",950,475,20,0,Unisex
+Harpy Feather Robe,"A light robe adorned with harpy feathers, allows graceful movement.",800,400,0,24,Female
+Unicorn Horn Plate,"Plate armor inlaid with fragments of unicorn horn, very rare.",2500,1250,30,10,Unisex
+Chiffon Gown,"A delicate and sheer gown, provides no protection.",50,25,0,1,Female
+Bridal Gown,"A beautiful white gown, worn for ceremonies.",150,75,0,3,Female
+Fortune Teller's Robe,"A colorful robe with mystical symbols, enhances foresight.",700,350,0,21,Female
+Bard's Vest,"A flashy vest that helps with performances, slight charm boost.",100,50,1,0,Unisex
+Scholar's Gown,"A dignified gown for intellectual pursuits, very comfortable.",120,60,0,8,Female
+Court Jester's Tunic,"A brightly colored tunic, offers no protection, purely cosmetic.",30,15,0,0,Unisex
+Artisan's Apron,"A practical apron with many pockets, good for crafting.",80,40,1,0,Unisex
+Miner's Vest,"A thick vest, offers protection against falling debris.",160,80,4,0,Unisex
+Inquisitor's Robe,"A grim robe worn by those who seek out evil.",900,450,0,25,Unisex
+Reaper's Shroud,"A dark, flowing shroud that seems to absorb light, feared by many.",1500,750,0,32,Unisex
+Barbarian's Fur Vest,"A rugged vest made of thick fur, offers warmth and protection.",220,110,6,0,Unisex
+Nomad's Tunic,"A simple, durable tunic for desert wanderers.",90,45,1,0,Unisex
+Zephyr Vest,"A light vest that makes the wearer feel faster.",130,65,2,0,Unisex
+Stone Breastplate,"A heavy breastplate carved from a single piece of stone.",600,300,14,0,Unisex
+Nether Robe,"A dark robe from the underworld, radiating ominous energy.",1100,550,0,29,Unisex
+Wyrmscale Vest,"A vest crafted from the scales of a smaller wyrm.",1100,550,17,0,Unisex
+Crimson Robe,"A vivid red robe, associated with powerful fire mages.",1300,650,0,30,Unisex
+Silver Plate Armor,"Plate armor forged from pure silver, shines brightly.",2000,1000,28,0,Unisex
+Runesmith's Robe,"A heavy robe adorned with glowing runes, enhances enchanting.",1600,800,0,34,Unisex
+Chitin Cuirass,"A cuirass made from the hard exoskeleton of a giant insect.",700,350,16,0,Unisex
+Golem Heart Breastplate,"A breastplate embedded with the pulsating core of a golem.",2300,1150,33,0,Unisex
+Starfall Robe,"A robe said to be woven from threads of falling stars, grants incredible power.",2200,1100,0,42,Unisex
+Ethereal Vest,"A semi-transparent vest that seems to flicker in and out of existence.",1200,600,10,10,Unisex
+Specter Vest,"A vest that offers slight resistance to spiritual attacks.",200,100,3,3,Unisex
+Shaman's Robe,"A ceremonial robe adorned with totems and charms.",750,375,0,23,Unisex
+Cultist's Robe,"A dark and ominous robe, often worn by followers of dark deities.",300,150,0,15,Unisex
+Executioner's Plate,"Heavy and dark plate armor, designed for maximum intimidation.",1700,850,29,0,Unisex
+Blood Robe,"A robe stained with ancient blood, granting power through sacrifice.",1400,700,5,30,Unisex
+Dragon King's Cuirass,"The legendary cuirass of a dragon ruler, immensely powerful.",3000,1500,40,5,Unisex
+Divine Robe,"A robe of unparalleled purity, offering divine protection.",2500,1250,0,45,Unisex
+Warlord's Plate,"The battle-hardened plate armor of a seasoned warlord.",2800,1400,38,0,Unisex
+Mist Robe,"A robe that seems to shimmer like mist, enhancing stealth.",950,475,0,27,Unisex
+Stone Skin Vest,"A vest that makes the wearer's skin as hard as stone.",600,300,12,0,Unisex
+Enigma Robe,"A robe that constantly changes its magical properties.",1800,900,0,37,Unisex
+Champion's Breastplate,"The shining breastplate of a revered champion.",1900,950,30,0,Unisex
+Sorcerer's Tunic,"A simple tunic, often worn under a robe, with minor magical properties.",170,85,0,12,Unisex
+Adventurer's Jacket,"A versatile jacket with many pockets, good for general exploration.",200,100,3,0,Unisex
+Hermit's Robe,"A plain, patched robe, worn by reclusive wise individuals.",110,55,0,10,Unisex
+Guard's Uniform,"The standard uniform of a town guard, offers moderate protection.",150,75,4,0,Unisex
+Executioner's Vest,"A sturdy, dark vest worn by those carrying out justice.",240,120,6,0,Unisex
+Necromancer's Robe,"A chilling robe that pulses with unholy energy, enhancing dark magic.",1000,500,0,28,Unisex
+Blessed Chainmail,"Chainmail consecrated by holy rites, effective against evil.",800,400,11,4,Unisex
+Obsidian Cuirass,"A cuirass carved from pure obsidian, incredibly durable.",1700,850,26,0,Unisex
+Sunken Robe,"A robe recovered from deep sea ruins, still damp but enchanted.",1200,600,0,30,Unisex
+Titan's Plate,"Plate armor said to be forged by ancient titans, immense defense.",2700,1350,36,0,Unisex
+Ember Robe,"A robe that radiates a faint warmth, hinting at fire magic.",1500,750,0,32,Unisex
+Crystal Cuirass,"A cuirass made from hardened magical crystals, somewhat fragile.",1600,800,24,8,Unisex
+Vindicator's Plate,"Plate armor worn by those who seek justice, glows faintly.",2100,1050,32,0,Unisex
+Phantom Robe,"A robe that makes the wearer partially incorporeal, enhancing evasion.",1800,900,0,35,Unisex
+Soulbound Vest,"A vest that has formed a mystical link with its wearer, gaining power over time.",500,250,8,8,Unisex
+Glacial Robe,"A robe radiating intense cold, perfect for ice mages.",1400,700,0,31,Unisex
+Dragon Slayer's Plate,"Plate armor designed specifically to combat dragons, immensely strong.",3200,1600,42,0,Unisex
+Monk's Gi,"A simple, loose-fitting martial arts uniform.",100,50,2,0,Unisex
+Traveler's Cloak,"A multi-purpose cloak that can be worn like a tunic.",90,45,0,0,Unisex
+Herbalist's Tunic,"A tunic with many pockets for herbs, slightly protective.",110,55,0,5,Unisex
+Engineer's Vest,"A vest with various tools and pockets, offers minor defense.",140,70,3,0,Unisex
+Glittering Robe,"A robe woven with fine silver threads, sparkles in the light.",600,300,0,18,Unisex
+Swashbuckler's Vest,"A flashy vest that helps with agility and charm.",280,140,5,0,Unisex
+Beastmaster's Tunic,"A tunic made from tough animal hides, enhances communication with beasts.",230,115,4,0,Unisex
+Bard's Tunic,"A comfortable and stylish tunic for performers.",160,80,1,0,Unisex
+Gloom Robe,"A dark, plain robe for those who prefer to remain unnoticed.",300,150,0,14,Unisex
+Stonehide Vest,"A vest that feels as tough as stone, surprisingly flexible.",450,225,9,0,Unisex
+Coral Cuirass,"A cuirass made from hardened coral, offers water resistance.",800,400,15,3,Unisex
+Star Sapphire Robe,"A deep blue robe embedded with star sapphires, very potent.",1500,750,0,33,Unisex
+Valiant Cuirass,"A shining cuirass worn by courageous warriors.",1000,500,20,0,Unisex
+Warlock's Robe,"A dark, ominous robe, often associated with forbidden magic.",1200,600,0,29,Unisex
+Griffin Feather Vest,"A vest made from the feathers of a griffin, allows for light fall.",1100,550,16,0,Unisex
+Frostfire Robe,"A robe that shimmers with both ice and fire, very volatile.",1600,800,0,35,Unisex
+Eternal Plate,"Armor said to be from another dimension, unbreakable.",4000,2000,50,0,Unisex
+Crimson Chainmail,"Chainmail dyed crimson, favored by elite guards.",900,450,14,0,Unisex
+Azure Robe,"A brilliant blue robe, often worn by powerful water mages.",1350,675,0,31,Unisex
+Forest Dweller's Tunic,"A green tunic that blends in with natural environments.",120,60,2,0,Unisex
+Poacher's Vest,"A stealthy vest with many hidden compartments.",180,90,4,0,Unisex
+Glacial Breastplate,"A breastplate emanating a freezing aura, good against fire.",1100,550,22,0,Unisex
+Volcanic Robe,"A robe made from cooled lava, resisting extreme heat.",1700,850,0,36,Unisex
+Abyssal Plate,"Plate armor from the deepest parts of the ocean, incredibly tough.",2500,1250,34,0,Unisex
+Skyforged Cuirass,"A cuirass said to be hammered from clouds, very light and strong.",1900,950,28,0,Unisex
+Sunken Treasure Robe,"A robe encrusted with pearls and gems from sunken ships, carries a sea enchantment.",1400,700,0,33,Unisex
+Onyx Plate,"Armor crafted from polished black onyx, very heavy and strong.",2100,1050,31,0,Unisex
+Silver-Threaded Robe,"A robe intricately woven with silver threads, enhances defense against dark magic.",880,440,0,25,Unisex
+Ironbound Vest,"A vest with iron plates sewn into the fabric for added protection.",310,155,7,0,Unisex
+Whisperwind Tunic,"A lightweight tunic that barely rustles, ideal for stealth and speed.",140,70,1,0,Unisex
+Solar Cuirass,"A cuirass that radiates a gentle warmth, offering minor fire resistance.",920,460,17,2,Unisex
+Moonstone Robe,"A robe adorned with glowing moonstones, boosting lunar magic.",1150,575,0,29,Female
+Gargoyle Plate,"Heavy, grotesque plate armor carved to resemble a gargoyle.",1750,875,29,0,Unisex
+Spiritwalker's Vest,"A vest that aids in traversing spiritual realms, light but protective.",650,325,9,9,Unisex
+Arcane Weave Robe,"A robe woven with pure arcane energy, granting significant magical power.",1900,950,0,38,Unisex
+Blackened Steel Cuirass,"Steel cuirass treated to a dark, menacing finish.",1050,525,21,0,Unisex
+Fey-Touched Tunic,"A tunic seemingly woven from forest leaves, offering minor magical resistance.",260,130,0,6,Unisex
+Shadow-Stitched Vest,"A vest sewn with threads of shadow, enhancing stealth and evasion.",320,160,5,0,Unisex
+Divine Aegis Breastplate,"A breastplate radiating holy light, offering strong defense against evil.",1250,625,24,6,Unisex
+Elemental Master's Robe,"A robe imbued with the essence of all four elements, highly versatile.",2100,1050,5,40,Unisex
+Venomhide Cuirass,"A cuirass made from poisonous beast hide, offering minor toxin resistance.",980,490,18,0,Unisex
+Astral Silk Robe,"A robe made from ethereal silk, allowing slight glimpses into other dimensions.",1650,825,0,35,Female
+Crystaline Breastplate,"A breastplate forged from compressed magical crystals, very durable.",1850,925,27,10,Unisex
+Chronos Robe,"A robe that seems to slightly bend time around the wearer, boosting speed.",2000,1000,0,39,Unisex
+Abyssal Chainmail,"Chainmail found in the deepest parts of the ocean, resistant to pressure.",1300,650,15,0,Unisex
+Desert Wanderer's Robe,"A light, breathable robe ideal for hot climates, offers minor sun protection.",190,95,0,7,Unisex
+Stone Guard Tunic,"A tunic reinforced with small stone plates for basic defense.",160,80,3,0,Unisex
+Pilgrim's Vest,"A simple, durable vest for long journeys of faith.",110,55,0,0,Unisex
+Alchemist's Apron,"A sturdy apron with many pockets, useful for potion crafting.",100,50,1,0,Unisex
+Dreamer's Robe,"A soft robe that aids in lucid dreaming, enhancing magical recovery.",250,125,0,13,Unisex
+Riverstone Vest,"A vest embedded with smooth river stones, offering minor water resistance.",220,110,4,0,Unisex
+Frostweave Robe,"A robe woven from icy fibers, providing cold resistance.",780,390,0,22,Unisex
+Glimmering Chainmail,"Chainmail that catches the light and subtly disorients foes.",850,425,12,1,Unisex
+Wyvern Bone Cuirass,"A cuirass crafted from the bones of a wyvern, lightweight yet strong.",1500,750,23,0,Unisex
+Celestial Messenger's Robe,"A robe said to be worn by celestial beings, granting wisdom and foresight.",1750,875,0,36,Unisex
+Golem Plating,"Sections of golem plating fashioned into a heavy torso armor.",2400,1200,34,0,Unisex
+Soulfire Robe,"A robe imbued with captured souls, radiating dark energy and boosting spells.",1950,975,0,37,Unisex
+Obsidian Guard Vest,"A vest reinforced with shards of obsidian, offering sharp defense.",480,240,10,0,Unisex
+Emerald Robe,"A vibrant green robe adorned with emeralds, enhancing nature magic.",1000,500,0,26,Unisex
+Runic Breastplate,"A breastplate etched with protective runes, offering strong magical defense.",1400,700,25,5,Unisex
+Stardust Robe,"A robe that shimmers like scattered stardust, boosting cosmic magic.",1600,800,0,34,Unisex
+Viking Chainmail,"Heavy, sturdy chainmail favored by northern warriors.",750,375,13,0,Unisex
+Dread Knight's Cuirass,"A terrifying black cuirass, instilling fear in enemies.",1800,900,29,0,Unisex
+Aether Robe,"A translucent robe that seems to shift with air currents, very light.",1300,650,0,30,Unisex
+Chimera Hide Vest,"A vest made from the hides of various monstrous creatures, granting varied resistances.",1700,850,20,0,Unisex
+Vampiric Robe,"A robe that subtly drains life from enemies during combat.",1550,775,3,32,Unisex
+Stormforged Plate,"Plate armor that hums with static electricity, resisting lightning.",2600,1300,35,0,Unisex
+Echoing Robe,"A robe that amplifies spells, but leaves residual magical echoes.",1700,850,0,38,Unisex
+Titan's Legacy Breastplate,"A breastplate said to be a fragment of a titan's armor, immense.",2900,1450,39,0,Unisex
+Dreamcatcher Vest,"A vest woven with mystical strands, protecting against magical sleep.",380,190,0,10,Unisex
+Sunken Plate,"Heavy plate armor encrusted with barnacles, very resistant to water.",2200,1100,33,0,Unisex
+Crimson Witch's Gown,"A deep crimson gown, enhancing dark and fire-based magic.",1300,650,0,30,Female
+Rose Silk Robe,"A delicate pink silk robe, often worn by charming mages.",600,300,0,17,Female
+Maiden's Chainmail,"Lighter, more flexible chainmail designed for female warriors.",650,325,9,0,Female
+Enchanted Corset,"A reinforced corset imbued with minor protective enchantments.",280,140,2,5,Female
+Goddess's Gown,"A radiant gown said to be blessed by a deity, offering divine protection.",2000,1000,0,40,Female
+Vixen's Vest,"A sleek, dark vest, often worn by agile and cunning female rogues.",250,125,5,0,Female
+Empress's Robe,"A regal robe, richly embroidered and imbued with subtle power.",1500,750,0,32,Female
+Moonlit Dress,"A flowing dress that glows softly in the moonlight, enhancing illusion magic.",750,375,0,23,Female
+Diamond Cuirass,"A sparkling cuirass inlaid with diamonds, very durable and beautiful.",1800,900,28,0,Female
+Forest Nymph's Tunic,"A tunic made from living leaves and moss, blending with nature.",150,75,0,6,Female
+Battle Maiden's Plate,"Sturdy plate armor designed for female warriors, allowing flexibility.",1100,550,21,0,Female
+Queen of Thorns Robe,"A dark, thorny robe, providing protection and minor offensive capabilities.",1450,725,2,31,Female
+Spirit Dancer's Blouse,"A light blouse that enhances agility and spiritual connection.",120,60,0,7,Female
+Crimson Court Gown,"A luxurious crimson gown, granting slight magical allure.",500,250,0,10,Female
+Shadow Huntress's Vest,"A dark vest optimized for stealth and ranged attacks.",280,140,6,0,Female
+Celestial Sorceress Gown,"A magnificent gown adorned with celestial patterns, immensely powerful for magic.",2300,1150,0,44,Female
+Desert Rose Dress,"A light, airy dress, comfortable in hot climates, with minor fire resistance.",180,90,0,4,Female
+Winter Maiden's Robe,"A robe that emanates a chilling aura, providing strong cold resistance.",950,475,0,27,Female
+Warrior Queen's Breastplate,"A fearsome breastplate worn by a powerful female leader.",2000,1000,31,0,Female
+Gothic Vest,"A dark, layered vest with ornate buckles, offers good defense.",380,190,8,0,Unisex
+Bone Plate,"Armor crafted from hardened bones, eerie but effective.",600,300,13,0,Unisex
+Deep Sea Robe,"A robe woven from rare deep-sea fibers, offers strong water resistance.",1000,500,0,28,Unisex
+Volatile Vest,"A vest that sometimes explodes with magical energy, risky but powerful.",420,210,7,7,Unisex
+Eldritch Robe,"A robe that subtly shifts patterns, enhancing forbidden magic.",1700,850,0,36,Unisex
+Void Weaver's Cuirass,"A cuirass that seems to absorb all light, making the wearer harder to hit.",2000,1000,30,0,Unisex
