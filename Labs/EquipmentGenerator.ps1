@@ -41,60 +41,257 @@ If($CsvData.Count -GT 0) {
             "`t`t`$this.PurchasePrice      = $($Row.'Purchase Price')",
             "`t`t`$this.SellPrice          = $($Row.'Sell Price')",
             "`t`t`$this.TargetStats        = $(
-                # I'LL LIKELY NEED TO ADD MORE LOGIC FOR DIFFERENT KINDS OF EQUIPMENT TYPES
-                If($EquipmentType -EQ 'Weapon') {
-                    $Data = '@{ '
-                    If($Row.'Attack Power' -GT 0 -AND $Row.'Magic Attack Power' -GT 0) {
-                        $Data += "[StatId]::Attack = $($Row.'Attack Power'); [StatId]::MagicAttack = $($Row.'Magic Attack Power')"
-                    } Else {
+                $Data = "@{`n"
+
+                Switch($EquipmentType) {
+                    'Weapon' {
                         If($Row.'Attack Power' -GT 0) {
-                            $Data += "[StatId]::Attack = $($Row.'Attack Power')"
-                        } Elseif($Row.'Magic Attack Power' -GT 0) {
-                            $Data += "[StatId]::MagicAttack = $($Row.'Magic Attack Power')"
+                            $Data += "`t`t`t[StatId]::Attack = $($Row.'Attack Power')`n"
                         }
+                        If($Row.'Magic Attack Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicAttack = $($Row.'Magic Attack Power')`n"
+                        }
+
+                        Break
                     }
-                    $Data += ' }'
-                    $Data
-                } Else {
-                    $Data = '@{ '
-                    If($Row.'Defense Power' -GT 0 -AND $Row.'Magic Defense Power' -GT 0) {
-                        $Data += "[StatId]::Defense = $($Row.'Defense Power'); [StatId]::MagicDefense = $($Row.'Magic Defense Power')"
-                    } Else {
+                    'Helmet' {
                         If($Row.'Defense Power' -GT 0) {
-                            $Data += "[StatId]::Defense = $($Row.'Defense Power')"
-                        } Elseif($Row.'Magic Defense Power' -GT 0) {
-                            $Data += "[StatId]::MagicDefense = $($Row.'Magic Defense Power')"
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
                         }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        
+                        Break
                     }
-                    $Data += ' }'
-                    $Data
+                    'Armor' {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        
+                        Break
+                    }
+                    'Pauldron'  {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        
+                        Break
+                    }
+                    'Gauntlets' {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        If($Row.Accuracy -GT 0) {
+                            $Data += "`t`t`t[StatId]::Accuracy = $($Row.Accuracy)`n"
+                        }
+                        
+                        Break
+                    }
+                    'Greaves' {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        If($Row.Speed -GT 0) {
+                            $Data += "`t`t`t[StatId]::Speed = $($Row.Speed)`n"
+                        }
+                        
+                        Break
+                    }
+                    'Boots' {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        If($Row.Speed -GT 0) {
+                            $Data += "`t`t`t[StatId]::Speed = $($Row.Speed)`n"
+                        }
+                        
+                        Break
+                    }
+                    'Jewelry' {
+                        If($Row.'Attack Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Attack Power')`n"
+                        }
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"
+                        }
+                        If($Row.'Magic Attack Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicAttack = $($Row.'Magic Attack Power')`n"
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += "`t`t`t[StatId]::MagicDefense = $($Row.'Magic Defense Power')`n"
+                        }
+                        If($Row.Speed -GT 0) {
+                            $Data += "`t`t`t[StatId]::Speed = $($Row.Speed)`n"
+                        }
+                        If($Row.Luck -GT 0) {
+                            $Data += "`t`t`t[StatId]::Luck = $($Row.Luck)`n"
+                        }
+                        If($Row.Accuracy -GT 0) {
+                            $Data += "`t`t`t[StatId]::Accuracy = $($Row.Accuracy)`n"
+                        }
+
+                        Break
+                    }
+                    'Cape' {
+                        If($Row.Speed -GT 0) {
+                            $Data += "`t`t`t[StatId]::Speed = $($Row.Speed)`n"
+                        }
+                        If($Row.Luck -GT 0) {
+                            $Data += "`t`t`t[StatId]::Luck = $($Row.Luck)`n"
+                        }
+                        If($Row.Accuracy -GT 0) {
+                            $Data += "`t`t`t[StatId]::Accuracy = $($Row.Accuracy)`n"
+                        }
+
+                        Break
+                    }
                 }
+
+                $Data += "`t`t}"
+                $Data
             )",
             "`t`t`$this.CanAddToInventory  = `$true",
             "`t`t`$this.ExamineString      = '$($Row.Description -REPLACE "'", "''")'",
             "`t`t`$this.PlayerEffectString = `"$(
-                # I'LL LIKELY NEED TO ADD MORE LOGIC FOR DIFFERENT KINDS OF EQUIPMENT TYPES
-                If($EquipmentType -EQ 'Weapon') {
-                    If($Row.'Attack Power' -GT 0 -AND $Row.'Magic Attack Power' -GT 0) {
-                        '+$($this.TargetStats[[StatId]::Attack]) ATK, +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
-                    } Else {
+                $Data = ''
+
+                Switch($EquipmentType) {
+                    'Weapon'    {
                         If($Row.'Attack Power' -GT 0) {
-                            '+$($this.TargetStats[[StatId]::Attack]) ATK'
-                        } Else {
-                            '+$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            $Data += '+$($this.TargetStats[[StatId]::Attack]) ATK'
                         }
+                        If($Row.'Magic Attack Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                        }
+
+                        Break
                     }
-                } Else {
-                    If($Row.'Defense Power' -GT 0 -AND $Row.'Magic Defense Power' -GT 0) {
-                        '+$($this.TargetStats[[StatId]::Defnse]) DEF, +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
-                    } Else {
+                    'Helmet'    {
                         If($Row.'Defense Power' -GT 0) {
-                            '+$($this.TargetStats[[StatId]::Defense]) DEF'
-                        } Else {
-                            '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                        }
+                        
+                        Break
+                    }
+                    'Armor'     {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                        }
+                        
+                        Break
+                    }
+                    'Pauldron'  {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                        }
+                        
+                        Break
+                    }
+                    'Gauntlets' {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                        }
+                        If($Row.Accuracy -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                        }
+                        
+                        Break
+                    }
+                    'Greaves'   {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  '
+                        }
+                        If($Row.Speed -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                        }
+                        
+                        Break
+                    }
+                    'Boots'     {
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                        }
+                        If($Row.Speed -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                        }
+                        
+                        Break
+                    }
+                    'Jewelry'   {
+                        If($Row.'Attack Power' -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Attack]) ATK'
+                        }
+                        If($Row.'Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Defense]) DEF'
+                        }
+                        If($Row.'Magic Attack Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                        }
+                        If($Row.'Magic Defense Power' -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                        }
+                        If($Row.Speed -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                        }
+                        If($Row.Luck -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Luck]) LCK'
+                        }
+                        If($Row.Accuracy -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                        }
+
+                        Break
+                    }
+                    'Cape'      {
+                        If($Row.Speed -GT 0) {
+                            $Data += '+$($this.TargetStats[[StatId]::Speed]) SPD'
+                        }
+                        If($Row.Luck -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Luck]) LCK'
+                        }
+                        If($Row.Accuracy -GT 0) {
+                            $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                        }
+
+                        Break
                     }
                 }
+
+                $Data
             )`"",
             "`t`t`$this.TargetGender       = $(
                 If(($Row | Get-Member -Name 'Gender')) {

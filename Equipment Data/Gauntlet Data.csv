@@ -1,0 +1,400 @@
+Name,Description,Purchase Price,Sell Price,Defense Power,Magic Defense Power,Accuracy,Gender
+Iron Gauntlets,"Standard blacksmith-forged gauntlets, offering basic protection.",100,50,5,2,0,Unisex
+Leather Gauntlets,"Lightweight leather gloves, offering dexterity with minimal defense.",80,40,3,4,2,Unisex
+Bronze Fists,"Crude but sturdy bronze gauntlets, heavy and reliable.",150,75,8,1,0,Male
+Steel Gauntlets,"Reinforced steel gauntlets, a common choice for adventurers.",250,125,12,3,0,Unisex
+Padded Mitts,"Thickly padded gloves, offering surprising magical resistance.",120,60,4,8,0,Female
+Hunter's Grips,"Agile gauntlets favored by hunters, enhancing precision.",180,90,7,5,5,Unisex
+Warrior's Gauntlets,"Solid gauntlets for frontline fighters, focusing on physical defense.",300,150,15,4,0,Male
+Sorcerer's Bands,"Enchanted wristbands, amplifying magical potency.",280,140,6,15,0,Unisex
+Chainmail Gauntlets,"Flexible chainmail providing good all-around protection.",220,110,10,7,0,Unisex
+Thief's Gloves,"Thin, dark gloves used for stealth and quick movements.",110,55,2,6,8,Unisex
+Sentinel Gauntlets,"Heavy duty gauntlets for guardians, built for endurance.",400,200,20,5,0,Male
+Mystic Handguards,"Gauntlets imbued with faint arcane energy, boosting magic defense.",350,175,9,18,0,Female
+Guard Captain Gauntlets,"Worn by experienced guards, providing reliable defense.",380,190,18,7,0,Unisex
+Berserker's Fists,"Crude, spiked gauntlets for aggressive combatants.",320,160,16,2,3,Male
+Archer's Bracers,"Light and flexible bracers for archers, aiding aim.",200,100,6,4,10,Unisex
+Holy Gauntlets,"Blessed gauntlets, offering protection against dark forces.",450,225,15,12,0,Unisex
+Shadow Grips,"Dark, lightweight gloves for those who operate in shadows.",260,130,5,10,12,Unisex
+Knight's Gauntlets,"Polished and robust gauntlets, fit for a knight.",500,250,22,8,0,Male
+Cleric's Cuffs,"Simple cuffs worn by clerics, aiding in divine magic.",300,150,7,17,0,Female
+Draconian Claws,"Gauntlets crafted from dragon scales, exceptionally strong.",600,300,28,10,0,Unisex
+Elven Weave Gloves,"Intricately woven gloves, light and magically resistant.",420,210,10,20,5,Unisex
+Dwarven Stonefists,"Stone-infused gauntlets, incredibly durable.",550,275,25,6,0,Male
+Enchanted Armbands,"Armbands pulsating with magical energy.",480,240,12,22,0,Female
+Gladiator's Gauntlets,"Rough yet effective gauntlets for arena combat.",370,185,19,3,0,Male
+Apprentice's Mitts,"Basic gloves for a budding spellcaster.",90,45,3,6,0,Unisex
+Traveler's Gloves,"Simple, comfortable gloves for long journeys.",70,35,2,3,1,Unisex
+Crusader's Gauntlets,"Heavy, ornate gauntlets for a holy warrior.",650,325,30,15,0,Male
+Moonlit Bands,"Silken bands that shimmer with lunar light, boosting mystical power.",520,260,8,25,0,Female
+Veteran's Grips,"Well-worn gauntlets of an experienced fighter.",410,205,21,6,0,Unisex
+Wyvern Claws,"Gauntlets adorned with wyvern talons, sharp and intimidating.",580,290,26,9,0,Male
+Celestial Gauntlets,"Gauntlets said to be forged from starlight, offering divine protection.",700,350,32,20,0,Unisex
+Warlock's Wraps,"Dark wraps enhancing destructive magic.",500,250,10,28,0,Female
+Paladin's Vambraces,"Polished vambraces of a sworn protector.",750,375,35,18,0,Male
+Spirit Woven Gloves,"Gloves woven with spectral threads, offering ethereal defense.",460,230,11,24,0,Unisex
+Dark Iron Gauntlets,"Gauntlets forged from dark iron, ominous and powerful.",620,310,29,11,0,Male
+Oracle's Handguards,"Handguards that hum with prophetic energy, aiding foresight.",540,270,13,27,7,Female
+Royal Gauntlets,"Finely crafted gauntlets, fit for royalty.",800,400,38,20,0,Unisex
+Assassin's Claws,"Sleek, sharp gauntlets designed for quick strikes.",340,170,7,9,15,Unisex
+Titan's Fists,"Massive gauntlets rumored to be from a giant.",850,425,40,10,0,Male
+Phoenix Gloves,"Gloves said to be touched by a phoenix, offering fiery defense.",720,360,16,30,0,Female
+Abyssal Gauntlets,"Gauntlets from the depths, reeking of darkness.",900,450,42,15,0,Unisex
+Runesmith's Gauntlets,"Gauntlets inscribed with powerful runes, enhancing craftsmanship and defense.",780,390,36,12,0,Unisex
+Harpy Talons,"Light gauntlets with sharp tips, good for quick attacks.",390,195,8,7,18,Female
+Gorgon's Grip,"Petrifying gauntlets that can turn foes to stone.",950,475,45,20,0,Unisex
+Desert Nomad Gloves,"Dust-resistant gloves for arid environments.",130,65,4,5,2,Unisex
+Frostbite Gauntlets,"Gauntlets radiating chilling energy, freezing foes.",760,380,34,17,0,Male
+Sunstone Cuffs,"Cuffs glowing with warm sunlight, providing healing and protection.",680,340,14,32,0,Female
+Beastkin Gauntlets,"Gauntlets made from tough beast hide, wild and untamed.",430,215,20,6,0,Unisex
+Golem Gauntlets,"Heavy, stone-like gauntlets, nearly indestructible.",1000,500,50,8,0,Unisex
+Shaman's Handwraps,"Simple wraps used in rituals, channeling natural magic.",490,245,9,26,0,Unisex
+Zephyr Gloves,"Gloves light as air, granting incredible speed and evasion.",400,200,6,10,20,Unisex
+Vampire's Embrace,"Gauntlets that seem to drain life from enemies.",820,410,25,23,0,Unisex
+Dreadnought Gauntlets,"Massive, intimidating gauntlets for ultimate defense.",1100,550,55,10,0,Male
+Faerie Silk Gloves,"Gloves woven from mystical faerie silk, incredibly soft yet protective.",560,280,12,35,0,Female
+Savage Gauntlets,"Brutal, unrefined gauntlets for savage warriors.",470,235,23,4,0,Male
+Stormcaller Bands,"Bands crackling with elemental energy, summoning lightning.",880,440,18,30,0,Unisex
+Void Gauntlets,"Gauntlets from the void, absorbing magical attacks.",1200,600,48,25,0,Unisex
+Divine Aegis,"Gauntlets offering supreme divine protection.",1300,650,60,30,0,Unisex
+Inferno Fists,"Gauntlets ablaze with eternal flames, burning all who touch.",920,460,30,28,0,Male
+Seraphic Mitts,"Feather-light mitts of angelic origin, offering celestial defense.",700,350,15,40,0,Female
+Barbarian's Cuffs,"Rough, leather cuffs for a primal warrior.",160,80,9,1,0,Male
+Runepowder Gauntlets,"Gauntlets infused with explosive runepowder.",680,340,24,9,0,Unisex
+Glacial Handguards,"Handguards emitting an icy aura, slowing enemies.",740,370,27,14,0,Unisex
+Crimson Gauntlets,"Blood-stained gauntlets of a ruthless warrior.",530,265,26,7,0,Male
+Emerald Bands,"Bands gleaming with verdant energy, restoring vitality.",600,300,13,21,0,Female
+Obsidian Fists,"Gauntlets carved from volcanic obsidian, sharp and resilient.",980,490,40,12,0,Unisex
+Specter Gloves,"Gloves allowing passage through solid objects.",850,425,10,33,0,Unisex
+Gloom Gauntlets,"Gauntlets that seem to absorb light and hope.",1050,525,45,16,0,Unisex
+Zealot's Bracers,"Bracers of a fanatical warrior, inspiring courage.",790,395,33,13,0,Male
+Chrono Cuffs,"Cuffs that subtly manipulate time, improving reaction speed.",900,450,15,25,10,Unisex
+Necromancer's Grips,"Grips that draw power from the deceased.",800,400,11,30,0,Unisex
+Golemite Gauntlets,"Heavy gauntlets made from animated stone.",950,475,48,10,0,Male
+Silverleaf Gloves,"Gloves crafted from mystical silverleaf, light and protective.",620,310,14,29,0,Female
+Spiked Gauntlets,"Iron gauntlets with sharp spikes for offensive maneuvers.",200,100,10,2,0,Unisex
+Aetherial Bands,"Bands pulsating with pure magical essence.",1100,550,17,38,0,Unisex
+Wyrmhide Gauntlets,"Gauntlets made from the tough hide of a lesser wyrm.",720,360,31,10,0,Unisex
+Stoneguard Gauntlets,"Gauntlets reinforced with elemental earth, sturdy.",670,335,28,8,0,Male
+Oceanic Gauntlets,"Gauntlets smelling of the sea, aiding in water spells.",880,440,16,31,0,Female
+Blazefire Gauntlets,"Gauntlets radiating intense heat, burning enemies on contact.",930,465,37,15,0,Male
+Lunar Gauntlets,"Gauntlets that glow with soft moonlight, enhancing stealth.",750,375,12,28,15,Female
+Solar Bracers,"Bracers that pulse with sun's energy, healing allies.",800,400,19,26,0,Unisex
+Vanguard Gauntlets,"The first line of defense, heavy and reliable.",1000,500,52,12,0,Male
+Stormforged Fists,"Gauntlets forged in a thunderstorm, crackling with power.",960,480,39,18,0,Unisex
+Zealot Gauntlets,"Ornately decorated gauntlets, inspiring divine fury.",1020,510,43,20,0,Male
+Shadowstitch Gloves,"Gloves sewn from threads of shadow, providing stealth and agility.",650,325,9,20,17,Unisex
+Ancient Rune Gauntlets,"Gauntlets covered in ancient, forgotten runes.",1150,575,47,24,0,Unisex
+Bloodbound Gauntlets,"Gauntlets that empower the wearer with every wound taken.",1250,625,58,15,0,Male
+Starlight Gauntlets,"Gauntlets shimmering with starlight, offering celestial guidance.",1080,540,20,36,8,Female
+Crystaline Gauntlets,"Gauntlets formed from pure crystal, fragile yet powerful.",910,455,35,22,0,Unisex
+Gravehand Gloves,"Gloves that chill to the touch, connected to the underworld.",770,385,10,30,0,Unisex
+Dragonhide Gauntlets,"Gauntlets crafted from the hide of a mature dragon.",1350,675,65,25,0,Male
+Dreamweaver Bands,"Bands that allow the wearer to influence dreams and minds.",830,415,13,34,0,Female
+Ironclad Gauntlets,"Exceptionally sturdy gauntlets, heavy but impenetrable.",1400,700,70,10,0,Unisex
+Soulforged Gauntlets,"Gauntlets imbued with a captured soul, granting dark power.",1500,750,68,28,0,Unisex
+Angelic Gauntlets,"Gauntlets from the heavens, radiating purity and light.",1600,800,75,35,0,Unisex
+Demonic Claws,"Vicious gauntlets from the fiery pits, dripping with malice.",1700,850,80,20,0,Unisex
+Ebon Gauntlets,"Gauntlets forged from solidified darkness, absorbing all light.",1800,900,85,30,0,Male
+Radiant Fists,"Fists that glow with holy light, scorching evil.",1900,950,78,38,0,Female
+Voidforged Gauntlets,"Gauntlets crafted in the heart of the void, immense power.",2000,1000,90,40,0,Unisex
+Mythril Gauntlets,"Gauntlets of legendary mythril, light yet incredibly strong.",2200,1100,95,45,0,Unisex
+Adamantite Gauntlets,"Gauntlets of the hardest known metal, virtually unbreakable.",2500,1250,100,50,0,Unisex
+Glimmering Gauntlets,"Gauntlets that sparkle with a faint, magical light.",500,250,20,10,0,Unisex
+Stonehide Gloves,"Gloves made from petrified animal hide, surprisingly tough.",300,150,15,5,0,Unisex
+Silent Wraps,"Soft wraps for quiet movement, favored by scouts.",140,70,3,7,7,Unisex
+Wyrmfang Gauntlets,"Gauntlets tipped with the fangs of a juvenile wyrm.",600,300,28,9,0,Male
+Whisperwind Bands,"Bands that carry the faintest whispers, granting keen senses.",580,290,12,23,12,Unisex
+Ogre Gauntlets,"Crude and massive gauntlets, for the strongest warriors.",700,350,35,5,0,Male
+Dryad's Embrace,"Gloves woven with living vines, connected to nature's magic.",450,225,8,26,0,Female
+Forgeheart Gauntlets,"Gauntlets from a master smith's forge, enduring and hot.",750,375,32,11,0,Male
+Stonetooth Fists,"Gauntlets with jagged, stone-like knuckles.",480,240,24,6,0,Unisex
+Deepwood Grips,"Gloves made from ancient forest materials, blending with shadows.",360,180,6,15,10,Unisex
+Celestial Sphere Gauntlets,"Gauntlets adorned with miniature celestial spheres, aiding astral magic.",1200,600,25,50,0,Unisex
+Shadowbinder Gauntlets,"Gauntlets that seem to control shadows, binding foes.",1100,550,40,30,0,Unisex
+Drakeskin Gauntlets,"Gauntlets made from the durable hide of a drake.",850,425,38,16,0,Male
+Chitinous Gauntlets,"Gauntlets crafted from hardened insect chitin, surprisingly light.",400,200,18,7,0,Unisex
+Viking's Bracers,"Sturdy bracers for a seafaring warrior.",330,165,16,4,0,Male
+Siren's Gloves,"Gloves with a captivating aura, charming adversaries.",550,275,10,28,0,Female
+Gargoyle Gauntlets,"Gauntlets resembling gargoyle claws, stony and imposing.",900,450,45,10,0,Unisex
+Reaper's Grasp,"Gauntlets that chill the soul, wielding spectral power.",1000,500,30,35,0,Unisex
+Sunken Gauntlets,"Barnacle-encrusted gauntlets from a forgotten wreck.",420,210,22,8,0,Unisex
+Tempest Fists,"Fists crackling with the raw energy of a storm.",970,485,42,20,0,Unisex
+Wispweave Gloves,"Gloves made of ethereal wisp material, nearly invisible.",700,350,15,32,10,Female
+Nomad's Gauntlets,"Practical and robust gauntlets for a wanderer.",280,140,14,5,0,Unisex
+Ashwood Gauntlets,"Gauntlets carved from ancient ashwood, light and resilient.",350,175,17,6,0,Unisex
+Bloodsteel Gauntlets,"Gauntlets forged with blood ritual, dark and potent.",1050,525,50,22,0,Male
+Starfall Gauntlets,"Gauntlets embedded with fallen star fragments, radiating power.",1200,600,55,30,0,Unisex
+Oracle's Touch,"Gloves allowing brief glimpses into the future, improving reaction.",950,475,18,36,9,Female
+Griffin Rider's Gauntlets,"Aerodynamic gauntlets for those who ride the skies.",700,350,28,15,0,Unisex
+Onyx Fists,"Gauntlets crafted from dark onyx, absorbing negative energy.",1300,650,60,25,0,Unisex
+Zephyrweave Gauntlets,"Gauntlets woven from enchanted air, granting swiftness.",880,440,20,27,15,Unisex
+Cragskin Gauntlets,"Gauntlets made from hardened mountain hide, durable and rugged.",650,325,30,10,0,Male
+Mystic Sentinel Gauntlets,"Gauntlets of an ancient order, protecting magic users.",1100,550,35,40,0,Female
+Infernal Grips,"Grips that burn with a malevolent fire, searing enemies.",1400,700,62,24,0,Unisex
+Aegis Gauntlets,"Gauntlets with an invisible shield, deflecting attacks.",1500,750,70,30,0,Unisex
+Voidcaller's Cuffs,"Cuffs that resonate with the void, amplifying dark spells.",1350,675,25,45,0,Unisex
+Graveward Gauntlets,"Gauntlets of a silent guardian, protecting sacred grounds.",1600,800,72,28,0,Male
+Celestial Handguards,"Handguards of celestial origin, radiating divine light.",1700,850,78,33,0,Female
+Elderwood Gauntlets,"Gauntlets carved from ancient, sentient wood.",980,490,30,20,5,Unisex
+Stoneflesh Gauntlets,"Gauntlets that seem to turn skin to stone.",1000,500,45,18,0,Male
+Sunblessed Gauntlets,"Gauntlets infused with the sun's warmth, healing allies.",1050,525,33,35,0,Unisex
+Shadowfang Gloves,"Gloves with retractable shadow claws, for stealthy strikes.",800,400,12,25,18,Unisex
+Wyvernscale Gauntlets,"Gauntlets made from the scales of a full-grown wyvern.",1150,575,50,20,0,Male
+Stormbreaker Gauntlets,"Gauntlets that can channel and disperse stormy energy.",1250,625,58,28,0,Unisex
+Feywild Gloves,"Gloves touched by the Feywild, shimmering with magic.",900,450,15,38,7,Female
+Abyssal Maw Gauntlets,"Gauntlets resembling a gaping maw, crushing foes.",1450,725,65,22,0,Unisex
+Starforged Gauntlets,"Gauntlets forged under a specific constellation, granting luck.",1550,775,70,30,10,Unisex
+Dragonlord's Gauntlets,"Gauntlets fit for a dragonlord, of immense power.",1800,900,88,35,0,Male
+Spiritwalker Gloves,"Gloves that allow brief interaction with spirits.",1100,550,20,42,0,Unisex
+Netherite Gauntlets,"Gauntlets made from a rare, volatile metal.",1900,950,92,38,0,Unisex
+Arcane Weave Gloves,"Gloves intricately woven with arcane threads, enhancing spellcasting.",950,475,18,40,0,Female
+Colossus Gauntlets,"Massive gauntlets for a champion, empowering strikes.",2000,1000,98,25,0,Male
+Chrono Flux Gauntlets,"Gauntlets that bend time, granting rapid movements.",1700,850,30,35,12,Unisex
+Void Shroud Gauntlets,"Gauntlets that appear to fade in and out of existence.",1850,925,85,40,0,Unisex
+Lionheart Gauntlets,"Gauntlets bearing the symbol of a lion, inspiring courage.",1650,825,75,32,0,Male
+Valkyrie's Vambraces,"Vambraces adorned with wings, lighter than air yet strong.",1500,750,68,30,0,Female
+Serpent Scale Gauntlets,"Gauntlets made from large serpent scales, flexible and tough.",700,350,30,12,0,Unisex
+Golem Handguards,"Handguards of an ancient golem, incredibly durable.",900,450,40,10,0,Male
+Moonpetal Gloves,"Gloves woven from moonlit petals, soft and magically potent.",680,340,10,30,5,Female
+Centurion Gauntlets,"Heavy, practical gauntlets for a seasoned soldier.",550,275,25,7,0,Male
+Spellbound Gauntlets,"Gauntlets imbued with a powerful, protective spell.",800,400,20,28,0,Unisex
+Iron Guard Gauntlets,"Reinforced iron gauntlets, preferred by city guards.",180,90,9,3,0,Unisex
+Roughspun Grips,"Crude, but surprisingly durable gloves.",60,30,2,1,0,Unisex
+Brigand's Bracers,"Simple bracers, often found on bandits.",130,65,6,2,0,Unisex
+Zealot's Mitts,"Light mitts for a quick, devoted follower.",110,55,4,5,0,Unisex
+Silken Gloves,"Soft, elegant gloves offering minimal protection.",90,45,1,8,0,Female
+Apprentice's Gauntlets,"Basic gauntlets for those learning the craft.",100,50,5,3,0,Unisex
+Wanderer's Cuffs,"Durable cuffs for endless travels.",150,75,7,4,0,Unisex
+Fabled Gauntlets,"Gauntlets spoken of in legends, their power growing.",2500,1250,90,45,5,Unisex
+Grimskull Gauntlets,"Gauntlets adorned with skulls, intimidating and dark.",1600,800,75,20,0,Male
+Crystalweave Gloves,"Gloves woven with fine crystal threads, enhancing focus.",1200,600,22,40,0,Female
+Dragonsworn Gauntlets,"Gauntlets of those who pledge loyalty to dragons.",1700,850,82,30,0,Unisex
+Eternal Flame Gauntlets,"Gauntlets burning with a non-consuming flame.",1800,900,80,38,0,Unisex
+Whispersteel Gauntlets,"Gauntlets made of a silent, shadowy metal.",1400,700,65,25,10,Unisex
+Stoneskin Grips,"Grips that harden the skin, making it resistant.",1250,625,58,15,0,Male
+Goddess's Handguards,"Handguards said to be touched by a deity, offering ultimate defense.",2000,1000,95,50,0,Female
+Champion's Gauntlets,"Gauntlets of a legendary champion, imbued with their might.",2200,1100,100,40,0,Unisex
+Wraithtouch Gloves,"Gloves that pass through enemies, leaving a chilling effect.",1300,650,28,45,0,Unisex
+Titanforged Gauntlets,"Gauntlets forged in a titan's forge, immense and heavy.",2400,1200,110,30,0,Male
+Ethereal Bands,"Bands composed of pure ether, granting magical prowess.",1500,750,35,55,0,Unisex
+Blademaster Gauntlets,"Gauntlets designed for precision and offensive strikes.",900,450,40,10,12,Unisex
+Oathsworn Gauntlets,"Gauntlets of a sworn knight, unbreakable in their resolve.",1000,500,48,12,0,Male
+Silverlight Gloves,"Gloves that emanate a faint silver light, revealing hidden paths.",780,390,15,25,7,Female
+Guardian's Grip,"A firm grip for protecting others.",850,425,36,8,0,Unisex
+Mystic Relic Gauntlets,"Gauntlets from a forgotten civilization, holding ancient power.",1100,550,50,20,0,Unisex
+Shadowdancer Gloves,"Gloves allowing swift, silent movement through shadows.",600,300,10,18,15,Unisex
+Battleworn Gauntlets,"Gauntlets that have seen countless battles, scarred but strong.",700,350,32,6,0,Male
+Spiritbound Gauntlets,"Gauntlets that link to a spirit, enhancing defense and magic.",950,475,25,32,0,Unisex
+Venomous Grips,"Gauntlets dripping with faint poison, for subtle attacks.",450,225,12,10,5,Unisex
+Zealot's Fists,"Fists of a righteous warrior, imbued with fervor.",520,260,28,8,0,Male
+Emerald Scale Gauntlets,"Gauntlets made from vibrant green dragon scales.",1200,600,55,20,0,Unisex
+Frost Weaver Gloves,"Gloves that manipulate ice, weaving chilling spells.",850,425,18,35,0,Female
+Onyx Claw Gauntlets,"Gauntlets with sharp onyx claws, for piercing attacks.",1300,650,60,15,0,Male
+Starshard Gauntlets,"Gauntlets embedded with fragments of fallen stars, radiating cosmic energy.",1400,700,65,28,0,Unisex
+Moonstone Bracers,"Bracers glowing with soft moonstone, aiding nocturnal endeavors.",980,490,20,38,8,Female
+Blaze Core Gauntlets,"Gauntlets with an internal core of fire, burning steadily.",1500,750,70,22,0,Male
+Nightfall Gauntlets,"Gauntlets that absorb surrounding light, cloaking the wearer.",1350,675,50,25,12,Unisex
+Ancient Steel Gauntlets,"Gauntlets of incredibly old, resilient steel.",1000,500,45,10,0,Unisex
+Divine Essence Gauntlets,"Gauntlets pulsating with pure divine essence, warding off evil.",1800,900,80,40,0,Unisex
+Void Shard Gloves,"Gloves containing fragments of the void, disorienting foes.",1100,550,25,48,0,Unisex
+Crimson Guard Gauntlets,"Gauntlets of a crimson guard, stained by many battles.",1200,600,55,18,0,Male
+Enchantress's Bands,"Bands for a powerful enchantress, boosting all magic.",1050,525,20,42,0,Female
+Runeforged Gauntlets,"Gauntlets forged with powerful runes, radiating mystical energy.",1300,650,60,25,0,Unisex
+Whisperwind Gauntlets,"Gauntlets light as a breeze, granting unparalleled agility.",900,450,22,20,20,Unisex
+Earthshaker Gauntlets,"Gauntlets that can cause minor tremors with each strike.",1400,700,70,15,0,Male
+Soulfire Grips,"Grips that burn with ethereal flame, searing spirits.",1500,750,30,50,0,Unisex
+Dragonheart Gauntlets,"Gauntlets from the heart of a dragon, radiating power.",1900,950,90,35,0,Unisex
+Celestial Tear Gauntlets,"Gauntlets said to be formed from a fallen star's tear.",2000,1000,95,40,0,Unisex
+Abyssal Plate Gauntlets,"Heavy gauntlets from the deepest abyss, extremely resilient.",2100,1050,100,30,0,Unisex
+Phoenix Feather Gloves,"Gloves woven with phoenix feathers, offering light and healing.",1250,625,28,48,0,Female
+Warlord's Gauntlets,"Gauntlets of a fearsome warlord, commanding respect.",1600,800,78,20,0,Male
+Dreamsteel Gauntlets,"Gauntlets crafted from solidified dreams, both light and strong.",1700,850,75,32,0,Unisex
+Voidstone Gauntlets,"Gauntlets made of voidstone, absorbing all magical attacks.",1800,900,80,45,0,Unisex
+Sunpetal Handguards,"Handguards made from sun-kissed petals, vibrant and delicate.",1150,575,25,40,5,Female
+Crimson Iron Gauntlets,"Iron gauntlets dyed crimson, symbolizing ferocity.",200,100,11,3,0,Unisex
+Woven Vine Gloves,"Gloves crafted from strong, flexible vines.",120,60,4,6,0,Unisex
+Stone Splinter Gauntlets,"Gauntlets reinforced with sharp stone splinters.",220,110,13,2,0,Unisex
+Leather-Bound Gauntlets,"Leather gauntlets reinforced with metal bands.",160,80,8,4,0,Unisex
+Traveler's Bracers,"Comfortable bracers for long journeys.",110,55,5,3,2,Unisex
+Simple Iron Gauntlets,"Basic, unadorned iron gauntlets.",90,45,4,1,0,Unisex
+Padded Iron Gauntlets,"Iron gauntlets with padded interior for comfort.",130,65,6,3,0,Unisex
+Studded Leather Gauntlets,"Leather gauntlets with small metal studs for added defense.",170,85,9,5,0,Unisex
+Bone-Plated Gauntlets,"Gauntlets made from hardened animal bones.",210,105,11,4,0,Unisex
+Scale Mail Gauntlets,"Gauntlets composed of overlapping metal scales.",240,120,13,6,0,Unisex
+Hardened Leather Gloves,"Gloves of exceptionally tough, treated leather.",150,75,7,7,0,Unisex
+Forged Steel Gauntlets,"Expertly forged steel gauntlets, balanced for battle.",280,140,14,5,0,Unisex
+Reinforced Mitts,"Mitts with extra padding, offering more protection.",190,95,7,9,0,Unisex
+Soldier's Gauntlets,"Standard issue gauntlets for army soldiers.",300,150,16,6,0,Male
+Acolyte's Bands,"Simple bands for a magical apprentice, aiding their studies.",250,125,6,12,0,Unisex
+Marauder's Grips,"Rough grips favored by raiders, for brutal attacks.",350,175,18,3,0,Male
+Silverthread Gloves,"Gloves woven with fine silver thread, light and defensive against dark magic.",320,160,8,14,0,Female
+Barbarian's Claws,"Crude gauntlets with sharpened edges, for close combat.",290,145,15,2,0,Male
+Squire's Gauntlets,"Gauntlets for a young knight in training.",230,115,12,4,0,Male
+Fighter's Cuffs,"Strong cuffs for brawlers and melee combatants.",270,135,14,3,0,Male
+Spellbinder's Gloves,"Gloves designed to assist in the casting of complex spells.",360,180,7,16,0,Unisex
+Ranger's Bracers,"Light bracers for those who roam the wilderness.",260,130,9,8,6,Unisex
+Heavy Iron Gauntlets,"Very thick iron gauntlets, slow but incredibly tough.",400,200,20,5,0,Male
+Mystic Leather Gauntlets,"Leather gauntlets infused with minor protective charms.",380,190,10,18,0,Unisex
+Warmaster's Gauntlets,"Gauntlets of a battle-hardened commander, commanding.",450,225,22,7,0,Male
+Forest Guardian Gloves,"Gloves crafted from forest materials, blending with nature.",310,155,8,10,0,Unisex
+Stone Gauntlets,"Gauntlets carved from solid stone, heavy and resilient.",420,210,21,6,0,Male
+Frostworn Grips,"Grips that retain a chilling touch from icy encounters.",370,185,19,9,0,Unisex
+Sunken Silver Gauntlets,"Silver gauntlets recovered from a sunken ship, glimmering.",480,240,24,10,0,Unisex
+Shadowscale Gloves,"Gloves made from the scales of a shadowy creature, light and elusive.",430,215,9,16,10,Unisex
+Knight-Errant Gauntlets,"Gauntlets of a wandering knight, reliable and well-kept.",500,250,26,8,0,Male
+Priestess's Cuffs,"Cuffs worn by priestesses, aiding in benevolent magic.",400,200,11,20,0,Female
+Drakehide Gloves,"Gloves made from the hide of a young drake, flexible and tough.",460,230,23,12,0,Unisex
+Desert Scavenger Grips,"Makeshift grips used by desert scavengers, rugged.",200,100,10,3,1,Unisex
+Stormchaser Gauntlets,"Gauntlets designed to withstand and channel lightning.",550,275,27,15,0,Male
+Moonfall Bands,"Bands that softly glow, absorbing lunar energy.",490,245,12,22,0,Female
+Grizzled Veteran's Gauntlets,"Gauntlets of a truly ancient warrior, scarred and strong.",600,300,30,9,0,Male
+Aetherial Gauntlets,"Gauntlets infused with faint Aether, granting resilience.",520,260,25,18,0,Unisex
+Blazeforged Grips,"Grips heated in intense flames, maintaining their warmth.",580,290,29,11,0,Male
+Deeprune Gauntlets,"Gauntlets with deeply etched runes, enhancing their power.",650,325,32,16,0,Unisex
+Spiritwalker Handguards,"Handguards aiding those who commune with spirits.",540,270,15,24,0,Unisex
+Ironbound Gauntlets,"Gauntlets tightly bound with iron strips, very durable.",350,175,17,4,0,Unisex
+Wyvern Tail Gauntlets,"Gauntlets ending in a segmented wyvern tail, for agile strikes.",620,310,28,10,5,Unisex
+Sunfire Gloves,"Gloves that radiate soft warmth, comforting and protective.",510,255,13,26,0,Female
+Barbarian King Gauntlets,"Gauntlets fit for a tribal leader, raw and powerful.",700,350,35,7,0,Male
+Shadecloth Gloves,"Gloves made of cloth spun from shadows, very stealthy.",470,235,10,19,12,Unisex
+Crystal Soul Gauntlets,"Gauntlets embedded with a small crystal, reflecting magical attacks.",750,375,30,28,0,Unisex
+Goliath Gauntlets,"Massive gauntlets designed for a giant's strength.",800,400,40,10,0,Male
+Oracle's Visions,"Gloves that briefly glimpse the future, boosting evasion.",630,315,16,30,9,Female
+Crimson Death Gauntlets,"Gauntlets of a formidable executioner, stained red.",850,425,42,14,0,Male
+Stormheart Gauntlets,"Gauntlets that seem to beat with a storm's heart, powerful.",900,450,45,20,0,Unisex
+Eldritch Bands,"Bands pulsing with otherworldly energy, dangerous yet powerful.",780,390,20,38,0,Unisex
+Glacial Spike Gauntlets,"Gauntlets adorned with sharp ice spikes, chilling to touch.",950,475,48,17,0,Male
+Celestial Touch Gloves,"Gloves that feel like a gentle touch from the heavens.",820,410,18,36,0,Female
+Abyssal Core Gauntlets,"Gauntlets with a core of abyssal energy, consuming magic.",1000,500,50,25,0,Unisex
+Runebound Gauntlets,"Gauntlets strongly bound by ancient runes, powerful.",1050,525,52,28,0,Unisex
+Soulsteel Gauntlets,"Gauntlets forged from purified souls, radiant and strong.",1100,550,55,30,0,Unisex
+Dragon King Gauntlets,"Gauntlets fit for a true dragon king, absolute power.",1200,600,60,35,0,Male
+Phoenix Soul Gauntlets,"Gauntlets with the spirit of a phoenix, granting rebirth.",1150,575,30,50,0,Unisex
+Titanblood Gauntlets,"Gauntlets stained with titan blood, granting immense strength.",1300,650,65,20,0,Male
+Starlight Weave Gloves,"Gloves woven from starlight, shimmering and ethereal.",900,450,22,42,0,Female
+Void Shrouded Gauntlets,"Gauntlets entirely cloaked in void energy, hard to perceive.",1400,700,70,30,10,Unisex
+Holy Vambraces,"Vambraces blessed by sacred rites, warding off evil.",1350,675,62,25,0,Unisex
+Inferno Core Gauntlets,"Gauntlets with a perpetual internal flame, burning hot.",1500,750,75,33,0,Male
+Seraphim's Embrace,"Feathery gloves that feel like an angelic embrace.",1000,500,28,48,0,Female
+Dreadskull Gauntlets,"Gauntlets shaped like skulls, exuding fear.",1600,800,80,27,0,Male
+Astral Gauntlets,"Gauntlets connected to the astral plane, enhancing spiritual power.",1700,850,35,55,0,Unisex
+Onyx Heart Gauntlets,"Gauntlets with an onyx core, drawing dark energy.",1800,900,85,30,0,Unisex
+Zephyr Soul Gauntlets,"Gauntlets imbued with the soul of the wind, incredibly light.",1200,600,30,35,15,Unisex
+Earthbound Gauntlets,"Gauntlets rooted to the earth, granting stability.",1900,950,90,25,0,Male
+Lunar Eclipse Gauntlets,"Gauntlets that dim the light around them, aiding stealth.",1450,725,68,32,18,Unisex
+Solar Flare Gauntlets,"Gauntlets that periodically unleash bursts of sunlight.",1550,775,72,38,0,Male
+Abyssal Handguards,"Handguards from the deepest, darkest pits.",2000,1000,98,30,0,Unisex
+Divine Aegis Gloves,"Gloves that provide an invisible shield, divinely powered.",1650,825,32,52,0,Female
+Grimstone Gauntlets,"Gauntlets carved from cursed stone, heavy and menacing.",1750,875,82,28,0,Male
+Ebon Shadow Gauntlets,"Gauntlets that melt into shadows, making the wearer unseen.",1850,925,75,35,17,Unisex
+Mythril Weave Gloves,"Gloves woven from fine mythril, light and extremely strong.",1400,700,38,40,0,Unisex
+Adamantite Fist Gauntlets,"Gauntlets made of pure adamantite, unyielding.",2000,1000,105,35,0,Male
+Celestial Zenith Gauntlets,"Gauntlets that draw power from the highest heavens.",2100,1050,100,45,0,Unisex
+Void Heart Gauntlets,"Gauntlets that house a fragment of the void, immense power.",2200,1100,105,50,0,Unisex
+Dragon's Breath Gauntlets,"Gauntlets imbued with a dragon's fiery breath.",2300,1150,110,40,0,Unisex
+Starfire Gauntlets,"Gauntlets glowing with cosmic fire, scorching foes.",2400,1200,115,42,0,Unisex
+True Divine Gauntlets,"Gauntlets said to be worn by gods, ultimate protection.",2500,1250,120,60,0,Unisex
+Soul Eater Gauntlets,"Gauntlets that devour the souls of defeated enemies.",2600,1300,125,55,0,Unisex
+Worldshaper Gauntlets,"Gauntlets that hum with world-shaping energy, immense power.",2700,1350,130,65,0,Unisex
+Sunken King's Gauntlets,"Gauntlets of a forgotten underwater king, granting aquatic power.",1500,750,70,30,0,Male
+Spirit Guardian Gauntlets,"Gauntlets imbued with ancient guardian spirits, protecting all.",1600,800,75,35,0,Unisex
+Whisperwind Gauntlets II,"Improved Whisperwind Gauntlets, even swifter.",1000,500,25,25,20,Unisex
+Crimson Fury Gauntlets,"Gauntlets that boil with controlled rage, increasing strength.",1300,650,60,20,0,Male
+Emerald Soul Gauntlets,"Gauntlets pulsating with emerald energy, enhancing vitality.",1100,550,25,45,0,Female
+Onyx Shadow Gauntlets,"Gauntlets of pure shadow, absorbing all light.",1400,700,65,28,0,Unisex
+Starfall Gauntlets II,"Enhanced Starfall Gauntlets, stronger cosmic energy.",1300,650,60,35,0,Unisex
+Moonstone Eclipse Gauntlets,"Bracers that absorb moonlight, enhancing night vision and stealth.",1050,525,22,40,10,Female
+Blazecore Gauntlets II,"Improved Blazecore Gauntlets, hotter and more resilient.",1600,800,80,25,0,Male
+Nightfall Gauntlets II,"More potent Nightfall Gauntlets, deeper shadows.",1450,725,70,30,20,Unisex
+Ancient Steel Gauntlets II,"Further reinforced Ancient Steel Gauntlets, nearly unbreakable.",1100,550,50,15,0,Unisex
+Divine Radiance Gauntlets,"Gauntlets emanating intense divine light, scorching foes.",1900,950,85,45,0,Unisex
+Void Shard Gauntlets II,"More powerful Void Shard Gauntlets, stronger disorientation.",1200,600,30,52,0,Unisex
+Crimson Guard Gauntlets II,"Superior Crimson Guard Gauntlets, even more ferocious.",1300,650,60,22,0,Male
+Enchantress's Embrace,"Advanced bands for a master enchantress, supreme magic.",1150,575,25,50,0,Female
+Runeforged Gauntlets II,"More powerful Runeforged Gauntlets, stronger mystical energy.",1400,700,65,30,0,Unisex
+Earthshaker Gauntlets II,"Improved Earthshaker Gauntlets, causing stronger tremors.",1500,750,75,20,0,Male
+Soulfire Grips II,"More potent Soulfire Grips, searing spirits with greater intensity.",1600,800,35,55,0,Unisex
+Dragonheart Gauntlets II,"Gauntlets radiating even greater draconic power.",2000,1000,95,40,0,Unisex
+Celestial Tear Gauntlets II,"Enhanced Celestial Tear Gauntlets, drawing more cosmic power.",2100,1050,100,45,0,Unisex
+Abyssal Plate Gauntlets II,"Further hardened Abyssal Plate Gauntlets, incredibly resilient.",2200,1100,105,35,0,Unisex
+Phoenix Feather Gloves II,"More protective Phoenix Feather Gloves, enhanced healing.",1350,675,32,52,0,Female
+Warlord's Fury Gauntlets,"Gauntlets boiling with warlord's fury, inspiring fear.",1700,850,82,25,0,Male
+Dreamsteel Gauntlets II,"Improved Dreamsteel Gauntlets, lighter and stronger.",1800,900,80,38,0,Unisex
+Voidstone Gauntlets II,"Superior Voidstone Gauntlets, absorbing more magical attacks.",1900,950,85,50,0,Unisex
+Sunpetal Handguards II,"More vibrant Sunpetal Handguards, enhanced healing.",1250,625,30,45,8,Female
+Heavy Chainmail Gauntlets,"Dense chainmail gauntlets, offering robust defense.",280,140,15,8,0,Unisex
+Blessed Silver Gauntlets,"Gauntlets made of purified silver, effective against undead.",350,175,18,10,0,Unisex
+Dread Knight Gauntlets,"Gauntlets of a fearsome dark knight, chilling to the touch.",700,350,35,12,0,Male
+Fey Iron Gauntlets,"Gauntlets crafted from special Fey iron, resistant to magic.",600,300,28,20,0,Unisex
+Serpent Tongue Gloves,"Gloves with a subtle serpentine pattern, aiding in swiftness.",300,150,7,12,10,Unisex
+Crusader's Might Gauntlets,"Heavily fortified gauntlets of a valiant crusader.",750,375,40,18,0,Male
+Moonlit Dew Gloves,"Gloves shimmering with moonlight dew, granting restorative power.",650,325,12,30,0,Female
+Sentinel's Bulwark,"Gauntlets that seem to project a defensive aura.",800,400,42,15,0,Male
+Wildheart Gauntlets,"Gauntlets made from primal beast hide, granting strength.",500,250,26,7,0,Unisex
+Thunderclap Gauntlets,"Gauntlets that resonate with thunder, stunning foes.",900,450,45,20,0,Unisex
+Spiritwoven Armbands,"Armbands intricately woven with spiritual energy.",720,360,16,33,0,Female
+Dragonshard Gauntlets,"Gauntlets embedded with fragments of dragon shards, immensely powerful.",1500,750,70,30,0,Unisex
+Starforged Vambraces,"Vambraces forged under a specific constellation, granting luck.",1200,600,55,22,10,Unisex
+Gravecaller Gauntlets,"Gauntlets that hum with the whispers of the deceased, aiding necromancy.",1300,650,30,40,0,Unisex
+Celestial Blessing Gauntlets,"Gauntlets blessed by celestial beings, divine protection.",1600,800,78,38,0,Unisex
+Voidheart Grips,"Grips that feel cold to the touch, connected to the void.",1700,850,82,30,0,Unisex
+Arcane Sentinel Gauntlets,"Gauntlets of an ancient order of arcane guardians, robust.",1400,700,65,42,0,Unisex
+Lionheart Vambraces,"Vambraces bearing the crest of a lion, inspiring courage.",1500,750,72,28,0,Male
+Valkyrie's Wings Gloves,"Gloves with feather-like lightness, allowing swift movement.",1300,650,30,45,12,Female
+Serpentfang Gauntlets,"Gauntlets with venomous serpent fangs, for deadly strikes.",850,425,38,15,8,Unisex
+Golem Lord Gauntlets,"Gauntlets of a golem lord, commanding immense strength.",1000,500,50,12,0,Male
+Moonpetal Gauntlets,"Gauntlets made of moonlight-infused petals, magically potent.",750,375,15,35,5,Female
+Centurion's Legacy Gauntlets,"Gauntlets of a legendary centurion, carrying his might.",1100,550,55,10,0,Male
+Spellbound Gauntlets II,"More potent Spellbound Gauntlets, stronger protective spells.",900,450,22,33,0,Unisex
+Iron Guard Gauntlets II,"Reinforced Iron Guard Gauntlets, sturdier.",250,125,13,5,0,Unisex
+Brigand's Plated Bracers,"Heavy plated bracers favored by elite brigands.",200,100,10,4,0,Unisex
+Zealot's Vengeance Gauntlets,"Gauntlets of a vengeful zealot, empowering their strikes.",600,300,30,10,0,Male
+Silken Enchantment Gloves,"Silken gloves imbued with potent enchantments, boosting magic.",400,200,10,20,0,Female
+Apprentice's Runebands,"Basic runebands for a magic apprentice, aiding their studies.",180,90,7,10,0,Unisex
+Wanderer's Iron Gauntlets,"Iron gauntlets for a seasoned wanderer, robust and practical.",250,125,12,6,0,Unisex
+Fabled Champion Gauntlets,"Gauntlets of a fabled champion, unmatched power.",2800,1400,135,70,0,Unisex
+Grimskull Lord Gauntlets,"Gauntlets of a grimskull lord, radiating immense dread.",1700,850,85,25,0,Male
+Crystalweave Gloves II,"Improved Crystalweave Gloves, enhancing focus further.",1300,650,25,45,0,Female
+Dragonsworn Gauntlets II,"More potent Dragonsworn Gauntlets, stronger loyalty to dragons.",1800,900,90,35,0,Unisex
+Eternal Flame Gauntlets II,"Stronger Eternal Flame Gauntlets, more intense heat.",1900,950,95,40,0,Unisex
+Whispersteel Gauntlets II,"Further enhanced Whispersteel Gauntlets, more silent and potent.",1500,750,70,30,15,Unisex
+Stoneskin Grips II,"More powerful Stoneskin Grips, turning skin to tougher stone.",1350,675,62,20,0,Male
+Goddess's Touch Gauntlets,"Gauntlets said to be touched by a goddess, supreme defense.",2100,1050,100,55,0,Female
+Champion's Glory Gauntlets,"Gauntlets radiating the glory of a champion, inspiring allies.",2300,1150,105,45,0,Unisex
+Wraithtouch Gloves II,"More potent Wraithtouch Gloves, chilling effect intensified.",1400,700,32,50,0,Unisex
+Titanforged Gauntlets II,"Even more massive Titanforged Gauntlets, immense and heavy.",2500,1250,120,35,0,Male
+Ethereal Bands II,"More pure Ethereal Bands, granting greater magical prowess.",1600,800,40,60,0,Unisex
+Blademaster Gauntlets II,"Enhanced Blademaster Gauntlets, greater precision and offense.",1000,500,45,15,15,Unisex
+Oathsworn Gauntlets II,"More potent Oathsworn Gauntlets, unwavering resolve.",1100,550,52,15,0,Male
+Silverlight Gloves II,"Brighter Silverlight Gloves, revealing more hidden paths.",880,440,18,30,10,Female
+Guardian's Resolve Gauntlets,"Gauntlets imbued with a guardian's unwavering resolve.",950,475,40,10,0,Unisex
+Mystic Relic Gauntlets II,"More powerful Mystic Relic Gauntlets, holding stronger ancient power.",1200,600,55,25,0,Unisex
+Shadowdancer Gloves II,"More advanced Shadowdancer Gloves, allowing greater agility.",700,350,12,22,18,Unisex
+Battleworn Gauntlets II,"Battleworn Gauntlets hardened by more battles, even stronger.",800,400,38,8,0,Male
+Spiritbound Gauntlets II,"More potent Spiritbound Gauntlets, stronger link to spirits.",1050,525,30,38,0,Unisex
+Venomous Grips II,"More potent Venomous Grips, dripping with stronger poison.",550,275,15,12,8,Unisex
+Zealot's Holy Fists,"Fists of a truly righteous zealot, imbued with divine fervor.",620,310,32,10,0,Male
+Emerald Scale Gauntlets II,"More vibrant Emerald Scale Gauntlets, stronger protection.",1300,650,60,25,0,Unisex
+Frost Weaver Gloves II,"Improved Frost Weaver Gloves, manipulating ice with greater skill.",950,475,20,40,0,Female
+Onyx Claw Gauntlets II,"More potent Onyx Claw Gauntlets, for deeper piercing attacks.",1400,700,65,18,0,Male
+Starshard Gauntlets II,"More powerful Starshard Gauntlets, radiating stronger cosmic energy.",1500,750,70,30,0,Unisex
+Moonstone Bracers II,"Brighter Moonstone Bracers, enhancing nocturnal endeavors further.",1080,540,22,42,10,Female
+Blazecore Gauntlets III,"Ultimate Blazecore Gauntlets, intensely hot and resilient.",1700,850,85,28,0,Male
+Nightfall Gauntlets III,"Final tier Nightfall Gauntlets, deepest shadows, supreme stealth.",1550,775,75,35,20,Unisex
+Ancient Steel Gauntlets III,"Ancient Steel Gauntlets of ultimate durability, unyielding.",1200,600,55,20,0,Unisex
+Divine Essence Gauntlets III,"Ultimate Divine Essence Gauntlets, radiating pure divine power.",2000,1000,90,50,0,Unisex
+Void Shard Gloves III,"Final tier Void Shard Gloves, supreme disorientation.",1300,650,35,58,0,Unisex
+Crimson Guard Gauntlets III,"Crimson Guard Gauntlets of unparalleled ferocity.",1400,700,65,25,0,Male
+Enchantress's Grasp,"Ultimate bands for an enchantress, absolute magical power.",1250,625,28,55,0,Female
+Runeforged Gauntlets III,"Ultimate Runeforged Gauntlets, absolute mystical power.",1500,750,70,35,0,Unisex
+Earthshaker Gauntlets III,"Ultimate Earthshaker Gauntlets, causing devastating tremors.",1600,800,80,25,0,Male
+Soulfire Grips III,"Final tier Soulfire Grips, searing spirits with maximum intensity.",1700,850,40,60,0,Unisex
+Dragonheart Gauntlets III,"Gauntlets radiating the heart of a true dragon, immense power.",2100,1050,100,45,0,Unisex
+Celestial Tear Gauntlets III,"Ultimate Celestial Tear Gauntlets, drawing maximum cosmic power.",2200,1100,105,50,0,Unisex
+Abyssal Plate Gauntlets III,"Final tier Abyssal Plate Gauntlets, unyielding resilience.",2300,1150,110,40,0,Unisex
+Phoenix Feather Gloves III,"Ultimate Phoenix Feather Gloves, supreme healing and protection.",1450,725,35,58,0,Female
+Warlord's Dominion Gauntlets,"Gauntlets that command absolute dominion, inspiring awe.",1800,900,88,30,0,Male
+Dreamsteel Gauntlets III,"Ultimate Dreamsteel Gauntlets, impossibly light and strong.",1900,950,85,42,0,Unisex
+Voidstone Gauntlets III,"Final tier Voidstone Gauntlets, absorbing all magical attacks.",2000,1000,90,55,0,Unisex
+Sunpetal Handguards III,"Ultimate Sunpetal Handguards, vibrant and supremely healing.",1350,675,32,50,10,Female
