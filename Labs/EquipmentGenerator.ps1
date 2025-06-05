@@ -35,9 +35,9 @@ If($CsvData.Count -GT 0) {
                     Default     { 'BEWeapon'; Break }
                 }
             ) {",
-            "`tBE$($Row.Name -REPLACE "[\s']+", '')() : base() {",
+            "`tBE$($Row.Name -REPLACE "[\s'-]+", '')() : base() {",
             "`t`t`$this.Name               = '$($Row.Name -REPLACE "'", "''")'",
-            "`t`t`$this.MapObjName         = '$(($Row.Name -REPLACE "[\s']+", '').ToLower())'",
+            "`t`t`$this.MapObjName         = '$(($Row.Name -REPLACE "[\s'-]+", '').ToLower())'",
             "`t`t`$this.PurchasePrice      = $($Row.'Purchase Price')",
             "`t`t`$this.SellPrice          = $($Row.'Sell Price')",
             "`t`t`$this.TargetStats        = $(
@@ -102,7 +102,7 @@ If($CsvData.Count -GT 0) {
                         'Unisex' { '[Gender]::Unisex'; Break }
                         'Male'   { '[Gender]::Male'; Break }
                         'Female' { '[Gender]::Female'; Break }
-                        Default { '[Gender]::Unisex'; Break }
+                        Default  { '[Gender]::Unisex'; Break }
                     }
                 } Else {
                     '[Gender]::Unisex'
