@@ -1,4 +1,4 @@
-Name,Description,Purchase Price,Sell Price,Attack Power,Magic Attack Power,Gender
+Name,Description,Purchase Price,Sell Price,Defense Power,Magic Defense Power,Gender
 Cotton Tunic,"A simple tunic made of soft cotton, comfortable for everyday wear.",50,25,0,5,Unisex
 Leather Vest,"A basic leather vest offering minimal protection.",80,40,2,0,Unisex
 Padded Shirt,"A quilted shirt providing light defense.",120,60,0,0,Unisex

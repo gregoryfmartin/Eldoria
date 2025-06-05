@@ -99,9 +99,9 @@ If($CsvData.Count -GT 0) {
             "`t`t`$this.TargetGender       = $(
                 If(($Row | Get-Member -Name 'Gender')) {
                     Switch($Row.Gender) {
-                        { 'Unisex' } { '[Gender]::Unisex'; Break }
-                        { 'Male' }   { '[Gender]::Male'; Break }
-                        { 'Female' } { '[Gender]::Female'; Break }
+                        'Unisex' { '[Gender]::Unisex'; Break }
+                        'Male'   { '[Gender]::Male'; Break }
+                        'Female' { '[Gender]::Female'; Break }
                         Default { '[Gender]::Unisex'; Break }
                     }
                 } Else {
