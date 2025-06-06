@@ -35,9 +35,9 @@ If($CsvData.Count -GT 0) {
                     Default     { 'BEWeapon'; Break }
                 }
             ) {",
-            "`tBE$($Row.Name -REPLACE "[\s'-]+", '')() : base() {",
+            "`tBE$($Row.Name -REPLACE "[\s'\-]+", '')() : base() {",
             "`t`t`$this.Name               = '$($Row.Name -REPLACE "'", "''")'",
-            "`t`t`$this.MapObjName         = '$(($Row.Name -REPLACE "[\s'-]+", '').ToLower())'",
+            "`t`t`$this.MapObjName         = '$(($Row.Name -REPLACE "[\s'\-]+", '').ToLower())'",
             "`t`t`$this.PurchasePrice      = $($Row.'Purchase Price')",
             "`t`t`$this.SellPrice          = $($Row.'Sell Price')",
             "`t`t`$this.TargetStats        = $(
@@ -177,7 +177,11 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Attack]) ATK'
                         }
                         If($Row.'Magic Attack Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            }
                         }
 
                         Break
@@ -187,7 +191,11 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         
                         Break
@@ -197,7 +205,11 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         
                         Break
@@ -207,7 +219,11 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         
                         Break
@@ -217,10 +233,18 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         If($Row.Accuracy -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            }
                         }
                         
                         Break
@@ -230,10 +254,18 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  '
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         If($Row.Speed -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Speed]) SPD'
+                            }
                         }
                         
                         Break
@@ -243,10 +275,18 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         If($Row.Speed -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Speed]) SPD'
+                            }
                         }
                         
                         Break
@@ -256,22 +296,46 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Attack]) ATK'
                         }
                         If($Row.'Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Defense]) DEF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Defense]) DEF'                                
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Defense]) DEF'
+                            }
                         }
                         If($Row.'Magic Attack Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicAttack]) MAT'
+                            }
                         }
                         If($Row.'Magic Defense Power' -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::MagicDefense]) MDF'
+                            }
                         }
                         If($Row.Speed -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Speed]) SPD'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Speed]) SPD'
+                            }
                         }
                         If($Row.Luck -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Luck]) LCK'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Luck]) LCK'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Luck]) LCK'
+                            }
                         }
                         If($Row.Accuracy -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'                            
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            }
                         }
 
                         Break
@@ -281,10 +345,18 @@ If($CsvData.Count -GT 0) {
                             $Data += '+$($this.TargetStats[[StatId]::Speed]) SPD'
                         }
                         If($Row.Luck -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Luck]) LCK'
+                            If($Data.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Luck]) LCK'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Luck]) LCK'
+                            }
                         }
                         If($Row.Accuracy -GT 0) {
-                            $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            If($Row.Length -GT 0) {
+                                $Data += '  +$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            } Else {
+                                $Data += '+$($this.TargetStats[[StatId]::Accuracy]) ACC'
+                            }
                         }
 
                         Break
@@ -309,8 +381,9 @@ If($CsvData.Count -GT 0) {
             '}',
             ''
         )
-        Add-Content -Path $OutputFile -Value $ClassStringData
-        Start-Sleep -Seconds 1 # Stops a race condition for file access that can prevent some entries from being written; makes this GAWD AWFUL SLOW!
+        $ClassStringData | Out-File -FilePath $OutputFile -Append
+        # Add-Content -Path $OutputFile -Value $ClassStringData
+        # Start-Sleep -Seconds 0.75 # Stops a race condition for file access that can prevent some entries from being written; makes this GAWD AWFUL SLOW!
         $Itr++
     }
 }

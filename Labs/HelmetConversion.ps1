@@ -108,7 +108,7 @@ Class BERoyalCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An elegant circlet adorned with jewels, worn by royalty.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -156,7 +156,7 @@ Class BEMagesHat : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A pointed hat worn by mages, rumored to amplify magical energies.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -172,7 +172,7 @@ Class BEHelmofWisdom : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helmet imbued with ancient knowledge, boosting a mage''s intellect.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -303,7 +303,7 @@ Class BEHealersTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A delicate tiara that enhances healing spells and provides comfort.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -319,7 +319,7 @@ Class BEScholarsMortarboard : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A traditional academic hat, said to improve focus and memory.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -351,7 +351,7 @@ Class BESorceresssVeil : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A mysterious veil that conceals the wearer''s identity and enhances dark magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -416,7 +416,7 @@ Class BEEnchantersHood : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A mystical hood that aids in the art of enchantment.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -448,7 +448,7 @@ Class BEDruidsCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A nature-infused circlet that boosts connection to the earth''s magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -530,7 +530,7 @@ Class BEPriestsMitre : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A ceremonial mitre worn by priests, enhancing divine blessings.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -546,7 +546,7 @@ Class BEClericsCoif : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple coif worn by clerics, providing modest protection and spiritual focus.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -562,7 +562,7 @@ Class BESpellweaversTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A sparkling tiara that amplifies the power of complex spells.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -628,7 +628,7 @@ Class BEDancersHeadpiece : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An elaborate headpiece that complements a dancer''s movements and grace.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -659,7 +659,7 @@ Class BEAlchemistsGoggles : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'Goggles designed to protect the eyes of alchemists during experiments.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -691,7 +691,7 @@ Class BEArtisansBeret : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A stylish beret worn by artisans, inspiring creativity.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -724,7 +724,7 @@ Class BEAcolytesHood : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A humble hood worn by acolytes, signifying their dedication.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -740,7 +740,7 @@ Class BESagesTurban : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A wise turban worn by sages, imbued with ancient knowledge.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -840,7 +840,7 @@ Class BEOraclesCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A shimmering circlet worn by oracles, granting glimpses of the future.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -856,7 +856,7 @@ Class BEProphetsHeadwrap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple headwrap worn by prophets, aiding in divine communication.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -939,7 +939,7 @@ Class BESunstoneCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A radiant circlet made of sunstone, imbued with healing light.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -955,7 +955,7 @@ Class BEMoonlightTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A luminous tiara that glows with moonlight, enhancing nocturnal magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1121,7 +1121,7 @@ Class BESpiritwalkerMask : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A ceremonial mask that allows communion with spirits.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1154,7 +1154,7 @@ Class BEDreamCatchersTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A mystical tiara that protects against nightmares and enhances lucid dreaming.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1187,7 +1187,7 @@ Class BEDaybreakCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A radiant circlet that harnesses the power of the rising sun, dispelling darkness.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1219,7 +1219,7 @@ Class BEFairysGarland : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A delicate garland woven from enchanted flowers, granting subtle magical abilities.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1267,7 +1267,7 @@ Class BEElvenCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An exquisitely crafted circlet worn by elves, enhancing their natural grace.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1381,7 +1381,7 @@ Class BESirensHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A shimmering headband worn by sirens, subtly enhancing their enchanting voices.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1429,7 +1429,7 @@ Class BEDryadsWreath : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A beautiful wreath of living plants worn by dryads, connecting them to nature.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1462,7 +1462,7 @@ Class BESphinxsMask : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An enigmatic mask that grants cryptic wisdom and a connection to ancient riddles.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1495,7 +1495,7 @@ Class BEUnicornHornCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A pure circlet with a small unicorn horn, enhancing healing and purity.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1729,7 +1729,7 @@ Class BEAngelsHalo : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A shimmering halo radiating divine energy, protecting against evil.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1762,7 +1762,7 @@ Class BESpectersShroudHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A ghostly helm that allows the wearer to phase through solid objects.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1811,7 +1811,7 @@ Class BEGoblinShamansSkullcap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crude skullcap adorned with goblin shaman trinkets, enhancing their rudimentary magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1875,7 +1875,7 @@ Class BESpritesLeafHat : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A tiny hat woven from magical leaves, granting illusionary abilities.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1908,7 +1908,7 @@ Class BELeprechaunsTopHat : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A charming top hat that brings good luck.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -1924,7 +1924,7 @@ Class BEBansheesWailMask : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A haunting mask that amplifies a banshee''s terrifying scream.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -1973,7 +1973,7 @@ Class BEMummysLinenWrap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An ancient linen wrap that offers minor protection against curses.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2139,7 +2139,7 @@ Class BEArcaneOrbHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm with a floating arcane orb, significantly boosting magical power.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2172,7 +2172,7 @@ Class BEVoidGazeHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that allows the wearer to glimpse into the void, potentially driving them mad.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2188,7 +2188,7 @@ Class BEAstralProjectionHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that aids in astral projection, allowing the wearer to explore beyond their body.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2221,7 +2221,7 @@ Class BEAetherialVeil : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A translucent veil that grants partial etherealness, making the wearer harder to hit.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2237,7 +2237,7 @@ Class BECelestialDiadem : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A diadem adorned with fragments of starlight, radiating divine protection.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2304,7 +2304,7 @@ Class BESpiritbondCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet that creates a strong bond with a companion spirit.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2354,7 +2354,7 @@ Class BECrystalBloomTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A tiara made of blossoming crystals, enhancing natural magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2403,7 +2403,7 @@ Class BEJadeCrown : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crown made of pure jade, enhancing wisdom and longevity.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2436,7 +2436,7 @@ Class BESapphireTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A tiara with a brilliant sapphire, enhancing water and ice magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2452,7 +2452,7 @@ Class BEEmeraldCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet with a gleaming emerald, boosting nature-based magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2485,7 +2485,7 @@ Class BEAmethystHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm with an amethyst, enhancing mental clarity and resistance to mind-control.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2501,7 +2501,7 @@ Class BETopazCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet with a golden topaz, enhancing agility and swiftness.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2533,7 +2533,7 @@ Class BEPearlTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A delicate tiara with lustrous pearls, enhancing healing and purity.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2549,7 +2549,7 @@ Class BEOpalHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A shimmering helm with an opal, granting minor illusionary abilities.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2565,7 +2565,7 @@ Class BETourmalineCrown : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crown with a multi-colored tourmaline, granting resistance to various elemental attacks.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2597,7 +2597,7 @@ Class BEMoonstoneCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet with moonstone, granting enhanced intuition and nocturnal magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2613,7 +2613,7 @@ Class BESunstoneHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm with sunstone, radiating warmth and light, countering darkness.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -2762,7 +2762,7 @@ Class BEStardustCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet crafted from condensed stardust, granting cosmic awareness.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -2931,7 +2931,7 @@ Class BERealityBendersTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A tiara that allows the wearer to bend reality to their will, within limits.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3065,7 +3065,7 @@ Class BEArtificersGoggles : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'Goggles designed for artificers, enhancing their crafting precision.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3149,7 +3149,7 @@ Class BEAbjurersHood : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A hood worn by abjurers, specializing in defensive magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3165,7 +3165,7 @@ Class BEConjurersCap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A cap worn by conjurers, aiding in summoning creatures.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3181,7 +3181,7 @@ Class BEDivinersHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A headband worn by diviners, enhancing their foresight.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3197,7 +3197,7 @@ Class BEEnchantresssCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet worn by enchantresses, boosting charming spells.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3213,7 +3213,7 @@ Class BEIllusionistsMask : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A mask worn by illusionists, making their illusions more convincing.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3246,7 +3246,7 @@ Class BETransmutersHood : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A hood worn by transmuters, aiding in altering physical properties.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3329,7 +3329,7 @@ Class BEEmpresssTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A regal tiara worn by empresses, radiating grace and authority.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3362,7 +3362,7 @@ Class BEQueensDiadem : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A beautiful diadem worn by queens, symbolizing wisdom and benevolence.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3394,7 +3394,7 @@ Class BEBaronesssCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An elegant circlet worn by baronesses, suitable for court.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3426,7 +3426,7 @@ Class BEDuchesssTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A sophisticated tiara worn by duchesses, befitting their noble status.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3458,7 +3458,7 @@ Class BECountesssHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A stylish headband worn by countesses, adorned with minor jewels.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3672,7 +3672,7 @@ Class BEBlessedCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple circlet blessed by a cleric, offering minor protection.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -3721,7 +3721,7 @@ Class BEAngelicHalo : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A luminous halo of pure light, granting divine blessings.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3905,7 +3905,7 @@ Class BERuneofMagicHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm inscribed with a rune of magic, greatly boosting magical power.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -3955,7 +3955,7 @@ Class BERuneofWisdomHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm inscribed with a rune of wisdom, boosting intellect.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4002,7 +4002,7 @@ Class BERuneofSerenityHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm inscribed with a rune of serenity, calming the mind and boosting magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4120,7 +4120,7 @@ Class BEDreamersVeil : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A veil that allows the wearer to enter and manipulate dreams.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -4185,7 +4185,7 @@ Class BEExplorersGoggles : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'Goggles that aid explorers in spotting hidden details.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4217,7 +4217,7 @@ Class BERelicHuntersHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A headband that subtly hums when near ancient relics.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4348,7 +4348,7 @@ Class BEFamiliarsBondHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that strengthens the bond with a magical familiar.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4364,7 +4364,7 @@ Class BESummonersCrown : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crown that amplifies summoning magic, allowing for more powerful summons.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4430,7 +4430,7 @@ Class BEClockworkEngineersGoggles : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'Goggles that aid in precise clockwork construction and repair.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4463,7 +4463,7 @@ Class BEInventorsHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that inspires grand inventions and complex designs.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4496,7 +4496,7 @@ Class BEApothecarysMortarCap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A cap worn by apothecaries, aiding in the creation of potent concoctions.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4512,7 +4512,7 @@ Class BEHerbalistsWovenHat : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A hat woven from herbs, enhancing knowledge of plants.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4669,7 +4669,7 @@ Class BEBrewersCap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A traditional cap worn by brewers, ensuring good spirits.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4700,7 +4700,7 @@ Class BEInnkeepersHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple headband worn by innkeepers, offering a welcoming demeanor.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4716,7 +4716,7 @@ Class BEMerchantsTurban : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A practical turban worn by merchants, suitable for travel.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4875,7 +4875,7 @@ Class BEFloristsGarland : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A delicate garland of flowers worn by florists, imbued with subtle nature magic.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -4891,7 +4891,7 @@ Class BEZoologistsHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A headband that aids zoologists in understanding animal behavior.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4907,7 +4907,7 @@ Class BEBotanistsCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet that enhances a botanist''s knowledge of plants and their properties.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4939,7 +4939,7 @@ Class BEAstronomersHood : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A hood that aids astronomers in observing the night sky.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4955,7 +4955,7 @@ Class BEHistoriansSpectacles : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'Spectacles that aid historians in deciphering ancient texts.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4971,7 +4971,7 @@ Class BELibrariansEye-shade : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An eye-shade that helps librarians focus on their reading.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -4987,7 +4987,23 @@ Class BECartographersCompassHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm with an integrated compass, aiding cartographers in mapping.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArtistsBeret : BEHelmet {
+	BEArtistsBeret() : base() {
+		$this.Name               = 'Artist''s Beret'
+		$this.MapObjName         = 'artistsberet'
+		$this.PurchasePrice      = 60
+		$this.SellPrice          = 30
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A classic beret worn by artists, inspiring creativity and vision.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5003,7 +5019,7 @@ Class BEMusiciansHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A headband that helps musicians maintain rhythm and harmony.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5019,7 +5035,7 @@ Class BEPoetsLaurelWreath : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A laurel wreath worn by poets, inspiring eloquence.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5035,7 +5051,7 @@ Class BEWritersQuillCap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A cap with a quill, aiding writers in their craft.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5051,7 +5067,7 @@ Class BEOratorsHeadpiece : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A stately headpiece worn by orators, enhancing their persuasive abilities.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5067,7 +5083,7 @@ Class BEDiplomatsHat : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A refined hat worn by diplomats, conveying respect and authority.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5083,7 +5099,7 @@ Class BENegotiatorsHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A headband that aids negotiators in finding common ground.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5194,7 +5210,7 @@ Class BEJudgesWig : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A formal wig worn by judges, symbolizing justice and authority.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5210,7 +5226,7 @@ Class BELawyersHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A modest headband for lawyers, aiding in quick thinking.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5226,7 +5242,7 @@ Class BEDoctorsHeadMirror : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A reflective mirror worn by doctors, aiding in examinations.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5242,7 +5258,7 @@ Class BENursesCap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple cap worn by nurses, symbolizing care and dedication.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -5273,7 +5289,7 @@ Class BEApothecarysGoggles : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'Protective goggles worn by apothecaries, for handling volatile concoctions.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5350,7 +5366,7 @@ Class BESpiritMediumsHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A headband that aids spirit mediums in communicating with the deceased.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5366,7 +5382,7 @@ Class BEExorcistsHeadpiece : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A holy headpiece worn by exorcists, warding off demonic influence.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5382,7 +5398,7 @@ Class BEInquisitorsBlindfold : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A blindfold worn by certain inquisitors, allowing them to focus on inner vision.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5398,7 +5414,7 @@ Class BEZealotsHeadwrap : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple headwrap worn by zealots, signifying their fervent devotion.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5445,7 +5461,23 @@ Class BEApostatesHood : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A dark hood worn by apostates, symbolizing their rejection of faith.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECultistsHood : BEHelmet {
+	BECultistsHood() : base() {
+		$this.Name               = 'Cultist''s Hood'
+		$this.MapObjName         = 'cultistshood'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A sinister hood worn by cultists, aiding in dark rituals.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5476,7 +5508,7 @@ Class BERitualistsMask : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A ceremonial mask worn by ritualists, enhancing their arcane ceremonies.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5492,7 +5524,7 @@ Class BEDivinationOrbHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm with a scrying orb, aiding in divination.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5508,7 +5540,7 @@ Class BESeersEyepatch : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An eyepatch worn by seers, sometimes to focus their prophetic visions.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5524,7 +5556,7 @@ Class BEMysticsHeadband : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A simple headband worn by mystics, aiding in meditation and enlightenment.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5540,7 +5572,7 @@ Class BEEnlightenedOnesCrown : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crown worn by those who have achieved enlightenment, radiating inner peace.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5556,7 +5588,7 @@ Class BEAscendantsHalo : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A halo that signifies ascension to a higher plane of existence.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5572,7 +5604,7 @@ Class BENirvanaHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that grants the wearer a state of ultimate peace and detachment.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5588,7 +5620,7 @@ Class BESagesCircletofAges : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet that grants access to the wisdom of all ages.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5604,7 +5636,7 @@ Class BEProphetsCrownofForetelling : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crown that grants glimpses of future events, both good and ill.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5620,7 +5652,7 @@ Class BEOraclesDivineSightOrb : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'An orb integrated into a helm, granting omniscient vision.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5670,7 +5702,7 @@ Class BENebulaVeil : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A veil that shimmers with the colors of a nebula, concealing the wearer''s true form.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -5703,7 +5735,7 @@ Class BELunarEmbraceTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A tiara that glows with moonlight, enhancing nocturnal abilities and grace.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -5770,7 +5802,7 @@ Class BEDreamWeaversTiara : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A tiara that allows the wearer to weave dreams into reality.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -5803,7 +5835,7 @@ Class BEEternalSlumberHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that puts enemies into an eternal slumber, rendering them harmless.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5887,7 +5919,7 @@ Class BETruthSeekersHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that reveals the truth, cutting through illusions and lies.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5903,7 +5935,7 @@ Class BEKnowledgeBringersCrown : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A crown that bestows immense knowledge upon the wearer.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5919,7 +5951,7 @@ Class BEWisdomGiversHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that grants profound wisdom, allowing the wearer to see beyond.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
@@ -5951,7 +5983,7 @@ Class BECreationHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that embodies pure creation, allowing for the manifestation of wonders.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -5967,7 +5999,7 @@ Class BELifeBringersCirclet : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A circlet that radiates life energy, healing all around the wearer.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Female
 	}
 }
@@ -5999,7 +6031,7 @@ Class BELightsBeaconHelm : BEHelmet {
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A helm that acts as a beacon of pure light, dispelling all darkness.'
-		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
 }
