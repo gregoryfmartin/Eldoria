@@ -125,7 +125,7 @@ If($CsvData.Count -GT 0) {
                     }
                     'Jewelry' {
                         If($Row.'Attack Power' -GT 0) {
-                            $Data += "`t`t`t[StatId]::Defense = $($Row.'Attack Power')`n"
+                            $Data += "`t`t`t[StatId]::Attack = $($Row.'Attack Power')`n"
                         }
                         If($Row.'Defense Power' -GT 0) {
                             $Data += "`t`t`t[StatId]::Defense = $($Row.'Defense Power')`n"

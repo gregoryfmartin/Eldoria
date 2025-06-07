@@ -1,0 +1,26 @@
+Name,Description,Purchase Price,Sell Price,Luck,Speed,Accuracy,Gender
+Tattered Cape,"A worn and torn cape, offering minimal protection.",50,25,0,0,0,Unisex
+Cloth Cape,"A simple cloth cape, light and unassuming.",80,40,0,0,0,Unisex
+Leather Cape,"A sturdy leather cape, providing a touch of defense.",150,75,0,0,0,Unisex
+Traveler Cape,"A durable cape designed for long journeys.",200,100,1,0,0,Unisex
+Hunter Cape,"A practical cape favored by trackers and hunters.",250,125,0,1,0,Unisex
+Rogue Cape,"A dark cape, ideal for blending into shadows.",300,150,0,2,0,Unisex
+Sorcerer Cape,"A flowing cape, subtly enhancing magical flow.",350,175,0,0,0,Male
+Priestess Cape,"A pure white cape, imbued with a gentle blessing.",400,200,0,0,0,Female
+Warrior Cape,"A robust cape, offering minor protection in combat.",450,225,0,0,0,Male
+Knight Cape,"A heavy cape, signifying duty and honor.",500,250,0,0,0,Male
+Elvenweave Cape,"A finely woven cape, light and graceful.",600,300,0,1,1,Female
+Dwarven Hearth Cape,"A thick, warm cape from dwarven forges.",650,325,0,0,0,Male
+Shadows Embrace Cape,"A cape that seems to absorb light, aiding in stealth.",700,350,1,3,0,Unisex
+Sunlit Cape,"A cape that glows faintly with solar energy, inspiring hope.",750,375,1,0,0,Female
+Moonwhisper Cape,"A dark cape that seems to hum with lunar power, aiding intuition.",800,400,0,0,1,Female
+Dragonscale Cape,"A cape crafted from the durable scales of a dragon.",900,450,0,0,0,Unisex
+Phoenixwing Cape,"A cape made from the vibrant feathers of a phoenix, surprisingly light.",1000,500,0,4,0,Unisex
+Blessed Hero Cape,"A cape worn by a legendary hero, imbued with divine favor.",1200,600,2,0,0,Male
+Starlight Weave Cape,"A cape woven from threads infused with starlight, subtly enhancing luck.",1100,550,2,0,0,Unisex
+Void Touched Cape,"A cape that seems to draw power from the void, unsettling yet potent.",1300,650,0,0,1,Male
+Whispering Woods Cape,"A cape woven from ancient forest materials, attuned to nature.",850,425,0,1,0,Female
+Stormfront Cape,"A cape that crackles with faint static, hinting at elemental power.",950,475,0,0,0,Unisex
+Glacierwind Cape,"A cape that feels perpetually cold, offering resistance to heat.",1050,525,0,0,0,Unisex
+Crimson Sorceress Cape,"A deep red cape, favored by powerful female magic users.",1150,575,0,0,1,Female
+Royal Sentinel Cape,"A finely embroidered cape, worn by the elite royal guard.",1400,700,0,0,0,Male

@@ -34499,1929 +34499,13463 @@ Class BESunpetalHandguardsIII : BEGauntlets {
 
 #region Greaves
 
-Class BEWornClothGreaves : BEGreaves {
-    BEWornClothGreaves() : base() {
-        $this.Name               = 'Worn Cloth Greaves'
-        $this.MapObjName         = 'wornclothgreaves'
-        $this.PurchasePrice      = 10
-        $this.SellPrice          = 5
-        $this.TargetStats        = @{
-            [StatId]::Defense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 0
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Patched up cloth wrappings for the legs. Barely offers protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
+Class BELeatherGreaves : BEGreaves {
+	BELeatherGreaves() : base() {
+		$this.Name               = 'Leather Greaves'
+		$this.MapObjName         = 'leathergreaves'
+		$this.PurchasePrice      = 100
+		$this.SellPrice          = 50
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Simple leather leg guards, offering basic protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
 }
 
-Class BERustedMetalShinguards : BEGreaves {
-    BERustedMetalShinguards() : base() {
-        $this.Name               = 'Rusted Metal Shinguards'
-        $this.MapObjName         = 'rustedmetalshinguards'
-        $this.PurchasePrice      = 20
-        $this.SellPrice          = 10
-        $this.TargetStats        = @{
-            [StatId]::Defense = 2
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Shoddily made metal shinguards, covered in rust.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
+Class BEPaddedGreaves : BEGreaves {
+	BEPaddedGreaves() : base() {
+		$this.Name               = 'Padded Greaves'
+		$this.MapObjName         = 'paddedgreaves'
+		$this.PurchasePrice      = 120
+		$this.SellPrice          = 60
+		$this.TargetStats        = @{
+			[StatId]::Defense = 6
+			[StatId]::MagicDefense = 3
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Lightly padded greaves for agile combatants.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
 }
 
-Class BEThinLeatherLeggings : BEGreaves {
-    BEThinLeatherLeggings() : base() {
-        $this.Name               = 'Thin Leather Leggings'
-        $this.MapObjName         = 'thinleatherleggings'
-        $this.PurchasePrice      = 30
-        $this.SellPrice          = 15
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 2
-            [StatId]::MagicDefense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 1
-            [StatId]::MagicDefense = 0
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Simple leggings made from thin, treated leather.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEPaddedTravelersGreaves : BEGreaves {
-    BEPaddedTravelersGreaves() : base() {
-        $this.Name               = 'Padded Traveler''s Greaves'
-        $this.MapObjName         = 'paddedtravelersgreaves'
-        $this.PurchasePrice      = 45
-        $this.SellPrice          = 22
-        $this.TargetStats        = @{
-            [StatId]::Defense = 3
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 2
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves with extra padding, suitable for long journeys.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEHardenedClothShinWraps : BEGreaves {
-    BEHardenedClothShinWraps() : base() {
-        $this.Name               = 'Hardened Cloth Shin Wraps'
-        $this.MapObjName         = 'hardenedclothshinwraps'
-        $this.PurchasePrice      = 55
-        $this.SellPrice          = 27
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 3
-            [StatId]::MagicDefense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 2
-            [StatId]::MagicDefense = 0
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Cloth wraps stiffened with resin for better leg protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEBasicWoodenGreaves : BEGreaves {
-    BEBasicWoodenGreaves() : base() {
-        $this.Name               = 'Basic Wooden Greaves'
-        $this.MapObjName         = 'basicwoodengreaves'
-        $this.PurchasePrice      = 70
-        $this.SellPrice          = 35
-        $this.TargetStats        = @{
-            [StatId]::Defense = 4
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 2
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Simple greaves carved from sturdy wood.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEBoiledLeatherGreaves : BEGreaves {
-    BEBoiledLeatherGreaves() : base() {
-        $this.Name               = 'Boiled Leather Greaves'
-        $this.MapObjName         = 'boiledleathergreaves'
-        $this.PurchasePrice      = 85
-        $this.SellPrice          = 42
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 4
-            [StatId]::MagicDefense = 2
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 3
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves made from leather hardened by boiling.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BECopperPlatedGreaves : BEGreaves {
-    BECopperPlatedGreaves() : base() {
-        $this.Name               = 'Copper-Plated Greaves'
-        $this.MapObjName         = 'copperplatedgreaves'
-        $this.PurchasePrice      = 100
-        $this.SellPrice          = 50
-        $this.TargetStats        = @{
-            [StatId]::Defense = 5
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 3
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leather greaves reinforced with thin copper plates.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEApprenticeLeggings : BEGreaves {
-    BEApprenticeLeggings() : base() {
-        $this.Name               = 'Apprentice Leggings'
-        $this.MapObjName         = 'apprenticeleggings'
-        $this.PurchasePrice      = 90
-        $this.SellPrice          = 45
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 2
-            [StatId]::MagicDefense = 3
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 1
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leggings worn by novice magic users, offering slight magical resistance.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEHideAndFurGreaves : BEGreaves {
-    BEHideAndFurGreaves() : base() {
-        $this.Name               = 'Hide and Fur Greaves'
-        $this.MapObjName         = 'hideandfurgreaves'
-        $this.PurchasePrice      = 110
-        $this.SellPrice          = 55
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 5
-            [StatId]::MagicDefense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 3
-            [StatId]::MagicDefense = 0
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves made from animal hides and lined with fur for warmth.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BESturdyLeatherGreaves : BEGreaves {
-    BESturdyLeatherGreaves() : base() {
-        $this.Name               = 'Sturdy Leather Greaves'
-        $this.MapObjName         = 'sturdyleathergreaves'
-        $this.PurchasePrice      = 130
-        $this.SellPrice          = 65
-        $this.TargetStats        = @{
-            [StatId]::Defense = 6
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 4
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Well-made greaves from thick, sturdy leather.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEBronzeShinguards : BEGreaves {
-    BEBronzeShinguards() : base() {
-        $this.Name               = 'Bronze Shinguards'
-        $this.MapObjName         = 'bronzeshinguards'
-        $this.PurchasePrice      = 150
-        $this.SellPrice          = 75
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 7
-            [StatId]::MagicDefense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 5
-            [StatId]::MagicDefense = 0
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Shinguards crafted from beaten bronze.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEIronReinforcedGreaves : BEGreaves {
-    BEIronReinforcedGreaves() : base() {
-        $this.Name               = 'Iron-Reinforced Greaves'
-        $this.MapObjName         = 'ironreinforcedgreaves'
-        $this.PurchasePrice      = 180
-        $this.SellPrice          = 90
-        $this.TargetStats        = @{
-            [StatId]::Defense = 8
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 6
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leather greaves reinforced with strips of iron.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEQuiltedLegGuards : BEGreaves {
-    BEQuiltedLegGuards() : base() {
-        $this.Name               = 'Quilted Leg Guards'
-        $this.MapObjName         = 'quiltedlegguards'
-        $this.PurchasePrice      = 200
-        $this.SellPrice          = 100
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 6
-            [StatId]::MagicDefense = 3
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 4
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Thickly quilted guards providing decent leg protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEBanditChiefsGreaves : BEGreaves {
-    BEBanditChiefsGreaves() : base() {
-        $this.Name               = 'Bandit Chief''s Greaves'
-        $this.MapObjName         = 'banditchiefsgreaves'
-        $this.PurchasePrice      = 230
-        $this.SellPrice          = 115
-        $this.TargetStats        = @{
-            [StatId]::Defense = 9
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 7
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Stolen and repurposed greaves, surprisingly effective.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEForestWalkersGreaves : BEGreaves {
-    BEForestWalkersGreaves() : base() {
-        $this.Name               = 'Forest Walker''s Greaves'
-        $this.MapObjName         = 'forestwalkersgreaves'
-        $this.PurchasePrice      = 250
-        $this.SellPrice          = 125
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 7
-            [StatId]::MagicDefense = 4
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 5
-            [StatId]::MagicDefense = 2
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves designed for quiet movement through forests.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BESoldiersIronGreaves : BEGreaves {
-    BESoldiersIronGreaves() : base() {
-        $this.Name               = 'Soldier''s Iron Greaves'
-        $this.MapObjName         = 'soldiersirongreaves'
-        $this.PurchasePrice      = 280
-        $this.SellPrice          = 140
-        $this.TargetStats        = @{
-            [StatId]::Defense = 10
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 7
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Standard issue iron greaves for foot soldiers.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEEnchantedBronzeGreaves : BEGreaves {
-    BEEnchantedBronzeGreaves() : base() {
-        $this.Name               = 'Enchanted Bronze Greaves'
-        $this.MapObjName         = 'enchantedbronzegreaves'
-        $this.PurchasePrice      = 300
-        $this.SellPrice          = 150
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 8
-            [StatId]::MagicDefense = 5
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 6
-            [StatId]::MagicDefense = 3
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Bronze greaves imbued with minor protective enchantments.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEHeavyHideGreaves : BEGreaves {
-    BEHeavyHideGreaves() : base() {
-        $this.Name               = 'Heavy Hide Greaves'
-        $this.MapObjName         = 'heavyhidegreaves'
-        $this.PurchasePrice      = 260
-        $this.SellPrice          = 130
-        $this.TargetStats        = @{
-            [StatId]::Defense = 9
-            [StatId]::MagicDefense = 2
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 7
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves made from thick, tough animal hides.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEJourneymansGreaves : BEGreaves {
-    BEJourneymansGreaves() : base() {
-        $this.Name               = 'Journeyman''s Greaves'
-        $this.MapObjName         = 'journeymansgreaves'
-        $this.PurchasePrice      = 320
-        $this.SellPrice          = 160
-        $this.TargetStats        = @{
-            [StatId]::Defense = 11
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 8
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Reliable greaves for an experienced adventurer.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEReinforcedLeatherLegGuards : BEGreaves {
-    BEReinforcedLeatherLegGuards() : base() {
-        $this.Name               = 'Reinforced Leather Leg Guards'
-        $this.MapObjName         = 'reinforcedleatherlegguards'
-        $this.PurchasePrice      = 350
-        $this.SellPrice          = 175
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 10
-            [StatId]::MagicDefense = 3
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 7
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leather leg guards with internal metal plates for added protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
+Class BEBronzeGreaves : BEGreaves {
+	BEBronzeGreaves() : base() {
+		$this.Name               = 'Bronze Greaves'
+		$this.MapObjName         = 'bronzegreaves'
+		$this.PurchasePrice      = 180
+		$this.SellPrice          = 90
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Sturdy bronze leg protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
 }
 
 Class BEIronGreaves : BEGreaves {
-    BEIronGreaves() : base() {
-        $this.Name               = 'Iron Greaves'
-        $this.MapObjName         = 'irongreaves'
-        $this.PurchasePrice      = 400
-        $this.SellPrice          = 200
-        $this.TargetStats        = @{
-            [StatId]::Defense = 12
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 9
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Solid iron greaves offering good physical defense.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEStuddedIronGreaves : BEGreaves {
-    BEStuddedIronGreaves() : base() {
-        $this.Name               = 'Studded Iron Greaves'
-        $this.MapObjName         = 'studdedirongreaves'
-        $this.PurchasePrice      = 450
-        $this.SellPrice          = 225
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 13
-            [StatId]::MagicDefense = 2
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 10
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Iron greaves reinforced with prominent metal studs.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEChainmailLeggings : BEGreaves {
-    BEChainmailLeggings() : base() {
-        $this.Name               = 'Chainmail Leggings'
-        $this.MapObjName         = 'chainmailleggings'
-        $this.PurchasePrice      = 500
-        $this.SellPrice          = 250
-        $this.TargetStats        = @{
-            [StatId]::Defense = 14
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 11
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leggings made of interlocking metal rings.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEGuardiansGreaves : BEGreaves {
-    BEGuardiansGreaves() : base() {
-        $this.Name               = 'Guardian''s Greaves'
-        $this.MapObjName         = 'guardiansgreaves'
-        $this.PurchasePrice      = 550
-        $this.SellPrice          = 275
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 15
-            [StatId]::MagicDefense = 4
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 12
-            [StatId]::MagicDefense = 2
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by city guardians, polished and well-maintained.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEAcolytesBoots : BEGreaves {
-    BEAcolytesBoots() : base() {
-        $this.Name               = 'Acolyte''s Boots'
-        $this.MapObjName         = 'acolytesboots'
-        $this.PurchasePrice      = 480
-        $this.SellPrice          = 240
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 5
-            [StatId]::MagicDefense = 7
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 3
-            [StatId]::MagicDefense = 4
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Sturdy boots often worn by acolytes, offering magical resistance.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEScaleMailGreaves : BEGreaves {
-    BEScaleMailGreaves() : base() {
-        $this.Name               = 'Scale Mail Greaves'
-        $this.MapObjName         = 'scalemailgreaves'
-        $this.PurchasePrice      = 600
-        $this.SellPrice          = 300
-        $this.TargetStats        = @{
-            [StatId]::Defense = 16
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 12
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves constructed from overlapping metal scales.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEHuntersLeatherTreads : BEGreaves {
-    BEHuntersLeatherTreads() : base() {
-        $this.Name               = 'Hunter''s Leather Treads'
-        $this.MapObjName         = 'huntersleathertreads'
-        $this.PurchasePrice      = 650
-        $this.SellPrice          = 325
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 14
-            [StatId]::MagicDefense = 5
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 11
-            [StatId]::MagicDefense = 3
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Durable leather treads designed for tracking through rough terrain.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEFortifiedWoodenGreaves : BEGreaves {
-    BEFortifiedWoodenGreaves() : base() {
-        $this.Name               = 'Fortified Wooden Greaves'
-        $this.MapObjName         = 'fortifiedwoodengreaves'
-        $this.PurchasePrice      = 520
-        $this.SellPrice          = 260
-        $this.TargetStats        = @{
-            [StatId]::Defense = 13
-            [StatId]::MagicDefense = 1
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 10
-            [StatId]::MagicDefense = 0
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Wooden greaves reinforced with metal bands.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEIroncladGreaves : BEGreaves {
-    BEIroncladGreaves() : base() {
-        $this.Name               = 'Ironclad Greaves'
-        $this.MapObjName         = 'ironcladgreaves'
-        $this.PurchasePrice      = 700
-        $this.SellPrice          = 350
-        $this.TargetStats        = @{
-            [StatId]::Defense = 18
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 14
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Heavy iron greaves offering substantial protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
+	BEIronGreaves() : base() {
+		$this.Name               = 'Iron Greaves'
+		$this.MapObjName         = 'irongreaves'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Common iron greaves, reliable and strong.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
 }
 
 Class BESteelGreaves : BEGreaves {
-    BESteelGreaves() : base() {
-        $this.Name               = 'Steel Greaves'
-        $this.MapObjName         = 'steelgreaves'
-        $this.PurchasePrice      = 750
-        $this.SellPrice          = 375
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 19
-            [StatId]::MagicDefense = 3
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 15
-            [StatId]::MagicDefense = 1
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Well-crafted greaves made of polished steel.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEHardenedLeatherLeggingsMarkII : BEGreaves {
-    BEHardenedLeatherLeggingsMarkII() : base() {
-        $this.Name               = 'Hardened Leather Leggings II'
-        $this.MapObjName         = 'hardenedleatherleggingsii'
-        $this.PurchasePrice      = 800
-        $this.SellPrice          = 400
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 16
-            [StatId]::MagicDefense = 7
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 12
-            [StatId]::MagicDefense = 4
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Improved leggings made from specially treated, hardened leather.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEChainmailAndPlateGreaves : BEGreaves {
-    BEChainmailAndPlateGreaves() : base() {
-        $this.Name               = 'Chainmail and Plate Greaves'
-        $this.MapObjName         = 'chainmailandplategreaves'
-        $this.PurchasePrice      = 900
-        $this.SellPrice          = 450
-        $this.TargetStats        = @{
-            [StatId]::Defense = 22
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 17
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves combining chainmail flexibility with plate protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEWarriorsLeatherGreaves : BEGreaves {
-    BEWarriorsLeatherGreaves() : base() {
-        $this.Name               = 'Warrior''s Leather Greaves'
-        $this.MapObjName         = 'warriorsleathergreaves'
-        $this.PurchasePrice      = 950
-        $this.SellPrice          = 475
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 20
-            [StatId]::MagicDefense = 5
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 16
-            [StatId]::MagicDefense = 3
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Tough leather greaves favored by seasoned warriors.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEScholarsBoots : BEGreaves {
-    BEScholarsBoots() : base() {
-        $this.Name               = 'Scholar''s Boots'
-        $this.MapObjName         = 'scholarsboots'
-        $this.PurchasePrice      = 850
-        $this.SellPrice          = 425
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 7
-            [StatId]::MagicDefense = 10
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 5
-            [StatId]::MagicDefense = 6
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Comfortable boots often worn by scholars, offering some magical warding.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEHeavyChainGreaves : BEGreaves {
-    BEHeavyChainGreaves() : base() {
-        $this.Name               = 'Heavy Chain Greaves'
-        $this.MapObjName         = 'heavychaingreaves'
-        $this.PurchasePrice      = 1100
-        $this.SellPrice          = 550
-        $this.TargetStats        = @{
-            [StatId]::Defense = 25
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 19
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves made from thick, heavy chainmail links.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEFineSteelGreaves : BEGreaves {
-    BEFineSteelGreaves() : base() {
-        $this.Name               = 'Fine Steel Greaves'
-        $this.MapObjName         = 'finesteelgreaves'
-        $this.PurchasePrice      = 1200
-        $this.SellPrice          = 600
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 24
-            [StatId]::MagicDefense = 6
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 18
-            [StatId]::MagicDefense = 3
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves crafted from high-quality steel, offering excellent protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEEnchantedTravelersBoots : BEGreaves {
-    BEEnchantedTravelersBoots() : base() {
-        $this.Name               = 'Enchanted Traveler''s Boots'
-        $this.MapObjName         = 'enchantedtravelersboots'
-        $this.PurchasePrice      = 1000
-        $this.SellPrice          = 500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 10
-            [StatId]::MagicDefense = 12
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 7
-            [StatId]::MagicDefense = 8
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots enchanted for long journeys, providing magical resistance.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEPlateAndMailGreaves : BEGreaves {
-    BEPlateAndMailGreaves() : base() {
-        $this.Name               = 'Plate and Mail Greaves'
-        $this.MapObjName         = 'plateandmailgreaves'
-        $this.PurchasePrice      = 1350
-        $this.SellPrice          = 675
-        $this.TargetStats        = @{
-            [StatId]::Defense = 28
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 22
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'A hybrid design combining the strength of plate with chainmail flexibility.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEVeteranSoldiersGreaves : BEGreaves {
-    BEVeteranSoldiersGreaves() : base() {
-        $this.Name               = 'Veteran Soldier''s Greaves'
-        $this.MapObjName         = 'veteransoldiersgreaves'
-        $this.PurchasePrice      = 1500
-        $this.SellPrice          = 750
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 26
-            [StatId]::MagicDefense = 7
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 20
-            [StatId]::MagicDefense = 4
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by battle-hardened veteran soldiers.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEMithrilThreadedGreaves : BEGreaves {
-    BEMithrilThreadedGreaves() : base() {
-        $this.Name               = 'Mithril-Threaded Greaves'
-        $this.MapObjName         = 'mithrilthreadedgreaves'
-        $this.PurchasePrice      = 1600
-        $this.SellPrice          = 800
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 25
-            [StatId]::MagicDefense = 10
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 19
-            [StatId]::MagicDefense = 6
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leather greaves interwoven with threads of mithril for lightness and strength.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEFullSteelPlateGreaves : BEGreaves {
-    BEFullSteelPlateGreaves() : base() {
-        $this.Name               = 'Full Steel Plate Greaves'
-        $this.MapObjName         = 'fullsteelplategreaves'
-        $this.PurchasePrice      = 1800
-        $this.SellPrice          = 900
-        $this.TargetStats        = @{
-            [StatId]::Defense = 32
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 25
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves offering complete leg protection with articulated steel plates.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEEnchantedKnightGreaves : BEGreaves {
-    BEEnchantedKnightGreaves() : base() {
-        $this.Name               = 'Enchanted Knight Greaves'
-        $this.MapObjName         = 'enchantedknightgreaves'
-        $this.PurchasePrice      = 2000
-        $this.SellPrice          = 1000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 30
-            [StatId]::MagicDefense = 8
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 23
-            [StatId]::MagicDefense = 5
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Steel greaves of a knight, imbued with protective enchantments.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEWyrmScaleLeggings : BEGreaves {
-    BEWyrmScaleLeggings() : base() {
-        $this.Name               = 'Wyrm Scale Leggings'
-        $this.MapObjName         = 'wyrmscaleleggings'
-        $this.PurchasePrice      = 2200
-        $this.SellPrice          = 1100
-        $this.TargetStats        = @{
-            [StatId]::Defense = 35
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 27
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Leggings crafted from the scales of a young dragon or wyrm.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEMagesGuildBoots : BEGreaves {
-    BEMagesGuildBoots() : base() {
-        $this.Name               = 'Mage''s Guild Boots'
-        $this.MapObjName         = 'magesguildboots'
-        $this.PurchasePrice      = 1900
-        $this.SellPrice          = 950
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 12
-            [StatId]::MagicDefense = 15
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 8
-            [StatId]::MagicDefense = 10
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots issued to members of a mage''s guild, enchanted for magical defense.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEOrnateSteelLegguards : BEGreaves {
-    BEOrnateSteelLegguards() : base() {
-        $this.Name               = 'Ornate Steel Legguards'
-        $this.MapObjName         = 'ornatesteellegguards'
-        $this.PurchasePrice      = 2500
-        $this.SellPrice          = 1250
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 34
-            [StatId]::MagicDefense = 6
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 26
-            [StatId]::MagicDefense = 3
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Steel legguards with intricate, decorative carvings.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEGryphonFeatherBoots : BEGreaves {
-    BEGryphonFeatherBoots() : base() {
-        $this.Name               = 'Gryphon Feather Boots'
-        $this.MapObjName         = 'gryphonfeatherboots'
-        $this.PurchasePrice      = 2300
-        $this.SellPrice          = 1150
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 20
-            [StatId]::MagicDefense = 12
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 15
-            [StatId]::MagicDefense = 8
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Lightweight boots adorned with gryphon feathers, said to enhance agility.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEDwarvenForgedGreaves : BEGreaves {
-    BEDwarvenForgedGreaves() : base() {
-        $this.Name               = 'Dwarven Forged Greaves'
-        $this.MapObjName         = 'dwarvenforgedgreaves'
-        $this.PurchasePrice      = 2800
-        $this.SellPrice          = 1400
-        $this.TargetStats        = @{
-            [StatId]::Defense = 38
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 30
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves masterfully forged by dwarven smiths, exceptionally durable.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEElvenScoutsBoots : BEGreaves {
-    BEElvenScoutsBoots() : base() {
-        $this.Name               = 'Elven Scout''s Boots'
-        $this.MapObjName         = 'elvenscoutsboots'
-        $this.PurchasePrice      = 2600
-        $this.SellPrice          = 1300
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 22
-            [StatId]::MagicDefense = 14
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 17
-            [StatId]::MagicDefense = 9
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots crafted for elven scouts, allowing for silent movement.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEAdamantiteWeaveGreaves : BEGreaves {
-    BEAdamantiteWeaveGreaves() : base() {
-        $this.Name               = 'Adamantite Weave Greaves'
-        $this.MapObjName         = 'adamantiteweavegreaves'
-        $this.PurchasePrice      = 3000
-        $this.SellPrice          = 1500
-        $this.TargetStats        = @{
-            [StatId]::Defense = 40
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 32
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves with an underlying weave of adamantite threads for superior protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEMithrilPlateGreaves : BEGreaves {
-    BEMithrilPlateGreaves() : base() {
-        $this.Name               = 'Mithril Plate Greaves'
-        $this.MapObjName         = 'mithrilplategreaves'
-        $this.PurchasePrice      = 3200
-        $this.SellPrice          = 1600
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 38
-            [StatId]::MagicDefense = 12
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 30
-            [StatId]::MagicDefense = 8
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves made from plates of shining mithril, light and strong.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEBattlemageReinforcedBoots : BEGreaves {
-    BEBattlemageReinforcedBoots() : base() {
-        $this.Name               = 'Battlemage Reinforced Boots'
-        $this.MapObjName         = 'battlemagereinforcedboots'
-        $this.PurchasePrice      = 3500
-        $this.SellPrice          = 1750
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 28
-            [StatId]::MagicDefense = 18
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 22
-            [StatId]::MagicDefense = 13
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots reinforced with metal and enchantments for battle mages.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEOrnateDwarvenGreaves : BEGreaves {
-    BEOrnateDwarvenGreaves() : base() {
-        $this.Name               = 'Ornate Dwarven Greaves'
-        $this.MapObjName         = 'ornatedwarvengreaves'
-        $this.PurchasePrice      = 3800
-        $this.SellPrice          = 1900
-        $this.TargetStats        = @{
-            [StatId]::Defense = 45
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 36
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Heavily ornamented greaves showcasing masterful dwarven craftsmanship.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEElvenKnightGreaves : BEGreaves {
-    BEElvenKnightGreaves() : base() {
-        $this.Name               = 'Elven Knight Greaves'
-        $this.MapObjName         = 'elvenknightgreaves'
-        $this.PurchasePrice      = 4200
-        $this.SellPrice          = 2100
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 35
-            [StatId]::MagicDefense = 15
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 27
-            [StatId]::MagicDefense = 10
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Elegant yet sturdy greaves worn by elven knights.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEShadowWalkerBoots : BEGreaves {
-    BEShadowWalkerBoots() : base() {
-        $this.Name               = 'Shadow Walker Boots'
-        $this.MapObjName         = 'shadowwalkerboots'
-        $this.PurchasePrice      = 4000
-        $this.SellPrice          = 2000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 25
-            [StatId]::MagicDefense = 22
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 19
-            [StatId]::MagicDefense = 16
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots that allow the wearer to move like a shadow, silent and unseen.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEAdamantitePlatedGreaves : BEGreaves {
-    BEAdamantitePlatedGreaves() : base() {
-        $this.Name               = 'Adamantite-Plated Greaves'
-        $this.MapObjName         = 'adamantiteplatedgreaves'
-        $this.PurchasePrice      = 4800
-        $this.SellPrice          = 2400
-        $this.TargetStats        = @{
-            [StatId]::Defense = 50
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 40
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves reinforced with nearly unbreakable adamantite plates.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEGreavesOfResilience : BEGreaves {
-    BEGreavesOfResilience() : base() {
-        $this.Name               = 'Greaves of Resilience'
-        $this.MapObjName         = 'greavesofresilience'
-        $this.PurchasePrice      = 5200
-        $this.SellPrice          = 2600
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 48
-            [StatId]::MagicDefense = 10
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 38
-            [StatId]::MagicDefense = 6
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves enchanted to withstand tremendous punishment.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEBootsOfSwiftStriking : BEGreaves {
-    BEBootsOfSwiftStriking() : base() {
-        $this.Name               = 'Boots of Swift Striking'
-        $this.MapObjName         = 'bootsofswiftstriking'
-        $this.PurchasePrice      = 5000
-        $this.SellPrice          = 2500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 30
-            [StatId]::MagicDefense = 20
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 23
-            [StatId]::MagicDefense = 15
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots that enhance the wearer''s speed and reflexes in combat.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEWyrmboneGreaves : BEGreaves {
-    BEWyrmboneGreaves() : base() {
-        $this.Name               = 'Wyrmbone Greaves'
-        $this.MapObjName         = 'wyrmbonegreaves'
-        $this.PurchasePrice      = 5800
-        $this.SellPrice          = 2900
-        $this.TargetStats        = @{
-            [StatId]::Defense = 55
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 44
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves carved from the bones of a powerful wyrm.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEArchmagesEnchantedBoots : BEGreaves {
-    BEArchmagesEnchantedBoots() : base() {
-        $this.Name               = 'Archmage''s Enchanted Boots'
-        $this.MapObjName         = 'archmagesenchantedboots'
-        $this.PurchasePrice      = 6000
-        $this.SellPrice          = 3000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 25
-            [StatId]::MagicDefense = 25
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 19
-            [StatId]::MagicDefense = 19
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots heavily enchanted by an archmage for superior magical defense.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEDragonscaleGreaves : BEGreaves {
-    BEDragonscaleGreaves() : base() {
-        $this.Name               = 'Dragonscale Greaves'
-        $this.MapObjName         = 'dragonscalegreaves'
-        $this.PurchasePrice      = 6500
-        $this.SellPrice          = 3250
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 52
-            [StatId]::MagicDefense = 15
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 41
-            [StatId]::MagicDefense = 10
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves meticulously crafted from individual dragon scales.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEOrichalcumPlatedGreaves : BEGreaves {
-    BEOrichalcumPlatedGreaves() : base() {
-        $this.Name               = 'Orichalcum-Plated Greaves'
-        $this.MapObjName         = 'orichalcumplatedgreaves'
-        $this.PurchasePrice      = 7000
-        $this.SellPrice          = 3500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 45
-            [StatId]::MagicDefense = 20
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 36
-            [StatId]::MagicDefense = 15
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves plated with the rare and magically resonant orichalcum.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEPhoenixRiderGreaves : BEGreaves {
-    BEPhoenixRiderGreaves() : base() {
-        $this.Name               = 'Phoenix Rider Greaves'
-        $this.MapObjName         = 'phoenixridergreaves'
-        $this.PurchasePrice      = 7500
-        $this.SellPrice          = 3750
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 40
-            [StatId]::MagicDefense = 28
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 32
-            [StatId]::MagicDefense = 21
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by legendary riders of phoenixes, imbued with fire resistance.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEAdamantiumCoreGreaves : BEGreaves {
-    BEAdamantiumCoreGreaves() : base() {
-        $this.Name               = 'Adamantium Core Greaves'
-        $this.MapObjName         = 'adamantiumcoregreaves'
-        $this.PurchasePrice      = 8000
-        $this.SellPrice          = 4000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 60
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 48
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves with a solid core of nearly unbreakable adamantite.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEGreavesOfTheSilentGuardian : BEGreaves {
-    BEGreavesOfTheSilentGuardian() : base() {
-        $this.Name               = 'Greaves of the Silent Guardian'
-        $this.MapObjName         = 'greavesofthesilentguardian'
-        $this.PurchasePrice      = 8500
-        $this.SellPrice          = 4250
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 58
-            [StatId]::MagicDefense = 18
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 46
-            [StatId]::MagicDefense = 13
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by guardians who protect sacred, silent places.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEStarSilverLegplates : BEGreaves {
-    BEStarSilverLegplates() : base() {
-        $this.Name               = 'Star Silver Legplates'
-        $this.MapObjName         = 'starsilverlegplates'
-        $this.PurchasePrice      = 9000
-        $this.SellPrice          = 4500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 42
-            [StatId]::MagicDefense = 25
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 33
-            [StatId]::MagicDefense = 19
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Legplates forged from silver mined from a fallen star, cool to the touch.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEVoidtouchedGreaves : BEGreaves {
-    BEVoidtouchedGreaves() : base() {
-        $this.Name               = 'Void-Touched Greaves'
-        $this.MapObjName         = 'voidtouchedgreaves'
-        $this.PurchasePrice      = 9500
-        $this.SellPrice          = 4750
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 50
-            [StatId]::MagicDefense = 22
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 40
-            [StatId]::MagicDefense = 17
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves that seem to absorb light, touched by the emptiness of the void.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEGolemsHeartGreaves : BEGreaves {
-    BEGolemsHeartGreaves() : base() {
-        $this.Name               = 'Golem''s Heart Greaves'
-        $this.MapObjName         = 'golemsheartgreaves'
-        $this.PurchasePrice      = 10000
-        $this.SellPrice          = 5000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 68
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 54
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Massive greaves, as if taken from the core of a powerful stone golem.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BECelestialKnightGreaves : BEGreaves {
-    BECelestialKnightGreaves() : base() {
-        $this.Name               = 'Celestial Knight Greaves'
-        $this.MapObjName         = 'celestialknightgreaves'
-        $this.PurchasePrice      = 11000
-        $this.SellPrice          = 5500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 55
-            [StatId]::MagicDefense = 30
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 44
-            [StatId]::MagicDefense = 23
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by knights who serve celestial beings, shimmering with holy light.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEDemonboneGreaves : BEGreaves {
-    BEDemonboneGreaves() : base() {
-        $this.Name               = 'Demonbone Greaves'
-        $this.MapObjName         = 'demonbonegreaves'
-        $this.PurchasePrice      = 12000
-        $this.SellPrice          = 6000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 75
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 60
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves crafted from the bones of powerful demons, unnervingly strong.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEArchonForgedGreaves : BEGreaves {
-    BEArchonForgedGreaves() : base() {
-        $this.Name               = 'Archon-Forged Greaves'
-        $this.MapObjName         = 'archonforgedgreaves'
-        $this.PurchasePrice      = 13000
-        $this.SellPrice          = 6500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 65
-            [StatId]::MagicDefense = 35
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 52
-            [StatId]::MagicDefense = 27
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves forged by Archons, imbued with immense protective power.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BETitaniumPlateGreaves : BEGreaves {
-    BETitaniumPlateGreaves() : base() {
-        $this.Name               = 'Titanium Plate Greaves'
-        $this.MapObjName         = 'titaniumplategreaves'
-        $this.PurchasePrice      = 14000
-        $this.SellPrice          = 7000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 80
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 64
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves made from solid plates of exceptionally strong titanium.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEStarMetalLegplates : BEGreaves {
-    BEStarMetalLegplates() : base() {
-        $this.Name               = 'Star Metal Legplates'
-        $this.MapObjName         = 'starmetallegplates'
-        $this.PurchasePrice      = 15000
-        $this.SellPrice          = 7500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 70
-            [StatId]::MagicDefense = 38
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 56
-            [StatId]::MagicDefense = 29
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Legplates forged from metal fallen from the stars, humming with cosmic energy.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEVoidtouchedPlatelegs : BEGreaves {
-    BEVoidtouchedPlatelegs() : base() {
-        $this.Name               = 'Void-Touched Platelegs'
-        $this.MapObjName         = 'voidtouchedplatelegs'
-        $this.PurchasePrice      = 16000
-        $this.SellPrice          = 8000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 78
-            [StatId]::MagicDefense = 25
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 62
-            [StatId]::MagicDefense = 19
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Platelegs that seem to absorb light, touched by the emptiness of the void.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEAncientRunicLegguards : BEGreaves {
-    BEAncientRunicLegguards() : base() {
-        $this.Name               = 'Ancient Runic Legguards'
-        $this.MapObjName         = 'ancientruniclegguards'
-        $this.PurchasePrice      = 17500
-        $this.SellPrice          = 8750
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 68
-            [StatId]::MagicDefense = 42
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 54
-            [StatId]::MagicDefense = 33
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Legguards covered in ancient, powerful runes of warding.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEDrakeLordGreaves : BEGreaves {
-    BEDrakeLordGreaves() : base() {
-        $this.Name               = 'Drake Lord Greaves'
-        $this.MapObjName         = 'drakelordgreaves'
-        $this.PurchasePrice      = 19000
-        $this.SellPrice          = 9500
-        $this.TargetStats        = @{
-            [StatId]::Defense = 90
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 72
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves crafted from the scales of a mighty Drake Lord.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEPaladinsSacredGreaves : BEGreaves {
-    BEPaladinsSacredGreaves() : base() {
-        $this.Name               = 'Paladin''s Sacred Greaves'
-        $this.MapObjName         = 'paladinssacredgreaves'
-        $this.PurchasePrice      = 20000
-        $this.SellPrice          = 10000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 80
-            [StatId]::MagicDefense = 30
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 64
-            [StatId]::MagicDefense = 23
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Sacred greaves blessed to protect a holy champion of justice.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEArchmagesWardBoots : BEGreaves {
-    BEArchmagesWardBoots() : base() {
-        $this.Name               = 'Archmage''s Ward Boots'
-        $this.MapObjName         = 'archmageswardboots'
-        $this.PurchasePrice      = 22000
-        $this.SellPrice          = 11000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 45
-            [StatId]::MagicDefense = 50
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 36
-            [StatId]::MagicDefense = 40
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Boots heavily enchanted by an archmage, creating a powerful magical ward.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEBlacksteelPlatelegs : BEGreaves {
-    BEBlacksteelPlatelegs() : base() {
-        $this.Name               = 'Blacksteel Platelegs'
-        $this.MapObjName         = 'blacksteelplatelegs'
-        $this.PurchasePrice      = 24000
-        $this.SellPrice          = 12000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 95
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 76
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Platelegs forged from rare blacksteel, offering superior resilience.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEGryphonKingsGreaves : BEGreaves {
-    BEGryphonKingsGreaves() : base() {
-        $this.Name               = 'Gryphon King''s Greaves'
-        $this.MapObjName         = 'gryphonkingsgreaves'
-        $this.PurchasePrice      = 25000
-        $this.SellPrice          = 12500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 85
-            [StatId]::MagicDefense = 28
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 68
-            [StatId]::MagicDefense = 21
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by the king of gryphons, light yet incredibly strong.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BESunstonePlatedGreaves : BEGreaves {
-    BESunstonePlatedGreaves() : base() {
-        $this.Name               = 'Sunstone-Plated Greaves'
-        $this.MapObjName         = 'sunstoneplatedgreaves'
-        $this.PurchasePrice      = 27000
-        $this.SellPrice          = 13500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 75
-            [StatId]::MagicDefense = 45
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 60
-            [StatId]::MagicDefense = 36
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves plated with radiant sunstones, warm to the touch.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEDragonbonePlatelegs : BEGreaves {
-    BEDragonbonePlatelegs() : base() {
-        $this.Name               = 'Dragonbone Platelegs'
-        $this.MapObjName         = 'dragonboneplatelegs'
-        $this.PurchasePrice      = 30000
-        $this.SellPrice          = 15000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 105
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 84
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Platelegs crafted from the ancient bones of a powerful dragon.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BECelestialGuardianGreaves : BEGreaves {
-    BECelestialGuardianGreaves() : base() {
-        $this.Name               = 'Celestial Guardian Greaves'
-        $this.MapObjName         = 'celestialguardiangreaves'
-        $this.PurchasePrice      = 33000
-        $this.SellPrice          = 16500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 90
-            [StatId]::MagicDefense = 50
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 72
-            [StatId]::MagicDefense = 40
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by celestial guardians, shimmering with divine light.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEDemonicLordGreaves : BEGreaves {
-    BEDemonicLordGreaves() : base() {
-        $this.Name               = 'Demonic Lord Greaves'
-        $this.MapObjName         = 'demoniclordgreaves'
-        $this.PurchasePrice      = 36000
-        $this.SellPrice          = 18000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 115
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 92
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves once worn by a powerful demon lord, radiating malevolence.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEAbyssalWalkerGreaves : BEGreaves {
-    BEAbyssalWalkerGreaves() : base() {
-        $this.Name               = 'Abyssal Walker Greaves'
-        $this.MapObjName         = 'abyssalwalkergreaves'
-        $this.PurchasePrice      = 39000
-        $this.SellPrice          = 19500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 95
-            [StatId]::MagicDefense = 48
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 76
-            [StatId]::MagicDefense = 38
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves that allow one to tread the paths of the abyss unharmed.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEPhoenixEmperorGreaves : BEGreaves {
-    BEPhoenixEmperorGreaves() : base() {
-        $this.Name               = 'Phoenix Emperor Greaves'
-        $this.MapObjName         = 'phoenixemperorgreaves'
-        $this.PurchasePrice      = 42000
-        $this.SellPrice          = 21000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 80
-            [StatId]::MagicDefense = 58
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 64
-            [StatId]::MagicDefense = 46
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves of a legendary emperor who commanded phoenixes, imbued with eternal flame.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BETitanSlayerGreaves : BEGreaves {
-    BETitanSlayerGreaves() : base() {
-        $this.Name               = 'Titan Slayer Greaves'
-        $this.MapObjName         = 'titanslayergreaves'
-        $this.PurchasePrice      = 45000
-        $this.SellPrice          = 22500
-        $this.TargetStats        = @{
-            [StatId]::Defense = 125
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 100
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by heroes who have slain titans, incredibly resilient.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEStormLordGreaves : BEGreaves {
-    BEStormLordGreaves() : base() {
-        $this.Name               = 'Storm Lord Greaves'
-        $this.MapObjName         = 'stormlordgreaves'
-        $this.PurchasePrice      = 48000
-        $this.SellPrice          = 24000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 100
-            [StatId]::MagicDefense = 52
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 80
-            [StatId]::MagicDefense = 41
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves of a lord who commands the fury of storms, crackling with power.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEHolyAvengerGreaves : BEGreaves {
-    BEHolyAvengerGreaves() : base() {
-        $this.Name               = 'Holy Avenger Greaves'
-        $this.MapObjName         = 'holyavengergreaves'
-        $this.PurchasePrice      = 50000
-        $this.SellPrice          = 25000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 90
-            [StatId]::MagicDefense = 60
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 72
-            [StatId]::MagicDefense = 48
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves of a divine avenger, radiating pure holy energy.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEInfernalTyrantGreaves : BEGreaves {
-    BEInfernalTyrantGreaves() : base() {
-        $this.Name               = 'Infernal Tyrant Greaves'
-        $this.MapObjName         = 'infernaltyrantgreaves'
-        $this.PurchasePrice      = 52000
-        $this.SellPrice          = 26000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 130
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 104
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves worn by a tyrant of the infernal realms, exuding dread.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEWorldTreeRootGreaves : BEGreaves {
-    BEWorldTreeRootGreaves() : base() {
-        $this.Name               = 'World Tree Root Greaves'
-        $this.MapObjName         = 'worldtreerootgreaves'
-        $this.PurchasePrice      = 55000
-        $this.SellPrice          = 27500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 110
-            [StatId]::MagicDefense = 65
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 88
-            [StatId]::MagicDefense = 52
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves crafted from the ancient roots of the World Tree itself.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEStarforgedAegisGreaves : BEGreaves {
-    BEStarforgedAegisGreaves() : base() {
-        $this.Name               = 'Starforged Aegis Greaves'
-        $this.MapObjName         = 'starforgedaegisgreaves'
-        $this.PurchasePrice      = 60000
-        $this.SellPrice          = 30000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 140
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 112
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves forged in the heart of a dying star, offering unparalleled defense.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEAspectOfTheCreatorGreaves : BEGreaves {
-    BEAspectOfTheCreatorGreaves() : base() {
-        $this.Name               = 'Aspect of the Creator Greaves'
-        $this.MapObjName         = 'aspectofthecreatorgreaves'
-        $this.PurchasePrice      = 65000
-        $this.SellPrice          = 32500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 120
-            [StatId]::MagicDefense = 70
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 96
-            [StatId]::MagicDefense = 56
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves said to be a fragment of the Creator''s own power and resilience.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEGodslayerWarboots : BEGreaves {
-    BEGodslayerWarboots() : base() {
-        $this.Name               = 'Godslayer Warboots'
-        $this.MapObjName         = 'godslayerwarboots'
-        $this.PurchasePrice      = 70000
-        $this.SellPrice          = 35000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 150
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 120
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Warboots imbued with the power to fell deities, offering unmatched protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEArmguardsofEternalNight : BEGreaves {
-    BEArmguardsofEternalNight() : base() {
-        $this.Name               = 'Armguards of Eternal Night'
-        $this.MapObjName         = 'armguardsofeternalnight'
-        $this.PurchasePrice      = 75000
-        $this.SellPrice          = 37500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 125
-            [StatId]::MagicDefense = 75
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 100
-            [StatId]::MagicDefense = 60
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Armguards woven from the fabric of endless night, granting mastery over shadows and defense.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEGreavesOfTheWorldSerpent : BEGreaves {
-    BEGreavesOfTheWorldSerpent() : base() {
-        $this.Name               = 'Greaves of the World Serpent'
-        $this.MapObjName         = 'greavesoftheworldserpent'
-        $this.PurchasePrice      = 80000
-        $this.SellPrice          = 40000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 160
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 128
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves crafted from the scales of Jormungandr, the World Serpent, impossibly tough.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEGreavesOfTimelessness : BEGreaves {
-    BEGreavesOfTimelessness() : base() {
-        $this.Name               = 'Greaves of Timelessness'
-        $this.MapObjName         = 'greavesoftimelessness'
-        $this.PurchasePrice      = 85000
-        $this.SellPrice          = 42500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 130
-            [StatId]::MagicDefense = 80
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 104
-            [StatId]::MagicDefense = 64
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves that seem to exist outside of time, offering profound protection.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEGreavesOfThePrimordials : BEGreaves {
-    BEGreavesOfThePrimordials() : base() {
-        $this.Name               = 'Greaves of the Primordials'
-        $this.MapObjName         = 'greavesoftheprimordials'
-        $this.PurchasePrice      = 90000
-        $this.SellPrice          = 45000
-        $this.TargetStats        = @{
-            [StatId]::Defense = 170
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense = 136
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves imbued with the raw power of the first beings of creation.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense"
-    }
-}
-
-Class BEGreavesOfDivineAscension : BEGreaves {
-    BEGreavesOfDivineAscension() : base() {
-        $this.Name               = 'Greaves of Divine Ascension'
-        $this.MapObjName         = 'greavesofdivineascension'
-        $this.PurchasePrice      = 95000
-        $this.SellPrice          = 47500
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 140
-            [StatId]::MagicDefense = 85
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 112
-            [StatId]::MagicDefense = 68
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'Greaves that signify the wearer''s path to godhood, radiating immense power.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
-}
-
-Class BEOmegaGreaves : BEGreaves {
-    BEOmegaGreaves() : base() {
-        $this.Name               = 'Omega Greaves'
-        $this.MapObjName         = 'omegagreaves'
-        $this.PurchasePrice      = 100000
-        $this.SellPrice          = 50000
-        $this.TargetStats        = @{
-            [StatId]::Defense      = 150
-            [StatId]::MagicDefense = 70 # Omega items should be powerful in all aspects
-        }
-        $this.RequiredStats      = @{
-            [StatId]::Defense      = 120
-            [StatId]::MagicDefense = 56
-        }
-        $this.CanAddToInventory  = $true
-        $this.ExamineString      = 'The ultimate greaves, signifying the end of all challenges to the wearer''s defense.'
-        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) Defense, +$($this.TargetStats[[StatId]::MagicDefense]) Magic Defense"
-    }
+	BESteelGreaves() : base() {
+		$this.Name               = 'Steel Greaves'
+		$this.MapObjName         = 'steelgreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy steel greaves, offering solid defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
 }
+
+Class BEChainmailGreaves : BEGreaves {
+	BEChainmailGreaves() : base() {
+		$this.Name               = 'Chainmail Greaves'
+		$this.MapObjName         = 'chainmailgreaves'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Flexible chainmail leg guards, good against piercing attacks.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPlateGreaves : BEGreaves {
+	BEPlateGreaves() : base() {
+		$this.Name               = 'Plate Greaves'
+		$this.MapObjName         = 'plategreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Full plate leg armor, excellent protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMithrilGreaves : BEGreaves {
+	BEMithrilGreaves() : base() {
+		$this.Name               = 'Mithril Greaves'
+		$this.MapObjName         = 'mithrilgreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 15
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves crafted from light and strong mithril.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAdamantGreaves : BEGreaves {
+	BEAdamantGreaves() : base() {
+		$this.Name               = 'Adamant Greaves'
+		$this.MapObjName         = 'adamantgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Nearly impenetrable greaves made from adamant ore.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDragonhideGreaves : BEGreaves {
+	BEDragonhideGreaves() : base() {
+		$this.Name               = 'Dragonhide Greaves'
+		$this.MapObjName         = 'dragonhidegreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves made from the tough hide of a dragon.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEElvenGreaves : BEGreaves {
+	BEElvenGreaves() : base() {
+		$this.Name               = 'Elven Greaves'
+		$this.MapObjName         = 'elvengreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 25
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Graceful greaves favored by elves, light and protective.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDwarvenGreaves : BEGreaves {
+	BEDwarvenGreaves() : base() {
+		$this.Name               = 'Dwarven Greaves'
+		$this.MapObjName         = 'dwarvengreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Robust greaves forged by dwarven artisans.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEShadowGreaves : BEGreaves {
+	BEShadowGreaves() : base() {
+		$this.Name               = 'Shadow Greaves'
+		$this.MapObjName         = 'shadowgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 28
+			[StatId]::Speed = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves imbued with dark energies, granting stealth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHolyGreaves : BEGreaves {
+	BEHolyGreaves() : base() {
+		$this.Name               = 'Holy Greaves'
+		$this.MapObjName         = 'holygreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Blessed greaves that ward off evil.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMysticGreaves : BEGreaves {
+	BEMysticGreaves() : base() {
+		$this.Name               = 'Mystic Greaves'
+		$this.MapObjName         = 'mysticgreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that enhance magical aptitude.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarriorGreaves : BEGreaves {
+	BEWarriorGreaves() : base() {
+		$this.Name               = 'Warrior Greaves'
+		$this.MapObjName         = 'warriorgreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Standard issue greaves for a seasoned warrior.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKnightGreaves : BEGreaves {
+	BEKnightGreaves() : base() {
+		$this.Name               = 'Knight Greaves'
+		$this.MapObjName         = 'knightgreaves'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves fit for a noble knight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESentinelGreaves : BEGreaves {
+	BESentinelGreaves() : base() {
+		$this.Name               = 'Sentinel Greaves'
+		$this.MapObjName         = 'sentinelgreaves'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy greaves designed for defensive stances.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEScoutGreaves : BEGreaves {
+	BEScoutGreaves() : base() {
+		$this.Name               = 'Scout Greaves'
+		$this.MapObjName         = 'scoutgreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 8
+			[StatId]::Speed = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light greaves for quick movement and evasion.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERangerGreaves : BEGreaves {
+	BERangerGreaves() : base() {
+		$this.Name               = 'Ranger Greaves'
+		$this.MapObjName         = 'rangergreaves'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 14
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves suitable for wilderness survival.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBerserkerGreaves : BEGreaves {
+	BEBerserkerGreaves() : base() {
+		$this.Name               = 'Berserker Greaves'
+		$this.MapObjName         = 'berserkergreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those who fight with unrestrained fury.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPaladinGreaves : BEGreaves {
+	BEPaladinGreaves() : base() {
+		$this.Name               = 'Paladin Greaves'
+		$this.MapObjName         = 'paladingreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a holy warrior, offering divine protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESorcererGreaves : BEGreaves {
+	BESorcererGreaves() : base() {
+		$this.Name               = 'Sorcerer Greaves'
+		$this.MapObjName         = 'sorcerergreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light greaves that aid in spellcasting.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarlockGreaves : BEGreaves {
+	BEWarlockGreaves() : base() {
+		$this.Name               = 'Warlock Greaves'
+		$this.MapObjName         = 'warlockgreaves'
+		$this.PurchasePrice      = 520
+		$this.SellPrice          = 260
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those who dabble in dark magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAdeptGreaves : BEGreaves {
+	BEAdeptGreaves() : base() {
+		$this.Name               = 'Adept Greaves'
+		$this.MapObjName         = 'adeptgreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by skilled practitioners.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGuardianGreaves : BEGreaves {
+	BEGuardianGreaves() : base() {
+		$this.Name               = 'Guardian Greaves'
+		$this.MapObjName         = 'guardiangreaves'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves designed to protect the wearer at all costs.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHeroicGreaves : BEGreaves {
+	BEHeroicGreaves() : base() {
+		$this.Name               = 'Heroic Greaves'
+		$this.MapObjName         = 'heroicgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by legendary heroes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEImperialGreaves : BEGreaves {
+	BEImperialGreaves() : base() {
+		$this.Name               = 'Imperial Greaves'
+		$this.MapObjName         = 'imperialgreaves'
+		$this.PurchasePrice      = 720
+		$this.SellPrice          = 360
+		$this.TargetStats        = @{
+			[StatId]::Defense = 33
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of the imperial guard, highly polished.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERoyalGreaves : BEGreaves {
+	BERoyalGreaves() : base() {
+		$this.Name               = 'Royal Greaves'
+		$this.MapObjName         = 'royalgreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves fit for royalty, exquisitely crafted.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETravelerGreaves : BEGreaves {
+	BETravelerGreaves() : base() {
+		$this.Name               = 'Traveler Greaves'
+		$this.MapObjName         = 'travelergreaves'
+		$this.PurchasePrice      = 90
+		$this.SellPrice          = 45
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Simple and comfortable greaves for long journeys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHunterGreaves : BEGreaves {
+	BEHunterGreaves() : base() {
+		$this.Name               = 'Hunter Greaves'
+		$this.MapObjName         = 'huntergreaves'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves designed for tracking and hunting.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMercenaryGreaves : BEGreaves {
+	BEMercenaryGreaves() : base() {
+		$this.Name               = 'Mercenary Greaves'
+		$this.MapObjName         = 'mercenarygreaves'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a hired blade, practical and durable.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGladiatorGreaves : BEGreaves {
+	BEGladiatorGreaves() : base() {
+		$this.Name               = 'Gladiator Greaves'
+		$this.MapObjName         = 'gladiatorgreaves'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+			[StatId]::Defense = 36
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy greaves worn by arena champions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBarbarianGreaves : BEGreaves {
+	BEBarbarianGreaves() : base() {
+		$this.Name               = 'Barbarian Greaves'
+		$this.MapObjName         = 'barbariangreaves'
+		$this.PurchasePrice      = 480
+		$this.SellPrice          = 240
+		$this.TargetStats        = @{
+			[StatId]::Defense = 26
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Crude but effective greaves of a barbarian.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDruidGreaves : BEGreaves {
+	BEDruidGreaves() : base() {
+		$this.Name               = 'Druid Greaves'
+		$this.MapObjName         = 'druidgreaves'
+		$this.PurchasePrice      = 580
+		$this.SellPrice          = 290
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves made from natural materials, attuned to nature.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEClericGreaves : BEGreaves {
+	BEClericGreaves() : base() {
+		$this.Name               = 'Cleric Greaves'
+		$this.MapObjName         = 'clericgreaves'
+		$this.PurchasePrice      = 620
+		$this.SellPrice          = 310
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves blessed by divine power, for healing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMonkGreaves : BEGreaves {
+	BEMonkGreaves() : base() {
+		$this.Name               = 'Monk Greaves'
+		$this.MapObjName         = 'monkgreaves'
+		$this.PurchasePrice      = 360
+		$this.SellPrice          = 180
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 16
+			[StatId]::Speed = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light greaves for martial arts practitioners.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESamuraiGreaves : BEGreaves {
+	BESamuraiGreaves() : base() {
+		$this.Name               = 'Samurai Greaves'
+		$this.MapObjName         = 'samuraigreaves'
+		$this.PurchasePrice      = 780
+		$this.SellPrice          = 390
+		$this.TargetStats        = @{
+			[StatId]::Defense = 34
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a disciplined warrior from the East.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BENinjaGreaves : BEGreaves {
+	BENinjaGreaves() : base() {
+		$this.Name               = 'Ninja Greaves'
+		$this.MapObjName         = 'ninjagreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 18
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light and silent greaves for covert operations.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETemplarGreaves : BEGreaves {
+	BETemplarGreaves() : base() {
+		$this.Name               = 'Templar Greaves'
+		$this.MapObjName         = 'templargreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Holy greaves worn by zealous protectors.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEEnchantedGreaves : BEGreaves {
+	BEEnchantedGreaves() : base() {
+		$this.Name               = 'Enchanted Greaves'
+		$this.MapObjName         = 'enchantedgreaves'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves imbued with a minor enchantment.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECrystallineGreaves : BEGreaves {
+	BECrystallineGreaves() : base() {
+		$this.Name               = 'Crystalline Greaves'
+		$this.MapObjName         = 'crystallinegreaves'
+		$this.PurchasePrice      = 980
+		$this.SellPrice          = 490
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves crafted from durable crystals.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVolcanicGreaves : BEGreaves {
+	BEVolcanicGreaves() : base() {
+		$this.Name               = 'Volcanic Greaves'
+		$this.MapObjName         = 'volcanicgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves forged near volcanic heat, resilient.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOceanicGreaves : BEGreaves {
+	BEOceanicGreaves() : base() {
+		$this.Name               = 'Oceanic Greaves'
+		$this.MapObjName         = 'oceanicgreaves'
+		$this.PurchasePrice      = 1050
+		$this.SellPrice          = 525
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves found in the depths of the ocean, resistant to water.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEForestGreaves : BEGreaves {
+	BEForestGreaves() : base() {
+		$this.Name               = 'Forest Greaves'
+		$this.MapObjName         = 'forestgreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 17
+			[StatId]::MagicDefense = 15
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that blend with natural surroundings.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDesertGreaves : BEGreaves {
+	BEDesertGreaves() : base() {
+		$this.Name               = 'Desert Greaves'
+		$this.MapObjName         = 'desertgreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves suitable for arid environments.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArcticGreaves : BEGreaves {
+	BEArcticGreaves() : base() {
+		$this.Name               = 'Arctic Greaves'
+		$this.MapObjName         = 'arcticgreaves'
+		$this.PurchasePrice      = 470
+		$this.SellPrice          = 235
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves designed for cold climates.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEStarfallGreaves : BEGreaves {
+	BEStarfallGreaves() : base() {
+		$this.Name               = 'Starfall Greaves'
+		$this.MapObjName         = 'starfallgreaves'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves said to be crafted from fallen stars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESunstoneGreaves : BEGreaves {
+	BESunstoneGreaves() : base() {
+		$this.Name               = 'Sunstone Greaves'
+		$this.MapObjName         = 'sunstonegreaves'
+		$this.PurchasePrice      = 1350
+		$this.SellPrice          = 675
+		$this.TargetStats        = @{
+			[StatId]::Defense = 52
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that shimmer with solar energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMoonstoneGreaves : BEGreaves {
+	BEMoonstoneGreaves() : base() {
+		$this.Name               = 'Moonstone Greaves'
+		$this.MapObjName         = 'moonstonegreaves'
+		$this.PurchasePrice      = 1350
+		$this.SellPrice          = 675
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that glow with lunar power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAetherGreaves : BEGreaves {
+	BEAetherGreaves() : base() {
+		$this.Name               = 'Aether Greaves'
+		$this.MapObjName         = 'aethergreaves'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Defense = 65
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves from another dimension, ethereal.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVoidGreaves : BEGreaves {
+	BEVoidGreaves() : base() {
+		$this.Name               = 'Void Greaves'
+		$this.MapObjName         = 'voidgreaves'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::Defense = 70
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that draw power from the void.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpiritGreaves : BEGreaves {
+	BESpiritGreaves() : base() {
+		$this.Name               = 'Spirit Greaves'
+		$this.MapObjName         = 'spiritgreaves'
+		$this.PurchasePrice      = 1250
+		$this.SellPrice          = 625
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that resonate with spiritual energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAncientGreaves : BEGreaves {
+	BEAncientGreaves() : base() {
+		$this.Name               = 'Ancient Greaves'
+		$this.MapObjName         = 'ancientgreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 58
+			[StatId]::MagicDefense = 38
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves from a forgotten civilization.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELegendaryGreaves : BEGreaves {
+	BELegendaryGreaves() : base() {
+		$this.Name               = 'Legendary Greaves'
+		$this.MapObjName         = 'legendarygreaves'
+		$this.PurchasePrice      = 2000
+		$this.SellPrice          = 1000
+		$this.TargetStats        = @{
+			[StatId]::Defense = 75
+			[StatId]::MagicDefense = 55
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves spoken of in ancient tales.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGodlyGreaves : BEGreaves {
+	BEGodlyGreaves() : base() {
+		$this.Name               = 'Godly Greaves'
+		$this.MapObjName         = 'godlygreaves'
+		$this.PurchasePrice      = 2500
+		$this.SellPrice          = 1250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 90
+			[StatId]::MagicDefense = 60
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by deities, immense power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEApprenticeGreaves : BEGreaves {
+	BEApprenticeGreaves() : base() {
+		$this.Name               = 'Apprentice Greaves'
+		$this.MapObjName         = 'apprenticegreaves'
+		$this.PurchasePrice      = 70
+		$this.SellPrice          = 35
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Basic greaves for aspiring adventurers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJourneymanGreaves : BEGreaves {
+	BEJourneymanGreaves() : base() {
+		$this.Name               = 'Journeyman Greaves'
+		$this.MapObjName         = 'journeymangreaves'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those gaining experience.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMasterGreaves : BEGreaves {
+	BEMasterGreaves() : base() {
+		$this.Name               = 'Master Greaves'
+		$this.MapObjName         = 'mastergreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by true masters of their craft.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGrandmasterGreaves : BEGreaves {
+	BEGrandmasterGreaves() : base() {
+		$this.Name               = 'Grandmaster Greaves'
+		$this.MapObjName         = 'grandmastergreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of unparalleled skill and defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVanguardGreaves : BEGreaves {
+	BEVanguardGreaves() : base() {
+		$this.Name               = 'Vanguard Greaves'
+		$this.MapObjName         = 'vanguardgreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for the front lines of battle.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEReconGreaves : BEGreaves {
+	BEReconGreaves() : base() {
+		$this.Name               = 'Recon Greaves'
+		$this.MapObjName         = 'recongreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light greaves for reconnaissance missions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECommandoGreaves : BEGreaves {
+	BECommandoGreaves() : base() {
+		$this.Name               = 'Commando Greaves'
+		$this.MapObjName         = 'commandogreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for elite fighting units.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPathfinderGreaves : BEGreaves {
+	BEPathfinderGreaves() : base() {
+		$this.Name               = 'Pathfinder Greaves'
+		$this.MapObjName         = 'pathfindergreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 12
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for charting unknown territories.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWandererGreaves : BEGreaves {
+	BEWandererGreaves() : base() {
+		$this.Name               = 'Wanderer Greaves'
+		$this.MapObjName         = 'wanderergreaves'
+		$this.PurchasePrice      = 200
+		$this.SellPrice          = 100
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 6
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for eternal travelers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENomadGreaves : BEGreaves {
+	BENomadGreaves() : base() {
+		$this.Name               = 'Nomad Greaves'
+		$this.MapObjName         = 'nomadgreaves'
+		$this.PurchasePrice      = 220
+		$this.SellPrice          = 110
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 7
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those who live on the move.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPilgrimGreaves : BEGreaves {
+	BEPilgrimGreaves() : base() {
+		$this.Name               = 'Pilgrim Greaves'
+		$this.MapObjName         = 'pilgrimgreaves'
+		$this.PurchasePrice      = 240
+		$this.SellPrice          = 120
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for spiritual journeys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECrusaderGreaves : BEGreaves {
+	BECrusaderGreaves() : base() {
+		$this.Name               = 'Crusader Greaves'
+		$this.MapObjName         = 'crusadergreaves'
+		$this.PurchasePrice      = 1150
+		$this.SellPrice          = 575
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a holy warrior on a quest.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEInquisitorGreaves : BEGreaves {
+	BEInquisitorGreaves() : base() {
+		$this.Name               = 'Inquisitor Greaves'
+		$this.MapObjName         = 'inquisitorgreaves'
+		$this.PurchasePrice      = 1050
+		$this.SellPrice          = 525
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those who seek out heresy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEZealotGreaves : BEGreaves {
+	BEZealotGreaves() : base() {
+		$this.Name               = 'Zealot Greaves'
+		$this.MapObjName         = 'zealotgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of unwavering devotion.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEFanaticGreaves : BEGreaves {
+	BEFanaticGreaves() : base() {
+		$this.Name               = 'Fanatic Greaves'
+		$this.MapObjName         = 'fanaticgreaves'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of extreme fervor.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESentryGreaves : BEGreaves {
+	BESentryGreaves() : base() {
+		$this.Name               = 'Sentry Greaves'
+		$this.MapObjName         = 'sentrygreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for watchful guards.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWatchmanGreaves : BEGreaves {
+	BEWatchmanGreaves() : base() {
+		$this.Name               = 'Watchman Greaves'
+		$this.MapObjName         = 'watchmangreaves'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for night patrols.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMilitiaGreaves : BEGreaves {
+	BEMilitiaGreaves() : base() {
+		$this.Name               = 'Militia Greaves'
+		$this.MapObjName         = 'militiagreaves'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::Defense = 6
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for civilian defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEConscriptGreaves : BEGreaves {
+	BEConscriptGreaves() : base() {
+		$this.Name               = 'Conscript Greaves'
+		$this.MapObjName         = 'conscriptgreaves'
+		$this.PurchasePrice      = 120
+		$this.SellPrice          = 60
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Basic greaves for newly drafted soldiers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOfficerGreaves : BEGreaves {
+	BEOfficerGreaves() : base() {
+		$this.Name               = 'Officer Greaves'
+		$this.MapObjName         = 'officergreaves'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by military officers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECommanderGreaves : BEGreaves {
+	BECommanderGreaves() : base() {
+		$this.Name               = 'Commander Greaves'
+		$this.MapObjName         = 'commandergreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a battle hardened commander.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGeneralGreaves : BEGreaves {
+	BEGeneralGreaves() : base() {
+		$this.Name               = 'General Greaves'
+		$this.MapObjName         = 'generalgreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves fit for a military general.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEmperorGreaves : BEGreaves {
+	BEEmperorGreaves() : base() {
+		$this.Name               = 'Emperor Greaves'
+		$this.MapObjName         = 'emperorgreaves'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of an undisputed ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEEmpressGreaves : BEGreaves {
+	BEEmpressGreaves() : base() {
+		$this.Name               = 'Empress Greaves'
+		$this.MapObjName         = 'empressgreaves'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 58
+			[StatId]::MagicDefense = 38
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a powerful female ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEHeroineGreaves : BEGreaves {
+	BEHeroineGreaves() : base() {
+		$this.Name               = 'Heroine Greaves'
+		$this.MapObjName         = 'heroinegreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a celebrated female hero.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEChampionGreaves : BEGreaves {
+	BEChampionGreaves() : base() {
+		$this.Name               = 'Champion Greaves'
+		$this.MapObjName         = 'championgreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of an undisputed champion.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVictorGreaves : BEGreaves {
+	BEVictorGreaves() : base() {
+		$this.Name               = 'Victor Greaves'
+		$this.MapObjName         = 'victorgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by those who claim victory.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETriumphGreaves : BEGreaves {
+	BETriumphGreaves() : base() {
+		$this.Name               = 'Triumph Greaves'
+		$this.MapObjName         = 'triumphgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 52
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves signifying great success.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAuraGreaves : BEGreaves {
+	BEAuraGreaves() : base() {
+		$this.Name               = 'Aura Greaves'
+		$this.MapObjName         = 'auragreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that emanate a protective aura.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESanctuaryGreaves : BEGreaves {
+	BESanctuaryGreaves() : base() {
+		$this.Name               = 'Sanctuary Greaves'
+		$this.MapObjName         = 'sanctuarygreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that offer a sense of peace.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESeraphGreaves : BEGreaves {
+	BESeraphGreaves() : base() {
+		$this.Name               = 'Seraph Greaves'
+		$this.MapObjName         = 'seraphgreaves'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Defense = 62
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of angelic origin.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECherubGreaves : BEGreaves {
+	BECherubGreaves() : base() {
+		$this.Name               = 'Cherub Greaves'
+		$this.MapObjName         = 'cherubgreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 40
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light and protective greaves.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEArchangelGreaves : BEGreaves {
+	BEArchangelGreaves() : base() {
+		$this.Name               = 'Archangel Greaves'
+		$this.MapObjName         = 'archangelgreaves'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::Defense = 70
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of the highest order of angels.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDemonGreaves : BEGreaves {
+	BEDemonGreaves() : base() {
+		$this.Name               = 'Demon Greaves'
+		$this.MapObjName         = 'demongreaves'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 65
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves infused with demonic power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEFiendGreaves : BEGreaves {
+	BEFiendGreaves() : base() {
+		$this.Name               = 'Fiend Greaves'
+		$this.MapObjName         = 'fiendgreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a malevolent spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEImpGreaves : BEGreaves {
+	BEImpGreaves() : base() {
+		$this.Name               = 'Imp Greaves'
+		$this.MapObjName         = 'impgreaves'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Small but surprisingly tough greaves.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGoblinGreaves : BEGreaves {
+	BEGoblinGreaves() : base() {
+		$this.Name               = 'Goblin Greaves'
+		$this.MapObjName         = 'goblingreaves'
+		$this.PurchasePrice      = 80
+		$this.SellPrice          = 40
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Crude greaves taken from goblins.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOrcishGreaves : BEGreaves {
+	BEOrcishGreaves() : base() {
+		$this.Name               = 'Orcish Greaves'
+		$this.MapObjName         = 'orcishgreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy and brutal greaves of orcs.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEOgreGreaves : BEGreaves {
+	BEOgreGreaves() : base() {
+		$this.Name               = 'Ogre Greaves'
+		$this.MapObjName         = 'ogregreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Massive greaves for immense creatures.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGiantGreaves : BEGreaves {
+	BEGiantGreaves() : base() {
+		$this.Name               = 'Giant Greaves'
+		$this.MapObjName         = 'giantgreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves sized for colossal beings.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETitanGreaves : BEGreaves {
+	BETitanGreaves() : base() {
+		$this.Name               = 'Titan Greaves'
+		$this.MapObjName         = 'titangreaves'
+		$this.PurchasePrice      = 1900
+		$this.SellPrice          = 950
+		$this.TargetStats        = @{
+			[StatId]::Defense = 72
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of legendary titans, immensely strong.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDragonlordGreaves : BEGreaves {
+	BEDragonlordGreaves() : base() {
+		$this.Name               = 'Dragonlord Greaves'
+		$this.MapObjName         = 'dragonlordgreaves'
+		$this.PurchasePrice      = 2200
+		$this.SellPrice          = 1100
+		$this.TargetStats        = @{
+			[StatId]::Defense = 80
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by a dragonlord.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEWyvernGreaves : BEGreaves {
+	BEWyvernGreaves() : base() {
+		$this.Name               = 'Wyvern Greaves'
+		$this.MapObjName         = 'wyverngreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves crafted from wyvern scales.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPhoenixGreaves : BEGreaves {
+	BEPhoenixGreaves() : base() {
+		$this.Name               = 'Phoenix Greaves'
+		$this.MapObjName         = 'phoenixgreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that glow with fiery essence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGriffinGreaves : BEGreaves {
+	BEGriffinGreaves() : base() {
+		$this.Name               = 'Griffin Greaves'
+		$this.MapObjName         = 'griffingreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 25
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that grant swiftness and grace.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEUnicornGreaves : BEGreaves {
+	BEUnicornGreaves() : base() {
+		$this.Name               = 'Unicorn Greaves'
+		$this.MapObjName         = 'unicorngreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 38
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Pure greaves, associated with healing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEPegasusGreaves : BEGreaves {
+	BEPegasusGreaves() : base() {
+		$this.Name               = 'Pegasus Greaves'
+		$this.MapObjName         = 'pegasusgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 20
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that feel weightless.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHarpyGreaves : BEGreaves {
+	BEHarpyGreaves() : base() {
+		$this.Name               = 'Harpy Greaves'
+		$this.MapObjName         = 'harpygreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 15
+			[StatId]::Speed = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that aid in agile aerial combat.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESphinxGreaves : BEGreaves {
+	BESphinxGreaves() : base() {
+		$this.Name               = 'Sphinx Greaves'
+		$this.MapObjName         = 'sphinxgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of ancient wisdom and defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBasiliskGreaves : BEGreaves {
+	BEBasiliskGreaves() : base() {
+		$this.Name               = 'Basilisk Greaves'
+		$this.MapObjName         = 'basiliskgreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves made from basilisk hide, resistant to petrification.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHydraGreaves : BEGreaves {
+	BEHydraGreaves() : base() {
+		$this.Name               = 'Hydra Greaves'
+		$this.MapObjName         = 'hydragreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 58
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of multi-headed beasts, regenerating.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKrakenGreaves : BEGreaves {
+	BEKrakenGreaves() : base() {
+		$this.Name               = 'Kraken Greaves'
+		$this.MapObjName         = 'krakengreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 52
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves from the depths, granting water resistance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMinotaurGreaves : BEGreaves {
+	BEMinotaurGreaves() : base() {
+		$this.Name               = 'Minotaur Greaves'
+		$this.MapObjName         = 'minotaurgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of brute strength.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BECentaurGreaves : BEGreaves {
+	BECentaurGreaves() : base() {
+		$this.Name               = 'Centaur Greaves'
+		$this.MapObjName         = 'centaurgreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 15
+			[StatId]::Speed = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for equestrian warriors.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGorgonGreaves : BEGreaves {
+	BEGorgonGreaves() : base() {
+		$this.Name               = 'Gorgon Greaves'
+		$this.MapObjName         = 'gorgongreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves offering protection from petrification.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEWerewolfGreaves : BEGreaves {
+	BEWerewolfGreaves() : base() {
+		$this.Name               = 'Werewolf Greaves'
+		$this.MapObjName         = 'werewolfgreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 18
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a shapeshifter, enhances agility.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVampireGreaves : BEGreaves {
+	BEVampireGreaves() : base() {
+		$this.Name               = 'Vampire Greaves'
+		$this.MapObjName         = 'vampiregreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that drain life from foes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEZombieGreaves : BEGreaves {
+	BEZombieGreaves() : base() {
+		$this.Name               = 'Zombie Greaves'
+		$this.MapObjName         = 'zombiegreaves'
+		$this.PurchasePrice      = 50
+		$this.SellPrice          = 25
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Rotting greaves, barely functional.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESkeletonGreaves : BEGreaves {
+	BESkeletonGreaves() : base() {
+		$this.Name               = 'Skeleton Greaves'
+		$this.MapObjName         = 'skeletongreaves'
+		$this.PurchasePrice      = 70
+		$this.SellPrice          = 35
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Bony greaves, surprisingly light.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGhostGreaves : BEGreaves {
+	BEGhostGreaves() : base() {
+		$this.Name               = 'Ghost Greaves'
+		$this.MapObjName         = 'ghostgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Ethereal greaves, difficult to hit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpecterGreaves : BEGreaves {
+	BESpecterGreaves() : base() {
+		$this.Name               = 'Specter Greaves'
+		$this.MapObjName         = 'spectergreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a powerful phantom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELichGreaves : BEGreaves {
+	BELichGreaves() : base() {
+		$this.Name               = 'Lich Greaves'
+		$this.MapObjName         = 'lichgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 55
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of an undead sorcerer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEMummyGreaves : BEGreaves {
+	BEMummyGreaves() : base() {
+		$this.Name               = 'Mummy Greaves'
+		$this.MapObjName         = 'mummygreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Bandaged greaves, ancient and cursed.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGargoyleGreaves : BEGreaves {
+	BEGargoyleGreaves() : base() {
+		$this.Name               = 'Gargoyle Greaves'
+		$this.MapObjName         = 'gargoylegreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Stone greaves, offering immense defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGolemGreaves : BEGreaves {
+	BEGolemGreaves() : base() {
+		$this.Name               = 'Golem Greaves'
+		$this.MapObjName         = 'golemgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves crafted from enchanted stone.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAutomatonGreaves : BEGreaves {
+	BEAutomatonGreaves() : base() {
+		$this.Name               = 'Automaton Greaves'
+		$this.MapObjName         = 'automatongreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Mechanical greaves, precisely engineered.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEClockworkGreaves : BEGreaves {
+	BEClockworkGreaves() : base() {
+		$this.Name               = 'Clockwork Greaves'
+		$this.MapObjName         = 'clockworkgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 52
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves with intricate clockwork mechanisms.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESteamGreaves : BEGreaves {
+	BESteamGreaves() : base() {
+		$this.Name               = 'Steam Greaves'
+		$this.MapObjName         = 'steamgreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves powered by steam, heavy but powerful.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMagitechGreaves : BEGreaves {
+	BEMagitechGreaves() : base() {
+		$this.Name               = 'Magitech Greaves'
+		$this.MapObjName         = 'magitechgreaves'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves combining magic and technology.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArcaneGreaves : BEGreaves {
+	BEArcaneGreaves() : base() {
+		$this.Name               = 'Arcane Greaves'
+		$this.MapObjName         = 'arcanegreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves infused with raw arcane power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEtherealGreaves : BEGreaves {
+	BEEtherealGreaves() : base() {
+		$this.Name               = 'Ethereal Greaves'
+		$this.MapObjName         = 'etherealgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 48
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves existing between realms, difficult to perceive.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAstralGreaves : BEGreaves {
+	BEAstralGreaves() : base() {
+		$this.Name               = 'Astral Greaves'
+		$this.MapObjName         = 'astralgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 52
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that draw power from the stars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECosmicGreaves : BEGreaves {
+	BECosmicGreaves() : base() {
+		$this.Name               = 'Cosmic Greaves'
+		$this.MapObjName         = 'cosmicgreaves'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::Defense = 70
+			[StatId]::MagicDefense = 60
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of the cosmos, vast and powerful.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENebulaGreaves : BEGreaves {
+	BENebulaGreaves() : base() {
+		$this.Name               = 'Nebula Greaves'
+		$this.MapObjName         = 'nebulagreaves'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 55
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves shimmering with cosmic dust.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGalacticGreaves : BEGreaves {
+	BEGalacticGreaves() : base() {
+		$this.Name               = 'Galactic Greaves'
+		$this.MapObjName         = 'galacticgreaves'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Defense = 65
+			[StatId]::MagicDefense = 58
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves from beyond the galaxy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERunicGreaves : BEGreaves {
+	BERunicGreaves() : base() {
+		$this.Name               = 'Runic Greaves'
+		$this.MapObjName         = 'runicgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves inscribed with ancient runes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGlyphGreaves : BEGreaves {
+	BEGlyphGreaves() : base() {
+		$this.Name               = 'Glyph Greaves'
+		$this.MapObjName         = 'glyphgreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves adorned with powerful magical symbols.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESigilGreaves : BEGreaves {
+	BESigilGreaves() : base() {
+		$this.Name               = 'Sigil Greaves'
+		$this.MapObjName         = 'sigilgreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves bearing potent magical sigils.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECabalGreaves : BEGreaves {
+	BECabalGreaves() : base() {
+		$this.Name               = 'Cabal Greaves'
+		$this.MapObjName         = 'cabalgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a secret magical society.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECultistGreaves : BEGreaves {
+	BECultistGreaves() : base() {
+		$this.Name               = 'Cultist Greaves'
+		$this.MapObjName         = 'cultistgreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by a dark cult.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHereticGreaves : BEGreaves {
+	BEHereticGreaves() : base() {
+		$this.Name               = 'Heretic Greaves'
+		$this.MapObjName         = 'hereticgreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of those who defy dogma.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEApostateGreaves : BEGreaves {
+	BEApostateGreaves() : base() {
+		$this.Name               = 'Apostate Greaves'
+		$this.MapObjName         = 'apostategreaves'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of one who has renounced their faith.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERebelGreaves : BEGreaves {
+	BERebelGreaves() : base() {
+		$this.Name               = 'Rebel Greaves'
+		$this.MapObjName         = 'rebelgreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 15
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of resistance fighters.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOutlawGreaves : BEGreaves {
+	BEOutlawGreaves() : base() {
+		$this.Name               = 'Outlaw Greaves'
+		$this.MapObjName         = 'outlawgreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 12
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those living outside the law.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBanditGreaves : BEGreaves {
+	BEBanditGreaves() : base() {
+		$this.Name               = 'Bandit Greaves'
+		$this.MapObjName         = 'banditgreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves favored by brigands.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEThiefGreaves : BEGreaves {
+	BEThiefGreaves() : base() {
+		$this.Name               = 'Thief Greaves'
+		$this.MapObjName         = 'thiefgreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 7
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light greaves for stealthy operatives.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERogueGreaves : BEGreaves {
+	BERogueGreaves() : base() {
+		$this.Name               = 'Rogue Greaves'
+		$this.MapObjName         = 'roguegreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for cunning and agile adventurers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAssassinGreaves : BEGreaves {
+	BEAssassinGreaves() : base() {
+		$this.Name               = 'Assassin Greaves'
+		$this.MapObjName         = 'assassingreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 18
+			[StatId]::Speed = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves designed for silent kills.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEExecutionerGreaves : BEGreaves {
+	BEExecutionerGreaves() : base() {
+		$this.Name               = 'Executioner Greaves'
+		$this.MapObjName         = 'executionergreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy greaves for those who carry out sentences.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETorturerGreaves : BEGreaves {
+	BETorturerGreaves() : base() {
+		$this.Name               = 'Torturer Greaves'
+		$this.MapObjName         = 'torturergreaves'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of those who inflict pain.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESlayerGreaves : BEGreaves {
+	BESlayerGreaves() : base() {
+		$this.Name               = 'Slayer Greaves'
+		$this.MapObjName         = 'slayergreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a monster hunter.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVanquisherGreaves : BEGreaves {
+	BEVanquisherGreaves() : base() {
+		$this.Name               = 'Vanquisher Greaves'
+		$this.MapObjName         = 'vanquishergreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of one who utterly defeats their foes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEConquerorGreaves : BEGreaves {
+	BEConquerorGreaves() : base() {
+		$this.Name               = 'Conqueror Greaves'
+		$this.MapObjName         = 'conquerorgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a victorious leader.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETyrantGreaves : BEGreaves {
+	BETyrantGreaves() : base() {
+		$this.Name               = 'Tyrant Greaves'
+		$this.MapObjName         = 'tyrantgreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of an oppressive ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDespotGreaves : BEGreaves {
+	BEDespotGreaves() : base() {
+		$this.Name               = 'Despot Greaves'
+		$this.MapObjName         = 'despotgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of an absolute ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEOverlordGreaves : BEGreaves {
+	BEOverlordGreaves() : base() {
+		$this.Name               = 'Overlord Greaves'
+		$this.MapObjName         = 'overlordgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a supreme master.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEWarlordGreaves : BEGreaves {
+	BEWarlordGreaves() : base() {
+		$this.Name               = 'Warlord Greaves'
+		$this.MapObjName         = 'warlordgreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 58
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a powerful military leader.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEChieftainGreaves : BEGreaves {
+	BEChieftainGreaves() : base() {
+		$this.Name               = 'Chieftain Greaves'
+		$this.MapObjName         = 'chieftaingreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a tribal leader.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEShamanGreaves : BEGreaves {
+	BEShamanGreaves() : base() {
+		$this.Name               = 'Shaman Greaves'
+		$this.MapObjName         = 'shamangreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a spiritual guide.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEOracleGreaves : BEGreaves {
+	BEOracleGreaves() : base() {
+		$this.Name               = 'Oracle Greaves'
+		$this.MapObjName         = 'oraclegreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that enhance prophetic visions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESeerGreaves : BEGreaves {
+	BESeerGreaves() : base() {
+		$this.Name               = 'Seer Greaves'
+		$this.MapObjName         = 'seergreaves'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that reveal hidden truths.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEProphetGreaves : BEGreaves {
+	BEProphetGreaves() : base() {
+		$this.Name               = 'Prophet Greaves'
+		$this.MapObjName         = 'prophetgreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a divine messenger.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESageGreaves : BEGreaves {
+	BESageGreaves() : base() {
+		$this.Name               = 'Sage Greaves'
+		$this.MapObjName         = 'sagegreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of profound wisdom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEScholarGreaves : BEGreaves {
+	BEScholarGreaves() : base() {
+		$this.Name               = 'Scholar Greaves'
+		$this.MapObjName         = 'scholargreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by academic scholars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELibrarianGreaves : BEGreaves {
+	BELibrarianGreaves() : base() {
+		$this.Name               = 'Librarian Greaves'
+		$this.MapObjName         = 'librariangreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for diligent keepers of knowledge.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHistorianGreaves : BEGreaves {
+	BEHistorianGreaves() : base() {
+		$this.Name               = 'Historian Greaves'
+		$this.MapObjName         = 'historiangreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those who study the past.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArchivistGreaves : BEGreaves {
+	BEArchivistGreaves() : base() {
+		$this.Name               = 'Archivist Greaves'
+		$this.MapObjName         = 'archivistgreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for protectors of ancient records.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArtisanGreaves : BEGreaves {
+	BEArtisanGreaves() : base() {
+		$this.Name               = 'Artisan Greaves'
+		$this.MapObjName         = 'artisangreaves'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves worn by skilled craftspeople.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEngineerGreaves : BEGreaves {
+	BEEngineerGreaves() : base() {
+		$this.Name               = 'Engineer Greaves'
+		$this.MapObjName         = 'engineergreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of mechanical innovators.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInventorGreaves : BEGreaves {
+	BEInventorGreaves() : base() {
+		$this.Name               = 'Inventor Greaves'
+		$this.MapObjName         = 'inventorgreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for creative minds.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAlchemistGreaves : BEGreaves {
+	BEAlchemistGreaves() : base() {
+		$this.Name               = 'Alchemist Greaves'
+		$this.MapObjName         = 'alchemistgreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for those who transmute elements.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEChemistGreaves : BEGreaves {
+	BEChemistGreaves() : base() {
+		$this.Name               = 'Chemist Greaves'
+		$this.MapObjName         = 'chemistgreaves'
+		$this.PurchasePrice      = 580
+		$this.SellPrice          = 290
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for scientific experimenters.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBotanistGreaves : BEGreaves {
+	BEBotanistGreaves() : base() {
+		$this.Name               = 'Botanist Greaves'
+		$this.MapObjName         = 'botanistgreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for plant specialists.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEZoologistGreaves : BEGreaves {
+	BEZoologistGreaves() : base() {
+		$this.Name               = 'Zoologist Greaves'
+		$this.MapObjName         = 'zoologistgreaves'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for animal researchers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGeologistGreaves : BEGreaves {
+	BEGeologistGreaves() : base() {
+		$this.Name               = 'Geologist Greaves'
+		$this.MapObjName         = 'geologistgreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for earth scientists.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAstronomerGreaves : BEGreaves {
+	BEAstronomerGreaves() : base() {
+		$this.Name               = 'Astronomer Greaves'
+		$this.MapObjName         = 'astronomergreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for star gazers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPhilosopherGreaves : BEGreaves {
+	BEPhilosopherGreaves() : base() {
+		$this.Name               = 'Philosopher Greaves'
+		$this.MapObjName         = 'philosophergreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for deep thinkers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDiplomatGreaves : BEGreaves {
+	BEDiplomatGreaves() : base() {
+		$this.Name               = 'Diplomat Greaves'
+		$this.MapObjName         = 'diplomatgreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for negotiators and envoys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMediatorGreaves : BEGreaves {
+	BEMediatorGreaves() : base() {
+		$this.Name               = 'Mediator Greaves'
+		$this.MapObjName         = 'mediatorgreaves'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 11
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for resolving conflicts.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEmissaryGreaves : BEGreaves {
+	BEEmissaryGreaves() : base() {
+		$this.Name               = 'Emissary Greaves'
+		$this.MapObjName         = 'emissarygreaves'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for special representatives.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAmbassadorGreaves : BEGreaves {
+	BEAmbassadorGreaves() : base() {
+		$this.Name               = 'Ambassador Greaves'
+		$this.MapObjName         = 'ambassadorgreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for high-ranking envoys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESenatorGreaves : BEGreaves {
+	BESenatorGreaves() : base() {
+		$this.Name               = 'Senator Greaves'
+		$this.MapObjName         = 'senatorgreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a governmental official.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMagistrateGreaves : BEGreaves {
+	BEMagistrateGreaves() : base() {
+		$this.Name               = 'Magistrate Greaves'
+		$this.MapObjName         = 'magistrategreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a civil officer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJudgeGreaves : BEGreaves {
+	BEJudgeGreaves() : base() {
+		$this.Name               = 'Judge Greaves'
+		$this.MapObjName         = 'judgegreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a judicial authority.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESheriffGreaves : BEGreaves {
+	BESheriffGreaves() : base() {
+		$this.Name               = 'Sheriff Greaves'
+		$this.MapObjName         = 'sheriffgreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a law enforcer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEMarshalGreaves : BEGreaves {
+	BEMarshalGreaves() : base() {
+		$this.Name               = 'Marshal Greaves'
+		$this.MapObjName         = 'marshalgreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a high-ranking law officer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEInvestigatorGreaves : BEGreaves {
+	BEInvestigatorGreaves() : base() {
+		$this.Name               = 'Investigator Greaves'
+		$this.MapObjName         = 'investigatorgreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for detectives.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAnalystGreaves : BEGreaves {
+	BEAnalystGreaves() : base() {
+		$this.Name               = 'Analyst Greaves'
+		$this.MapObjName         = 'analystgreaves'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for data examination.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEForensicGreaves : BEGreaves {
+	BEForensicGreaves() : base() {
+		$this.Name               = 'Forensic Greaves'
+		$this.MapObjName         = 'forensicgreaves'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for crime scene analysis.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETacticianGreaves : BEGreaves {
+	BETacticianGreaves() : base() {
+		$this.Name               = 'Tactician Greaves'
+		$this.MapObjName         = 'tacticiangreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for strategic thinkers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEStrategistGreaves : BEGreaves {
+	BEStrategistGreaves() : base() {
+		$this.Name               = 'Strategist Greaves'
+		$this.MapObjName         = 'strategistgreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for grand scale planning.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BELogisticsGreaves : BEGreaves {
+	BELogisticsGreaves() : base() {
+		$this.Name               = 'Logistics Greaves'
+		$this.MapObjName         = 'logisticsgreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for supply management.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERecruiterGreaves : BEGreaves {
+	BERecruiterGreaves() : base() {
+		$this.Name               = 'Recruiter Greaves'
+		$this.MapObjName         = 'recruitergreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for enlisting new members.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETrainerGreaves : BEGreaves {
+	BETrainerGreaves() : base() {
+		$this.Name               = 'Trainer Greaves'
+		$this.MapObjName         = 'trainergreaves'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for skill development.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMentorGreaves : BEGreaves {
+	BEMentorGreaves() : base() {
+		$this.Name               = 'Mentor Greaves'
+		$this.MapObjName         = 'mentorgreaves'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 11
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for guiding others.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInstructorGreaves : BEGreaves {
+	BEInstructorGreaves() : base() {
+		$this.Name               = 'Instructor Greaves'
+		$this.MapObjName         = 'instructorgreaves'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for teaching new techniques.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECoachGreaves : BEGreaves {
+	BECoachGreaves() : base() {
+		$this.Name               = 'Coach Greaves'
+		$this.MapObjName         = 'coachgreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for athletic guidance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEProspectorGreaves : BEGreaves {
+	BEProspectorGreaves() : base() {
+		$this.Name               = 'Prospector Greaves'
+		$this.MapObjName         = 'prospectorgreaves'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for mineral seekers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMinerGreaves : BEGreaves {
+	BEMinerGreaves() : base() {
+		$this.Name               = 'Miner Greaves'
+		$this.MapObjName         = 'minergreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for underground excavation.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEQuarrymanGreaves : BEGreaves {
+	BEQuarrymanGreaves() : base() {
+		$this.Name               = 'Quarryman Greaves'
+		$this.MapObjName         = 'quarrymangreaves'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for stone extraction.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEExcavatorGreaves : BEGreaves {
+	BEExcavatorGreaves() : base() {
+		$this.Name               = 'Excavator Greaves'
+		$this.MapObjName         = 'excavatorgreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for deep digging.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDelverGreaves : BEGreaves {
+	BEDelverGreaves() : base() {
+		$this.Name               = 'Delver Greaves'
+		$this.MapObjName         = 'delvergreaves'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for exploring subterranean depths.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpeleologistGreaves : BEGreaves {
+	BESpeleologistGreaves() : base() {
+		$this.Name               = 'Speleologist Greaves'
+		$this.MapObjName         = 'speleologistgreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for cave explorers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECavernGreaves : BEGreaves {
+	BECavernGreaves() : base() {
+		$this.Name               = 'Cavern Greaves'
+		$this.MapObjName         = 'caverngreaves'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for damp cave environments.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGrottoGreaves : BEGreaves {
+	BEGrottoGreaves() : base() {
+		$this.Name               = 'Grotto Greaves'
+		$this.MapObjName         = 'grottogreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for small cave systems.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESubterraneanGreaves : BEGreaves {
+	BESubterraneanGreaves() : base() {
+		$this.Name               = 'Subterranean Greaves'
+		$this.MapObjName         = 'subterraneangreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 11
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for underground travel.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEUnderdarkGreaves : BEGreaves {
+	BEUnderdarkGreaves() : base() {
+		$this.Name               = 'Underdark Greaves'
+		$this.MapObjName         = 'underdarkgreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves for the deep and dangerous underground.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAbyssalGreaves : BEGreaves {
+	BEAbyssalGreaves() : base() {
+		$this.Name               = 'Abyssal Greaves'
+		$this.MapObjName         = 'abyssalgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves from the deepest chasms.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInfernalGreaves : BEGreaves {
+	BEInfernalGreaves() : base() {
+		$this.Name               = 'Infernal Greaves'
+		$this.MapObjName         = 'infernalgreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 52
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves forged in the fires of hell.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDemonicGreaves : BEGreaves {
+	BEDemonicGreaves() : base() {
+		$this.Name               = 'Demonic Greaves'
+		$this.MapObjName         = 'demonicgreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves infused with the essence of demons.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEFallenGreaves : BEGreaves {
+	BEFallenGreaves() : base() {
+		$this.Name               = 'Fallen Greaves'
+		$this.MapObjName         = 'fallengreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a corrupted warrior.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BECorruptedGreaves : BEGreaves {
+	BECorruptedGreaves() : base() {
+		$this.Name               = 'Corrupted Greaves'
+		$this.MapObjName         = 'corruptedgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves twisted by dark forces.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBlightedGreaves : BEGreaves {
+	BEBlightedGreaves() : base() {
+		$this.Name               = 'Blighted Greaves'
+		$this.MapObjName         = 'blightedgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves afflicted by a terrible curse.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPlaguedGreaves : BEGreaves {
+	BEPlaguedGreaves() : base() {
+		$this.Name               = 'Plagued Greaves'
+		$this.MapObjName         = 'plaguedgreaves'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves spreading disease and decay.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENecroticGreaves : BEGreaves {
+	BENecroticGreaves() : base() {
+		$this.Name               = 'Necrotic Greaves'
+		$this.MapObjName         = 'necroticgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves linked to death magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERevenantGreaves : BEGreaves {
+	BERevenantGreaves() : base() {
+		$this.Name               = 'Revenant Greaves'
+		$this.MapObjName         = 'revenantgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of one returned from the grave.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPhantomGreaves : BEGreaves {
+	BEPhantomGreaves() : base() {
+		$this.Name               = 'Phantom Greaves'
+		$this.MapObjName         = 'phantomgreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of an elusive spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEShadeGreaves : BEGreaves {
+	BEShadeGreaves() : base() {
+		$this.Name               = 'Shade Greaves'
+		$this.MapObjName         = 'shadegreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a shadowy entity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWraithGreaves : BEGreaves {
+	BEWraithGreaves() : base() {
+		$this.Name               = 'Wraith Greaves'
+		$this.MapObjName         = 'wraithgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a malevolent specter.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBansheeGreaves : BEGreaves {
+	BEBansheeGreaves() : base() {
+		$this.Name               = 'Banshee Greaves'
+		$this.MapObjName         = 'bansheegreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that emit a mournful wail.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESuccubusGreaves : BEGreaves {
+	BESuccubusGreaves() : base() {
+		$this.Name               = 'Succubus Greaves'
+		$this.MapObjName         = 'succubusgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a seductive demon.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEIncubusGreaves : BEGreaves {
+	BEIncubusGreaves() : base() {
+		$this.Name               = 'Incubus Greaves'
+		$this.MapObjName         = 'incubusgreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a charming demon.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESirenGreaves : BEGreaves {
+	BESirenGreaves() : base() {
+		$this.Name               = 'Siren Greaves'
+		$this.MapObjName         = 'sirengreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that lure sailors to their doom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDryadGreaves : BEGreaves {
+	BEDryadGreaves() : base() {
+		$this.Name               = 'Dryad Greaves'
+		$this.MapObjName         = 'dryadgreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves made from living wood, attuned to forests.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BENymphGreaves : BEGreaves {
+	BENymphGreaves() : base() {
+		$this.Name               = 'Nymph Greaves'
+		$this.MapObjName         = 'nymphgreaves'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a beautiful nature spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESylphGreaves : BEGreaves {
+	BESylphGreaves() : base() {
+		$this.Name               = 'Sylph Greaves'
+		$this.MapObjName         = 'sylphgreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 20
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light greaves of an air spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEUndineGreaves : BEGreaves {
+	BEUndineGreaves() : base() {
+		$this.Name               = 'Undine Greaves'
+		$this.MapObjName         = 'undinegreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a water spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESalamanderGreaves : BEGreaves {
+	BESalamanderGreaves() : base() {
+		$this.Name               = 'Salamander Greaves'
+		$this.MapObjName         = 'salamandergreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a fire spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGnomeGreaves : BEGreaves {
+	BEGnomeGreaves() : base() {
+		$this.Name               = 'Gnome Greaves'
+		$this.MapObjName         = 'gnomegreaves'
+		$this.PurchasePrice      = 200
+		$this.SellPrice          = 100
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Small but sturdy greaves, crafted by gnomes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPixieGreaves : BEGreaves {
+	BEPixieGreaves() : base() {
+		$this.Name               = 'Pixie Greaves'
+		$this.MapObjName         = 'pixiegreaves'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Tiny and almost weightless greaves.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEFairyGreaves : BEGreaves {
+	BEFairyGreaves() : base() {
+		$this.Name               = 'Fairy Greaves'
+		$this.MapObjName         = 'fairygreaves'
+		$this.PurchasePrice      = 180
+		$this.SellPrice          = 90
+		$this.TargetStats        = @{
+			[StatId]::Defense = 6
+			[StatId]::MagicDefense = 12
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Delicate and enchanting greaves.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESpriteGreaves : BEGreaves {
+	BESpriteGreaves() : base() {
+		$this.Name               = 'Sprite Greaves'
+		$this.MapObjName         = 'spritegreaves'
+		$this.PurchasePrice      = 170
+		$this.SellPrice          = 85
+		$this.TargetStats        = @{
+			[StatId]::Defense = 6
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Nimble greaves of a playful spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BELeprechaunGreaves : BEGreaves {
+	BELeprechaunGreaves() : base() {
+		$this.Name               = 'Leprechaun Greaves'
+		$this.MapObjName         = 'leprechaungreaves'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that bring good fortune.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGoblinoidGreaves : BEGreaves {
+	BEGoblinoidGreaves() : base() {
+		$this.Name               = 'Goblinoid Greaves'
+		$this.MapObjName         = 'goblinoidgreaves'
+		$this.PurchasePrice      = 100
+		$this.SellPrice          = 50
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves favored by various goblinoid races.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKoboldGreaves : BEGreaves {
+	BEKoboldGreaves() : base() {
+		$this.Name               = 'Kobold Greaves'
+		$this.MapObjName         = 'koboldgreaves'
+		$this.PurchasePrice      = 90
+		$this.SellPrice          = 45
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Crude greaves of kobolds.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGnollGreaves : BEGreaves {
+	BEGnollGreaves() : base() {
+		$this.Name               = 'Gnoll Greaves'
+		$this.MapObjName         = 'gnollgreaves'
+		$this.PurchasePrice      = 120
+		$this.SellPrice          = 60
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Rough greaves of hyena folk.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBugbearGreaves : BEGreaves {
+	BEBugbearGreaves() : base() {
+		$this.Name               = 'Bugbear Greaves'
+		$this.MapObjName         = 'bugbeargreaves'
+		$this.PurchasePrice      = 180
+		$this.SellPrice          = 90
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy greaves of bugbears.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEOgreMageGreaves : BEGreaves {
+	BEOgreMageGreaves() : base() {
+		$this.Name               = 'Ogre Mage Greaves'
+		$this.MapObjName         = 'ogremagegreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a powerful ogre mage.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETrollGreaves : BEGreaves {
+	BETrollGreaves() : base() {
+		$this.Name               = 'Troll Greaves'
+		$this.MapObjName         = 'trollgreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves with regenerative properties.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBeastGreaves : BEGreaves {
+	BEBeastGreaves() : base() {
+		$this.Name               = 'Beast Greaves'
+		$this.MapObjName         = 'beastgreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves made from monstrous beast hides.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHunterKillerGreaves : BEGreaves {
+	BEHunterKillerGreaves() : base() {
+		$this.Name               = 'Hunter Killer Greaves'
+		$this.MapObjName         = 'hunterkillergreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves designed for tracking and eliminating targets.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPunisherGreaves : BEGreaves {
+	BEPunisherGreaves() : base() {
+		$this.Name               = 'Punisher Greaves'
+		$this.MapObjName         = 'punishergreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of relentless retribution.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEAvengerGreaves : BEGreaves {
+	BEAvengerGreaves() : base() {
+		$this.Name               = 'Avenger Greaves'
+		$this.MapObjName         = 'avengergreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of righteous vengeance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERedeemerGreaves : BEGreaves {
+	BERedeemerGreaves() : base() {
+		$this.Name               = 'Redeemer Greaves'
+		$this.MapObjName         = 'redeemergreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that bring salvation.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVindicatorGreaves : BEGreaves {
+	BEVindicatorGreaves() : base() {
+		$this.Name               = 'Vindicator Greaves'
+		$this.MapObjName         = 'vindicatorgreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of justified defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGloryGreaves : BEGreaves {
+	BEGloryGreaves() : base() {
+		$this.Name               = 'Glory Greaves'
+		$this.MapObjName         = 'glorygreaves'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves signifying great honor and fame.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEValorGreaves : BEGreaves {
+	BEValorGreaves() : base() {
+		$this.Name               = 'Valor Greaves'
+		$this.MapObjName         = 'valorgreaves'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves embodying courage and bravery.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEChivalryGreaves : BEGreaves {
+	BEChivalryGreaves() : base() {
+		$this.Name               = 'Chivalry Greaves'
+		$this.MapObjName         = 'chivalrygreaves'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 48
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves upholding the ideals of knighthood.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHonorGreaves : BEGreaves {
+	BEHonorGreaves() : base() {
+		$this.Name               = 'Honor Greaves'
+		$this.MapObjName         = 'honorgreaves'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves symbolizing integrity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJusticeGreaves : BEGreaves {
+	BEJusticeGreaves() : base() {
+		$this.Name               = 'Justice Greaves'
+		$this.MapObjName         = 'justicegreaves'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of unwavering fairness.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERighteousGreaves : BEGreaves {
+	BERighteousGreaves() : base() {
+		$this.Name               = 'Righteous Greaves'
+		$this.MapObjName         = 'righteousgreaves'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of moral rectitude.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVirtueGreaves : BEGreaves {
+	BEVirtueGreaves() : base() {
+		$this.Name               = 'Virtue Greaves'
+		$this.MapObjName         = 'virtuegreaves'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves representing moral excellence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPurityGreaves : BEGreaves {
+	BEPurityGreaves() : base() {
+		$this.Name               = 'Purity Greaves'
+		$this.MapObjName         = 'puritygreaves'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of untainted essence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEInnocenceGreaves : BEGreaves {
+	BEInnocenceGreaves() : base() {
+		$this.Name               = 'Innocence Greaves'
+		$this.MapObjName         = 'innocencegreaves'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of a pure heart.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEHopeGreaves : BEGreaves {
+	BEHopeGreaves() : base() {
+		$this.Name               = 'Hope Greaves'
+		$this.MapObjName         = 'hopegreaves'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that inspire optimism.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFaithGreaves : BEGreaves {
+	BEFaithGreaves() : base() {
+		$this.Name               = 'Faith Greaves'
+		$this.MapObjName         = 'faithgreaves'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of unwavering belief.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECharityGreaves : BEGreaves {
+	BECharityGreaves() : base() {
+		$this.Name               = 'Charity Greaves'
+		$this.MapObjName         = 'charitygreaves'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that embody benevolence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECourageGreaves : BEGreaves {
+	BECourageGreaves() : base() {
+		$this.Name               = 'Courage Greaves'
+		$this.MapObjName         = 'couragegreaves'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that instill bravery.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWisdomGreaves : BEGreaves {
+	BEWisdomGreaves() : base() {
+		$this.Name               = 'Wisdom Greaves'
+		$this.MapObjName         = 'wisdomgreaves'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves of profound insight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKnowledgeGreaves : BEGreaves {
+	BEKnowledgeGreaves() : base() {
+		$this.Name               = 'Knowledge Greaves'
+		$this.MapObjName         = 'knowledgegreaves'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that hold vast information.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETruthGreaves : BEGreaves {
+	BETruthGreaves() : base() {
+		$this.Name               = 'Truth Greaves'
+		$this.MapObjName         = 'truthgreaves'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that reveal falsehoods.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDisciplineGreaves : BEGreaves {
+	BEDisciplineGreaves() : base() {
+		$this.Name               = 'Discipline Greaves'
+		$this.MapObjName         = 'disciplinegreaves'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that promote self-control.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPatienceGreaves : BEGreaves {
+	BEPatienceGreaves() : base() {
+		$this.Name               = 'Patience Greaves'
+		$this.MapObjName         = 'patiencegreaves'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that foster endurance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPerseveranceGreaves : BEGreaves {
+	BEPerseveranceGreaves() : base() {
+		$this.Name               = 'Perseverance Greaves'
+		$this.MapObjName         = 'perseverancegreaves'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Greaves that encourage persistence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+#endregion
+
+
+
+
+
+#region Boots
+
+Class BELeatherBoots : BEBoots {
+	BELeatherBoots() : base() {
+		$this.Name               = 'Leather Boots'
+		$this.MapObjName         = 'leatherboots'
+		$this.PurchasePrice      = 80
+		$this.SellPrice          = 40
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Basic leather boots, offering minimal protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPaddedBoots : BEBoots {
+	BEPaddedBoots() : base() {
+		$this.Name               = 'Padded Boots'
+		$this.MapObjName         = 'paddedboots'
+		$this.PurchasePrice      = 100
+		$this.SellPrice          = 50
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 2
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Lightly padded boots for comfortable movement.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBronzeBoots : BEBoots {
+	BEBronzeBoots() : base() {
+		$this.Name               = 'Bronze Boots'
+		$this.MapObjName         = 'bronzeboots'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Sturdy bronze boots, providing decent foot protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEIronBoots : BEBoots {
+	BEIronBoots() : base() {
+		$this.Name               = 'Iron Boots'
+		$this.MapObjName         = 'ironboots'
+		$this.PurchasePrice      = 220
+		$this.SellPrice          = 110
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Common iron boots, robust and reliable.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESteelBoots : BEBoots {
+	BESteelBoots() : base() {
+		$this.Name               = 'Steel Boots'
+		$this.MapObjName         = 'steelboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy steel boots, offering solid defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEChainmailBoots : BEBoots {
+	BEChainmailBoots() : base() {
+		$this.Name               = 'Chainmail Boots'
+		$this.MapObjName         = 'chainmailboots'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Flexible chainmail foot protection, good against piercing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPlateBoots : BEBoots {
+	BEPlateBoots() : base() {
+		$this.Name               = 'Plate Boots'
+		$this.MapObjName         = 'plateboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Full plate foot armor, excellent protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMithrilBoots : BEBoots {
+	BEMithrilBoots() : base() {
+		$this.Name               = 'Mithril Boots'
+		$this.MapObjName         = 'mithrilboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 28
+			[StatId]::MagicDefense = 12
+			[StatId]::Speed = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots crafted from light and strong mithril.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAdamantBoots : BEBoots {
+	BEAdamantBoots() : base() {
+		$this.Name               = 'Adamant Boots'
+		$this.MapObjName         = 'adamantboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Nearly impenetrable boots made from adamant ore.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDragonhideBoots : BEBoots {
+	BEDragonhideBoots() : base() {
+		$this.Name               = 'Dragonhide Boots'
+		$this.MapObjName         = 'dragonhideboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 36
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots made from the tough hide of a dragon.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEElvenBoots : BEBoots {
+	BEElvenBoots() : base() {
+		$this.Name               = 'Elven Boots'
+		$this.MapObjName         = 'elvenboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 20
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Graceful boots favored by elves, light and agile.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDwarvenBoots : BEBoots {
+	BEDwarvenBoots() : base() {
+		$this.Name               = 'Dwarven Boots'
+		$this.MapObjName         = 'dwarvenboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Robust boots forged by dwarven artisans.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEShadowBoots : BEBoots {
+	BEShadowBoots() : base() {
+		$this.Name               = 'Shadow Boots'
+		$this.MapObjName         = 'shadowboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 25
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots imbued with dark energies, granting stealth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHolyBoots : BEBoots {
+	BEHolyBoots() : base() {
+		$this.Name               = 'Holy Boots'
+		$this.MapObjName         = 'holyboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 29
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Blessed boots that ward off evil.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMysticBoots : BEBoots {
+	BEMysticBoots() : base() {
+		$this.Name               = 'Mystic Boots'
+		$this.MapObjName         = 'mysticboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that enhance magical aptitude.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarriorBoots : BEBoots {
+	BEWarriorBoots() : base() {
+		$this.Name               = 'Warrior Boots'
+		$this.MapObjName         = 'warriorboots'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Standard issue boots for a seasoned warrior.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKnightBoots : BEBoots {
+	BEKnightBoots() : base() {
+		$this.Name               = 'Knight Boots'
+		$this.MapObjName         = 'knightboots'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots fit for a noble knight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESentinelBoots : BEBoots {
+	BESentinelBoots() : base() {
+		$this.Name               = 'Sentinel Boots'
+		$this.MapObjName         = 'sentinelboots'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy boots designed for defensive stances.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEScoutBoots : BEBoots {
+	BEScoutBoots() : base() {
+		$this.Name               = 'Scout Boots'
+		$this.MapObjName         = 'scoutboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 7
+			[StatId]::Speed = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light boots for quick movement and evasion.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERangerBoots : BEBoots {
+	BERangerBoots() : base() {
+		$this.Name               = 'Ranger Boots'
+		$this.MapObjName         = 'rangerboots'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 12
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots suitable for wilderness survival.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBerserkerBoots : BEBoots {
+	BEBerserkerBoots() : base() {
+		$this.Name               = 'Berserker Boots'
+		$this.MapObjName         = 'berserkerboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those who fight with unrestrained fury.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPaladinBoots : BEBoots {
+	BEPaladinBoots() : base() {
+		$this.Name               = 'Paladin Boots'
+		$this.MapObjName         = 'paladinboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a holy warrior, offering divine protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESorcererBoots : BEBoots {
+	BESorcererBoots() : base() {
+		$this.Name               = 'Sorcerer Boots'
+		$this.MapObjName         = 'sorcererboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light boots that aid in spellcasting.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarlockBoots : BEBoots {
+	BEWarlockBoots() : base() {
+		$this.Name               = 'Warlock Boots'
+		$this.MapObjName         = 'warlockboots'
+		$this.PurchasePrice      = 480
+		$this.SellPrice          = 240
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those who dabble in dark magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAdeptBoots : BEBoots {
+	BEAdeptBoots() : base() {
+		$this.Name               = 'Adept Boots'
+		$this.MapObjName         = 'adeptboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by skilled practitioners.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGuardianBoots : BEBoots {
+	BEGuardianBoots() : base() {
+		$this.Name               = 'Guardian Boots'
+		$this.MapObjName         = 'guardianboots'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 38
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots designed to protect the wearer at all costs.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHeroicBoots : BEBoots {
+	BEHeroicBoots() : base() {
+		$this.Name               = 'Heroic Boots'
+		$this.MapObjName         = 'heroicboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by legendary heroes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEImperialBoots : BEBoots {
+	BEImperialBoots() : base() {
+		$this.Name               = 'Imperial Boots'
+		$this.MapObjName         = 'imperialboots'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of the imperial guard, highly polished.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERoyalBoots : BEBoots {
+	BERoyalBoots() : base() {
+		$this.Name               = 'Royal Boots'
+		$this.MapObjName         = 'royalboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots fit for royalty, exquisitely crafted.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETravelerBoots : BEBoots {
+	BETravelerBoots() : base() {
+		$this.Name               = 'Traveler Boots'
+		$this.MapObjName         = 'travelerboots'
+		$this.PurchasePrice      = 80
+		$this.SellPrice          = 40
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Simple and comfortable boots for long journeys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHunterBoots : BEBoots {
+	BEHunterBoots() : base() {
+		$this.Name               = 'Hunter Boots'
+		$this.MapObjName         = 'hunterboots'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 9
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots designed for tracking and hunting.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMercenaryBoots : BEBoots {
+	BEMercenaryBoots() : base() {
+		$this.Name               = 'Mercenary Boots'
+		$this.MapObjName         = 'mercenaryboots'
+		$this.PurchasePrice      = 260
+		$this.SellPrice          = 130
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a hired blade, practical and durable.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGladiatorBoots : BEBoots {
+	BEGladiatorBoots() : base() {
+		$this.Name               = 'Gladiator Boots'
+		$this.MapObjName         = 'gladiatorboots'
+		$this.PurchasePrice      = 620
+		$this.SellPrice          = 310
+		$this.TargetStats        = @{
+			[StatId]::Defense = 33
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy boots worn by arena champions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBarbarianBoots : BEBoots {
+	BEBarbarianBoots() : base() {
+		$this.Name               = 'Barbarian Boots'
+		$this.MapObjName         = 'barbarianboots'
+		$this.PurchasePrice      = 440
+		$this.SellPrice          = 220
+		$this.TargetStats        = @{
+			[StatId]::Defense = 23
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Crude but effective boots of a barbarian.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDruidBoots : BEBoots {
+	BEDruidBoots() : base() {
+		$this.Name               = 'Druid Boots'
+		$this.MapObjName         = 'druidboots'
+		$this.PurchasePrice      = 530
+		$this.SellPrice          = 265
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots made from natural materials, attuned to nature.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEClericBoots : BEBoots {
+	BEClericBoots() : base() {
+		$this.Name               = 'Cleric Boots'
+		$this.MapObjName         = 'clericboots'
+		$this.PurchasePrice      = 570
+		$this.SellPrice          = 285
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 26
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots blessed by divine power, for healing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMonkBoots : BEBoots {
+	BEMonkBoots() : base() {
+		$this.Name               = 'Monk Boots'
+		$this.MapObjName         = 'monkboots'
+		$this.PurchasePrice      = 330
+		$this.SellPrice          = 165
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 14
+			[StatId]::Speed = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light boots for martial arts practitioners.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESamuraiBoots : BEBoots {
+	BESamuraiBoots() : base() {
+		$this.Name               = 'Samurai Boots'
+		$this.MapObjName         = 'samuraiboots'
+		$this.PurchasePrice      = 720
+		$this.SellPrice          = 360
+		$this.TargetStats        = @{
+			[StatId]::Defense = 31
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a disciplined warrior from the East.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BENinjaBoots : BEBoots {
+	BENinjaBoots() : base() {
+		$this.Name               = 'Ninja Boots'
+		$this.MapObjName         = 'ninjaboots'
+		$this.PurchasePrice      = 460
+		$this.SellPrice          = 230
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 16
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light and silent boots for covert operations.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETemplarBoots : BEBoots {
+	BETemplarBoots() : base() {
+		$this.Name               = 'Templar Boots'
+		$this.MapObjName         = 'templarboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Holy boots worn by zealous protectors.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEEnchantedBoots : BEBoots {
+	BEEnchantedBoots() : base() {
+		$this.Name               = 'Enchanted Boots'
+		$this.MapObjName         = 'enchantedboots'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 23
+			[StatId]::MagicDefense = 23
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots imbued with a minor enchantment.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECrystallineBoots : BEBoots {
+	BECrystallineBoots() : base() {
+		$this.Name               = 'Crystalline Boots'
+		$this.MapObjName         = 'crystallineboots'
+		$this.PurchasePrice      = 920
+		$this.SellPrice          = 460
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots crafted from durable crystals.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVolcanicBoots : BEBoots {
+	BEVolcanicBoots() : base() {
+		$this.Name               = 'Volcanic Boots'
+		$this.MapObjName         = 'volcanicboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 43
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots forged near volcanic heat, resilient.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOceanicBoots : BEBoots {
+	BEOceanicBoots() : base() {
+		$this.Name               = 'Oceanic Boots'
+		$this.MapObjName         = 'oceanicboots'
+		$this.PurchasePrice      = 980
+		$this.SellPrice          = 490
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots found in the depths of the ocean, resistant to water.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEForestBoots : BEBoots {
+	BEForestBoots() : base() {
+		$this.Name               = 'Forest Boots'
+		$this.MapObjName         = 'forestboots'
+		$this.PurchasePrice      = 460
+		$this.SellPrice          = 230
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 13
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that blend with natural surroundings.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDesertBoots : BEBoots {
+	BEDesertBoots() : base() {
+		$this.Name               = 'Desert Boots'
+		$this.MapObjName         = 'desertboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots suitable for arid environments.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArcticBoots : BEBoots {
+	BEArcticBoots() : base() {
+		$this.Name               = 'Arctic Boots'
+		$this.MapObjName         = 'arcticboots'
+		$this.PurchasePrice      = 440
+		$this.SellPrice          = 220
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 11
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots designed for cold climates.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEStarfallBoots : BEBoots {
+	BEStarfallBoots() : base() {
+		$this.Name               = 'Starfall Boots'
+		$this.MapObjName         = 'starfallboots'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots said to be crafted from fallen stars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESunstoneBoots : BEBoots {
+	BESunstoneBoots() : base() {
+		$this.Name               = 'Sunstone Boots'
+		$this.MapObjName         = 'sunstoneboots'
+		$this.PurchasePrice      = 1250
+		$this.SellPrice          = 625
+		$this.TargetStats        = @{
+			[StatId]::Defense = 47
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that shimmer with solar energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMoonstoneBoots : BEBoots {
+	BEMoonstoneBoots() : base() {
+		$this.Name               = 'Moonstone Boots'
+		$this.MapObjName         = 'moonstoneboots'
+		$this.PurchasePrice      = 1250
+		$this.SellPrice          = 625
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 33
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that glow with lunar power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAetherBoots : BEBoots {
+	BEAetherBoots() : base() {
+		$this.Name               = 'Aether Boots'
+		$this.MapObjName         = 'aetherboots'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots from another dimension, ethereal.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVoidBoots : BEBoots {
+	BEVoidBoots() : base() {
+		$this.Name               = 'Void Boots'
+		$this.MapObjName         = 'voidboots'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Defense = 65
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that draw power from the void.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpiritBoots : BEBoots {
+	BESpiritBoots() : base() {
+		$this.Name               = 'Spirit Boots'
+		$this.MapObjName         = 'spiritboots'
+		$this.PurchasePrice      = 1150
+		$this.SellPrice          = 575
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that resonate with spiritual energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAncientBoots : BEBoots {
+	BEAncientBoots() : base() {
+		$this.Name               = 'Ancient Boots'
+		$this.MapObjName         = 'ancientboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 53
+			[StatId]::MagicDefense = 33
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots from a forgotten civilization.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELegendaryBoots : BEBoots {
+	BELegendaryBoots() : base() {
+		$this.Name               = 'Legendary Boots'
+		$this.MapObjName         = 'legendaryboots'
+		$this.PurchasePrice      = 1900
+		$this.SellPrice          = 950
+		$this.TargetStats        = @{
+			[StatId]::Defense = 70
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots spoken of in ancient tales.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGodlyBoots : BEBoots {
+	BEGodlyBoots() : base() {
+		$this.Name               = 'Godly Boots'
+		$this.MapObjName         = 'godlyboots'
+		$this.PurchasePrice      = 2400
+		$this.SellPrice          = 1200
+		$this.TargetStats        = @{
+			[StatId]::Defense = 85
+			[StatId]::MagicDefense = 55
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by deities, immense power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEApprenticeBoots : BEBoots {
+	BEApprenticeBoots() : base() {
+		$this.Name               = 'Apprentice Boots'
+		$this.MapObjName         = 'apprenticeboots'
+		$this.PurchasePrice      = 60
+		$this.SellPrice          = 30
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Basic boots for aspiring adventurers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJourneymanBoots : BEBoots {
+	BEJourneymanBoots() : base() {
+		$this.Name               = 'Journeyman Boots'
+		$this.MapObjName         = 'journeymanboots'
+		$this.PurchasePrice      = 130
+		$this.SellPrice          = 65
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those gaining experience.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMasterBoots : BEBoots {
+	BEMasterBoots() : base() {
+		$this.Name               = 'Master Boots'
+		$this.MapObjName         = 'masterboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by true masters of their craft.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGrandmasterBoots : BEBoots {
+	BEGrandmasterBoots() : base() {
+		$this.Name               = 'Grandmaster Boots'
+		$this.MapObjName         = 'grandmasterboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of unparalleled skill and defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVanguardBoots : BEBoots {
+	BEVanguardBoots() : base() {
+		$this.Name               = 'Vanguard Boots'
+		$this.MapObjName         = 'vanguardboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for the front lines of battle.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEReconBoots : BEBoots {
+	BEReconBoots() : base() {
+		$this.Name               = 'Recon Boots'
+		$this.MapObjName         = 'reconboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 8
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light boots for reconnaissance missions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECommandoBoots : BEBoots {
+	BECommandoBoots() : base() {
+		$this.Name               = 'Commando Boots'
+		$this.MapObjName         = 'commandoboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for elite fighting units.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPathfinderBoots : BEBoots {
+	BEPathfinderBoots() : base() {
+		$this.Name               = 'Pathfinder Boots'
+		$this.MapObjName         = 'pathfinderboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for charting unknown territories.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWandererBoots : BEBoots {
+	BEWandererBoots() : base() {
+		$this.Name               = 'Wanderer Boots'
+		$this.MapObjName         = 'wandererboots'
+		$this.PurchasePrice      = 180
+		$this.SellPrice          = 90
+		$this.TargetStats        = @{
+			[StatId]::Defense = 6
+			[StatId]::MagicDefense = 5
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for eternal travelers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENomadBoots : BEBoots {
+	BENomadBoots() : base() {
+		$this.Name               = 'Nomad Boots'
+		$this.MapObjName         = 'nomadboots'
+		$this.PurchasePrice      = 200
+		$this.SellPrice          = 100
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 6
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those who live on the move.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPilgrimBoots : BEBoots {
+	BEPilgrimBoots() : base() {
+		$this.Name               = 'Pilgrim Boots'
+		$this.MapObjName         = 'pilgrimboots'
+		$this.PurchasePrice      = 220
+		$this.SellPrice          = 110
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for spiritual journeys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECrusaderBoots : BEBoots {
+	BECrusaderBoots() : base() {
+		$this.Name               = 'Crusader Boots'
+		$this.MapObjName         = 'crusaderboots'
+		$this.PurchasePrice      = 1050
+		$this.SellPrice          = 525
+		$this.TargetStats        = @{
+			[StatId]::Defense = 39
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a holy warrior on a quest.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEInquisitorBoots : BEBoots {
+	BEInquisitorBoots() : base() {
+		$this.Name               = 'Inquisitor Boots'
+		$this.MapObjName         = 'inquisitorboots'
+		$this.PurchasePrice      = 980
+		$this.SellPrice          = 490
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 29
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those who seek out heresy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEZealotBoots : BEBoots {
+	BEZealotBoots() : base() {
+		$this.Name               = 'Zealot Boots'
+		$this.MapObjName         = 'zealotboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of unwavering devotion.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEFanaticBoots : BEBoots {
+	BEFanaticBoots() : base() {
+		$this.Name               = 'Fanatic Boots'
+		$this.MapObjName         = 'fanaticboots'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 29
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of extreme fervor.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESentryBoots : BEBoots {
+	BESentryBoots() : base() {
+		$this.Name               = 'Sentry Boots'
+		$this.MapObjName         = 'sentryboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for watchful guards.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWatchmanBoots : BEBoots {
+	BEWatchmanBoots() : base() {
+		$this.Name               = 'Watchman Boots'
+		$this.MapObjName         = 'watchmanboots'
+		$this.PurchasePrice      = 630
+		$this.SellPrice          = 315
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for night patrols.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMilitiaBoots : BEBoots {
+	BEMilitiaBoots() : base() {
+		$this.Name               = 'Militia Boots'
+		$this.MapObjName         = 'militiaboots'
+		$this.PurchasePrice      = 130
+		$this.SellPrice          = 65
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for civilian defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEConscriptBoots : BEBoots {
+	BEConscriptBoots() : base() {
+		$this.Name               = 'Conscript Boots'
+		$this.MapObjName         = 'conscriptboots'
+		$this.PurchasePrice      = 110
+		$this.SellPrice          = 55
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Basic boots for newly drafted soldiers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOfficerBoots : BEBoots {
+	BEOfficerBoots() : base() {
+		$this.Name               = 'Officer Boots'
+		$this.MapObjName         = 'officerboots'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by military officers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECommanderBoots : BEBoots {
+	BECommanderBoots() : base() {
+		$this.Name               = 'Commander Boots'
+		$this.MapObjName         = 'commanderboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a battle hardened commander.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGeneralBoots : BEBoots {
+	BEGeneralBoots() : base() {
+		$this.Name               = 'General Boots'
+		$this.MapObjName         = 'generalboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots fit for a military general.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEmperorBoots : BEBoots {
+	BEEmperorBoots() : base() {
+		$this.Name               = 'Emperor Boots'
+		$this.MapObjName         = 'emperorboots'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 30
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of an undisputed ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEEmpressBoots : BEBoots {
+	BEEmpressBoots() : base() {
+		$this.Name               = 'Empress Boots'
+		$this.MapObjName         = 'empressboots'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 53
+			[StatId]::MagicDefense = 33
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a powerful female ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEHeroineBoots : BEBoots {
+	BEHeroineBoots() : base() {
+		$this.Name               = 'Heroine Boots'
+		$this.MapObjName         = 'heroineboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 43
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a celebrated female hero.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEChampionBoots : BEBoots {
+	BEChampionBoots() : base() {
+		$this.Name               = 'Champion Boots'
+		$this.MapObjName         = 'championboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 28
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of an undisputed champion.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVictorBoots : BEBoots {
+	BEVictorBoots() : base() {
+		$this.Name               = 'Victor Boots'
+		$this.MapObjName         = 'victorboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 43
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by those who claim victory.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETriumphBoots : BEBoots {
+	BETriumphBoots() : base() {
+		$this.Name               = 'Triumph Boots'
+		$this.MapObjName         = 'triumphboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 47
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots signifying great success.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAuraBoots : BEBoots {
+	BEAuraBoots() : base() {
+		$this.Name               = 'Aura Boots'
+		$this.MapObjName         = 'auraboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that emanate a protective aura.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESanctuaryBoots : BEBoots {
+	BESanctuaryBoots() : base() {
+		$this.Name               = 'Sanctuary Boots'
+		$this.MapObjName         = 'sanctuaryboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that offer a sense of peace.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESeraphBoots : BEBoots {
+	BESeraphBoots() : base() {
+		$this.Name               = 'Seraph Boots'
+		$this.MapObjName         = 'seraphboots'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 57
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of angelic origin.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECherubBoots : BEBoots {
+	BECherubBoots() : base() {
+		$this.Name               = 'Cherub Boots'
+		$this.MapObjName         = 'cherubboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 35
+			[StatId]::Speed = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light and protective boots.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEArchangelBoots : BEBoots {
+	BEArchangelBoots() : base() {
+		$this.Name               = 'Archangel Boots'
+		$this.MapObjName         = 'archangelboots'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Defense = 65
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of the highest order of angels.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDemonBoots : BEBoots {
+	BEDemonBoots() : base() {
+		$this.Name               = 'Demon Boots'
+		$this.MapObjName         = 'demonboots'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots infused with demonic power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEFiendBoots : BEBoots {
+	BEFiendBoots() : base() {
+		$this.Name               = 'Fiend Boots'
+		$this.MapObjName         = 'fiendboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a malevolent spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEImpBoots : BEBoots {
+	BEImpBoots() : base() {
+		$this.Name               = 'Imp Boots'
+		$this.MapObjName         = 'impboots'
+		$this.PurchasePrice      = 230
+		$this.SellPrice          = 115
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Small but surprisingly tough boots.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGoblinBoots : BEBoots {
+	BEGoblinBoots() : base() {
+		$this.Name               = 'Goblin Boots'
+		$this.MapObjName         = 'goblinboots'
+		$this.PurchasePrice      = 70
+		$this.SellPrice          = 35
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Crude boots taken from goblins.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOrcishBoots : BEBoots {
+	BEOrcishBoots() : base() {
+		$this.Name               = 'Orcish Boots'
+		$this.MapObjName         = 'orcishboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy and brutal boots of orcs.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEOgreBoots : BEBoots {
+	BEOgreBoots() : base() {
+		$this.Name               = 'Ogre Boots'
+		$this.MapObjName         = 'ogreboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Massive boots for immense creatures.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGiantBoots : BEBoots {
+	BEGiantBoots() : base() {
+		$this.Name               = 'Giant Boots'
+		$this.MapObjName         = 'giantboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots sized for colossal beings.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETitanBoots : BEBoots {
+	BETitanBoots() : base() {
+		$this.Name               = 'Titan Boots'
+		$this.MapObjName         = 'titanboots'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::Defense = 67
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of legendary titans, immensely strong.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDragonlordBoots : BEBoots {
+	BEDragonlordBoots() : base() {
+		$this.Name               = 'Dragonlord Boots'
+		$this.MapObjName         = 'dragonlordboots'
+		$this.PurchasePrice      = 2100
+		$this.SellPrice          = 1050
+		$this.TargetStats        = @{
+			[StatId]::Defense = 75
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by a dragonlord.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEWyvernBoots : BEBoots {
+	BEWyvernBoots() : base() {
+		$this.Name               = 'Wyvern Boots'
+		$this.MapObjName         = 'wyvernboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots crafted from wyvern scales.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPhoenixBoots : BEBoots {
+	BEPhoenixBoots() : base() {
+		$this.Name               = 'Phoenix Boots'
+		$this.MapObjName         = 'phoenixboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that glow with fiery essence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGriffinBoots : BEBoots {
+	BEGriffinBoots() : base() {
+		$this.Name               = 'Griffin Boots'
+		$this.MapObjName         = 'griffinboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 22
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that grant swiftness and grace.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEUnicornBoots : BEBoots {
+	BEUnicornBoots() : base() {
+		$this.Name               = 'Unicorn Boots'
+		$this.MapObjName         = 'unicornboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Pure boots, associated with healing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEPegasusBoots : BEBoots {
+	BEPegasusBoots() : base() {
+		$this.Name               = 'Pegasus Boots'
+		$this.MapObjName         = 'pegasusboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 30
+			[StatId]::MagicDefense = 18
+			[StatId]::Speed = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that feel weightless.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHarpyBoots : BEBoots {
+	BEHarpyBoots() : base() {
+		$this.Name               = 'Harpy Boots'
+		$this.MapObjName         = 'harpyboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 13
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that aid in agile aerial combat.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESphinxBoots : BEBoots {
+	BESphinxBoots() : base() {
+		$this.Name               = 'Sphinx Boots'
+		$this.MapObjName         = 'sphinxboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of ancient wisdom and defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBasiliskBoots : BEBoots {
+	BEBasiliskBoots() : base() {
+		$this.Name               = 'Basilisk Boots'
+		$this.MapObjName         = 'basiliskboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots made from basilisk hide, resistant to petrification.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHydraBoots : BEBoots {
+	BEHydraBoots() : base() {
+		$this.Name               = 'Hydra Boots'
+		$this.MapObjName         = 'hydraboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 53
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of multi-headed beasts, regenerating.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKrakenBoots : BEBoots {
+	BEKrakenBoots() : base() {
+		$this.Name               = 'Kraken Boots'
+		$this.MapObjName         = 'krakenboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 47
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots from the depths, granting water resistance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMinotaurBoots : BEBoots {
+	BEMinotaurBoots() : base() {
+		$this.Name               = 'Minotaur Boots'
+		$this.MapObjName         = 'minotaurboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 39
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of brute strength.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BECentaurBoots : BEBoots {
+	BECentaurBoots() : base() {
+		$this.Name               = 'Centaur Boots'
+		$this.MapObjName         = 'centaurboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 13
+			[StatId]::Speed = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for equestrian warriors.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGorgonBoots : BEBoots {
+	BEGorgonBoots() : base() {
+		$this.Name               = 'Gorgon Boots'
+		$this.MapObjName         = 'gorgonboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots offering protection from petrification.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEWerewolfBoots : BEBoots {
+	BEWerewolfBoots() : base() {
+		$this.Name               = 'Werewolf Boots'
+		$this.MapObjName         = 'werewolfboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 16
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a shapeshifter, enhances agility.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVampireBoots : BEBoots {
+	BEVampireBoots() : base() {
+		$this.Name               = 'Vampire Boots'
+		$this.MapObjName         = 'vampireboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that drain life from foes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEZombieBoots : BEBoots {
+	BEZombieBoots() : base() {
+		$this.Name               = 'Zombie Boots'
+		$this.MapObjName         = 'zombieboots'
+		$this.PurchasePrice      = 40
+		$this.SellPrice          = 20
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Rotting boots, barely functional.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESkeletonBoots : BEBoots {
+	BESkeletonBoots() : base() {
+		$this.Name               = 'Skeleton Boots'
+		$this.MapObjName         = 'skeletonboots'
+		$this.PurchasePrice      = 60
+		$this.SellPrice          = 30
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Bony boots, surprisingly light.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGhostBoots : BEBoots {
+	BEGhostBoots() : base() {
+		$this.Name               = 'Ghost Boots'
+		$this.MapObjName         = 'ghostboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Ethereal boots, difficult to hit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpecterBoots : BEBoots {
+	BESpecterBoots() : base() {
+		$this.Name               = 'Specter Boots'
+		$this.MapObjName         = 'specterboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 45
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a powerful phantom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELichBoots : BEBoots {
+	BELichBoots() : base() {
+		$this.Name               = 'Lich Boots'
+		$this.MapObjName         = 'lichboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of an undead sorcerer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEMummyBoots : BEBoots {
+	BEMummyBoots() : base() {
+		$this.Name               = 'Mummy Boots'
+		$this.MapObjName         = 'mummyboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Bandaged boots, ancient and cursed.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGargoyleBoots : BEBoots {
+	BEGargoyleBoots() : base() {
+		$this.Name               = 'Gargoyle Boots'
+		$this.MapObjName         = 'gargoyleboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Stone boots, offering immense defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGolemBoots : BEBoots {
+	BEGolemBoots() : base() {
+		$this.Name               = 'Golem Boots'
+		$this.MapObjName         = 'golemboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots crafted from enchanted stone.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAutomatonBoots : BEBoots {
+	BEAutomatonBoots() : base() {
+		$this.Name               = 'Automaton Boots'
+		$this.MapObjName         = 'automatonboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 43
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Mechanical boots, precisely engineered.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEClockworkBoots : BEBoots {
+	BEClockworkBoots() : base() {
+		$this.Name               = 'Clockwork Boots'
+		$this.MapObjName         = 'clockworkboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 47
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots with intricate clockwork mechanisms.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESteamBoots : BEBoots {
+	BESteamBoots() : base() {
+		$this.Name               = 'Steam Boots'
+		$this.MapObjName         = 'steamboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots powered by steam, heavy but powerful.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMagitechBoots : BEBoots {
+	BEMagitechBoots() : base() {
+		$this.Name               = 'Magitech Boots'
+		$this.MapObjName         = 'magitechboots'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots combining magic and technology.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArcaneBoots : BEBoots {
+	BEArcaneBoots() : base() {
+		$this.Name               = 'Arcane Boots'
+		$this.MapObjName         = 'arcaneboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots infused with raw arcane power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEtherealBoots : BEBoots {
+	BEEtherealBoots() : base() {
+		$this.Name               = 'Ethereal Boots'
+		$this.MapObjName         = 'etherealboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 43
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots existing between realms, difficult to perceive.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAstralBoots : BEBoots {
+	BEAstralBoots() : base() {
+		$this.Name               = 'Astral Boots'
+		$this.MapObjName         = 'astralboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 47
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that draw power from the stars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECosmicBoots : BEBoots {
+	BECosmicBoots() : base() {
+		$this.Name               = 'Cosmic Boots'
+		$this.MapObjName         = 'cosmicboots'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Defense = 65
+			[StatId]::MagicDefense = 55
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of the cosmos, vast and powerful.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENebulaBoots : BEBoots {
+	BENebulaBoots() : base() {
+		$this.Name               = 'Nebula Boots'
+		$this.MapObjName         = 'nebulaboots'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 55
+			[StatId]::MagicDefense = 50
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots shimmering with cosmic dust.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGalacticBoots : BEBoots {
+	BEGalacticBoots() : base() {
+		$this.Name               = 'Galactic Boots'
+		$this.MapObjName         = 'galacticboots'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Defense = 60
+			[StatId]::MagicDefense = 53
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots from beyond the galaxy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERunicBoots : BEBoots {
+	BERunicBoots() : base() {
+		$this.Name               = 'Runic Boots'
+		$this.MapObjName         = 'runicboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots inscribed with ancient runes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGlyphBoots : BEBoots {
+	BEGlyphBoots() : base() {
+		$this.Name               = 'Glyph Boots'
+		$this.MapObjName         = 'glyphboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots adorned with powerful magical symbols.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESigilBoots : BEBoots {
+	BESigilBoots() : base() {
+		$this.Name               = 'Sigil Boots'
+		$this.MapObjName         = 'sigilboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 29
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots bearing potent magical sigils.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECabalBoots : BEBoots {
+	BECabalBoots() : base() {
+		$this.Name               = 'Cabal Boots'
+		$this.MapObjName         = 'cabalboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 39
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a secret magical society.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECultistBoots : BEBoots {
+	BECultistBoots() : base() {
+		$this.Name               = 'Cultist Boots'
+		$this.MapObjName         = 'cultistboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by a dark cult.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHereticBoots : BEBoots {
+	BEHereticBoots() : base() {
+		$this.Name               = 'Heretic Boots'
+		$this.MapObjName         = 'hereticboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of those who defy dogma.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEApostateBoots : BEBoots {
+	BEApostateBoots() : base() {
+		$this.Name               = 'Apostate Boots'
+		$this.MapObjName         = 'apostateboots'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 29
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of one who has renounced their faith.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERebelBoots : BEBoots {
+	BERebelBoots() : base() {
+		$this.Name               = 'Rebel Boots'
+		$this.MapObjName         = 'rebelboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 13
+			[StatId]::Speed = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of resistance fighters.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOutlawBoots : BEBoots {
+	BEOutlawBoots() : base() {
+		$this.Name               = 'Outlaw Boots'
+		$this.MapObjName         = 'outlawboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 19
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those living outside the law.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBanditBoots : BEBoots {
+	BEBanditBoots() : base() {
+		$this.Name               = 'Bandit Boots'
+		$this.MapObjName         = 'banditboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots favored by brigands.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEThiefBoots : BEBoots {
+	BEThiefBoots() : base() {
+		$this.Name               = 'Thief Boots'
+		$this.MapObjName         = 'thiefboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 6
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light boots for stealthy operatives.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERogueBoots : BEBoots {
+	BERogueBoots() : base() {
+		$this.Name               = 'Rogue Boots'
+		$this.MapObjName         = 'rogueboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 9
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for cunning and agile adventurers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAssassinBoots : BEBoots {
+	BEAssassinBoots() : base() {
+		$this.Name               = 'Assassin Boots'
+		$this.MapObjName         = 'assassinboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 16
+			[StatId]::Speed = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots designed for silent kills.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEExecutionerBoots : BEBoots {
+	BEExecutionerBoots() : base() {
+		$this.Name               = 'Executioner Boots'
+		$this.MapObjName         = 'executionerboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy boots for those who carry out sentences.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETorturerBoots : BEBoots {
+	BETorturerBoots() : base() {
+		$this.Name               = 'Torturer Boots'
+		$this.MapObjName         = 'torturerboots'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of those who inflict pain.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESlayerBoots : BEBoots {
+	BESlayerBoots() : base() {
+		$this.Name               = 'Slayer Boots'
+		$this.MapObjName         = 'slayerboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a monster hunter.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVanquisherBoots : BEBoots {
+	BEVanquisherBoots() : base() {
+		$this.Name               = 'Vanquisher Boots'
+		$this.MapObjName         = 'vanquisherboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of one who utterly defeats their foes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEConquerorBoots : BEBoots {
+	BEConquerorBoots() : base() {
+		$this.Name               = 'Conqueror Boots'
+		$this.MapObjName         = 'conquerorboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a victorious leader.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETyrantBoots : BEBoots {
+	BETyrantBoots() : base() {
+		$this.Name               = 'Tyrant Boots'
+		$this.MapObjName         = 'tyrantboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 39
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of an oppressive ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDespotBoots : BEBoots {
+	BEDespotBoots() : base() {
+		$this.Name               = 'Despot Boots'
+		$this.MapObjName         = 'despotboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of an absolute ruler.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEOverlordBoots : BEBoots {
+	BEOverlordBoots() : base() {
+		$this.Name               = 'Overlord Boots'
+		$this.MapObjName         = 'overlordboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a supreme master.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEWarlordBoots : BEBoots {
+	BEWarlordBoots() : base() {
+		$this.Name               = 'Warlord Boots'
+		$this.MapObjName         = 'warlordboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 53
+			[StatId]::MagicDefense = 29
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a powerful military leader.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEChieftainBoots : BEBoots {
+	BEChieftainBoots() : base() {
+		$this.Name               = 'Chieftain Boots'
+		$this.MapObjName         = 'chieftainboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a tribal leader.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEShamanBoots : BEBoots {
+	BEShamanBoots() : base() {
+		$this.Name               = 'Shaman Boots'
+		$this.MapObjName         = 'shamanboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a spiritual guide.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEOracleBoots : BEBoots {
+	BEOracleBoots() : base() {
+		$this.Name               = 'Oracle Boots'
+		$this.MapObjName         = 'oracleboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that enhance prophetic visions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESeerBoots : BEBoots {
+	BESeerBoots() : base() {
+		$this.Name               = 'Seer Boots'
+		$this.MapObjName         = 'seerboots'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that reveal hidden truths.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEProphetBoots : BEBoots {
+	BEProphetBoots() : base() {
+		$this.Name               = 'Prophet Boots'
+		$this.MapObjName         = 'prophetboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a divine messenger.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESageBoots : BEBoots {
+	BESageBoots() : base() {
+		$this.Name               = 'Sage Boots'
+		$this.MapObjName         = 'sageboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 37
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of profound wisdom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEScholarBoots : BEBoots {
+	BEScholarBoots() : base() {
+		$this.Name               = 'Scholar Boots'
+		$this.MapObjName         = 'scholarboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by academic scholars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELibrarianBoots : BEBoots {
+	BELibrarianBoots() : base() {
+		$this.Name               = 'Librarian Boots'
+		$this.MapObjName         = 'librarianboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for diligent keepers of knowledge.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHistorianBoots : BEBoots {
+	BEHistorianBoots() : base() {
+		$this.Name               = 'Historian Boots'
+		$this.MapObjName         = 'historianboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those who study the past.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArchivistBoots : BEBoots {
+	BEArchivistBoots() : base() {
+		$this.Name               = 'Archivist Boots'
+		$this.MapObjName         = 'archivistboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for protectors of ancient records.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArtisanBoots : BEBoots {
+	BEArtisanBoots() : base() {
+		$this.Name               = 'Artisan Boots'
+		$this.MapObjName         = 'artisanboots'
+		$this.PurchasePrice      = 230
+		$this.SellPrice          = 115
+		$this.TargetStats        = @{
+			[StatId]::Defense = 6
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots worn by skilled craftspeople.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEngineerBoots : BEBoots {
+	BEEngineerBoots() : base() {
+		$this.Name               = 'Engineer Boots'
+		$this.MapObjName         = 'engineerboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of mechanical innovators.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInventorBoots : BEBoots {
+	BEInventorBoots() : base() {
+		$this.Name               = 'Inventor Boots'
+		$this.MapObjName         = 'inventorboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for creative minds.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAlchemistBoots : BEBoots {
+	BEAlchemistBoots() : base() {
+		$this.Name               = 'Alchemist Boots'
+		$this.MapObjName         = 'alchemistboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for those who transmute elements.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEChemistBoots : BEBoots {
+	BEChemistBoots() : base() {
+		$this.Name               = 'Chemist Boots'
+		$this.MapObjName         = 'chemistboots'
+		$this.PurchasePrice      = 530
+		$this.SellPrice          = 265
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for scientific experimenters.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBotanistBoots : BEBoots {
+	BEBotanistBoots() : base() {
+		$this.Name               = 'Botanist Boots'
+		$this.MapObjName         = 'botanistboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for plant specialists.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEZoologistBoots : BEBoots {
+	BEZoologistBoots() : base() {
+		$this.Name               = 'Zoologist Boots'
+		$this.MapObjName         = 'zoologistboots'
+		$this.PurchasePrice      = 390
+		$this.SellPrice          = 195
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for animal researchers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGeologistBoots : BEBoots {
+	BEGeologistBoots() : base() {
+		$this.Name               = 'Geologist Boots'
+		$this.MapObjName         = 'geologistboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for earth scientists.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAstronomerBoots : BEBoots {
+	BEAstronomerBoots() : base() {
+		$this.Name               = 'Astronomer Boots'
+		$this.MapObjName         = 'astronomerboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for star gazers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPhilosopherBoots : BEBoots {
+	BEPhilosopherBoots() : base() {
+		$this.Name               = 'Philosopher Boots'
+		$this.MapObjName         = 'philosopherboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for deep thinkers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDiplomatBoots : BEBoots {
+	BEDiplomatBoots() : base() {
+		$this.Name               = 'Diplomat Boots'
+		$this.MapObjName         = 'diplomatboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for negotiators and envoys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMediatorBoots : BEBoots {
+	BEMediatorBoots() : base() {
+		$this.Name               = 'Mediator Boots'
+		$this.MapObjName         = 'mediatorboots'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for resolving conflicts.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEmissaryBoots : BEBoots {
+	BEEmissaryBoots() : base() {
+		$this.Name               = 'Emissary Boots'
+		$this.MapObjName         = 'emissaryboots'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for special representatives.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAmbassadorBoots : BEBoots {
+	BEAmbassadorBoots() : base() {
+		$this.Name               = 'Ambassador Boots'
+		$this.MapObjName         = 'ambassadorboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for high-ranking envoys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESenatorBoots : BEBoots {
+	BESenatorBoots() : base() {
+		$this.Name               = 'Senator Boots'
+		$this.MapObjName         = 'senatorboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a governmental official.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMagistrateBoots : BEBoots {
+	BEMagistrateBoots() : base() {
+		$this.Name               = 'Magistrate Boots'
+		$this.MapObjName         = 'magistrateboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a civil officer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJudgeBoots : BEBoots {
+	BEJudgeBoots() : base() {
+		$this.Name               = 'Judge Boots'
+		$this.MapObjName         = 'judgeboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a judicial authority.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESheriffBoots : BEBoots {
+	BESheriffBoots() : base() {
+		$this.Name               = 'Sheriff Boots'
+		$this.MapObjName         = 'sheriffboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a law enforcer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEMarshalBoots : BEBoots {
+	BEMarshalBoots() : base() {
+		$this.Name               = 'Marshal Boots'
+		$this.MapObjName         = 'marshalboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a high-ranking law officer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEInvestigatorBoots : BEBoots {
+	BEInvestigatorBoots() : base() {
+		$this.Name               = 'Investigator Boots'
+		$this.MapObjName         = 'investigatorboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 11
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for detectives.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAnalystBoots : BEBoots {
+	BEAnalystBoots() : base() {
+		$this.Name               = 'Analyst Boots'
+		$this.MapObjName         = 'analystboots'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for data examination.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEForensicBoots : BEBoots {
+	BEForensicBoots() : base() {
+		$this.Name               = 'Forensic Boots'
+		$this.MapObjName         = 'forensicboots'
+		$this.PurchasePrice      = 390
+		$this.SellPrice          = 195
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for crime scene analysis.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETacticianBoots : BEBoots {
+	BETacticianBoots() : base() {
+		$this.Name               = 'Tactician Boots'
+		$this.MapObjName         = 'tacticianboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for strategic thinkers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEStrategistBoots : BEBoots {
+	BEStrategistBoots() : base() {
+		$this.Name               = 'Strategist Boots'
+		$this.MapObjName         = 'strategistboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for grand scale planning.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BELogisticsBoots : BEBoots {
+	BELogisticsBoots() : base() {
+		$this.Name               = 'Logistics Boots'
+		$this.MapObjName         = 'logisticsboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for supply management.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERecruiterBoots : BEBoots {
+	BERecruiterBoots() : base() {
+		$this.Name               = 'Recruiter Boots'
+		$this.MapObjName         = 'recruiterboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for enlisting new members.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETrainerBoots : BEBoots {
+	BETrainerBoots() : base() {
+		$this.Name               = 'Trainer Boots'
+		$this.MapObjName         = 'trainerboots'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for skill development.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMentorBoots : BEBoots {
+	BEMentorBoots() : base() {
+		$this.Name               = 'Mentor Boots'
+		$this.MapObjName         = 'mentorboots'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for guiding others.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInstructorBoots : BEBoots {
+	BEInstructorBoots() : base() {
+		$this.Name               = 'Instructor Boots'
+		$this.MapObjName         = 'instructorboots'
+		$this.PurchasePrice      = 390
+		$this.SellPrice          = 195
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 11
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for teaching new techniques.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECoachBoots : BEBoots {
+	BECoachBoots() : base() {
+		$this.Name               = 'Coach Boots'
+		$this.MapObjName         = 'coachboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for athletic guidance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEProspectorBoots : BEBoots {
+	BEProspectorBoots() : base() {
+		$this.Name               = 'Prospector Boots'
+		$this.MapObjName         = 'prospectorboots'
+		$this.PurchasePrice      = 230
+		$this.SellPrice          = 115
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for mineral seekers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMinerBoots : BEBoots {
+	BEMinerBoots() : base() {
+		$this.Name               = 'Miner Boots'
+		$this.MapObjName         = 'minerboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for underground excavation.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEQuarrymanBoots : BEBoots {
+	BEQuarrymanBoots() : base() {
+		$this.Name               = 'Quarryman Boots'
+		$this.MapObjName         = 'quarrymanboots'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for stone extraction.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEExcavatorBoots : BEBoots {
+	BEExcavatorBoots() : base() {
+		$this.Name               = 'Excavator Boots'
+		$this.MapObjName         = 'excavatorboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 11
+			[StatId]::MagicDefense = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for deep digging.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDelverBoots : BEBoots {
+	BEDelverBoots() : base() {
+		$this.Name               = 'Delver Boots'
+		$this.MapObjName         = 'delverboots'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for exploring subterranean depths.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpeleologistBoots : BEBoots {
+	BESpeleologistBoots() : base() {
+		$this.Name               = 'Speleologist Boots'
+		$this.MapObjName         = 'speleologistboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for cave explorers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECavernBoots : BEBoots {
+	BECavernBoots() : base() {
+		$this.Name               = 'Cavern Boots'
+		$this.MapObjName         = 'cavernboots'
+		$this.PurchasePrice      = 390
+		$this.SellPrice          = 195
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for damp cave environments.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGrottoBoots : BEBoots {
+	BEGrottoBoots() : base() {
+		$this.Name               = 'Grotto Boots'
+		$this.MapObjName         = 'grottoboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for small cave systems.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESubterraneanBoots : BEBoots {
+	BESubterraneanBoots() : base() {
+		$this.Name               = 'Subterranean Boots'
+		$this.MapObjName         = 'subterraneanboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 15
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for underground travel.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEUnderdarkBoots : BEBoots {
+	BEUnderdarkBoots() : base() {
+		$this.Name               = 'Underdark Boots'
+		$this.MapObjName         = 'underdarkboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots for the deep and dangerous underground.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAbyssalBoots : BEBoots {
+	BEAbyssalBoots() : base() {
+		$this.Name               = 'Abyssal Boots'
+		$this.MapObjName         = 'abyssalboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 43
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots from the deepest chasms.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInfernalBoots : BEBoots {
+	BEInfernalBoots() : base() {
+		$this.Name               = 'Infernal Boots'
+		$this.MapObjName         = 'infernalboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 47
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots forged in the fires of hell.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDemonicBoots : BEBoots {
+	BEDemonicBoots() : base() {
+		$this.Name               = 'Demonic Boots'
+		$this.MapObjName         = 'demonicboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots infused with the essence of demons.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEFallenBoots : BEBoots {
+	BEFallenBoots() : base() {
+		$this.Name               = 'Fallen Boots'
+		$this.MapObjName         = 'fallenboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a corrupted warrior.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BECorruptedBoots : BEBoots {
+	BECorruptedBoots() : base() {
+		$this.Name               = 'Corrupted Boots'
+		$this.MapObjName         = 'corruptedboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 40
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots twisted by dark forces.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBlightedBoots : BEBoots {
+	BEBlightedBoots() : base() {
+		$this.Name               = 'Blighted Boots'
+		$this.MapObjName         = 'blightedboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots afflicted by a terrible curse.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPlaguedBoots : BEBoots {
+	BEPlaguedBoots() : base() {
+		$this.Name               = 'Plagued Boots'
+		$this.MapObjName         = 'plaguedboots'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 29
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots spreading disease and decay.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENecroticBoots : BEBoots {
+	BENecroticBoots() : base() {
+		$this.Name               = 'Necrotic Boots'
+		$this.MapObjName         = 'necroticboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 43
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots linked to death magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERevenantBoots : BEBoots {
+	BERevenantBoots() : base() {
+		$this.Name               = 'Revenant Boots'
+		$this.MapObjName         = 'revenantboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 39
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of one returned from the grave.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPhantomBoots : BEBoots {
+	BEPhantomBoots() : base() {
+		$this.Name               = 'Phantom Boots'
+		$this.MapObjName         = 'phantomboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 35
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of an elusive spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEShadeBoots : BEBoots {
+	BEShadeBoots() : base() {
+		$this.Name               = 'Shade Boots'
+		$this.MapObjName         = 'shadeboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 32
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a shadowy entity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWraithBoots : BEBoots {
+	BEWraithBoots() : base() {
+		$this.Name               = 'Wraith Boots'
+		$this.MapObjName         = 'wraithboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 29
+			[StatId]::MagicDefense = 40
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a malevolent specter.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBansheeBoots : BEBoots {
+	BEBansheeBoots() : base() {
+		$this.Name               = 'Banshee Boots'
+		$this.MapObjName         = 'bansheeboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that emit a mournful wail.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESuccubusBoots : BEBoots {
+	BESuccubusBoots() : base() {
+		$this.Name               = 'Succubus Boots'
+		$this.MapObjName         = 'succubusboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 29
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a seductive demon.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEIncubusBoots : BEBoots {
+	BEIncubusBoots() : base() {
+		$this.Name               = 'Incubus Boots'
+		$this.MapObjName         = 'incubusboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 29
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a charming demon.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESirenBoots : BEBoots {
+	BESirenBoots() : base() {
+		$this.Name               = 'Siren Boots'
+		$this.MapObjName         = 'sirenboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that lure sailors to their doom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDryadBoots : BEBoots {
+	BEDryadBoots() : base() {
+		$this.Name               = 'Dryad Boots'
+		$this.MapObjName         = 'dryadboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots made from living wood, attuned to forests.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BENymphBoots : BEBoots {
+	BENymphBoots() : base() {
+		$this.Name               = 'Nymph Boots'
+		$this.MapObjName         = 'nymphboots'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a beautiful nature spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESylphBoots : BEBoots {
+	BESylphBoots() : base() {
+		$this.Name               = 'Sylph Boots'
+		$this.MapObjName         = 'sylphboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 13
+			[StatId]::MagicDefense = 18
+			[StatId]::Speed = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Light boots of an air spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEUndineBoots : BEBoots {
+	BEUndineBoots() : base() {
+		$this.Name               = 'Undine Boots'
+		$this.MapObjName         = 'undineboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a water spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESalamanderBoots : BEBoots {
+	BESalamanderBoots() : base() {
+		$this.Name               = 'Salamander Boots'
+		$this.MapObjName         = 'salamanderboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a fire spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGnomeBoots : BEBoots {
+	BEGnomeBoots() : base() {
+		$this.Name               = 'Gnome Boots'
+		$this.MapObjName         = 'gnomeboots'
+		$this.PurchasePrice      = 180
+		$this.SellPrice          = 90
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Small but sturdy boots, crafted by gnomes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPixieBoots : BEBoots {
+	BEPixieBoots() : base() {
+		$this.Name               = 'Pixie Boots'
+		$this.MapObjName         = 'pixieboots'
+		$this.PurchasePrice      = 130
+		$this.SellPrice          = 65
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 9
+			[StatId]::Speed = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Tiny and almost weightless boots.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEFairyBoots : BEBoots {
+	BEFairyBoots() : base() {
+		$this.Name               = 'Fairy Boots'
+		$this.MapObjName         = 'fairyboots'
+		$this.PurchasePrice      = 160
+		$this.SellPrice          = 80
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 10
+			[StatId]::Speed = 15
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Delicate and enchanting boots.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESpriteBoots : BEBoots {
+	BESpriteBoots() : base() {
+		$this.Name               = 'Sprite Boots'
+		$this.MapObjName         = 'spriteboots'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::Defense = 5
+			[StatId]::MagicDefense = 9
+			[StatId]::Speed = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Nimble boots of a playful spirit.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BELeprechaunBoots : BEBoots {
+	BELeprechaunBoots() : base() {
+		$this.Name               = 'Leprechaun Boots'
+		$this.MapObjName         = 'leprechaunboots'
+		$this.PurchasePrice      = 230
+		$this.SellPrice          = 115
+		$this.TargetStats        = @{
+			[StatId]::Defense = 8
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that bring good fortune.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGoblinoidBoots : BEBoots {
+	BEGoblinoidBoots() : base() {
+		$this.Name               = 'Goblinoid Boots'
+		$this.MapObjName         = 'goblinoidboots'
+		$this.PurchasePrice      = 90
+		$this.SellPrice          = 45
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots favored by various goblinoid races.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKoboldBoots : BEBoots {
+	BEKoboldBoots() : base() {
+		$this.Name               = 'Kobold Boots'
+		$this.MapObjName         = 'koboldboots'
+		$this.PurchasePrice      = 80
+		$this.SellPrice          = 40
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Crude boots of kobolds.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGnollBoots : BEBoots {
+	BEGnollBoots() : base() {
+		$this.Name               = 'Gnoll Boots'
+		$this.MapObjName         = 'gnollboots'
+		$this.PurchasePrice      = 100
+		$this.SellPrice          = 50
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Rough boots of hyena folk.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBugbearBoots : BEBoots {
+	BEBugbearBoots() : base() {
+		$this.Name               = 'Bugbear Boots'
+		$this.MapObjName         = 'bugbearboots'
+		$this.PurchasePrice      = 160
+		$this.SellPrice          = 80
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Heavy boots of bugbears.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEOgreMageBoots : BEBoots {
+	BEOgreMageBoots() : base() {
+		$this.Name               = 'Ogre Mage Boots'
+		$this.MapObjName         = 'ogremageboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a powerful ogre mage.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETrollBoots : BEBoots {
+	BETrollBoots() : base() {
+		$this.Name               = 'Troll Boots'
+		$this.MapObjName         = 'trollboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots with regenerative properties.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBeastBoots : BEBoots {
+	BEBeastBoots() : base() {
+		$this.Name               = 'Beast Boots'
+		$this.MapObjName         = 'beastboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots made from monstrous beast hides.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHunterKillerBoots : BEBoots {
+	BEHunterKillerBoots() : base() {
+		$this.Name               = 'Hunter Killer Boots'
+		$this.MapObjName         = 'hunterkillerboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots designed for tracking and eliminating targets.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPunisherBoots : BEBoots {
+	BEPunisherBoots() : base() {
+		$this.Name               = 'Punisher Boots'
+		$this.MapObjName         = 'punisherboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of relentless retribution.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEAvengerBoots : BEBoots {
+	BEAvengerBoots() : base() {
+		$this.Name               = 'Avenger Boots'
+		$this.MapObjName         = 'avengerboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 39
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of righteous vengeance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERedeemerBoots : BEBoots {
+	BERedeemerBoots() : base() {
+		$this.Name               = 'Redeemer Boots'
+		$this.MapObjName         = 'redeemerboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that bring salvation.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVindicatorBoots : BEBoots {
+	BEVindicatorBoots() : base() {
+		$this.Name               = 'Vindicator Boots'
+		$this.MapObjName         = 'vindicatorboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 25
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of justified defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGloryBoots : BEBoots {
+	BEGloryBoots() : base() {
+		$this.Name               = 'Glory Boots'
+		$this.MapObjName         = 'gloryboots'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 47
+			[StatId]::MagicDefense = 27
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots signifying great honor and fame.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEValorBoots : BEBoots {
+	BEValorBoots() : base() {
+		$this.Name               = 'Valor Boots'
+		$this.MapObjName         = 'valorboots'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 50
+			[StatId]::MagicDefense = 29
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots embodying courage and bravery.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEChivalryBoots : BEBoots {
+	BEChivalryBoots() : base() {
+		$this.Name               = 'Chivalry Boots'
+		$this.MapObjName         = 'chivalryboots'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 45
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots upholding the ideals of knighthood.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHonorBoots : BEBoots {
+	BEHonorBoots() : base() {
+		$this.Name               = 'Honor Boots'
+		$this.MapObjName         = 'honorboots'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 42
+			[StatId]::MagicDefense = 20
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots symbolizing integrity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJusticeBoots : BEBoots {
+	BEJusticeBoots() : base() {
+		$this.Name               = 'Justice Boots'
+		$this.MapObjName         = 'justiceboots'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Defense = 37
+			[StatId]::MagicDefense = 18
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of unwavering fairness.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERighteousBoots : BEBoots {
+	BERighteousBoots() : base() {
+		$this.Name               = 'Righteous Boots'
+		$this.MapObjName         = 'righteousboots'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 35
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of moral rectitude.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVirtueBoots : BEBoots {
+	BEVirtueBoots() : base() {
+		$this.Name               = 'Virtue Boots'
+		$this.MapObjName         = 'virtueboots'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Defense = 32
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots representing moral excellence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPurityBoots : BEBoots {
+	BEPurityBoots() : base() {
+		$this.Name               = 'Purity Boots'
+		$this.MapObjName         = 'purityboots'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 29
+			[StatId]::MagicDefense = 13
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of untainted essence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEInnocenceBoots : BEBoots {
+	BEInnocenceBoots() : base() {
+		$this.Name               = 'Innocence Boots'
+		$this.MapObjName         = 'innocenceboots'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Defense = 27
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of a pure heart.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEHopeBoots : BEBoots {
+	BEHopeBoots() : base() {
+		$this.Name               = 'Hope Boots'
+		$this.MapObjName         = 'hopeboots'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Defense = 25
+			[StatId]::MagicDefense = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that inspire optimism.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFaithBoots : BEBoots {
+	BEFaithBoots() : base() {
+		$this.Name               = 'Faith Boots'
+		$this.MapObjName         = 'faithboots'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Defense = 22
+			[StatId]::MagicDefense = 9
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of unwavering belief.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECharityBoots : BEBoots {
+	BECharityBoots() : base() {
+		$this.Name               = 'Charity Boots'
+		$this.MapObjName         = 'charityboots'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 20
+			[StatId]::MagicDefense = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that embody benevolence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECourageBoots : BEBoots {
+	BECourageBoots() : base() {
+		$this.Name               = 'Courage Boots'
+		$this.MapObjName         = 'courageboots'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 18
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that instill bravery.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWisdomBoots : BEBoots {
+	BEWisdomBoots() : base() {
+		$this.Name               = 'Wisdom Boots'
+		$this.MapObjName         = 'wisdomboots'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 16
+			[StatId]::MagicDefense = 22
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots of profound insight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEKnowledgeBoots : BEBoots {
+	BEKnowledgeBoots() : base() {
+		$this.Name               = 'Knowledge Boots'
+		$this.MapObjName         = 'knowledgeboots'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Defense = 14
+			[StatId]::MagicDefense = 19
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that hold vast information.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETruthBoots : BEBoots {
+	BETruthBoots() : base() {
+		$this.Name               = 'Truth Boots'
+		$this.MapObjName         = 'truthboots'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 12
+			[StatId]::MagicDefense = 17
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that reveal falsehoods.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDisciplineBoots : BEBoots {
+	BEDisciplineBoots() : base() {
+		$this.Name               = 'Discipline Boots'
+		$this.MapObjName         = 'disciplineboots'
+		$this.PurchasePrice      = 370
+		$this.SellPrice          = 185
+		$this.TargetStats        = @{
+			[StatId]::Defense = 10
+			[StatId]::MagicDefense = 16
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that promote self-control.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPatienceBoots : BEBoots {
+	BEPatienceBoots() : base() {
+		$this.Name               = 'Patience Boots'
+		$this.MapObjName         = 'patienceboots'
+		$this.PurchasePrice      = 320
+		$this.SellPrice          = 160
+		$this.TargetStats        = @{
+			[StatId]::Defense = 9
+			[StatId]::MagicDefense = 14
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that foster endurance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPerseveranceBoots : BEBoots {
+	BEPerseveranceBoots() : base() {
+		$this.Name               = 'Perseverance Boots'
+		$this.MapObjName         = 'perseveranceboots'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Defense = 7
+			[StatId]::MagicDefense = 12
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Boots that encourage persistence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+#endregion
+
+
+
+
+
+#region Jewelry
+
+Class BECopperRing : BEJewelry {
+	BECopperRing() : base() {
+		$this.Name               = 'Copper Ring'
+		$this.MapObjName         = 'copperring'
+		$this.PurchasePrice      = 50
+		$this.SellPrice          = 25
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicDefense = 1
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A simple, unadorned copper ring.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEIronPendant : BEJewelry {
+	BEIronPendant() : base() {
+		$this.Name               = 'Iron Pendant'
+		$this.MapObjName         = 'ironpendant'
+		$this.PurchasePrice      = 80
+		$this.SellPrice          = 40
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A heavy iron pendant, often worn by warriors.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESilverBracelet : BEJewelry {
+	BESilverBracelet() : base() {
+		$this.Name               = 'Silver Bracelet'
+		$this.MapObjName         = 'silverbracelet'
+		$this.PurchasePrice      = 120
+		$this.SellPrice          = 60
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A delicate silver bracelet, popular among magic users.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEGoldNecklace : BEJewelry {
+	BEGoldNecklace() : base() {
+		$this.Name               = 'Gold Necklace'
+		$this.MapObjName         = 'goldnecklace'
+		$this.PurchasePrice      = 180
+		$this.SellPrice          = 90
+		$this.TargetStats        = @{
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gleaming gold necklace, a sign of wealth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBronzeBrooch : BEJewelry {
+	BEBronzeBrooch() : base() {
+		$this.Name               = 'Bronze Brooch'
+		$this.MapObjName         = 'bronzebrooch'
+		$this.PurchasePrice      = 70
+		$this.SellPrice          = 35
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small bronze brooch, often used to fasten cloaks.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWoodenBeads : BEJewelry {
+	BEWoodenBeads() : base() {
+		$this.Name               = 'Wooden Beads'
+		$this.MapObjName         = 'woodenbeads'
+		$this.PurchasePrice      = 60
+		$this.SellPrice          = 30
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Simple wooden beads, sometimes used in rituals.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELeatherCharm : BEJewelry {
+	BELeatherCharm() : base() {
+		$this.Name               = 'Leather Charm'
+		$this.MapObjName         = 'leathercharm'
+		$this.PurchasePrice      = 90
+		$this.SellPrice          = 45
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small leather charm, believed to ward off evil.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBoneEarring : BEJewelry {
+	BEBoneEarring() : base() {
+		$this.Name               = 'Bone Earring'
+		$this.MapObjName         = 'boneearring'
+		$this.PurchasePrice      = 100
+		$this.SellPrice          = 50
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring crafted from polished bone.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERubyRing : BEJewelry {
+	BERubyRing() : base() {
+		$this.Name               = 'Ruby Ring'
+		$this.MapObjName         = 'rubyring'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gold ring set with a sparkling ruby.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESapphirePendant : BEJewelry {
+	BESapphirePendant() : base() {
+		$this.Name               = 'Sapphire Pendant'
+		$this.MapObjName         = 'sapphirependant'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A silver pendant featuring a deep blue sapphire.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEmeraldBracelet : BEJewelry {
+	BEEmeraldBracelet() : base() {
+		$this.Name               = 'Emerald Bracelet'
+		$this.MapObjName         = 'emeraldbracelet'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A verdant emerald bracelet, granting a touch of nature''s magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDiamondNecklace : BEJewelry {
+	BEDiamondNecklace() : base() {
+		$this.Name               = 'Diamond Necklace'
+		$this.MapObjName         = 'diamondnecklace'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Luck = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dazzling diamond necklace, exuding prestige.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAmethystBrooch : BEJewelry {
+	BEAmethystBrooch() : base() {
+		$this.Name               = 'Amethyst Brooch'
+		$this.MapObjName         = 'amethystbrooch'
+		$this.PurchasePrice      = 380
+		$this.SellPrice          = 190
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A purple amethyst brooch, known to enhance wisdom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEOpalRing : BEJewelry {
+	BEOpalRing() : base() {
+		$this.Name               = 'Opal Ring'
+		$this.MapObjName         = 'opalring'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An iridescent opal ring, rumored to bring good fortune.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGarnetAmulet : BEJewelry {
+	BEGarnetAmulet() : base() {
+		$this.Name               = 'Garnet Amulet'
+		$this.MapObjName         = 'garnetamulet'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark red garnet amulet, radiating fortitude.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEJadeAnklet : BEJewelry {
+	BEJadeAnklet() : base() {
+		$this.Name               = 'Jade Anklet'
+		$this.MapObjName         = 'jadeanklet'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+			[StatId]::Speed = 1
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A serene jade anklet, promoting calm and focus.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECoralBrooch : BEJewelry {
+	BECoralBrooch() : base() {
+		$this.Name               = 'Coral Brooch'
+		$this.MapObjName         = 'coralbrooch'
+		$this.PurchasePrice      = 200
+		$this.SellPrice          = 100
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A delicate coral brooch, whispering of ocean depths.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEOnyxRing : BEJewelry {
+	BEOnyxRing() : base() {
+		$this.Name               = 'Onyx Ring'
+		$this.MapObjName         = 'onyxring'
+		$this.PurchasePrice      = 420
+		$this.SellPrice          = 210
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A jet black onyx ring, absorbing negative energies.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEQuartzPendant : BEJewelry {
+	BEQuartzPendant() : base() {
+		$this.Name               = 'Quartz Pendant'
+		$this.MapObjName         = 'quartzpendant'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A clear quartz pendant, amplifying magical energies.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESunstoneRing : BEJewelry {
+	BESunstoneRing() : base() {
+		$this.Name               = 'Sunstone Ring'
+		$this.MapObjName         = 'sunstonering'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A vibrant sunstone ring, imbued with solar warmth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEStarSapphireBrooch : BEJewelry {
+	BEStarSapphireBrooch() : base() {
+		$this.Name               = 'Star Sapphire Brooch'
+		$this.MapObjName         = 'starsapphirebrooch'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A rare star sapphire brooch, said to grant wishes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDragonScaleNecklace : BEJewelry {
+	BEDragonScaleNecklace() : base() {
+		$this.Name               = 'Dragon Scale Necklace'
+		$this.MapObjName         = 'dragonscalenecklace'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A necklace made of hardened dragon scales, very protective.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPhoenixFeatherEarring : BEJewelry {
+	BEPhoenixFeatherEarring() : base() {
+		$this.Name               = 'Phoenix Feather Earring'
+		$this.MapObjName         = 'phoenixfeatherearring'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring with a vibrant phoenix feather, granting swiftness.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEUnicornHornCharm : BEJewelry {
+	BEUnicornHornCharm() : base() {
+		$this.Name               = 'Unicorn Horn Charm'
+		$this.MapObjName         = 'unicornhorncharm'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm crafted from a fragment of unicorn horn, for purity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEGriffinClawPendant : BEJewelry {
+	BEGriffinClawPendant() : base() {
+		$this.Name               = 'Griffin Claw Pendant'
+		$this.MapObjName         = 'griffinclawpendant'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Defense = 1
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A fierce griffin claw pendant, enhancing predatory instincts.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEVampireFangNecklace : BEJewelry {
+	BEVampireFangNecklace() : base() {
+		$this.Name               = 'Vampire Fang Necklace'
+		$this.MapObjName         = 'vampirefangnecklace'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark necklace adorned with a vampire fang, siphoning life.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWerewolfClawRing : BEJewelry {
+	BEWerewolfClawRing() : base() {
+		$this.Name               = 'Werewolf Claw Ring'
+		$this.MapObjName         = 'werewolfclawring'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring with a werewolf claw, granting ferocity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BELichPhylactery : BEJewelry {
+	BELichPhylactery() : base() {
+		$this.Name               = 'Lich Phylactery'
+		$this.MapObjName         = 'lichphylactery'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+			[StatId]::MagicAttack = 4
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark, pulsating phylactery, containing a lich''s essence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEElementalOrb : BEJewelry {
+	BEElementalOrb() : base() {
+		$this.Name               = 'Elemental Orb'
+		$this.MapObjName         = 'elementalorb'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A glowing orb containing elemental power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEChaosEmerald : BEJewelry {
+	BEChaosEmerald() : base() {
+		$this.Name               = 'Chaos Emerald'
+		$this.MapObjName         = 'chaosemerald'
+		$this.PurchasePrice      = 2000
+		$this.SellPrice          = 1000
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Defense = 2
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+			[StatId]::Speed = 2
+			[StatId]::Luck = 2
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A chaotic emerald, distorting reality.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Luck]) LCK  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOrderGem : BEJewelry {
+	BEOrderGem() : base() {
+		$this.Name               = 'Order Gem'
+		$this.MapObjName         = 'ordergem'
+		$this.PurchasePrice      = 2000
+		$this.SellPrice          = 1000
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+			[StatId]::Speed = 1
+			[StatId]::Luck = 1
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A perfectly balanced gem, promoting harmony.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Luck]) LCK  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELightCrystal : BEJewelry {
+	BELightCrystal() : base() {
+		$this.Name               = 'Light Crystal'
+		$this.MapObjName         = 'lightcrystal'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A radiant crystal, emitting pure light.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDarkShard : BEJewelry {
+	BEDarkShard() : base() {
+		$this.Name               = 'Dark Shard'
+		$this.MapObjName         = 'darkshard'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicAttack = 4
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A jagged dark shard, filled with malevolence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEStarfallFragment : BEJewelry {
+	BEStarfallFragment() : base() {
+		$this.Name               = 'Starfall Fragment'
+		$this.MapObjName         = 'starfallfragment'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Speed = 3
+			[StatId]::Luck = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A fragment of a fallen star, shimmering with cosmic energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVoidStone : BEJewelry {
+	BEVoidStone() : base() {
+		$this.Name               = 'Void Stone'
+		$this.MapObjName         = 'voidstone'
+		$this.PurchasePrice      = 1900
+		$this.SellPrice          = 950
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A stone that absorbs all light, connected to the void.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpiritEssence : BEJewelry {
+	BESpiritEssence() : base() {
+		$this.Name               = 'Spirit Essence'
+		$this.MapObjName         = 'spiritessence'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A vial containing a concentrated spirit essence.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESoulGem : BEJewelry {
+	BESoulGem() : base() {
+		$this.Name               = 'Soul Gem'
+		$this.MapObjName         = 'soulgem'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that holds a captured soul, eerie but powerful.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELifebloodAmulet : BEJewelry {
+	BELifebloodAmulet() : base() {
+		$this.Name               = 'Lifeblood Amulet'
+		$this.MapObjName         = 'lifebloodamulet'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An amulet pulsating with life energy, granting vitality.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDeathwhisperRing : BEJewelry {
+	BEDeathwhisperRing() : base() {
+		$this.Name               = 'Deathwhisper Ring'
+		$this.MapObjName         = 'deathwhisperring'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring that whispers of death, chilling to the touch.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETimeBenderChronometer : BEJewelry {
+	BETimeBenderChronometer() : base() {
+		$this.Name               = 'Time Bender Chronometer'
+		$this.MapObjName         = 'timebenderchronometer'
+		$this.PurchasePrice      = 2500
+		$this.SellPrice          = 1250
+		$this.TargetStats        = @{
+			[StatId]::Speed = 10
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A complex chronometer, subtly altering the flow of time.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESpaceWarpCube : BEJewelry {
+	BESpaceWarpCube() : base() {
+		$this.Name               = 'Space Warp Cube'
+		$this.MapObjName         = 'spacewarpcube'
+		$this.PurchasePrice      = 2500
+		$this.SellPrice          = 1250
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small cube that momentarily bends space.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERealityAnchor : BEJewelry {
+	BERealityAnchor() : base() {
+		$this.Name               = 'Reality Anchor'
+		$this.MapObjName         = 'realityanchor'
+		$this.PurchasePrice      = 2300
+		$this.SellPrice          = 1150
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A heavy anchor that stabilizes reality.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDreamcatcherBrooch : BEJewelry {
+	BEDreamcatcherBrooch() : base() {
+		$this.Name               = 'Dreamcatcher Brooch'
+		$this.MapObjName         = 'dreamcatcherbrooch'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A delicate brooch woven to capture pleasant dreams.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BENightmareShard : BEJewelry {
+	BENightmareShard() : base() {
+		$this.Name               = 'Nightmare Shard'
+		$this.MapObjName         = 'nightmareshard'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A jagged shard that induces terrifying nightmares.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERainbowPrism : BEJewelry {
+	BERainbowPrism() : base() {
+		$this.Name               = 'Rainbow Prism'
+		$this.MapObjName         = 'rainbowprism'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A faceted prism that refracts light into a rainbow.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEclipsePendant : BEJewelry {
+	BEEclipsePendant() : base() {
+		$this.Name               = 'Eclipse Pendant'
+		$this.MapObjName         = 'eclipsependant'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark pendant resembling an eclipse, symbolizing balance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAuroraCirclet : BEJewelry {
+	BEAuroraCirclet() : base() {
+		$this.Name               = 'Aurora Circlet'
+		$this.MapObjName         = 'auroracirclet'
+		$this.PurchasePrice      = 720
+		$this.SellPrice          = 360
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shimmering circlet that glows with aurora colors.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECometTailEarring : BEJewelry {
+	BECometTailEarring() : base() {
+		$this.Name               = 'Comet Tail Earring'
+		$this.MapObjName         = 'comettailearring'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring with a fragment resembling a comet''s tail, increasing speed.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMeteoriteFragment : BEJewelry {
+	BEMeteoriteFragment() : base() {
+		$this.Name               = 'Meteorite Fragment'
+		$this.MapObjName         = 'meteoritefragment'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A rough meteorite fragment, strangely heavy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBlackHoleCore : BEJewelry {
+	BEBlackHoleCore() : base() {
+		$this.Name               = 'Black Hole Core'
+		$this.MapObjName         = 'blackholecore'
+		$this.PurchasePrice      = 2200
+		$this.SellPrice          = 1100
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 5
+			[StatId]::MagicDefense = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny, dense core that draws in surrounding energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESupernovaGem : BEJewelry {
+	BESupernovaGem() : base() {
+		$this.Name               = 'Supernova Gem'
+		$this.MapObjName         = 'supernovagem'
+		$this.PurchasePrice      = 2300
+		$this.SellPrice          = 1150
+		$this.TargetStats        = @{
+			[StatId]::Attack = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that pulses with immense destructive energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BECosmicDustVial : BEJewelry {
+	BECosmicDustVial() : base() {
+		$this.Name               = 'Cosmic Dust Vial'
+		$this.MapObjName         = 'cosmicdustvial'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A vial filled with shimmering cosmic dust.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENebulaCloudPin : BEJewelry {
+	BENebulaCloudPin() : base() {
+		$this.Name               = 'Nebula Cloud Pin'
+		$this.MapObjName         = 'nebulacloudpin'
+		$this.PurchasePrice      = 1750
+		$this.SellPrice          = 875
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin with a swirling nebula trapped within.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGalaxyPearl : BEJewelry {
+	BEGalaxyPearl() : base() {
+		$this.Name               = 'Galaxy Pearl'
+		$this.MapObjName         = 'galaxypearl'
+		$this.PurchasePrice      = 1900
+		$this.SellPrice          = 950
+		$this.TargetStats        = @{
+			[StatId]::Luck = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pearl that reflects entire galaxies.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDimensionShifter : BEJewelry {
+	BEDimensionShifter() : base() {
+		$this.Name               = 'Dimension Shifter'
+		$this.MapObjName         = 'dimensionshifter'
+		$this.PurchasePrice      = 2100
+		$this.SellPrice          = 1050
+		$this.TargetStats        = @{
+			[StatId]::Speed = 7
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small device that can momentarily shift dimensions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESoulboundToken : BEJewelry {
+	BESoulboundToken() : base() {
+		$this.Name               = 'Soulbound Token'
+		$this.MapObjName         = 'soulboundtoken'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Defense = 2
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A token bound to a powerful soul, granting shared power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAncestralRing : BEJewelry {
+	BEAncestralRing() : base() {
+		$this.Name               = 'Ancestral Ring'
+		$this.MapObjName         = 'ancestralring'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring passed down through generations, holding ancient wisdom.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHeirloomBrooch : BEJewelry {
+	BEHeirloomBrooch() : base() {
+		$this.Name               = 'Heirloom Brooch'
+		$this.MapObjName         = 'heirloombrooch'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A family heirloom, imbued with sentimental value.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERelicMedallion : BEJewelry {
+	BERelicMedallion() : base() {
+		$this.Name               = 'Relic Medallion'
+		$this.MapObjName         = 'relicmedallion'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Defense = 2
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A powerful medallion from a forgotten age.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESacredTear : BEJewelry {
+	BESacredTear() : base() {
+		$this.Name               = 'Sacred Tear'
+		$this.MapObjName         = 'sacredtear'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A drop of solidified sacred tear, offering healing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEProfaneMark : BEJewelry {
+	BEProfaneMark() : base() {
+		$this.Name               = 'Profane Mark'
+		$this.MapObjName         = 'profanemark'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::MagicAttack = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark mark, radiating unholy energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBlessedCharm : BEJewelry {
+	BEBlessedCharm() : base() {
+		$this.Name               = 'Blessed Charm'
+		$this.MapObjName         = 'blessedcharm'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small charm blessed by a deity, granting protection.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECursedAmulet : BEJewelry {
+	BECursedAmulet() : base() {
+		$this.Name               = 'Cursed Amulet'
+		$this.MapObjName         = 'cursedamulet'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An amulet that brings misfortune to its wearer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFortuneCoin : BEJewelry {
+	BEFortuneCoin() : base() {
+		$this.Name               = 'Fortune Coin'
+		$this.MapObjName         = 'fortunecoin'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Luck = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A coin that seems to always land on its desired side.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMisfortuneToken : BEJewelry {
+	BEMisfortuneToken() : base() {
+		$this.Name               = 'Misfortune Token'
+		$this.MapObjName         = 'misfortunetoken'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A token that brings bad luck.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWhisperwindEarring : BEJewelry {
+	BEWhisperwindEarring() : base() {
+		$this.Name               = 'Whisperwind Earring'
+		$this.MapObjName         = 'whisperwindearring'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring that carries whispers on the wind, granting insight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEThunderclapBracelet : BEJewelry {
+	BEThunderclapBracelet() : base() {
+		$this.Name               = 'Thunderclap Bracelet'
+		$this.MapObjName         = 'thunderclapbracelet'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicAttack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A bracelet that hums with static, occasionally discharging electricity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEFirestormNecklace : BEJewelry {
+	BEFirestormNecklace() : base() {
+		$this.Name               = 'Firestorm Necklace'
+		$this.MapObjName         = 'firestormnecklace'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A necklace that feels warm to the touch, capable of igniting minor flames.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFrostbiteRing : BEJewelry {
+	BEFrostbiteRing() : base() {
+		$this.Name               = 'Frostbite Ring'
+		$this.MapObjName         = 'frostbitering'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring that chills the finger, capable of producing ice.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEarthbindAmulet : BEJewelry {
+	BEEarthbindAmulet() : base() {
+		$this.Name               = 'Earthbind Amulet'
+		$this.MapObjName         = 'earthbindamulet'
+		$this.PurchasePrice      = 780
+		$this.SellPrice          = 390
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An amulet made of rough stone, rooting the wearer to the ground.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWaterflowBrooch : BEJewelry {
+	BEWaterflowBrooch() : base() {
+		$this.Name               = 'Waterflow Brooch'
+		$this.MapObjName         = 'waterflowbrooch'
+		$this.PurchasePrice      = 720
+		$this.SellPrice          = 360
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch that seems to flow like water, granting agility.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEAirtwistCirclet : BEJewelry {
+	BEAirtwistCirclet() : base() {
+		$this.Name               = 'Airtwist Circlet'
+		$this.MapObjName         = 'airtwistcirclet'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A light circlet that allows the wearer to feel air currents.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEShadowgraspGauntlet : BEJewelry {
+	BEShadowgraspGauntlet() : base() {
+		$this.Name               = 'Shadowgrasp Gauntlet'
+		$this.MapObjName         = 'shadowgraspgauntlet'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gauntlet designed to blend into shadows, enhancing stealth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BELightbringerCharm : BEJewelry {
+	BELightbringerCharm() : base() {
+		$this.Name               = 'Lightbringer Charm'
+		$this.MapObjName         = 'lightbringercharm'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm that emits a soft glow, dispelling darkness.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVenomthornRing : BEJewelry {
+	BEVenomthornRing() : base() {
+		$this.Name               = 'Venomthorn Ring'
+		$this.MapObjName         = 'venomthornring'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring with a sharp, poisoned thorn.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBlazeHeart : BEJewelry {
+	BEBlazeHeart() : base() {
+		$this.Name               = 'Blaze Heart'
+		$this.MapObjName         = 'blazeheart'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small, pulsating gem that burns with intense heat.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGlacierCore : BEJewelry {
+	BEGlacierCore() : base() {
+		$this.Name               = 'Glacier Core'
+		$this.MapObjName         = 'glaciercore'
+		$this.PurchasePrice      = 1350
+		$this.SellPrice          = 675
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shard of eternal ice, chilling to the bone.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETempestTear : BEJewelry {
+	BETempestTear() : base() {
+		$this.Name               = 'Tempest Tear'
+		$this.MapObjName         = 'tempesttear'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A solidified tear from a storm, granting control over wind.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEQuakeStone : BEJewelry {
+	BEQuakeStone() : base() {
+		$this.Name               = 'Quake Stone'
+		$this.MapObjName         = 'quakestone'
+		$this.PurchasePrice      = 1450
+		$this.SellPrice          = 725
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A heavy stone that resonates with seismic energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETidalCurrentPearl : BEJewelry {
+	BETidalCurrentPearl() : base() {
+		$this.Name               = 'Tidal Current Pearl'
+		$this.MapObjName         = 'tidalcurrentpearl'
+		$this.PurchasePrice      = 1250
+		$this.SellPrice          = 625
+		$this.TargetStats        = @{
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pearl that gently pulls and pushes, aiding movement.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEIroncladRing : BEJewelry {
+	BEIroncladRing() : base() {
+		$this.Name               = 'Ironclad Ring'
+		$this.MapObjName         = 'ironcladring'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A sturdy iron ring, offering basic defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESteelHeartMedallion : BEJewelry {
+	BESteelHeartMedallion() : base() {
+		$this.Name               = 'Steel Heart Medallion'
+		$this.MapObjName         = 'steelheartmedallion'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A heavy steel medallion, for unwavering resolve.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESilverthreadChain : BEJewelry {
+	BESilverthreadChain() : base() {
+		$this.Name               = 'Silverthread Chain'
+		$this.MapObjName         = 'silverthreadchain'
+		$this.PurchasePrice      = 200
+		$this.SellPrice          = 100
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A finely woven silver chain, for subtle magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEGoldweaveBrooch : BEJewelry {
+	BEGoldweaveBrooch() : base() {
+		$this.Name               = 'Goldweave Brooch'
+		$this.MapObjName         = 'goldweavebrooch'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch woven with gold threads, enhancing beauty.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEPlatinumAmulet : BEJewelry {
+	BEPlatinumAmulet() : base() {
+		$this.Name               = 'Platinum Amulet'
+		$this.MapObjName         = 'platinumamulet'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A sleek platinum amulet, radiating sophistication.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETitaniumRing : BEJewelry {
+	BETitaniumRing() : base() {
+		$this.Name               = 'Titanium Ring'
+		$this.MapObjName         = 'titaniumring'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A lightweight but incredibly strong titanium ring.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEMythrilCirclet : BEJewelry {
+	BEMythrilCirclet() : base() {
+		$this.Name               = 'Mythril Circlet'
+		$this.MapObjName         = 'mythrilcirclet'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shimmering mythril circlet, for adept spellcasters.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEAdamantitePendant : BEJewelry {
+	BEAdamantitePendant() : base() {
+		$this.Name               = 'Adamantite Pendant'
+		$this.MapObjName         = 'adamantitependant'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark, heavy adamantite pendant, for ultimate defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEObsidianCharm : BEJewelry {
+	BEObsidianCharm() : base() {
+		$this.Name               = 'Obsidian Charm'
+		$this.MapObjName         = 'obsidiancharm'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A black obsidian charm, absorbing dark energies.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECrystalTear : BEJewelry {
+	BECrystalTear() : base() {
+		$this.Name               = 'Crystal Tear'
+		$this.MapObjName         = 'crystaltear'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A single, perfectly formed crystal tear.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEGeodeFragment : BEJewelry {
+	BEGeodeFragment() : base() {
+		$this.Name               = 'Geode Fragment'
+		$this.MapObjName         = 'geodefragment'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A rough geode fragment, sparkling with hidden crystals.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAmberEarring : BEJewelry {
+	BEAmberEarring() : base() {
+		$this.Name               = 'Amber Earring'
+		$this.MapObjName         = 'amberearring'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A warm amber earring, preserving ancient energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEJetBracelet : BEJewelry {
+	BEJetBracelet() : base() {
+		$this.Name               = 'Jet Bracelet'
+		$this.MapObjName         = 'jetbracelet'
+		$this.PurchasePrice      = 280
+		$this.SellPrice          = 140
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A glossy black jet bracelet, for subtle power.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETurquoiseNecklace : BEJewelry {
+	BETurquoiseNecklace() : base() {
+		$this.Name               = 'Turquoise Necklace'
+		$this.MapObjName         = 'turquoisenecklace'
+		$this.PurchasePrice      = 480
+		$this.SellPrice          = 240
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A vibrant turquoise necklace, connecting to the sky.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEPeridotRing : BEJewelry {
+	BEPeridotRing() : base() {
+		$this.Name               = 'Peridot Ring'
+		$this.MapObjName         = 'peridotring'
+		$this.PurchasePrice      = 470
+		$this.SellPrice          = 235
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A bright green peridot ring, radiating freshness.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBloodstoneAmulet : BEJewelry {
+	BEBloodstoneAmulet() : base() {
+		$this.Name               = 'Bloodstone Amulet'
+		$this.MapObjName         = 'bloodstoneamulet'
+		$this.PurchasePrice      = 520
+		$this.SellPrice          = 260
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark green bloodstone amulet, rumored to stop bleeding.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BELapisLazuliBrooch : BEJewelry {
+	BELapisLazuliBrooch() : base() {
+		$this.Name               = 'Lapis Lazuli Brooch'
+		$this.MapObjName         = 'lapislazulibrooch'
+		$this.PurchasePrice      = 460
+		$this.SellPrice          = 230
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A deep blue lapis lazuli brooch, for inner peace.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMalachiteRing : BEJewelry {
+	BEMalachiteRing() : base() {
+		$this.Name               = 'Malachite Ring'
+		$this.MapObjName         = 'malachitering'
+		$this.PurchasePrice      = 490
+		$this.SellPrice          = 245
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A patterned malachite ring, for grounding energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMoonpetalCharm : BEJewelry {
+	BEMoonpetalCharm() : base() {
+		$this.Name               = 'Moonpetal Charm'
+		$this.MapObjName         = 'moonpetalcharm'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm made from a petal bathed in moonlight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESunpetalBrooch : BEJewelry {
+	BESunpetalBrooch() : base() {
+		$this.Name               = 'Sunpetal Brooch'
+		$this.MapObjName         = 'sunpetalbrooch'
+		$this.PurchasePrice      = 620
+		$this.SellPrice          = 310
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch made from a petal warmed by sunlight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEStarflakeEarring : BEJewelry {
+	BEStarflakeEarring() : base() {
+		$this.Name               = 'Starflake Earring'
+		$this.MapObjName         = 'starflakeearring'
+		$this.PurchasePrice      = 580
+		$this.SellPrice          = 290
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A delicate earring resembling a starflake, for swiftness.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECloudspunThread : BEJewelry {
+	BECloudspunThread() : base() {
+		$this.Name               = 'Cloudspun Thread'
+		$this.MapObjName         = 'cloudspunthread'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A strand of thread woven from clouds, incredibly light.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMistveilShawl : BEJewelry {
+	BEMistveilShawl() : base() {
+		$this.Name               = 'Mistveil Shawl'
+		$this.MapObjName         = 'mistveilshawl'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shimmering shawl that creates a light mist.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEGossamerFilament : BEJewelry {
+	BEGossamerFilament() : base() {
+		$this.Name               = 'Gossamer Filament'
+		$this.MapObjName         = 'gossamerfilament'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An almost invisible filament, for subtle movements.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEZephyrFeather : BEJewelry {
+	BEZephyrFeather() : base() {
+		$this.Name               = 'Zephyr Feather'
+		$this.MapObjName         = 'zephyrfeather'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A feather from the swift zephyr bird, granting speed.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDewdropPendant : BEJewelry {
+	BEDewdropPendant() : base() {
+		$this.Name               = 'Dewdrop Pendant'
+		$this.MapObjName         = 'dewdroppendant'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant with a perpetual dewdrop, refreshing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BERiverstoneRing : BEJewelry {
+	BERiverstoneRing() : base() {
+		$this.Name               = 'Riverstone Ring'
+		$this.MapObjName         = 'riverstonering'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A smooth riverstone ring, providing calm.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWaterfallGem : BEJewelry {
+	BEWaterfallGem() : base() {
+		$this.Name               = 'Waterfall Gem'
+		$this.MapObjName         = 'waterfallgem'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that constantly reflects flowing water.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMountainheartMedallion : BEJewelry {
+	BEMountainheartMedallion() : base() {
+		$this.Name               = 'Mountainheart Medallion'
+		$this.MapObjName         = 'mountainheartmedallion'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A rough medallion from the heart of a mountain, unyielding.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEForestwhisperCharm : BEJewelry {
+	BEForestwhisperCharm() : base() {
+		$this.Name               = 'Forestwhisper Charm'
+		$this.MapObjName         = 'forestwhispercharm'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm that seems to hum with the sounds of the forest.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDesertRoseBrooch : BEJewelry {
+	BEDesertRoseBrooch() : base() {
+		$this.Name               = 'Desert Rose Brooch'
+		$this.MapObjName         = 'desertrosebrooch'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A delicate brooch resembling a desert rose, enduring.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEIceboundShard : BEJewelry {
+	BEIceboundShard() : base() {
+		$this.Name               = 'Icebound Shard'
+		$this.MapObjName         = 'iceboundshard'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shard of perpetually frozen ice, chilling to the touch.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVolcanoEmber : BEJewelry {
+	BEVolcanoEmber() : base() {
+		$this.Name               = 'Volcano Ember'
+		$this.MapObjName         = 'volcanoember'
+		$this.PurchasePrice      = 1150
+		$this.SellPrice          = 575
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicAttack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small ember from a volcano, radiating heat.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEStormcloudEarring : BEJewelry {
+	BEStormcloudEarring() : base() {
+		$this.Name               = 'Stormcloud Earring'
+		$this.MapObjName         = 'stormcloudearring'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring that crackles with faint static electricity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEQuicksandHourglass : BEJewelry {
+	BEQuicksandHourglass() : base() {
+		$this.Name               = 'Quicksand Hourglass'
+		$this.MapObjName         = 'quicksandhourglass'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny hourglass with perpetually shifting sand.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMirageDustVial : BEJewelry {
+	BEMirageDustVial() : base() {
+		$this.Name               = 'Mirage Dust Vial'
+		$this.MapObjName         = 'miragedustvial'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A vial of shimmering dust that creates illusions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEchoingConch : BEJewelry {
+	BEEchoingConch() : base() {
+		$this.Name               = 'Echoing Conch'
+		$this.MapObjName         = 'echoingconch'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A conch shell that echoes faint sounds of the past.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWhisperingWillowAmulet : BEJewelry {
+	BEWhisperingWillowAmulet() : base() {
+		$this.Name               = 'Whispering Willow Amulet'
+		$this.MapObjName         = 'whisperingwillowamulet'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An amulet carved from whispering willow wood.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEThornsEmbraceRing : BEJewelry {
+	BEThornsEmbraceRing() : base() {
+		$this.Name               = 'Thorns Embrace Ring'
+		$this.MapObjName         = 'thornsembracering'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring resembling thorny vines, protective.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPetalfallNecklace : BEJewelry {
+	BEPetalfallNecklace() : base() {
+		$this.Name               = 'Petalfall Necklace'
+		$this.MapObjName         = 'petalfallnecklace'
+		$this.PurchasePrice      = 720
+		$this.SellPrice          = 360
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A necklace adorned with perpetually falling petals, ethereal.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECinderstoneBracelet : BEJewelry {
+	BECinderstoneBracelet() : base() {
+		$this.Name               = 'Cinderstone Bracelet'
+		$this.MapObjName         = 'cinderstonebracelet'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A bracelet made of cooled volcanic cinder.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBramblethornBrooch : BEJewelry {
+	BEBramblethornBrooch() : base() {
+		$this.Name               = 'Bramblethorn Brooch'
+		$this.MapObjName         = 'bramblethornbrooch'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch shaped like thorny brambles, deterring.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEStarlightCirclet : BEJewelry {
+	BEStarlightCirclet() : base() {
+		$this.Name               = 'Starlight Circlet'
+		$this.MapObjName         = 'starlightcirclet'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A circlet that seems to gather starlight.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMoonglowPendant : BEJewelry {
+	BEMoonglowPendant() : base() {
+		$this.Name               = 'Moonglow Pendant'
+		$this.MapObjName         = 'moonglowpendant'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant that emits a soft, ethereal glow.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESunbeamBrooch : BEJewelry {
+	BESunbeamBrooch() : base() {
+		$this.Name               = 'Sunbeam Brooch'
+		$this.MapObjName         = 'sunbeambrooch'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch that captures a single, perpetual sunbeam.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAuroraBorealisGem : BEJewelry {
+	BEAuroraBorealisGem() : base() {
+		$this.Name               = 'Aurora Borealis Gem'
+		$this.MapObjName         = 'auroraborealisgem'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that shimmers with the colors of the aurora.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECometDustVial : BEJewelry {
+	BECometDustVial() : base() {
+		$this.Name               = 'Comet Dust Vial'
+		$this.MapObjName         = 'cometdustvial'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A vial filled with the dust of a passing comet.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMeteorShowerFragment : BEJewelry {
+	BEMeteorShowerFragment() : base() {
+		$this.Name               = 'Meteor Shower Fragment'
+		$this.MapObjName         = 'meteorshowerfragment'
+		$this.PurchasePrice      = 1450
+		$this.SellPrice          = 725
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A fragment from a spectacular meteor shower.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPlanetaryRing : BEJewelry {
+	BEPlanetaryRing() : base() {
+		$this.Name               = 'Planetary Ring'
+		$this.MapObjName         = 'planetaryring'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring that has miniature planets orbiting it.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECelestialSphereEarring : BEJewelry {
+	BECelestialSphereEarring() : base() {
+		$this.Name               = 'Celestial Sphere Earring'
+		$this.MapObjName         = 'celestialsphereearring'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring with a tiny celestial sphere.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEAndromedaCharm : BEJewelry {
+	BEAndromedaCharm() : base() {
+		$this.Name               = 'Andromeda Charm'
+		$this.MapObjName         = 'andromedacharm'
+		$this.PurchasePrice      = 1900
+		$this.SellPrice          = 950
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm depicting the Andromeda galaxy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMilkyWayBracelet : BEJewelry {
+	BEMilkyWayBracelet() : base() {
+		$this.Name               = 'Milky Way Bracelet'
+		$this.MapObjName         = 'milkywaybracelet'
+		$this.PurchasePrice      = 2000
+		$this.SellPrice          = 1000
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A bracelet that seems to swirl with countless stars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENebulaHeart : BEJewelry {
+	BENebulaHeart() : base() {
+		$this.Name               = 'Nebula Heart'
+		$this.MapObjName         = 'nebulaheart'
+		$this.PurchasePrice      = 2100
+		$this.SellPrice          = 1050
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pulsating gem that resembles a distant nebula.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEQuasarShard : BEJewelry {
+	BEQuasarShard() : base() {
+		$this.Name               = 'Quasar Shard'
+		$this.MapObjName         = 'quasarshard'
+		$this.PurchasePrice      = 2400
+		$this.SellPrice          = 1200
+		$this.TargetStats        = @{
+			[StatId]::Attack = 3
+			[StatId]::MagicAttack = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shard from a quasar, radiating immense energy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPulsarCore : BEJewelry {
+	BEPulsarCore() : base() {
+		$this.Name               = 'Pulsar Core'
+		$this.MapObjName         = 'pulsarcore'
+		$this.PurchasePrice      = 2300
+		$this.SellPrice          = 1150
+		$this.TargetStats        = @{
+			[StatId]::Speed = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A rapidly spinning core, generating powerful magnetic fields.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECosmicStringFragment : BEJewelry {
+	BECosmicStringFragment() : base() {
+		$this.Name               = 'Cosmic String Fragment'
+		$this.MapObjName         = 'cosmicstringfragment'
+		$this.PurchasePrice      = 2500
+		$this.SellPrice          = 1250
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 6
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A fragment of an infinitely thin cosmic string.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMultiverseKey : BEJewelry {
+	BEMultiverseKey() : base() {
+		$this.Name               = 'Multiverse Key'
+		$this.MapObjName         = 'multiversekey'
+		$this.PurchasePrice      = 2600
+		$this.SellPrice          = 1300
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A key rumored to unlock doors between dimensions.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDreamWeaverLoom : BEJewelry {
+	BEDreamWeaverLoom() : base() {
+		$this.Name               = 'Dream Weaver Loom'
+		$this.MapObjName         = 'dreamweaverloom'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny loom that subtly influences dreams.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BENightWalkerShroud : BEJewelry {
+	BENightWalkerShroud() : base() {
+		$this.Name               = 'Night Walker Shroud'
+		$this.MapObjName         = 'nightwalkershroud'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small piece of shroud that aids in moving unseen.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEDaybreakPendant : BEJewelry {
+	BEDaybreakPendant() : base() {
+		$this.Name               = 'Daybreak Pendant'
+		$this.MapObjName         = 'daybreakpendant'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant that always seems to catch the first rays of dawn.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETwilightBrooch : BEJewelry {
+	BETwilightBrooch() : base() {
+		$this.Name               = 'Twilight Brooch'
+		$this.MapObjName         = 'twilightbrooch'
+		$this.PurchasePrice      = 920
+		$this.SellPrice          = 460
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch that shimmers with the colors of dusk.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDuskpetalEarring : BEJewelry {
+	BEDuskpetalEarring() : base() {
+		$this.Name               = 'Duskpetal Earring'
+		$this.MapObjName         = 'duskpetalearring'
+		$this.PurchasePrice      = 880
+		$this.SellPrice          = 440
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An earring made from a petal that blooms only at dusk.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDawnfeatherCharm : BEJewelry {
+	BEDawnfeatherCharm() : base() {
+		$this.Name               = 'Dawnfeather Charm'
+		$this.MapObjName         = 'dawnfeathercharm'
+		$this.PurchasePrice      = 870
+		$this.SellPrice          = 435
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm with a feather from a bird that sings at dawn.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEGlimmergemRing : BEJewelry {
+	BEGlimmergemRing() : base() {
+		$this.Name               = 'Glimmergem Ring'
+		$this.MapObjName         = 'glimmergemring'
+		$this.PurchasePrice      = 780
+		$this.SellPrice          = 390
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring with a gem that always seems to glimmer.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFlickerflamePendant : BEJewelry {
+	BEFlickerflamePendant() : base() {
+		$this.Name               = 'Flickerflame Pendant'
+		$this.MapObjName         = 'flickerflamependant'
+		$this.PurchasePrice      = 820
+		$this.SellPrice          = 410
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant with a perpetual, tiny flame.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESparklightCirclet : BEJewelry {
+	BESparklightCirclet() : base() {
+		$this.Name               = 'Sparklight Circlet'
+		$this.MapObjName         = 'sparklightcirclet'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A circlet that emits tiny, harmless sparks of light.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEShimmerstoneBracelet : BEJewelry {
+	BEShimmerstoneBracelet() : base() {
+		$this.Name               = 'Shimmerstone Bracelet'
+		$this.MapObjName         = 'shimmerstonebracelet'
+		$this.PurchasePrice      = 730
+		$this.SellPrice          = 365
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A bracelet made of stones that subtly shimmer.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGlowwormLamp : BEJewelry {
+	BEGlowwormLamp() : base() {
+		$this.Name               = 'Glowworm Lamp'
+		$this.MapObjName         = 'glowwormlamp'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny lamp containing a perpetual glowworm.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFireflyJar : BEJewelry {
+	BEFireflyJar() : base() {
+		$this.Name               = 'Firefly Jar'
+		$this.MapObjName         = 'fireflyjar'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A miniature jar containing perpetually glowing fireflies.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWillothewispOrb : BEJewelry {
+	BEWillothewispOrb() : base() {
+		$this.Name               = 'Willothewisp Orb'
+		$this.MapObjName         = 'willothewisporb'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small orb that floats and bobs like a will-o-the-wisp.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFadingEmber : BEJewelry {
+	BEFadingEmber() : base() {
+		$this.Name               = 'Fading Ember'
+		$this.MapObjName         = 'fadingember'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dying ember that occasionally flares.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEternalFlameMedallion : BEJewelry {
+	BEEternalFlameMedallion() : base() {
+		$this.Name               = 'Eternal Flame Medallion'
+		$this.MapObjName         = 'eternalflamemedallion'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A medallion with a small, perpetual flame.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPermafrostShard : BEJewelry {
+	BEPermafrostShard() : base() {
+		$this.Name               = 'Permafrost Shard'
+		$this.MapObjName         = 'permafrostshard'
+		$this.PurchasePrice      = 1350
+		$this.SellPrice          = 675
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shard of ice that never melts.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEverflowingDrop : BEJewelry {
+	BEEverflowingDrop() : base() {
+		$this.Name               = 'Everflowing Drop'
+		$this.MapObjName         = 'everflowingdrop'
+		$this.PurchasePrice      = 1250
+		$this.SellPrice          = 625
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A drop of water that never dries.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBoundlessAirCirclet : BEJewelry {
+	BEBoundlessAirCirclet() : base() {
+		$this.Name               = 'Boundless Air Circlet'
+		$this.MapObjName         = 'boundlessaircirclet'
+		$this.PurchasePrice      = 1150
+		$this.SellPrice          = 575
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A circlet that allows the wearer to breathe freely.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEUnyieldingEarthRing : BEJewelry {
+	BEUnyieldingEarthRing() : base() {
+		$this.Name               = 'Unyielding Earth Ring'
+		$this.MapObjName         = 'unyieldingearthring'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring made of solid earth, incredibly durable.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESilentStepAnklet : BEJewelry {
+	BESilentStepAnklet() : base() {
+		$this.Name               = 'Silent Step Anklet'
+		$this.MapObjName         = 'silentstepanklet'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An anklet that muffles footsteps, for stealth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETrueSightLens : BEJewelry {
+	BETrueSightLens() : base() {
+		$this.Name               = 'True Sight Lens'
+		$this.MapObjName         = 'truesightlens'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A monocle that allows the wearer to see hidden things.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFortressHeartstone : BEJewelry {
+	BEFortressHeartstone() : base() {
+		$this.Name               = 'Fortress Heartstone'
+		$this.MapObjName         = 'fortressheartstone'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::Defense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A heart shaped stone that provides immense defense.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESorcerersEye : BEJewelry {
+	BESorcerersEye() : base() {
+		$this.Name               = 'Sorcerer''s Eye'
+		$this.MapObjName         = 'sorcererseye'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An ominous eye shaped gem, enhancing dark magic.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESagesMindstone : BEJewelry {
+	BESagesMindstone() : base() {
+		$this.Name               = 'Sage''s Mindstone'
+		$this.MapObjName         = 'sagesmindstone'
+		$this.PurchasePrice      = 1650
+		$this.SellPrice          = 825
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A smooth, polished stone that enhances intellect.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAcrobatsCharm : BEJewelry {
+	BEAcrobatsCharm() : base() {
+		$this.Name               = 'Acrobat''s Charm'
+		$this.MapObjName         = 'acrobatscharm'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small charm that aids in agility and balance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMarksmansScope : BEJewelry {
+	BEMarksmansScope() : base() {
+		$this.Name               = 'Marksman''s Scope'
+		$this.MapObjName         = 'marksmansscope'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A miniature scope that enhances accuracy.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBerserkersRageGem : BEJewelry {
+	BEBerserkersRageGem() : base() {
+		$this.Name               = 'Berserker''s Rage Gem'
+		$this.MapObjName         = 'berserkersragegem'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Attack = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A volatile gem that pulses with raw anger.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGuardiansAegis : BEJewelry {
+	BEGuardiansAegis() : base() {
+		$this.Name               = 'Guardian''s Aegis'
+		$this.MapObjName         = 'guardiansaegis'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Defense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small shield shaped amulet, for staunch defenders.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPaladinsVowRing : BEJewelry {
+	BEPaladinsVowRing() : base() {
+		$this.Name               = 'Paladin''s Vow Ring'
+		$this.MapObjName         = 'paladinsvowring'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring that glows faintly, symbolizing a holy vow.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPriestesssBlessingBead : BEJewelry {
+	BEPriestesssBlessingBead() : base() {
+		$this.Name               = 'Priestess''s Blessing Bead'
+		$this.MapObjName         = 'priestesssblessingbead'
+		$this.PurchasePrice      = 1350
+		$this.SellPrice          = 675
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A single bead imbued with divine blessing.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEWitchsBrewVial : BEJewelry {
+	BEWitchsBrewVial() : base() {
+		$this.Name               = 'Witch''s Brew Vial'
+		$this.MapObjName         = 'witchsbrewvial'
+		$this.PurchasePrice      = 1250
+		$this.SellPrice          = 625
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small vial containing a bubbling, potent brew.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BENecromancersTotem : BEJewelry {
+	BENecromancersTotem() : base() {
+		$this.Name               = 'Necromancer''s Totem'
+		$this.MapObjName         = 'necromancerstotem'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark totem crafted from bone and shadows.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEBardsLyrePin : BEJewelry {
+	BEBardsLyrePin() : base() {
+		$this.Name               = 'Bard''s Lyre Pin'
+		$this.MapObjName         = 'bardslyrepin'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small pin shaped like a lyre, enhancing charm.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERoguesDaggerClip : BEJewelry {
+	BERoguesDaggerClip() : base() {
+		$this.Name               = 'Rogue''s Dagger Clip'
+		$this.MapObjName         = 'roguesdaggerclip'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A clip shaped like a small dagger, for quick action.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarriorsCrest : BEJewelry {
+	BEWarriorsCrest() : base() {
+		$this.Name               = 'Warrior''s Crest'
+		$this.MapObjName         = 'warriorscrest'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Attack = 2
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small crest, symbolizing strength and courage.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEArchersQuiverPin : BEJewelry {
+	BEArchersQuiverPin() : base() {
+		$this.Name               = 'Archer''s Quiver Pin'
+		$this.MapObjName         = 'archersquiverpin'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a small quiver, enhancing precision.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEThiefsLockpickCharm : BEJewelry {
+	BEThiefsLockpickCharm() : base() {
+		$this.Name               = 'Thief''s Lockpick Charm'
+		$this.MapObjName         = 'thiefslockpickcharm'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm resembling a tiny lockpick, for nimble fingers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAssassinsPoisonVial : BEJewelry {
+	BEAssassinsPoisonVial() : base() {
+		$this.Name               = 'Assassin''s Poison Vial'
+		$this.MapObjName         = 'assassinspoisonvial'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny vial of potent, slow acting poison.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHealersAnkh : BEJewelry {
+	BEHealersAnkh() : base() {
+		$this.Name               = 'Healer''s Ankh'
+		$this.MapObjName         = 'healersankh'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An ankh symbol, for rapid recovery.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEArtificersCogwheel : BEJewelry {
+	BEArtificersCogwheel() : base() {
+		$this.Name               = 'Artificer''s Cogwheel'
+		$this.MapObjName         = 'artificerscogwheel'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny, perpetually turning cogwheel.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEScholarsQuillBrooch : BEJewelry {
+	BEScholarsQuillBrooch() : base() {
+		$this.Name               = 'Scholar''s Quill Brooch'
+		$this.MapObjName         = 'scholarsquillbrooch'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch shaped like a quill, enhancing learning.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMerchantsScaleCharm : BEJewelry {
+	BEMerchantsScaleCharm() : base() {
+		$this.Name               = 'Merchant''s Scale Charm'
+		$this.MapObjName         = 'merchantsscalecharm'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a tiny balance scale, for good deals.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFarmersScythePin : BEJewelry {
+	BEFarmersScythePin() : base() {
+		$this.Name               = 'Farmer''s Scythe Pin'
+		$this.MapObjName         = 'farmersscythepin'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a miniature scythe, for good harvests.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEFishermansHookPendant : BEJewelry {
+	BEFishermansHookPendant() : base() {
+		$this.Name               = 'Fisherman''s Hook Pendant'
+		$this.MapObjName         = 'fishermanshookpendant'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant shaped like a fish hook, for bountiful catches.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEHuntersTrapBadge : BEJewelry {
+	BEHuntersTrapBadge() : base() {
+		$this.Name               = 'Hunter''s Trap Badge'
+		$this.MapObjName         = 'hunterstrapbadge'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A badge resembling a small trap, for tracking.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECooksLadlePin : BEJewelry {
+	BECooksLadlePin() : base() {
+		$this.Name               = 'Cook''s Ladle Pin'
+		$this.MapObjName         = 'cooksladlepin'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a small ladle, for culinary prowess.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBlacksmithsHammerCharm : BEJewelry {
+	BEBlacksmithsHammerCharm() : base() {
+		$this.Name               = 'Blacksmith''s Hammer Charm'
+		$this.MapObjName         = 'blacksmithshammercharm'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a tiny hammer, for crafting.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BETailorsNeedleBrooch : BEJewelry {
+	BETailorsNeedleBrooch() : base() {
+		$this.Name               = 'Tailor''s Needle Brooch'
+		$this.MapObjName         = 'tailorsneedlebrooch'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch shaped like a needle, for fine stitching.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BECarpentersSawPendant : BEJewelry {
+	BECarpentersSawPendant() : base() {
+		$this.Name               = 'Carpenter''s Saw Pendant'
+		$this.MapObjName         = 'carpenterssawpendant'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant shaped like a small saw, for construction.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEJewelersLoupeRing : BEJewelry {
+	BEJewelersLoupeRing() : base() {
+		$this.Name               = 'Jeweler''s Loupe Ring'
+		$this.MapObjName         = 'jewelersloupering'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A ring with a tiny magnifying glass, for discerning details.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAlchemistsMortarPin : BEJewelry {
+	BEAlchemistsMortarPin() : base() {
+		$this.Name               = 'Alchemist''s Mortar Pin'
+		$this.MapObjName         = 'alchemistsmortarpin'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a mortar and pestle, for potions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBrewersTankardCharm : BEJewelry {
+	BEBrewersTankardCharm() : base() {
+		$this.Name               = 'Brewer''s Tankard Charm'
+		$this.MapObjName         = 'brewerstankardcharm'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a miniature tankard, for hearty drinks.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEGamblersDice : BEJewelry {
+	BEGamblersDice() : base() {
+		$this.Name               = 'Gambler''s Dice'
+		$this.MapObjName         = 'gamblersdice'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Luck = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny pair of perpetually tumbling dice.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEJestersBell : BEJewelry {
+	BEJestersBell() : base() {
+		$this.Name               = 'Jester''s Bell'
+		$this.MapObjName         = 'jestersbell'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small, perpetually jingling bell.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDancersRibbon : BEJewelry {
+	BEDancersRibbon() : base() {
+		$this.Name               = 'Dancer''s Ribbon'
+		$this.MapObjName         = 'dancersribbon'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+			[StatId]::Speed = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A delicate ribbon that flows gracefully.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BESingersVoiceCharm : BEJewelry {
+	BESingersVoiceCharm() : base() {
+		$this.Name               = 'Singer''s Voice Charm'
+		$this.MapObjName         = 'singersvoicecharm'
+		$this.PurchasePrice      = 620
+		$this.SellPrice          = 310
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm that subtly enhances the voice.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEActorsMaskPin : BEJewelry {
+	BEActorsMaskPin() : base() {
+		$this.Name               = 'Actor''s Mask Pin'
+		$this.MapObjName         = 'actorsmaskpin'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a theatrical mask, for performance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArtistsBrushBrooch : BEJewelry {
+	BEArtistsBrushBrooch() : base() {
+		$this.Name               = 'Artist''s Brush Brooch'
+		$this.MapObjName         = 'artistsbrushbrooch'
+		$this.PurchasePrice      = 680
+		$this.SellPrice          = 340
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch shaped like a paint brush, for creativity.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESculptorsChiselPendant : BEJewelry {
+	BESculptorsChiselPendant() : base() {
+		$this.Name               = 'Sculptor''s Chisel Pendant'
+		$this.MapObjName         = 'sculptorschiselpendant'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pendant shaped like a tiny chisel, for precision.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWritersInkwellCharm : BEJewelry {
+	BEWritersInkwellCharm() : base() {
+		$this.Name               = 'Writer''s Inkwell Charm'
+		$this.MapObjName         = 'writersinkwellcharm'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like an inkwell, for inspiration.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMusiciansClefPin : BEJewelry {
+	BEMusiciansClefPin() : base() {
+		$this.Name               = 'Musician''s Clef Pin'
+		$this.MapObjName         = 'musiciansclefpin'
+		$this.PurchasePrice      = 620
+		$this.SellPrice          = 310
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a musical clef, for harmony.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEExplorersCompass : BEJewelry {
+	BEExplorersCompass() : base() {
+		$this.Name               = 'Explorer''s Compass'
+		$this.MapObjName         = 'explorerscompass'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny compass that always points true.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BENavigatorsSextantCharm : BEJewelry {
+	BENavigatorsSextantCharm() : base() {
+		$this.Name               = 'Navigator''s Sextant Charm'
+		$this.MapObjName         = 'navigatorssextantcharm'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a miniature sextant, for guidance.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECartographersScroll : BEJewelry {
+	BECartographersScroll() : base() {
+		$this.Name               = 'Cartographer''s Scroll'
+		$this.MapObjName         = 'cartographersscroll'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A miniature scroll that always unrolls to a map.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArchaeologistsTrowel : BEJewelry {
+	BEArchaeologistsTrowel() : base() {
+		$this.Name               = 'Archaeologist''s Trowel'
+		$this.MapObjName         = 'archaeologiststrowel'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny trowel for uncovering ancient secrets.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELinguistsRosettaStone : BEJewelry {
+	BELinguistsRosettaStone() : base() {
+		$this.Name               = 'Linguist''s Rosetta Stone'
+		$this.MapObjName         = 'linguistsrosettastone'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small fragment resembling the Rosetta Stone, for understanding languages.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBotanistsLeafBrooch : BEJewelry {
+	BEBotanistsLeafBrooch() : base() {
+		$this.Name               = 'Botanist''s Leaf Brooch'
+		$this.MapObjName         = 'botanistsleafbrooch'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A brooch shaped like a perfect leaf, for plant growth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEZoologistsPawPrint : BEJewelry {
+	BEZoologistsPawPrint() : base() {
+		$this.Name               = 'Zoologist''s Paw Print'
+		$this.MapObjName         = 'zoologistspawprint'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm with a delicate paw print, for animal empathy.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGeologistsPickaxePin : BEJewelry {
+	BEGeologistsPickaxePin() : base() {
+		$this.Name               = 'Geologist''s Pickaxe Pin'
+		$this.MapObjName         = 'geologistspickaxepin'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a tiny pickaxe, for mineral detection.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEAstronomersTelescope : BEJewelry {
+	BEAstronomersTelescope() : base() {
+		$this.Name               = 'Astronomer''s Telescope'
+		$this.MapObjName         = 'astronomerstelescope'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny telescope that reveals distant stars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEOceanographersWaveCharm : BEJewelry {
+	BEOceanographersWaveCharm() : base() {
+		$this.Name               = 'Oceanographer''s Wave Charm'
+		$this.MapObjName         = 'oceanographerswavecharm'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a perfect wave, for navigating seas.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEClimatologistsCloudPin : BEJewelry {
+	BEClimatologistsCloudPin() : base() {
+		$this.Name               = 'Climatologist''s Cloud Pin'
+		$this.MapObjName         = 'climatologistscloudpin'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a small cloud, for predicting weather.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETherapistsCalmingGem : BEJewelry {
+	BETherapistsCalmingGem() : base() {
+		$this.Name               = 'Therapist''s Calming Gem'
+		$this.MapObjName         = 'therapistscalminggem'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that emits a soothing aura, for mental peace.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPhilosophersStoneFragment : BEJewelry {
+	BEPhilosophersStoneFragment() : base() {
+		$this.Name               = 'Philosopher''s Stone Fragment'
+		$this.MapObjName         = 'philosophersstonefragment'
+		$this.PurchasePrice      = 2800
+		$this.SellPrice          = 1400
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+			[StatId]::Luck = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny fragment of the legendary Philosopher''s Stone.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWanderersBootsCharm : BEJewelry {
+	BEWanderersBootsCharm() : base() {
+		$this.Name               = 'Wanderer''s Boots Charm'
+		$this.MapObjName         = 'wanderersbootscharm'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a tiny boot, for long journeys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPilgrimsScallopShell : BEJewelry {
+	BEPilgrimsScallopShell() : base() {
+		$this.Name               = 'Pilgrim''s Scallop Shell'
+		$this.MapObjName         = 'pilgrimsscallopshell'
+		$this.PurchasePrice      = 550
+		$this.SellPrice          = 275
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small scallop shell, symbolizing a completed journey.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHermitsLanternPin : BEJewelry {
+	BEHermitsLanternPin() : base() {
+		$this.Name               = 'Hermit''s Lantern Pin'
+		$this.MapObjName         = 'hermitslanternpin'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a small lantern, for solitary exploration.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAsceticsSimpleCord : BEJewelry {
+	BEAsceticsSimpleCord() : base() {
+		$this.Name               = 'Ascetic''s Simple Cord'
+		$this.MapObjName         = 'asceticssimplecord'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A plain cord, representing simplicity and detachment.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMonksPrayerBeads : BEJewelry {
+	BEMonksPrayerBeads() : base() {
+		$this.Name               = 'Monk''s Prayer Beads'
+		$this.MapObjName         = 'monksprayerbeads'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small string of prayer beads, for meditation.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarriorMonksFistCharm : BEJewelry {
+	BEWarriorMonksFistCharm() : base() {
+		$this.Name               = 'Warrior Monk''s Fist Charm'
+		$this.MapObjName         = 'warriormonksfistcharm'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm shaped like a clenched fist, for martial discipline.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BERogueMonksShadowStep : BEJewelry {
+	BERogueMonksShadowStep() : base() {
+		$this.Name               = 'Rogue Monk''s Shadow Step'
+		$this.MapObjName         = 'roguemonksshadowstep'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small shadow-like charm, aiding in silent movement.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPaladinsOathScroll : BEJewelry {
+	BEPaladinsOathScroll() : base() {
+		$this.Name               = 'Paladin''s Oath Scroll'
+		$this.MapObjName         = 'paladinsoathscroll'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A miniature scroll inscribed with a holy oath.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEClericsDivineSymbol : BEJewelry {
+	BEClericsDivineSymbol() : base() {
+		$this.Name               = 'Cleric''s Divine Symbol'
+		$this.MapObjName         = 'clericsdivinesymbol'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small, glowing divine symbol.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDruidsVineCharm : BEJewelry {
+	BEDruidsVineCharm() : base() {
+		$this.Name               = 'Druid''s Vine Charm'
+		$this.MapObjName         = 'druidsvinecharm'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A charm woven from living vines, connecting to nature.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEBardsHarmonyGem : BEJewelry {
+	BEBardsHarmonyGem() : base() {
+		$this.Name               = 'Bard''s Harmony Gem'
+		$this.MapObjName         = 'bardsharmonygem'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that resonates with perfect harmony.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESorcerersFocusCrystal : BEJewelry {
+	BESorcerersFocusCrystal() : base() {
+		$this.Name               = 'Sorcerer''s Focus Crystal'
+		$this.MapObjName         = 'sorcerersfocuscrystal'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A crystal that enhances magical concentration.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEWarlocksPactSigil : BEJewelry {
+	BEWarlocksPactSigil() : base() {
+		$this.Name               = 'Warlock''s Pact Sigil'
+		$this.MapObjName         = 'warlockspactsigil'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark sigil representing a forbidden pact.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BENecromancersBoneDust : BEJewelry {
+	BENecromancersBoneDust() : base() {
+		$this.Name               = 'Necromancer''s Bone Dust'
+		$this.MapObjName         = 'necromancersbonedust'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small pouch of fine bone dust, for raising the dead.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BESummonersBindingCircle : BEJewelry {
+	BESummonersBindingCircle() : base() {
+		$this.Name               = 'Summoner''s Binding Circle'
+		$this.MapObjName         = 'summonersbindingcircle'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A miniature binding circle, for controlling summoned beings.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEnchantersGlyph : BEJewelry {
+	BEEnchantersGlyph() : base() {
+		$this.Name               = 'Enchanter''s Glyph'
+		$this.MapObjName         = 'enchantersglyph'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small, glowing glyph, for imbuing items.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEIllusionistsMirrorShard : BEJewelry {
+	BEIllusionistsMirrorShard() : base() {
+		$this.Name               = 'Illusionist''s Mirror Shard'
+		$this.MapObjName         = 'illusionistsmirrorshard'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A fragment of a mirror that reflects illusions.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDivinersPendulum : BEJewelry {
+	BEDivinersPendulum() : base() {
+		$this.Name               = 'Diviner''s Pendulum'
+		$this.MapObjName         = 'divinerspendulum'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small pendulum that sways to reveal truths.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAbjurersWardingCircle : BEJewelry {
+	BEAbjurersWardingCircle() : base() {
+		$this.Name               = 'Abjurer''s Warding Circle'
+		$this.MapObjName         = 'abjurerswardingcircle'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::MagicDefense = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny warding circle, for defensive spells.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEConjurersOrb : BEJewelry {
+	BEConjurersOrb() : base() {
+		$this.Name               = 'Conjurer''s Orb'
+		$this.MapObjName         = 'conjurersorb'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 2
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small orb that can manifest minor objects.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETransmutersCatalyst : BEJewelry {
+	BETransmutersCatalyst() : base() {
+		$this.Name               = 'Transmuter''s Catalyst'
+		$this.MapObjName         = 'transmuterscatalyst'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small, heavy catalyst that aids in transformations.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEvokersFocusGem : BEJewelry {
+	BEEvokersFocusGem() : base() {
+		$this.Name               = 'Evoker''s Focus Gem'
+		$this.MapObjName         = 'evokersfocusgem'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A gem that intensifies elemental spells.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEConjurationBell : BEJewelry {
+	BEConjurationBell() : base() {
+		$this.Name               = 'Conjuration Bell'
+		$this.MapObjName         = 'conjurationbell'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tiny bell that rings to summon familiars.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMysticsThirdEye : BEJewelry {
+	BEMysticsThirdEye() : base() {
+		$this.Name               = 'Mystic''s Third Eye'
+		$this.MapObjName         = 'mysticsthirdeye'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 3
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'An eye-shaped gem, for enhanced perception.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERunemastersStone : BEJewelry {
+	BERunemastersStone() : base() {
+		$this.Name               = 'Runemaster''s Stone'
+		$this.MapObjName         = 'runemastersstone'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Attack = 1
+			[StatId]::Defense = 1
+			[StatId]::MagicAttack = 1
+			[StatId]::MagicDefense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A stone engraved with powerful runes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEInventorsBlueprintFragment : BEJewelry {
+	BEInventorsBlueprintFragment() : base() {
+		$this.Name               = 'Inventor''s Blueprint Fragment'
+		$this.MapObjName         = 'inventorsblueprintfragment'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A fragment of an ingenious blueprint.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGolemCoreFragment : BEJewelry {
+	BEGolemCoreFragment() : base() {
+		$this.Name               = 'Golem Core Fragment'
+		$this.MapObjName         = 'golemcorefragment'
+		$this.PurchasePrice      = 1500
+		$this.SellPrice          = 750
+		$this.TargetStats        = @{
+			[StatId]::Defense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A piece of a golem''s core, slightly humming.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAutomatonGear : BEJewelry {
+	BEAutomatonGear() : base() {
+		$this.Name               = 'Automaton Gear'
+		$this.MapObjName         = 'automatongear'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+			[StatId]::Defense = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A perfectly crafted gear from an ancient automaton.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEClockworkHeart : BEJewelry {
+	BEClockworkHeart() : base() {
+		$this.Name               = 'Clockwork Heart'
+		$this.MapObjName         = 'clockworkheart'
+		$this.PurchasePrice      = 1600
+		$this.SellPrice          = 800
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A miniature clockwork heart, ticking softly.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESteamValvePin : BEJewelry {
+	BESteamValvePin() : base() {
+		$this.Name               = 'Steam Valve Pin'
+		$this.MapObjName         = 'steamvalvepin'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pin shaped like a tiny steam valve, for mechanical control.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEMagitechBattery : BEJewelry {
+	BEMagitechBattery() : base() {
+		$this.Name               = 'Magitech Battery'
+		$this.MapObjName         = 'magitechbattery'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 3
+			[StatId]::MagicDefense = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small battery that stores both magic and electricity.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEArcaniteShard : BEJewelry {
+	BEArcaniteShard() : base() {
+		$this.Name               = 'Arcanite Shard'
+		$this.MapObjName         = 'arcaniteshard'
+		$this.PurchasePrice      = 1800
+		$this.SellPrice          = 900
+		$this.TargetStats        = @{
+			[StatId]::MagicAttack = 4
+			[StatId]::MagicDefense = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shimmering shard of pure arcanite.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::MagicAttack]) MAT  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEEtherealWeaveBracelet : BEJewelry {
+	BEEtherealWeaveBracelet() : base() {
+		$this.Name               = 'Ethereal Weave Bracelet'
+		$this.MapObjName         = 'etherealweavebracelet'
+		$this.PurchasePrice      = 1700
+		$this.SellPrice          = 850
+		$this.TargetStats        = @{
+			[StatId]::Speed = 5
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A bracelet woven from ethereal threads, making the wearer less corporeal.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEAstralCompass : BEJewelry {
+	BEAstralCompass() : base() {
+		$this.Name               = 'Astral Compass'
+		$this.MapObjName         = 'astralcompass'
+		$this.PurchasePrice      = 1900
+		$this.SellPrice          = 950
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A compass that points to different astral planes.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECosmicWhisperPearl : BEJewelry {
+	BECosmicWhisperPearl() : base() {
+		$this.Name               = 'Cosmic Whisper Pearl'
+		$this.MapObjName         = 'cosmicwhisperpearl'
+		$this.PurchasePrice      = 2000
+		$this.SellPrice          = 1000
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pearl that seems to hum with the sounds of the cosmos.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEDimensionKnot : BEJewelry {
+	BEDimensionKnot() : base() {
+		$this.Name               = 'Dimension Knot'
+		$this.MapObjName         = 'dimensionknot'
+		$this.PurchasePrice      = 2100
+		$this.SellPrice          = 1050
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A tangled knot of dimensional threads.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERealityThread : BEJewelry {
+	BERealityThread() : base() {
+		$this.Name               = 'Reality Thread'
+		$this.MapObjName         = 'realitythread'
+		$this.PurchasePrice      = 2200
+		$this.SellPrice          = 1100
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A single, unbroken thread of reality.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEQuantumFluxCrystal : BEJewelry {
+	BEQuantumFluxCrystal() : base() {
+		$this.Name               = 'Quantum Flux Crystal'
+		$this.MapObjName         = 'quantumfluxcrystal'
+		$this.PurchasePrice      = 2300
+		$this.SellPrice          = 1150
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A crystal that vibrates with quantum fluctuations.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETemporalAnomalyShard : BEJewelry {
+	BETemporalAnomalyShard() : base() {
+		$this.Name               = 'Temporal Anomaly Shard'
+		$this.MapObjName         = 'temporalanomalyshard'
+		$this.PurchasePrice      = 2400
+		$this.SellPrice          = 1200
+		$this.TargetStats        = @{
+			[StatId]::Speed = 8
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A shard that seems to slightly distort time around it.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGravitonCoil : BEJewelry {
+	BEGravitonCoil() : base() {
+		$this.Name               = 'Graviton Coil'
+		$this.MapObjName         = 'gravitoncoil'
+		$this.PurchasePrice      = 2500
+		$this.SellPrice          = 1250
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A small coil that subtly alters gravity.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+#endregion
+
+
+
+
+#region Capes
+
+Class BETatteredCape : BECape {
+	BETatteredCape() : base() {
+		$this.Name               = 'Tattered Cape'
+		$this.MapObjName         = 'tatteredcape'
+		$this.PurchasePrice      = 50
+		$this.SellPrice          = 25
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A worn and torn cape, offering minimal protection.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEClothCape : BECape {
+	BEClothCape() : base() {
+		$this.Name               = 'Cloth Cape'
+		$this.MapObjName         = 'clothcape'
+		$this.PurchasePrice      = 80
+		$this.SellPrice          = 40
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A simple cloth cape, light and unassuming.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BELeatherCape : BECape {
+	BELeatherCape() : base() {
+		$this.Name               = 'Leather Cape'
+		$this.MapObjName         = 'leathercape'
+		$this.PurchasePrice      = 150
+		$this.SellPrice          = 75
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A sturdy leather cape, providing a touch of defense.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BETravelerCape : BECape {
+	BETravelerCape() : base() {
+		$this.Name               = 'Traveler Cape'
+		$this.MapObjName         = 'travelercape'
+		$this.PurchasePrice      = 200
+		$this.SellPrice          = 100
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A durable cape designed for long journeys.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEHunterCape : BECape {
+	BEHunterCape() : base() {
+		$this.Name               = 'Hunter Cape'
+		$this.MapObjName         = 'huntercape'
+		$this.PurchasePrice      = 250
+		$this.SellPrice          = 125
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A practical cape favored by trackers and hunters.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BERogueCape : BECape {
+	BERogueCape() : base() {
+		$this.Name               = 'Rogue Cape'
+		$this.MapObjName         = 'roguecape'
+		$this.PurchasePrice      = 300
+		$this.SellPrice          = 150
+		$this.TargetStats        = @{
+			[StatId]::Speed = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark cape, ideal for blending into shadows.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESorcererCape : BECape {
+	BESorcererCape() : base() {
+		$this.Name               = 'Sorcerer Cape'
+		$this.MapObjName         = 'sorcerercape'
+		$this.PurchasePrice      = 350
+		$this.SellPrice          = 175
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A flowing cape, subtly enhancing magical flow.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEPriestessCape : BECape {
+	BEPriestessCape() : base() {
+		$this.Name               = 'Priestess Cape'
+		$this.MapObjName         = 'priestesscape'
+		$this.PurchasePrice      = 400
+		$this.SellPrice          = 200
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A pure white cape, imbued with a gentle blessing.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEWarriorCape : BECape {
+	BEWarriorCape() : base() {
+		$this.Name               = 'Warrior Cape'
+		$this.MapObjName         = 'warriorcape'
+		$this.PurchasePrice      = 450
+		$this.SellPrice          = 225
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A robust cape, offering minor protection in combat.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEKnightCape : BECape {
+	BEKnightCape() : base() {
+		$this.Name               = 'Knight Cape'
+		$this.MapObjName         = 'knightcape'
+		$this.PurchasePrice      = 500
+		$this.SellPrice          = 250
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A heavy cape, signifying duty and honor.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEElvenweaveCape : BECape {
+	BEElvenweaveCape() : base() {
+		$this.Name               = 'Elvenweave Cape'
+		$this.MapObjName         = 'elvenweavecape'
+		$this.PurchasePrice      = 600
+		$this.SellPrice          = 300
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A finely woven cape, light and graceful.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDwarvenHearthCape : BECape {
+	BEDwarvenHearthCape() : base() {
+		$this.Name               = 'Dwarven Hearth Cape'
+		$this.MapObjName         = 'dwarvenhearthcape'
+		$this.PurchasePrice      = 650
+		$this.SellPrice          = 325
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A thick, warm cape from dwarven forges.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEShadowsEmbraceCape : BECape {
+	BEShadowsEmbraceCape() : base() {
+		$this.Name               = 'Shadows Embrace Cape'
+		$this.MapObjName         = 'shadowsembracecape'
+		$this.PurchasePrice      = 700
+		$this.SellPrice          = 350
+		$this.TargetStats        = @{
+			[StatId]::Speed = 3
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape that seems to absorb light, aiding in stealth.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BESunlitCape : BECape {
+	BESunlitCape() : base() {
+		$this.Name               = 'Sunlit Cape'
+		$this.MapObjName         = 'sunlitcape'
+		$this.PurchasePrice      = 750
+		$this.SellPrice          = 375
+		$this.TargetStats        = @{
+			[StatId]::Luck = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape that glows faintly with solar energy, inspiring hope.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEMoonwhisperCape : BECape {
+	BEMoonwhisperCape() : base() {
+		$this.Name               = 'Moonwhisper Cape'
+		$this.MapObjName         = 'moonwhispercape'
+		$this.PurchasePrice      = 800
+		$this.SellPrice          = 400
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A dark cape that seems to hum with lunar power, aiding intuition.'
+		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEDragonscaleCape : BECape {
+	BEDragonscaleCape() : base() {
+		$this.Name               = 'Dragonscale Cape'
+		$this.MapObjName         = 'dragonscalecape'
+		$this.PurchasePrice      = 900
+		$this.SellPrice          = 450
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape crafted from the durable scales of a dragon.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEPhoenixwingCape : BECape {
+	BEPhoenixwingCape() : base() {
+		$this.Name               = 'Phoenixwing Cape'
+		$this.MapObjName         = 'phoenixwingcape'
+		$this.PurchasePrice      = 1000
+		$this.SellPrice          = 500
+		$this.TargetStats        = @{
+			[StatId]::Speed = 4
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape made from the vibrant feathers of a phoenix, surprisingly light.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEBlessedHeroCape : BECape {
+	BEBlessedHeroCape() : base() {
+		$this.Name               = 'Blessed Hero Cape'
+		$this.MapObjName         = 'blessedherocape'
+		$this.PurchasePrice      = 1200
+		$this.SellPrice          = 600
+		$this.TargetStats        = @{
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape worn by a legendary hero, imbued with divine favor.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEStarlightWeaveCape : BECape {
+	BEStarlightWeaveCape() : base() {
+		$this.Name               = 'Starlight Weave Cape'
+		$this.MapObjName         = 'starlightweavecape'
+		$this.PurchasePrice      = 1100
+		$this.SellPrice          = 550
+		$this.TargetStats        = @{
+			[StatId]::Luck = 2
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape woven from threads infused with starlight, subtly enhancing luck.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEVoidTouchedCape : BECape {
+	BEVoidTouchedCape() : base() {
+		$this.Name               = 'Void Touched Cape'
+		$this.MapObjName         = 'voidtouchedcape'
+		$this.PurchasePrice      = 1300
+		$this.SellPrice          = 650
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape that seems to draw power from the void, unsettling yet potent.'
+		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
+Class BEWhisperingWoodsCape : BECape {
+	BEWhisperingWoodsCape() : base() {
+		$this.Name               = 'Whispering Woods Cape'
+		$this.MapObjName         = 'whisperingwoodscape'
+		$this.PurchasePrice      = 850
+		$this.SellPrice          = 425
+		$this.TargetStats        = @{
+			[StatId]::Speed = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape woven from ancient forest materials, attuned to nature.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BEStormfrontCape : BECape {
+	BEStormfrontCape() : base() {
+		$this.Name               = 'Stormfront Cape'
+		$this.MapObjName         = 'stormfrontcape'
+		$this.PurchasePrice      = 950
+		$this.SellPrice          = 475
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape that crackles with faint static, hinting at elemental power.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BEGlacierwindCape : BECape {
+	BEGlacierwindCape() : base() {
+		$this.Name               = 'Glacierwind Cape'
+		$this.MapObjName         = 'glacierwindcape'
+		$this.PurchasePrice      = 1050
+		$this.SellPrice          = 525
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A cape that feels perpetually cold, offering resistance to heat.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Unisex
+	}
+}
+
+Class BECrimsonSorceressCape : BECape {
+	BECrimsonSorceressCape() : base() {
+		$this.Name               = 'Crimson Sorceress Cape'
+		$this.MapObjName         = 'crimsonsorceresscape'
+		$this.PurchasePrice      = 1150
+		$this.SellPrice          = 575
+		$this.TargetStats        = @{
+			[StatId]::Accuracy = 1
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A deep red cape, favored by powerful female magic users.'
+		$this.PlayerEffectString = "  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+		$this.TargetGender       = [Gender]::Female
+	}
+}
+
+Class BERoyalSentinelCape : BECape {
+	BERoyalSentinelCape() : base() {
+		$this.Name               = 'Royal Sentinel Cape'
+		$this.MapObjName         = 'royalsentinelcape'
+		$this.PurchasePrice      = 1400
+		$this.SellPrice          = 700
+		$this.TargetStats        = @{
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'A finely embroidered cape, worn by the elite royal guard.'
+		$this.PlayerEffectString = ""
+		$this.TargetGender       = [Gender]::Male
+	}
+}
+
 #endregion
 
 #endregion

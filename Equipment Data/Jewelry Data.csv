@@ -1,0 +1,256 @@
+Name,Description,Purchase Price,Sell Price,Attack Power,Defense Power,Magic Attack Power,Magic Defense Power,Luck,Speed,Accuracy,Gender
+Copper Ring,"A simple, unadorned copper ring.",50,25,0,1,0,1,1,0,0,Unisex
+Iron Pendant,"A heavy iron pendant, often worn by warriors.",80,40,1,1,0,0,0,0,0,Male
+Silver Bracelet,"A delicate silver bracelet, popular among magic users.",120,60,0,0,1,2,0,0,0,Female
+Gold Necklace,"A gleaming gold necklace, a sign of wealth.",180,90,0,0,0,0,2,0,0,Unisex
+Bronze Brooch,"A small bronze brooch, often used to fasten cloaks.",70,35,0,1,0,0,0,0,0,Unisex
+Wooden Beads,"Simple wooden beads, sometimes used in rituals.",60,30,0,0,1,1,0,0,0,Unisex
+Leather Charm,"A small leather charm, believed to ward off evil.",90,45,0,0,0,0,1,0,0,Unisex
+Bone Earring,"An earring crafted from polished bone.",100,50,1,0,0,0,0,0,1,Male
+Pearl Tiara,"A beautiful tiara adorned with lustrous pearls.",300,150,0,1,2,3,0,0,0,Female
+Ruby Ring,"A gold ring set with a sparkling ruby.",450,225,1,1,1,1,1,0,0,Unisex
+Sapphire Pendant,"A silver pendant featuring a deep blue sapphire.",500,250,0,0,2,3,0,0,0,Unisex
+Emerald Bracelet,"A verdant emerald bracelet, granting a touch of nature's magic.",550,275,0,1,2,2,0,0,0,Female
+Diamond Necklace,"A dazzling diamond necklace, exuding prestige.",800,400,0,0,0,0,3,0,0,Unisex
+Amethyst Brooch,"A purple amethyst brooch, known to enhance wisdom.",380,190,0,0,1,2,0,0,0,Female
+Opal Ring,"An iridescent opal ring, rumored to bring good fortune.",700,350,0,0,2,2,2,0,0,Unisex
+Topaz Circlet,"A golden circlet set with a bright topaz gem.",400,200,0,1,1,1,0,0,0,Female
+Garnet Amulet,"A dark red garnet amulet, radiating fortitude.",350,175,1,1,0,0,0,0,0,Male
+Jade Anklet,"A serene jade anklet, promoting calm and focus.",250,125,0,0,0,1,1,1,0,Female
+Coral Brooch,"A delicate coral brooch, whispering of ocean depths.",200,100,0,0,1,1,0,0,0,Female
+Onyx Ring,"A jet black onyx ring, absorbing negative energies.",420,210,0,1,0,2,0,0,0,Male
+Quartz Pendant,"A clear quartz pendant, amplifying magical energies.",300,150,0,0,1,1,0,0,0,Unisex
+Sunstone Ring,"A vibrant sunstone ring, imbued with solar warmth.",600,300,1,0,1,1,1,0,0,Unisex
+Moonstone Circlet,"A luminous moonstone circlet, connected to lunar magic.",620,310,0,0,2,2,0,0,0,Female
+Star Sapphire Brooch,"A rare star sapphire brooch, said to grant wishes.",900,450,0,0,3,3,2,0,0,Female
+Dragon Scale Necklace,"A necklace made of hardened dragon scales, very protective.",1500,750,2,3,0,1,0,0,0,Male
+Phoenix Feather Earring,"An earring with a vibrant phoenix feather, granting swiftness.",1300,650,0,0,0,0,0,5,0,Female
+Unicorn Horn Charm,"A charm crafted from a fragment of unicorn horn, for purity.",1200,600,0,1,2,3,0,0,0,Female
+Griffin Claw Pendant,"A fierce griffin claw pendant, enhancing predatory instincts.",1400,700,2,1,0,0,0,0,2,Male
+Vampire Fang Necklace,"A dark necklace adorned with a vampire fang, siphoning life.",1100,550,1,0,0,1,0,0,0,Unisex
+Werewolf Claw Ring,"A ring with a werewolf claw, granting ferocity.",1000,500,2,0,0,0,0,1,0,Male
+Lich Phylactery,"A dark, pulsating phylactery, containing a lich's essence.",1800,900,0,2,4,4,0,0,0,Male
+Elemental Orb,"A glowing orb containing elemental power.",750,375,1,1,1,1,0,0,0,Unisex
+Chaos Emerald,"A chaotic emerald, distorting reality.",2000,1000,2,2,2,2,2,2,2,Unisex
+Order Gem,"A perfectly balanced gem, promoting harmony.",2000,1000,1,1,1,1,1,1,1,Unisex
+Light Crystal,"A radiant crystal, emitting pure light.",1600,800,0,0,3,4,0,0,0,Unisex
+Dark Shard,"A jagged dark shard, filled with malevolence.",1600,800,1,0,4,3,0,0,0,Male
+Starfall Fragment,"A fragment of a fallen star, shimmering with cosmic energy.",1700,850,0,0,0,0,3,3,0,Unisex
+Void Stone,"A stone that absorbs all light, connected to the void.",1900,950,0,2,3,5,0,0,0,Unisex
+Spirit Essence,"A vial containing a concentrated spirit essence.",1000,500,0,0,2,2,0,0,0,Unisex
+Soul Gem,"A gem that holds a captured soul, eerie but powerful.",1200,600,1,0,3,3,0,0,0,Unisex
+Lifeblood Amulet,"An amulet pulsating with life energy, granting vitality.",1100,550,0,1,0,0,0,0,0,Unisex
+Deathwhisper Ring,"A ring that whispers of death, chilling to the touch.",1000,500,1,0,0,1,0,0,0,Unisex
+Time Bender Chronometer,"A complex chronometer, subtly altering the flow of time.",2500,1250,0,0,0,0,0,10,0,Unisex
+Space Warp Cube,"A small cube that momentarily bends space.",2500,1250,0,0,0,0,0,0,5,Unisex
+Reality Anchor,"A heavy anchor that stabilizes reality.",2300,1150,0,3,0,3,0,0,0,Unisex
+Dreamcatcher Brooch,"A delicate brooch woven to capture pleasant dreams.",300,150,0,0,1,1,1,0,0,Female
+Nightmare Shard,"A jagged shard that induces terrifying nightmares.",300,150,1,0,0,1,0,0,0,Male
+Rainbow Prism,"A faceted prism that refracts light into a rainbow.",700,350,0,0,2,2,0,0,0,Unisex
+Eclipse Pendant,"A dark pendant resembling an eclipse, symbolizing balance.",800,400,1,1,1,1,0,0,0,Unisex
+Aurora Circlet,"A shimmering circlet that glows with aurora colors.",720,360,0,0,2,2,0,0,0,Female
+Comet Tail Earring,"An earring with a fragment resembling a comet's tail, increasing speed.",680,340,0,0,0,0,0,4,0,Female
+Meteorite Fragment,"A rough meteorite fragment, strangely heavy.",650,325,1,1,0,0,0,0,0,Unisex
+Black Hole Core,"A tiny, dense core that draws in surrounding energy.",2200,1100,0,0,5,5,0,0,0,Unisex
+Supernova Gem,"A gem that pulses with immense destructive energy.",2300,1150,5,0,0,0,0,0,0,Male
+Cosmic Dust Vial,"A vial filled with shimmering cosmic dust.",1800,900,0,0,3,3,2,0,0,Unisex
+Nebula Cloud Pin,"A pin with a swirling nebula trapped within.",1750,875,0,0,3,3,0,0,0,Unisex
+Galaxy Pearl,"A pearl that reflects entire galaxies.",1900,950,0,0,0,0,4,0,0,Unisex
+Dimension Shifter,"A small device that can momentarily shift dimensions.",2100,1050,0,0,0,0,0,7,0,Unisex
+Soulbound Token,"A token bound to a powerful soul, granting shared power.",1500,750,2,2,2,2,0,0,0,Unisex
+Ancestral Ring,"A ring passed down through generations, holding ancient wisdom.",1300,650,0,1,2,2,0,0,0,Unisex
+Heirloom Brooch,"A family heirloom, imbued with sentimental value.",1200,600,0,0,0,0,1,0,0,Unisex
+Relic Medallion,"A powerful medallion from a forgotten age.",1600,800,2,2,2,2,1,0,0,Unisex
+Sacred Tear,"A drop of solidified sacred tear, offering healing.",1100,550,0,0,0,4,0,0,0,Female
+Profane Mark,"A dark mark, radiating unholy energy.",1100,550,2,0,3,0,0,0,0,Male
+Blessed Charm,"A small charm blessed by a deity, granting protection.",900,450,0,1,0,2,0,0,0,Unisex
+Cursed Amulet,"An amulet that brings misfortune to its wearer.",1000,500,1,1,1,1,-2,0,0,Unisex
+Fortune Coin,"A coin that seems to always land on its desired side.",800,400,0,0,0,0,3,0,0,Unisex
+Misfortune Token,"A token that brings bad luck.",750,375,0,0,0,0,-1,0,0,Unisex
+Whisperwind Earring,"An earring that carries whispers on the wind, granting insight.",700,350,0,0,0,0,0,0,2,Female
+Thunderclap Bracelet,"A bracelet that hums with static, occasionally discharging electricity.",800,400,1,0,1,0,0,0,0,Male
+Firestorm Necklace,"A necklace that feels warm to the touch, capable of igniting minor flames.",900,450,2,0,0,0,0,0,0,Unisex
+Frostbite Ring,"A ring that chills the finger, capable of producing ice.",850,425,0,0,2,0,0,0,0,Unisex
+Earthbind Amulet,"An amulet made of rough stone, rooting the wearer to the ground.",780,390,0,2,0,0,0,0,0,Unisex
+Waterflow Brooch,"A brooch that seems to flow like water, granting agility.",720,360,0,0,0,0,0,2,0,Female
+Airtwist Circlet,"A light circlet that allows the wearer to feel air currents.",680,340,0,0,0,0,0,3,0,Unisex
+Shadowgrasp Gauntlet,"A gauntlet designed to blend into shadows, enhancing stealth.",1200,600,1,1,0,0,0,4,0,Male
+Lightbringer Charm,"A charm that emits a soft glow, dispelling darkness.",1100,550,0,0,2,1,0,0,0,Unisex
+Venomthorn Ring,"A ring with a sharp, poisoned thorn.",950,475,1,0,0,0,0,0,0,Unisex
+Blaze Heart,"A small, pulsating gem that burns with intense heat.",1300,650,2,0,0,0,0,0,0,Unisex
+Glacier Core,"A shard of eternal ice, chilling to the bone.",1350,675,0,2,0,0,0,0,0,Unisex
+Tempest Tear,"A solidified tear from a storm, granting control over wind.",1400,700,0,0,2,0,0,0,0,Unisex
+Quake Stone,"A heavy stone that resonates with seismic energy.",1450,725,0,3,0,0,0,0,0,Unisex
+Tidal Current Pearl,"A pearl that gently pulls and pushes, aiding movement.",1250,625,0,0,0,0,0,4,0,Unisex
+Ironclad Ring,"A sturdy iron ring, offering basic defense.",150,75,0,2,0,0,0,0,0,Male
+Steel Heart Medallion,"A heavy steel medallion, for unwavering resolve.",250,125,0,3,0,0,0,0,0,Male
+Silverthread Chain,"A finely woven silver chain, for subtle magic.",200,100,0,0,1,1,0,0,0,Female
+Goldweave Brooch,"A brooch woven with gold threads, enhancing beauty.",280,140,0,0,0,0,1,0,0,Female
+Platinum Amulet,"A sleek platinum amulet, radiating sophistication.",600,300,0,1,1,1,0,0,0,Unisex
+Titanium Ring,"A lightweight but incredibly strong titanium ring.",700,350,1,2,0,0,0,0,0,Male
+Mythril Circlet,"A shimmering mythril circlet, for adept spellcasters.",850,425,0,0,2,3,0,0,0,Female
+Adamantite Pendant,"A dark, heavy adamantite pendant, for ultimate defense.",1000,500,0,4,0,0,0,0,0,Male
+Obsidian Charm,"A black obsidian charm, absorbing dark energies.",500,250,0,1,1,2,0,0,0,Unisex
+Crystal Tear,"A single, perfectly formed crystal tear.",400,200,0,0,1,1,0,0,0,Female
+Geode Fragment,"A rough geode fragment, sparkling with hidden crystals.",350,175,0,1,0,0,0,0,0,Unisex
+Amber Earring,"A warm amber earring, preserving ancient energy.",300,150,0,0,0,1,0,0,0,Female
+Jet Bracelet,"A glossy black jet bracelet, for subtle power.",280,140,0,0,1,0,0,0,0,Male
+Turquoise Necklace,"A vibrant turquoise necklace, connecting to the sky.",480,240,0,0,0,1,0,0,0,Female
+Peridot Ring,"A bright green peridot ring, radiating freshness.",470,235,0,0,1,0,0,0,0,Unisex
+Bloodstone Amulet,"A dark green bloodstone amulet, rumored to stop bleeding.",520,260,1,1,0,0,0,0,0,Male
+Lapis Lazuli Brooch,"A deep blue lapis lazuli brooch, for inner peace.",460,230,0,0,1,1,0,0,0,Female
+Malachite Ring,"A patterned malachite ring, for grounding energy.",490,245,0,1,0,1,0,0,0,Unisex
+Moonpetal Charm,"A charm made from a petal bathed in moonlight.",600,300,0,0,1,2,0,0,0,Female
+Sunpetal Brooch,"A brooch made from a petal warmed by sunlight.",620,310,0,0,1,1,0,0,0,Unisex
+Starflake Earring,"A delicate earring resembling a starflake, for swiftness.",580,290,0,0,0,0,0,2,0,Female
+Cloudspun Thread,"A strand of thread woven from clouds, incredibly light.",700,350,0,0,0,0,0,3,0,Unisex
+Mistveil Shawl,"A shimmering shawl that creates a light mist.",800,400,0,1,1,1,0,0,0,Female
+Gossamer Filament,"An almost invisible filament, for subtle movements.",750,375,0,0,0,0,0,3,0,Unisex
+Zephyr Feather,"A feather from the swift zephyr bird, granting speed.",900,450,0,0,0,0,0,5,0,Unisex
+Dewdrop Pendant,"A pendant with a perpetual dewdrop, refreshing.",550,275,0,0,1,1,0,0,0,Female
+Riverstone Ring,"A smooth riverstone ring, providing calm.",500,250,0,1,0,1,0,0,0,Unisex
+Waterfall Gem,"A gem that constantly reflects flowing water.",600,300,0,0,1,2,0,0,0,Female
+Mountainheart Medallion,"A rough medallion from the heart of a mountain, unyielding.",1000,500,1,2,0,0,0,0,0,Male
+Forestwhisper Charm,"A charm that seems to hum with the sounds of the forest.",950,475,0,0,1,1,0,0,0,Female
+Desert Rose Brooch,"A delicate brooch resembling a desert rose, enduring.",900,450,0,0,0,1,0,0,0,Female
+Icebound Shard,"A shard of perpetually frozen ice, chilling to the touch.",1100,550,0,1,1,2,0,0,0,Unisex
+Volcano Ember,"A small ember from a volcano, radiating heat.",1150,575,1,0,2,0,0,0,0,Unisex
+Stormcloud Earring,"An earring that crackles with faint static electricity.",1200,600,0,0,1,1,0,0,0,Unisex
+Quicksand Hourglass,"A tiny hourglass with perpetually shifting sand.",800,400,0,0,0,0,0,0,0,Unisex
+Mirage Dust Vial,"A vial of shimmering dust that creates illusions.",900,450,0,0,2,0,0,0,0,Unisex
+Echoing Conch,"A conch shell that echoes faint sounds of the past.",700,350,0,0,0,0,1,0,0,Unisex
+Whispering Willow Amulet,"An amulet carved from whispering willow wood.",680,340,0,0,1,1,0,0,0,Female
+Thorns Embrace Ring,"A ring resembling thorny vines, protective.",650,325,1,1,0,0,0,0,0,Unisex
+Petalfall Necklace,"A necklace adorned with perpetually falling petals, ethereal.",720,360,0,0,1,1,0,0,0,Female
+Cinderstone Bracelet,"A bracelet made of cooled volcanic cinder.",700,350,1,0,0,1,0,0,0,Male
+Bramblethorn Brooch,"A brooch shaped like thorny brambles, deterring.",600,300,0,1,0,0,0,0,0,Unisex
+Starlight Circlet,"A circlet that seems to gather starlight.",1500,750,0,0,3,3,0,0,0,Female
+Moonglow Pendant,"A pendant that emits a soft, ethereal glow.",1400,700,0,0,2,3,0,0,0,Female
+Sunbeam Brooch,"A brooch that captures a single, perpetual sunbeam.",1300,650,0,0,2,2,0,0,0,Unisex
+Aurora Borealis Gem,"A gem that shimmers with the colors of the aurora.",1600,800,0,0,3,3,1,0,0,Unisex
+Comet Dust Vial,"A vial filled with the dust of a passing comet.",1500,750,0,0,0,0,2,2,0,Unisex
+Meteor Shower Fragment,"A fragment from a spectacular meteor shower.",1450,725,1,1,0,0,0,0,0,Unisex
+Planetary Ring,"A ring that has miniature planets orbiting it.",1800,900,0,0,2,2,0,0,0,Unisex
+Celestial Sphere Earring,"An earring with a tiny celestial sphere.",1700,850,0,0,3,3,0,0,0,Female
+Andromeda Charm,"A charm depicting the Andromeda galaxy.",1900,950,0,0,0,0,0,0,3,Unisex
+Milky Way Bracelet,"A bracelet that seems to swirl with countless stars.",2000,1000,0,0,4,4,0,0,0,Unisex
+Nebula Heart,"A pulsating gem that resembles a distant nebula.",2100,1050,0,0,4,4,0,0,0,Unisex
+Quasar Shard,"A shard from a quasar, radiating immense energy.",2400,1200,3,0,5,0,0,0,0,Unisex
+Pulsar Core,"A rapidly spinning core, generating powerful magnetic fields.",2300,1150,0,0,0,0,0,6,0,Unisex
+Cosmic String Fragment,"A fragment of an infinitely thin cosmic string.",2500,1250,0,0,0,0,0,0,6,Unisex
+Multiverse Key,"A key rumored to unlock doors between dimensions.",2600,1300,0,0,0,0,0,0,0,Unisex
+Dream Weaver Loom,"A tiny loom that subtly influences dreams.",1000,500,0,0,2,2,1,0,0,Female
+Night Walker Shroud,"A small piece of shroud that aids in moving unseen.",1100,550,0,0,0,0,0,5,0,Male
+Daybreak Pendant,"A pendant that always seems to catch the first rays of dawn.",900,450,0,0,1,1,0,0,0,Unisex
+Twilight Brooch,"A brooch that shimmers with the colors of dusk.",920,460,0,0,1,1,0,0,0,Unisex
+Duskpetal Earring,"An earring made from a petal that blooms only at dusk.",880,440,0,0,0,0,0,1,0,Female
+Dawnfeather Charm,"A charm with a feather from a bird that sings at dawn.",870,435,0,0,0,0,0,1,0,Female
+Glimmergem Ring,"A ring with a gem that always seems to glimmer.",780,390,0,0,0,0,1,0,0,Unisex
+Flickerflame Pendant,"A pendant with a perpetual, tiny flame.",820,410,1,0,0,0,0,0,0,Unisex
+Sparklight Circlet,"A circlet that emits tiny, harmless sparks of light.",750,375,0,0,1,0,0,0,0,Female
+Shimmerstone Bracelet,"A bracelet made of stones that subtly shimmer.",730,365,0,0,0,0,0,0,0,Unisex
+Glowworm Lamp,"A tiny lamp containing a perpetual glowworm.",680,340,0,0,0,0,0,0,0,Unisex
+Firefly Jar,"A miniature jar containing perpetually glowing fireflies.",650,325,0,0,0,0,0,0,0,Unisex
+Willothewisp Orb,"A small orb that floats and bobs like a will-o-the-wisp.",900,450,0,0,2,2,0,0,0,Unisex
+Fading Ember,"A dying ember that occasionally flares.",500,250,0,0,0,0,0,0,0,Unisex
+Eternal Flame Medallion,"A medallion with a small, perpetual flame.",1300,650,2,0,0,0,0,0,0,Male
+Permafrost Shard,"A shard of ice that never melts.",1350,675,0,2,0,0,0,0,0,Unisex
+Everflowing Drop,"A drop of water that never dries.",1250,625,0,0,1,1,0,0,0,Unisex
+Boundless Air Circlet,"A circlet that allows the wearer to breathe freely.",1150,575,0,0,0,0,0,2,0,Unisex
+Unyielding Earth Ring,"A ring made of solid earth, incredibly durable.",1400,700,0,3,0,0,0,0,0,Male
+Silent Step Anklet,"An anklet that muffles footsteps, for stealth.",1000,500,0,0,0,0,0,5,0,Unisex
+True Sight Lens,"A monocle that allows the wearer to see hidden things.",1600,800,0,0,0,0,0,0,4,Unisex
+Fortress Heartstone,"A heart shaped stone that provides immense defense.",1800,900,0,4,0,0,0,0,0,Male
+Sorcerer's Eye,"An ominous eye shaped gem, enhancing dark magic.",1700,850,0,0,4,0,0,0,0,Male
+Sage's Mindstone,"A smooth, polished stone that enhances intellect.",1650,825,0,0,0,4,0,0,0,Unisex
+Acrobat's Charm,"A small charm that aids in agility and balance.",1000,500,0,0,0,0,0,5,0,Unisex
+Marksman's Scope,"A miniature scope that enhances accuracy.",1100,550,0,0,0,0,0,0,4,Male
+Berserker's Rage Gem,"A volatile gem that pulses with raw anger.",1200,600,3,0,0,0,0,0,0,Male
+Guardian's Aegis,"A small shield shaped amulet, for staunch defenders.",1300,650,0,3,0,0,0,0,0,Male
+Paladin's Vow Ring,"A ring that glows faintly, symbolizing a holy vow.",1400,700,1,1,1,1,0,0,0,Male
+Priestess's Blessing Bead,"A single bead imbued with divine blessing.",1350,675,0,0,0,3,0,0,0,Female
+Witch's Brew Vial,"A small vial containing a bubbling, potent brew.",1250,625,0,0,3,0,0,0,0,Female
+Necromancer's Totem,"A dark totem crafted from bone and shadows.",1500,750,0,0,4,0,0,0,0,Male
+Bard's Lyre Pin,"A small pin shaped like a lyre, enhancing charm.",800,400,0,0,1,1,0,0,0,Unisex
+Rogue's Dagger Clip,"A clip shaped like a small dagger, for quick action.",900,450,1,0,0,0,0,3,0,Unisex
+Warrior's Crest,"A small crest, symbolizing strength and courage.",1000,500,2,1,0,0,0,0,0,Male
+Archer's Quiver Pin,"A pin shaped like a small quiver, enhancing precision.",950,475,0,0,0,0,0,0,2,Unisex
+Thief's Lockpick Charm,"A charm resembling a tiny lockpick, for nimble fingers.",850,425,0,0,0,0,0,2,0,Unisex
+Assassin's Poison Vial,"A tiny vial of potent, slow acting poison.",1100,550,0,0,0,0,0,0,0,Unisex
+Healer's Ankh,"An ankh symbol, for rapid recovery.",1200,600,0,0,0,3,0,0,0,Female
+Artificer's Cogwheel,"A tiny, perpetually turning cogwheel.",1300,650,0,0,0,0,0,0,0,Unisex
+Scholar's Quill Brooch,"A brooch shaped like a quill, enhancing learning.",700,350,0,0,1,1,0,0,0,Unisex
+Merchant's Scale Charm,"A charm shaped like a tiny balance scale, for good deals.",600,300,0,0,0,0,2,0,0,Unisex
+Farmer's Scythe Pin,"A pin shaped like a miniature scythe, for good harvests.",500,250,0,0,0,0,1,0,0,Unisex
+Fisherman's Hook Pendant,"A pendant shaped like a fish hook, for bountiful catches.",550,275,0,0,0,0,1,0,0,Male
+Hunter's Trap Badge,"A badge resembling a small trap, for tracking.",750,375,0,0,0,0,0,0,1,Unisex
+Cook's Ladle Pin,"A pin shaped like a small ladle, for culinary prowess.",450,225,0,0,0,0,0,0,0,Unisex
+Blacksmith's Hammer Charm,"A charm shaped like a tiny hammer, for crafting.",700,350,1,0,0,0,0,0,0,Male
+Tailor's Needle Brooch,"A brooch shaped like a needle, for fine stitching.",650,325,0,0,0,0,0,0,0,Female
+Carpenter's Saw Pendant,"A pendant shaped like a small saw, for construction.",600,300,1,0,0,0,0,0,0,Male
+Jeweler's Loupe Ring,"A ring with a tiny magnifying glass, for discerning details.",800,400,0,0,0,0,0,0,2,Unisex
+Alchemist's Mortar Pin,"A pin shaped like a mortar and pestle, for potions.",900,450,0,0,2,0,0,0,0,Unisex
+Brewer's Tankard Charm,"A charm shaped like a miniature tankard, for hearty drinks.",500,250,0,0,0,0,0,0,0,Male
+Gambler's Dice,"A tiny pair of perpetually tumbling dice.",700,350,0,0,0,0,3,0,0,Unisex
+Jester's Bell,"A small, perpetually jingling bell.",600,300,0,0,0,0,0,2,0,Unisex
+Dancer's Ribbon,"A delicate ribbon that flows gracefully.",550,275,0,0,0,0,0,3,0,Female
+Singer's Voice Charm,"A charm that subtly enhances the voice.",620,310,0,0,1,1,0,0,0,Unisex
+Actor's Mask Pin,"A pin shaped like a theatrical mask, for performance.",700,350,0,0,0,0,1,0,0,Unisex
+Artist's Brush Brooch,"A brooch shaped like a paint brush, for creativity.",680,340,0,0,0,0,0,0,0,Unisex
+Sculptor's Chisel Pendant,"A pendant shaped like a tiny chisel, for precision.",650,325,1,0,0,0,0,0,0,Unisex
+Writer's Inkwell Charm,"A charm shaped like an inkwell, for inspiration.",700,350,0,0,0,0,0,0,0,Unisex
+Musician's Clef Pin,"A pin shaped like a musical clef, for harmony.",620,310,0,0,1,0,0,0,0,Unisex
+Explorer's Compass,"A tiny compass that always points true.",800,400,0,0,0,0,0,0,2,Unisex
+Navigator's Sextant Charm,"A charm shaped like a miniature sextant, for guidance.",850,425,0,0,0,0,0,0,2,Unisex
+Cartographer's Scroll,"A miniature scroll that always unrolls to a map.",900,450,0,0,0,0,0,0,0,Unisex
+Archaeologist's Trowel,"A tiny trowel for uncovering ancient secrets.",950,475,0,0,0,0,0,0,0,Unisex
+Linguist's Rosetta Stone,"A small fragment resembling the Rosetta Stone, for understanding languages.",1000,500,0,0,0,0,0,0,0,Unisex
+Botanist's Leaf Brooch,"A brooch shaped like a perfect leaf, for plant growth.",800,400,0,0,0,1,0,0,0,Female
+Zoologist's Paw Print,"A charm with a delicate paw print, for animal empathy.",850,425,0,0,0,0,0,0,0,Unisex
+Geologist's Pickaxe Pin,"A pin shaped like a tiny pickaxe, for mineral detection.",900,450,0,0,0,0,0,0,0,Male
+Astronomer's Telescope,"A tiny telescope that reveals distant stars.",1000,500,0,0,2,2,0,0,0,Unisex
+Oceanographer's Wave Charm,"A charm shaped like a perfect wave, for navigating seas.",950,475,0,0,0,0,0,0,0,Unisex
+Climatologist's Cloud Pin,"A pin shaped like a small cloud, for predicting weather.",800,400,0,0,0,0,0,0,0,Unisex
+Therapist's Calming Gem,"A gem that emits a soothing aura, for mental peace.",700,350,0,0,0,1,0,0,0,Unisex
+Philosopher's Stone Fragment,"A tiny fragment of the legendary Philosopher's Stone.",2800,1400,1,1,1,1,5,0,0,Unisex
+Wanderer's Boots Charm,"A charm shaped like a tiny boot, for long journeys.",600,300,0,0,0,0,0,1,0,Unisex
+Pilgrim's Scallop Shell,"A small scallop shell, symbolizing a completed journey.",550,275,0,0,0,0,0,0,0,Unisex
+Hermit's Lantern Pin,"A pin shaped like a small lantern, for solitary exploration.",700,350,0,0,0,0,0,0,0,Unisex
+Ascetic's Simple Cord,"A plain cord, representing simplicity and detachment.",400,200,0,0,0,0,0,0,0,Unisex
+Monk's Prayer Beads,"A small string of prayer beads, for meditation.",600,300,0,0,1,1,0,0,0,Unisex
+Warrior Monk's Fist Charm,"A charm shaped like a clenched fist, for martial discipline.",700,350,1,1,0,0,0,0,0,Male
+Rogue Monk's Shadow Step,"A small shadow-like charm, aiding in silent movement.",800,400,0,0,0,0,0,4,0,Unisex
+Paladin's Oath Scroll,"A miniature scroll inscribed with a holy oath.",1500,750,0,0,0,4,0,0,0,Male
+Cleric's Divine Symbol,"A small, glowing divine symbol.",1400,700,0,0,0,3,0,0,0,Female
+Druid's Vine Charm,"A charm woven from living vines, connecting to nature.",1300,650,0,0,2,2,0,0,0,Female
+Bard's Harmony Gem,"A gem that resonates with perfect harmony.",1200,600,0,0,2,2,0,0,0,Unisex
+Sorcerer's Focus Crystal,"A crystal that enhances magical concentration.",1600,800,0,0,4,0,0,0,0,Unisex
+Warlock's Pact Sigil,"A dark sigil representing a forbidden pact.",1700,850,0,0,4,0,0,0,0,Male
+Necromancer's Bone Dust,"A small pouch of fine bone dust, for raising the dead.",1500,750,0,0,3,0,0,0,0,Male
+Summoner's Binding Circle,"A miniature binding circle, for controlling summoned beings.",1800,900,0,0,4,0,0,0,0,Unisex
+Enchanter's Glyph,"A small, glowing glyph, for imbuing items.",1700,850,0,0,3,3,0,0,0,Unisex
+Illusionist's Mirror Shard,"A fragment of a mirror that reflects illusions.",1600,800,0,0,3,0,0,0,0,Unisex
+Diviner's Pendulum,"A small pendulum that sways to reveal truths.",1500,750,0,0,0,0,2,0,0,Unisex
+Abjurer's Warding Circle,"A tiny warding circle, for defensive spells.",1400,700,0,0,0,3,0,0,0,Unisex
+Conjurer's Orb,"A small orb that can manifest minor objects.",1300,650,0,0,2,2,0,0,0,Unisex
+Transmuter's Catalyst,"A small, heavy catalyst that aids in transformations.",1200,600,0,0,0,0,0,0,0,Unisex
+Evoker's Focus Gem,"A gem that intensifies elemental spells.",1700,850,0,0,4,0,0,0,0,Unisex
+Conjuration Bell,"A tiny bell that rings to summon familiars.",1600,800,0,0,3,0,0,0,0,Unisex
+Mystic's Third Eye,"An eye-shaped gem, for enhanced perception.",1500,750,0,0,0,0,0,0,3,Unisex
+Runemaster's Stone,"A stone engraved with powerful runes.",1400,700,1,1,1,1,0,0,0,Unisex
+Artificer's Goggles,"Tiny goggles with intricate lenses, for mechanical insight.",1300,650,0,0,0,0,0,0,2,Unisex
+Inventor's Blueprint Fragment,"A fragment of an ingenious blueprint.",1200,600,0,0,0,0,0,0,0,Unisex
+Golem Core Fragment,"A piece of a golem's core, slightly humming.",1500,750,0,2,0,0,0,0,0,Unisex
+Automaton Gear,"A perfectly crafted gear from an ancient automaton.",1400,700,0,1,0,0,0,0,0,Unisex
+Clockwork Heart,"A miniature clockwork heart, ticking softly.",1600,800,0,0,0,0,0,1,0,Unisex
+Steam Valve Pin,"A pin shaped like a tiny steam valve, for mechanical control.",1300,650,0,0,0,0,0,0,0,Unisex
+Magitech Battery,"A small battery that stores both magic and electricity.",1700,850,0,0,3,2,0,0,0,Unisex
+Arcanite Shard,"A shimmering shard of pure arcanite.",1800,900,0,0,4,4,0,0,0,Unisex
+Ethereal Weave Bracelet,"A bracelet woven from ethereal threads, making the wearer less corporeal.",1700,850,0,0,0,0,0,5,0,Unisex
+Astral Compass,"A compass that points to different astral planes.",1900,950,0,0,0,0,0,0,0,Unisex
+Cosmic Whisper Pearl,"A pearl that seems to hum with the sounds of the cosmos.",2000,1000,0,0,0,0,0,0,0,Unisex
+Dimension Knot,"A tangled knot of dimensional threads.",2100,1050,0,0,0,0,0,0,0,Unisex
+Reality Thread,"A single, unbroken thread of reality.",2200,1100,0,0,0,0,0,0,0,Unisex
+Quantum Flux Crystal,"A crystal that vibrates with quantum fluctuations.",2300,1150,0,0,0,0,0,0,0,Unisex
+Temporal Anomaly Shard,"A shard that seems to slightly distort time around it.",2400,1200,0,0,0,0,0,8,0,Unisex
+Graviton Coil,"A small coil that subtly alters gravity.",2500,1250,0,0,0,0,0,0,0,Unisex
