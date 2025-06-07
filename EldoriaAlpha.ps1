@@ -15,8 +15,49 @@ $PSStyle.Progress.View = 'Classic'
 
 
 
-#region Enumerations
 
+
+
+
+
+###############################################################################
+#
+# ENUMERATIONS
+#
+###############################################################################
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# GAME STATE PRIMARY
+#
+# SPLASH SCREEN A
+#    THE FIRST SPLASH SCREEN THAT'S SHOWN TO THE PLAYER - ENTIRELY DECORATIVE.
+#
+# SPLASH SCREEN B
+#    THE SECOND SPLASH SCREEN THAT'S SHOWN TO THE PLAYER - ENTIRELY DECORATIVE.
+#
+# TITLE SCREEN
+#    THE TITLE SCREEN, SHOWS THE ELDORIA NAME.
+#
+# PLAYER SETUP SCREEN
+#    SHOWS THE PLAYER SETUP PROCESS.
+#
+# GAME PLAY SCREEN
+#    TERRIBLE NAME, THE SCREEN THE PLAYER NAVIGATES THE WORLD WITH.
+#
+# INVENTORY SCREEN
+#    THE SCREEN THE PLAYER INTERACTS WITH THEIR ITEM INVENTORY IN.
+#
+# BATTLE SCREEN
+#    THE SCREEN USED FOR THE BATTLE PROGRAM.
+#
+# PLAYER STATUS SCREEN
+#    SHOWS THE STATUS OF THE PLAYER, ALLOWS EQUIPMENT CHANGING.
+#
+# CLEANUP
+#    REMOVE GAME RESOURCES.
+#
+#//////////////////////////////////////////////////////////////////////////////
 Enum GameStatePrimary {
     SplashScreenA
     SplashScreenB
@@ -29,23 +70,94 @@ Enum GameStatePrimary {
     Cleanup
 }
 
+#//////////////////////////////////////////////////////////////////////////////
+#
+# STAT NUMBER STATE
+#
+# NORMAL
+#    THE NUMBER IS WITHIN NORMAL TOLERANCES.
+#
+# CAUTION
+#    THE NUMBER IS BELOW NORMAL BUT ABOVE CRITICAL TOLERANCES.
+#
+# DANGER
+#    THE NUMBER IS BELOW CRITICAL TOLERANCES.
+#
+# NOTE THAT THIS ENUMERATION MAKE NO OPINION ON WHAT DEFINES SAID TOLERANCES.
+# THIS IS LEFT TO THE IMPLEMENTATION.
+#
+#//////////////////////////////////////////////////////////////////////////////
 Enum StatNumberState {
     Normal
     Caution
     Danger
 }
 
+#//////////////////////////////////////////////////////////////////////////////
+#
+# ITEM REMOVAL STATUS
+#
+# SUCCESS
+#    THE ITEM WAS SUCCESSFULLY REMOVED FROM THE ITEM INVENTORY.
+#
+# FAIL GENERAL
+#    THE ITEM FAILED TO BE REMOVED FROM THE ITEM INVENTORY FOR AN UNSPECIFIC REASON.
+#
+# FAIL KEY ITEM
+#    THE ITEM FAILED TO BE REMOVED FROM THE ITEM INVENTORY BECAUSE IT'S A KEY ITEM.
+#
+#//////////////////////////////////////////////////////////////////////////////
 Enum ItemRemovalStatus {
     Success
     FailGeneral
     FailKeyItem
 }
 
+#//////////////////////////////////////////////////////////////////////////////
+#
+# ACTION INV REMOVAL STATUS
+#
+# SUCCESS
+#    THE ACTION WAS SUCCESSFULLY REMOVED FROM THE ACTION INVENTORY.
+#
+# FAIL
+#    THE ACTION FAILED TO BE REMOVED FROM THE ACTION INVENTORY FOR AN UNSPECIFIC REASON.
+#
+#//////////////////////////////////////////////////////////////////////////////
 Enum ActionInvRemovalStatus {
     Success
     Fail
 }
 
+#//////////////////////////////////////////////////////////////////////////////
+#
+# BATTLE ACTION TYPE
+#
+# PHYSICAL
+#    ATTACKS THAT DON'T HAVE A SPECIFIC ELEMENTAL AFFINITY.
+#
+# ELEMENTAL FIRE
+#    ATTACKS THAT HAVE A FIRE-BASED ELEMENTAL AFFINITY.
+#
+# ELEMENTAL WATER
+#    ATTACKS THAT HAVE A WATER-BASED ELEMENTAL AFFINITY.
+#
+# ELEMENTAL EARTH
+#    ATTACKS THAT HAVE AN EARTH-BASED ELEMENTAL AFFINITY.
+#
+# ELEMENTAL WIND
+#    ATTACKS THAT HAVE A WIND-BASED ELEMENTAL AFFINITY.
+#
+# ELEMENTAL LIGHT
+#    ATTACKS THAT HAVE A HOLY-BASED ELEMENTAL AFFINITY.
+#
+# ELEMENTAL DARK
+#    ATTACKS THAT HAVE A HELL-BASED ELEMENTAL AFFINITY.
+#
+# ELEMENTAL ICE
+#    ATTACKS THAT HAVE A AN ICE-BASED ELEMENTAL AFFINITY.
+#
+#//////////////////////////////////////////////////////////////////////////////
 Enum BattleActionType {
     Physical
     ElementalFire
@@ -205,13 +317,21 @@ Enum Gender {
     Unisex # INTENDED FOR EQUIPMENT PURPOSES
 }
 
-#endregion
 
 
 
 
 
-#region Global Variables
+
+
+
+
+
+###############################################################################
+#
+# GLOBAL VARIABLE DECLARATIONS/DEFINITIONS
+#
+###############################################################################
 
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
@@ -9939,11 +10059,11 @@ Class BECape : BattleEquipment {}
 
 Class BEWoodenSword : BEWeapon {
 	BEWoodenSword() : base() {
-		$this.Name               = 'Wooden Sword'
-		$this.MapObjName         = 'woodensword'
-		$this.PurchasePrice      = 50
-		$this.SellPrice          = 25
-		$this.TargetStats        = @{
+		$this.Name          = 'Wooden Sword'
+		$this.MapObjName    = 'woodensword'
+		$this.PurchasePrice = 50
+		$this.SellPrice     = 25
+		$this.TargetStats   = @{
 			[StatId]::Attack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -9955,11 +10075,11 @@ Class BEWoodenSword : BEWeapon {
 
 Class BEDagger : BEWeapon {
 	BEDagger() : base() {
-		$this.Name               = 'Dagger'
-		$this.MapObjName         = 'dagger'
-		$this.PurchasePrice      = 75
-		$this.SellPrice          = 37
-		$this.TargetStats        = @{
+		$this.Name          = 'Dagger'
+		$this.MapObjName    = 'dagger'
+		$this.PurchasePrice = 75
+		$this.SellPrice     = 37
+		$this.TargetStats   = @{
 			[StatId]::Attack = 8
 		}
 		$this.CanAddToInventory  = $true
@@ -9971,11 +10091,11 @@ Class BEDagger : BEWeapon {
 
 Class BEShortSword : BEWeapon {
 	BEShortSword() : base() {
-		$this.Name               = 'Short Sword'
-		$this.MapObjName         = 'shortsword'
-		$this.PurchasePrice      = 120
-		$this.SellPrice          = 60
-		$this.TargetStats        = @{
+		$this.Name          = 'Short Sword'
+		$this.MapObjName    = 'shortsword'
+		$this.PurchasePrice = 120
+		$this.SellPrice     = 60
+		$this.TargetStats   = @{
 			[StatId]::Attack = 12
 		}
 		$this.CanAddToInventory  = $true
@@ -9987,11 +10107,11 @@ Class BEShortSword : BEWeapon {
 
 Class BEIronAxe : BEWeapon {
 	BEIronAxe() : base() {
-		$this.Name               = 'Iron Axe'
-		$this.MapObjName         = 'ironaxe'
-		$this.PurchasePrice      = 150
-		$this.SellPrice          = 75
-		$this.TargetStats        = @{
+		$this.Name          = 'Iron Axe'
+		$this.MapObjName    = 'ironaxe'
+		$this.PurchasePrice = 150
+		$this.SellPrice     = 75
+		$this.TargetStats   = @{
 			[StatId]::Attack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -10003,12 +10123,12 @@ Class BEIronAxe : BEWeapon {
 
 Class BEStaff : BEWeapon {
 	BEStaff() : base() {
-		$this.Name               = 'Staff'
-		$this.MapObjName         = 'staff'
-		$this.PurchasePrice      = 100
-		$this.SellPrice          = 50
-		$this.TargetStats        = @{
-			[StatId]::Attack = 3
+		$this.Name          = 'Staff'
+		$this.MapObjName    = 'staff'
+		$this.PurchasePrice = 100
+		$this.SellPrice     = 50
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 3
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -10020,11 +10140,11 @@ Class BEStaff : BEWeapon {
 
 Class BEBronzeSpear : BEWeapon {
 	BEBronzeSpear() : base() {
-		$this.Name               = 'Bronze Spear'
-		$this.MapObjName         = 'bronzespear'
-		$this.PurchasePrice      = 130
-		$this.SellPrice          = 65
-		$this.TargetStats        = @{
+		$this.Name          = 'Bronze Spear'
+		$this.MapObjName    = 'bronzespear'
+		$this.PurchasePrice = 130
+		$this.SellPrice     = 65
+		$this.TargetStats   = @{
 			[StatId]::Attack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -10036,11 +10156,11 @@ Class BEBronzeSpear : BEWeapon {
 
 Class BESling : BEWeapon {
 	BESling() : base() {
-		$this.Name               = 'Sling'
-		$this.MapObjName         = 'sling'
-		$this.PurchasePrice      = 40
-		$this.SellPrice          = 20
-		$this.TargetStats        = @{
+		$this.Name          = 'Sling'
+		$this.MapObjName    = 'sling'
+		$this.PurchasePrice = 40
+		$this.SellPrice     = 20
+		$this.TargetStats   = @{
 			[StatId]::Attack = 4
 		}
 		$this.CanAddToInventory  = $true
@@ -10052,11 +10172,11 @@ Class BESling : BEWeapon {
 
 Class BEBow : BEWeapon {
 	BEBow() : base() {
-		$this.Name               = 'Bow'
-		$this.MapObjName         = 'bow'
-		$this.PurchasePrice      = 180
-		$this.SellPrice          = 90
-		$this.TargetStats        = @{
+		$this.Name          = 'Bow'
+		$this.MapObjName    = 'bow'
+		$this.PurchasePrice = 180
+		$this.SellPrice     = 90
+		$this.TargetStats   = @{
 			[StatId]::Attack = 14
 		}
 		$this.CanAddToInventory  = $true
@@ -10068,11 +10188,11 @@ Class BEBow : BEWeapon {
 
 Class BELeatherWhip : BEWeapon {
 	BELeatherWhip() : base() {
-		$this.Name               = 'Leather Whip'
-		$this.MapObjName         = 'leatherwhip'
-		$this.PurchasePrice      = 90
-		$this.SellPrice          = 45
-		$this.TargetStats        = @{
+		$this.Name          = 'Leather Whip'
+		$this.MapObjName    = 'leatherwhip'
+		$this.PurchasePrice = 90
+		$this.SellPrice     = 45
+		$this.TargetStats   = @{
 			[StatId]::Attack = 7
 		}
 		$this.CanAddToInventory  = $true
@@ -10084,11 +10204,11 @@ Class BELeatherWhip : BEWeapon {
 
 Class BEClub : BEWeapon {
 	BEClub() : base() {
-		$this.Name               = 'Club'
-		$this.MapObjName         = 'club'
-		$this.PurchasePrice      = 60
-		$this.SellPrice          = 30
-		$this.TargetStats        = @{
+		$this.Name          = 'Club'
+		$this.MapObjName    = 'club'
+		$this.PurchasePrice = 60
+		$this.SellPrice     = 30
+		$this.TargetStats   = @{
 			[StatId]::Attack = 6
 		}
 		$this.CanAddToInventory  = $true
@@ -10100,11 +10220,11 @@ Class BEClub : BEWeapon {
 
 Class BECopperKnuckles : BEWeapon {
 	BECopperKnuckles() : base() {
-		$this.Name               = 'Copper Knuckles'
-		$this.MapObjName         = 'copperknuckles'
-		$this.PurchasePrice      = 80
-		$this.SellPrice          = 40
-		$this.TargetStats        = @{
+		$this.Name          = 'Copper Knuckles'
+		$this.MapObjName    = 'copperknuckles'
+		$this.PurchasePrice = 80
+		$this.SellPrice     = 40
+		$this.TargetStats   = @{
 			[StatId]::Attack = 9
 		}
 		$this.CanAddToInventory  = $true
@@ -10116,11 +10236,11 @@ Class BECopperKnuckles : BEWeapon {
 
 Class BELightCrossbow : BEWeapon {
 	BELightCrossbow() : base() {
-		$this.Name               = 'Light Crossbow'
-		$this.MapObjName         = 'lightcrossbow'
-		$this.PurchasePrice      = 200
-		$this.SellPrice          = 100
-		$this.TargetStats        = @{
+		$this.Name          = 'Light Crossbow'
+		$this.MapObjName    = 'lightcrossbow'
+		$this.PurchasePrice = 200
+		$this.SellPrice     = 100
+		$this.TargetStats   = @{
 			[StatId]::Attack = 16
 		}
 		$this.CanAddToInventory  = $true
@@ -10132,12 +10252,12 @@ Class BELightCrossbow : BEWeapon {
 
 Class BEApprenticeWand : BEWeapon {
 	BEApprenticeWand() : base() {
-		$this.Name               = 'Apprentice Wand'
-		$this.MapObjName         = 'apprenticewand'
-		$this.PurchasePrice      = 110
-		$this.SellPrice          = 55
-		$this.TargetStats        = @{
-			[StatId]::Attack = 2
+		$this.Name          = 'Apprentice Wand'
+		$this.MapObjName    = 'apprenticewand'
+		$this.PurchasePrice = 110
+		$this.SellPrice     = 55
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 2
 			[StatId]::MagicAttack = 12
 		}
 		$this.CanAddToInventory  = $true
@@ -10149,11 +10269,11 @@ Class BEApprenticeWand : BEWeapon {
 
 Class BEHuntingKnife : BEWeapon {
 	BEHuntingKnife() : base() {
-		$this.Name               = 'Hunting Knife'
-		$this.MapObjName         = 'huntingknife'
-		$this.PurchasePrice      = 65
-		$this.SellPrice          = 32
-		$this.TargetStats        = @{
+		$this.Name          = 'Hunting Knife'
+		$this.MapObjName    = 'huntingknife'
+		$this.PurchasePrice = 65
+		$this.SellPrice     = 32
+		$this.TargetStats   = @{
 			[StatId]::Attack = 7
 		}
 		$this.CanAddToInventory  = $true
@@ -10165,11 +10285,11 @@ Class BEHuntingKnife : BEWeapon {
 
 Class BEStuddedClub : BEWeapon {
 	BEStuddedClub() : base() {
-		$this.Name               = 'Studded Club'
-		$this.MapObjName         = 'studdedclub'
-		$this.PurchasePrice      = 100
-		$this.SellPrice          = 50
-		$this.TargetStats        = @{
+		$this.Name          = 'Studded Club'
+		$this.MapObjName    = 'studdedclub'
+		$this.PurchasePrice = 100
+		$this.SellPrice     = 50
+		$this.TargetStats   = @{
 			[StatId]::Attack = 11
 		}
 		$this.CanAddToInventory  = $true
@@ -10181,11 +10301,11 @@ Class BEStuddedClub : BEWeapon {
 
 Class BEStoneAxe : BEWeapon {
 	BEStoneAxe() : base() {
-		$this.Name               = 'Stone Axe'
-		$this.MapObjName         = 'stoneaxe'
-		$this.PurchasePrice      = 70
-		$this.SellPrice          = 35
-		$this.TargetStats        = @{
+		$this.Name          = 'Stone Axe'
+		$this.MapObjName    = 'stoneaxe'
+		$this.PurchasePrice = 70
+		$this.SellPrice     = 35
+		$this.TargetStats   = @{
 			[StatId]::Attack = 8
 		}
 		$this.CanAddToInventory  = $true
@@ -10197,11 +10317,11 @@ Class BEStoneAxe : BEWeapon {
 
 Class BEFishingRod : BEWeapon {
 	BEFishingRod() : base() {
-		$this.Name               = 'Fishing Rod'
-		$this.MapObjName         = 'fishingrod'
-		$this.PurchasePrice      = 30
-		$this.SellPrice          = 15
-		$this.TargetStats        = @{
+		$this.Name          = 'Fishing Rod'
+		$this.MapObjName    = 'fishingrod'
+		$this.PurchasePrice = 30
+		$this.SellPrice     = 15
+		$this.TargetStats   = @{
 			[StatId]::Attack = 2
 		}
 		$this.CanAddToInventory  = $true
@@ -10213,11 +10333,11 @@ Class BEFishingRod : BEWeapon {
 
 Class BERustySword : BEWeapon {
 	BERustySword() : base() {
-		$this.Name               = 'Rusty Sword'
-		$this.MapObjName         = 'rustysword'
-		$this.PurchasePrice      = 45
-		$this.SellPrice          = 22
-		$this.TargetStats        = @{
+		$this.Name          = 'Rusty Sword'
+		$this.MapObjName    = 'rustysword'
+		$this.PurchasePrice = 45
+		$this.SellPrice     = 22
+		$this.TargetStats   = @{
 			[StatId]::Attack = 4
 		}
 		$this.CanAddToInventory  = $true
@@ -10229,12 +10349,12 @@ Class BERustySword : BEWeapon {
 
 Class BEPracticeStaff : BEWeapon {
 	BEPracticeStaff() : base() {
-		$this.Name               = 'Practice Staff'
-		$this.MapObjName         = 'practicestaff'
-		$this.PurchasePrice      = 80
-		$this.SellPrice          = 40
-		$this.TargetStats        = @{
-			[StatId]::Attack = 1
+		$this.Name          = 'Practice Staff'
+		$this.MapObjName    = 'practicestaff'
+		$this.PurchasePrice = 80
+		$this.SellPrice     = 40
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 1
 			[StatId]::MagicAttack = 8
 		}
 		$this.CanAddToInventory  = $true
@@ -10246,11 +10366,11 @@ Class BEPracticeStaff : BEWeapon {
 
 Class BESmallShield : BEWeapon {
 	BESmallShield() : base() {
-		$this.Name               = 'Small Shield'
-		$this.MapObjName         = 'smallshield'
-		$this.PurchasePrice      = 70
-		$this.SellPrice          = 35
-		$this.TargetStats        = @{
+		$this.Name          = 'Small Shield'
+		$this.MapObjName    = 'smallshield'
+		$this.PurchasePrice = 70
+		$this.SellPrice     = 35
+		$this.TargetStats   = @{
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A very small shield, offers minimal protection.'
@@ -10261,11 +10381,11 @@ Class BESmallShield : BEWeapon {
 
 Class BEThrowingDaggers : BEWeapon {
 	BEThrowingDaggers() : base() {
-		$this.Name               = 'Throwing Daggers'
-		$this.MapObjName         = 'throwingdaggers'
-		$this.PurchasePrice      = 110
-		$this.SellPrice          = 55
-		$this.TargetStats        = @{
+		$this.Name          = 'Throwing Daggers'
+		$this.MapObjName    = 'throwingdaggers'
+		$this.PurchasePrice = 110
+		$this.SellPrice     = 55
+		$this.TargetStats   = @{
 			[StatId]::Attack = 9
 		}
 		$this.CanAddToInventory  = $true
@@ -10277,11 +10397,11 @@ Class BEThrowingDaggers : BEWeapon {
 
 Class BELongBow : BEWeapon {
 	BELongBow() : base() {
-		$this.Name               = 'Long Bow'
-		$this.MapObjName         = 'longbow'
-		$this.PurchasePrice      = 250
-		$this.SellPrice          = 125
-		$this.TargetStats        = @{
+		$this.Name          = 'Long Bow'
+		$this.MapObjName    = 'longbow'
+		$this.PurchasePrice = 250
+		$this.SellPrice     = 125
+		$this.TargetStats   = @{
 			[StatId]::Attack = 18
 		}
 		$this.CanAddToInventory  = $true
@@ -10293,11 +10413,11 @@ Class BELongBow : BEWeapon {
 
 Class BEIronSword : BEWeapon {
 	BEIronSword() : base() {
-		$this.Name               = 'Iron Sword'
-		$this.MapObjName         = 'ironsword'
-		$this.PurchasePrice      = 280
-		$this.SellPrice          = 140
-		$this.TargetStats        = @{
+		$this.Name          = 'Iron Sword'
+		$this.MapObjName    = 'ironsword'
+		$this.PurchasePrice = 280
+		$this.SellPrice     = 140
+		$this.TargetStats   = @{
 			[StatId]::Attack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -10309,11 +10429,11 @@ Class BEIronSword : BEWeapon {
 
 Class BEBattleAxe : BEWeapon {
 	BEBattleAxe() : base() {
-		$this.Name               = 'Battle Axe'
-		$this.MapObjName         = 'battleaxe'
-		$this.PurchasePrice      = 320
-		$this.SellPrice          = 160
-		$this.TargetStats        = @{
+		$this.Name          = 'Battle Axe'
+		$this.MapObjName    = 'battleaxe'
+		$this.PurchasePrice = 320
+		$this.SellPrice     = 160
+		$this.TargetStats   = @{
 			[StatId]::Attack = 25
 		}
 		$this.CanAddToInventory  = $true
@@ -10325,12 +10445,12 @@ Class BEBattleAxe : BEWeapon {
 
 Class BEMagicStaff : BEWeapon {
 	BEMagicStaff() : base() {
-		$this.Name               = 'Magic Staff'
-		$this.MapObjName         = 'magicstaff'
-		$this.PurchasePrice      = 200
-		$this.SellPrice          = 100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 5
+		$this.Name          = 'Magic Staff'
+		$this.MapObjName    = 'magicstaff'
+		$this.PurchasePrice = 200
+		$this.SellPrice     = 100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 5
 			[StatId]::MagicAttack = 18
 		}
 		$this.CanAddToInventory  = $true
@@ -10342,11 +10462,11 @@ Class BEMagicStaff : BEWeapon {
 
 Class BESteelSpear : BEWeapon {
 	BESteelSpear() : base() {
-		$this.Name               = 'Steel Spear'
-		$this.MapObjName         = 'steelspear'
-		$this.PurchasePrice      = 260
-		$this.SellPrice          = 130
-		$this.TargetStats        = @{
+		$this.Name          = 'Steel Spear'
+		$this.MapObjName    = 'steelspear'
+		$this.PurchasePrice = 260
+		$this.SellPrice     = 130
+		$this.TargetStats   = @{
 			[StatId]::Attack = 18
 		}
 		$this.CanAddToInventory  = $true
@@ -10358,11 +10478,11 @@ Class BESteelSpear : BEWeapon {
 
 Class BEShortBow : BEWeapon {
 	BEShortBow() : base() {
-		$this.Name               = 'Short Bow'
-		$this.MapObjName         = 'shortbow'
-		$this.PurchasePrice      = 160
-		$this.SellPrice          = 80
-		$this.TargetStats        = @{
+		$this.Name          = 'Short Bow'
+		$this.MapObjName    = 'shortbow'
+		$this.PurchasePrice = 160
+		$this.SellPrice     = 80
+		$this.TargetStats   = @{
 			[StatId]::Attack = 12
 		}
 		$this.CanAddToInventory  = $true
@@ -10374,11 +10494,11 @@ Class BEShortBow : BEWeapon {
 
 Class BEWarHammer : BEWeapon {
 	BEWarHammer() : base() {
-		$this.Name               = 'War Hammer'
-		$this.MapObjName         = 'warhammer'
-		$this.PurchasePrice      = 300
-		$this.SellPrice          = 150
-		$this.TargetStats        = @{
+		$this.Name          = 'War Hammer'
+		$this.MapObjName    = 'warhammer'
+		$this.PurchasePrice = 300
+		$this.SellPrice     = 150
+		$this.TargetStats   = @{
 			[StatId]::Attack = 23
 		}
 		$this.CanAddToInventory  = $true
@@ -10390,11 +10510,11 @@ Class BEWarHammer : BEWeapon {
 
 Class BEGrindingStone : BEWeapon {
 	BEGrindingStone() : base() {
-		$this.Name               = 'Grinding Stone'
-		$this.MapObjName         = 'grindingstone'
-		$this.PurchasePrice      = 50
-		$this.SellPrice          = 25
-		$this.TargetStats        = @{
+		$this.Name          = 'Grinding Stone'
+		$this.MapObjName    = 'grindingstone'
+		$this.PurchasePrice = 50
+		$this.SellPrice     = 25
+		$this.TargetStats   = @{
 			[StatId]::Attack = 7
 		}
 		$this.CanAddToInventory  = $true
@@ -10406,12 +10526,12 @@ Class BEGrindingStone : BEWeapon {
 
 Class BESimpleWand : BEWeapon {
 	BESimpleWand() : base() {
-		$this.Name               = 'Simple Wand'
-		$this.MapObjName         = 'simplewand'
-		$this.PurchasePrice      = 150
-		$this.SellPrice          = 75
-		$this.TargetStats        = @{
-			[StatId]::Attack = 3
+		$this.Name          = 'Simple Wand'
+		$this.MapObjName    = 'simplewand'
+		$this.PurchasePrice = 150
+		$this.SellPrice     = 75
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 3
 			[StatId]::MagicAttack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -10423,11 +10543,11 @@ Class BESimpleWand : BEWeapon {
 
 Class BELeatherGloves : BEWeapon {
 	BELeatherGloves() : base() {
-		$this.Name               = 'Leather Gloves'
-		$this.MapObjName         = 'leathergloves'
-		$this.PurchasePrice      = 60
-		$this.SellPrice          = 30
-		$this.TargetStats        = @{
+		$this.Name          = 'Leather Gloves'
+		$this.MapObjName    = 'leathergloves'
+		$this.PurchasePrice = 60
+		$this.SellPrice     = 30
+		$this.TargetStats   = @{
 			[StatId]::Attack = 6
 		}
 		$this.CanAddToInventory  = $true
@@ -10439,11 +10559,11 @@ Class BELeatherGloves : BEWeapon {
 
 Class BESlingShot : BEWeapon {
 	BESlingShot() : base() {
-		$this.Name               = 'Sling Shot'
-		$this.MapObjName         = 'slingshot'
-		$this.PurchasePrice      = 80
-		$this.SellPrice          = 40
-		$this.TargetStats        = @{
+		$this.Name          = 'Sling Shot'
+		$this.MapObjName    = 'slingshot'
+		$this.PurchasePrice = 80
+		$this.SellPrice     = 40
+		$this.TargetStats   = @{
 			[StatId]::Attack = 6
 		}
 		$this.CanAddToInventory  = $true
@@ -10455,11 +10575,11 @@ Class BESlingShot : BEWeapon {
 
 Class BESpikedClub : BEWeapon {
 	BESpikedClub() : base() {
-		$this.Name               = 'Spiked Club'
-		$this.MapObjName         = 'spikedclub'
-		$this.PurchasePrice      = 130
-		$this.SellPrice          = 65
-		$this.TargetStats        = @{
+		$this.Name          = 'Spiked Club'
+		$this.MapObjName    = 'spikedclub'
+		$this.PurchasePrice = 130
+		$this.SellPrice     = 65
+		$this.TargetStats   = @{
 			[StatId]::Attack = 14
 		}
 		$this.CanAddToInventory  = $true
@@ -10471,11 +10591,11 @@ Class BESpikedClub : BEWeapon {
 
 Class BEWornDagger : BEWeapon {
 	BEWornDagger() : base() {
-		$this.Name               = 'Worn Dagger'
-		$this.MapObjName         = 'worndagger'
-		$this.PurchasePrice      = 35
-		$this.SellPrice          = 17
-		$this.TargetStats        = @{
+		$this.Name          = 'Worn Dagger'
+		$this.MapObjName    = 'worndagger'
+		$this.PurchasePrice = 35
+		$this.SellPrice     = 17
+		$this.TargetStats   = @{
 			[StatId]::Attack = 3
 		}
 		$this.CanAddToInventory  = $true
@@ -10487,12 +10607,12 @@ Class BEWornDagger : BEWeapon {
 
 Class BEApprenticeStaff : BEWeapon {
 	BEApprenticeStaff() : base() {
-		$this.Name               = 'Apprentice Staff'
-		$this.MapObjName         = 'apprenticestaff'
-		$this.PurchasePrice      = 120
-		$this.SellPrice          = 60
-		$this.TargetStats        = @{
-			[StatId]::Attack = 4
+		$this.Name          = 'Apprentice Staff'
+		$this.MapObjName    = 'apprenticestaff'
+		$this.PurchasePrice = 120
+		$this.SellPrice     = 60
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 4
 			[StatId]::MagicAttack = 13
 		}
 		$this.CanAddToInventory  = $true
@@ -10504,11 +10624,11 @@ Class BEApprenticeStaff : BEWeapon {
 
 Class BEWoodcuttersAxe : BEWeapon {
 	BEWoodcuttersAxe() : base() {
-		$this.Name               = 'Woodcutter''s Axe'
-		$this.MapObjName         = 'woodcuttersaxe'
-		$this.PurchasePrice      = 140
-		$this.SellPrice          = 70
-		$this.TargetStats        = @{
+		$this.Name          = 'Woodcutter''s Axe'
+		$this.MapObjName    = 'woodcuttersaxe'
+		$this.PurchasePrice = 140
+		$this.SellPrice     = 70
+		$this.TargetStats   = @{
 			[StatId]::Attack = 13
 		}
 		$this.CanAddToInventory  = $true
@@ -10520,11 +10640,11 @@ Class BEWoodcuttersAxe : BEWeapon {
 
 Class BEBlowgun : BEWeapon {
 	BEBlowgun() : base() {
-		$this.Name               = 'Blowgun'
-		$this.MapObjName         = 'blowgun'
-		$this.PurchasePrice      = 90
-		$this.SellPrice          = 45
-		$this.TargetStats        = @{
+		$this.Name          = 'Blowgun'
+		$this.MapObjName    = 'blowgun'
+		$this.PurchasePrice = 90
+		$this.SellPrice     = 45
+		$this.TargetStats   = @{
 			[StatId]::Attack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -10536,11 +10656,11 @@ Class BEBlowgun : BEWeapon {
 
 Class BEStoneHammer : BEWeapon {
 	BEStoneHammer() : base() {
-		$this.Name               = 'Stone Hammer'
-		$this.MapObjName         = 'stonehammer'
-		$this.PurchasePrice      = 70
-		$this.SellPrice          = 35
-		$this.TargetStats        = @{
+		$this.Name          = 'Stone Hammer'
+		$this.MapObjName    = 'stonehammer'
+		$this.PurchasePrice = 70
+		$this.SellPrice     = 35
+		$this.TargetStats   = @{
 			[StatId]::Attack = 9
 		}
 		$this.CanAddToInventory  = $true
@@ -10552,11 +10672,11 @@ Class BEStoneHammer : BEWeapon {
 
 Class BERustyKnife : BEWeapon {
 	BERustyKnife() : base() {
-		$this.Name               = 'Rusty Knife'
-		$this.MapObjName         = 'rustyknife'
-		$this.PurchasePrice      = 30
-		$this.SellPrice          = 15
-		$this.TargetStats        = @{
+		$this.Name          = 'Rusty Knife'
+		$this.MapObjName    = 'rustyknife'
+		$this.PurchasePrice = 30
+		$this.SellPrice     = 15
+		$this.TargetStats   = @{
 			[StatId]::Attack = 2
 		}
 		$this.CanAddToInventory  = $true
@@ -10568,11 +10688,11 @@ Class BERustyKnife : BEWeapon {
 
 Class BEFryingPan : BEWeapon {
 	BEFryingPan() : base() {
-		$this.Name               = 'Frying Pan'
-		$this.MapObjName         = 'fryingpan'
-		$this.PurchasePrice      = 40
-		$this.SellPrice          = 20
-		$this.TargetStats        = @{
+		$this.Name          = 'Frying Pan'
+		$this.MapObjName    = 'fryingpan'
+		$this.PurchasePrice = 40
+		$this.SellPrice     = 20
+		$this.TargetStats   = @{
 			[StatId]::Attack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -10584,11 +10704,11 @@ Class BEFryingPan : BEWeapon {
 
 Class BETorch : BEWeapon {
 	BETorch() : base() {
-		$this.Name               = 'Torch'
-		$this.MapObjName         = 'torch'
-		$this.PurchasePrice      = 20
-		$this.SellPrice          = 10
-		$this.TargetStats        = @{
+		$this.Name          = 'Torch'
+		$this.MapObjName    = 'torch'
+		$this.PurchasePrice = 20
+		$this.SellPrice     = 10
+		$this.TargetStats   = @{
 			[StatId]::Attack = 1
 		}
 		$this.CanAddToInventory  = $true
@@ -10600,11 +10720,11 @@ Class BETorch : BEWeapon {
 
 Class BECarvingKnife : BEWeapon {
 	BECarvingKnife() : base() {
-		$this.Name               = 'Carving Knife'
-		$this.MapObjName         = 'carvingknife'
-		$this.PurchasePrice      = 50
-		$this.SellPrice          = 25
-		$this.TargetStats        = @{
+		$this.Name          = 'Carving Knife'
+		$this.MapObjName    = 'carvingknife'
+		$this.PurchasePrice = 50
+		$this.SellPrice     = 25
+		$this.TargetStats   = @{
 			[StatId]::Attack = 6
 		}
 		$this.CanAddToInventory  = $true
@@ -10616,11 +10736,11 @@ Class BECarvingKnife : BEWeapon {
 
 Class BEFarmersScythe : BEWeapon {
 	BEFarmersScythe() : base() {
-		$this.Name               = 'Farmer''s Scythe'
-		$this.MapObjName         = 'farmersscythe'
-		$this.PurchasePrice      = 160
-		$this.SellPrice          = 80
-		$this.TargetStats        = @{
+		$this.Name          = 'Farmer''s Scythe'
+		$this.MapObjName    = 'farmersscythe'
+		$this.PurchasePrice = 160
+		$this.SellPrice     = 80
+		$this.TargetStats   = @{
 			[StatId]::Attack = 16
 		}
 		$this.CanAddToInventory  = $true
@@ -10632,11 +10752,11 @@ Class BEFarmersScythe : BEWeapon {
 
 Class BEBrokenBottle : BEWeapon {
 	BEBrokenBottle() : base() {
-		$this.Name               = 'Broken Bottle'
-		$this.MapObjName         = 'brokenbottle'
-		$this.PurchasePrice      = 25
-		$this.SellPrice          = 12
-		$this.TargetStats        = @{
+		$this.Name          = 'Broken Bottle'
+		$this.MapObjName    = 'brokenbottle'
+		$this.PurchasePrice = 25
+		$this.SellPrice     = 12
+		$this.TargetStats   = @{
 			[StatId]::Attack = 3
 		}
 		$this.CanAddToInventory  = $true
@@ -10648,11 +10768,11 @@ Class BEBrokenBottle : BEWeapon {
 
 Class BECandlestick : BEWeapon {
 	BECandlestick() : base() {
-		$this.Name               = 'Candlestick'
-		$this.MapObjName         = 'candlestick'
-		$this.PurchasePrice      = 50
-		$this.SellPrice          = 25
-		$this.TargetStats        = @{
+		$this.Name          = 'Candlestick'
+		$this.MapObjName    = 'candlestick'
+		$this.PurchasePrice = 50
+		$this.SellPrice     = 25
+		$this.TargetStats   = @{
 			[StatId]::Attack = 7
 		}
 		$this.CanAddToInventory  = $true
@@ -10664,11 +10784,11 @@ Class BECandlestick : BEWeapon {
 
 Class BEGardeningHoe : BEWeapon {
 	BEGardeningHoe() : base() {
-		$this.Name               = 'Gardening Hoe'
-		$this.MapObjName         = 'gardeninghoe'
-		$this.PurchasePrice      = 60
-		$this.SellPrice          = 30
-		$this.TargetStats        = @{
+		$this.Name          = 'Gardening Hoe'
+		$this.MapObjName    = 'gardeninghoe'
+		$this.PurchasePrice = 60
+		$this.SellPrice     = 30
+		$this.TargetStats   = @{
 			[StatId]::Attack = 8
 		}
 		$this.CanAddToInventory  = $true
@@ -10680,11 +10800,11 @@ Class BEGardeningHoe : BEWeapon {
 
 Class BESturdyStick : BEWeapon {
 	BESturdyStick() : base() {
-		$this.Name               = 'Sturdy Stick'
-		$this.MapObjName         = 'sturdystick'
-		$this.PurchasePrice      = 30
-		$this.SellPrice          = 15
-		$this.TargetStats        = @{
+		$this.Name          = 'Sturdy Stick'
+		$this.MapObjName    = 'sturdystick'
+		$this.PurchasePrice = 30
+		$this.SellPrice     = 15
+		$this.TargetStats   = @{
 			[StatId]::Attack = 4
 		}
 		$this.CanAddToInventory  = $true
@@ -10696,11 +10816,11 @@ Class BESturdyStick : BEWeapon {
 
 Class BESewerPipe : BEWeapon {
 	BESewerPipe() : base() {
-		$this.Name               = 'Sewer Pipe'
-		$this.MapObjName         = 'sewerpipe'
-		$this.PurchasePrice      = 70
-		$this.SellPrice          = 35
-		$this.TargetStats        = @{
+		$this.Name          = 'Sewer Pipe'
+		$this.MapObjName    = 'sewerpipe'
+		$this.PurchasePrice = 70
+		$this.SellPrice     = 35
+		$this.TargetStats   = @{
 			[StatId]::Attack = 9
 		}
 		$this.CanAddToInventory  = $true
@@ -10712,11 +10832,11 @@ Class BESewerPipe : BEWeapon {
 
 Class BEOldBroom : BEWeapon {
 	BEOldBroom() : base() {
-		$this.Name               = 'Old Broom'
-		$this.MapObjName         = 'oldbroom'
-		$this.PurchasePrice      = 20
-		$this.SellPrice          = 10
-		$this.TargetStats        = @{
+		$this.Name          = 'Old Broom'
+		$this.MapObjName    = 'oldbroom'
+		$this.PurchasePrice = 20
+		$this.SellPrice     = 10
+		$this.TargetStats   = @{
 			[StatId]::Attack = 2
 		}
 		$this.CanAddToInventory  = $true
@@ -10728,11 +10848,11 @@ Class BEOldBroom : BEWeapon {
 
 Class BEToySword : BEWeapon {
 	BEToySword() : base() {
-		$this.Name               = 'Toy Sword'
-		$this.MapObjName         = 'toysword'
-		$this.PurchasePrice      = 10
-		$this.SellPrice          = 5
-		$this.TargetStats        = @{
+		$this.Name          = 'Toy Sword'
+		$this.MapObjName    = 'toysword'
+		$this.PurchasePrice = 10
+		$this.SellPrice     = 5
+		$this.TargetStats   = @{
 			[StatId]::Attack = 1
 		}
 		$this.CanAddToInventory  = $true
@@ -10744,11 +10864,11 @@ Class BEToySword : BEWeapon {
 
 Class BEMythrilSword : BEWeapon {
 	BEMythrilSword() : base() {
-		$this.Name               = 'Mythril Sword'
-		$this.MapObjName         = 'mythrilsword'
-		$this.PurchasePrice      = 800
-		$this.SellPrice          = 400
-		$this.TargetStats        = @{
+		$this.Name          = 'Mythril Sword'
+		$this.MapObjName    = 'mythrilsword'
+		$this.PurchasePrice = 800
+		$this.SellPrice     = 400
+		$this.TargetStats   = @{
 			[StatId]::Attack = 45
 		}
 		$this.CanAddToInventory  = $true
@@ -10760,12 +10880,12 @@ Class BEMythrilSword : BEWeapon {
 
 Class BESilverDagger : BEWeapon {
 	BESilverDagger() : base() {
-		$this.Name               = 'Silver Dagger'
-		$this.MapObjName         = 'silverdagger'
-		$this.PurchasePrice      = 750
-		$this.SellPrice          = 375
-		$this.TargetStats        = @{
-			[StatId]::Attack = 40
+		$this.Name          = 'Silver Dagger'
+		$this.MapObjName    = 'silverdagger'
+		$this.PurchasePrice = 750
+		$this.SellPrice     = 375
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 40
 			[StatId]::MagicAttack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -10777,11 +10897,11 @@ Class BESilverDagger : BEWeapon {
 
 Class BEGreatSword : BEWeapon {
 	BEGreatSword() : base() {
-		$this.Name               = 'Great Sword'
-		$this.MapObjName         = 'greatsword'
-		$this.PurchasePrice      = 900
-		$this.SellPrice          = 450
-		$this.TargetStats        = @{
+		$this.Name          = 'Great Sword'
+		$this.MapObjName    = 'greatsword'
+		$this.PurchasePrice = 900
+		$this.SellPrice     = 450
+		$this.TargetStats   = @{
 			[StatId]::Attack = 55
 		}
 		$this.CanAddToInventory  = $true
@@ -10793,12 +10913,12 @@ Class BEGreatSword : BEWeapon {
 
 Class BEDragonAxe : BEWeapon {
 	BEDragonAxe() : base() {
-		$this.Name               = 'Dragon Axe'
-		$this.MapObjName         = 'dragonaxe'
-		$this.PurchasePrice      = 1000
-		$this.SellPrice          = 500
-		$this.TargetStats        = @{
-			[StatId]::Attack = 60
+		$this.Name          = 'Dragon Axe'
+		$this.MapObjName    = 'dragonaxe'
+		$this.PurchasePrice = 1000
+		$this.SellPrice     = 500
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 60
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -10810,12 +10930,12 @@ Class BEDragonAxe : BEWeapon {
 
 Class BEWizardsStaff : BEWeapon {
 	BEWizardsStaff() : base() {
-		$this.Name               = 'Wizard''s Staff'
-		$this.MapObjName         = 'wizardsstaff'
-		$this.PurchasePrice      = 850
-		$this.SellPrice          = 425
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Wizard''s Staff'
+		$this.MapObjName    = 'wizardsstaff'
+		$this.PurchasePrice = 850
+		$this.SellPrice     = 425
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 50
 		}
 		$this.CanAddToInventory  = $true
@@ -10827,12 +10947,12 @@ Class BEWizardsStaff : BEWeapon {
 
 Class BEHolyLance : BEWeapon {
 	BEHolyLance() : base() {
-		$this.Name               = 'Holy Lance'
-		$this.MapObjName         = 'holylance'
-		$this.PurchasePrice      = 950
-		$this.SellPrice          = 475
-		$this.TargetStats        = @{
-			[StatId]::Attack = 50
+		$this.Name          = 'Holy Lance'
+		$this.MapObjName    = 'holylance'
+		$this.PurchasePrice = 950
+		$this.SellPrice     = 475
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 50
 			[StatId]::MagicAttack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -10844,11 +10964,11 @@ Class BEHolyLance : BEWeapon {
 
 Class BERepeatingCrossbow : BEWeapon {
 	BERepeatingCrossbow() : base() {
-		$this.Name               = 'Repeating Crossbow'
-		$this.MapObjName         = 'repeatingcrossbow'
-		$this.PurchasePrice      = 1100
-		$this.SellPrice          = 550
-		$this.TargetStats        = @{
+		$this.Name          = 'Repeating Crossbow'
+		$this.MapObjName    = 'repeatingcrossbow'
+		$this.PurchasePrice = 1100
+		$this.SellPrice     = 550
+		$this.TargetStats   = @{
 			[StatId]::Attack = 58
 		}
 		$this.CanAddToInventory  = $true
@@ -10860,11 +10980,11 @@ Class BERepeatingCrossbow : BEWeapon {
 
 Class BEElvenBow : BEWeapon {
 	BEElvenBow() : base() {
-		$this.Name               = 'Elven Bow'
-		$this.MapObjName         = 'elvenbow'
-		$this.PurchasePrice      = 1200
-		$this.SellPrice          = 600
-		$this.TargetStats        = @{
+		$this.Name          = 'Elven Bow'
+		$this.MapObjName    = 'elvenbow'
+		$this.PurchasePrice = 1200
+		$this.SellPrice     = 600
+		$this.TargetStats   = @{
 			[StatId]::Attack = 62
 		}
 		$this.CanAddToInventory  = $true
@@ -10876,12 +10996,12 @@ Class BEElvenBow : BEWeapon {
 
 Class BEScourgeWhip : BEWeapon {
 	BEScourgeWhip() : base() {
-		$this.Name               = 'Scourge Whip'
-		$this.MapObjName         = 'scourgewhip'
-		$this.PurchasePrice      = 700
-		$this.SellPrice          = 350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 35
+		$this.Name          = 'Scourge Whip'
+		$this.MapObjName    = 'scourgewhip'
+		$this.PurchasePrice = 700
+		$this.SellPrice     = 350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 35
 			[StatId]::MagicAttack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -10893,11 +11013,11 @@ Class BEScourgeWhip : BEWeapon {
 
 Class BEMeteorHammer : BEWeapon {
 	BEMeteorHammer() : base() {
-		$this.Name               = 'Meteor Hammer'
-		$this.MapObjName         = 'meteorhammer'
-		$this.PurchasePrice      = 880
-		$this.SellPrice          = 440
-		$this.TargetStats        = @{
+		$this.Name          = 'Meteor Hammer'
+		$this.MapObjName    = 'meteorhammer'
+		$this.PurchasePrice = 880
+		$this.SellPrice     = 440
+		$this.TargetStats   = @{
 			[StatId]::Attack = 52
 		}
 		$this.CanAddToInventory  = $true
@@ -10909,11 +11029,11 @@ Class BEMeteorHammer : BEWeapon {
 
 Class BEAdamantKnuckles : BEWeapon {
 	BEAdamantKnuckles() : base() {
-		$this.Name               = 'Adamant Knuckles'
-		$this.MapObjName         = 'adamantknuckles'
-		$this.PurchasePrice      = 920
-		$this.SellPrice          = 460
-		$this.TargetStats        = @{
+		$this.Name          = 'Adamant Knuckles'
+		$this.MapObjName    = 'adamantknuckles'
+		$this.PurchasePrice = 920
+		$this.SellPrice     = 460
+		$this.TargetStats   = @{
 			[StatId]::Attack = 56
 		}
 		$this.CanAddToInventory  = $true
@@ -10925,12 +11045,12 @@ Class BEAdamantKnuckles : BEWeapon {
 
 Class BEFlameBlade : BEWeapon {
 	BEFlameBlade() : base() {
-		$this.Name               = 'Flame Blade'
-		$this.MapObjName         = 'flameblade'
-		$this.PurchasePrice      = 780
-		$this.SellPrice          = 390
-		$this.TargetStats        = @{
-			[StatId]::Attack = 48
+		$this.Name          = 'Flame Blade'
+		$this.MapObjName    = 'flameblade'
+		$this.PurchasePrice = 780
+		$this.SellPrice     = 390
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 48
 			[StatId]::MagicAttack = 8
 		}
 		$this.CanAddToInventory  = $true
@@ -10942,12 +11062,12 @@ Class BEFlameBlade : BEWeapon {
 
 Class BEIceBrand : BEWeapon {
 	BEIceBrand() : base() {
-		$this.Name               = 'Ice Brand'
-		$this.MapObjName         = 'icebrand'
-		$this.PurchasePrice      = 780
-		$this.SellPrice          = 390
-		$this.TargetStats        = @{
-			[StatId]::Attack = 48
+		$this.Name          = 'Ice Brand'
+		$this.MapObjName    = 'icebrand'
+		$this.PurchasePrice = 780
+		$this.SellPrice     = 390
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 48
 			[StatId]::MagicAttack = 8
 		}
 		$this.CanAddToInventory  = $true
@@ -10959,12 +11079,12 @@ Class BEIceBrand : BEWeapon {
 
 Class BEThunderRod : BEWeapon {
 	BEThunderRod() : base() {
-		$this.Name               = 'Thunder Rod'
-		$this.MapObjName         = 'thunderrod'
-		$this.PurchasePrice      = 720
-		$this.SellPrice          = 360
-		$this.TargetStats        = @{
-			[StatId]::Attack = 8
+		$this.Name          = 'Thunder Rod'
+		$this.MapObjName    = 'thunderrod'
+		$this.PurchasePrice = 720
+		$this.SellPrice     = 360
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 8
 			[StatId]::MagicAttack = 45
 		}
 		$this.CanAddToInventory  = $true
@@ -10976,11 +11096,11 @@ Class BEThunderRod : BEWeapon {
 
 Class BEVenomDagger : BEWeapon {
 	BEVenomDagger() : base() {
-		$this.Name               = 'Venom Dagger'
-		$this.MapObjName         = 'venomdagger'
-		$this.PurchasePrice      = 650
-		$this.SellPrice          = 325
-		$this.TargetStats        = @{
+		$this.Name          = 'Venom Dagger'
+		$this.MapObjName    = 'venomdagger'
+		$this.PurchasePrice = 650
+		$this.SellPrice     = 325
+		$this.TargetStats   = @{
 			[StatId]::Attack = 38
 		}
 		$this.CanAddToInventory  = $true
@@ -10992,11 +11112,11 @@ Class BEVenomDagger : BEWeapon {
 
 Class BEGiantClub : BEWeapon {
 	BEGiantClub() : base() {
-		$this.Name               = 'Giant Club'
-		$this.MapObjName         = 'giantclub'
-		$this.PurchasePrice      = 820
-		$this.SellPrice          = 410
-		$this.TargetStats        = @{
+		$this.Name          = 'Giant Club'
+		$this.MapObjName    = 'giantclub'
+		$this.PurchasePrice = 820
+		$this.SellPrice     = 410
+		$this.TargetStats   = @{
 			[StatId]::Attack = 50
 		}
 		$this.CanAddToInventory  = $true
@@ -11008,12 +11128,12 @@ Class BEGiantClub : BEWeapon {
 
 Class BEShadowBow : BEWeapon {
 	BEShadowBow() : base() {
-		$this.Name               = 'Shadow Bow'
-		$this.MapObjName         = 'shadowbow'
-		$this.PurchasePrice      = 1050
-		$this.SellPrice          = 525
-		$this.TargetStats        = @{
-			[StatId]::Attack = 55
+		$this.Name          = 'Shadow Bow'
+		$this.MapObjName    = 'shadowbow'
+		$this.PurchasePrice = 1050
+		$this.SellPrice     = 525
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 55
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -11025,12 +11145,12 @@ Class BEShadowBow : BEWeapon {
 
 Class BESpiritStaff : BEWeapon {
 	BESpiritStaff() : base() {
-		$this.Name               = 'Spirit Staff'
-		$this.MapObjName         = 'spiritstaff'
-		$this.PurchasePrice      = 780
-		$this.SellPrice          = 390
-		$this.TargetStats        = @{
-			[StatId]::Attack = 5
+		$this.Name          = 'Spirit Staff'
+		$this.MapObjName    = 'spiritstaff'
+		$this.PurchasePrice = 780
+		$this.SellPrice     = 390
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 5
 			[StatId]::MagicAttack = 48
 		}
 		$this.CanAddToInventory  = $true
@@ -11042,12 +11162,12 @@ Class BESpiritStaff : BEWeapon {
 
 Class BEBarrierBlade : BEWeapon {
 	BEBarrierBlade() : base() {
-		$this.Name               = 'Barrier Blade'
-		$this.MapObjName         = 'barrierblade'
-		$this.PurchasePrice      = 850
-		$this.SellPrice          = 425
-		$this.TargetStats        = @{
-			[StatId]::Attack = 42
+		$this.Name          = 'Barrier Blade'
+		$this.MapObjName    = 'barrierblade'
+		$this.PurchasePrice = 850
+		$this.SellPrice     = 425
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 42
 			[StatId]::MagicAttack = 12
 		}
 		$this.CanAddToInventory  = $true
@@ -11059,12 +11179,12 @@ Class BEBarrierBlade : BEWeapon {
 
 Class BEFrostAxe : BEWeapon {
 	BEFrostAxe() : base() {
-		$this.Name               = 'Frost Axe'
-		$this.MapObjName         = 'frostaxe'
-		$this.PurchasePrice      = 900
-		$this.SellPrice          = 450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 53
+		$this.Name          = 'Frost Axe'
+		$this.MapObjName    = 'frostaxe'
+		$this.PurchasePrice = 900
+		$this.SellPrice     = 450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 53
 			[StatId]::MagicAttack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -11076,12 +11196,12 @@ Class BEFrostAxe : BEWeapon {
 
 Class BESolarStaff : BEWeapon {
 	BESolarStaff() : base() {
-		$this.Name               = 'Solar Staff'
-		$this.MapObjName         = 'solarstaff'
-		$this.PurchasePrice      = 920
-		$this.SellPrice          = 460
-		$this.TargetStats        = @{
-			[StatId]::Attack = 12
+		$this.Name          = 'Solar Staff'
+		$this.MapObjName    = 'solarstaff'
+		$this.PurchasePrice = 920
+		$this.SellPrice     = 460
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 12
 			[StatId]::MagicAttack = 55
 		}
 		$this.CanAddToInventory  = $true
@@ -11093,11 +11213,11 @@ Class BESolarStaff : BEWeapon {
 
 Class BEBladeofTruth : BEWeapon {
 	BEBladeofTruth() : base() {
-		$this.Name               = 'Blade of Truth'
-		$this.MapObjName         = 'bladeoftruth'
-		$this.PurchasePrice      = 1150
-		$this.SellPrice          = 575
-		$this.TargetStats        = @{
+		$this.Name          = 'Blade of Truth'
+		$this.MapObjName    = 'bladeoftruth'
+		$this.PurchasePrice = 1150
+		$this.SellPrice     = 575
+		$this.TargetStats   = @{
 			[StatId]::Attack = 60
 		}
 		$this.CanAddToInventory  = $true
@@ -11109,12 +11229,12 @@ Class BEBladeofTruth : BEWeapon {
 
 Class BEDragonsBreath : BEWeapon {
 	BEDragonsBreath() : base() {
-		$this.Name               = 'Dragon''s Breath'
-		$this.MapObjName         = 'dragonsbreath'
-		$this.PurchasePrice      = 980
-		$this.SellPrice          = 490
-		$this.TargetStats        = @{
-			[StatId]::Attack = 50
+		$this.Name          = 'Dragon''s Breath'
+		$this.MapObjName    = 'dragonsbreath'
+		$this.PurchasePrice = 980
+		$this.SellPrice     = 490
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 50
 			[StatId]::MagicAttack = 25
 		}
 		$this.CanAddToInventory  = $true
@@ -11126,12 +11246,12 @@ Class BEDragonsBreath : BEWeapon {
 
 Class BEVoidScepter : BEWeapon {
 	BEVoidScepter() : base() {
-		$this.Name               = 'Void Scepter'
-		$this.MapObjName         = 'voidscepter'
-		$this.PurchasePrice      = 1000
-		$this.SellPrice          = 500
-		$this.TargetStats        = @{
-			[StatId]::Attack = 15
+		$this.Name          = 'Void Scepter'
+		$this.MapObjName    = 'voidscepter'
+		$this.PurchasePrice = 1000
+		$this.SellPrice     = 500
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 15
 			[StatId]::MagicAttack = 60
 		}
 		$this.CanAddToInventory  = $true
@@ -11143,11 +11263,11 @@ Class BEVoidScepter : BEWeapon {
 
 Class BEGriffinBow : BEWeapon {
 	BEGriffinBow() : base() {
-		$this.Name               = 'Griffin Bow'
-		$this.MapObjName         = 'griffinbow'
-		$this.PurchasePrice      = 1300
-		$this.SellPrice          = 650
-		$this.TargetStats        = @{
+		$this.Name          = 'Griffin Bow'
+		$this.MapObjName    = 'griffinbow'
+		$this.PurchasePrice = 1300
+		$this.SellPrice     = 650
+		$this.TargetStats   = @{
 			[StatId]::Attack = 65
 		}
 		$this.CanAddToInventory  = $true
@@ -11159,12 +11279,12 @@ Class BEGriffinBow : BEWeapon {
 
 Class BESerpentStaff : BEWeapon {
 	BESerpentStaff() : base() {
-		$this.Name               = 'Serpent Staff'
-		$this.MapObjName         = 'serpentstaff'
-		$this.PurchasePrice      = 800
-		$this.SellPrice          = 400
-		$this.TargetStats        = @{
-			[StatId]::Attack = 7
+		$this.Name          = 'Serpent Staff'
+		$this.MapObjName    = 'serpentstaff'
+		$this.PurchasePrice = 800
+		$this.SellPrice     = 400
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 7
 			[StatId]::MagicAttack = 47
 		}
 		$this.CanAddToInventory  = $true
@@ -11176,12 +11296,12 @@ Class BESerpentStaff : BEWeapon {
 
 Class BEChaosBlade : BEWeapon {
 	BEChaosBlade() : base() {
-		$this.Name               = 'Chaos Blade'
-		$this.MapObjName         = 'chaosblade'
-		$this.PurchasePrice      = 1250
-		$this.SellPrice          = 625
-		$this.TargetStats        = @{
-			[StatId]::Attack = 58
+		$this.Name          = 'Chaos Blade'
+		$this.MapObjName    = 'chaosblade'
+		$this.PurchasePrice = 1250
+		$this.SellPrice     = 625
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 58
 			[StatId]::MagicAttack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -11193,12 +11313,12 @@ Class BEChaosBlade : BEWeapon {
 
 Class BEStarMace : BEWeapon {
 	BEStarMace() : base() {
-		$this.Name               = 'Star Mace'
-		$this.MapObjName         = 'starmace'
-		$this.PurchasePrice      = 950
-		$this.SellPrice          = 475
-		$this.TargetStats        = @{
-			[StatId]::Attack = 54
+		$this.Name          = 'Star Mace'
+		$this.MapObjName    = 'starmace'
+		$this.PurchasePrice = 950
+		$this.SellPrice     = 475
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 54
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -11210,12 +11330,12 @@ Class BEStarMace : BEWeapon {
 
 Class BESoulHarvester : BEWeapon {
 	BESoulHarvester() : base() {
-		$this.Name               = 'Soul Harvester'
-		$this.MapObjName         = 'soulharvester'
-		$this.PurchasePrice      = 1100
-		$this.SellPrice          = 550
-		$this.TargetStats        = @{
-			[StatId]::Attack = 56
+		$this.Name          = 'Soul Harvester'
+		$this.MapObjName    = 'soulharvester'
+		$this.PurchasePrice = 1100
+		$this.SellPrice     = 550
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 56
 			[StatId]::MagicAttack = 18
 		}
 		$this.CanAddToInventory  = $true
@@ -11227,12 +11347,12 @@ Class BESoulHarvester : BEWeapon {
 
 Class BECrystalWand : BEWeapon {
 	BECrystalWand() : base() {
-		$this.Name               = 'Crystal Wand'
-		$this.MapObjName         = 'crystalwand'
-		$this.PurchasePrice      = 700
-		$this.SellPrice          = 350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Crystal Wand'
+		$this.MapObjName    = 'crystalwand'
+		$this.PurchasePrice = 700
+		$this.SellPrice     = 350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 42
 		}
 		$this.CanAddToInventory  = $true
@@ -11244,11 +11364,11 @@ Class BECrystalWand : BEWeapon {
 
 Class BEObsidianGreatsword : BEWeapon {
 	BEObsidianGreatsword() : base() {
-		$this.Name               = 'Obsidian Greatsword'
-		$this.MapObjName         = 'obsidiangreatsword'
-		$this.PurchasePrice      = 1000
-		$this.SellPrice          = 500
-		$this.TargetStats        = @{
+		$this.Name          = 'Obsidian Greatsword'
+		$this.MapObjName    = 'obsidiangreatsword'
+		$this.PurchasePrice = 1000
+		$this.SellPrice     = 500
+		$this.TargetStats   = @{
 			[StatId]::Attack = 57
 		}
 		$this.CanAddToInventory  = $true
@@ -11260,12 +11380,12 @@ Class BEObsidianGreatsword : BEWeapon {
 
 Class BEWindAxe : BEWeapon {
 	BEWindAxe() : base() {
-		$this.Name               = 'Wind Axe'
-		$this.MapObjName         = 'windaxe'
-		$this.PurchasePrice      = 920
-		$this.SellPrice          = 460
-		$this.TargetStats        = @{
-			[StatId]::Attack = 54
+		$this.Name          = 'Wind Axe'
+		$this.MapObjName    = 'windaxe'
+		$this.PurchasePrice = 920
+		$this.SellPrice     = 460
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 54
 			[StatId]::MagicAttack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -11277,12 +11397,12 @@ Class BEWindAxe : BEWeapon {
 
 Class BERuneStaff : BEWeapon {
 	BERuneStaff() : base() {
-		$this.Name               = 'Rune Staff'
-		$this.MapObjName         = 'runestaff'
-		$this.PurchasePrice      = 880
-		$this.SellPrice          = 440
-		$this.TargetStats        = @{
-			[StatId]::Attack = 8
+		$this.Name          = 'Rune Staff'
+		$this.MapObjName    = 'runestaff'
+		$this.PurchasePrice = 880
+		$this.SellPrice     = 440
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 8
 			[StatId]::MagicAttack = 52
 		}
 		$this.CanAddToInventory  = $true
@@ -11294,12 +11414,12 @@ Class BERuneStaff : BEWeapon {
 
 Class BELightbringer : BEWeapon {
 	BELightbringer() : base() {
-		$this.Name               = 'Lightbringer'
-		$this.MapObjName         = 'lightbringer'
-		$this.PurchasePrice      = 1050
-		$this.SellPrice          = 525
-		$this.TargetStats        = @{
-			[StatId]::Attack = 55
+		$this.Name          = 'Lightbringer'
+		$this.MapObjName    = 'lightbringer'
+		$this.PurchasePrice = 1050
+		$this.SellPrice     = 525
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 55
 			[StatId]::MagicAttack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -11311,12 +11431,12 @@ Class BELightbringer : BEWeapon {
 
 Class BEDarknessBow : BEWeapon {
 	BEDarknessBow() : base() {
-		$this.Name               = 'Darkness Bow'
-		$this.MapObjName         = 'darknessbow'
-		$this.PurchasePrice      = 980
-		$this.SellPrice          = 490
-		$this.TargetStats        = @{
-			[StatId]::Attack = 52
+		$this.Name          = 'Darkness Bow'
+		$this.MapObjName    = 'darknessbow'
+		$this.PurchasePrice = 980
+		$this.SellPrice     = 490
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 52
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -11328,12 +11448,12 @@ Class BEDarknessBow : BEWeapon {
 
 Class BEEmeraldRod : BEWeapon {
 	BEEmeraldRod() : base() {
-		$this.Name               = 'Emerald Rod'
-		$this.MapObjName         = 'emeraldrod'
-		$this.PurchasePrice      = 750
-		$this.SellPrice          = 375
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Emerald Rod'
+		$this.MapObjName    = 'emeraldrod'
+		$this.PurchasePrice = 750
+		$this.SellPrice     = 375
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 44
 		}
 		$this.CanAddToInventory  = $true
@@ -11345,11 +11465,11 @@ Class BEEmeraldRod : BEWeapon {
 
 Class BEPoisonedWhip : BEWeapon {
 	BEPoisonedWhip() : base() {
-		$this.Name               = 'Poisoned Whip'
-		$this.MapObjName         = 'poisonedwhip'
-		$this.PurchasePrice      = 680
-		$this.SellPrice          = 340
-		$this.TargetStats        = @{
+		$this.Name          = 'Poisoned Whip'
+		$this.MapObjName    = 'poisonedwhip'
+		$this.PurchasePrice = 680
+		$this.SellPrice     = 340
+		$this.TargetStats   = @{
 			[StatId]::Attack = 36
 		}
 		$this.CanAddToInventory  = $true
@@ -11361,11 +11481,11 @@ Class BEPoisonedWhip : BEWeapon {
 
 Class BESpikedGauntlets : BEWeapon {
 	BESpikedGauntlets() : base() {
-		$this.Name               = 'Spiked Gauntlets'
-		$this.MapObjName         = 'spikedgauntlets'
-		$this.PurchasePrice      = 850
-		$this.SellPrice          = 425
-		$this.TargetStats        = @{
+		$this.Name          = 'Spiked Gauntlets'
+		$this.MapObjName    = 'spikedgauntlets'
+		$this.PurchasePrice = 850
+		$this.SellPrice     = 425
+		$this.TargetStats   = @{
 			[StatId]::Attack = 51
 		}
 		$this.CanAddToInventory  = $true
@@ -11377,12 +11497,12 @@ Class BESpikedGauntlets : BEWeapon {
 
 Class BEAetherBlade : BEWeapon {
 	BEAetherBlade() : base() {
-		$this.Name               = 'Aether Blade'
-		$this.MapObjName         = 'aetherblade'
-		$this.PurchasePrice      = 1120
-		$this.SellPrice          = 560
-		$this.TargetStats        = @{
-			[StatId]::Attack = 59
+		$this.Name          = 'Aether Blade'
+		$this.MapObjName    = 'aetherblade'
+		$this.PurchasePrice = 1120
+		$this.SellPrice     = 560
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 59
 			[StatId]::MagicAttack = 22
 		}
 		$this.CanAddToInventory  = $true
@@ -11394,12 +11514,12 @@ Class BEAetherBlade : BEWeapon {
 
 Class BEOceanScepter : BEWeapon {
 	BEOceanScepter() : base() {
-		$this.Name               = 'Ocean Scepter'
-		$this.MapObjName         = 'oceanscepter'
-		$this.PurchasePrice      = 900
-		$this.SellPrice          = 450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 12
+		$this.Name          = 'Ocean Scepter'
+		$this.MapObjName    = 'oceanscepter'
+		$this.PurchasePrice = 900
+		$this.SellPrice     = 450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 12
 			[StatId]::MagicAttack = 50
 		}
 		$this.CanAddToInventory  = $true
@@ -11411,12 +11531,12 @@ Class BEOceanScepter : BEWeapon {
 
 Class BEPhoenixBow : BEWeapon {
 	BEPhoenixBow() : base() {
-		$this.Name               = 'Phoenix Bow'
-		$this.MapObjName         = 'phoenixbow'
-		$this.PurchasePrice      = 1250
-		$this.SellPrice          = 625
-		$this.TargetStats        = @{
-			[StatId]::Attack = 63
+		$this.Name          = 'Phoenix Bow'
+		$this.MapObjName    = 'phoenixbow'
+		$this.PurchasePrice = 1250
+		$this.SellPrice     = 625
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 63
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -11428,11 +11548,11 @@ Class BEPhoenixBow : BEWeapon {
 
 Class BEGolemAxe : BEWeapon {
 	BEGolemAxe() : base() {
-		$this.Name               = 'Golem Axe'
-		$this.MapObjName         = 'golemaxe'
-		$this.PurchasePrice      = 1020
-		$this.SellPrice          = 510
-		$this.TargetStats        = @{
+		$this.Name          = 'Golem Axe'
+		$this.MapObjName    = 'golemaxe'
+		$this.PurchasePrice = 1020
+		$this.SellPrice     = 510
+		$this.TargetStats   = @{
 			[StatId]::Attack = 61
 		}
 		$this.CanAddToInventory  = $true
@@ -11444,12 +11564,12 @@ Class BEGolemAxe : BEWeapon {
 
 Class BEManaRod : BEWeapon {
 	BEManaRod() : base() {
-		$this.Name               = 'Mana Rod'
-		$this.MapObjName         = 'manarod'
-		$this.PurchasePrice      = 600
-		$this.SellPrice          = 300
-		$this.TargetStats        = @{
-			[StatId]::Attack = 5
+		$this.Name          = 'Mana Rod'
+		$this.MapObjName    = 'manarod'
+		$this.PurchasePrice = 600
+		$this.SellPrice     = 300
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 5
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -11461,12 +11581,12 @@ Class BEManaRod : BEWeapon {
 
 Class BEDreamWeaverStaff : BEWeapon {
 	BEDreamWeaverStaff() : base() {
-		$this.Name               = 'Dream Weaver Staff'
-		$this.MapObjName         = 'dreamweaverstaff'
-		$this.PurchasePrice      = 820
-		$this.SellPrice          = 410
-		$this.TargetStats        = @{
-			[StatId]::Attack = 6
+		$this.Name          = 'Dream Weaver Staff'
+		$this.MapObjName    = 'dreamweaverstaff'
+		$this.PurchasePrice = 820
+		$this.SellPrice     = 410
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 6
 			[StatId]::MagicAttack = 49
 		}
 		$this.CanAddToInventory  = $true
@@ -11478,12 +11598,12 @@ Class BEDreamWeaverStaff : BEWeapon {
 
 Class BEVampireSword : BEWeapon {
 	BEVampireSword() : base() {
-		$this.Name               = 'Vampire Sword'
-		$this.MapObjName         = 'vampiresword'
-		$this.PurchasePrice      = 950
-		$this.SellPrice          = 475
-		$this.TargetStats        = @{
-			[StatId]::Attack = 48
+		$this.Name          = 'Vampire Sword'
+		$this.MapObjName    = 'vampiresword'
+		$this.PurchasePrice = 950
+		$this.SellPrice     = 475
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 48
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -11495,11 +11615,11 @@ Class BEVampireSword : BEWeapon {
 
 Class BEGuardianShield : BEWeapon {
 	BEGuardianShield() : base() {
-		$this.Name               = 'Guardian Shield'
-		$this.MapObjName         = 'guardianshield'
-		$this.PurchasePrice      = 700
-		$this.SellPrice          = 350
-		$this.TargetStats        = @{
+		$this.Name          = 'Guardian Shield'
+		$this.MapObjName    = 'guardianshield'
+		$this.PurchasePrice = 700
+		$this.SellPrice     = 350
+		$this.TargetStats   = @{
 			[StatId]::Attack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -11511,12 +11631,12 @@ Class BEGuardianShield : BEWeapon {
 
 Class BEMoonlightBow : BEWeapon {
 	BEMoonlightBow() : base() {
-		$this.Name               = 'Moonlight Bow'
-		$this.MapObjName         = 'moonlightbow'
-		$this.PurchasePrice      = 1180
-		$this.SellPrice          = 590
-		$this.TargetStats        = @{
-			[StatId]::Attack = 60
+		$this.Name          = 'Moonlight Bow'
+		$this.MapObjName    = 'moonlightbow'
+		$this.PurchasePrice = 1180
+		$this.SellPrice     = 590
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 60
 			[StatId]::MagicAttack = 5
 		}
 		$this.CanAddToInventory  = $true
@@ -11528,12 +11648,12 @@ Class BEMoonlightBow : BEWeapon {
 
 Class BESunstoneStaff : BEWeapon {
 	BESunstoneStaff() : base() {
-		$this.Name               = 'Sunstone Staff'
-		$this.MapObjName         = 'sunstonestaff'
-		$this.PurchasePrice      = 900
-		$this.SellPrice          = 450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Sunstone Staff'
+		$this.MapObjName    = 'sunstonestaff'
+		$this.PurchasePrice = 900
+		$this.SellPrice     = 450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 53
 		}
 		$this.CanAddToInventory  = $true
@@ -11545,11 +11665,11 @@ Class BESunstoneStaff : BEWeapon {
 
 Class BETitanAxe : BEWeapon {
 	BETitanAxe() : base() {
-		$this.Name               = 'Titan Axe'
-		$this.MapObjName         = 'titanaxe'
-		$this.PurchasePrice      = 1300
-		$this.SellPrice          = 650
-		$this.TargetStats        = @{
+		$this.Name          = 'Titan Axe'
+		$this.MapObjName    = 'titanaxe'
+		$this.PurchasePrice = 1300
+		$this.SellPrice     = 650
+		$this.TargetStats   = @{
 			[StatId]::Attack = 68
 		}
 		$this.CanAddToInventory  = $true
@@ -11561,12 +11681,12 @@ Class BETitanAxe : BEWeapon {
 
 Class BESpiritBlade : BEWeapon {
 	BESpiritBlade() : base() {
-		$this.Name               = 'Spirit Blade'
-		$this.MapObjName         = 'spiritblade'
-		$this.PurchasePrice      = 1080
-		$this.SellPrice          = 540
-		$this.TargetStats        = @{
-			[StatId]::Attack = 54
+		$this.Name          = 'Spirit Blade'
+		$this.MapObjName    = 'spiritblade'
+		$this.PurchasePrice = 1080
+		$this.SellPrice     = 540
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 54
 			[StatId]::MagicAttack = 18
 		}
 		$this.CanAddToInventory  = $true
@@ -11578,12 +11698,12 @@ Class BESpiritBlade : BEWeapon {
 
 Class BEExcalibur : BEWeapon {
 	BEExcalibur() : base() {
-		$this.Name               = 'Excalibur'
-		$this.MapObjName         = 'excalibur'
-		$this.PurchasePrice      = 5000
-		$this.SellPrice          = 2500
-		$this.TargetStats        = @{
-			[StatId]::Attack = 120
+		$this.Name          = 'Excalibur'
+		$this.MapObjName    = 'excalibur'
+		$this.PurchasePrice = 5000
+		$this.SellPrice     = 2500
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 120
 			[StatId]::MagicAttack = 50
 		}
 		$this.CanAddToInventory  = $true
@@ -11595,12 +11715,12 @@ Class BEExcalibur : BEWeapon {
 
 Class BEGungnir : BEWeapon {
 	BEGungnir() : base() {
-		$this.Name               = 'Gungnir'
-		$this.MapObjName         = 'gungnir'
-		$this.PurchasePrice      = 4800
-		$this.SellPrice          = 2400
-		$this.TargetStats        = @{
-			[StatId]::Attack = 115
+		$this.Name          = 'Gungnir'
+		$this.MapObjName    = 'gungnir'
+		$this.PurchasePrice = 4800
+		$this.SellPrice     = 2400
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 115
 			[StatId]::MagicAttack = 40
 		}
 		$this.CanAddToInventory  = $true
@@ -11612,12 +11732,12 @@ Class BEGungnir : BEWeapon {
 
 Class BEMjolnir : BEWeapon {
 	BEMjolnir() : base() {
-		$this.Name               = 'Mjolnir'
-		$this.MapObjName         = 'mjolnir'
-		$this.PurchasePrice      = 5200
-		$this.SellPrice          = 2600
-		$this.TargetStats        = @{
-			[StatId]::Attack = 130
+		$this.Name          = 'Mjolnir'
+		$this.MapObjName    = 'mjolnir'
+		$this.PurchasePrice = 5200
+		$this.SellPrice     = 2600
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 130
 			[StatId]::MagicAttack = 60
 		}
 		$this.CanAddToInventory  = $true
@@ -11629,12 +11749,12 @@ Class BEMjolnir : BEWeapon {
 
 Class BEMasamune : BEWeapon {
 	BEMasamune() : base() {
-		$this.Name               = 'Masamune'
-		$this.MapObjName         = 'masamune'
-		$this.PurchasePrice      = 4500
-		$this.SellPrice          = 2250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 110
+		$this.Name          = 'Masamune'
+		$this.MapObjName    = 'masamune'
+		$this.PurchasePrice = 4500
+		$this.SellPrice     = 2250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 110
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -11646,12 +11766,12 @@ Class BEMasamune : BEWeapon {
 
 Class BEAsclepius : BEWeapon {
 	BEAsclepius() : base() {
-		$this.Name               = 'Asclepius'
-		$this.MapObjName         = 'asclepius'
-		$this.PurchasePrice      = 4000
-		$this.SellPrice          = 2000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 20
+		$this.Name          = 'Asclepius'
+		$this.MapObjName    = 'asclepius'
+		$this.PurchasePrice = 4000
+		$this.SellPrice     = 2000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 20
 			[StatId]::MagicAttack = 100
 		}
 		$this.CanAddToInventory  = $true
@@ -11663,12 +11783,12 @@ Class BEAsclepius : BEWeapon {
 
 Class BEYewBow : BEWeapon {
 	BEYewBow() : base() {
-		$this.Name               = 'Yew Bow'
-		$this.MapObjName         = 'yewbow'
-		$this.PurchasePrice      = 4200
-		$this.SellPrice          = 2100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 105
+		$this.Name          = 'Yew Bow'
+		$this.MapObjName    = 'yewbow'
+		$this.PurchasePrice = 4200
+		$this.SellPrice     = 2100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 105
 			[StatId]::MagicAttack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -11680,11 +11800,11 @@ Class BEYewBow : BEWeapon {
 
 Class BEAegisShield : BEWeapon {
 	BEAegisShield() : base() {
-		$this.Name               = 'Aegis Shield'
-		$this.MapObjName         = 'aegisshield'
-		$this.PurchasePrice      = 3500
-		$this.SellPrice          = 1750
-		$this.TargetStats        = @{
+		$this.Name          = 'Aegis Shield'
+		$this.MapObjName    = 'aegisshield'
+		$this.PurchasePrice = 3500
+		$this.SellPrice     = 1750
+		$this.TargetStats   = @{
 		}
 		$this.CanAddToInventory  = $true
 		$this.ExamineString      = 'A divine shield that reflects all magical attacks.'
@@ -11695,12 +11815,12 @@ Class BEAegisShield : BEWeapon {
 
 Class BEValhallaAxe : BEWeapon {
 	BEValhallaAxe() : base() {
-		$this.Name               = 'Valhalla Axe'
-		$this.MapObjName         = 'valhallaaxe'
-		$this.PurchasePrice      = 4700
-		$this.SellPrice          = 2350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 125
+		$this.Name          = 'Valhalla Axe'
+		$this.MapObjName    = 'valhallaaxe'
+		$this.PurchasePrice = 4700
+		$this.SellPrice     = 2350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 125
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -11712,11 +11832,11 @@ Class BEValhallaAxe : BEWeapon {
 
 Class BESoulEdge : BEWeapon {
 	BESoulEdge() : base() {
-		$this.Name               = 'Soul Edge'
-		$this.MapObjName         = 'souledge'
-		$this.PurchasePrice      = 4900
-		$this.SellPrice          = 2450
-		$this.TargetStats        = @{
+		$this.Name          = 'Soul Edge'
+		$this.MapObjName    = 'souledge'
+		$this.PurchasePrice = 4900
+		$this.SellPrice     = 2450
+		$this.TargetStats   = @{
 			[StatId]::Attack = 140
 		}
 		$this.CanAddToInventory  = $true
@@ -11728,11 +11848,11 @@ Class BESoulEdge : BEWeapon {
 
 Class BEDragonClaw : BEWeapon {
 	BEDragonClaw() : base() {
-		$this.Name               = 'Dragon Claw'
-		$this.MapObjName         = 'dragonclaw'
-		$this.PurchasePrice      = 4600
-		$this.SellPrice          = 2300
-		$this.TargetStats        = @{
+		$this.Name          = 'Dragon Claw'
+		$this.MapObjName    = 'dragonclaw'
+		$this.PurchasePrice = 4600
+		$this.SellPrice     = 2300
+		$this.TargetStats   = @{
 			[StatId]::Attack = 118
 		}
 		$this.CanAddToInventory  = $true
@@ -11744,12 +11864,12 @@ Class BEDragonClaw : BEWeapon {
 
 Class BERuneblade : BEWeapon {
 	BERuneblade() : base() {
-		$this.Name               = 'Runeblade'
-		$this.MapObjName         = 'runeblade'
-		$this.PurchasePrice      = 3800
-		$this.SellPrice          = 1900
-		$this.TargetStats        = @{
-			[StatId]::Attack = 90
+		$this.Name          = 'Runeblade'
+		$this.MapObjName    = 'runeblade'
+		$this.PurchasePrice = 3800
+		$this.SellPrice     = 1900
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 90
 			[StatId]::MagicAttack = 35
 		}
 		$this.CanAddToInventory  = $true
@@ -11761,12 +11881,12 @@ Class BERuneblade : BEWeapon {
 
 Class BEOrbofSouls : BEWeapon {
 	BEOrbofSouls() : base() {
-		$this.Name               = 'Orb of Souls'
-		$this.MapObjName         = 'orbofsouls'
-		$this.PurchasePrice      = 3600
-		$this.SellPrice          = 1800
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Orb of Souls'
+		$this.MapObjName    = 'orbofsouls'
+		$this.PurchasePrice = 3600
+		$this.SellPrice     = 1800
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 90
 		}
 		$this.CanAddToInventory  = $true
@@ -11778,12 +11898,12 @@ Class BEOrbofSouls : BEWeapon {
 
 Class BEChaosBow : BEWeapon {
 	BEChaosBow() : base() {
-		$this.Name               = 'Chaos Bow'
-		$this.MapObjName         = 'chaosbow'
-		$this.PurchasePrice      = 4000
-		$this.SellPrice          = 2000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 95
+		$this.Name          = 'Chaos Bow'
+		$this.MapObjName    = 'chaosbow'
+		$this.PurchasePrice = 4000
+		$this.SellPrice     = 2000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 95
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -11795,11 +11915,11 @@ Class BEChaosBow : BEWeapon {
 
 Class BEWorldBreaker : BEWeapon {
 	BEWorldBreaker() : base() {
-		$this.Name               = 'World Breaker'
-		$this.MapObjName         = 'worldbreaker'
-		$this.PurchasePrice      = 5500
-		$this.SellPrice          = 2750
-		$this.TargetStats        = @{
+		$this.Name          = 'World Breaker'
+		$this.MapObjName    = 'worldbreaker'
+		$this.PurchasePrice = 5500
+		$this.SellPrice     = 2750
+		$this.TargetStats   = @{
 			[StatId]::Attack = 150
 		}
 		$this.CanAddToInventory  = $true
@@ -11811,12 +11931,12 @@ Class BEWorldBreaker : BEWeapon {
 
 Class BEEtherealStaff : BEWeapon {
 	BEEtherealStaff() : base() {
-		$this.Name               = 'Ethereal Staff'
-		$this.MapObjName         = 'etherealstaff'
-		$this.PurchasePrice      = 4300
-		$this.SellPrice          = 2150
-		$this.TargetStats        = @{
-			[StatId]::Attack = 15
+		$this.Name          = 'Ethereal Staff'
+		$this.MapObjName    = 'etherealstaff'
+		$this.PurchasePrice = 4300
+		$this.SellPrice     = 2150
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 15
 			[StatId]::MagicAttack = 110
 		}
 		$this.CanAddToInventory  = $true
@@ -11828,12 +11948,12 @@ Class BEEtherealStaff : BEWeapon {
 
 Class BEPhoenixFeatherDagger : BEWeapon {
 	BEPhoenixFeatherDagger() : base() {
-		$this.Name               = 'Phoenix Feather Dagger'
-		$this.MapObjName         = 'phoenixfeatherdagger'
-		$this.PurchasePrice      = 3900
-		$this.SellPrice          = 1950
-		$this.TargetStats        = @{
-			[StatId]::Attack = 90
+		$this.Name          = 'Phoenix Feather Dagger'
+		$this.MapObjName    = 'phoenixfeatherdagger'
+		$this.PurchasePrice = 3900
+		$this.SellPrice     = 1950
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 90
 			[StatId]::MagicAttack = 25
 		}
 		$this.CanAddToInventory  = $true
@@ -11845,12 +11965,12 @@ Class BEPhoenixFeatherDagger : BEWeapon {
 
 Class BEGravityAxe : BEWeapon {
 	BEGravityAxe() : base() {
-		$this.Name               = 'Gravity Axe'
-		$this.MapObjName         = 'gravityaxe'
-		$this.PurchasePrice      = 4400
-		$this.SellPrice          = 2200
-		$this.TargetStats        = @{
-			[StatId]::Attack = 110
+		$this.Name          = 'Gravity Axe'
+		$this.MapObjName    = 'gravityaxe'
+		$this.PurchasePrice = 4400
+		$this.SellPrice     = 2200
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 110
 			[StatId]::MagicAttack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -11862,12 +11982,12 @@ Class BEGravityAxe : BEWeapon {
 
 Class BEDreamcatcherStaff : BEWeapon {
 	BEDreamcatcherStaff() : base() {
-		$this.Name               = 'Dreamcatcher Staff'
-		$this.MapObjName         = 'dreamcatcherstaff'
-		$this.PurchasePrice      = 3700
-		$this.SellPrice          = 1850
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Dreamcatcher Staff'
+		$this.MapObjName    = 'dreamcatcherstaff'
+		$this.PurchasePrice = 3700
+		$this.SellPrice     = 1850
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 85
 		}
 		$this.CanAddToInventory  = $true
@@ -11879,12 +11999,12 @@ Class BEDreamcatcherStaff : BEWeapon {
 
 Class BEHolyAvenger : BEWeapon {
 	BEHolyAvenger() : base() {
-		$this.Name               = 'Holy Avenger'
-		$this.MapObjName         = 'holyavenger'
-		$this.PurchasePrice      = 4100
-		$this.SellPrice          = 2050
-		$this.TargetStats        = @{
-			[StatId]::Attack = 100
+		$this.Name          = 'Holy Avenger'
+		$this.MapObjName    = 'holyavenger'
+		$this.PurchasePrice = 4100
+		$this.SellPrice     = 2050
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 100
 			[StatId]::MagicAttack = 40
 		}
 		$this.CanAddToInventory  = $true
@@ -11896,12 +12016,12 @@ Class BEHolyAvenger : BEWeapon {
 
 Class BEStormbringer : BEWeapon {
 	BEStormbringer() : base() {
-		$this.Name               = 'Stormbringer'
-		$this.MapObjName         = 'stormbringer'
-		$this.PurchasePrice      = 4300
-		$this.SellPrice          = 2150
-		$this.TargetStats        = @{
-			[StatId]::Attack = 105
+		$this.Name          = 'Stormbringer'
+		$this.MapObjName    = 'stormbringer'
+		$this.PurchasePrice = 4300
+		$this.SellPrice     = 2150
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 105
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -11913,12 +12033,12 @@ Class BEStormbringer : BEWeapon {
 
 Class BESunforgedBlade : BEWeapon {
 	BESunforgedBlade() : base() {
-		$this.Name               = 'Sunforged Blade'
-		$this.MapObjName         = 'sunforgedblade'
-		$this.PurchasePrice      = 4200
-		$this.SellPrice          = 2100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 102
+		$this.Name          = 'Sunforged Blade'
+		$this.MapObjName    = 'sunforgedblade'
+		$this.PurchasePrice = 4200
+		$this.SellPrice     = 2100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 102
 			[StatId]::MagicAttack = 28
 		}
 		$this.CanAddToInventory  = $true
@@ -11930,12 +12050,12 @@ Class BESunforgedBlade : BEWeapon {
 
 Class BEMoonpetalBow : BEWeapon {
 	BEMoonpetalBow() : base() {
-		$this.Name               = 'Moonpetal Bow'
-		$this.MapObjName         = 'moonpetalbow'
-		$this.PurchasePrice      = 3900
-		$this.SellPrice          = 1950
-		$this.TargetStats        = @{
-			[StatId]::Attack = 98
+		$this.Name          = 'Moonpetal Bow'
+		$this.MapObjName    = 'moonpetalbow'
+		$this.PurchasePrice = 3900
+		$this.SellPrice     = 1950
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 98
 			[StatId]::MagicAttack = 22
 		}
 		$this.CanAddToInventory  = $true
@@ -11947,12 +12067,12 @@ Class BEMoonpetalBow : BEWeapon {
 
 Class BEChronoStaff : BEWeapon {
 	BEChronoStaff() : base() {
-		$this.Name               = 'Chrono Staff'
-		$this.MapObjName         = 'chronostaff'
-		$this.PurchasePrice      = 4500
-		$this.SellPrice          = 2250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 18
+		$this.Name          = 'Chrono Staff'
+		$this.MapObjName    = 'chronostaff'
+		$this.PurchasePrice = 4500
+		$this.SellPrice     = 2250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 18
 			[StatId]::MagicAttack = 120
 		}
 		$this.CanAddToInventory  = $true
@@ -11964,11 +12084,11 @@ Class BEChronoStaff : BEWeapon {
 
 Class BEDragonboneAxe : BEWeapon {
 	BEDragonboneAxe() : base() {
-		$this.Name               = 'Dragonbone Axe'
-		$this.MapObjName         = 'dragonboneaxe'
-		$this.PurchasePrice      = 4600
-		$this.SellPrice          = 2300
-		$this.TargetStats        = @{
+		$this.Name          = 'Dragonbone Axe'
+		$this.MapObjName    = 'dragonboneaxe'
+		$this.PurchasePrice = 4600
+		$this.SellPrice     = 2300
+		$this.TargetStats   = @{
 			[StatId]::Attack = 112
 		}
 		$this.CanAddToInventory  = $true
@@ -11980,12 +12100,12 @@ Class BEDragonboneAxe : BEWeapon {
 
 Class BEStarfallRod : BEWeapon {
 	BEStarfallRod() : base() {
-		$this.Name               = 'Starfall Rod'
-		$this.MapObjName         = 'starfallrod'
-		$this.PurchasePrice      = 4700
-		$this.SellPrice          = 2350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 25
+		$this.Name          = 'Starfall Rod'
+		$this.MapObjName    = 'starfallrod'
+		$this.PurchasePrice = 4700
+		$this.SellPrice     = 2350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 25
 			[StatId]::MagicAttack = 130
 		}
 		$this.CanAddToInventory  = $true
@@ -11997,12 +12117,12 @@ Class BEStarfallRod : BEWeapon {
 
 Class BEVoidwalkerBlade : BEWeapon {
 	BEVoidwalkerBlade() : base() {
-		$this.Name               = 'Voidwalker Blade'
-		$this.MapObjName         = 'voidwalkerblade'
-		$this.PurchasePrice      = 4000
-		$this.SellPrice          = 2000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 95
+		$this.Name          = 'Voidwalker Blade'
+		$this.MapObjName    = 'voidwalkerblade'
+		$this.PurchasePrice = 4000
+		$this.SellPrice     = 2000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 95
 			[StatId]::MagicAttack = 35
 		}
 		$this.CanAddToInventory  = $true
@@ -12014,12 +12134,12 @@ Class BEVoidwalkerBlade : BEWeapon {
 
 Class BEWhisperwindBow : BEWeapon {
 	BEWhisperwindBow() : base() {
-		$this.Name               = 'Whisperwind Bow'
-		$this.MapObjName         = 'whisperwindbow'
-		$this.PurchasePrice      = 3800
-		$this.SellPrice          = 1900
-		$this.TargetStats        = @{
-			[StatId]::Attack = 92
+		$this.Name          = 'Whisperwind Bow'
+		$this.MapObjName    = 'whisperwindbow'
+		$this.PurchasePrice = 3800
+		$this.SellPrice     = 1900
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 92
 			[StatId]::MagicAttack = 18
 		}
 		$this.CanAddToInventory  = $true
@@ -12031,12 +12151,12 @@ Class BEWhisperwindBow : BEWeapon {
 
 Class BEEmberStaff : BEWeapon {
 	BEEmberStaff() : base() {
-		$this.Name               = 'Ember Staff'
-		$this.MapObjName         = 'emberstaff'
-		$this.PurchasePrice      = 3700
-		$this.SellPrice          = 1850
-		$this.TargetStats        = @{
-			[StatId]::Attack = 12
+		$this.Name          = 'Ember Staff'
+		$this.MapObjName    = 'emberstaff'
+		$this.PurchasePrice = 3700
+		$this.SellPrice     = 1850
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 12
 			[StatId]::MagicAttack = 88
 		}
 		$this.CanAddToInventory  = $true
@@ -12048,12 +12168,12 @@ Class BEEmberStaff : BEWeapon {
 
 Class BEGlacialBlade : BEWeapon {
 	BEGlacialBlade() : base() {
-		$this.Name               = 'Glacial Blade'
-		$this.MapObjName         = 'glacialblade'
-		$this.PurchasePrice      = 4100
-		$this.SellPrice          = 2050
-		$this.TargetStats        = @{
-			[StatId]::Attack = 100
+		$this.Name          = 'Glacial Blade'
+		$this.MapObjName    = 'glacialblade'
+		$this.PurchasePrice = 4100
+		$this.SellPrice     = 2050
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 100
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -12065,12 +12185,12 @@ Class BEGlacialBlade : BEWeapon {
 
 Class BETempestSpear : BEWeapon {
 	BETempestSpear() : base() {
-		$this.Name               = 'Tempest Spear'
-		$this.MapObjName         = 'tempestspear'
-		$this.PurchasePrice      = 3900
-		$this.SellPrice          = 1950
-		$this.TargetStats        = @{
-			[StatId]::Attack = 98
+		$this.Name          = 'Tempest Spear'
+		$this.MapObjName    = 'tempestspear'
+		$this.PurchasePrice = 3900
+		$this.SellPrice     = 1950
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 98
 			[StatId]::MagicAttack = 25
 		}
 		$this.CanAddToInventory  = $true
@@ -12082,12 +12202,12 @@ Class BETempestSpear : BEWeapon {
 
 Class BEOraclesStaff : BEWeapon {
 	BEOraclesStaff() : base() {
-		$this.Name               = 'Oracle''s Staff'
-		$this.MapObjName         = 'oraclesstaff'
-		$this.PurchasePrice      = 4200
-		$this.SellPrice          = 2100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 15
+		$this.Name          = 'Oracle''s Staff'
+		$this.MapObjName    = 'oraclesstaff'
+		$this.PurchasePrice = 4200
+		$this.SellPrice     = 2100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 15
 			[StatId]::MagicAttack = 105
 		}
 		$this.CanAddToInventory  = $true
@@ -12099,12 +12219,12 @@ Class BEOraclesStaff : BEWeapon {
 
 Class BEInfernoAxe : BEWeapon {
 	BEInfernoAxe() : base() {
-		$this.Name               = 'Inferno Axe'
-		$this.MapObjName         = 'infernoaxe'
-		$this.PurchasePrice      = 4800
-		$this.SellPrice          = 2400
-		$this.TargetStats        = @{
-			[StatId]::Attack = 120
+		$this.Name          = 'Inferno Axe'
+		$this.MapObjName    = 'infernoaxe'
+		$this.PurchasePrice = 4800
+		$this.SellPrice     = 2400
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 120
 			[StatId]::MagicAttack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -12116,12 +12236,12 @@ Class BEInfernoAxe : BEWeapon {
 
 Class BEShadowfangDagger : BEWeapon {
 	BEShadowfangDagger() : base() {
-		$this.Name               = 'Shadowfang Dagger'
-		$this.MapObjName         = 'shadowfangdagger'
-		$this.PurchasePrice      = 3500
-		$this.SellPrice          = 1750
-		$this.TargetStats        = @{
-			[StatId]::Attack = 85
+		$this.Name          = 'Shadowfang Dagger'
+		$this.MapObjName    = 'shadowfangdagger'
+		$this.PurchasePrice = 3500
+		$this.SellPrice     = 1750
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 85
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -12133,12 +12253,12 @@ Class BEShadowfangDagger : BEWeapon {
 
 Class BEAuraBlade : BEWeapon {
 	BEAuraBlade() : base() {
-		$this.Name               = 'Aura Blade'
-		$this.MapObjName         = 'aurablade'
-		$this.PurchasePrice      = 4400
-		$this.SellPrice          = 2200
-		$this.TargetStats        = @{
-			[StatId]::Attack = 108
+		$this.Name          = 'Aura Blade'
+		$this.MapObjName    = 'aurablade'
+		$this.PurchasePrice = 4400
+		$this.SellPrice     = 2200
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 108
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -12150,12 +12270,12 @@ Class BEAuraBlade : BEWeapon {
 
 Class BESoulbinderStaff : BEWeapon {
 	BESoulbinderStaff() : base() {
-		$this.Name               = 'Soulbinder Staff'
-		$this.MapObjName         = 'soulbinderstaff'
-		$this.PurchasePrice      = 4600
-		$this.SellPrice          = 2300
-		$this.TargetStats        = @{
-			[StatId]::Attack = 18
+		$this.Name          = 'Soulbinder Staff'
+		$this.MapObjName    = 'soulbinderstaff'
+		$this.PurchasePrice = 4600
+		$this.SellPrice     = 2300
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 18
 			[StatId]::MagicAttack = 115
 		}
 		$this.CanAddToInventory  = $true
@@ -12167,12 +12287,12 @@ Class BESoulbinderStaff : BEWeapon {
 
 Class BEThunderclapHammer : BEWeapon {
 	BEThunderclapHammer() : base() {
-		$this.Name               = 'Thunderclap Hammer'
-		$this.MapObjName         = 'thunderclaphammer'
-		$this.PurchasePrice      = 4900
-		$this.SellPrice          = 2450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 128
+		$this.Name          = 'Thunderclap Hammer'
+		$this.MapObjName    = 'thunderclaphammer'
+		$this.PurchasePrice = 4900
+		$this.SellPrice     = 2450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 128
 			[StatId]::MagicAttack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -12184,12 +12304,12 @@ Class BEThunderclapHammer : BEWeapon {
 
 Class BEEmeraldBow : BEWeapon {
 	BEEmeraldBow() : base() {
-		$this.Name               = 'Emerald Bow'
-		$this.MapObjName         = 'emeraldbow'
-		$this.PurchasePrice      = 4100
-		$this.SellPrice          = 2050
-		$this.TargetStats        = @{
-			[StatId]::Attack = 102
+		$this.Name          = 'Emerald Bow'
+		$this.MapObjName    = 'emeraldbow'
+		$this.PurchasePrice = 4100
+		$this.SellPrice     = 2050
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 102
 			[StatId]::MagicAttack = 15
 		}
 		$this.CanAddToInventory  = $true
@@ -12201,12 +12321,12 @@ Class BEEmeraldBow : BEWeapon {
 
 Class BECrimsonScythe : BEWeapon {
 	BECrimsonScythe() : base() {
-		$this.Name               = 'Crimson Scythe'
-		$this.MapObjName         = 'crimsonscythe'
-		$this.PurchasePrice      = 4700
-		$this.SellPrice          = 2350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 115
+		$this.Name          = 'Crimson Scythe'
+		$this.MapObjName    = 'crimsonscythe'
+		$this.PurchasePrice = 4700
+		$this.SellPrice     = 2350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 115
 			[StatId]::MagicAttack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -12218,12 +12338,12 @@ Class BECrimsonScythe : BEWeapon {
 
 Class BEZephyrBow : BEWeapon {
 	BEZephyrBow() : base() {
-		$this.Name               = 'Zephyr Bow'
-		$this.MapObjName         = 'zephyrbow'
-		$this.PurchasePrice      = 4300
-		$this.SellPrice          = 2150
-		$this.TargetStats        = @{
-			[StatId]::Attack = 105
+		$this.Name          = 'Zephyr Bow'
+		$this.MapObjName    = 'zephyrbow'
+		$this.PurchasePrice = 4300
+		$this.SellPrice     = 2150
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 105
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -12235,11 +12355,11 @@ Class BEZephyrBow : BEWeapon {
 
 Class BEStoneGolemHammer : BEWeapon {
 	BEStoneGolemHammer() : base() {
-		$this.Name               = 'Stone Golem Hammer'
-		$this.MapObjName         = 'stonegolemhammer'
-		$this.PurchasePrice      = 5000
-		$this.SellPrice          = 2500
-		$this.TargetStats        = @{
+		$this.Name          = 'Stone Golem Hammer'
+		$this.MapObjName    = 'stonegolemhammer'
+		$this.PurchasePrice = 5000
+		$this.SellPrice     = 2500
+		$this.TargetStats   = @{
 			[StatId]::Attack = 135
 		}
 		$this.CanAddToInventory  = $true
@@ -12251,12 +12371,12 @@ Class BEStoneGolemHammer : BEWeapon {
 
 Class BEStarfallStaff : BEWeapon {
 	BEStarfallStaff() : base() {
-		$this.Name               = 'Starfall Staff'
-		$this.MapObjName         = 'starfallstaff'
-		$this.PurchasePrice      = 4800
-		$this.SellPrice          = 2400
-		$this.TargetStats        = @{
-			[StatId]::Attack = 22
+		$this.Name          = 'Starfall Staff'
+		$this.MapObjName    = 'starfallstaff'
+		$this.PurchasePrice = 4800
+		$this.SellPrice     = 2400
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 22
 			[StatId]::MagicAttack = 125
 		}
 		$this.CanAddToInventory  = $true
@@ -12268,12 +12388,12 @@ Class BEStarfallStaff : BEWeapon {
 
 Class BEAbyssalBlade : BEWeapon {
 	BEAbyssalBlade() : base() {
-		$this.Name               = 'Abyssal Blade'
-		$this.MapObjName         = 'abyssalblade'
-		$this.PurchasePrice      = 4500
-		$this.SellPrice          = 2250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 110
+		$this.Name          = 'Abyssal Blade'
+		$this.MapObjName    = 'abyssalblade'
+		$this.PurchasePrice = 4500
+		$this.SellPrice     = 2250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 110
 			[StatId]::MagicAttack = 40
 		}
 		$this.CanAddToInventory  = $true
@@ -12285,12 +12405,12 @@ Class BEAbyssalBlade : BEWeapon {
 
 Class BESeraphicBlade : BEWeapon {
 	BESeraphicBlade() : base() {
-		$this.Name               = 'Seraphic Blade'
-		$this.MapObjName         = 'seraphicblade'
-		$this.PurchasePrice      = 4900
-		$this.SellPrice          = 2450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 118
+		$this.Name          = 'Seraphic Blade'
+		$this.MapObjName    = 'seraphicblade'
+		$this.PurchasePrice = 4900
+		$this.SellPrice     = 2450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 118
 			[StatId]::MagicAttack = 45
 		}
 		$this.CanAddToInventory  = $true
@@ -12302,12 +12422,12 @@ Class BESeraphicBlade : BEWeapon {
 
 Class BEInfernalAxe : BEWeapon {
 	BEInfernalAxe() : base() {
-		$this.Name               = 'Infernal Axe'
-		$this.MapObjName         = 'infernalaxe'
-		$this.PurchasePrice      = 5100
-		$this.SellPrice          = 2550
-		$this.TargetStats        = @{
-			[StatId]::Attack = 130
+		$this.Name          = 'Infernal Axe'
+		$this.MapObjName    = 'infernalaxe'
+		$this.PurchasePrice = 5100
+		$this.SellPrice     = 2550
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 130
 			[StatId]::MagicAttack = 25
 		}
 		$this.CanAddToInventory  = $true
@@ -12319,12 +12439,12 @@ Class BEInfernalAxe : BEWeapon {
 
 Class BEVortexStaff : BEWeapon {
 	BEVortexStaff() : base() {
-		$this.Name               = 'Vortex Staff'
-		$this.MapObjName         = 'vortexstaff'
-		$this.PurchasePrice      = 4400
-		$this.SellPrice          = 2200
-		$this.TargetStats        = @{
-			[StatId]::Attack = 20
+		$this.Name          = 'Vortex Staff'
+		$this.MapObjName    = 'vortexstaff'
+		$this.PurchasePrice = 4400
+		$this.SellPrice     = 2200
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 20
 			[StatId]::MagicAttack = 110
 		}
 		$this.CanAddToInventory  = $true
@@ -12336,11 +12456,11 @@ Class BEVortexStaff : BEWeapon {
 
 Class BEGolemSlayer : BEWeapon {
 	BEGolemSlayer() : base() {
-		$this.Name               = 'Golem Slayer'
-		$this.MapObjName         = 'golemslayer'
-		$this.PurchasePrice      = 3600
-		$this.SellPrice          = 1800
-		$this.TargetStats        = @{
+		$this.Name          = 'Golem Slayer'
+		$this.MapObjName    = 'golemslayer'
+		$this.PurchasePrice = 3600
+		$this.SellPrice     = 1800
+		$this.TargetStats   = @{
 			[StatId]::Attack = 90
 		}
 		$this.CanAddToInventory  = $true
@@ -12352,12 +12472,12 @@ Class BEGolemSlayer : BEWeapon {
 
 Class BEDivineRod : BEWeapon {
 	BEDivineRod() : base() {
-		$this.Name               = 'Divine Rod'
-		$this.MapObjName         = 'divinerod'
-		$this.PurchasePrice      = 3800
-		$this.SellPrice          = 1900
-		$this.TargetStats        = @{
-			[StatId]::Attack = 10
+		$this.Name          = 'Divine Rod'
+		$this.MapObjName    = 'divinerod'
+		$this.PurchasePrice = 3800
+		$this.SellPrice     = 1900
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 10
 			[StatId]::MagicAttack = 95
 		}
 		$this.CanAddToInventory  = $true
@@ -12369,11 +12489,11 @@ Class BEDivineRod : BEWeapon {
 
 Class BEBehemothClub : BEWeapon {
 	BEBehemothClub() : base() {
-		$this.Name               = 'Behemoth Club'
-		$this.MapObjName         = 'behemothclub'
-		$this.PurchasePrice      = 5200
-		$this.SellPrice          = 2600
-		$this.TargetStats        = @{
+		$this.Name          = 'Behemoth Club'
+		$this.MapObjName    = 'behemothclub'
+		$this.PurchasePrice = 5200
+		$this.SellPrice     = 2600
+		$this.TargetStats   = @{
 			[StatId]::Attack = 145
 		}
 		$this.CanAddToInventory  = $true
@@ -12385,12 +12505,12 @@ Class BEBehemothClub : BEWeapon {
 
 Class BESoulrend : BEWeapon {
 	BESoulrend() : base() {
-		$this.Name               = 'Soulrend'
-		$this.MapObjName         = 'soulrend'
-		$this.PurchasePrice      = 5300
-		$this.SellPrice          = 2650
-		$this.TargetStats        = @{
-			[StatId]::Attack = 138
+		$this.Name          = 'Soulrend'
+		$this.MapObjName    = 'soulrend'
+		$this.PurchasePrice = 5300
+		$this.SellPrice     = 2650
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 138
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -12402,12 +12522,12 @@ Class BESoulrend : BEWeapon {
 
 Class BEGrimoireStaff : BEWeapon {
 	BEGrimoireStaff() : base() {
-		$this.Name               = 'Grimoire Staff'
-		$this.MapObjName         = 'grimoirestaff'
-		$this.PurchasePrice      = 5000
-		$this.SellPrice          = 2500
-		$this.TargetStats        = @{
-			[StatId]::Attack = 25
+		$this.Name          = 'Grimoire Staff'
+		$this.MapObjName    = 'grimoirestaff'
+		$this.PurchasePrice = 5000
+		$this.SellPrice     = 2500
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 25
 			[StatId]::MagicAttack = 140
 		}
 		$this.CanAddToInventory  = $true
@@ -12419,12 +12539,12 @@ Class BEGrimoireStaff : BEWeapon {
 
 Class BEArcaneScepter : BEWeapon {
 	BEArcaneScepter() : base() {
-		$this.Name               = 'Arcane Scepter'
-		$this.MapObjName         = 'arcanescepter'
-		$this.PurchasePrice      = 5500
-		$this.SellPrice          = 2750
-		$this.TargetStats        = @{
-			[StatId]::Attack = 30
+		$this.Name          = 'Arcane Scepter'
+		$this.MapObjName    = 'arcanescepter'
+		$this.PurchasePrice = 5500
+		$this.SellPrice     = 2750
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 30
 			[StatId]::MagicAttack = 150
 		}
 		$this.CanAddToInventory  = $true
@@ -12436,12 +12556,12 @@ Class BEArcaneScepter : BEWeapon {
 
 Class BEBladeofAges : BEWeapon {
 	BEBladeofAges() : base() {
-		$this.Name               = 'Blade of Ages'
-		$this.MapObjName         = 'bladeofages'
-		$this.PurchasePrice      = 5800
-		$this.SellPrice          = 2900
-		$this.TargetStats        = @{
-			[StatId]::Attack = 140
+		$this.Name          = 'Blade of Ages'
+		$this.MapObjName    = 'bladeofages'
+		$this.PurchasePrice = 5800
+		$this.SellPrice     = 2900
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 140
 			[StatId]::MagicAttack = 60
 		}
 		$this.CanAddToInventory  = $true
@@ -12453,12 +12573,12 @@ Class BEBladeofAges : BEWeapon {
 
 Class BEWorldTreeBow : BEWeapon {
 	BEWorldTreeBow() : base() {
-		$this.Name               = 'World Tree Bow'
-		$this.MapObjName         = 'worldtreebow'
-		$this.PurchasePrice      = 6000
-		$this.SellPrice          = 3000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 130
+		$this.Name          = 'World Tree Bow'
+		$this.MapObjName    = 'worldtreebow'
+		$this.PurchasePrice = 6000
+		$this.SellPrice     = 3000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 130
 			[StatId]::MagicAttack = 40
 		}
 		$this.CanAddToInventory  = $true
@@ -12470,12 +12590,12 @@ Class BEWorldTreeBow : BEWeapon {
 
 Class BEDragonheartAxe : BEWeapon {
 	BEDragonheartAxe() : base() {
-		$this.Name               = 'Dragonheart Axe'
-		$this.MapObjName         = 'dragonheartaxe'
-		$this.PurchasePrice      = 6200
-		$this.SellPrice          = 3100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 155
+		$this.Name          = 'Dragonheart Axe'
+		$this.MapObjName    = 'dragonheartaxe'
+		$this.PurchasePrice = 6200
+		$this.SellPrice     = 3100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 155
 			[StatId]::MagicAttack = 30
 		}
 		$this.CanAddToInventory  = $true
@@ -12487,12 +12607,12 @@ Class BEDragonheartAxe : BEWeapon {
 
 Class BEStaffofCreation : BEWeapon {
 	BEStaffofCreation() : base() {
-		$this.Name               = 'Staff of Creation'
-		$this.MapObjName         = 'staffofcreation'
-		$this.PurchasePrice      = 5700
-		$this.SellPrice          = 2850
-		$this.TargetStats        = @{
-			[StatId]::Attack = 35
+		$this.Name          = 'Staff of Creation'
+		$this.MapObjName    = 'staffofcreation'
+		$this.PurchasePrice = 5700
+		$this.SellPrice     = 2850
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 35
 			[StatId]::MagicAttack = 160
 		}
 		$this.CanAddToInventory  = $true
@@ -12504,12 +12624,12 @@ Class BEStaffofCreation : BEWeapon {
 
 Class BEStarforgedSword : BEWeapon {
 	BEStarforgedSword() : base() {
-		$this.Name               = 'Starforged Sword'
-		$this.MapObjName         = 'starforgedsword'
-		$this.PurchasePrice      = 6100
-		$this.SellPrice          = 3050
-		$this.TargetStats        = @{
-			[StatId]::Attack = 145
+		$this.Name          = 'Starforged Sword'
+		$this.MapObjName    = 'starforgedsword'
+		$this.PurchasePrice = 6100
+		$this.SellPrice     = 3050
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 145
 			[StatId]::MagicAttack = 70
 		}
 		$this.CanAddToInventory  = $true
@@ -12521,12 +12641,12 @@ Class BEStarforgedSword : BEWeapon {
 
 Class BEPhoenixAshDagger : BEWeapon {
 	BEPhoenixAshDagger() : base() {
-		$this.Name               = 'Phoenix Ash Dagger'
-		$this.MapObjName         = 'phoenixashdagger'
-		$this.PurchasePrice      = 5400
-		$this.SellPrice          = 2700
-		$this.TargetStats        = @{
-			[StatId]::Attack = 125
+		$this.Name          = 'Phoenix Ash Dagger'
+		$this.MapObjName    = 'phoenixashdagger'
+		$this.PurchasePrice = 5400
+		$this.SellPrice     = 2700
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 125
 			[StatId]::MagicAttack = 50
 		}
 		$this.CanAddToInventory  = $true
@@ -12538,12 +12658,12 @@ Class BEPhoenixAshDagger : BEWeapon {
 
 Class BEHammerofJudgment : BEWeapon {
 	BEHammerofJudgment() : base() {
-		$this.Name               = 'Hammer of Judgment'
-		$this.MapObjName         = 'hammerofjudgment'
-		$this.PurchasePrice      = 6300
-		$this.SellPrice          = 3150
-		$this.TargetStats        = @{
-			[StatId]::Attack = 165
+		$this.Name          = 'Hammer of Judgment'
+		$this.MapObjName    = 'hammerofjudgment'
+		$this.PurchasePrice = 6300
+		$this.SellPrice     = 3150
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 165
 			[StatId]::MagicAttack = 20
 		}
 		$this.CanAddToInventory  = $true
@@ -12555,12 +12675,12 @@ Class BEHammerofJudgment : BEWeapon {
 
 Class BEEternitysEmbrace : BEWeapon {
 	BEEternitysEmbrace() : base() {
-		$this.Name               = 'Eternity''s Embrace'
-		$this.MapObjName         = 'eternitysembrace'
-		$this.PurchasePrice      = 5900
-		$this.SellPrice          = 2950
-		$this.TargetStats        = @{
-			[StatId]::Attack = 40
+		$this.Name          = 'Eternity''s Embrace'
+		$this.MapObjName    = 'eternitysembrace'
+		$this.PurchasePrice = 5900
+		$this.SellPrice     = 2950
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 40
 			[StatId]::MagicAttack = 170
 		}
 		$this.CanAddToInventory  = $true
@@ -12572,12 +12692,12 @@ Class BEEternitysEmbrace : BEWeapon {
 
 Class BESoulflameScythe : BEWeapon {
 	BESoulflameScythe() : base() {
-		$this.Name               = 'Soulflame Scythe'
-		$this.MapObjName         = 'soulflamescythe'
-		$this.PurchasePrice      = 6500
-		$this.SellPrice          = 3250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 150
+		$this.Name          = 'Soulflame Scythe'
+		$this.MapObjName    = 'soulflamescythe'
+		$this.PurchasePrice = 6500
+		$this.SellPrice     = 3250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 150
 			[StatId]::MagicAttack = 80
 		}
 		$this.CanAddToInventory  = $true
@@ -12589,12 +12709,12 @@ Class BESoulflameScythe : BEWeapon {
 
 Class BECelestialBow : BEWeapon {
 	BECelestialBow() : base() {
-		$this.Name               = 'Celestial Bow'
-		$this.MapObjName         = 'celestialbow'
-		$this.PurchasePrice      = 6400
-		$this.SellPrice          = 3200
-		$this.TargetStats        = @{
-			[StatId]::Attack = 135
+		$this.Name          = 'Celestial Bow'
+		$this.MapObjName    = 'celestialbow'
+		$this.PurchasePrice = 6400
+		$this.SellPrice     = 3200
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 135
 			[StatId]::MagicAttack = 55
 		}
 		$this.CanAddToInventory  = $true
@@ -12606,12 +12726,12 @@ Class BECelestialBow : BEWeapon {
 
 Class BEAbyssalStaff : BEWeapon {
 	BEAbyssalStaff() : base() {
-		$this.Name               = 'Abyssal Staff'
-		$this.MapObjName         = 'abyssalstaff'
-		$this.PurchasePrice      = 5600
-		$this.SellPrice          = 2800
-		$this.TargetStats        = @{
-			[StatId]::Attack = 32
+		$this.Name          = 'Abyssal Staff'
+		$this.MapObjName    = 'abyssalstaff'
+		$this.PurchasePrice = 5600
+		$this.SellPrice     = 2800
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 32
 			[StatId]::MagicAttack = 155
 		}
 		$this.CanAddToInventory  = $true
@@ -12623,12 +12743,12 @@ Class BEAbyssalStaff : BEWeapon {
 
 Class BEDragonsRoarAxe : BEWeapon {
 	BEDragonsRoarAxe() : base() {
-		$this.Name               = 'Dragon''s Roar Axe'
-		$this.MapObjName         = 'dragonsroaraxe'
-		$this.PurchasePrice      = 6000
-		$this.SellPrice          = 3000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 148
+		$this.Name          = 'Dragon''s Roar Axe'
+		$this.MapObjName    = 'dragonsroaraxe'
+		$this.PurchasePrice = 6000
+		$this.SellPrice     = 3000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 148
 			[StatId]::MagicAttack = 25
 		}
 		$this.CanAddToInventory  = $true
@@ -12640,12 +12760,12 @@ Class BEDragonsRoarAxe : BEWeapon {
 
 Class BELightweaveBlade : BEWeapon {
 	BELightweaveBlade() : base() {
-		$this.Name               = 'Lightweave Blade'
-		$this.MapObjName         = 'lightweaveblade'
-		$this.PurchasePrice      = 5700
-		$this.SellPrice          = 2850
-		$this.TargetStats        = @{
-			[StatId]::Attack = 138
+		$this.Name          = 'Lightweave Blade'
+		$this.MapObjName    = 'lightweaveblade'
+		$this.PurchasePrice = 5700
+		$this.SellPrice     = 2850
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 138
 			[StatId]::MagicAttack = 65
 		}
 		$this.CanAddToInventory  = $true
@@ -12657,11 +12777,11 @@ Class BELightweaveBlade : BEWeapon {
 
 Class BEDoomBringer : BEWeapon {
 	BEDoomBringer() : base() {
-		$this.Name               = 'Doom Bringer'
-		$this.MapObjName         = 'doombringer'
-		$this.PurchasePrice      = 6600
-		$this.SellPrice          = 3300
-		$this.TargetStats        = @{
+		$this.Name          = 'Doom Bringer'
+		$this.MapObjName    = 'doombringer'
+		$this.PurchasePrice = 6600
+		$this.SellPrice     = 3300
+		$this.TargetStats   = @{
 			[StatId]::Attack = 170
 		}
 		$this.CanAddToInventory  = $true
@@ -12673,12 +12793,12 @@ Class BEDoomBringer : BEWeapon {
 
 Class BESpiritKingsStaff : BEWeapon {
 	BESpiritKingsStaff() : base() {
-		$this.Name               = 'Spirit King''s Staff'
-		$this.MapObjName         = 'spiritkingsstaff'
-		$this.PurchasePrice      = 6200
-		$this.SellPrice          = 3100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 45
+		$this.Name          = 'Spirit King''s Staff'
+		$this.MapObjName    = 'spiritkingsstaff'
+		$this.PurchasePrice = 6200
+		$this.SellPrice     = 3100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 45
 			[StatId]::MagicAttack = 175
 		}
 		$this.CanAddToInventory  = $true
@@ -12690,12 +12810,12 @@ Class BESpiritKingsStaff : BEWeapon {
 
 Class BEBladeofRuin : BEWeapon {
 	BEBladeofRuin() : base() {
-		$this.Name               = 'Blade of Ruin'
-		$this.MapObjName         = 'bladeofruin'
-		$this.PurchasePrice      = 6800
-		$this.SellPrice          = 3400
-		$this.TargetStats        = @{
-			[StatId]::Attack = 160
+		$this.Name          = 'Blade of Ruin'
+		$this.MapObjName    = 'bladeofruin'
+		$this.PurchasePrice = 6800
+		$this.SellPrice     = 3400
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 160
 			[StatId]::MagicAttack = 75
 		}
 		$this.CanAddToInventory  = $true
@@ -12707,12 +12827,12 @@ Class BEBladeofRuin : BEWeapon {
 
 Class BEThousandCutsDagger : BEWeapon {
 	BEThousandCutsDagger() : base() {
-		$this.Name               = 'Thousand Cuts Dagger'
-		$this.MapObjName         = 'thousandcutsdagger'
-		$this.PurchasePrice      = 5300
-		$this.SellPrice          = 2650
-		$this.TargetStats        = @{
-			[StatId]::Attack = 120
+		$this.Name          = 'Thousand Cuts Dagger'
+		$this.MapObjName    = 'thousandcutsdagger'
+		$this.PurchasePrice = 5300
+		$this.SellPrice     = 2650
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 120
 			[StatId]::MagicAttack = 45
 		}
 		$this.CanAddToInventory  = $true
@@ -12724,12 +12844,12 @@ Class BEThousandCutsDagger : BEWeapon {
 
 Class BEHammeroftheAncients : BEWeapon {
 	BEHammeroftheAncients() : base() {
-		$this.Name               = 'Hammer of the Ancients'
-		$this.MapObjName         = 'hammeroftheancients'
-		$this.PurchasePrice      = 6700
-		$this.SellPrice          = 3350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 175
+		$this.Name          = 'Hammer of the Ancients'
+		$this.MapObjName    = 'hammeroftheancients'
+		$this.PurchasePrice = 6700
+		$this.SellPrice     = 3350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 175
 			[StatId]::MagicAttack = 10
 		}
 		$this.CanAddToInventory  = $true
@@ -12741,12 +12861,12 @@ Class BEHammeroftheAncients : BEWeapon {
 
 Class BEWorldEnder : BEWeapon {
 	BEWorldEnder() : base() {
-		$this.Name               = 'World Ender'
-		$this.MapObjName         = 'worldender'
-		$this.PurchasePrice      = 7000
-		$this.SellPrice          = 3500
-		$this.TargetStats        = @{
-			[StatId]::Attack = 200
+		$this.Name          = 'World Ender'
+		$this.MapObjName    = 'worldender'
+		$this.PurchasePrice = 7000
+		$this.SellPrice     = 3500
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 200
 			[StatId]::MagicAttack = 100
 		}
 		$this.CanAddToInventory  = $true
@@ -12758,12 +12878,12 @@ Class BEWorldEnder : BEWeapon {
 
 Class BESunstoneBow : BEWeapon {
 	BESunstoneBow() : base() {
-		$this.Name               = 'Sunstone Bow'
-		$this.MapObjName         = 'sunstonebow'
-		$this.PurchasePrice      = 5800
-		$this.SellPrice          = 2900
-		$this.TargetStats        = @{
-			[StatId]::Attack = 128
+		$this.Name          = 'Sunstone Bow'
+		$this.MapObjName    = 'sunstonebow'
+		$this.PurchasePrice = 5800
+		$this.SellPrice     = 2900
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 128
 			[StatId]::MagicAttack = 50
 		}
 		$this.CanAddToInventory  = $true
@@ -12775,12 +12895,12 @@ Class BESunstoneBow : BEWeapon {
 
 Class BEVoidEdge : BEWeapon {
 	BEVoidEdge() : base() {
-		$this.Name               = 'Void Edge'
-		$this.MapObjName         = 'voidedge'
-		$this.PurchasePrice      = 5900
-		$this.SellPrice          = 2950
-		$this.TargetStats        = @{
-			[StatId]::Attack = 142
+		$this.Name          = 'Void Edge'
+		$this.MapObjName    = 'voidedge'
+		$this.PurchasePrice = 5900
+		$this.SellPrice     = 2950
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 142
 			[StatId]::MagicAttack = 68
 		}
 		$this.CanAddToInventory  = $true
@@ -12792,12 +12912,12 @@ Class BEVoidEdge : BEWeapon {
 
 Class BEStaffoftheCosmos : BEWeapon {
 	BEStaffoftheCosmos() : base() {
-		$this.Name               = 'Staff of the Cosmos'
-		$this.MapObjName         = 'staffofthecosmos'
-		$this.PurchasePrice      = 6300
-		$this.SellPrice          = 3150
-		$this.TargetStats        = @{
-			[StatId]::Attack = 48
+		$this.Name          = 'Staff of the Cosmos'
+		$this.MapObjName    = 'staffofthecosmos'
+		$this.PurchasePrice = 6300
+		$this.SellPrice     = 3150
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 48
 			[StatId]::MagicAttack = 180
 		}
 		$this.CanAddToInventory  = $true
@@ -12809,12 +12929,12 @@ Class BEStaffoftheCosmos : BEWeapon {
 
 Class BEDragonsToothSword : BEWeapon {
 	BEDragonsToothSword() : base() {
-		$this.Name               = 'Dragon''s Tooth Sword'
-		$this.MapObjName         = 'dragonstoothsword'
-		$this.PurchasePrice      = 6500
-		$this.SellPrice          = 3250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 152
+		$this.Name          = 'Dragon''s Tooth Sword'
+		$this.MapObjName    = 'dragonstoothsword'
+		$this.PurchasePrice = 6500
+		$this.SellPrice     = 3250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 152
 			[StatId]::MagicAttack = 72
 		}
 		$this.CanAddToInventory  = $true
@@ -12826,12 +12946,12 @@ Class BEDragonsToothSword : BEWeapon {
 
 Class BENetherblade : BEWeapon {
 	BENetherblade() : base() {
-		$this.Name               = 'Netherblade'
-		$this.MapObjName         = 'netherblade'
-		$this.PurchasePrice      = 6700
-		$this.SellPrice          = 3350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 160
+		$this.Name          = 'Netherblade'
+		$this.MapObjName    = 'netherblade'
+		$this.PurchasePrice = 6700
+		$this.SellPrice     = 3350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 160
 			[StatId]::MagicAttack = 85
 		}
 		$this.CanAddToInventory  = $true
@@ -12843,12 +12963,12 @@ Class BENetherblade : BEWeapon {
 
 Class BEStormforgedAxe : BEWeapon {
 	BEStormforgedAxe() : base() {
-		$this.Name               = 'Stormforged Axe'
-		$this.MapObjName         = 'stormforgedaxe'
-		$this.PurchasePrice      = 6100
-		$this.SellPrice          = 3050
-		$this.TargetStats        = @{
-			[StatId]::Attack = 150
+		$this.Name          = 'Stormforged Axe'
+		$this.MapObjName    = 'stormforgedaxe'
+		$this.PurchasePrice = 6100
+		$this.SellPrice     = 3050
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 150
 			[StatId]::MagicAttack = 35
 		}
 		$this.CanAddToInventory  = $true
@@ -12860,12 +12980,12 @@ Class BEStormforgedAxe : BEWeapon {
 
 Class BESoulreaverStaff : BEWeapon {
 	BESoulreaverStaff() : base() {
-		$this.Name               = 'Soulreaver Staff'
-		$this.MapObjName         = 'soulreaverstaff'
-		$this.PurchasePrice      = 6400
-		$this.SellPrice          = 3200
-		$this.TargetStats        = @{
-			[StatId]::Attack = 50
+		$this.Name          = 'Soulreaver Staff'
+		$this.MapObjName    = 'soulreaverstaff'
+		$this.PurchasePrice = 6400
+		$this.SellPrice     = 3200
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 50
 			[StatId]::MagicAttack = 190
 		}
 		$this.CanAddToInventory  = $true
@@ -12877,12 +12997,12 @@ Class BESoulreaverStaff : BEWeapon {
 
 Class BEPhoenixFireSword : BEWeapon {
 	BEPhoenixFireSword() : base() {
-		$this.Name               = 'Phoenix Fire Sword'
-		$this.MapObjName         = 'phoenixfiresword'
-		$this.PurchasePrice      = 6600
-		$this.SellPrice          = 3300
-		$this.TargetStats        = @{
-			[StatId]::Attack = 155
+		$this.Name          = 'Phoenix Fire Sword'
+		$this.MapObjName    = 'phoenixfiresword'
+		$this.PurchasePrice = 6600
+		$this.SellPrice     = 3300
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 155
 			[StatId]::MagicAttack = 78
 		}
 		$this.CanAddToInventory  = $true
@@ -12894,12 +13014,12 @@ Class BEPhoenixFireSword : BEWeapon {
 
 Class BEBlazeofGloryBow : BEWeapon {
 	BEBlazeofGloryBow() : base() {
-		$this.Name               = 'Blaze of Glory Bow'
-		$this.MapObjName         = 'blazeofglorybow'
-		$this.PurchasePrice      = 5700
-		$this.SellPrice          = 2850
-		$this.TargetStats        = @{
-			[StatId]::Attack = 125
+		$this.Name          = 'Blaze of Glory Bow'
+		$this.MapObjName    = 'blazeofglorybow'
+		$this.PurchasePrice = 5700
+		$this.SellPrice     = 2850
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 125
 			[StatId]::MagicAttack = 48
 		}
 		$this.CanAddToInventory  = $true
@@ -12911,12 +13031,12 @@ Class BEBlazeofGloryBow : BEWeapon {
 
 Class BEWintersChillStaff : BEWeapon {
 	BEWintersChillStaff() : base() {
-		$this.Name               = 'Winter''s Chill Staff'
-		$this.MapObjName         = 'winterschillstaff'
-		$this.PurchasePrice      = 6000
-		$this.SellPrice          = 3000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 42
+		$this.Name          = 'Winter''s Chill Staff'
+		$this.MapObjName    = 'winterschillstaff'
+		$this.PurchasePrice = 6000
+		$this.SellPrice     = 3000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 42
 			[StatId]::MagicAttack = 165
 		}
 		$this.CanAddToInventory  = $true
@@ -12928,12 +13048,12 @@ Class BEWintersChillStaff : BEWeapon {
 
 Class BEHammerofCreation : BEWeapon {
 	BEHammerofCreation() : base() {
-		$this.Name               = 'Hammer of Creation'
-		$this.MapObjName         = 'hammerofcreation'
-		$this.PurchasePrice      = 6900
-		$this.SellPrice          = 3450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 180
+		$this.Name          = 'Hammer of Creation'
+		$this.MapObjName    = 'hammerofcreation'
+		$this.PurchasePrice = 6900
+		$this.SellPrice     = 3450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 180
 			[StatId]::MagicAttack = 90
 		}
 		$this.CanAddToInventory  = $true
@@ -12945,12 +13065,12 @@ Class BEHammerofCreation : BEWeapon {
 
 Class BEDragonsBane : BEWeapon {
 	BEDragonsBane() : base() {
-		$this.Name               = 'Dragon''s Bane'
-		$this.MapObjName         = 'dragonsbane'
-		$this.PurchasePrice      = 6200
-		$this.SellPrice          = 3100
-		$this.TargetStats        = @{
-			[StatId]::Attack = 148
+		$this.Name          = 'Dragon''s Bane'
+		$this.MapObjName    = 'dragonsbane'
+		$this.PurchasePrice = 6200
+		$this.SellPrice     = 3100
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 148
 			[StatId]::MagicAttack = 60
 		}
 		$this.CanAddToInventory  = $true
@@ -12962,12 +13082,12 @@ Class BEDragonsBane : BEWeapon {
 
 Class BEWandoftheArchmage : BEWeapon {
 	BEWandoftheArchmage() : base() {
-		$this.Name               = 'Wand of the Archmage'
-		$this.MapObjName         = 'wandofthearchmage'
-		$this.PurchasePrice      = 6800
-		$this.SellPrice          = 3400
-		$this.TargetStats        = @{
-			[StatId]::Attack = 55
+		$this.Name          = 'Wand of the Archmage'
+		$this.MapObjName    = 'wandofthearchmage'
+		$this.PurchasePrice = 6800
+		$this.SellPrice     = 3400
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 55
 			[StatId]::MagicAttack = 200
 		}
 		$this.CanAddToInventory  = $true
@@ -12979,11 +13099,11 @@ Class BEWandoftheArchmage : BEWeapon {
 
 Class BEAegisDefender : BEWeapon {
 	BEAegisDefender() : base() {
-		$this.Name               = 'Aegis Defender'
-		$this.MapObjName         = 'aegisdefender'
-		$this.PurchasePrice      = 5500
-		$this.SellPrice          = 2750
-		$this.TargetStats        = @{
+		$this.Name          = 'Aegis Defender'
+		$this.MapObjName    = 'aegisdefender'
+		$this.PurchasePrice = 5500
+		$this.SellPrice     = 2750
+		$this.TargetStats   = @{
 			[StatId]::Attack = 130
 		}
 		$this.CanAddToInventory  = $true
@@ -12995,12 +13115,12 @@ Class BEAegisDefender : BEWeapon {
 
 Class BEStarcallerAxe : BEWeapon {
 	BEStarcallerAxe() : base() {
-		$this.Name               = 'Starcaller Axe'
-		$this.MapObjName         = 'starcalleraxe'
-		$this.PurchasePrice      = 6300
-		$this.SellPrice          = 3150
-		$this.TargetStats        = @{
-			[StatId]::Attack = 150
+		$this.Name          = 'Starcaller Axe'
+		$this.MapObjName    = 'starcalleraxe'
+		$this.PurchasePrice = 6300
+		$this.SellPrice     = 3150
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 150
 			[StatId]::MagicAttack = 40
 		}
 		$this.CanAddToInventory  = $true
@@ -13012,12 +13132,12 @@ Class BEStarcallerAxe : BEWeapon {
 
 Class BEChronosBlade : BEWeapon {
 	BEChronosBlade() : base() {
-		$this.Name               = 'Chronos Blade'
-		$this.MapObjName         = 'chronosblade'
-		$this.PurchasePrice      = 6500
-		$this.SellPrice          = 3250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 158
+		$this.Name          = 'Chronos Blade'
+		$this.MapObjName    = 'chronosblade'
+		$this.PurchasePrice = 6500
+		$this.SellPrice     = 3250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 158
 			[StatId]::MagicAttack = 70
 		}
 		$this.CanAddToInventory  = $true
@@ -13029,12 +13149,12 @@ Class BEChronosBlade : BEWeapon {
 
 Class BESoulbinderBlade : BEWeapon {
 	BESoulbinderBlade() : base() {
-		$this.Name               = 'Soulbinder Blade'
-		$this.MapObjName         = 'soulbinderblade'
-		$this.PurchasePrice      = 5800
-		$this.SellPrice          = 2900
-		$this.TargetStats        = @{
-			[StatId]::Attack = 135
+		$this.Name          = 'Soulbinder Blade'
+		$this.MapObjName    = 'soulbinderblade'
+		$this.PurchasePrice = 5800
+		$this.SellPrice     = 2900
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 135
 			[StatId]::MagicAttack = 55
 		}
 		$this.CanAddToInventory  = $true
@@ -13046,12 +13166,12 @@ Class BESoulbinderBlade : BEWeapon {
 
 Class BESeraphimStaff : BEWeapon {
 	BESeraphimStaff() : base() {
-		$this.Name               = 'Seraphim Staff'
-		$this.MapObjName         = 'seraphimstaff'
-		$this.PurchasePrice      = 6700
-		$this.SellPrice          = 3350
-		$this.TargetStats        = @{
-			[StatId]::Attack = 45
+		$this.Name          = 'Seraphim Staff'
+		$this.MapObjName    = 'seraphimstaff'
+		$this.PurchasePrice = 6700
+		$this.SellPrice     = 3350
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 45
 			[StatId]::MagicAttack = 195
 		}
 		$this.CanAddToInventory  = $true
@@ -13063,12 +13183,12 @@ Class BESeraphimStaff : BEWeapon {
 
 Class BEDragonfireBow : BEWeapon {
 	BEDragonfireBow() : base() {
-		$this.Name               = 'Dragonfire Bow'
-		$this.MapObjName         = 'dragonfirebow'
-		$this.PurchasePrice      = 6000
-		$this.SellPrice          = 3000
-		$this.TargetStats        = @{
-			[StatId]::Attack = 132
+		$this.Name          = 'Dragonfire Bow'
+		$this.MapObjName    = 'dragonfirebow'
+		$this.PurchasePrice = 6000
+		$this.SellPrice     = 3000
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 132
 			[StatId]::MagicAttack = 52
 		}
 		$this.CanAddToInventory  = $true
@@ -13080,12 +13200,12 @@ Class BEDragonfireBow : BEWeapon {
 
 Class BEFrostbiteAxe : BEWeapon {
 	BEFrostbiteAxe() : base() {
-		$this.Name               = 'Frostbite Axe'
-		$this.MapObjName         = 'frostbiteaxe'
-		$this.PurchasePrice      = 6400
-		$this.SellPrice          = 3200
-		$this.TargetStats        = @{
-			[StatId]::Attack = 153
+		$this.Name          = 'Frostbite Axe'
+		$this.MapObjName    = 'frostbiteaxe'
+		$this.PurchasePrice = 6400
+		$this.SellPrice     = 3200
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 153
 			[StatId]::MagicAttack = 38
 		}
 		$this.CanAddToInventory  = $true
@@ -13097,12 +13217,12 @@ Class BEFrostbiteAxe : BEWeapon {
 
 Class BEWhisperoftheAncients : BEWeapon {
 	BEWhisperoftheAncients() : base() {
-		$this.Name               = 'Whisper of the Ancients'
-		$this.MapObjName         = 'whisperoftheancients'
-		$this.PurchasePrice      = 5400
-		$this.SellPrice          = 2700
-		$this.TargetStats        = @{
-			[StatId]::Attack = 122
+		$this.Name          = 'Whisper of the Ancients'
+		$this.MapObjName    = 'whisperoftheancients'
+		$this.PurchasePrice = 5400
+		$this.SellPrice     = 2700
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 122
 			[StatId]::MagicAttack = 46
 		}
 		$this.CanAddToInventory  = $true
@@ -13114,12 +13234,12 @@ Class BEWhisperoftheAncients : BEWeapon {
 
 Class BEThunderfury : BEWeapon {
 	BEThunderfury() : base() {
-		$this.Name               = 'Thunderfury'
-		$this.MapObjName         = 'thunderfury'
-		$this.PurchasePrice      = 6900
-		$this.SellPrice          = 3450
-		$this.TargetStats        = @{
-			[StatId]::Attack = 165
+		$this.Name          = 'Thunderfury'
+		$this.MapObjName    = 'thunderfury'
+		$this.PurchasePrice = 6900
+		$this.SellPrice     = 3450
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 165
 			[StatId]::MagicAttack = 80
 		}
 		$this.CanAddToInventory  = $true
@@ -13131,12 +13251,12 @@ Class BEThunderfury : BEWeapon {
 
 Class BEAstralScepter : BEWeapon {
 	BEAstralScepter() : base() {
-		$this.Name               = 'Astral Scepter'
-		$this.MapObjName         = 'astralscepter'
-		$this.PurchasePrice      = 6100
-		$this.SellPrice          = 3050
-		$this.TargetStats        = @{
-			[StatId]::Attack = 40
+		$this.Name          = 'Astral Scepter'
+		$this.MapObjName    = 'astralscepter'
+		$this.PurchasePrice = 6100
+		$this.SellPrice     = 3050
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 40
 			[StatId]::MagicAttack = 170
 		}
 		$this.CanAddToInventory  = $true
@@ -13148,12 +13268,12 @@ Class BEAstralScepter : BEWeapon {
 
 Class BEDivineRetribution : BEWeapon {
 	BEDivineRetribution() : base() {
-		$this.Name               = 'Divine Retribution'
-		$this.MapObjName         = 'divineretribution'
-		$this.PurchasePrice      = 7000
-		$this.SellPrice          = 3500
-		$this.TargetStats        = @{
-			[StatId]::Attack = 170
+		$this.Name          = 'Divine Retribution'
+		$this.MapObjName    = 'divineretribution'
+		$this.PurchasePrice = 7000
+		$this.SellPrice     = 3500
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 170
 			[StatId]::MagicAttack = 95
 		}
 		$this.CanAddToInventory  = $true
@@ -13165,12 +13285,12 @@ Class BEDivineRetribution : BEWeapon {
 
 Class BEEmberheartStaff : BEWeapon {
 	BEEmberheartStaff() : base() {
-		$this.Name               = 'Emberheart Staff'
-		$this.MapObjName         = 'emberheartstaff'
-		$this.PurchasePrice      = 5600
-		$this.SellPrice          = 2800
-		$this.TargetStats        = @{
-			[StatId]::Attack = 30
+		$this.Name          = 'Emberheart Staff'
+		$this.MapObjName    = 'emberheartstaff'
+		$this.PurchasePrice = 5600
+		$this.SellPrice     = 2800
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 30
 			[StatId]::MagicAttack = 140
 		}
 		$this.CanAddToInventory  = $true
@@ -13182,11 +13302,11 @@ Class BEEmberheartStaff : BEWeapon {
 
 Class BETitansMight : BEWeapon {
 	BETitansMight() : base() {
-		$this.Name               = 'Titan''s Might'
-		$this.MapObjName         = 'titansmight'
-		$this.PurchasePrice      = 6800
-		$this.SellPrice          = 3400
-		$this.TargetStats        = @{
+		$this.Name          = 'Titan''s Might'
+		$this.MapObjName    = 'titansmight'
+		$this.PurchasePrice = 6800
+		$this.SellPrice     = 3400
+		$this.TargetStats   = @{
 			[StatId]::Attack = 185
 		}
 		$this.CanAddToInventory  = $true
@@ -13198,12 +13318,12 @@ Class BETitansMight : BEWeapon {
 
 Class BECelestialHammer : BEWeapon {
 	BECelestialHammer() : base() {
-		$this.Name               = 'Celestial Hammer'
-		$this.MapObjName         = 'celestialhammer'
-		$this.PurchasePrice      = 6600
-		$this.SellPrice          = 3300
-		$this.TargetStats        = @{
-			[StatId]::Attack = 160
+		$this.Name          = 'Celestial Hammer'
+		$this.MapObjName    = 'celestialhammer'
+		$this.PurchasePrice = 6600
+		$this.SellPrice     = 3300
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 160
 			[StatId]::MagicAttack = 80
 		}
 		$this.CanAddToInventory  = $true
@@ -13215,12 +13335,12 @@ Class BECelestialHammer : BEWeapon {
 
 Class BESpectralBlade : BEWeapon {
 	BESpectralBlade() : base() {
-		$this.Name               = 'Spectral Blade'
-		$this.MapObjName         = 'spectralblade'
-		$this.PurchasePrice      = 5900
-		$this.SellPrice          = 2950
-		$this.TargetStats        = @{
-			[StatId]::Attack = 140
+		$this.Name          = 'Spectral Blade'
+		$this.MapObjName    = 'spectralblade'
+		$this.PurchasePrice = 5900
+		$this.SellPrice     = 2950
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 140
 			[StatId]::MagicAttack = 60
 		}
 		$this.CanAddToInventory  = $true
@@ -13232,12 +13352,12 @@ Class BESpectralBlade : BEWeapon {
 
 Class BEHeartwoodStaff : BEWeapon {
 	BEHeartwoodStaff() : base() {
-		$this.Name               = 'Heartwood Staff'
-		$this.MapObjName         = 'heartwoodstaff'
-		$this.PurchasePrice      = 6500
-		$this.SellPrice          = 3250
-		$this.TargetStats        = @{
-			[StatId]::Attack = 48
+		$this.Name          = 'Heartwood Staff'
+		$this.MapObjName    = 'heartwoodstaff'
+		$this.PurchasePrice = 6500
+		$this.SellPrice     = 3250
+		$this.TargetStats   = @{
+			[StatId]::Attack      = 48
 			[StatId]::MagicAttack = 185
 		}
 		$this.CanAddToInventory  = $true
@@ -13245,6 +13365,40 @@ Class BEHeartwoodStaff : BEWeapon {
 		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
 		$this.TargetGender       = [Gender]::Unisex
 	}
+}
+
+Class BEInfinityIITurtleSword : BEWeapon {
+    BEInfinityIITurtleSword() : base() {
+        $this.Name               = 'Infinity II Turtle Sword'
+        $this.MapObjName         = 'infinityiiturtsword'
+        $this.PurchasePrice      = 750000
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Attack      = 240
+            [StatId]::MagicAttack = 240
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'It spawns 6 turtles that help you, and stay with you.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearSword : BEWeapon {
+    BEBearSword() : base() {
+        $this.Name               = 'Bear Sword'
+        $this.MapObjName         = 'bearsword'
+        $this.PurchasePrice      = 0
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Attack      = 999
+            [StatId]::MagicAttack = 999
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate in fuzzy offense.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Attack]) ATK  +$($this.TargetStats[[StatId]::MagicAttack]) MAT"
+        $this.TargetGender       = [Gender]::Unisex
+    }
 }
 
 #endregion
@@ -19376,6 +19530,40 @@ Class BECosmicLordsHelm : BEHelmet {
 	}
 }
 
+Class BEInfinityIITurtleHelmet : BEHelmet {
+    BEInfinityIITurtleHelmet() : base() {
+        $this.Name               = 'Infinity II Turtle Helmet'
+        $this.MapObjName         = 'infinityiiturttlehelmet'
+        $this.PurchasePrice      = 250000
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 250
+            [StatId]::MagicDefense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'When someone attacks you, that means it spawns 60K turtles!'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearHelmet : BEHelmet {
+    BEBearHelmet() : base() {
+        $this.Name               = 'Bear Helmet'
+        $this.MapObjName         = 'bearhelmet'
+        $this.PurchasePrice      = 0
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 999
+            [StatId]::MagicDefense = 999
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate in fuzzy headwear.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
 #endregion
 
 
@@ -24081,6 +24269,40 @@ Class BEVoidWeaversCuirass : BEArmor {
 	}
 }
 
+Class BEInfinityVITurtleArmor : BEArmor {
+    BEInfinityVITurtleArmor() : base() {
+        $this.Name               = 'Infinity VI Turtle Armor'
+        $this.MapObjName         = 'infinityviturtlearmor'
+        $this.PurchasePrice      = 300000
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 250
+            [StatId]::MagicDefense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'This also evidently spawns 60K turtles too.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearArmor : BEArmor {
+    BEBearArmor() : base() {
+        $this.Name               = 'Bear Armor'
+        $this.MapObjName         = 'beararmor'
+        $this.PurchasePrice      = 0
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 999
+            [StatId]::MagicDefense = 999
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate in fuzzy armor.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
 #endregion
 
 
@@ -24088,6 +24310,7 @@ Class BEVoidWeaversCuirass : BEArmor {
 
 
 #region Pauldrons
+
 Class BEWovenPauldron : BEPauldron {
 	BEWovenPauldron() : base() {
 		$this.Name               = 'Woven Pauldron'
@@ -27649,6 +27872,40 @@ Class BEChaosBringerPauldron : BEPauldron {
 		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
+}
+
+Class BEInfinityCCTurtlePauldron : BEPauldron {
+    BEInfinityCCTurtlePauldron() : base() {
+        $this.Name               = 'Infinity CC Turtle Pauldron'
+        $this.MapObjName         = 'infinityccturtlepauldron'
+        $this.PurchasePrice      = 250000
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 250
+            [StatId]::MagicDefense = 250
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'It spawns 1M trees falling down on their head.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearPauldrons : BEPauldron {
+    BEBearPauldrons() : base() {
+        $this.Name               = 'Bear Pauldrons'
+        $this.MapObjName         = 'bearpauldrons'
+        $this.PurchasePrice      = 0
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 999
+            [StatId]::MagicDefense = 999
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate in fuzzy pauldrons.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+        $this.TargetGender       = [Gender]::Unisex
+    }
 }
 
 #endregion
@@ -34491,6 +34748,42 @@ Class BESunpetalHandguardsIII : BEGauntlets {
 	}
 }
 
+Class BEInfinityCCTurtleGauntlets : BEGauntlets {
+    BEInfinityCCTurtleGauntlets() : base() {
+        $this.Name = 'Infinity CC Turtle Gauntlets'
+        $this.MapObjName = 'infinityccturtlegauntlets'
+        $this.PurchasePrice = 230000
+        $this.SellPrice = 0
+        $this.TargetStats = @{
+            [StatId]::Defense = 250
+            [StatId]::MagicDefense = 250
+            [StatId]::Accuracy = 250
+        }
+        $this.CanAddToInventory = $true
+        $this.ExamineString = 'It sprays out lava.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+        $this.TargetGender = [Gender]::Unisex
+    }
+}
+
+Class BEBearGauntlets : BEGauntlets {
+    BEBearGauntlets() : base() {
+        $this.Name               = 'Bear Gauntlets'
+        $this.MapObjName         = 'beargauntlets'
+        $this.PurchasePrice      = 0
+        $this.SellPrice          = 0
+        $this.TargetStats        = @{
+            [StatId]::Defense      = 999
+            [StatId]::MagicDefense = 999
+            [StatId]::Accuracy     = 999
+        }
+        $this.CanAddToInventory  = $true
+        $this.ExamineString      = 'The ultimate in fuzzy gauntlets.'
+        $this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF  +$($this.TargetStats[[StatId]::Accuracy]) ACC"
+        $this.TargetGender       = [Gender]::Unisex
+    }
+}
+
 #endregion
 
 
@@ -38945,6 +39238,40 @@ Class BEPerseveranceGreaves : BEGreaves {
 		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
 		$this.TargetGender       = [Gender]::Unisex
 	}
+}
+
+Class BEInfinityMTurtleGreaves : BEGreaves {
+    BEInfinityMTurtleGreaves() : base() {
+		$this.Name               = 'Infinity M Turtle Greaves'
+		$this.MapObjName         = 'infinitymturtlegreaves'
+		$this.PurchasePrice      = 750000
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+			[StatId]::Defense = 255
+			[StatId]::MagicDefense = 255
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'They shoot out Minecraft Creepers.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearGreaves : BEGreaves {
+    BEBearGreaves() : base() {
+		$this.Name               = 'Bear Greaves'
+		$this.MapObjName         = 'beargreaves'
+		$this.PurchasePrice      = 0
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+			[StatId]::Defense      = 999
+			[StatId]::MagicDefense = 999
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'The ultimate in fuzzy greaves.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+    }
 }
 
 #endregion
@@ -43404,6 +43731,40 @@ Class BEPerseveranceBoots : BEBoots {
 	}
 }
 
+Class BEInfinityITurtleBoots : BEBoots {
+    BEInfinityITurtleBoots() : base() {
+		$this.Name               = 'Infinity I Turtle Boots'
+		$this.MapObjName         = 'infinityiturtleboots'
+		$this.PurchasePrice      = 370000
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+			[StatId]::Defense = 255
+			[StatId]::MagicDefense = 255
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'They bounce you really high.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearBoots : BEBoots {
+    BEBearBoots() : base() {
+		$this.Name               = 'Bear Boots'
+		$this.MapObjName         = 'bearboots'
+		$this.PurchasePrice      = 0
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+			[StatId]::Defense      = 999
+			[StatId]::MagicDefense = 999
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'The ultimate in fuzzy footwear.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Defense]) DEF  +$($this.TargetStats[[StatId]::MagicDefense]) MDF"
+		$this.TargetGender       = [Gender]::Unisex
+    }
+}
+
 #endregion
 
 
@@ -47559,6 +47920,40 @@ Class BEGravitonCoil : BEJewelry {
 	}
 }
 
+Class BEInfinityIITurtleNecklace : BEJewelry {
+    BEInfinityIITurtleNecklace() : base() {
+		$this.Name               = 'Infinity II Turtle Necklace'
+		$this.MapObjName         = 'infinityiiturtlenecklace'
+		$this.PurchasePrice      = 240000
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+			[StatId]::Speed = 250
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'Because mom will like it if you wear it. And it''s littered with glitter!'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD"
+		$this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearEarrings : BEJewelry {
+    BEBearEarrings() : base() {
+		$this.Name               = 'Bear Earrings'
+		$this.MapObjName         = 'bearearrings'
+		$this.PurchasePrice      = 0
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+			[StatId]::Speed    = 999
+            [StatId]::Accuracy = 999
+            [StatId]::Luck     = 999
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'The ultimate in fuzzy ear accessories.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Speed]) SPD  +$($this.TargetStats[[StatId]::Accuracy]) ACC  +$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+    }
+}
+
 #endregion
 
 
@@ -47954,6 +48349,38 @@ Class BERoyalSentinelCape : BECape {
 		$this.PlayerEffectString = ""
 		$this.TargetGender       = [Gender]::Male
 	}
+}
+
+Class BEInfinityIVTurtleCape : BECape {
+    BEInfinityIVTurtleCape() : base() {
+		$this.Name               = 'Infinity IV Turtle Cape'
+		$this.MapObjName         = 'infinityivturtlecape'
+		$this.PurchasePrice      = 140000
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+            [StatId]::Luck = 250
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'I would give Cici a flower!'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+    }
+}
+
+Class BEBearCape : BECape {
+    BEBearCape() : base() {
+		$this.Name               = 'Bear Cape'
+		$this.MapObjName         = 'bearcape'
+		$this.PurchasePrice      = 0
+		$this.SellPrice          = 0
+		$this.TargetStats        = @{
+            [StatId]::Luck = 999
+		}
+		$this.CanAddToInventory  = $true
+		$this.ExamineString      = 'The ultimate in fuzzy capes.'
+		$this.PlayerEffectString = "+$($this.TargetStats[[StatId]::Luck]) LCK"
+		$this.TargetGender       = [Gender]::Unisex
+    }
 }
 
 #endregion
