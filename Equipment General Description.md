@@ -55,7 +55,7 @@ When creating a new player, they all start off with the same base stats. Selecti
 The whole process of creating a new player would be as follows:
 
 * Enter the player name (limited to 8 characters)
-* Choose the player's gender (male or female)
+* Choose the player's gender
 * Allocate initial bonus points to whichever stats the player wants (accounts for gender bonuses)
 * Choose the player's image (set changes based on gender selection)
 * Choose the player's elemental affinity

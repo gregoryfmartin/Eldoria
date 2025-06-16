@@ -9,7 +9,50 @@ Add-Type -AssemblyName PresentationCore
 
 Set-StrictMode -Version Latest
 
-$PSStyle.Progress.View = 'Classic'
+$PSStyle.Progress.View = 'Minimal'
+
+
+
+
+
+
+
+
+
+###############################################################################
+#
+# TOC
+#
+# TABLE OF CONTENTS
+#
+# YEAH, I KNOW, THIS IS WEIRD. BUT, LARGE FILE PROBLEMS BRUH.
+#
+#
+# S01 - ENUMERATIONS
+# S02 - GLOBAL VARIABLES
+# S02A - THE SCENE IMAGES DEFINITION
+# S02B - THE MAP WARP HANDLER DEFINITION
+# S02C - THE BAD COMMAND RETORTS DEFINITION
+# S02D - THE SPECTRE CONSOLE WINDOW BORDER DEFINITIONS
+# S02E - THE BATTLE ENCOUNTER REGION TABLE DEFINITION
+# S02F - THE BATTLE ACTION LOOKUP TABLE DEFINTION
+# S02G - THE STATE BLOCK TABLE DEFINITIONS
+# S02H - THE COMMAND BLOCK DEFINITIONS
+# S02I - THE COMMAND TABLE DEFINITION
+# S02J - THE BATTLE ACTION DAMAGE CALCULATOR FUNCTION DEFINITION
+# S02K - THE PLAYER'S DEFINITION
+# S02L - THE GLOBAL STATE BLOCK DEFINITION
+# S03 - 24-BIT CONSOLE COLOR DEFINITIONS
+# S04 - AT STUCTURE DEFINITIONS
+# S05 - COMBAT ENGINE PRIMITIVE DEFINITIONS
+# S06 - MAP PRIMITIVE DEFINITIONS
+# S07 - EQUIPMENT DEFINITIONS
+# S08 - FAST NOISE LITE DEFINITION
+# S09 - USER INTERFACE DEFINITIONS
+# S10 - BATTLE MANAGER DEFINITION
+# S11 - GAME CORE DEFINITION/GAME BOOTSTRAP CODE
+#
+###############################################################################
 
 
 
@@ -22,6 +65,8 @@ $PSStyle.Progress.View = 'Classic'
 
 ###############################################################################
 #
+# S01
+# 
 # ENUMERATIONS
 #
 ###############################################################################
@@ -58,6 +103,7 @@ $PSStyle.Progress.View = 'Classic'
 #    REMOVE GAME RESOURCES.
 #
 #//////////////////////////////////////////////////////////////////////////////
+
 Enum GameStatePrimary {
     SplashScreenA
     SplashScreenB
@@ -69,6 +115,7 @@ Enum GameStatePrimary {
     PlayerStatusScreen
     Cleanup
 }
+
 
 #//////////////////////////////////////////////////////////////////////////////
 #
@@ -87,11 +134,13 @@ Enum GameStatePrimary {
 # THIS IS LEFT TO THE IMPLEMENTATION.
 #
 #//////////////////////////////////////////////////////////////////////////////
+
 Enum StatNumberState {
     Normal
     Caution
     Danger
 }
+
 
 #//////////////////////////////////////////////////////////////////////////////
 #
@@ -107,11 +156,13 @@ Enum StatNumberState {
 #    THE ITEM FAILED TO BE REMOVED FROM THE ITEM INVENTORY BECAUSE IT'S A KEY ITEM.
 #
 #//////////////////////////////////////////////////////////////////////////////
+
 Enum ItemRemovalStatus {
     Success
     FailGeneral
     FailKeyItem
 }
+
 
 #//////////////////////////////////////////////////////////////////////////////
 #
@@ -124,10 +175,12 @@ Enum ItemRemovalStatus {
 #    THE ACTION FAILED TO BE REMOVED FROM THE ACTION INVENTORY FOR AN UNSPECIFIC REASON.
 #
 #//////////////////////////////////////////////////////////////////////////////
+
 Enum ActionInvRemovalStatus {
     Success
     Fail
 }
+
 
 #//////////////////////////////////////////////////////////////////////////////
 #
@@ -157,7 +210,29 @@ Enum ActionInvRemovalStatus {
 # ELEMENTAL ICE
 #    ATTACKS THAT HAVE A AN ICE-BASED ELEMENTAL AFFINITY.
 #
+# MAGIC POISON
+#    ATTACKS THAT HAVE A CHANCE TO POISON THE ENEMY.
+#
+# MAGIC CONFUSE
+#    ATTACKS THAT HAVE A CHANCE TO CONFUSE THE ENEMY.
+#
+# MAGIC SLEEP
+#    ATTACKS THAT HAVE A CHANCE TO PUT THE ENEMY TO SLEEP.
+#
+# MAGIC AGING
+#    ATTACKS THAT HAVE A CHANCE TO INFLICT AGING ON THE ENEMY.
+#
+# MAGIC HEALING
+#    ATTACKS THAT CAN HEAL THE ENEMY OR PLAYER.
+#
+# MAGIC STAT AUGMENT
+#    ATTACKS THAT CAN PROVIDE A TEMPORARY BUFF TO A SPECIFIC STAT.
+#
+# NONE
+#    A PLACEHOLDER FOR BASE CASE EVALUATIONS.
+#
 #//////////////////////////////////////////////////////////////////////////////
+
 Enum BattleActionType {
     Physical
     ElementalFire
@@ -176,6 +251,15 @@ Enum BattleActionType {
     None
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# STAT ID
+#
+# THESE ARE ALL SELF EXPLANATORY. NO NEED TO DISSECT THEM.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum StatId {
     HitPoints
     MagicPoints
@@ -188,6 +272,18 @@ Enum StatId {
     Accuracy
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# ACTION SLOT
+#
+# EQUIPPABLE SLOTS FOR ACTION ITEMS. SELF EXPLANATORY, REALLY.
+#
+# NONE
+#    A PLACEHOLDER FOR BASE CASE EVALUATIONS.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum ActionSlot {
     A
     B
@@ -195,6 +291,16 @@ Enum ActionSlot {
     D
     None
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# BATTLE MANAGER STATE
+#
+# EXPRESSES THE INTERNAL STATES OF THE BATTLE MANAGER. REFER TO THE BATTLE
+# MANAGER CLASS FOR FURTHER DOCUMENTATION OF EACH STATE.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum BattleManagerState {
     HealthCheck
@@ -206,6 +312,39 @@ Enum BattleManagerState {
     BattleWon
     BattleLost
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# BATTLE ACTION RESULT TYPE
+#
+# SUMMARIZES THE KINDS OF RESULTS THAT CAN OCCUR FROM EXECUTING A BATTLE ACTION.
+#
+# SUCCESS
+#    THE ACTION WAS SUCCESSFULLY EXECUTED.
+#
+# SUCCESS WITH CRITICAL
+#    THE ACTION WAS SUCCESSFULLY EXECUTED AND GAINED A CRITICAL BONUS.
+#
+# SUCCESSS WITH AFFINITY BONUS
+#    THE ACTION WAS SUCCESSFULLY EXECUTED AND GAINED AN AFFINITY BONUS.
+#
+# SUCCESS WITH CRIT AND AFFINITY BONUS
+#    THE ACTION WAS SUCCESSFULLY EXECUTED AND GAINED BOTH A CRITICAL AND AFFINITY BONUS.
+#
+# FAILED ATTACK MISSED
+#    THE ACTION FAILED BECAUSE THE ATTACK MISSED.
+#
+# FAILED ATTACK FAILED
+#    THE ACTION FAILED BECAUSE THE USER FAILED TO EXECUTE IT CORRECTLY.
+#
+# (DEPRECATED) FAILED NO USES REMAINING
+#    THE ACTION FAILED BECAUSE THERE ARE NO REMAINING USES.
+#
+# FAILED NOT ENOUGH MP
+#    THE ACTION FAILED BECUASE THE USER DOESN'T HAVE ENOUGH MP.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum BattleActionResultType {
     Success
@@ -219,10 +358,37 @@ Enum BattleActionResultType {
     FailedNotEnoughMp
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# STATUS SCREEN MODE
+#
+# EXPRESSES THE INTERNAL STATE OF THE STATUS SCREEN.
+#
+# EQUIPPED TECH SELECTION
+#    THE STATUS SCREEN IS SHOWING AND FOCUSED ON THE CURRENTLY EQUIPPED TECHNIQUES.
+#
+# TECH INVENTORY SELECTION
+#    THE STATUS SCREEN IS SHOWING AND FOCUSED ON THE TECH INVENTORY SUB-WINDOW.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum StatusScreenMode {
     EquippedTechSelection
     TechInventorySelection
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL NOISE TYPE
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# DEFINES THE TYPE OF NOISE TO GENERATE. I'M NOT GOING TO CLAIM THAT I UNDERSTAND
+# ALL OF THEM TO ANY SIGNIFICANT DEGREE.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum FnlNoiseType {
     OpenSimplex2
@@ -233,11 +399,33 @@ Enum FnlNoiseType {
     Value
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL ROTATION TYPE 3D
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# DEFINES THE KINDS OF 3D ROTATIONS THAT CAN OCCUR DURING EVALUATION.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum FnlRotationType3D {
     None
     ImproveXYPlanes
     ImproveXZPlanes
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL FRACTAL TYPE
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# SPECIFIES THE TYPE OF FRACTAL TO EVALUATE.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum FnlFractalType {
     None
@@ -248,12 +436,34 @@ Enum FnlFractalType {
     DomainWarpIndependent
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL CELLULAR DISTANCE FUNCTION
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# SPECIFIES THE TYPE OF CELLULAR DISTANCE FUNCTION TO USE DURING EVALUATION.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum FnlCellularDistanceFunction {
     Euclidean
     EuclideanSq
     Manhattan
     Hybrid
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL CELLULAR RETURN TYPE
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# SPECIFIES THE TYPE OF CELLULAR RETURN WHEN EVALUATING CELL-RELATED EXPRESSIONS.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum FnlCellularReturnType {
     CellValue
@@ -265,11 +475,33 @@ Enum FnlCellularReturnType {
     Distance2Div
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL DOMAIN WARP TYPE
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# SPECIFIES THE TYPE OF DOMAIN WARP TO USE DURING EVALUATION.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum FnlDomainWarpType {
     OpenSimplex2
     OpenSimplex2Reduced
     BasicGrid
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# FNL TRANSFORM TYPE 3D
+#
+# AN ENUMERATION PEGGED TO THE FAST NOISE LITE IMPLEMENTATION.
+#
+# SPECIFIES THE TYPE OF 3D TRANSFORM TO USE DURING EVALUATION.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum FnlTransformType3D {
     None
@@ -277,6 +509,19 @@ Enum FnlTransformType3D {
     ImproveXZPlanes
     DefaultOpenSimplex2
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# WINDOW BORDER PART
+#
+# AN ENUMERATION INSPIRED BY SPECTRE CONSOLE AND PWSHSPECTRECONSOLE.
+# THANKS TO SHAWN LAWRIE AND TRACKD!
+#
+# SPECIFIES THE COMPONENTS OF A WINDOW'S BORDER. EACH REFERS TO A SPECIFIC CHARACTER
+# USED TO CREATE THAT PORTION.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum WindowBorderPart {
     LeftTop
@@ -289,6 +534,23 @@ Enum WindowBorderPart {
     Left
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# WINDOW BORDER PART DIRTY
+#
+# IN SPITE OF WINDOW BORDER PART, WINDOW BORDERS DON'T DRAW THEIR PARTS INDIVIDUALLY.
+# RATHER, THEY'RE DRAWN AS FOUR PIECES, EACH PEICE BEING A COMPOSITION OF PARTS.
+# SOME OF THE MOTIVATION BEHIND THIS IS SIMPLICITY IN RENDERING, OTHERWISE I'D NEED
+# TO MAINTAIN THE COORDINATES OF THE FAR CORNERS WHICH ISN'T DESIRABLE, AND
+# BECAUSE THE LEGACY CODE ALREADY RENDERED EACH FACE WITH NO ISSUES EVEN BEFORE
+# CONVERTING THEM TO A COMPOSITION.
+#
+# THE ADDED BENEFIT OF USING THIS ENUMERATION IS THAT IT REMOVES A HANDFUL OF STATIC
+# MEMBERS FROM EACH WINDOW CLASS.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum WindowBorderPartDirty {
     Top
     Bottom
@@ -296,20 +558,53 @@ Enum WindowBorderPartDirty {
     Right
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# UI ELEMENT (UIE) LAYOUT
+#
+# THIS IS A VESTIGE FROM AN ATTEMPT TO CREATE A USER INTERFACE LIBRARY. THIS
+# ISN'T USED.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum UIELayout {
     Horizontal
     Vertical
 }
 
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# TTY SPEED
+#
+# FRAME-RATE UNBOUND TIMEOUTS FOR PER-CHARACTER RENDERING. THESE HAVE BEEN TESTED
+# ON A GOOD NUMBER OF NON-QUANTUM COMPUTERS SO THIS SHOULD BE SAFE... I HOPE.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Enum TtySpeed {
     SuperSlow = 1000000
-    Slow   = 750000
-    Normal = 100000
-    Moderate = 75000
-    Quick = 65000
-    Fast = 50000
+    Slow      = 750000
+    Normal    = 100000
+    Moderate  = 75000
+    Quick     = 65000
+    Fast      = 50000
     SuperFast = 25000
 }
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# GENDER
+#
+# SIMPLE ENOUGH. WHEN CREATING A NEW CHARACTER, THE PLAYER CAN CHOOSE TO BE EITHER
+# MALE OR FEMALE. THIS HAS SEVERAL EFFECTS THROUGHOUT THE ENGINE, NOT LEAST OF
+# WHICH IS WHAT KINDS OF ARMOR CAN THE PLAYER EQUIP, HENCE THE INCLUSION OF
+# UNISEX, WHICH IS PREDOMINANTLY USED FOR SPECIFYING THAT A PIECE OF EQUIPMENT CAN
+# BE USED BY EITHER MALE OR FEMALE.
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum Gender {
     Male
@@ -318,6 +613,23 @@ Enum Gender {
 }
 
 
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PLAYER SETUP SCREEN STATES
+#
+# THE STATES THAT THE PLAYER SETUP SCREEN GOES THROUGH.
+#
+#//////////////////////////////////////////////////////////////////////////////
+Enum PlayerSetupScreenStates {
+    PlayerSetupNameEntry
+    PlayerSetupGenderSelection
+    PlayerSetupPointAllocate
+    PlayerSetupAffinitySelect
+    PlayerSetupProfileSelect
+    PlayerSetupConfirmation
+}
+
+
 
 
 
@@ -329,11 +641,274 @@ Enum Gender {
 
 ###############################################################################
 #
+# S02
+#
 # GLOBAL VARIABLE DECLARATIONS/DEFINITIONS
+#
+# YEAH, I KNOW, THE GET-LOCATION USES ARE PROBLEMATIC. SHOOT ME. I'LL FIX IT LATER.
+# THERE'S A LOT OF THESE THINGS, BUT I'LL DOCUMENT THEM ALL AS BEST I CAN WITHOUT
+# LOSING MY SANITY.
 #
 ###############################################################################
 
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# SCENE IMAGES TO LOAD
+#    THIS IS THE TOTAL NUMBER OF SCENE IMAGES DETECTED IN THE IMAGE DATA DIRECTORY.
+#
+# SCENE IMAGES LOADED
+#    THIS IS THE TOTAL NUMBER OF IMAGES CURRENTLY LOADED INTO MEMORY.
+#
+# MAX WIDTH
+#    THIS IS THE MAX WIDTH IN BUFFER CELLS THAT ELDORIA CAN OCCUPY. NOT A HARD
+#    LIMIT, BUT IT'S THE MAX WIDTH THAT THE BUFFER MANAGER WILL FORMALLY GRAB.
+#
+# SSAPECOUNTER
+#    THIS IS USED AS A COUNTER FOR THE LINE DRAW DELIMITER FOR THE FIGLET.
+#
+# SSAPETIMEOUT
+#    THIS IS THE COUNTER TIMEOUT FOR THE LINE DRAW DELIMITER FOR THE FIGLET.
+#    WHEN SSAPECOUNTER REACHES OR EXCEEDS THIS, THE COUNTER IS RESET.
+#
+# SFX UI CHEVRON MOVE
+#    THE WAV FILE THAT'S PLAYED WHEN A UI CHEVRON IS MOVED BY THE PLAYER.
+#
+# SFX UI SELECTION VALID
+#    THE WAV FILE THAT'S PLAYED WHEN A UI CHEVRON SELECTION IS VALID.
+#
+# SFX BA PHYSICAL STRIKE A
+#    THE WAV FILE PLAYED WHEN USING A BATTLE ACTION THAT'S PHYSICAL.
+#
+# SFX BA MISS FAIL
+#    THE WAV FILE PLAYED WHEN AN ATTACK IS MISSED OF THE FAIL KIND.
+#
+# SFX BA ACTION DISABLED
+#    THE WAV FILE PLAYED WHEN ATTEMPTING TO USE AN ACTION THAT'S DISABLED.
+#
+# SFX BA FIRE STRIKE A
+#    THE WAV FILE PLAYED WHEN USING A BATTLE ACTION THAT'S FIRE ELEMENTAL.
+#
+# SFX BATTLE INTRO
+#    THE WAV FILE PLAYED WHEN ENCOUNTERING A BATTLE SCENARIO.
+#
+# SFX BATTLE PLAYER WIN
+#    THE WAV FILE PLAYED WHEN THE PLAYER WINS A BATTLE SCENARIO.
+#
+# SFX BATTLE PLAYER LOSE
+#    THE WAV FILE PLAYED WHEN THE PLAYER LOSES A BATTLE SCENARIO.
+#
+# BGM BATTLE THEME A
+#    THE WAV FILE PLAYED AS THE BACKGROUND MUSIC FOR THE BATTLE SECNARIO.
+#
+# SFX BATTLE NEM
+#    I DON'T REMEMBER WHAT THIS WAS FOR. IT'S LIKELY UNUSED.
+#
+# BGM TITLE THEME A
+#    ONE OF THE POSSIBLE WAV FILES THAT PLAYS DURING THE TITLE SEQUENCE.
+#
+# BGM TITLE THEME B
+#    ONE OF THE POSSIBLE WAV FILES THAT PLAYS DURING THE TITLE SEQUENCE.
+#
+# THE GAME SUBTITLE
+#    THE STRING DISPLAYED UNDER THE GAME TITLE FIGLET.
+#
+# SPECTRE BBP ROUNDED
+#    CHARACTERS USED TO CREATE A ROUNDED BORDER WINDOW, TAKEN FROM SPECTRE CONSOLE.
+#
+# SPECTRE BBP SQUARE
+#    CHARACTERS USED TO CREATE A SQUARE BORDER WINDOW, TAKEN FROM SPECTRE CONSOLE.
+#
+# CURRENT WINDOW DESIGN
+#    AN INDIRECTION LAYER FOR WINDOWS TO TOGGLE BETWEEN VARIOUS SPECTRE CONSOLE BORDER DESIGNS.
+#
+# BAD COMMAND RETORTS
+#    AN ARRAY OF RETORTS TO RETURN TO THE PLAYER WHEN THEY GIVE A BAD COMMAND.
+#    ONE IS RANDOMLY SELECTED EACH TIME A BAD COMMAND IS ISSUED.
+#
+# THE STATUS WINDOW
+#    THE SINGLE INSTANCE OF THE STATUS WINDOW CLASS. THIS IS THE WINDOW SHOWN
+#    IN THE TOP-LEFT AREA OF THE BUFFER THAT SHOWS THE PLAYER NAME, HP, MP,
+#    AND CURRENT GOLD.
+#
+# THE COMMAND WINDOW
+#    THE SINGLE INSTANCE OF THE COMMAND WINDOW CLASS. THIS IS THE WINDOW SHOWN
+#    DIRECTLY BENEATH THE STATUS WINDOW AND IS WHERE THE PLAYER WILL ENTER
+#    COMMANDS INTO.
+#
+# THE SCENE WINDOW
+#    THE SINGLE INSTANCE OF THE SCENE WINDOW CLASS. THIS IS THE WINDOW SHOWN ON
+#    THE FAR RIGHT AND DISPLAYS AN "IMAGE" OF-SORTS WHEN THE PLAYER MOVES TO
+#    DIFFERENT LOCATIONS IN THE CURRENT MAP.
+#
+# THE MESSAGE WINDOW
+#    THE SINGLE INSTANCE OF THE MESSAGE WINDOW CLASS. THIS IS THE WINDOW SHOWN
+#    ON THE VERY BOTTOM OF THE NAVIGATION SCREEN. IT PROVIDES FEEDBACK ABOUT
+#    COMMANDS THAT THE PLAYER HAS ENTERED IN THE COMMAND WINDOW.
+#
+# THE INVENTORY WINDOW
+#    THE SINGLE INSTANCE OF THE INVENTORY WINDOW. THIS WAS AN OVERARCHING
+#    EXPERIMENTAL WINDOW THAT BECAME SOMETHING BIGGER. THE PLAYER'S ITEM
+#    INVENTORY IS MANAGED THROUGH HERE.
+#
+# DEFAULT CURSOR COORDINATES
+#    THIS WAS INTENDED TO BE USED AS A DEFAULT LANDING SPACE FOR THE CURSOR,
+#    BUT THAT WAS BACK SEVERAL YEARS AGO WHEN THE GAME WAS ONLY INTENDED TO HAVE
+#    A SINGLE SCREEN. THIS LIKELY ISN'T USED ANY LONGER.
+#
+# THE PLAYER BATTLE STAT WINDOW
+#    AN INSTANCE OF THE BATTLE ENTITY STATUS WINDOW CLASS INTENDED TO SHOW
+#    BATTLE INFORMATION ABOUT THE PLAYER.
+#
+# THE ENEMY BATTLE STAT WINDOW
+#    AN INSTANCE OF THE BATTLE ENTITY STATUS WINDOW CLASS INTENDED TO SHOW
+#    BATTLE INFORMATION ABOUT THE ENEMY.
+#
+# THE PLAYER BATTLE ACTION WINDOW
+#    THE SINGLE INSTANCE OF THE BATTLE PLAYER ACTION WINDOW CLASS THAT ALLOWS
+#    THE PLAYER TO SELECT A BATTLE ACTION TO EXECUTE IN BATTLE WHEN IT'S THEIR
+#    PHASE.
+#
+# THE BATTLE STATUS MESSAGE WINDOW
+#    THE SINGLE INSTANCE OF THE BATTLE STATUS MESSAGE WINDOW CLASS THAT SHOWS
+#    FEEDBACK OF THE BATTLE PROGRESSION.
+#
+# THE BATTLE PHASE INDICATOR
+#    THE SINGLE INSTANCE OF THE BATTLE PHASE INDICATOR CLASS. IT SHOWS,
+#    TEXTUALLY, WHO HAS THE CURRENT PHASE IN THE CURRENT TURN.
+#
+# THE STATUS HUD WINDOW
+#    THE SINGLE INSTANCE OF THE STATUS HUD WINDOW CLASS. IT SHOWS THE CURRENT
+#    STATUS OF THE PLAYER IN THE STATUS SCREEN.
+#
+# THE STATUS TECH SELECTION WINDOW
+#    THE SINGLE INSTANCE OF THE STATUS TECHNIQUE SELECTION WINDOW. THIS ALLOWS
+#    THE PLAYER TO SELECT ONE OF THEIR CURRENTLY EQUIPPED ACTIONS TO REPLACE
+#    WITH ANOTHER.
+#
+# THE STATUS TECH INVENTORY WINDOW
+#    THE SINGLE INSTANCE OF THE STATUS TECHNIQUE INVENTORY WINDOW. THIS IS A
+#    MINIATURE VERSION OF THE INVENTORY WINDOW THAT ALLOWS THE PLAYER TO BROWSE
+#    THEIR ACTION INVENTORY AND SWAP AN EQUIPPED ACTION WITH ANOTHER ONE.
+#
+# THE BUFFER MANAGER
+#    THE SINGLE INSTANCE OF THE BUFFER MANAGER CLASS. THIS IS PRIMARILY
+#    USED FOR BUFFER SWAPPING.
+#
+# THE GAME CORE
+#    THE SINGLE INSTNACE OF THE GAME CORE CLASS. THIS IS USED TO BOOTSTRAP
+#    THE GAME LOOP.
+#
+# THE CURRENT ENEMY
+#    AN INSTANCE OF ENEMY BATTLE ENTITY THAT REFERENCES THE CURRENT ENEMY
+#    THE PLAYER IS FIGHTING AGAINST IN A BATTLE SCENARIO.
+#
+# THE BATTLE MANAGER
+#    THE SINGLE INSTANCE OF THE BATTLE MANAGER CLASS. THIS CLASS IS RESPONSIBLE
+#    FOR THE ENTIRE BATTLE PROGRAM SUBSYSTEM.
+#
+# THE SFX MACHINE
+#    A VESTIGE THAT IS NO LONGER USED.
+#
+# THE BGM MACHINE
+#    A VESTIGE THAT IS NO LONGER USED.
+#
+# IS BATTLE BGM PLAYING
+#    A FLAG THAT PREVENTS THE BATTLE BGM FROM PLAYING REPEATEDLY AFTER ALREADY
+#    HAVING BEEN STARTED.
+#
+# HAS BATTLE INTRO PLAYED
+#    A FLAG THAT PREVENTS THE BATTLE INTRO FROM PLAYING REPEATEDLY AFTER
+#    ALREADY HAVING BEEN STARTED.
+#
+# HAS BATTLE WON CHIME PLAYED
+#    A FLAG THAT PREVENTS THE BATTLE WON CHIME FROM PLAYING REPEATEDLY AFTER
+#    ALREADY HAVING BEEN STARTED.
+#
+# HAS BATTLE LOST CHIME PLAYED
+#    A FLAG THAT PREVENTS THE BATTLE LOST CHIME FROM PLAYING REPEATEDLY AFTER
+#    ALREADY HAVING BEEN STARTED.
+#
+# GPS RESTORED FROM INV BACKUP
+#    I HAVE NO IDEA WHAT THE HELL I DID WITH THIS. IT DOES SOMETHING.
+#
+# GPS RESTORED FROM BAT BACKUP
+#    I HAVE NO IDEA WHAT THE HELL I DID WITH THIS. IT DOES SOMETHING.
+#
+# GPS RESTORED FROM STA BACKUP
+#    I HAVE NO IDEA WHAT THE HELL I DID WITH THIS. IT DOES SOMETHING.
+#
+# BATTLE CURSOR VISIBLE
+#    IS THE CHEVRON FOR THE BATTLE ACTION SELECTION WINDOW VISIBLE
+#
+# HAS TITLE BGM STARTED
+#    A FLAG THAT PREVENTS THE TITLE BGM FROM PLAYING REPEATEDLY AFTER ALREADY
+#    HAVING BEEN STARTED.
+#
+# HAS SUBTITLE BEEN WRITTEN
+#    A FLAG THAT PREVENTS THE SUBTITLE STRING FROM BEING WRITTEN REPEATEDLY
+#    AFTER IT HAS ALREADY BEEN WRITTEN.
+#
+# HAS SUBTITLE BEEN COLORED
+#    A FLAG THAT PREVENTS THE SUBTITLE STRING FROM HAVING THE RAINBOW EFFECT
+#    APPLIED REPEATEDLY AFTER IT HAS ALREADY BEEN WRITTEN.
+#
+# HAS SSA PRESS ENTER SHOWN
+#    A FLAG INDICATING THAT THE "PRESS ENTER" PROMPT HAS BEEN SHOWN.
+#
+# HAS SSA PRESS ENTER TOGGLED
+#    A VESTIGE FROM TESTING. LIKELY TO BE REMOVED.
+#
+# HAS SSA SETUP RUNSPACE
+#    A FLAG INDICATING IF THE INPUT MONITOR RUNSPACE HAS BEEN SETUP OR NOT.
+#
+# EEI BAT 
+#    THE SINGLE INSTANCE OF THE EEIBAT CLASS. THIS IS THE IMAGE OF THE BAT.
+#
+# EEI NIGHTWING
+#    THE SINGLE INSTANCE OF THE EEINIGHTWING CLASS. THIS IS THE IMAGE OF THE
+#    NIGHTWING.
+#
+# EEI WINGBLIGHT
+#    THE SINGLE INSTANCE OF THE EEIWINGBLIGHT CLASS. THIS IS THE IMAGE OF THE
+#    WINGBLIGHT.
+#
+# EEI DARKFANG
+#    THE SINGLE INSTANCE OF THE EEIDARKFANG CLASS. THIS IS THE IMAGE OF THE
+#    DARKFANG.
+#
+# EEI NOCTURNA
+#    THE SINGLE INSTANCE OF THE EEINOCTURNA CLASS. THIS IS THE IMAGE OF THE
+#    NOCTURNA.
+#
+# EEI BLOODSWOOP
+#    THE SINGLE INSTANCE OF THE EEI BLOODSWOOP CLASS. THIS IS THE IMAGE OF THE
+#    BLOODSWOOP.
+#
+# EEI DUSKBANE
+#    THE SINGLE INSTANCE OF THE EEI DUSKBANE CLASS. THIS IS THE IMAGE OF THE
+#    BLOODSWOOP.
+#
+# THE SFX MPLAYER
+#    AN INSTANCE OF SYSTEM.WINDOWS.MEDIA.MEDIAPLAYER INTENDED TO PLAY SOUND
+#    EFFECTS.
+#
+# THE BGM MPLAYER
+#    AN INSTANCE OF SYSTEM.WINDOWS.MEDIA.MEDIAPLAYER INTENDED TO PLAY
+#    BACKGROUND MUSIC.
+#
+# AFFINITY MULT NEG
+#    A HARD-CODED DAMAGE SCALAR FOR WHEN AFFINITIES MATCH.
+#
+# AFFINITY MULT POS
+#    A HARD-CODED DAMAGE SCALAR FOR WHEN AFFINITIES DON'T MATCH.
+#
+# STATUS ES SELECTED SLOT
+#    
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 [Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
 [Int]                             $Script:SceneImagesLoaded            = 0
 [Int]                             $Script:MaxWidth                     = 80
@@ -406,7 +981,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::TitleScreen
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::PlayerSetupScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                    = $null
 [Map]                             $Script:SampleWarpMap01              = $null
@@ -420,7 +995,19 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Runspace]                        $Script:TheOffThread                 = [RunspaceFactory]::CreateRunspace()
 [PowerShell]                      $Script:TheOffShell                  = [PowerShell]::Create()
 [IAsyncResult]                    $Script:SSAInputAsr                  = $null
+[PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# S02A
+#
+# THE SCENE IMAGES DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Write-Progress -Activity 'Creating Scene Images' -Id 2 -PercentComplete 0
 [Hashtable]$Script:TheSceneImages = @{
@@ -467,14 +1054,16 @@ Write-Progress -Activity 'Creating Scene Images' -Id 2 -Completed
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+#
+# S02B
 #
 # MAP WARP FUNCTION
 #
 # THIS IS LIKELY A PRETTY NAIEVE APPROACH TO THIS AT THE MOMENT, BUT WHAT THE
 # HELL?
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 [ScriptBlock]$Script:MapWarpHandler = {
     Param(
         [Map]$TargetMap,
@@ -498,15 +1087,21 @@ Write-Progress -Activity 'Creating Scene Images' -Id 2 -Completed
     # CORRECTION: THIS HAS BEEN MOVED TO THE COMMAND BLOCK CALL RATHER THAN HERE.
 }
 
-
-
-
-
 [Map]$Script:SampleMap       = [Map]::new('Map Data\SampleMap.json')
 [Map]$Script:SampleWarpMap01 = [Map]::new('Map Data\MapWarpTest01.json')
 [Map]$Script:SampleWarpMap02 = [Map]::new('Map Data\MapWarpTest02.json')
 [Map]$Script:CurrentMap      = $Script:SampleWarpMap01
 
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# S02C
+#
+# THE BAD COMMAND RETORTS DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 $Script:BadCommandRetorts = @(
     'Huh?',
     'Do what now?',
@@ -523,6 +1118,16 @@ $Script:BadCommandRetorts = @(
     '843214385321832904'
 )
 
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# S02D
+#
+# THE SPECTRE CONSOLE WINDOW BORDER DEFINITIONS
+#
+#//////////////////////////////////////////////////////////////////////////////
 $Script:SpectreBBPRounded = @{
     [WindowBorderPart]::LeftTop     = '╭'
     [WindowBorderPart]::Top         = '─'
@@ -547,6 +1152,16 @@ $Script:SpectreBBPSquare = @{
 
 $Script:CurrentWindowDesign = $SpectreBBPRounded
 
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# S02E
+#
+# THE BATTLE ENCOUNTER REGION TABLE DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 $Script:BattleEncounterRegionTable = @{
     0 = @(
         'EEBat',
@@ -576,12 +1191,19 @@ $Script:BATAdornmentCharTable = @{
     [BattleActionType]::MagicStatAugment = [Tuple[[String], [ConsoleColor24]]]::new("`u{20B9}", [CCAppleOrangeLight24]::new())
 }
 
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
-# BATTLE ACTION TABLE - LOOKUP TABLE
+# S02F
+#
+# THE BATTLE ACTION LOOKUP TABLE DEFINITION
 #
 # LOOKUP FOR RESISTANCE/WEAKNESS SCALARS. THIS IS GREATLY SENSITIVE TO THE ENUMERATION
 # ORDERING IN THE BATTLE ACTION TYPE ENUMERATION.
 #
+#//////////////////////////////////////////////////////////////////////////////
 $Script:BATLut = @(
 	# PHYSICAL ATTACKS AGAINST OTHERS
 	@(1, 1, 1, 1, 1, 1, 1, 1),
@@ -614,11 +1236,13 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
-# THE STATE BLOCK TABLE SCRIPTBLOCK DEFINITIONS
+# S02G
 #
-###############################################################################
+# THE STATE BLOCK TABLE DEFINITIONS
+#
+#//////////////////////////////////////////////////////////////////////////////
 [ScriptBlock]$Script:TheSplashScreenAState = {}
 
 [ScriptBlock]$Script:TheSplashScreenBState = {}
@@ -722,7 +1346,26 @@ $Script:Rui = $(Get-Host).UI.RawUI
     Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 }
 
-[ScriptBlock]$Script:ThePlayerSetupState = {}
+[ScriptBlock]$Script:ThePlayerSetupState = {
+    # CLEANUP THE PREVIOUS STATE
+    If($null -NE $Script:TheTitleFiglet) {
+        $Script:TheTitleFiglet = $null
+    }
+    If($null -NE $Script:TheSubtitleFiglet) {
+        $Script:TheSubtitleFiglet = $null
+    }
+    If($null -NE $Script:TheSSAPressEnterPrompt) {
+        $Script:TheSSAPressEnterPrompt = $null
+    }
+    
+    # SETUP THE CURRENT STATE
+    If($null -EQ $Script:ThePSNameEntryWindow) {
+        $Script:ThePSNameEntryWindow = [PSNameEntryWindow]::new()
+    }
+    
+    $Script:ThePSNameEntryWindow.Draw()
+    $Script:ThePSNameEntryWindow.HandleInput()
+}
 
 [ScriptBlock]$Script:TheGamePlayScreenState = {
     If($null -NE $Script:TheInventoryWindow) {
@@ -964,11 +1607,13 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
-# THE COMMAND TABLE AND ITS ASSOCIATED SCRIPT BLOCKS
+# S02H
 #
-###############################################################################
+# THE COMMAND BLOCK TABLE DEFINITIONS
+#
+#//////////////////////////////////////////////////////////////////////////////
 [ScriptBlock]$Script:TheMoveCommand = {
     Param(
         [String]$a0
@@ -1332,6 +1977,16 @@ $Script:Rui = $(Get-Host).UI.RawUI
     $Script:TheMessageWindow.WriteBadCommandRetortMessage()
 }
 
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# S02I
+#
+# THE COMMAND TABLE DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 $Script:TheCommandTable = @{
     'move'      = $Script:TheMoveCommand
     'm'         = $Script:TheMoveCommand
@@ -1362,11 +2017,13 @@ $Script:TheCommandTable = @{
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
-# BATTLE ACTION CALCULATION
+# S02J
 #
-###############################################################################
+# THE BATTLE ACTION DAMAGE CALCULATOR FUNCTION DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 [ScriptBlock]$Script:BaCalc = {
     Param(
         [BattleEntity]$Self,
@@ -1495,11 +2152,13 @@ $Script:TheCommandTable = @{
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
-# PLAYER INITIALIZATION
+# S02K
 #
-###############################################################################
+# THE PLAYER'S DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 [Player]$Script:ThePlayer = [Player]@{
     Name  = 'Steve'
     Stats = @{
@@ -1656,11 +2315,13 @@ $Script:TheCommandTable = @{
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
-# GLOBAL STATE BLOCK TABLE DEFINITION
+# S02L
 #
-###############################################################################
+# THE GLOBAL STATE BLOCK DEFINITION
+#
+#//////////////////////////////////////////////////////////////////////////////
 $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::SplashScreenA      = $Script:TheSplashScreenAState
     [GameStatePrimary]::SplashScreenB      = $Script:TheSplashScreenBState
@@ -1673,19 +2334,20 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::Cleanup            = $Script:TheCleanupState
 }
 
-#endregion
 
 
 
 
 
-#region Console Colors
+
+
+
 
 ###############################################################################
 #
-# CONSOLE COLOR 24 CLASS
+# S03
 #
-# BASIC 24-BIT COLOR DEFINITION
+# 24-BIT CONSOLE COLOR DEFINITIONS
 #
 ###############################################################################
 Class ConsoleColor24 {
@@ -1708,11 +2370,11 @@ Class ConsoleColor24 {
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # CONSOLE COLOR 24 SPECIALIZATIONS
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class CCBlack24 : ConsoleColor24 {
     CCBlack24() : base(0, 0, 0) {}
 }
@@ -2418,29 +3080,32 @@ Class CCListItemCurrentHighlight24 : CCAppleNPinkLight24 {}
 
 Class CCWindowBorderDefault24 : CCTextDefault24 {}
 
-#endregion
 
 
 
 
 
-#region AT Structures
+
+
+
 
 ###############################################################################
 #
-# ANSI-TERMINATED STRING SUPPORT
+# S04
+#
+# AT STRUCTURE DEFINITIONS
 #
 # THIS IS WHERE ALL THE MAGIC SAUCE HAPPENS AT. BECAUSE, FUCKERS.
 #
 ###############################################################################
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT CONTROL SEQUENCES
 #
 # CONTAINS COMMON ANSI-TERMINATED STRINGS THAT ARE USED THROUGHT THE PROGRAM.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATControlSequences {
     Static [String]$ForegroundColor24Prefix = "`e[38;2;"
     Static [String]$BackgroundColor24Prefix = "`e[48;2;"
@@ -2465,14 +3130,14 @@ Class ATControlSequences {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT FOREGROUND COLOR 24
 #
 # A SYMBOLIC ENCAPSULATION OF CONSOLE COLOR 24 TO BE USED SPECIFICALLY FOR
 # FOREGROUND COLOR APPLICATIONS.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATForegroundColor24 {
     [ValidateNotNull()][ConsoleColor24]$Color
 
@@ -2487,14 +3152,14 @@ Class ATForegroundColor24 {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT FOREGROUND COLOR 24 NONE
 #
 # AN ABSTRACTION OF AT FOREGROUND COLOR 24 INTENDED TO BE USED TO IMPLY NO
 # FOREGROUND COLOR IN THE PRECEEDING STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATForegroundColor24None : ATForegroundColor24 {
     ATForegroundColor24None() : base([CCBlack24]::new()) {}
 
@@ -2503,14 +3168,14 @@ Class ATForegroundColor24None : ATForegroundColor24 {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT BACKGROUND COLOR 24
 #
 # A SYMBOLIC ENCAPSULATION OF CONSOLE COLOR 24 TO BE USED SPECIFICALLY FOR
 # BACKGROUND COLOR APPLICATIONS.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATBackgroundColor24 {
     [ValidateNotNull()][ConsoleColor24]$Color
 
@@ -2525,14 +3190,14 @@ Class ATBackgroundColor24 {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT BACKGROUND COLOR 24 NONE
 #
 # AN ABSTRACTION OF AT BACKGROUND COLOR 24 INTENDED TO BE USED TO IMPLY NO
 # BACKGROUND COLOR IN THE PRECEEDING STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATBackgroundColor24None : ATBackgroundColor24 {
     ATBackgroundColor24None() : base([CCBlack24]::new()) {}
 
@@ -2541,14 +3206,14 @@ Class ATBackgroundColor24None : ATBackgroundColor24 {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT DECORATION
 #
 # A SYMBOLIC ENCAPSULATION OF ONE OR MANY ANSI DECORATIONS TO APPLY TO A
 # PRECEEDING STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATDecoration {
     [ValidateNotNull()][Boolean]$Blink
     [ValidateNotNull()][Boolean]$Italic
@@ -2582,14 +3247,14 @@ Class ATDecoration {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT COORDINATES NONE
 #
 # AN ABSTRACTION OF AT DECORATION INTENDED TO IMPLY NO ANSI DECORATORS BE
 # APPLIED TO THE PRECEEDING STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATDecorationNone : ATDecoration {
     ATDecorationNone() : base() {}
 
@@ -2598,13 +3263,13 @@ Class ATDecorationNone : ATDecoration {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT COORDINATES
 #
 # A SYMBOLIC ENCAPSULATION OF A COORDINATE PAIR IN ROW,COLUMN (Y,X) ORDER.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATCoordinates {
     [ValidateNotNull()][Int]$Row
     [ValidateNotNull()][Int]$Column
@@ -2645,14 +3310,14 @@ Class ATCoordinates {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT COORDINATES NONE
 #
 # AN ABSTRACTION OF AT COORDINATES INTENDED TO IMPLY NO ANSI COORDINATE
 # MODIFIER BE APPLIED TO THE PRECEEDING STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATCoordinatesNone : ATCoordinates {
     ATCoordinatesNone() : base(0, 0) {}
 
@@ -2661,7 +3326,7 @@ Class ATCoordinatesNone : ATCoordinates {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT COORDINATES DEFAULT
 #
@@ -2669,19 +3334,19 @@ Class ATCoordinatesNone : ATCoordinates {
 # MODIFIER BE APPLIED TO THE PRECEEDING STRING LITERAL THAT MOVES THE CURSOR TO
 # A "DEFAULT" LOCATION.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATCoordinatesDefault : ATCoordinates {
     ATCoordinatesDefault() : base(1, 18) {}
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING PREFIX
 #
 # AN AGGREGATE OF SEVERAL ANSI MODIFIERS THAT COLLECTIVELY MODIFY A PRECEEDING
 # STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATStringPrefix {
     [ValidateNotNull()][ATForegroundColor24]$ForegroundColor
     [ValidateNotNull()][ATBackgroundColor24]$BackgroundColor
@@ -2712,14 +3377,14 @@ Class ATStringPrefix {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING PREFIX NONE
 #
 # AN ABSTRACTION OF AT STRING PREFIX INTENDED TO IMPLY NO ANSI MODIFIERS BE
 # APPLIED TO A PRECEEDING STRING LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATStringPrefixNone : ATStringPrefix {
     ATStringPrefixNone() : base() {}
 
@@ -2728,7 +3393,7 @@ Class ATStringPrefixNone : ATStringPrefix {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING
 #
@@ -2737,7 +3402,7 @@ Class ATStringPrefixNone : ATStringPrefix {
 # TO THE RESULTANT STRING ENSURING THE MODIFIERS FROM THE PREFIX AREN'T CARRIED
 # BEYOND THE LENGTH OF THE LITERAL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATString {
     [ValidateNotNull()][ATStringPrefix]$Prefix
     [ValidateNotNull()][String]$UserData
@@ -2770,7 +3435,7 @@ Class ATString {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING NONE
 #
@@ -2778,7 +3443,7 @@ Class ATString {
 # CLASS IS GENERALLY USED AS A SANE DEFAULT INITIALIZATION POINT FOR WHAT WOULD
 # EVENTUALLY BE PROPER AT STRING INSTANCES.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATStringNone : ATString {
     ATStringNone() : base() {}
 
@@ -2787,7 +3452,7 @@ Class ATStringNone : ATString {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING COMPOSITE
 #
@@ -2795,7 +3460,7 @@ Class ATStringNone : ATString {
 # PRETTY COMPLEX DISPLAYS BY COMBINING MULTIPLE INDEPENDENT AT STRING INSTANCES
 # INTO ONE.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATStringComposite {
     [List[ATString]]$CompositeActual = [List[ATString]]::new()
 
@@ -2836,7 +3501,7 @@ Class ATStringComposite {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # AT SCENE IMAGE STRING
 #
@@ -2844,7 +3509,7 @@ Class ATStringComposite {
 # CLASS SHORTCUTS MOST PROPERTIES OF AT STRING AND AT STRING PREFIX EXCEPT FOR
 # BACKGROUND COLOR AND COORDINATES.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class ATSceneImageString : ATString {
     Static [String]$SceneImageBlank = ' '
 
@@ -2863,24 +3528,27 @@ Class ATSceneImageString : ATString {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Combat Engine Primitives
+
+
+
 
 ###############################################################################
 #
-# BATTLE ENGINE SUPPORT
+# S05
+#
+# COMABT ENGINE PRIMITIVE DEFINITIONS
 #
 # CLASSES THAT DEFINE INTERACTIONS THAT FACILITATE THE COMBAT SYSTEM. GENERAL
 # CLASSES ARE INCLUDED IN HERE AS WELL AS BEING "IN-SCOPE".
 #
 ###############################################################################
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # BATTLE ENTITY PROPERTY
 #
@@ -2888,7 +3556,7 @@ Class ATSceneImageString : ATString {
 # MINIMUM AND MAXIMUM, SUPPORTS TEMPORARY AUGMENTATION, AND IS CAPABLE OF
 # MAINTAINING ITS OWN STATE.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class BattleEntityProperty {
     Static [Single]$StatNumThresholdCaution          = 0.6D
     Static [Single]$StatNumThresholdDanger           = 0.3D
@@ -9194,23 +9862,26 @@ Class EEDuskbane : EEBat {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Map Primitives
+
+
+
 
 ###############################################################################
 #
-# MAP SUPPORT
+# S06
+#
+# MAP PRIMITIVE DEFINITIONS
 #
 # CLASSES THAT COALESCE INTO MAP FUNCTIONALITY.
 #
 ###############################################################################
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SCENE IMAGE
 #
@@ -9218,7 +9889,7 @@ Class EEDuskbane : EEBat {
 # LIKE AN ENEMY IMAGE, JUST WITH DIFFERENT DIMENSIONS. SPECIALIZATIONS OF THIS
 # ARE CREATED USING A SIMILAR PATTERN AS WELL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class SceneImage {
     Static [Int]$Width  = 48
     Static [Int]$Height = 18
@@ -9260,13 +9931,13 @@ Class SceneImage {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SI EMPTY
 #
 # A SYMBOLIC HOLDER FOR AN EMPTY SCENE IMAGE. THIS WOULD RARELY BE USED.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class SIEmpty : SceneImage {
     SIEmpty() : base() {}
 
@@ -9275,13 +9946,13 @@ Class SIEmpty : SceneImage {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SI INTERNAL BASE
 #
 # A SPECIALIZATION OF SCENE IMAGE THAT ADDS COLOR MAP DATA.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class SIInternalBase : SceneImage {
     [ATBackgroundColor24[]]$ColorMap
 
@@ -9331,13 +10002,13 @@ Class SIInternalBase : SceneImage {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SI RANDOM NOISE
 #
 # A SPECIALIZATION OF SCENE IMAGE THAT GENERATES RANDOM NOISE PER CELL.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class SIRandomNoise : SceneImage {
     [ATBackgroundColor24[]]$ColorMap
 
@@ -9351,7 +10022,7 @@ Class SIRandomNoise : SceneImage {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SI MAP IMAGES
 #
@@ -9359,7 +10030,7 @@ Class SIRandomNoise : SceneImage {
 # NAVIGATION SCREEN. THE NAMES ARE SELF-DOCUMENTING, AND THE PATTERN HERE IS
 # THE SAME AS THE ENEMY IMAGES (HISTORICALLY, THESE WERE FIRST).
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class SIFieldNorthRoad : SIInternalBase {
     SIFieldNorthRoad() : base("$(Get-Location)\Image Data\SIFieldNorthRoadNew.json") {}
 }
@@ -9513,7 +10184,7 @@ Class SIRiverOnWestNorthSouthAtNorth : SIInternalBase {
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # MAP TILE OBJECT
 #
@@ -9524,7 +10195,7 @@ Class SIRiverOnWestNorthSouthAtNorth : SIInternalBase {
 #
 # IT'S WORTH MENTIONING THE TARGETOFFILTER PROPERTY.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class MapTileObject {
     [String]$Name
     [String]$MapObjName
@@ -9560,7 +10231,7 @@ Class MapTileObject {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # MAP TILE
 #
@@ -9583,7 +10254,7 @@ Class MapTileObject {
 # CONTAINS ARRAYS THAT MAP TO REGION CODES. THESE ARRAYS SPECIFY WHICH KINDS OF
 # ENEMIES CAN BE ENCOUNTERED IN THIS REGION.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class MapTile {
     Static [Int]$TileExitNorth = 0
     Static [Int]$TileExitSouth = 1
@@ -9698,11 +10369,11 @@ Class MapTile {
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # MAP
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class Map {
     [Int]$MapWidth
     [Int]$MapHeight
@@ -9768,14 +10439,14 @@ Class Map {
     }
 }
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # MAP TILE OBJECT ABSTRACTIONS
 #
 # THESE ABSTRACTIONS SERVE TO BUILD UP ACTUAL ITEMS THAT THE PLAYER CAN 
 # INTERACT WITH. THESE CONSTRUCTS CAN BE A LITTLE CUMBERSOME TO SETUP.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Class MTOTree : MapTileObject {
     [Boolean]$HasRopeTied
 
@@ -9999,22 +10670,22 @@ Class MTODoor00002 : MTODoor {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Equipment
+
+
+
 
 ###############################################################################
 #
-# BATTLE EQUIPMENT CLASS
+# S07
+#
+# EQUIPMENT PRIMITIVES
 #
 # THE BASE CLASS FOR ITEMS INTENDED TO BE USED AS EQUIPMENT FOR THE PLAYER.
-#
-# INSTEAD OF USING ENUMERATIONS FOR THE DIFFERENT KINDS OF EQUIPMENT, I'LL
-# BE USING DIFFERENT BASE CLASSES.
 #
 ###############################################################################
 Class BattleEquipment : MapTileObject {    
@@ -10055,7 +10726,11 @@ Class BECape : BattleEquipment {}
 
 
 
-#region Weapons
+#//////////////////////////////////////////////////////////////////////////////
+#
+# WEAPONS
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BEWoodenSword : BEWeapon {
 	BEWoodenSword() : base() {
@@ -13401,13 +14076,21 @@ Class BEBearSword : BEWeapon {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Helmets
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# HELMETS
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BELeatherCap : BEHelmet {
 	BELeatherCap() : base() {
 		$this.Name               = 'Leather Cap'
@@ -19564,13 +20247,20 @@ Class BEBearHelmet : BEHelmet {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Armors
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# ARMORS
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BECottonTunic : BEArmor {
 	BECottonTunic() : base() {
@@ -24303,13 +24993,20 @@ Class BEBearArmor : BEArmor {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Pauldrons
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PAULDRONS
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BEWovenPauldron : BEPauldron {
 	BEWovenPauldron() : base() {
@@ -27908,13 +28605,21 @@ Class BEBearPauldrons : BEPauldron {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Gauntlets
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# GAUNTLETS
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BEIronGauntlets : BEGauntlets {
 	BEIronGauntlets() : base() {
 		$this.Name               = 'Iron Gauntlets'
@@ -34784,13 +35489,20 @@ Class BEBearGauntlets : BEGauntlets {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Greaves
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# GREAVES
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BELeatherGreaves : BEGreaves {
 	BELeatherGreaves() : base() {
@@ -39274,13 +39986,20 @@ Class BEBearGreaves : BEGreaves {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Boots
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# BOOTS
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BELeatherBoots : BEBoots {
 	BELeatherBoots() : base() {
@@ -43765,13 +44484,20 @@ Class BEBearBoots : BEBoots {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Jewelry
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# JEWELRY
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BECopperRing : BEJewelry {
 	BECopperRing() : base() {
@@ -47954,12 +48680,20 @@ Class BEBearEarrings : BEJewelry {
     }
 }
 
-#endregion
 
 
 
 
-#region Capes
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# CAPES
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class BETatteredCape : BECape {
 	BETatteredCape() : base() {
@@ -48383,20 +49117,23 @@ Class BEBearCape : BECape {
     }
 }
 
-#endregion
-
-#endregion
 
 
 
 
-#region Fast Noise Lite
+
+
+
+
 
 ###############################################################################
+#
+# S08
 #
 # FAST NOISE LITE IMPLEMENTATION
 #
 ###############################################################################
+
 Class FastNoiseLite {
     Static [Int64]$PRIMEX         = 501125321
     Static [Int64]$PRIMEY         = 1136930381
@@ -51301,21 +52038,25 @@ Class FastNoiseLite {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Buffer Support
+
+
+
 
 ###############################################################################
+#
+# S09
 #
 # BUFFER MANAGER CLASS
 #
 # MANAGES A SET OF BUFFER STORES TO KEEP THE STATE OF THE GAME BUFFER IN.
 #
 ###############################################################################
+
 Class BufferManager {
     [BufferCell[,]]$ScreenBufferA
     [BufferCell[,]]$ScreenBufferB
@@ -51364,21 +52105,23 @@ Class BufferManager {
     }
 }
 
-#endregion
 
 
 
 
 
-#region UI
 
-###############################################################################
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # UIE CONTAINER
 #
 # THE ROOT CONTAINER FOR ANY UI ELEMENT.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class UIEContainer {
     [ATCoordinates]$LeftTop
     [ATCoordinates]$RightBottom
@@ -51463,7 +52206,12 @@ Class UIEContainer {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # WINDOW BASE
 #
@@ -51484,7 +52232,8 @@ Class UIEContainer {
 # BETTER VISUAL EXPERIENCE, ESPCIALLY SINCE I MAY NOT BE ABLE TO USE SAID
 # LIBRARY TO RENDER THE GAME AFTER TALKING WITH HIM.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class WindowBase {
     [ATCoordinates]$LeftTop
     [ATCoordinates]$RightBottom
@@ -51694,7 +52443,12 @@ Class WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # STATUS WINDOW
 #
@@ -51708,7 +52462,8 @@ Class WindowBase {
 # IN THE DRAW METHOD. THIS VESTIGE IS NO LONGER NECESSARY SINCE THE CODE WILL
 # NO LONGER BE PORTABLE BY DESIGN.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class StatusWindow : WindowBase {
     Static [Int]$PlayerStatDrawColumn = 3
     Static [Int]$PlayerNameDrawRow    = 2
@@ -51949,14 +52704,20 @@ Class StatusWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # COMMAND WINDOW
 #
 # THIS IS THE WINDOW THAT ALLOWS THE USER TO INPUT COMMANDS AND ALSO SHOWS THE
-# COMMAND HISTORY (FIVE MOST RECENT COMMANDS). 
+# COMMAND HISTORY (FIVE MOST RECENT COMMANDS).
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class CommandWindow : WindowBase {
     Static [Int]$CommandHistoryARef    = 0
     Static [Int]$CommandHistoryBRef    = 1
@@ -52236,14 +52997,20 @@ Class CommandWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SCENE WINDOW
 #
 # THIS WINDOW DISPLAYS AN IMAGE FOR THE CURRENT MAP TILE. THIS IS A VISUAL
 # HACK TO GIVE A VISUAL FLAIR TO THE PROGRAM.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class SceneWindow : WindowBase {
     Static [Int]$WindowLTRow           = 1
     Static [Int]$WindowLTColumn        = 30
@@ -52298,13 +53065,19 @@ Class SceneWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # MESSAGE WINDOW
 #
 # THIS WINDOW DISPLAYS MESSAGES IN THE MAP NAVIGATION SCREEN.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class MessageWindow : WindowBase {
     Static [Int]$MessageHistoryARef = 0
     Static [Int]$MessageHistoryBRef = 1
@@ -53047,7 +53820,12 @@ Class MessageWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # INVENTORY WINDOW
 #
@@ -53057,7 +53835,8 @@ Class MessageWindow : WindowBase {
 # BATTLE ACTION INVENTORY, SO THERE'S A BIT TO BE DESIRED HERE. THIS WILL BE
 # WORKED ON AFTER COVERAGE IS COMPLETED.
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class InventoryWindow : WindowBase {
     Static [Int]$WindowLTRow    = 1
     Static [Int]$WindowLTColumn = 1
@@ -53936,7 +54715,12 @@ Class InventoryWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # BATTLE ENTITY STATUS WINDOW
 #
@@ -53952,7 +54736,8 @@ Class InventoryWindow : WindowBase {
 # WINDOWRBROW
 # WINDOWRBCOLUMN
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BattleEntityStatusWindow : WindowBase {
     Static [String]$FullLineBlankActual    = '                '
 
@@ -54724,11 +55509,17 @@ Class BattleEntityStatusWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # BATTLE PLAYER ACTION WINDOW
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BattlePlayerActionWindow : WindowBase {
     Static [Int]$WindowLTRow    = 18
     Static [Int]$WindowLTColumn = 1
@@ -55120,11 +55911,17 @@ Class BattlePlayerActionWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # BATTLE STATUS MESSAGE WINDOW
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BattleStatusMessageWindow : WindowBase {
     Static [Int]$MessageHistoryARef = 0
     Static [Int]$MessageHistoryBRef = 1
@@ -56271,11 +57068,17 @@ Class BattleStatusMessageWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # BATTLE ENEMY IMAGE WINDOW
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BattleEnemyImageWindow : WindowBase {
     Static [Int]$WindowLTRow           = 1
     Static [Int]$WindowLTColumn        = 43
@@ -56548,11 +57351,17 @@ Class StatusHudWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # STATUS TECHNIQUE SELECTION WINDOW
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class StatusTechniqueSelectionWindow : WindowBase {
     Static [Int]$WindowLTRow    = 4
     Static [Int]$WindowLTColumn = 1
@@ -56933,11 +57742,17 @@ Class StatusTechniqueSelectionWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # STATUS TECHNIQUE INVENTORY WINDOW
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class StatusTechniqueInventoryWindow : WindowBase {
     Static [Int]$WindowLTRow    = 4
     Static [Int]$WindowLTColumn = 22
@@ -57831,11 +58646,17 @@ Class StatusTechniqueInventoryWindow : WindowBase {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # BATTLE PHASE INDICATOR
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class BattlePhaseIndicator {
     [Boolean]$IndicatorDrawDirty
     [ATCoordinates]$IndicatorDrawCoords
@@ -57893,7 +58714,12 @@ Class BattlePhaseIndicator {
 
 
 
-###############################################################################
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
 #
 # SPLASH SCREEN A (SSA) "FIGLET"
 #
@@ -57901,7 +58727,8 @@ Class BattlePhaseIndicator {
 #
 # ... SORT OF. IT'S HARD CODED. DOES THIS STILL COUNT?
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
+
 Class SSAFiglet {
     # I DID IT AGAIN! FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
     Static [String]$LineBlankData = ' ' * $Script:MaxWidth
@@ -58057,6 +58884,21 @@ Class SSAFiglet {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# SSA SUBTITLE
+#
+#//////////////////////////////////////////////////////////////////////////////
 
 Class SSASubtitle {
     Static [Int]$DrawTop  = 9
@@ -58448,6 +59290,21 @@ Class SSASubtitle {
     }
 }
 
+
+
+
+
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# SSA PRESS ENTER PROMPT
+#
+#//////////////////////////////////////////////////////////////////////////////
+
 Class SSAPressEnterPrompt {
     Static [Int]$DrawTop    = 15
     Static [Int]$DrawLeft   = 35
@@ -58500,15 +59357,136 @@ Class SSAPressEnterPrompt {
     }
 }
 
-#endregion
 
 
 
 
 
-#region Battle Manager
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PS NAME ENTRY WINDOW
+#
+# A WINDOW THAT ALLOWS THE USER TO INPUT THE DESIRED PLAYER'S NAME.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
+Class PSNameEntryWindow : WindowBase {
+    Static [Int]$WindowLTRow = 1
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowRBRow = 3
+    Static [Int]$WindowRBColumn = 16
+    
+    Static [String]$WindowTitle = 'Name'
+    
+    # I'M NOT SURE THAT I'D NEED THIS, BUT WE'LL LEAVE IT HERE FOR GIGGLES
+    Static [String]$CommandBlankData = ' ' * ([PSNameEntryWindow]::WindowRBColumn - 2)
+    
+    [ATString]$CommandActual
+    [ATString]$NameBlankActual
+    
+    PSNameEntryWindow() : base() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row = [PSNameEntryWindow]::WindowLTRow
+            Column = [PSNameEntryWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row = [PSNameEntryWindow]::WindowRBRow
+            Column = [PSNameEntryWindow]::WindowRBColumn
+        }
+        
+        $this.UpdateDimensions()
+        $this.SetupTitle([PSNameEntryWindow]::WindowTitle, [CCTextDefault24]::new())
+        
+        $this.CommandActual = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]@{
+                    Row = 10
+                    Column = 1
+                }
+            }
+            UseATReset = $true
+        }
+        $this.NameBlankActual = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]@{
+                    Row = 2
+                    Column = 2
+                }
+            }
+            UserData = [PSNameEntryWindow]::CommandBlankData
+            UseATReset = $true
+        }
+    }
+    
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+    }
+    
+    [Void]HandleInput() {
+        $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 2; Column = 1 }).ToAutomationCoordinates()
+        $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+        
+        While($KeyCap.VirtualKeyCode -NE 13) {
+            $CPX = $Script:Rui.CursorPosition.X
+
+            Switch($KeyCap.VirtualKeyCode) {
+                8 {
+                    $fpx = $Script:Rui.CursorPosition.X
+                    If($fpx -GT 2) {
+                        Write-Host "`b `b" -NoNewLine
+                        If($this.CommandActual.UserData.Length -GT 0) {
+                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                        }
+                    } Elseif($fpx -LT 2) {
+                        $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 2; Column = 1 }).ToAutomationCoordinates()
+                    } Elseif($fpx -EQ 2) {
+                        Write-Host " `b" -NoNewline
+                        If($this.CommandActual.UserData.Length -GT 0) {
+                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                        }
+                    }
+
+                    Break
+                }
+
+                Default {
+                    $FPX = $Script:Rui.CursorPosition.X
+                    
+                    If($FPX -GE ([PSNameEntryWindow]::WindowRBColumn - 2)) {
+                        Break
+                    } Else {
+                        Write-Host "$($KeyCap.Character)" -NoNewLine
+                        $this.CommandActual.UserData += $KeyCap.Character
+                    }
+                    
+                    Break
+                }
+            }
+            
+            $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+        }
+        
+        Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
+        
+        # AT THIS POINT, WE'D NEED TO CHANGE STATE
+    }
+}
+
+
+
+
+
+
+
+
+
 
 ###############################################################################
+#
+# S10
 #
 # BATTLE MANAGER
 #
@@ -58516,6 +59494,7 @@ Class SSAPressEnterPrompt {
 # HERE IS TOTAL GARBAGE.
 #
 ###############################################################################
+
 Class BattleManager {
     [Int]$TurnCounter
     [Int]$TurnLimit
@@ -59397,13 +60376,18 @@ Class BattleManager {
     }
 }
 
-#endregion
+
+
+
+
 
 
 
 
 
 ###############################################################################
+#
+# S11
 #
 # GAME CORE
 #
@@ -59415,7 +60399,7 @@ Class GameCore {
 
     GameCore() {
         $this.GameRunning          = $true
-        $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerSetupScreen
     }
 
     [Void]Run() {
@@ -59434,11 +60418,11 @@ Class GameCore {
 
 
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # DUMMY SETUP CODE
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 Clear-Host
 
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
