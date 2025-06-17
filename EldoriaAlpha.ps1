@@ -999,6 +999,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [IAsyncResult]                    $Script:SSAInputAsr                  = $null
 [PlayerSetupScreenStates]         $Script:ThePssSubstate               = [PlayerSetupScreenStates]::PlayerSetupSetup
 [PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
+[PSGenderSelectionWindow]         $Script:ThePSGenderSelectionWindow   = $null
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
 
@@ -1380,7 +1381,16 @@ $Script:Rui = $(Get-Host).UI.RawUI
             Break
         }
         
-        ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {}
+        ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {
+            If($null -EQ $Script:ThePSGenderSelectionWindow) {
+                $Script:ThePSGenderSelectionWindow = [PSGenderSelectionWindow]::new()
+            }
+            
+            $Script:ThePSGenderSelectionWindow.Draw()
+            $Script:ThePSGenderSelectionWindow.HandleInput()
+            
+            Break
+        }
         
         ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {}
         
@@ -59498,6 +59508,232 @@ Class PSNameEntryWindow : WindowBase {
         # Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
         
         # AT THIS POINT, WE'D NEED TO CHANGE SUBSTATE
+        $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupGenderSelection
+        
+        # WRITE THE HIDE CURSOR CSI
+        Write-Host "$([ATControlSequences]::CursorHide)"
+    }
+}
+
+
+
+
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PS GENDER SELECTION WINDOW
+#
+# ALLOWS THE PLAYER TO SELECT A GENDER FOR THEIR CHARACTER.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
+Class PSGenderSelectionWindow : WindowBase {
+    Static [Int]$WindowLTRow           = 1
+    Static [Int]$WindowLTColumn        = 25
+    Static [Int]$WindowRBRow           = 3
+    Static [Int]$WindowRBColumn        = 36
+
+    Static [String]$PlayerChevronCharacter      = '❱'
+    Static [String]$PlayerChevronBlankCharacter = ' '
+    Static [String]$MaleSymbol                  = '♂'
+    Static [String]$FemaleSymbol                = '♀'
+    Static [String]$WindowTitle                 = 'Gender'
+
+    [Int]$ActiveChevronIndex
+    [Boolean]$PlayerChevronDirty
+    [Boolean]$MaleSymbolDirty
+    [Boolean]$FemaleSymbolDirty
+    [Boolean]$IsActive
+    [ATCoordinates]$MaleSymbolDrawCoords
+    [ATCoordinates]$FemaleSymbolDrawCoords
+    [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons
+    [ATString]$MaleDisplay
+    [ATString]$FemaleDisplay
+
+    PSGenderSelectionWindow() : base() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = [PSGenderSelectionWindow]::WindowLTRow
+            Column = [PSGenderSelectionWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = [PSGenderSelectionWindow]::WindowRBRow
+            Column = [PSGenderSelectionWindow]::WindowRBColumn
+        }
+
+        $this.UpdateDimensions()
+        $this.SetupTitle([PSGenderSelectionWindow]::WindowTitle, [CCTextDefault24]::new())
+
+        $this.ActiveChevronIndex = 0 # 0 for Male, 1 for Female
+        $this.PlayerChevronDirty = $true
+        $this.MaleSymbolDirty    = $true # Initialize dirty flag
+        $this.FemaleSymbolDirty  = $true # Initialize dirty flag
+        $this.IsActive           = $false # Starts as inactive, becomes active on transition
+
+        # Calculate absolute draw coordinates for gender symbols
+        $this.MaleSymbolDrawCoords = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $this.LeftTop.Column + 3 # Column for '♂'
+        }
+        $this.FemaleSymbolDrawCoords = [ATCoordinates]@{
+            Row    = $this.LeftTop.Row + 1
+            Column = $this.LeftTop.Column + 8 # Column for '♀'
+        }
+
+        # Create ATString instances for symbols once in the constructor
+        $this.MaleDisplay = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                ForegroundColor = [CCTextDefault24]::new()
+                Coordinates     = $this.MaleSymbolDrawCoords
+            }
+            UserData   = [PSGenderSelectionWindow]::MaleSymbol
+            UseATReset = $true
+        }
+        $this.FemaleDisplay = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                ForegroundColor = [CCTextDefault24]::new()
+                Coordinates     = $this.FemaleSymbolDrawCoords
+            }
+            UserData   = [PSGenderSelectionWindow]::FemaleSymbol
+            UseATReset = $true
+        }
+
+        $this.CreateChevrons()
+    }
+
+    [Void]CreateChevrons() {
+        $this.Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.MaleSymbolDrawCoords.Row
+                            Column = $this.MaleSymbolDrawCoords.Column - 1 # Position chevron left of male symbol
+                        }
+                    }
+                    UserData   = "$([PSGenderSelectionWindow]::PlayerChevronCharacter)"
+                    UseATReset = $true
+                },
+                $true # Male is initially selected
+            )
+        )
+        $this.Chevrons.Add(
+            [ValueTuple]::Create(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.FemaleSymbolDrawCoords.Row
+                            Column = $this.FemaleSymbolDrawCoords.Column - 1 # Position chevron left of female symbol
+                        }
+                    }
+                    UserData   = "$([PSGenderSelectionWindow]::PlayerChevronBlankCharacter)"
+                    UseATReset = $true
+                },
+                $false # Female is not initially selected
+            )
+        )
+    }
+
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+
+        # Draw Male Symbol only if dirty
+        If ($this.MaleSymbolDirty -EQ $true) {
+            Write-Host "$($this.MaleDisplay.ToAnsiControlSequenceString())"
+            $this.MaleSymbolDirty = $false
+        }
+
+        # Draw Female Symbol only if dirty
+        If ($this.FemaleSymbolDirty -EQ $true) {
+            Write-Host "$($this.FemaleDisplay.ToAnsiControlSequenceString())"
+            $this.FemaleSymbolDirty = $false
+        }
+
+        # Draw Chevrons based on active state or if chevron is dirty
+        If ($this.PlayerChevronDirty -EQ $true -OR $this.IsActive -EQ $true) {
+            Foreach($c in $this.Chevrons) {
+                If ($this.IsActive -EQ $true) {
+                    $c.Item1.Prefix.ForegroundColor = [CCAppleNGreenLight24]::new()
+                } Else {
+                    $c.Item1.Prefix.ForegroundColor = [CCAppleNOrangeLight24]::new()
+                }
+                Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            }
+            $this.PlayerChevronDirty = $false
+        }
+    }
+
+    [Void]HandleInput() {
+        $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        Switch($keyCap.VirtualKeyCode) {
+            13 { # Enter key
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
+
+                # Transition to next state: PlayerSetupPointAllocate
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
+            }
+            27 { # Escape key
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
+                # Transition back to previous state: PlayerSetupNameEntry
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
+            }
+            37 { # Left Arrow
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
+                $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronBlankCharacter
+                $this.ActiveChevronIndex                                = ($this.ActiveChevronIndex - 1 + $this.Chevrons.Count) % $this.Chevrons.Count
+                $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+                $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
+                $this.PlayerChevronDirty                                = $true
+            }
+            39 { # Right Arrow
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
+                $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+                $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronBlankCharacter
+                $this.ActiveChevronIndex                                = ($this.ActiveChevronIndex + 1) % $this.Chevrons.Count
+                $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+                $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
+                $this.PlayerChevronDirty                                = $true
+            }
+        }
+    }
+
+    [Void]SetAsActive() {
+        $this.IsActive           = $true
+        $this.PlayerChevronDirty = $true
+        # Reset dirty flags for symbols when window becomes active
+        $this.MaleSymbolDirty    = $true
+        $this.FemaleSymbolDirty  = $true
+        # Reset previous selection when returning to this state
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronBlankCharacter
+        $this.ActiveChevronIndex                                = 0 # Reset to male as default selection
+        $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
+        $this.PlayerChevronDirty                                = $true
+    }
+
+    [Void]SetAsInactive() {
+        $this.IsActive = $false
+        $this.PlayerChevronDirty = $true
     }
 }
 
