@@ -620,7 +620,9 @@ Enum Gender {
 # THE STATES THAT THE PLAYER SETUP SCREEN GOES THROUGH.
 #
 #//////////////////////////////////////////////////////////////////////////////
+
 Enum PlayerSetupScreenStates {
+    PlayerSetupSetup
     PlayerSetupNameEntry
     PlayerSetupGenderSelection
     PlayerSetupPointAllocate
@@ -995,6 +997,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Runspace]                        $Script:TheOffThread                 = [RunspaceFactory]::CreateRunspace()
 [PowerShell]                      $Script:TheOffShell                  = [PowerShell]::Create()
 [IAsyncResult]                    $Script:SSAInputAsr                  = $null
+[PlayerSetupScreenStates]         $Script:ThePssSubstate               = [PlayerSetupScreenStates]::PlayerSetupSetup
 [PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
@@ -1347,24 +1350,46 @@ $Script:Rui = $(Get-Host).UI.RawUI
 }
 
 [ScriptBlock]$Script:ThePlayerSetupState = {
-    # CLEANUP THE PREVIOUS STATE
-    If($null -NE $Script:TheTitleFiglet) {
-        $Script:TheTitleFiglet = $null
+    Switch($Script:ThePssSubstate) {
+        ([PlayerSetupScreenStates]::PlayerSetupSetup) {
+            # CLEANUP THE PREVIOUS STATE
+            If($null -NE $Script:TheTitleFiglet) {
+                $Script:TheTitleFiglet = $null
+            }
+            If($null -NE $Script:TheSubtitleFiglet) {
+                $Script:TheSubtitleFiglet = $null
+            }
+            If($null -NE $Script:TheSSAPressEnterPrompt) {
+                $Script:TheSSAPressEnterPrompt = $null
+            }
+            
+            # TRANSITION TO THE NEXT STATE AUTOMATICALLY
+            $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
+            
+            Break
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupNameEntry) {
+            If($null -EQ $Script:ThePSNameEntryWindow) {
+                $Script:ThePSNameEntryWindow = [PSNameEntryWindow]::new()
+            }
+            
+            $Script:ThePSNameEntryWindow.Draw()
+            $Script:ThePSNameEntryWindow.HandleInput()
+            
+            Break
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {}
+        
+        ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {}
+        
+        ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {}
+        
+        ([PlayerSetupScreenStates]::PlayerSetupProfileSelect) {}
+        
+        ([PlayerSetupScreenStates]::PlayerSetupConfirmation) {}
     }
-    If($null -NE $Script:TheSubtitleFiglet) {
-        $Script:TheSubtitleFiglet = $null
-    }
-    If($null -NE $Script:TheSSAPressEnterPrompt) {
-        $Script:TheSSAPressEnterPrompt = $null
-    }
-    
-    # SETUP THE CURRENT STATE
-    If($null -EQ $Script:ThePSNameEntryWindow) {
-        $Script:ThePSNameEntryWindow = [PSNameEntryWindow]::new()
-    }
-    
-    $Script:ThePSNameEntryWindow.Draw()
-    $Script:ThePSNameEntryWindow.HandleInput()
 }
 
 [ScriptBlock]$Script:TheGamePlayScreenState = {
@@ -59382,9 +59407,9 @@ Class PSNameEntryWindow : WindowBase {
     Static [String]$WindowTitle = 'Name'
     
     # I'M NOT SURE THAT I'D NEED THIS, BUT WE'LL LEAVE IT HERE FOR GIGGLES
-    Static [String]$CommandBlankData = ' ' * ([PSNameEntryWindow]::WindowRBColumn - 2)
+    Static [String]$NameBlankData = ' ' * ([PSNameEntryWindow]::WindowRBColumn - 2)
     
-    [ATString]$CommandActual
+    [ATString]$NameActual
     [ATString]$NameBlankActual
     
     PSNameEntryWindow() : base() {
@@ -59400,7 +59425,7 @@ Class PSNameEntryWindow : WindowBase {
         $this.UpdateDimensions()
         $this.SetupTitle([PSNameEntryWindow]::WindowTitle, [CCTextDefault24]::new())
         
-        $this.CommandActual = [ATString]@{
+        $this.NameActual = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]@{
                     Row = 10
@@ -59416,7 +59441,7 @@ Class PSNameEntryWindow : WindowBase {
                     Column = 2
                 }
             }
-            UserData = [PSNameEntryWindow]::CommandBlankData
+            UserData = [PSNameEntryWindow]::NameBlankData
             UseATReset = $true
         }
     }
@@ -59437,15 +59462,15 @@ Class PSNameEntryWindow : WindowBase {
                     $fpx = $Script:Rui.CursorPosition.X
                     If($fpx -GT 2) {
                         Write-Host "`b `b" -NoNewLine
-                        If($this.CommandActual.UserData.Length -GT 0) {
-                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                        If($this.NameActual.UserData.Length -GT 0) {
+                            $this.NameActual.UserData = $this.NameActual.UserData.Remove($this.NameActual.UserData.Length - 1, 1)
                         }
                     } Elseif($fpx -LT 2) {
                         $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 2; Column = 1 }).ToAutomationCoordinates()
                     } Elseif($fpx -EQ 2) {
                         Write-Host " `b" -NoNewline
-                        If($this.CommandActual.UserData.Length -GT 0) {
-                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                        If($this.NameActual.UserData.Length -GT 0) {
+                            $this.NameActual.UserData = $this.NameActual.UserData.Remove($this.NameActual.UserData.Length - 1, 1)
                         }
                     }
 
@@ -59459,7 +59484,7 @@ Class PSNameEntryWindow : WindowBase {
                         Break
                     } Else {
                         Write-Host "$($KeyCap.Character)" -NoNewLine
-                        $this.CommandActual.UserData += $KeyCap.Character
+                        $this.NameActual.UserData += $KeyCap.Character
                     }
                     
                     Break
@@ -59469,9 +59494,10 @@ Class PSNameEntryWindow : WindowBase {
             $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         }
         
-        Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
+        # THIS SHOULD LIKELY HAPPEN WHEN THE USER COMES BACK TO THIS STATE FROM A FORWARD STATE
+        # Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
         
-        # AT THIS POINT, WE'D NEED TO CHANGE STATE
+        # AT THIS POINT, WE'D NEED TO CHANGE SUBSTATE
     }
 }
 
