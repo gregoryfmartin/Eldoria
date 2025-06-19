@@ -632,6 +632,25 @@ Enum PlayerSetupScreenStates {
 }
 
 
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PS BONUS POINT ALLOC STATE
+#
+# THE STATES THAT THE PS BONUS POINT ALLOC WINDOW GOES THROUGH.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
+Enum PSBonusPointAllocState {
+    AtkPointsMod
+    DefPointsMod
+    MatPointsMod
+    MdfPointsMod
+    SpdPointsMod
+    AccPointsMod
+    LckPointsMod
+}
+
+
 
 
 
@@ -1000,6 +1019,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [PlayerSetupScreenStates]         $Script:ThePssSubstate               = [PlayerSetupScreenStates]::PlayerSetupSetup
 [PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
 [PSGenderSelectionWindow]         $Script:ThePSGenderSelectionWindow   = $null
+[PSBonusPointAllocWindow]         $Script:ThePSBonusPointAllocWindow   = $null
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
 
@@ -1392,7 +1412,13 @@ $Script:Rui = $(Get-Host).UI.RawUI
             Break
         }
         
-        ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {}
+        ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {
+            If($null -EQ $Script:ThePSBonusPointAllocWindow) {
+                $Script:ThePSBonusPointAllocWindow = [PSBonusPointAllocWindow]::new()
+            }
+            
+            $Script:ThePSBonusPointAllocWindow.Draw()
+        }
         
         ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {}
         
@@ -59507,6 +59533,12 @@ Class PSNameEntryWindow : WindowBase {
         # THIS SHOULD LIKELY HAPPEN WHEN THE USER COMES BACK TO THIS STATE FROM A FORWARD STATE
         # Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
         
+        # PLAY A SFX TO ACK THE ENTRY
+        Try {
+            $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
+            $Script:TheSfxMPlayer.Play()
+        } Catch {}
+        
         # AT THIS POINT, WE'D NEED TO CHANGE SUBSTATE
         $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupGenderSelection
         
@@ -59731,6 +59763,527 @@ Class PSGenderSelectionWindow : WindowBase {
     [Void]SetAsInactive() {
         $this.IsActive           = $false
         $this.PlayerChevronDirty = $true
+    }
+}
+
+
+
+
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PS BONUS POINT ALLOC WINDOW
+#
+# ALLOWS THE PLAYER TO ALLOCATE BONUS POINTS TO THE RANDOMLY GENERATED STATS.
+# THESE STATS CAN BE REROLLED BY PRESSING THE R KEY.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
+Class PSBonusPointAllocWindow : WindowBase {
+    Static [Int]$WindowLTRow = 5
+    Static [Int]$WindowLTColumn = 1
+    Static [Int]$WindowRBRow = 15
+    Static [Int]$WindowRBColumn = 22
+    Static [Int]$BonusPointsPool = 10
+    
+    Static [String]$WindowTitle = 'Bonus Points'
+    Static [String]$PointsLeftData = 'Points Left: '
+    Static [String]$AtkPromptData = 'ATK: '
+    Static [String]$DefPromptData = 'DEF: '
+    Static [String]$MatPromptData = 'MAT: '
+    Static [String]$MdfPromptData = 'MDF: '
+    Static [String]$SpdPromptData = 'SPD: '
+    Static [String]$AccPromptData = 'ACC: '
+    Static [String]$LckPromptData = 'LCK: '
+    Static [String]$ChevronLeftData = "`u{27E8}"
+    Static [String]$ChevronRightData = "`u{27E9}"
+    Static [String]$NumberDialLeftArrowData = "`u{23F4}"
+    Static [String]$NumberDialRightArrowData = "`u{23F5}"
+    
+    Static [ConsoleColor24]$NumberDialActiveColor = [CCAppleNPinkLight24]::new()
+    
+    [Int]$AtkPoints
+    [Int]$DefPoints
+    [Int]$MatPoints
+    [Int]$MdfPoints
+    [Int]$SpdPoints
+    [Int]$AccPoints
+    [Int]$LckPoints
+    
+    [Boolean]$PointsLeftPromptDirty
+    [Boolean]$AtkPromptDirty
+    [Boolean]$DefPromptDirty
+    [Boolean]$MatPromptDirty
+    [Boolean]$MdfPromptDirty
+    [Boolean]$SpdPromptDirty
+    [Boolean]$AccPromptDirty
+    [Boolean]$LckPromptDirty
+    [Boolean]$PointsLeftDataDirty
+    [Boolean]$AtkDataDirty
+    [Boolean]$DefDataDirty
+    [Boolean]$MatDataDirty
+    [Boolean]$MdfDataDirty
+    [Boolean]$SpdDataDirty
+    [Boolean]$AccDataDirty
+    [Boolean]$LckDataDirty
+    
+    [ATStringComposite]$PointsLeftActual
+    [ATStringComposite]$AtkPromptActual
+    [ATStringComposite]$DefPromptActual
+    [ATStringComposite]$MatPromptActual
+    [ATStringComposite]$MdfPromptActual
+    [ATStringComposite]$SpdPromptActual
+    [ATStringComposite]$AccPromptActual
+    [ATStringComposite]$LckPromptActual
+    
+    [PSBonusPointAllocState]$State
+
+    PSBonusPointAllocWindow() : base() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row    = [PSBonusPointAllocWindow]::WindowLTRow
+            Column = [PSBonusPointAllocWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row    = [PSBonusPointAllocWindow]::WindowRBRow
+            Column = [PSBonusPointAllocWindow]::WindowRBColumn
+        }
+        
+        $this.UpdateDimensions()
+        $this.SetupTitle([PSBonusPointAllocWindow]::WindowTitle, [CCTextDefault24]::new())
+        
+        $this.PointsLeftPromptDirty = $true
+        $this.AtkPromptDirty = $true
+        $this.DefPromptDirty = $true
+        $this.MatPromptDirty = $true
+        $this.MdfPromptDirty = $true
+        $this.SpdPromptDirty = $true
+        $this.AccPromptDirty = $true
+        $this.LckPromptDirty = $true
+        $this.PointsLeftDataDirty = $false
+        $this.AtkDataDirty = $false
+        $this.DefDataDirty = $false
+        $this.MatDataDirty = $false
+        $this.MdfDataDirty = $false
+        $this.SpdDataDirty = $false
+        $this.AccDataDirty = $false
+        $this.LckDataDirty = $false
+        $this.State = [PSBonusPointAllocState]::AtkPointsMod
+        
+        $this.SetupPointsLeftActual()
+        $this.SetupAtkPromptActual()
+        $this.SetupDefPromptActual()
+        $this.SetupMatPromptActual()
+        $this.SetupMdfPromptActual()
+        $this.SetupSpdPromptActual()
+        $this.SetupAccPromptActual()
+        $this.SetupLckPromptActual()
+    }
+    
+    [Void]SetupPointsLeftActual() {
+        $this.PointsLeftActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 1
+                        Column = $this.LeftTop.Column + 3
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::PointsLeftData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 1
+                        Column = ($this.LeftTop.Column + 3) + [PSBonusPointAllocWindow]::PointsLeftData.Length
+                    }
+                }
+                UserData = "{0:d2}" -F [PSBonusPointAllocWindow]::BonusPointsPool
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]UpdatePointsLeftActual() {
+        $this.PointsLeftActual.CompositeActual[1].UserData = "{0:d2}" -F [PSBonusPointAllocWindow]::BonusPointsPool
+        $this.PointsLeftDataDirty = $true
+    }
+    
+    [Void]SetupAtkPromptActual() {
+        $this.AtkPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 3
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::AtkPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 3
+                        Column = ($this.LeftTop.Column + 4) + [PSBonusPointAllocWindow]::AtkPromptData.Length + 1
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 3
+                        Column = ($this.LeftTop.Column + 4) + [PSBonusPointAllocWindow]::AtkPromptData.Length + 2
+                    }
+                }
+                UserData = " {0:d3} " -F $this.AtkPoints
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 3
+                        Column = ($this.LeftTop.Column + 4) + [PSBonusPointAllocWindow]::AtkPromptData.Length + 7
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]UpdateAtkPromptActual() {
+        $this.AtkPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.AtkPoints
+        $this.AtkDataDirty = $true
+    }
+    
+    [Void]SetupDefPromptActual() {
+        $this.DefPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Column
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::DefPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::DefPromptData.Length + 1
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::DefPromptData.Length + 2
+                    }
+                }
+                UserData = " {0:d3} " -F $this.DefPoints
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::DefPromptData.Length + 7
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]UpdateDefPromptActual() {
+        $this.DefPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.DefPoints
+        $this.DefDataDirty = $true
+    }
+    
+    [Void]SetupMatPromptActual() {
+        $this.MatPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Column
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::MatPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MatPromptData.Length + 1
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MatPromptData.Length + 2
+                    }
+                }
+                UserData = " {0:d3} " -F $this.MatPoints
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MatPromptData.Length + 7
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]UpdateMatPromptActual() {
+        $this.MatPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.MatPoints
+        $this.MatDataDirty = $true
+    }
+    
+    [Void]SetupMdfPromptActual() {
+        $this.MdfPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Column
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::MdfPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MdfPromptData.Length + 1
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MdfPromptData.Length + 2
+                    }
+                }
+                UserData = " {0:d3} " -F $this.MdfPoints
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MdfPromptData.Length + 7
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]UpdateMdfPromptActual() {
+        $this.MdfPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.MdfPoints
+        $this.MdfDataDirty = $true
+    }
+    
+    [Void]SetupSpdPromptActual() {
+        $this.SpdPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.MdfPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.MdfPromptActual.CompositeActual[0].Prefix.Coordinates.Column
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::SpdPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "{0:d3}" -F $this.SpdPoints
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]SetupAccPromptActual() {
+        $this.AccPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.SpdPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.SpdPromptActual.CompositeActual[0].Prefix.Coordinates.Column
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::SpdPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "{0:d3}" -F $this.AccPoints
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]SetupLckPromptActual() {
+        $this.LckPromptActual = [ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.AccPromptActual.CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Column = $this.AccPromptActual.CompositeActual[0].Prefix.Coordinates.Column
+                    }
+                }
+                UserData = "$([PSBonusPointAllocWindow]::LckPromptData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialLeftArrowData)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "{0:d3}" -F $this.LckPoints
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
+                UseATReset = $true
+            }
+        ))
+    }
+    
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+        
+        If($this.PointsLeftPromptDirty -EQ $true) {
+            Write-Host "$($this.PointsLeftActual.ToAnsiControlSequenceString())"
+            $this.PointsLeftPromptDirty = $true
+        }
+        If($this.PointsLeftDataDirty -EQ $true) {
+            Write-Host "$($this.PointsLeftActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            $this.PointsLeftDataDirty = $false
+        }
+        If($this.AtkPromptDirty -EQ $true) {
+            Write-Host "$($this.AtkPromptActual.ToAnsiControlSequenceString())"
+            $this.AtkPromptDirty = $false
+        }
+        If($this.AtkDataDirty -EQ $true) {
+            Write-Host "$($this.AtkPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            $this.AtkDataDirty = $false
+        }
+        If($this.DefPromptDirty -EQ $true) {
+            Write-Host "$($this.DefPromptActual.ToAnsiControlSequenceString())"
+            $this.DefPromptDirty = $false
+        }
+        If($this.DefDataDirty -EQ $true) {
+            Write-Host "$($this.DefPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            $this.DefDataDirty = $false
+        }
+        If($this.MatPromptDirty -EQ $true) {
+            Write-Host "$($this.MatPromptActual.ToAnsiControlSequenceString())"
+            $this.MatPromptDirty = $false
+        }
+        If($this.MatDataDirty -EQ $true) {
+            Write-Host "$($this.MatPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            $this.MatDataDirty = $false
+        }
+        If($this.MdfPromptDirty -EQ $true) {
+            Write-Host "$($this.MdfPromptActual.ToAnsiControlSequenceString())"
+            $this.MdfPromptDirty = $false
+        }
+        If($this.MdfDataDirty -EQ $true) {
+            Write-Host "$($this.MdfPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            $this.MdfDataDirty = $false
+        }
     }
 }
 
