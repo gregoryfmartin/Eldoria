@@ -59789,7 +59789,6 @@ Class PSBonusPointAllocWindow : WindowBase {
     Static [Int]$WindowLTColumn = 1
     Static [Int]$WindowRBRow = 15
     Static [Int]$WindowRBColumn = 22
-    Static [Int]$BonusPointsPool = 10
     
     Static [String]$WindowTitle = 'Bonus Points'
     Static [String]$PointsLeftData = 'Points Left: '
@@ -59807,6 +59806,7 @@ Class PSBonusPointAllocWindow : WindowBase {
     
     Static [ConsoleColor24]$NumberDialActiveColor = [CCAppleNPinkLight24]::new()
     
+    [Int]$PointsPool
     [Int]$AtkPoints
     [Int]$DefPoints
     [Int]$MatPoints
@@ -59814,6 +59814,13 @@ Class PSBonusPointAllocWindow : WindowBase {
     [Int]$SpdPoints
     [Int]$AccPoints
     [Int]$LckPoints
+    [Int]$AtkModPoints
+    [Int]$DefModPoints
+    [Int]$MatModPoints
+    [Int]$MdfModPoints
+    [Int]$SpdModPoints
+    [Int]$AccModPoints
+    [Int]$LckModPoints
     
     [Boolean]$PointsLeftPromptDirty
     [Boolean]$AtkPromptDirty
@@ -59873,6 +59880,21 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.AccDataDirty = $false
         $this.LckDataDirty = $false
         $this.State = [PSBonusPointAllocState]::AtkPointsMod
+        $this.PointsPool = 10
+        $this.AtkPoints = 0
+        $this.DefPoints = 0
+        $this.MatPoints = 0
+        $this.MdfPoints = 0
+        $this.SpdPoints = 0
+        $this.AccPoints = 0
+        $this.LckPoints = 0
+        $this.AtkModPoints = 0
+        $this.DefModPoints = 0
+        $this.MatModPoints = 0
+        $this.MdfModPoints = 0
+        $this.SpdModPoints = 0
+        $this.AccModPoints = 0
+        $this.LckModPoints = 0        
         
         $this.GenerateStats()
         
@@ -60131,6 +60153,80 @@ Class PSBonusPointAllocWindow : WindowBase {
         }
     }
     
+    [Void]IncrementStatModVal() {
+        Switch($this.State) {
+            ([PSBonusPointAllocState]::AtkPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.AtkModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateAtkPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::DefPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.DefModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateDefPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MatPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.MatModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateMatPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MdfPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.MdfModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateMdfPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::SpdPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.SpdModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateSpdPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::AccPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.AccModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateAccPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::LckPointsMod) {
+                If($this.PointsPool -GT 0) {
+                    $this.LckModPoints++
+                    $this.DecrementPointsLeft()
+                    $this.UpdateLckPromptActual()
+                }
+                
+                Break
+            }
+        }
+    }
+    
     [Void]SetupPointsLeftActual() {
         $this.PointsLeftActual = [ATStringComposite]::new(@(
             [ATString]@{
@@ -60152,14 +60248,14 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = ($this.LeftTop.Column + 3) + [PSBonusPointAllocWindow]::PointsLeftData.Length
                     }
                 }
-                UserData = "{0:d2}" -F [PSBonusPointAllocWindow]::BonusPointsPool
+                UserData = "{0:d2}" -F $this.PointsPool
                 UseATReset = $true
             }
         ))
     }
     
     [Void]UpdatePointsLeftActual() {
-        If([PSBonusPointAllocWindow]::BonusPointsPool -LE 0) {
+        If($this.PointsPool -LE 0) {
             $this.PointsLeftActual.CompositeActual[1].Prefix.ForegroundColor = [CCAppleNRedLight24]::new()
             $this.PointsLeftActual.CompositeActual[1].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
         } Else {
@@ -60167,21 +60263,21 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.PointsLeftActual.CompositeActual[1].Prefix.Decorations = [ATDecorationNone]::new()
         }
         
-        $this.PointsLeftActual.CompositeActual[1].UserData = "{0:d2}" -F [PSBonusPointAllocWindow]::BonusPointsPool
+        $this.PointsLeftActual.CompositeActual[1].UserData = "{0:d2}" -F $this.PointsPool
         $this.PointsLeftDataDirty = $true
     }
     
     [Void]DecrementPointsLeft() {
-        If(([PSBonusPointAllocWindow]::BonusPointsPool - 1) -GE 0) {
-            [PSBonusPointAllocWindow]::BonusPointsPool--
+        If(($this.PointsPool - 1) -GE 0) {
+            $this.PointsPool--
             
             $this.UpdatePointsLeftActual()
         }
     }
     
     [Void]IncrementPointsLeft() {
-        If(([PSBonusPointAllocWindow]::BonusPointsPool) + 1 -LE 10) {
-            [PSBonusPointAllocWindow]::BonusPointsPool++
+        If(($this.PointsPool + 1) -LE 10) {
+            $this.PointsPool++
             
             $this.UpdatePointsLeftActual()
         }
@@ -60219,7 +60315,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = ($this.LeftTop.Column + 4) + [PSBonusPointAllocWindow]::AtkPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.AtkPoints
+                UserData = " {0:d3} " -F ($this.AtkPoints + $this.AtkModPoints)
                 UseATReset = $true
             },
             [ATString]@{
@@ -60237,7 +60333,14 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateAtkPromptActual() {
-        $this.AtkPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.AtkPoints
+        $this.AtkPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.AtkPoints + $this.AtkModPoints)
+        
+        If($this.AtkModPoints -EQ 0) {
+            $this.AtkPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.AtkModPoints -GT 0) {
+            $this.AtkPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
         $this.AtkDataDirty = $true
     }
     
@@ -60273,7 +60376,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = $this.AtkPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::DefPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.DefPoints
+                UserData = " {0:d3} " -F ($this.DefPoints + $this.DefModPoints)
                 UseATReset = $true
             },
             [ATString]@{
@@ -60291,7 +60394,14 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateDefPromptActual() {
-        $this.DefPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.DefPoints
+        $this.DefPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.DefPoints + $this.DefModPoints)
+        
+        If($this.DefModPoints -EQ 0) {
+            $this.DefPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.DefModPoints -GT 0) {
+            $this.DefPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
         $this.DefDataDirty = $true
     }
     
@@ -60327,7 +60437,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = $this.DefPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MatPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.MatPoints
+                UserData = " {0:d3} " -F ($this.MatPoints + $this.MatModPoints)
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
@@ -60344,7 +60454,14 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateMatPromptActual() {
-        $this.MatPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.MatPoints
+        $this.MatPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.MatPoints + $this.MatModPoints)
+        
+        If($this.MatModPoints -EQ 0) {
+            $this.MatPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.MatModPoints -GT 0) {
+            $this.MatPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
         $this.MatDataDirty = $true
     }
     
@@ -60380,7 +60497,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = $this.MatPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::MdfPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.MdfPoints
+                UserData = " {0:d3} " -F ($this.MdfPoints + $this.MdfModPoints)
                 UseATReset = $true
             },
             [ATString]@{
@@ -60398,7 +60515,14 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateMdfPromptActual() {
-        $this.MdfPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.MdfPoints
+        $this.MdfPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.MdfPoints + $this.MdfModPoints)
+        
+        If($this.MdfModPoints -EQ 0) {
+            $this.MdfPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.MdfModPoints -GT 0) {
+            $this.MdfPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
         $this.MdfDataDirty = $true
     }
     
@@ -60434,7 +60558,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = $this.MdfPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::SpdPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.SpdPoints
+                UserData = " {0:d3} " -F ($this.SpdPoints + $this.SpdModPoints)
                 UseATReset = $true
             },
             [ATString]@{
@@ -60452,7 +60576,14 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateSpdPromptActual() {
-        $this.SpdPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.SpdPoints
+        $this.SpdPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.SpdPoints + $this.SpdModPoints)
+        
+        If($this.SpdModPoints -EQ 0) {
+            $this.SpdPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.SpdModPoints -GT 0) {
+            $this.SpdPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
         $this.SpdDataDirty = $true
     }
     
@@ -60488,7 +60619,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = $this.SpdPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::AccPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.AccPoints
+                UserData = " {0:d3} " -F ($this.AccPoints + $this.AccModPoints)
                 UseATReset = $true
             },
             [ATString]@{
@@ -60506,8 +60637,15 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateAccPromptActual() {
-        $this.AccPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.AccPoints
-        $this.SpdDataDirty = $true
+        $this.AccPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.AccPoints + $this.AccModPoints)
+        
+        If($this.AccModPoints -EQ 0) {
+            $this.AccPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.AccModPoints -GT 0) {
+            $this.AccPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
+        $this.AccDataDirty = $true
     }
     
     [Void]SetupLckPromptActual() {
@@ -60542,7 +60680,7 @@ Class PSBonusPointAllocWindow : WindowBase {
                         Column = $this.AccPromptActual.CompositeActual[0].Prefix.Coordinates.Column + [PSBonusPointAllocWindow]::LckPromptData.Length + 2
                     }
                 }
-                UserData = " {0:d3} " -F $this.LckPoints
+                UserData = " {0:d3} " -F ($this.LckPoints + $this.LckModPoints)
                 UseATReset = $true
             },
             [ATString]@{
@@ -60560,7 +60698,14 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]UpdateLckPromptActual() {
-        $this.LckPromptActual.CompositeActual[2].UserData = " {0:d3} " -F $this.LckPoints
+        $this.LckPromptActual.CompositeActual[2].UserData = " {0:d3} " -F ($this.LckPoints + $this.LckModPoints)
+        
+        If($this.LckModPoints -EQ 0) {
+            $this.LckPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Elseif($this.LckModPoints -GT 0) {
+            $this.LckPromptActual.CompositeActual[2].Prefix.ForegroundColor = [CCAppleNMintLight24]::new()
+        }
+        
         $this.LckDataDirty = $true
     }
     
@@ -60580,7 +60725,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.AtkPromptDirty = $false
         }
         If($this.AtkDataDirty -EQ $true) {
-            Write-Host "$($this.AtkPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.AtkPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.AtkDataDirty = $false
         }
         If($this.DefPromptDirty -EQ $true) {
@@ -60644,7 +60789,8 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 
                 39 { # RIGHT ARROW
-                    $this.IncrementPointsLeft()
+                    #$this.IncrementPointsLeft()
+                    $this.IncrementStatModVal()
                     
                     Break
                 }
