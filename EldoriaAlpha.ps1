@@ -59882,6 +59882,158 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.SetupSpdPromptActual()
         $this.SetupAccPromptActual()
         $this.SetupLckPromptActual()
+        
+        $this.UpdateStateTargetVisuals()
+    }
+    
+    [Void]CycleStateForward() {
+        Switch($this.State) {
+            ([PSBonusPointAllocState]::AtkPointsMod) {
+                $this.State = [PSBonusPointAllocState]::DefPointsMod
+                
+                $this.AtkPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AtkPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.AtkPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AtkPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::DefPointsMod) {
+                $this.State = [PSBonusPointAllocState]::MatPointsMod
+                
+                $this.DefPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.DefPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.DefPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.DefPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MatPointsMod) {
+                $this.State = [PSBonusPointAllocState]::MdfPointsMod
+                
+                $this.MatPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MatPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.MatPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MatPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MdfPointsMod) {
+                $this.State = [PSBonusPointAllocState]::SpdPointsMod
+                
+                $this.MdfPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MdfPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.MdfPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MdfPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::SpdPointsMod) {
+                $this.State = [PSBonusPointAllocState]::AccPointsMod
+                
+                $this.SpdPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.SpdPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.SpdPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.SpdPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::AccPointsMod) {
+                $this.State = [PSBonusPointAllocState]::LckPointsMod
+                
+                $this.AccPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AccPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.AccPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AccPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::LckPointsMod) {
+                $this.State = [PSBonusPointAllocState]::AtkPointsMod
+                
+                $this.LckPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.LckPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.LckPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.LckPromptDirty = $true
+                
+                Break
+            }
+        }
+        
+        $this.UpdateStateTargetVisuals()
+    }
+    
+    [Void]UpdateStateTargetVisuals() {
+        Switch($this.State) {
+            ([PSBonusPointAllocState]::AtkPointsMod) {
+                $this.AtkPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.AtkPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.AtkPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.AtkPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::DefPointsMod) {
+                $this.DefPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.DefPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.DefPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.DefPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MatPointsMod) {
+                $this.MatPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.MatPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.MatPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.MatPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MdfPointsMod) {
+                $this.MdfPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.MdfPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.MdfPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.MdfPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::SpdPointsMod) {
+                $this.SpdPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.SpdPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.SpdPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.SpdPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::AccPointsMod) {
+                $this.AccPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.AccPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.AccPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.AccPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::LckPointsMod) {
+                $this.LckPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.LckPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCAppleNYellowLight24]::new()
+                $this.LckPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
+                $this.LckPromptDirty = $true
+                
+                Break
+            }
+        }
     }
     
     [Void]SetupPointsLeftActual() {
@@ -60409,6 +60561,9 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 
                 40 { # DOWN ARROW
+                    $this.CycleStateForward()
+                    $this.Draw()
+                    
                     Break
                 }
             }
