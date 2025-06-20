@@ -59969,6 +59969,89 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.UpdateStateTargetVisuals()
     }
     
+    [Void]CycleStateBackward() {
+        Switch($this.State) {
+            ([PSBonusPointAllocState]::AtkPointsMod) {
+                $this.State = [PSBonusPointAllocState]::LckPointsMod
+                
+                $this.AtkPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AtkPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.AtkPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AtkPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::LckPointsMod) {
+                $this.State = [PSBonusPointAllocState]::AccPointsMod
+                
+                $this.LckPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.LckPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.LckPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.LckPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::AccPointsMod) {
+                $this.State = [PSBonusPointAllocState]::SpdPointsMod
+                
+                $this.AccPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AccPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.AccPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.AccPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::SpdPointsMod) {
+                $this.State = [PSBonusPointAllocState]::MdfPointsMod
+                
+                $this.SpdPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.SpdPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.SpdPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.SpdPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MdfPointsMod) {
+                $this.State = [PSBonusPointAllocState]::MatPointsMod
+                
+                $this.MdfPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MdfPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.MdfPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MdfPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MatPointsMod) {
+                $this.State = [PSBonusPointAllocState]::DefPointsMod
+                
+                $this.MatPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MatPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.MatPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.MatPromptDirty = $true
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::DefPointsMod) {
+                $this.State = [PSBonusPointAllocState]::AtkPointsMod
+                
+                $this.DefPromptActual.CompositeActual[0].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.DefPromptActual.CompositeActual[0].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                $this.DefPromptActual.CompositeActual[2].Prefix.Decorations = [ATDecorationNone]::new()
+                $this.DefPromptDirty = $true
+                
+                Break
+            }
+        }
+        
+        $this.UpdateStateTargetVisuals()
+    }
+    
     [Void]UpdateStateTargetVisuals() {
         Switch($this.State) {
             ([PSBonusPointAllocState]::AtkPointsMod) {
@@ -60544,29 +60627,30 @@ Class PSBonusPointAllocWindow : WindowBase {
             Switch($KeyCap.VirtualKeyCode) {
                 37 { # LEFT ARROW
                     $this.DecrementPointsLeft()
-                    $this.Draw()
                     
                     Break
                 }
                 
                 39 { # RIGHT ARROW
                     $this.IncrementPointsLeft()
-                    $this.Draw()
                     
                     Break
                 }
                 
                 38 { # UP ARROW
+                    $this.CycleStateBackward()
+                    
                     Break
                 }
                 
                 40 { # DOWN ARROW
                     $this.CycleStateForward()
-                    $this.Draw()
                     
                     Break
                 }
             }
+            
+            $this.Draw()
             
             $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         }
