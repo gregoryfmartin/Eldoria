@@ -60227,6 +60227,80 @@ Class PSBonusPointAllocWindow : WindowBase {
         }
     }
     
+    [Void]DecrementStatModVal() {
+        Switch($this.State) {
+            ([PSBonusPointAllocState]::AtkPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.AtkModPoints -GT 0) {
+                    $this.AtkModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateAtkPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::DefPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.DefModPoints -GT 0) {
+                    $this.DefModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateDefPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MatPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.MatModPoints -GT 0) {
+                    $this.MatModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateMatPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::MdfPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.MdfModPoints -GT 0) {
+                    $this.MdfModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateMdfPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::SpdPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.SpdModPoints -GT 0) {
+                    $this.SpdModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateSpdPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::AccPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.AccModPoints -GT 0) {
+                    $this.AccModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateAccPromptActual()
+                }
+                
+                Break
+            }
+            
+            ([PSBonusPointAllocState]::LckPointsMod) {
+                If($this.PointsPool -LT 10 -AND $this.LckModPoints -GT 0) {
+                    $this.LckModPoints--
+                    $this.IncrementPointsLeft()
+                    $this.UpdateLckPromptActual()
+                }
+                
+                Break
+            }
+        }
+    }
+    
     [Void]SetupPointsLeftActual() {
         $this.PointsLeftActual = [ATStringComposite]::new(@(
             [ATString]@{
@@ -60714,7 +60788,7 @@ Class PSBonusPointAllocWindow : WindowBase {
         
         If($this.PointsLeftPromptDirty -EQ $true) {
             Write-Host "$($this.PointsLeftActual.ToAnsiControlSequenceString())"
-            $this.PointsLeftPromptDirty = $true
+            $this.PointsLeftPromptDirty = $false
         }
         If($this.PointsLeftDataDirty -EQ $true) {
             Write-Host "$($this.PointsLeftActual.CompositeActual[1].ToAnsiControlSequenceString())"
@@ -60733,7 +60807,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.DefPromptDirty = $false
         }
         If($this.DefDataDirty -EQ $true) {
-            Write-Host "$($this.DefPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.DefPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.DefDataDirty = $false
         }
         If($this.MatPromptDirty -EQ $true) {
@@ -60741,7 +60815,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.MatPromptDirty = $false
         }
         If($this.MatDataDirty -EQ $true) {
-            Write-Host "$($this.MatPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.MatPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.MatDataDirty = $false
         }
         If($this.MdfPromptDirty -EQ $true) {
@@ -60749,7 +60823,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.MdfPromptDirty = $false
         }
         If($this.MdfDataDirty -EQ $true) {
-            Write-Host "$($this.MdfPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.MdfPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.MdfDataDirty = $false
         }
         If($this.SpdPromptDirty -EQ $true) {
@@ -60757,7 +60831,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.SpdPromptDirty = $false
         }
         If($this.SpdDataDirty -EQ $true) {
-            Write-Host "$($this.SpdPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.SpdPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.SpdDataDirty = $false
         }
         If($this.AccPromptDirty -EQ $true) {
@@ -60765,7 +60839,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.AccPromptDirty = $false
         }
         If($this.AccDataDirty -EQ $true) {
-            Write-Host "$($this.AccPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.AccPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.AccDataDirty = $false
         }
         If($this.LckPromptDirty -EQ $true) {
@@ -60773,7 +60847,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             $this.LckPromptDirty = $false
         }
         If($this.LckDataDirty -EQ $true) {
-            Write-Host "$($this.LckPromptActual.CompositeActual[1].ToAnsiControlSequenceString())"
+            Write-Host "$($this.LckPromptActual.CompositeActual[2].ToAnsiControlSequenceString())"
             $this.LckDataDirty = $false
         }
     }
@@ -60783,13 +60857,12 @@ Class PSBonusPointAllocWindow : WindowBase {
         While($KeyCap.VirtualKeyCode -NE 13) {
             Switch($KeyCap.VirtualKeyCode) {
                 37 { # LEFT ARROW
-                    $this.DecrementPointsLeft()
+                    $this.DecrementStatModVal()
                     
                     Break
                 }
                 
                 39 { # RIGHT ARROW
-                    #$this.IncrementPointsLeft()
                     $this.IncrementStatModVal()
                     
                     Break
