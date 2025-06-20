@@ -59874,6 +59874,8 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.LckDataDirty = $false
         $this.State = [PSBonusPointAllocState]::AtkPointsMod
         
+        $this.GenerateStats()
+        
         $this.SetupPointsLeftActual()
         $this.SetupAtkPromptActual()
         $this.SetupDefPromptActual()
@@ -59884,6 +59886,16 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.SetupLckPromptActual()
         
         $this.UpdateStateTargetVisuals()
+    }
+    
+    [Void]GenerateStats() {
+        $this.AtkPoints = (Get-Random -Minimum 3 -Maximum 15)
+        $this.DefPoints = (Get-Random -Minimum 3 -Maximum 15)
+        $this.MatPoints = (Get-Random -Minimum 3 -Maximum 15)
+        $this.MdfPoints = (Get-Random -Minimum 3 -Maximum 15)
+        $this.SpdPoints = (Get-Random -Minimum 3 -Maximum 15)
+        $this.AccPoints = (Get-Random -Minimum 3 -Maximum 15)
+        $this.LckPoints = (Get-Random -Minimum 3 -Maximum 15)
     }
     
     [Void]CycleStateForward() {
