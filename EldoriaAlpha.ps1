@@ -1016,7 +1016,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [Runspace]                        $Script:TheOffThread                 = [RunspaceFactory]::CreateRunspace()
 [PowerShell]                      $Script:TheOffShell                  = [PowerShell]::Create()
 [IAsyncResult]                    $Script:SSAInputAsr                  = $null
-[PlayerSetupScreenStates]         $Script:ThePssSubstate               = [PlayerSetupScreenStates]::PlayerSetupSetup
+[PlayerSetupScreenStates]         $Script:ThePssSubstate               = [PlayerSetupScreenStates]::new()
 [PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
 [PSGenderSelectionWindow]         $Script:ThePSGenderSelectionWindow   = $null
 [PSBonusPointAllocWindow]         $Script:ThePSBonusPointAllocWindow   = $null
@@ -1363,7 +1363,7 @@ $Script:Rui = $(Get-Host).UI.RawUI
             Start-Sleep -Seconds 1
 
             $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-            $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen   
+            $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
         }
     }
 
@@ -60885,6 +60885,66 @@ Class PSBonusPointAllocWindow : WindowBase {
             
             $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         }
+        
+        # AT THIS POINT, THE USER WILL HAVE PRESSED THE ENTER KEY
+        # FOR THE PURPOSES OF PROTOTYPING, WE'LL JUST TRANSITION STATE.
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+#
+# PS AFFINITY SELECT WINDOW
+#
+# THIS WINDOW ALLOWS THE USER TO SELECT THEIR DESIRED AFFINITY.
+#
+#//////////////////////////////////////////////////////////////////////////////
+Class PSAffinitySelectWindow : WindowBase {
+    Static [Int]$WindowLTRow = 4
+    Static [Int]$WindowLTColumn = 25
+    Static [Int]$WindowRBRow = 8
+    Static [Int]$WindowRBColumn = 38
+    
+    Static [String]$PlayerChevronData = '❱'
+    Static [String]$PlayerChevronBlankData = ' '
+    Static [String]$AffNameBlankData = ' ' * 7
+    Static [String]$WindowTitle = ' Affinity'
+    
+    [Int]$ActiveChevronIndex
+    
+    [Boolean]$PlayerChevronDirty
+    [Boolean]$AffinityListDirty
+    [Boolean]$ActiveItemBlinking
+    [Boolean]$IsActive
+    
+    [List[ValueType[[ATString], [Boolean]]]]$ChevronsActual
+    [List[ATStringComposite]]$ItemLabelsActual
+    [List[ATString]]$ItemLabelBlanksActual
+    
+    PSAffinitySelectWindow() : base() {
+        $this.LeftTop = [ATCoordinates]@{
+            Row = [PSAffinitySelectWindow]::WindowLTRow
+            Column = [PSAffinitySelectWindow]::WindowLTColumn
+        }
+        $this.RightBottom = [ATCoordinates]@{
+            Row = [PSAffinitySelectWindow]::WindowRBRow
+            Column = [PSAffinitySelectWindow]::WindowBRColumn
+        }
+        
+        $this.UpdateDimensions()
+        $this.SetupTitle([PSAffinitySelectWindow]::WindowTitle, [CCTextDefault24]::new())
+        
+        $this.ActiveChevronIndex = 0
+        $this.PlayerChevronDirty = $false
     }
 }
 
