@@ -12,7 +12,8 @@ Set-StrictMode -Version Latest
 
 Clear-Host
 
+Write-Host "`e[?25l" -NoNewLine
 Write-Host "`e[38;2;15;82;186mLoading Eldoria`e[m"
-Write-Host "`e[38;2;155;17;30mPlease wait...`e[m"
+Write-Host "`e[38;2;155;17;30m`e[5mPlease wait...`e[m"
 
 .\EldoriaAlpha.ps1

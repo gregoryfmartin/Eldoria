@@ -1020,6 +1020,7 @@ Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1
 [PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
 [PSGenderSelectionWindow]         $Script:ThePSGenderSelectionWindow   = $null
 [PSBonusPointAllocWindow]         $Script:ThePSBonusPointAllocWindow   = $null
+[PSAffinitySelectWindow]          $Script:ThePSAffinitySelectWindow    = $null
 Write-Progress -Activity 'Setting up Globals' -Id 1 -PercentComplete -1 -Completed
 
 
@@ -1421,7 +1422,14 @@ $Script:Rui = $(Get-Host).UI.RawUI
             $Script:ThePSBonusPointAllocWindow.HandleInput()
         }
         
-        ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {}
+        ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {
+            If($null -EQ $Script:ThePSAffinitySelectWindow) {
+                $Script:ThePSAffinitySelectWindow = [PSAffinitySelectWindow]::new()
+            }
+            
+            $Script:ThePSAffinitySelectWindow.Draw()
+            $Script:ThePSAffinitySelectWindow.HandleInput()
+        }
         
         ([PlayerSetupScreenStates]::PlayerSetupProfileSelect) {}
         
@@ -60869,12 +60877,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 
                 38 { # UP ARROW
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
                     $this.CycleStateBackward()
                     
                     Break
                 }
                 
                 40 { # DOWN ARROW
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
                     $this.CycleStateForward()
                     
                     Break
@@ -60888,7 +60904,7 @@ Class PSBonusPointAllocWindow : WindowBase {
         
         # AT THIS POINT, THE USER WILL HAVE PRESSED THE ENTER KEY
         # FOR THE PURPOSES OF PROTOTYPING, WE'LL JUST TRANSITION STATE.
-        
+        $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupAffinitySelect
     }
 }
 
@@ -60909,26 +60925,36 @@ Class PSBonusPointAllocWindow : WindowBase {
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class PSAffinitySelectWindow : WindowBase {
-    Static [Int]$WindowLTRow = 4
+    Static [Int]$WindowLTRow = 5
     Static [Int]$WindowLTColumn = 25
-    Static [Int]$WindowRBRow = 8
+    Static [Int]$WindowRBRow = 13
     Static [Int]$WindowRBColumn = 38
     
-    Static [String]$PlayerChevronData = '❱'
-    Static [String]$PlayerChevronBlankData = ' '
-    Static [String]$AffNameBlankData = ' ' * 7
+    Static [String]$ChevronData = '❱'
+    Static [String]$ChevronBlankData = ' '
+    Static [String]$AffinityNameBlankData = ' ' * 7
     Static [String]$WindowTitle = ' Affinity'
+    
+    Static [String[]]$AffinityLabelData = @(
+        'Fire',
+        'Water',
+        'Earth',
+        'Wind',
+        'Light',
+        'Dark',
+        'Ice'
+    )
     
     [Int]$ActiveChevronIndex
     
-    [Boolean]$PlayerChevronDirty
+    [Boolean]$ChevronDirty
     [Boolean]$AffinityListDirty
     [Boolean]$ActiveItemBlinking
-    [Boolean]$IsActive
     
-    [List[ValueType[[ATString], [Boolean]]]]$ChevronsActual
-    [List[ATStringComposite]]$ItemLabelsActual
-    [List[ATString]]$ItemLabelBlanksActual
+    [List[ValueTuple[[ATString], [Boolean]]]]$ChevronsActual
+    [List[ATStringComposite]]$AffinityLabelsActual
+    [List[ATString]]$AffinityLabelBlanksActual
+    [List[ATString]]$ChevronBlanksActual
     
     PSAffinitySelectWindow() : base() {
         $this.LeftTop = [ATCoordinates]@{
@@ -60937,14 +60963,315 @@ Class PSAffinitySelectWindow : WindowBase {
         }
         $this.RightBottom = [ATCoordinates]@{
             Row = [PSAffinitySelectWindow]::WindowRBRow
-            Column = [PSAffinitySelectWindow]::WindowBRColumn
+            Column = [PSAffinitySelectWindow]::WindowRBColumn
         }
         
         $this.UpdateDimensions()
         $this.SetupTitle([PSAffinitySelectWindow]::WindowTitle, [CCTextDefault24]::new())
         
         $this.ActiveChevronIndex = 0
-        $this.PlayerChevronDirty = $false
+        $this.ChevronDirty = $true
+        $this.AffinityListDirty = $true
+        $this.ActiveItemBlinking = $false
+        
+        $this.CreateChevrons()
+        $this.CreateChevronBlanks()
+        $this.CreateAffinityLabels()
+        $this.CreateAffinityLabelBlanks()
+    }
+    
+    [Void]CreateChevrons() {
+        $this.ChevronsActual = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        For([Int]$I = 0; $I -LT [PSAffinitySelectWindow]::AffinityLabelData.Count; $I++) {
+            $this.ChevronsActual.Add(
+                [ValueTuple]::Create(
+                    [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [CCTextDefault24]::new()
+                            Coordinates = [ATCoordinates]@{
+                                Row = ($this.LeftTop.Row + 1) + $I
+                                Column = $this.LeftTop.Column + 2
+                            }
+                        }
+                        UserData = "$([PSAffinitySelectWindow]::ChevronData)"
+                        UseATReset = $true
+                    },
+                    $false
+                )
+            )
+        }
+        
+        $ChevCopy = $this.ChevronsActual[0]
+        $this.ChevronsActual[0] = [ValueTuple]::Create($ChevCopy.Item1, $true)
+    }
+    
+    [Void]CreateChevronBlanks() {
+        $this.ChevronBlanksActual = [List[ATString]]::new()
+        For([Int]$I = 0; $I -LT [PSAffinitySelectWindow]::AffinityLabelData.Count; $I++) {
+            $this.ChevronBlanksActual.Add(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        Coordinates = [ATCoordinates]@{
+                            Row = ($this.LeftTop.Row + 1) + $I
+                            Column = $this.LeftTop.Column + 2
+                        }
+                    }
+                    UserData = "$([PSAffinitySelectWindow]::ChevronBlankData)"
+                    UseATReset = $true
+                }
+            )
+        }
+    }
+    
+    [Void]CreateAffinityLabels() {
+        $this.AffinityLabelsActual = [List[ATStringComposite]]::new()
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalFire].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 1
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalFire].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Fire'
+                UseATReset = $true
+            }
+        )))
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalWater].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 2
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalWater].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Water'
+                UseATReset = $true
+            }
+        )))
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalEarth].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 3
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalEarth].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Earth'
+                UseATReset = $true
+            }
+        )))
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalWind].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 4
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalWind].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Wind'
+                UseATReset = $true
+            }
+        )))
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalLight].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 5
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalLight].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Light'
+                UseATReset = $true
+            }
+        )))
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalDark].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 6
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalDark].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Dark'
+                UseATReset = $true
+            }
+        )))
+        
+        $this.AffinityLabelsActual.Add([ATStringComposite]::new(@(
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = $Script:BATAdornmentCharTable[[BattleActionType]::ElementalIce].Item2
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + 7
+                        Column = $this.LeftTop.Column + 4
+                    }
+                }
+                UserData = "$($Script:BATAdornmentCharTable[[BattleActionType]::ElementalIce].Item1)"
+                UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                }
+                UserData = ' Ice'
+                UseATReset = $true
+            }
+        )))
+    }
+    
+    [Void]CreateAffinityLabelBlanks() {
+        $this.AffinityLabelBlanksActual = [List[ATString]]::new()
+        For([Int]$I = 0; $I -LT [PSAffinitySelectWindow]::AffinityLabelData.Count; $I++) {
+            $this.AffinityLabelBlanksActual.Add(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        Coordinates = [ATCoordinates]@{
+                            Row = ($this.LeftTop.Row + 1) + $I
+                            Column = $this.LeftTop.Column + 5
+                        }
+                    }
+                    UserData = "$([PSAffinitySelectWindow]::AffinityNameBlankData)"
+                    UseATReset = $true
+                }
+            )
+        }
+    }
+    
+    [Void]Draw() {
+        ([WindowBase]$this).Draw()
+        
+        If($this.AffinityListDirty -EQ $true) {
+            For([Int]$I = 0; $I -LT [PSAffinitySelectWindow]::AffinityLabelData.Count; $I++) {
+                Write-Host "$($this.AffinityLabelBlanksActual[$I].ToAnsiControlSequenceString())$($this.AffinityLabelsActual[$I].ToAnsiControlSequenceString())"
+            }
+            
+            $this.AffinityListDirty = $false
+        }
+        
+        If($this.ChevronDirty -EQ $true) {
+            For([Int]$I = 0; $I -LT [PSAffinitySelectWindow]::AffinityLabelData.Count; $I++) {
+                If($this.ChevronsActual[$I].Item2 -EQ $true) {
+                    Write-Host "$($this.ChevronBlanksActual[$I].ToAnsiControlSequenceString())$($this.ChevronsActual[$I].Item1.ToAnsiControlSequenceString())"
+                } Else {
+                    Write-Host "$($this.ChevronBlanksActual[$I].ToAnsiControlSequenceString())"
+                }
+            }
+            
+            $this.ChevronDirty = $false
+        }
+    }
+    
+    [Void]HandleInput() {
+        $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+        
+        While($KeyCap.VirtualKeyCode -NE 13) {
+            Switch($KeyCap.VirtualKeyCode) {
+                38 { # UP ARROW
+                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $false)
+                    
+                    If($this.ActiveChevronIndex -EQ 0) {
+                        $this.ActiveChevronIndex = [PSAffinitySelectWindow]::AffinityLabelData.Count - 1
+                    } Else {
+                        $this.ActiveChevronIndex--
+                    }
+                    
+                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $true)
+                    
+                    $this.ChevronDirty = $true
+                    
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
+                    
+                    Break
+                }
+                
+                40 { # DOWN ARROW
+                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $false)
+                    
+                    If($this.ActiveChevronIndex -EQ ([PSAffinitySelectWindow]::AffinityLabelData.Count - 1)) {
+                        $this.ActiveChevronIndex = 0
+                    } Else {
+                        $this.ActiveChevronIndex++
+                    }
+                    
+                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $true)
+                    
+                    $this.ChevronDirty = $true
+                    
+                    Try {
+                        $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                        $Script:TheSfxMPlayer.Play()
+                    } Catch {}
+                    
+                    Break
+                }
+            }
+            
+            $this.Draw()
+        
+            $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+        }
     }
 }
 
