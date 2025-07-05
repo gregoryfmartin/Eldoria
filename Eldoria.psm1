@@ -8,7 +8,13 @@ Foreach($File in $PublicFunctions) {
     . $File.FullName
 }
 
-$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
-Foreach($File in $Classes) {
+$ColorSupport = Get-ChildItem -Path "$PSScriptRoot\Classes\ConsoleColor\CC*.ps1"
+. "$PSScriptRoot\Classes\ConsoleColor\ConsoleColor24.ps1"
+Foreach($File in $ColorSupport) {
     . $File.FullName
 }
+
+#$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
+#Foreach($File in $Classes) {
+#    . $File.FullName
+#}
