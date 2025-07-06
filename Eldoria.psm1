@@ -23,6 +23,7 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATBackgroundColor.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATBackgroundColorNone.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATDecoration.ps1"
+. "$PSScriptRoot\Classes\ATStrings\ATDecorationNone.ps1"
 
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
