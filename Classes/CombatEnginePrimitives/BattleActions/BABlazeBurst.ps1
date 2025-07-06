@@ -1,4 +1,4 @@
-using namspace System
+using namespace System
 
 Set-StrictMode -Version Latest
 
