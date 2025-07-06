@@ -43,6 +43,7 @@ Foreach($File in $ColorSupport) {
 # COMBAT ENGINE SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntityProperty.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleAction.ps1"
 
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
