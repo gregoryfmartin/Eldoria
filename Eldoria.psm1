@@ -8,6 +8,11 @@ Foreach($File in $PublicFunctions) {
     . $File.FullName
 }
 
+$Enumerations = Get-ChildItem -Path "$PSScriptRoot\Enums\*.ps1"
+Foreach($File in $Enumerations) {
+    . $File.FullName
+}
+
 $ColorSupport = Get-ChildItem -Path "$PSScriptRoot\Classes\ConsoleColor\CC*.ps1"
 . "$PSScriptRoot\Classes\ConsoleColor\ConsoleColor24.ps1"
 Foreach($File in $ColorSupport) {
@@ -33,6 +38,11 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATStringNone.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATStringComposite.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATSceneImageString.ps1"
+
+#//////////////////////////////////////////////////////////////////////////////
+# COMBAT ENGINE SUPPORT
+#//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntityProperty.ps1"
 
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
