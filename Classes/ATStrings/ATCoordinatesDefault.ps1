@@ -1,0 +1,12 @@
+#//////////////////////////////////////////////////////////////////////////////
+#
+# AT COORDINATES DEFAULT
+#
+# AN ABSTRACTION OF AT COORDINATES INTENDED TO IMPLY AN ANSI COORDINATE
+# MODIFIER BE APPLIED TO THE PRECEEDING STRING LITERAL THAT MOVES THE CURSOR TO
+# A "DEFAULT" LOCATION.
+#
+#//////////////////////////////////////////////////////////////////////////////
+Class ATCoordinatesDefault : ATCoordinates {
+    ATCoordinatesDefault() : base(1, 18) {}
+}

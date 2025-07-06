@@ -26,6 +26,7 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATDecorationNone.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATCoordinates.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATCoordinatesNone.ps1"
+. "$PSScriptRoot\Classes\ATStrings\ATCoordinatesDefault.ps1"
 
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
