@@ -38,6 +38,8 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATStringNone.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATStringComposite.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATSceneImageString.ps1"
+. "$PSScriptRoot\Classes\ATStrings\SceneImage.ps1"
+. "$PSScriptRoot\Classes\ATStrings\EnemyEntityImage.ps1"
 
 #//////////////////////////////////////////////////////////////////////////////
 # COMBAT ENGINE SUPPORT
