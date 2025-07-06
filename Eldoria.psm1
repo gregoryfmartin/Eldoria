@@ -14,6 +14,11 @@ Foreach($File in $ColorSupport) {
     . $File.FullName
 }
 
+#//////////////////////////////////////////////////////////////////////////////
+# AT STRING SUPPORT
+#//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Classes\ATStrings\ATControlSequences.ps1"
+
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
 #    . $File.FullName
