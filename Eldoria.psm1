@@ -46,6 +46,7 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleAction.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntity.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleActionResult.ps1"
+# . "$PSScriptRoot\Classes\CombatEnginePrimitives\EnemyBattleEntity.ps1"
 
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleActions\*.ps1")) {
     . $File.FullName
