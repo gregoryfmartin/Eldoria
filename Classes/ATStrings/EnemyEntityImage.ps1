@@ -12,6 +12,10 @@ Set-StrictMode -Version Latest
 #
 # DUE TO THE MODULE-IZATION, THE STATIC MEMBER HAS BEEN MADE REGULAR MEMBERS.
 #
+# RELIES ON:
+#   ATSCENEIMAGESTRING
+#   ATCOORDINATES
+#
 ###############################################################################
 Class EnemyEntityImage {
     [Int]$Width

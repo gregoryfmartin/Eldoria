@@ -1,8 +1,15 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT CONTROL SEQUENCES
 #
 # CONTAINS COMMON ANSI-TERMINATED STRINGS THAT ARE USED THROUGHT THE PROGRAM.
+#
+# RELIES ON:
+#   CONSOLECOLOR24
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATControlSequences {

@@ -1,3 +1,7 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING
@@ -6,6 +10,11 @@
 # APPLY THE ANSI MODIFIERS TO, AND AN OPTIONAL ANSI RESET MODIFIER TO APPEND
 # TO THE RESULTANT STRING ENSURING THE MODIFIERS FROM THE PREFIX AREN'T CARRIED
 # BEYOND THE LENGTH OF THE LITERAL.
+#
+# RELIES ON:
+#   ATSTRINGPREFIX
+#   ATSTRINGPREFIXNONE -> ATSTRINGPREFIX
+#   ATCONTROLSEQUENCES
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATString {

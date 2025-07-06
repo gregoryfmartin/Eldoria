@@ -1,9 +1,16 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT DECORATION
 #
 # A SYMBOLIC ENCAPSULATION OF ONE OR MANY ANSI DECORATIONS TO APPLY TO A
 # PRECEEDING STRING LITERAL.
+#
+# RELYS ON:
+#   ATCONTROLSEQUENCES
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATDecoration {

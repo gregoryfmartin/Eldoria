@@ -1,6 +1,8 @@
 using namespace System
 using namespace System.Collections.Generic
 
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING COMPOSITE
@@ -8,6 +10,10 @@ using namespace System.Collections.Generic
 # AN AGGREGATE OF AT STRING INSTANCES IN A COLLECTION. THIS CLASS PERMITS FOR
 # PRETTY COMPLEX DISPLAYS BY COMBINING MULTIPLE INDEPENDENT AT STRING INSTANCES
 # INTO ONE.
+#
+# RELIES ON:
+#   SYSTEM.COLLECTIONS.GENERIC.LIST
+#   ATSTRING
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATStringComposite {

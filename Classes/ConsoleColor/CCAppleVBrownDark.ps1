@@ -4,13 +4,13 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# CC APPLE NEUTRAL BLUE ACCESSIBLE LIGHT 24
+# CC APPLE VIBRANT BROWN DARK 24
 #
 # INHERITS:
 #   CONSOLE COLOR 24
 #
 ###############################################################################
 
-Class CCAppleNBlueALight24 : ConsoleColor24 {
-    CCAppleNBlueALight24() : base(0, 64, 221) {}
+Class CCAppleVBrownDark24 : ConsoleColor24 {
+    CCAppleVBrownDark24() : base(182, 152, 114) {}
 }

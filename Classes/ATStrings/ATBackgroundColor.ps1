@@ -1,9 +1,17 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT BACKGROUND COLOR 24
 #
 # A SYMBOLIC ENCAPSULATION OF CONSOLE COLOR 24 TO BE USED SPECIFICALLY FOR
 # BACKGROUND COLOR APPLICATIONS.
+#
+# RELIES ON:
+#   CONSOLECOLOR24
+#   ATCONTROLSEQUENCES
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATBackgroundColor24 {

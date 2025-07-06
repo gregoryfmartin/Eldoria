@@ -1,11 +1,17 @@
 using namespace System
 using namespace System.Management.Automation.Host
 
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT COORDINATES
 #
 # A SYMBOLIC ENCAPSULATION OF A COORDINATE PAIR IN ROW,COLUMN (Y,X) ORDER.
+#
+# RELIES ON:
+#   ATCONTROLSEQUENCES
+#   SYSTEM.MANAGEMENT.AUTOMATION.HOST.COORDINATES
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATCoordinates {

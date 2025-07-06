@@ -1,9 +1,19 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
 #//////////////////////////////////////////////////////////////////////////////
 #
 # AT STRING PREFIX
 #
 # AN AGGREGATE OF SEVERAL ANSI MODIFIERS THAT COLLECTIVELY MODIFY A PRECEEDING
 # STRING LITERAL.
+#
+# RELIES ON:
+#   ATFOREGROUNDCOLOR24
+#   ATBACKGROUNDCOLOR24
+#   ATDECORATION
+#   ATCOORDINATES
 #
 #//////////////////////////////////////////////////////////////////////////////
 Class ATStringPrefix {
