@@ -44,6 +44,8 @@ Foreach($File in $ColorSupport) {
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntityProperty.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleAction.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntity.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleActionResult.ps1"
 
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
