@@ -58,9 +58,13 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\ATStrings\EnemyEnti
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\PlayerActionInventory.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\PlayerItemInventory.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\Player.ps1"
-#. "$PSScriptRoot\Classes\CombatEnginePrimitives\EnemyBattleEntity.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\EnemyBattleEntity.ps1"
 
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleActions\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\EnemyEntities\*.ps1")) {
     . $File.FullName
 }
 
