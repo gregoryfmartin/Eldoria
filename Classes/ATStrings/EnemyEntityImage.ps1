@@ -17,6 +17,7 @@ Set-StrictMode -Version Latest
 #   ATCOORDINATES
 #
 ###############################################################################
+
 Class EnemyEntityImage {
     [Int]$Width
     [Int]$Height

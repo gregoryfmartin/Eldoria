@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA TEMPEST
+#
+###############################################################################
+
 Class BATempest : BattleAction {
     BATempest() : base() {
         $this.Name        = 'Tempest'

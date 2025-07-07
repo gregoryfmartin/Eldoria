@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA INCENERATE
+#
+###############################################################################
+
 Class BAIncenerate : BattleAction {
     BAIncenerate() : base() {
         $this.Name        = 'Incenerate'

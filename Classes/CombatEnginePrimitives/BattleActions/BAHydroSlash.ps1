@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA HYDRO SLASH
+#
+###############################################################################
+
 Class BAHydroSlash : BattleAction {
     BAHydroSlash() : base() {
         $this.Name        = 'Hydro Slash'

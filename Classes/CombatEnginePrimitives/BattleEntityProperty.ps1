@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # BATTLE ENTITY PROPERTY
 #
@@ -10,7 +10,8 @@ Set-StrictMode -Version Latest
 # MINIMUM AND MAXIMUM, SUPPORTS TEMPORARY AUGMENTATION, AND IS CAPABLE OF
 # MAINTAINING ITS OWN STATE.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class BattleEntityProperty {
     Static [Single]$StatNumThresholdCaution          = 0.6D
     Static [Single]$StatNumThresholdDanger           = 0.3D
@@ -45,33 +46,6 @@ Class BattleEntityProperty {
         $this.State               = [StatNumberState]::Normal
         $this.ValidateFunction    = $null
     }
-
-    # THIS CTOR CAN LIKELY GO AWAY
-    # BattleEntityProperty(
-    #     [Int]$Base,
-    #     [Int]$BasePre,
-    #     [Int]$BaseAugmentValue,
-    #     [Int]$Max,
-    #     [Int]$MaxPre,
-    #     [Int]$MaxAugmentValue,
-    #     [Int]$AugmentTurnDuration,
-    #     [Boolean]$BaseAugmentActive,
-    #     [Boolean]$MaxAugmentActive,
-    #     [StatNumberState]$State,
-    #     [ScriptBlock]$ValidateFunction
-    # ) {
-    #     $this.Base                = $Base
-    #     $this.BasePre             = $BasePre
-    #     $this.BaseAugmentValue    = $BaseAugmentValue
-    #     $this.Max                 = $Max
-    #     $this.MaxPre              = $MaxPre
-    #     $this.MaxAugmentValue     = $MaxAugmentValue
-    #     $this.AugmentTurnDuration = $AugmentTurnDuration
-    #     $this.BaseAugmentActive   = $BaseAugmentActive
-    #     $this.MaxAugmentActive    = $MaxAugmentActive
-    #     $this.State               = $State
-    #     $this.ValidateFunction    = $ValidateFunction
-    # }
 
     [Void]Update() {
         If($this.AugmentTurnDuration -GT 0) {

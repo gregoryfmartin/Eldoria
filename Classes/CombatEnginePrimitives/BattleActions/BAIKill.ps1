@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA IKILL
+#
+###############################################################################
+
 Class BAIKill : BattleAction {
     BAIKill() : base() {
         $this.Name        = 'IKill'

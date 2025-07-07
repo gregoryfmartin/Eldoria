@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA ANGELIC HYMN
+#
+###############################################################################
+
 Class BAAngelicHymn : BattleAction {
     BAAngelicHymn() : base() {
         $this.Name        = 'Angelic Hymn'

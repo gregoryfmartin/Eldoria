@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA DIVINE BEAM
+#
+###############################################################################
+
 Class BADivineBeam : BattleAction {
     BADivineBeam() : base() {
         $this.Name        = 'Divine Beam'

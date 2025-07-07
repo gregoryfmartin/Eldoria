@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA KNIFE THROW
+#
+###############################################################################
+
 Class BAKnifeThrow : BattleAction {
     BAKnifeThrow() : base() {
         $this.Name        = 'Knife Throw'

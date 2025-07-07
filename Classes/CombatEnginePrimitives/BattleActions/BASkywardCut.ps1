@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA SKYWARD CUT
+#
+###############################################################################
+
 Class BASkywardCut : BattleAction {
     BASkywardCut() : base() {
         $this.Name        = 'Skyward Cut'

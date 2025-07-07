@@ -3,7 +3,7 @@ using namespace System.Collections.Generic
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT STRING COMPOSITE
 #
@@ -15,7 +15,8 @@ Set-StrictMode -Version Latest
 #   SYSTEM.COLLECTIONS.GENERIC.LIST
 #   ATSTRING
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATStringComposite {
     [List[ATString]]$CompositeActual = [List[ATString]]::new()
 

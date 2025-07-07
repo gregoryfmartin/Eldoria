@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA TREMOR
+#
+###############################################################################
+
 Class BATremor : BattleAction {
     BATremor() : base() {
         $this.Name        = 'Tremor'

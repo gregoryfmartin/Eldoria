@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT COORDINATES NONE
 #
@@ -12,7 +12,8 @@ Set-StrictMode -Version Latest
 # INHERITS:
 #   ATCOORDINATES
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATCoordinatesNone : ATCoordinates {
     ATCoordinatesNone() : base(0, 0) {}
 

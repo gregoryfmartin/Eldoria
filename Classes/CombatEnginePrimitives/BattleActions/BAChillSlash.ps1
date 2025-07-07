@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA CHILL SLASH
+#
+###############################################################################
+
 Class BAChillSlash : BattleAction {
     BAChillSlash() : base() {
         $this.Name        = 'Chill Slash'

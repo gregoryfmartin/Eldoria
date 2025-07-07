@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT STRING
 #
@@ -16,7 +16,8 @@ Set-StrictMode -Version Latest
 #   ATSTRINGPREFIXNONE -> ATSTRINGPREFIX
 #   ATCONTROLSEQUENCES
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATString {
     [ValidateNotNull()][ATStringPrefix]$Prefix
     [ValidateNotNull()][String]$UserData

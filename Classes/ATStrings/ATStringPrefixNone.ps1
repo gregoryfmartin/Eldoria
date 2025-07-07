@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT STRING PREFIX NONE
 #
@@ -12,7 +12,8 @@ Set-StrictMode -Version Latest
 # INHERITS:
 #   ATSTRINGPREFIX
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATStringPrefixNone : ATStringPrefix {
     ATStringPrefixNone() : base() {}
 

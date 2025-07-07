@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA QUAKE FIST
+#
+###############################################################################
+
 Class BAQuakeFist : BattleAction {
     BAQuakeFist() : base() {
         $this.Name        = 'Quake Fist'

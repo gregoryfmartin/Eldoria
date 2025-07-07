@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA WATER WHIP
+#
+###############################################################################
+
 Class BAWaterWhip : BattleAction {
     BAWaterWhip() : base() {
         $this.Name        = 'Water Whip'

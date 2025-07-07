@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT STRING PREFIX
 #
@@ -15,7 +15,8 @@ Set-StrictMode -Version Latest
 #   ATDECORATION
 #   ATCOORDINATES
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATStringPrefix {
     [ValidateNotNull()][ATForegroundColor24]$ForegroundColor
     [ValidateNotNull()][ATBackgroundColor24]$BackgroundColor

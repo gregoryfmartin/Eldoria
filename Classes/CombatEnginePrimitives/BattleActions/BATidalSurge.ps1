@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA TIDAL SURGE
+#
+###############################################################################
+
 Class BATidalSurge : BattleAction {
     BATidalSurge() : base() {
         $this.Name        = 'Tidal Surge'

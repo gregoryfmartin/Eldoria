@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA GEO FENCE
+#
+###############################################################################
+
 Class BAGeoFence : BattleAction {
     BAGeoFence() : base() {
         $this.Name        = 'Geo Fence'

@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA SACRED PULSE
+#
+###############################################################################
+
 Class BASacredPulse : BattleAction {
     BASacredPulse() : base() {
         $this.Name        = 'Sacred Pulse'

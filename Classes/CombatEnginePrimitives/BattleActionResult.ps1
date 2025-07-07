@@ -7,6 +7,7 @@ Set-StrictMode -Version Latest
 # BATTLE ACTION RESULT
 #
 ###############################################################################
+
 Class BattleActionResult {
     [Int]$ActionEffectSum
     [BattleEntity]$Originator

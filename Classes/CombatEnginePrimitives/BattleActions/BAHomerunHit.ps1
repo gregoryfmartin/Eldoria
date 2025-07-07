@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA HOMERUN HIT
+#
+###############################################################################
+
 Class BAHomerunHit : BattleAction {
     BAHomerunHit() : base() {
         $this.Name        = 'Homerun Hit'

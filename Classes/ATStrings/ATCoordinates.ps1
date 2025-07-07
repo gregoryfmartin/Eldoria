@@ -3,7 +3,7 @@ using namespace System.Management.Automation.Host
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT COORDINATES
 #
@@ -13,7 +13,8 @@ Set-StrictMode -Version Latest
 #   ATCONTROLSEQUENCES
 #   SYSTEM.MANAGEMENT.AUTOMATION.HOST.COORDINATES
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATCoordinates {
     [ValidateNotNull()][Int]$Row
     [ValidateNotNull()][Int]$Column

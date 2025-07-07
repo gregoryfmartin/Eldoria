@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA GALEFLASH
+#
+###############################################################################
+
 Class BAGaleflash : BattleAction {
     BAGaleflash() : base() {
         $this.Name        = 'Galeflash'

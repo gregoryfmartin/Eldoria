@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA DOUBLE SCRATCH
+#
+###############################################################################
+
 Class BADoubleScratch : BattleAction {
     BADoubleScratch() : base() {
         $this.Name        = 'Double Scratch'

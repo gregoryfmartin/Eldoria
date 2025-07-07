@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA ZEPHYR SLASH
+#
+###############################################################################
+
 Class BAZephyrSlash : BattleAction {
     BAZephyrSlash() : base() {
         $this.Name        = 'Zephyr Slash'

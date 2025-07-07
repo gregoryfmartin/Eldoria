@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA THUNDER CLAP
+#
+###############################################################################
+
 Class BAThunderClap : BattleAction {
     BAThunderClap() : base() {
         $this.Name        = 'Thunder Clap'

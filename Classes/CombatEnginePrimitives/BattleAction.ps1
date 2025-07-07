@@ -11,6 +11,7 @@ Set-StrictMode -Version Latest
 # AFTER SAID CALCULATIONS.
 #
 ###############################################################################
+
 Class BattleAction {
     [String]$Name
     [ScriptBlock]$Effect
@@ -33,67 +34,6 @@ Class BattleAction {
         $this.Description = ''
     }
 
-    # IT'S UNLIKELY THAT ANY OF THESE CTORS ARE NEEDED
-    # BattleAction(
-    #     [String]$Name,
-    #     [BattleActionType]$Type,
-    #     [ScriptBlock]$Effect,
-    #     [Int]$Uses,
-    #     [Int]$EffectValue,
-    #     [Single]$Chance
-    # ) {
-    #     $this.Name        = $Name
-    #     $this.Type        = $Type
-    #     $this.Effect      = $Effect
-    #     $this.PreCalc     = {}
-    #     $this.PostCalc    = {}
-    #     $this.EffectValue = $EffectValue
-    #     $this.Chance      = $Chance
-    #     $this.Description = ''
-    # }
-
-    # BattleAction(
-    #     [String]$Name,
-    #     [String]$Description,
-    #     [BattleActionType]$Type,
-    #     [ScriptBlock]$Effect,
-    #     [Int]$Uses,
-    #     [Int]$UsesMax,
-    #     [Int]$EffectValue,
-    #     [Single]$Chance
-    # ) {
-    #     $this.Name        = $Name
-    #     $this.Type        = $Type
-    #     $this.Effect      = $Effect
-    #     $this.PreCalc     = {}
-    #     $this.PostCalc    = {}
-    #     $this.EffectValue = $EffectValue
-    #     $this.Chance      = $Chance
-    #     $this.Description = $Description
-    # }
-
-    # BattleAction(
-    #     [String]$Name,
-    #     [String]$Description,
-    #     [BattleActionType]$Type,
-    #     [ScriptBlock]$Effect,
-    #     [Int]$MpCost,
-    #     [Int]$EffectValue,
-    #     [Single]$Chance
-    # ) {
-    #     $this.Name        = $Name
-    #     $this.Type        = $Type
-    #     $this.Effect      = $Effect
-    #     $this.PreCalc     = {}
-    #     $this.PostCalc    = {}
-    #     $this.MpCost      = $MpCost
-    #     $this.EffectValue = $EffectValue
-    #     $this.Chance      = $Chance
-    #     $this.Description = $Description
-    # }
-
-    # THIS CTOR IS NEEDED BECAUSE POWERSHELL ASSIGNMENT IS BY REFERENCE
-    # THANKS C++
     BattleAction(
         [BattleAction]$Copy
     ) {

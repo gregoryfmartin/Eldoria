@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT DECORATION NONE
 #
@@ -12,7 +12,8 @@ Set-StrictMode -Version Latest
 # INHERITS:
 #   ATDECORATION
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATDecorationNone : ATDecoration {
     ATDecorationNone() : base() {}
 

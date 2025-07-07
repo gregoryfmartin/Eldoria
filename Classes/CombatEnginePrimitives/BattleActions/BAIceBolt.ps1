@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA ICE BOLT
+#
+###############################################################################
+
 Class BAIceBolt : BattleAction {
     BAIceBolt() : base() {
         $this.Name        = 'Ice Bolt'

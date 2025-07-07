@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT DECORATION
 #
@@ -12,7 +12,8 @@ Set-StrictMode -Version Latest
 # RELYS ON:
 #   ATCONTROLSEQUENCES
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATDecoration {
     [ValidateNotNull()][Boolean]$Blink
     [ValidateNotNull()][Boolean]$Italic

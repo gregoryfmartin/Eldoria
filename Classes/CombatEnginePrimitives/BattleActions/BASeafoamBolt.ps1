@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA SEAFOAM BOLT
+#
+###############################################################################
+
 Class BASeafoamBolt : BattleAction {
     BASeafoamBolt() : base() {
         $this.Name        = 'Seafoam Bolt'

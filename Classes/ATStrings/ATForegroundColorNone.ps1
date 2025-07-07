@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT FOREGROUND COLOR 24 NONE
 #
@@ -15,7 +15,8 @@ Set-StrictMode -Version Latest
 # RELIES ON:
 #   CCBLACK24 -> CONSOLECOLOR24
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATForegroundColor24None : ATForegroundColor24 {
     ATForegroundColor24None() : base([CCBlack24]::new()) {}
 

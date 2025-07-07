@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA WIND CATACLYSM
+#
+###############################################################################
+
 Class BAWindCataclysm : BattleAction {
     BAWindCataclysm() : base() {
         $this.Name        = "`u{03C6} Cataclysm"

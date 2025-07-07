@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA BOULDER BASH
+#
+###############################################################################
+
 Class BABoulderBash : BattleAction {
     BABoulderBash() : base() {
         $this.Name        = 'Boulder Bash'

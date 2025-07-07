@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA GRANITE DUST
+#
+###############################################################################
+
 Class BAGraniteDust : BattleAction {
     BAGraniteDust() : base() {
         $this.Name        = 'Granite Dust'

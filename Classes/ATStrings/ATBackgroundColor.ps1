@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT BACKGROUND COLOR 24
 #
@@ -13,7 +13,8 @@ Set-StrictMode -Version Latest
 #   CONSOLECOLOR24
 #   ATCONTROLSEQUENCES
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATBackgroundColor24 {
     [ValidateNotNull()][ConsoleColor24]$Color
 

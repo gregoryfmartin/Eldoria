@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA RADIANCE
+#
+###############################################################################
+
 Class BARadiance : BattleAction {
     BARadiance() : base() {
         $this.Name        = 'Radiance'

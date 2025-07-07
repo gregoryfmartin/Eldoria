@@ -16,6 +16,7 @@ Set-StrictMode -Version Latest
 #  ACTIONMARBLEBAG - A LIST OF FIXED SIZE (10) TO DETMINE ACTION CHANGE LAYOUT
 #
 ###############################################################################
+
 Class BattleEntity {
     [String]$Name
     [Boolean]$CanAct

@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA CLUB SWING
+#
+###############################################################################
+
 Class BAClubSwing : BattleAction {
     BAClubSwing() : base() {
         $this.Name        = 'Club Swing'

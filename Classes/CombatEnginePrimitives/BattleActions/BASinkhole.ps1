@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA SINKHOLE
+#
+###############################################################################
+
 Class BASinkhole : BattleAction {
     BASinkhole() : base() {
         $this.Name        = 'Sinkhole'

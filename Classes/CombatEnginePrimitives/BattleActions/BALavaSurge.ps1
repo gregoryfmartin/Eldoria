@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA LAVA SURGE
+#
+###############################################################################
+
 Class BALavaSurge : BattleAction {
     BALavaSurge() : base() {
         $this.Name        = 'Lava Surge'

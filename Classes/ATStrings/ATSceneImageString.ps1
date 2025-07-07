@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT SCENE IMAGE STRING
 #
@@ -20,7 +20,8 @@ Set-StrictMode -Version Latest
 #   ATFOREGROUNDCOLOR24NONE
 #   ATDECORATIONNONE
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATSceneImageString : ATString {
     ATSceneImageString(
         [ATBackgroundColor24]$BackgroundColor,

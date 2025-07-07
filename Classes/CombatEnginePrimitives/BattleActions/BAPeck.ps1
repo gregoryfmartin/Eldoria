@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA PECK
+#
+###############################################################################
+
 Class BAPeck : BattleAction {
     BAPeck() : base() {
         $this.Name        = 'Peck'

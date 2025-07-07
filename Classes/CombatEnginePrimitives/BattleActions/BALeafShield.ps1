@@ -2,6 +2,12 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+###############################################################################
+#
+# BA LEAF SHIELD
+#
+###############################################################################
+
 Class BALeafShield : BattleAction {
     BALeafShield() : base() {
         $this.Name        = 'Leaf Shield'

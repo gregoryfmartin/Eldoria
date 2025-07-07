@@ -10,6 +10,7 @@ Set-StrictMode -Version Latest
 # SCENARIO.
 #
 ###############################################################################
+
 Class EnemyBattleEntity : BattleEntity {
     [EnemyEntityImage]$Image
     [Int]$SpoilsGold

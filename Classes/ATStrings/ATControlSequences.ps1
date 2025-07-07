@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 #
 # AT CONTROL SEQUENCES
 #
@@ -11,7 +11,8 @@ Set-StrictMode -Version Latest
 # RELIES ON:
 #   CONSOLECOLOR24
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
+
 Class ATControlSequences {
     Static [String]$ForegroundColor24Prefix = "`e[38;2;"
     Static [String]$BackgroundColor24Prefix = "`e[48;2;"
