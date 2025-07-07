@@ -40,15 +40,22 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATSceneImageString.ps1"
 . "$PSScriptRoot\Classes\ATStrings\SceneImage.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EnemyEntityImage.ps1"
+. "$PSScriptRoot\Classes\ATStrings\EEIEmpty.ps1"
+. "$PSScriptRoot\Classes\ATStrings\EEIInternalBase.ps1"
+. "$PSScriptRoot\Classes\ATStrings\EEIBat.ps1"
 
 #//////////////////////////////////////////////////////////////////////////////
 # COMBAT ENGINE SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Classes\Mapping\MapTileObject.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntityProperty.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleAction.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntity.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleActionResult.ps1"
-# . "$PSScriptRoot\Classes\CombatEnginePrimitives\EnemyBattleEntity.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\PlayerActionInventory.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\PlayerItemInventory.ps1"
+. "$PSScriptRoot\Classes\CombatEnginePrimitives\Player.ps1"
+#. "$PSScriptRoot\Classes\CombatEnginePrimitives\EnemyBattleEntity.ps1"
 
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleActions\*.ps1")) {
     . $File.FullName
