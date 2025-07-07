@@ -51,6 +51,10 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\ATStrings\EnemyEnti
 # COMBAT ENGINE SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\Mapping\MapTileObject.ps1"
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\Mapping\MapTileObjects\*.ps1")) {
+    . $File.FullName
+}
+
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntityProperty.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleAction.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntity.ps1"
