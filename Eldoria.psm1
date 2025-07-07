@@ -43,6 +43,7 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\EEIEmpty.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIInternalBase.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIBat.ps1"
+. "$PSScriptRoot\Classes\ATStrings\EEIWingblight.ps1"
 
 #//////////////////////////////////////////////////////////////////////////////
 # COMBAT ENGINE SUPPORT
