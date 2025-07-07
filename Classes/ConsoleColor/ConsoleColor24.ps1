@@ -1,3 +1,13 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
+#
+# CONSOLE COLOR 24
+#
+###############################################################################
+
 Class ConsoleColor24 {
     [ValidateRange(0, 255)][Int]$Red
     [ValidateRange(0, 255)][Int]$Green
