@@ -42,8 +42,10 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\EnemyEntityImage.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIEmpty.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIInternalBase.ps1"
-. "$PSScriptRoot\Classes\ATStrings\EEIBat.ps1"
-. "$PSScriptRoot\Classes\ATStrings\EEIWingblight.ps1"
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\ATStrings\EnemyEntityImages\*.ps1")) {
+    . $File.FullName
+}
 
 #//////////////////////////////////////////////////////////////////////////////
 # COMBAT ENGINE SUPPORT
