@@ -90,6 +90,10 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimiti
     . $File.FullName
 }
 
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Helmets\*.ps1")) {
+    . $File.FullName
+}
+
 #$Classes = Get-ChildItem -Path "$PSScriptRoot\Classes\*.ps1"
 #Foreach($File in $Classes) {
 #    . $File.FullName
