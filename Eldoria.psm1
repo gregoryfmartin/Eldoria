@@ -140,3 +140,4 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimiti
 # BUFFER/WINDOW SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\BufferManager.ps1"
+. "$PSScriptRoot\Classes\UI\UIEContainer.ps1"
