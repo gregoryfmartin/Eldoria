@@ -50,6 +50,7 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATStringComposite.ps1"
 . "$PSScriptRoot\Classes\ATStrings\ATSceneImageString.ps1"
 . "$PSScriptRoot\Classes\ATStrings\SceneImage.ps1"
+. "$PSScriptRoot\Classes\ATStrings\SIEmpty.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EnemyEntityImage.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIEmpty.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIInternalBase.ps1"
