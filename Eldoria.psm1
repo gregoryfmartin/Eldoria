@@ -1,3 +1,12 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
+
+$Script:Rui = $(Get-Host).UI.RawUI
+
+
+
 $PrivateFunctions = Get-ChildItem -Path "$PSScriptRoot\Private\*.ps1"
 Foreach($File in $PrivateFunctions) {
     . $File.FullName
@@ -123,3 +132,11 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimiti
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Weapons\*.ps1")) {
     . $File.FullName
 }
+
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+# BUFFER/WINDOW SUPPORT
+#//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Classes\BufferManager.ps1"
