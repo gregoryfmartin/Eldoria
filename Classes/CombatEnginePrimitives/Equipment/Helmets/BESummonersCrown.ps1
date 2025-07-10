@@ -1,10 +1,10 @@
-7using namespace System
+using namespace System
 
 Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE SUMMONER'S CROWN
+# BE BESUMMONERSCROWN
 #
 ###############################################################################
 

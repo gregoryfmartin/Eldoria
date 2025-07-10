@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE STAFF OF THE COSMOS
+# BE BESTAFFOFTHECOSMOS
 #
 ###############################################################################
 
-Class BEStaffOfTheCosmos : BEWeapon {
-	BEStaffOfTheCosmos() : base() {
+Class BEStaffoftheCosmos : BEWeapon {
+	BEStaffoftheCosmos() : base() {
 		$this.Name          = 'Staff of the Cosmos'
 		$this.MapObjName    = 'staffofthecosmos'
 		$this.PurchasePrice = 6300

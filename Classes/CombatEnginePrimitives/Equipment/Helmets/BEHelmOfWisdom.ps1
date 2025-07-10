@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE HELM OF WISDOM
+# BE BEHELMOFWISDOM
 #
 ###############################################################################
 
-Class BEHelmOfWisdom : BEHelmet {
-	BEHelmOfWisdom() : base() {
+Class BEHelmofWisdom : BEHelmet {
+	BEHelmofWisdom() : base() {
 		$this.Name               = 'Helm of Wisdom'
 		$this.MapObjName         = 'helmofwisdom'
 		$this.PurchasePrice      = 700

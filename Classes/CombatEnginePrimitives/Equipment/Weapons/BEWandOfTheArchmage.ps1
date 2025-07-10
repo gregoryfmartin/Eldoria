@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE WAND OF THE ARCHMAGE
+# BE BEWANDOFTHEARCHMAGE
 #
 ###############################################################################
 
-Class BEWandOfTheArchmage : BEWeapon {
-	BEWandOfTheArchmage() : base() {
+Class BEWandoftheArchmage : BEWeapon {
+	BEWandoftheArchmage() : base() {
 		$this.Name          = 'Wand of the Archmage'
 		$this.MapObjName    = 'wandofthearchmage'
 		$this.PurchasePrice = 6800

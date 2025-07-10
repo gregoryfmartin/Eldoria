@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE BLADE OF RUIN
+# BE BEBLADEOFRUIN
 #
 ###############################################################################
 
-Class BEBladeOfRuin : BEWeapon {
-	BEBladeOfRuin() : base() {
+Class BEBladeofRuin : BEWeapon {
+	BEBladeofRuin() : base() {
 		$this.Name          = 'Blade of Ruin'
 		$this.MapObjName    = 'bladeofruin'
 		$this.PurchasePrice = 6800

@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE CARTOGRAPHER'S COMPASS HELM
+# BE BECARTOGRAPHERSCOMPASSHELM
 #
 ###############################################################################
 

@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE BLAZE OF GLORY BOW
+# BE BEBLAZEOFGLORYBOW
 #
 ###############################################################################
 
-Class BEBlazeOfGloryBow : BEWeapon {
-	BEBlazeOfGloryBow() : base() {
+Class BEBlazeofGloryBow : BEWeapon {
+	BEBlazeofGloryBow() : base() {
 		$this.Name          = 'Blaze of Glory Bow'
 		$this.MapObjName    = 'blazeofglorybow'
 		$this.PurchasePrice = 5700

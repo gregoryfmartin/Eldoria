@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE RUNE OF FURY HELM
+# BE BERUNEOFFURYHELM
 #
 ###############################################################################
 
-Class BERuneOfFuryHelm : BEHelmet {
-	BERuneOfFuryHelm() : base() {
+Class BERuneofFuryHelm : BEHelmet {
+	BERuneofFuryHelm() : base() {
 		$this.Name               = 'Rune of Fury Helm'
 		$this.MapObjName         = 'runeoffuryhelm'
 		$this.PurchasePrice      = 2000

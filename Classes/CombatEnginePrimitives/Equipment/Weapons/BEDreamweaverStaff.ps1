@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE DREAMWEAVER STAFF
+# BE BEDREAMWEAVERSTAFF
 #
 ###############################################################################
 
-Class BEDreamweaverStaff : BEWeapon {
-	BEDreamweaverStaff() : base() {
+Class BEDreamWeaverStaff : BEWeapon {
+	BEDreamWeaverStaff() : base() {
 		$this.Name          = 'Dream Weaver Staff'
 		$this.MapObjName    = 'dreamweaverstaff'
 		$this.PurchasePrice = 820

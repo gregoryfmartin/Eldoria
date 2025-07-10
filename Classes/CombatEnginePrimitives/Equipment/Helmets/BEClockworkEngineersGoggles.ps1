@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE CLOCKWORK ENGINEER'S GOGGLES
+# BE BECLOCKWORKENGINEERSGOGGLES
 #
 ###############################################################################
 

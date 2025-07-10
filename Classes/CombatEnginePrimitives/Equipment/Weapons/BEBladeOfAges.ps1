@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE BLADE OF AGES
+# BE BEBLADEOFAGES
 #
 ###############################################################################
 
-Class BEBladeOfAges : BEWeapon {
-	BEBladeOfAges() : base() {
+Class BEBladeofAges : BEWeapon {
+	BEBladeofAges() : base() {
 		$this.Name          = 'Blade of Ages'
 		$this.MapObjName    = 'bladeofages'
 		$this.PurchasePrice = 5800

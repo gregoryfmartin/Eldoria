@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE WHISPER OF THE ANCIENTS
+# BE BEWHISPEROFTHEANCIENTS
 #
 ###############################################################################
 
-Class BEWhisperOfTheAncients : BEWeapon {
-	BEWhisperOfTheAncients() : base() {
+Class BEWhisperoftheAncients : BEWeapon {
+	BEWhisperoftheAncients() : base() {
 		$this.Name          = 'Whisper of the Ancients'
 		$this.MapObjName    = 'whisperoftheancients'
 		$this.PurchasePrice = 5400

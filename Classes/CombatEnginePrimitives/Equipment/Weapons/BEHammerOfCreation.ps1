@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE HAMMER OF CREATION
+# BE BEHAMMEROFCREATION
 #
 ###############################################################################
 
-Class BEHammerOfCreation : BEWeapon {
-	BEHammerOfCreation() : base() {
+Class BEHammerofCreation : BEWeapon {
+	BEHammerofCreation() : base() {
 		$this.Name          = 'Hammer of Creation'
 		$this.MapObjName    = 'hammerofcreation'
 		$this.PurchasePrice = 6900

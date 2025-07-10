@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE CROWN OF HEROES
+# BE BECROWNOFHEROES
 #
 ###############################################################################
 
-Class BECrownOfHeroes : BEHelmet {
-	BECrownOfHeroes() : base() {
+Class BECrownofHeroes : BEHelmet {
+	BECrownofHeroes() : base() {
 		$this.Name               = 'Crown of Heroes'
 		$this.MapObjName         = 'crownofheroes'
 		$this.PurchasePrice      = 5000

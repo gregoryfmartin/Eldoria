@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE STAFF OF CREATION
+# BE BESTAFFOFCREATION
 #
 ###############################################################################
 
-Class BEStaffOfCreation : BEWeapon {
-	BEStaffOfCreation() : base() {
+Class BEStaffofCreation : BEWeapon {
+	BEStaffofCreation() : base() {
 		$this.Name          = 'Staff of Creation'
 		$this.MapObjName    = 'staffofcreation'
 		$this.PurchasePrice = 5700

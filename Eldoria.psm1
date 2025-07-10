@@ -86,11 +86,39 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimiti
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\BEPauldron.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\BEWeapon.ps1"
 
-Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Weapons\*.ps1")) {
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Armors\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Boots\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Capes\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Gauntlets\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Greaves\*.ps1")) {
     . $File.FullName
 }
 
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Helmets\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Jewelry\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Pauldrons\*.ps1")) {
+    . $File.FullName
+}
+
+Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Weapons\*.ps1")) {
     . $File.FullName
 }
 

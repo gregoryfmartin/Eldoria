@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE HAMMER OF JUDGMENT
+# BE BEHAMMEROFJUDGMENT
 #
 ###############################################################################
 
-Class BEHammerOfJudgment : BEWeapon {
-	BEHammerOfJudgment() : base() {
+Class BEHammerofJudgment : BEWeapon {
+	BEHammerofJudgment() : base() {
 		$this.Name          = 'Hammer of Judgment'
 		$this.MapObjName    = 'hammerofjudgment'
 		$this.PurchasePrice = 6300

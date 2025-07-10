@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE BLADE OF TRUTH
+# BE BEBLADEOFTRUTH
 #
 ###############################################################################
 
-Class BEBladeOfTruth : BEWeapon {
-	BEBladeOfTruth() : base() {
+Class BEBladeofTruth : BEWeapon {
+	BEBladeofTruth() : base() {
 		$this.Name          = 'Blade of Truth'
 		$this.MapObjName    = 'bladeoftruth'
 		$this.PurchasePrice = 1150

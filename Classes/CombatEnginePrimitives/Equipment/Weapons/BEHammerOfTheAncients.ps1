@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE HAMMER OF THE ANCIENTS
+# BE BEHAMMEROFTHEANCIENTS
 #
 ###############################################################################
 
-Class BEHammerOfTheAncients : BEWeapon {
-	BEHammerOfTheAncients() : base() {
+Class BEHammeroftheAncients : BEWeapon {
+	BEHammeroftheAncients() : base() {
 		$this.Name          = 'Hammer of the Ancients'
 		$this.MapObjName    = 'hammeroftheancients'
 		$this.PurchasePrice = 6700

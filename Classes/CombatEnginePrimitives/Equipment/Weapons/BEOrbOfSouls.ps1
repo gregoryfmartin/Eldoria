@@ -4,12 +4,12 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# BE ORB OF SOULS
+# BE BEORBOFSOULS
 #
 ###############################################################################
 
-Class BEOrbOfSouls : BEWeapon {
-	BEOrbOfSouls() : base() {
+Class BEOrbofSouls : BEWeapon {
+	BEOrbofSouls() : base() {
 		$this.Name          = 'Orb of Souls'
 		$this.MapObjName    = 'orbofsouls'
 		$this.PurchasePrice = 3600
