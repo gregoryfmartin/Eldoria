@@ -158,3 +158,6 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\UI\Windows\*.ps1"))
 # BATTLE MANAGER SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\BattleManager.ps1"
+
+
+. "$PSScriptRoot\Classes\GameCore.ps1"
