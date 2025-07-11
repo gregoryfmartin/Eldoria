@@ -6,17 +6,6 @@ Set-StrictMode -Version Latest
 $Script:Rui = $(Get-Host).UI.RawUI
 
 
-
-$PrivateFunctions = Get-ChildItem -Path "$PSScriptRoot\Private\*.ps1"
-Foreach($File in $PrivateFunctions) {
-    . $File.FullName
-}
-
-$PublicFunctions = Get-ChildItem -Path "$PSScriptRoot\Public\*.ps1"
-Foreach($File in $PublicFunctions) {
-    . $File.FullName
-}
-
 $Enumerations = Get-ChildItem -Path "$PSScriptRoot\Enums\*.ps1"
 Foreach($File in $Enumerations) {
     . $File.FullName
@@ -158,6 +147,5 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\UI\Windows\*.ps1"))
 # BATTLE MANAGER SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\BattleManager.ps1"
-
 
 . "$PSScriptRoot\Classes\GameCore.ps1"
