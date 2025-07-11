@@ -146,6 +146,7 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimiti
 . "$PSScriptRoot\Classes\UI\BattlePhaseIndicator.ps1"
 . "$PSScriptRoot\Classes\UI\SSAFiglet.ps1"
 . "$PSScriptRoot\Classes\UI\SSASubtitle.ps1"
+. "$PSScriptRoot\Classes\UI\SSAPressEnterPrompt.ps1"
 
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\UI\Windows\*.ps1")) {
     . $File.FullName
