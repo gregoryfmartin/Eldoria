@@ -1,6 +1,11 @@
 using namespace System
+using namespace System.Media
+
+Add-Type -AssemblyName PresentationCore
 
 Set-StrictMode -Version Latest
+
+$PSStyle.Progress.View = 'Minimal'
 
 
 $Script:Rui = $(Get-Host).UI.RawUI
@@ -40,6 +45,8 @@ Foreach($File in $ColorSupport) {
 . "$PSScriptRoot\Classes\ATStrings\ATSceneImageString.ps1"
 . "$PSScriptRoot\Classes\ATStrings\SceneImage.ps1"
 . "$PSScriptRoot\Classes\ATStrings\SIEmpty.ps1"
+. "$PSScriptRoot\Classes\ATStrings\SIInternalBase.ps1"
+. "$PSScriptRoot\Classes\ATStrings\SIRandomNoise.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EnemyEntityImage.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIEmpty.ps1"
 . "$PSScriptRoot\Classes\ATStrings\EEIInternalBase.ps1"
@@ -58,6 +65,8 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\Mapping\MapTileObje
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\Mapping\MapTileObjects\Warpables\*.ps1")) {
     . $File.FullName
 }
+. "$PSScriptRoot\Classes\Mapping\MapTile.ps1"
+. "$PSScriptRoot\Classes\Mapping\Map.ps1"
 
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleEntityProperty.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\BattleAction.ps1"
@@ -149,3 +158,15 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\UI\Windows\*.ps1"))
 . "$PSScriptRoot\Classes\BattleManager.ps1"
 
 . "$PSScriptRoot\Classes\GameCore.ps1"
+
+
+#//////////////////////////////////////////////////////////////////////////////
+# RESOURCE LOADING
+#//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Resources\Sixel\Profiles.ps1"
+
+
+#//////////////////////////////////////////////////////////////////////////////
+# VARIABLES
+#//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Private\Variables.ps1"

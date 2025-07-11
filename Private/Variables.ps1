@@ -1,0 +1,1388 @@
+using namespace System
+using namespace System.Collections
+using namespace System.Collections.Generic
+using namespace System.Management.Automation.Host
+using namespace System.Management.Automation.Runspaces
+using namespace System.Media
+
+Set-StrictMode -Version Latest
+
+###############################################################################
+#
+# GLOBAL VARIABLES
+#
+###############################################################################
+
+[Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
+[Int]                             $Script:SceneImagesLoaded            = 0
+[Int]                             $Script:MaxWidth                     = 80
+[Int]                             $Script:SSAPECounter                 = 0
+[Int]                             $Script:SSAPETimeout                 = 1000
+[String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
+[String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
+[String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
+[String]                          $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
+[String]                          $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
+[String]                          $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
+[String]                          $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
+[String]                          $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
+[String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
+[String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
+[String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
+[String]                          $Script:BgmTitleThemeA               = "$(Get-Location)\Assets\BGM\Title Theme A.wav"
+[String]                          $Script:BgmTitleThemeB               = "$(Get-Location)\Assets\BGM\Title Theme B.wav"
+[String]                          $Script:BgmPlayerSetupThemeA         = "$(Get-Location)\Assets\BGM\Player Setup Theme A.wav"
+[String]                          $Script:TheGameSubtitle              = 'A NOT GARY GAME'
+[Hashtable]                       $Script:SpectreBBPRounded            = @{}
+[Hashtable]                       $Script:SpectreBBPSquare             = @{}
+[Hashtable]                       $Script:CurrentWindowDesign          = @{}
+[String[]]                        $Script:BadCommandRetorts            = @()
+[StatusWindow]                    $Script:TheStatusWindow              = [StatusWindow]::new()
+[CommandWindow]                   $Script:TheCommandWindow             = [CommandWindow]::new()
+[SceneWindow]                     $Script:TheSceneWindow               = [SceneWindow]::new()
+[MessageWindow]                   $Script:TheMessageWindow             = [MessageWindow]::new()
+[InventoryWindow]                 $Script:TheInventoryWindow           = $null
+[ATCoordinatesDefault]            $Script:DefaultCursorCoordinates     = [ATCoordinatesDefault]::new()
+[BattleEntityStatusWindow]        $Script:ThePlayerBattleStatWindow    = $null
+[BattleEntityStatusWindow]        $Script:TheEnemyBattleStatWindow     = $null
+[BattlePlayerActionWindow]        $Script:ThePlayerBattleActionWindow  = $null
+[BattleStatusMessageWindow]       $Script:TheBattleStatusMessageWindow = $null
+[BattleEnemyImageWindow]          $Script:TheBattleEnemyImageWindow    = $null
+[BattlePhaseIndicator]            $Script:TheBattlePhaseIndicator      = $null
+[StatusHudWindow]                 $Script:TheStatusHudWindow           = $null
+[StatusTechniqueSelectionWindow]  $Script:TheStatusTechSelectionWindow = $null
+[StatusTechniqueInventoryWindow]  $Script:TheStatusTechInventoryWindow = $null
+[BufferManager]                   $Script:TheBufferManager             = [BufferManager]::new()
+[GameCore]                        $Script:TheGameCore                  = [GameCore]::new()
+[EnemyBattleEntity]               $Script:TheCurrentEnemy              = $null
+[BattleManager]                   $Script:TheBattleManager             = $null
+[SoundPlayer]                     $Script:TheSfxMachine                = [SoundPlayer]::new()
+[SoundPlayer]                     $Script:TheBgmMachine                = [SoundPlayer]::new()
+[Boolean]                         $Script:IsBattleBgmPlaying           = $false
+[Boolean]                         $Script:HasBattleIntroPlayed         = $false
+[Boolean]                         $Script:HasBattleWonChimePlayed      = $false
+[Boolean]                         $Script:HasBattleLostChimePlayed     = $false
+[Boolean]                         $Script:GpsRestoredFromInvBackup     = $true
+[Boolean]                         $Script:GpsRestoredFromBatBackup     = $false
+[Boolean]                         $Script:GpsRestoredFromStaBackup     = $false
+[Boolean]                         $Script:BattleCursorVisible          = $false
+[Boolean]                         $Script:HasTitleBgmStarted           = $false
+[Boolean]                         $Script:HasSubtitleBeenWritten       = $false
+[Boolean]                         $Script:HasSubtitleBeenColored       = $false
+[Boolean]                         $Script:HasSSAPressEnterShown        = $false
+[Boolean]                         $Script:HasSSAPressEnterToggled      = $false
+[Boolean]                         $Script:HasSSASetupRunspace          = $false
+[Boolean]                         $Script:PlayerSetupThemePlaying      = $false
+[EEIBat]                          $Script:EeiBat                       = [EEIBat]::new()
+[EEINightwing]                    $Script:EeiNightwing                 = [EEINightwing]::new()
+[EEIWingblight]                   $Script:EeiWingblight                = [EEIWingblight]::new()
+[EEIDarkfang]                     $Script:EeiDarkfang                  = [EEIDarkfang]::new()
+[EEINocturna]                     $Script:EeiNocturna                  = [EEINocturna]::new()
+[EEIBloodswoop]                   $Script:EeiBloodswoop                = [EEIBloodswoop]::new()
+[EEIDuskbane]                     $Script:EeiDuskbane                  = [EEIDuskbane]::new()
+[System.Windows.Media.MediaPlayer]$Script:TheSfxMPlayer                = [System.Windows.Media.MediaPlayer]::new()
+[System.Windows.Media.MediaPlayer]$Script:TheBgmMPlayer                = [System.Windows.Media.MediaPlayer]::new()
+[Double]                          $Script:AffinityMultNeg              = -0.75
+[Double]                          $Script:AffinityMultPos              = 1.6
+[ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
+[BattleAction]                    $Script:StatusIsSelected             = $null
+[StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::TitleScreen
+[GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
+[Map]                             $Script:SampleMap                    = $null
+[Map]                             $Script:SampleWarpMap01              = $null
+[Map]                             $Script:SampleWarpMap02              = $null
+[Map]                             $Script:CurrentMap                   = $null
+[Map]                             $Script:PreviousMap                  = $null
+[SSAFiglet]                       $Script:TheTitleFiglet               = [SSAFiglet]::new()
+[SSASubtitle]                     $Script:TheSubtitleFiglet            = [SSASubtitle]::new()
+[SSAPressEnterPrompt]             $Script:TheSSAPressEnterPrompt       = [SSAPressEnterPrompt]::new()
+[TtySpeed]                        $Script:TeletypeSpeed                = [TtySpeed]::Slow
+[Runspace]                        $Script:TheOffThread                 = [RunspaceFactory]::CreateRunspace()
+[PowerShell]                      $Script:TheOffShell                  = [PowerShell]::Create()
+[IAsyncResult]                    $Script:SSAInputAsr                  = $null
+[PlayerSetupScreenStates]         $Script:ThePssSubstate               = [PlayerSetupScreenStates]::new()
+[PSNameEntryWindow]               $Script:ThePSNameEntryWindow         = $null
+[PSGenderSelectionWindow]         $Script:ThePSGenderSelectionWindow   = $null
+[PSBonusPointAllocWindow]         $Script:ThePSBonusPointAllocWindow   = $null
+[PSAffinitySelectWindow]          $Script:ThePSAffinitySelectWindow    = $null
+[PSProfileSelectWindow]           $Script:ThePSProfileSelectWindow     = $null
+
+[String[]]$Script:FemaleImageData = @(
+    $Script:ElfFemaleImageDataA,
+    $Script:ElfFemaleImageDataB,
+    $Script:ElfFemaleImageDataC,
+    $Script:ElfFemaleImageDataD,
+    $Script:ElfFemaleImageDataE,
+    $Script:HumanFemaleImageDataA,
+    $Script:HumanFemaleImageDataB,
+    $Script:HumanFemaleImageDataC,
+    $Script:HumanFemaleImageDataD,
+    $Script:HumanFemaleImageDataE
+)
+
+[String[]]$Script:MaleImageData = @(
+    $Script:ElfMaleImageDataA,
+    $Script:ElfMaleImageDataB,
+    $Script:ElfMaleImageDataC,
+    $Script:HumanMaleImageDataA,
+    $Script:HumanMaleImageDataB,
+    $Script:HumanMaleImageDataC
+)
+
+[Hashtable]$Script:TheSceneImages = @{
+    'FieldPlainsNoRoad'                          = [SIFieldPlainsNoRoad]::new()
+    'FieldPlainsRoadNorth'                       = [SIFieldPlainsRoadNorth]::new()
+    'FieldPlainsRoadSouth'                       = [SIFieldPlainsRoadSouth]::new()
+    'FieldPlainsRoadEast'                        = [SIFieldPlainsRoadEast]::new()
+    'FieldPlainsRoadWest'                        = [SIFieldPlainsRoadWest]::new()
+    'FieldPlainsRoadNorthEast'                   = [SIFieldPlainsRoadNorthEast]::new()
+    'FieldPlainsRoadNorthWest'                   = [SIFieldPlainsRoadNorthWest]::new()
+    'FieldPlainsRoadNorthSouth'                  = [SIFieldPlainsRoadNorthSouth]::new()
+    'FieldPlainsRoadEastWest'                    = [SIFieldPlainsRoadEastWest]::new()
+    'FieldPlainsRoadNorthSouthEast'              = [SIFieldPlainsRoadNorthSouthEast]::new()
+    'FieldPlainsRoadNorthSouthEastWest'          = [SIFieldPlainsRoadNorthSouthEastWest]::new()
+    'FieldPlainsRoadNorthSouthWest'              = [SIFieldPlainsRoadNorthSouthWest]::new()
+    'RiverRoadSample'                            = [SIRiverRoadSample]::new()
+    'RiverRoadEWNSSample'                        = [SIRiverRoadEWNSSample]::new()
+    'RiverRoadEWSSSample'                        = [SIRiverRoadEWSSSample]::new()
+    'Random'                                     = [SIRandomNoise]::new()
+    'SIRiverOnEastAtNorth'                       = [SIRiverOnEastAtNorth]::new()
+    'SIRiverOnEastAtSouth'                       = [SIRiverOnEastAtSouth]::new()
+    'SIRiverOnEastWestAtNorth'                   = [SIRiverOnEastWestAtNorth]::new()
+    'SIRiverOnEastWestAtNorthSouth'              = [SIRiverOnEastWestAtNorthSouth]::new()
+    'SIRiverOnEastWestNorthSouthAtEast'          = [SIRiverOnEastWestNorthSouthAtEast]::new()
+    'SIRiverOnEastWestNorthSouthAtEastWest'      = [SIRiverOnEastWestNorthSouthAtEastWest]::new()
+    'SIRiverOnEastWestNorthSouthAtEastWestSouth' = [SIRiverOnEastWestNorthSouthAtEastWestSouth]::new()
+    'SIRiverOnEastWestNorthSouthAtWest'          = [SIRiverOnEastWestNorthSouthAtWest]::new()
+    'SIRiverOnNorthEastAtNorth'                  = [SIRiverOnNorthEastAtNorth]::new()
+    'SIRiverOnNorthSouthAtEast'                  = [SIRiverOnNorthSouthAtEast]::new()
+    'SIRiverOnNorthSouthAtWest'                  = [SIRiverOnNorthSouthAtWest]::new()
+    'SIRiverOnNorthSouthEastAtEast'              = [SIRiverOnNorthSouthEastAtEast]::new()
+    'SIRiverOnNorthSouthEastAtNorth'             = [SIRiverOnNorthSouthEastAtNorth]::new()
+    'SIRiverOnSouthAtEast'                       = [SIRiverOnSouthAtEast]::new()
+    'SIRiverOnSouthEastAtSouthEast'              = [SIRiverOnSouthEastAtSouthEast]::new()
+    'SIRiverOnWestAtNorth'                       = [SIRiverOnWestAtNorth]::new()
+    'SIRiverOnWestAtSouth'                       = [SIRiverOnWestAtSouth]::new()
+    'SIRiverOnWestEastAtSouth'                   = [SIRiverOnWestEastAtSouth]::new()
+    'SIRiverOnWestNorthAtNorth'                  = [SIRiverOnWestNorthAtNorth]::new()
+    'SIRiverOnWestNorthSouthAtNorth'             = [SIRiverOnWestNorthSouthAtNorth]::new()
+}
+
+[ScriptBlock]$Script:MapWarpHandler = {
+    Param(
+        [Map]$TargetMap,
+        [Int]$WarpX,
+        [Int]$WarpY
+    )
+
+    # ASSIGN THE PREVIOUS MAP
+    $Script:PreviousMap = $Script:CurrentMap
+
+    # ASSIGN THE CURRENT MAP
+    $Script:CurrentMap = $TargetMap
+
+    # SET THE PLAYER'S MAP COORDINATES
+    $Script:ThePlayer.MapCoordinates.Row    = $WarpY
+    $Script:ThePlayer.MapCoordinates.Column = $WarpX
+
+    # TODO: THIS WOULD HAVE TO TRIGGER A REFRESH OF THE GPS IN ORDER FOR THE
+    # CHANGE TO BE VISIBLE. WHATEVER LOGIC I'VE BEEN USING FOR THE TILE CHANGE
+    # WOULD LIKELY SUFFICE (AGAIN, MAY BE A BIT NAIEVE BUT I THINK IT SHOULD WORK).
+    # CORRECTION: THIS HAS BEEN MOVED TO THE COMMAND BLOCK CALL RATHER THAN HERE.
+}
+
+[Map]$Script:SampleMap       = [Map]::new('Map Data\SampleMap.json')
+[Map]$Script:SampleWarpMap01 = [Map]::new('Map Data\MapWarpTest01.json')
+[Map]$Script:SampleWarpMap02 = [Map]::new('Map Data\MapWarpTest02.json')
+[Map]$Script:CurrentMap      = $Script:SampleWarpMap01
+
+$Script:BadCommandRetorts = @(
+    'Huh?',
+    'Do what now?',
+    'Come again?',
+    'Pardon?',
+    'Y U no type rite?',
+    'Bruh...',
+    'Are you drunk?',
+    'Your commands are sus.',
+    'Git gud, scrub.',
+    'Did you RTFM?',
+    'git commit -am "Eye kant spell"',
+    'ceuwcnesckldsc',
+    '843214385321832904'
+)
+
+$Script:SpectreBBPRounded = @{
+    [WindowBorderPart]::LeftTop     = '╭'
+    [WindowBorderPart]::Top         = '─'
+    [WindowBorderPart]::RightTop    = '╮'
+    [WindowBorderPart]::Left        = '│'
+    [WindowBorderPart]::Right       = '│'
+    [WindowBorderPart]::LeftBottom  = '╰'
+    [WindowBorderPart]::Bottom      = '─'
+    [WindowBorderPart]::RightBottom = '╯'
+}
+
+$Script:SpectreBBPSquare = @{
+    [WindowBorderPart]::LeftTop     = '┌'
+    [WindowBorderPart]::Top         = '─'
+    [WindowBorderPart]::RightTop    = '┐'
+    [WindowBorderPart]::Left        = '│'
+    [WindowBorderPart]::Right       = '│'
+    [WindowBorderPart]::LeftBottom  = '└'
+    [WindowBorderPart]::Bottom      = '─'
+    [WindowBorderPart]::RightBottom = '┘'
+}
+
+$Script:CurrentWindowDesign = $SpectreBBPRounded
+
+$Script:BattleEncounterRegionTable = @{
+    0 = @(
+        'EEBat',
+        'EENightwing',
+        'EEWingblight',
+        'EEDarkfang',
+        'EENocturna',
+        'EEBloodswoop',
+        'EEDuskbane'
+    )
+}
+
+$Script:BATAdornmentCharTable = @{
+    [BattleActionType]::Physical         = [Tuple[[String], [ConsoleColor24]]]::new("`u{2022}", [CCTextDefault24]::new())
+    [BattleActionType]::ElementalFire    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B6}", [CCAppleRedLight24]::new())
+    [BattleActionType]::ElementalWater   = [Tuple[[String], [ConsoleColor24]]]::new("`u{03C8}", [CCAppleBlueLight24]::new())
+    [BattleActionType]::ElementalEarth   = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B5}", [CCAppleBrownLight24]::new())
+    [BattleActionType]::ElementalWind    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03C6}", [CCAppleGreenLight24]::new())
+    [BattleActionType]::ElementalLight   = [Tuple[[String], [ConsoleColor24]]]::new("`u{03BC}", [CCAppleYellowLight24]::new())
+    [BattleActionType]::ElementalDark    = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B4}", [CCApplePurpleDark24]::new())
+    [BattleActionType]::ElementalIce     = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B9}", [CCAppleCyanDark24]::new())
+    [BattleActionType]::MagicPoison      = [Tuple[[String], [ConsoleColor24]]]::new("`u{03BE}", [CCAppleIndigoLight24]::new())
+    [BattleActionType]::MagicConfuse     = [Tuple[[String], [ConsoleColor24]]]::new("`u{0398}", [CCAppleCyanDark24]::new())
+    [BattleActionType]::MagicSleep       = [Tuple[[String], [ConsoleColor24]]]::new("`u{03B7}", [CCAppleGrey4Light24]::new())
+    [BattleActionType]::MagicAging       = [Tuple[[String], [ConsoleColor24]]]::new("`u{03C3}", [CCAppleGrey6Light24]::new())
+    [BattleActionType]::MagicHealing     = [Tuple[[String], [ConsoleColor24]]]::new("`u{20AA}", [CCAppleMintLight24]::new())
+    [BattleActionType]::MagicStatAugment = [Tuple[[String], [ConsoleColor24]]]::new("`u{20B9}", [CCAppleOrangeLight24]::new())
+}
+
+$Script:BATLut = @(
+	# PHYSICAL ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1, 1, 1, 1, 1),
+
+	# ELEMENTAL FIRE ATTACKS AGAINST OTHERS
+	@(1, -0.75, 0.5, 0.5, 0.5, 1, 1, 1.75),
+
+	# ELEMENTAL WATER ATTACKS AGAINST OTHERS
+	@(1, 1.75, -0.75, 1, 0.5, 1, 1, 0.5),
+
+	# ELEMENTAL EARTH ATTACKS AGAINST OTHERS
+	@(1, 0.5, 1, -0.75, 0.5, 1, 1, 1.75),
+
+	# ELEMENTAL WIND ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1.75, -0.75, 1, 1, 0.5),
+
+	# ELEMENTAL LIGHT ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1, 1, -0.75, 1.75, 1),
+
+	# ELEMENTAL DARK ATTACKS AGAINST OTHERS
+	@(1, 1, 1, 1, 1, 1.75, -0.75, 1),
+
+	# ELEMENTAL ICE ATTACKS AGAINST OTHERS
+	@(1, 0.5, 1.75, 1.75, 1, 1, 1, -0.75)
+)
+
+[ScriptBlock]$Script:TheSplashScreenAState = {}
+
+[ScriptBlock]$Script:TheSplashScreenBState = {}
+
+[ScriptBlock]$Script:TheTitleScreenState = {
+    Write-Host "$([ATControlSequences]::CursorHide)"
+
+    If($Script:HasSSASetupRunspace -EQ $false) {
+        $Script:TheOffThread = [RunspaceFactory]::CreateRunspace()
+        $Script:TheOffShell  = [PowerShell]::Create()
+
+        $Script:TheOffThread.Open()
+        $Script:TheOffShell.Runspace = $Script:TheOffThread
+        $Script:TheOffShell.AddScript({
+            [Console]::ReadKey($true)
+        })
+
+        $Script:SSAInputAsr = $Script:TheOffShell.BeginInvoke()
+
+        $Script:HasSSASetupRunspace = $true
+    }
+
+    If($Script:HasTitleBgmStarted -EQ $false) {
+        Start-Sleep -Seconds 1
+        Try {
+            $Script:TheBgmMPlayer.Open($Script:BgmTitleThemeB)
+            $Script:TheBgmMPlayer.Play()
+        } Catch {}
+        $Script:HasTitleBgmStarted = $true
+    }
+
+    $Script:TheTitleFiglet.Draw()
+
+    If($Script:HasSubtitleBeenWritten -EQ $false) {
+        [Char[]]$CharArr   = $Script:TheGameSubtitle.ToCharArray()
+        [Int]$PrintCounter = 0
+        [Int]$Probe        = 0
+        [Int]$PrintCol     = 33
+
+        While($Probe -LE ($CharArr.Count - 1)) {
+            $PrintCounter++
+            If($PrintCounter -GE $Script:TeletypeSpeed) {
+                $PrintCounter = 0
+                Write-Host "$([ATControlSequences]::GenerateCoordinateString(9, $PrintCol))$($CharArr[$Probe])" -NoNewline
+                $Probe++
+                $PrintCol++
+            }
+        }
+
+        $Script:HasSubtitleBeenWritten = $true
+    }
+
+    If($Script:HasSubtitleBeenColored -EQ $false) {
+        $Script:TheSubtitleFiglet.Draw()
+        $Script:HasSubtitleBeenColored = $true
+    }
+
+    If((Get-Random -Minimum 1 -Maximum 50000) -LT 250) {
+        $Script:HasSubtitleBeenColored  = $false
+        $Script:TheSubtitleFiglet.Dirty = $true
+    }
+
+    If($Script:HasSSAPressEnterShown -EQ $false) {
+        $Script:TheSSAPressEnterPrompt.Draw()
+        $Script:HasSSAPressEnterShown = $true
+    }
+
+    If($Script:HasSSAPressEnterShown -EQ $true) {
+        $Script:SSAPECounter++
+        If($Script:SSAPECounter -GE $Script:SSAPETimeout) {
+            $Script:SSAPECounter                    = 0
+            $Script:TheSSAPressEnterPrompt.DrawMode = -NOT $Script:TheSSAPressEnterPrompt.DrawMode
+            $Script:TheSSAPressEnterPrompt.Dirty    = $true
+            $Script:TheSSAPressEnterPrompt.Draw()
+        }
+    }
+
+    If($Script:SSAInputAsr.IsCompleted -EQ $true) {
+        $SSAKeyPressInfo = $Script:TheOffShell.EndInvoke($Script:SSAInputAsr) | Select-Object -First 1
+        
+        If($SSAKeyPressInfo.Key -NE [ConsoleKey]::Enter) {
+            $Script:HasSSASetupRunspace = $false
+        } Else {
+            Try {
+                $Script:TheBgmMPlayer.Stop()
+            } Catch {}
+            $Script:HasTitleBgmStarted = $false
+
+            $Script:TheOffThread.Dispose()
+            $Script:TheOffShell.Dispose()
+
+            $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+
+            Start-Sleep -Seconds 1
+
+            $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+            $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerSetupScreen
+        }
+    }
+
+    Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
+}
+
+[ScriptBlock]$Script:ThePlayerSetupState = {
+    Switch($Script:ThePssSubstate) {
+        ([PlayerSetupScreenStates]::PlayerSetupSetup) {
+            # CLEANUP THE PREVIOUS STATE
+            If($null -NE $Script:TheTitleFiglet) {
+                $Script:TheTitleFiglet = $null
+            }
+            If($null -NE $Script:TheSubtitleFiglet) {
+                $Script:TheSubtitleFiglet = $null
+            }
+            If($null -NE $Script:TheSSAPressEnterPrompt) {
+                $Script:TheSSAPressEnterPrompt = $null
+            }
+            
+            # TRANSITION TO THE NEXT STATE AUTOMATICALLY
+            $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
+            
+            Break
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupNameEntry) {
+            If($null -EQ $Script:ThePSNameEntryWindow) {
+                $Script:ThePSNameEntryWindow = [PSNameEntryWindow]::new()
+            }
+            
+            $Script:ThePSNameEntryWindow.Draw()
+            $Script:ThePSNameEntryWindow.HandleInput()
+            
+            Break
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {
+            If($null -EQ $Script:ThePSGenderSelectionWindow) {
+                $Script:ThePSGenderSelectionWindow = [PSGenderSelectionWindow]::new()
+            }
+            
+            $Script:ThePSGenderSelectionWindow.Draw()
+            $Script:ThePSGenderSelectionWindow.HandleInput()
+            
+            Break
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {
+            If($null -EQ $Script:ThePSBonusPointAllocWindow) {
+                $Script:ThePSBonusPointAllocWindow = [PSBonusPointAllocWindow]::new()
+            }
+            
+            $Script:ThePSBonusPointAllocWindow.Draw()
+            $Script:ThePSBonusPointAllocWindow.HandleInput()
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {
+            If($null -EQ $Script:ThePSAffinitySelectWindow) {
+                $Script:ThePSAffinitySelectWindow = [PSAffinitySelectWindow]::new()
+            }
+            
+            $Script:ThePSAffinitySelectWindow.Draw()
+            $Script:ThePSAffinitySelectWindow.HandleInput()
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupProfileSelect) {
+            If($null -EQ $Script:ThePSProfileSelectWindow) {
+                Try {
+                    $Script:ThePSProfileSelectWindow = [PSProfileSelectWindow]::new()
+                } Catch {
+                    Clear-Host
+                    Write-Error "$($_.Exception.Message)"
+                    Write-Error "$($_.Exception.StackTrace)"
+                }
+            }
+            
+            $Script:ThePSProfileSelectWindow.Draw()
+            $Script:ThePSProfileSelectWindow.HandleInput()
+        }
+        
+        ([PlayerSetupScreenStates]::PlayerSetupConfirmation) {}
+    }
+}
+
+[ScriptBlock]$Script:TheGamePlayScreenState = {
+    If($null -NE $Script:TheInventoryWindow) {
+        $Script:TheInventoryWindow = $null
+    }
+    If($null -NE $Script:TheBattleManager) {
+        $Script:TheBattleManager.Cleanup()
+        $Script:TheBattleManager = $null
+    }
+    If($null -NE $Script:ThePlayerBattleStatWindow) {
+        $Script:ThePlayerBattleStatWindow = $null
+    }
+    If($null -NE $Script:TheEnemyBattleStatWindow) {
+        $Script:TheEnemyBattleStatWindow = $null
+    }
+    If($null -NE $Script:ThePlayerBattleActionWindow) {
+        $Script:ThePlayerBattleActionWindow = $null
+    }
+    If($null -NE $Script:TheBattleStatusMessageWindow) {
+        $Script:TheBattleStatusMessageWindow = $null
+    }
+    If($null -NE $Script:TheBattleEnemyImageWindow) {
+        $Script:TheBattleEnemyImageWindow = $null
+    }
+    If($null -NE $Script:TheStatusHudWindow) {
+        $Script:TheStatusHudWindow = $null
+    }
+    If($null -NE $Script:TheStatusTechSelectionWindow) {
+        $Script:TheStatusTechSelectionWindow = $null
+    }
+    If($null -NE $Script:TheStatusTechInventoryWindow) {
+        $Script:TheStatusTechInventoryWindow = $null
+    }
+
+    #######################################################################
+    #
+    # I REALLY NEED TO UNDERSTAND WHAT THE FUCK I WAS TRYING TO DO HERE.
+    # THIS CODE SEEMS LIKE A FUCKING CRIME AGAINST HUMANITY, BUT I CAN'T
+    # REMEMBER WHY I DID IT THIS WAY.
+    #
+    #######################################################################
+    If(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen) -AND ($Script:GpsRestoredFromInvBackup -EQ $false)) {
+        $Script:TheBufferManager.RestoreBufferAToActive()
+
+        # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+        # and I really don't feel like trying to figure out how to grab the buffer manually
+        $Script:GpsRestoredFromInvBackup             = $true
+        $Script:TheSceneWindow.SceneImageDirty       = $true
+        $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+        $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+        $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+        $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+        $Script:TheCommandWindow.CommandHistoryDirty = $true
+        $Script:TheMessageWindow.MessageADirty       = $true
+        $Script:TheMessageWindow.MessageBDirty       = $true
+        $Script:TheMessageWindow.MessageCDirty       = $true
+        Write-Host "$([ATControlSequences]::CursorShow)"
+    } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::BattleScreen) -AND ($Script:GpsRestoredFromBatBackup -EQ $false)) {
+        $Script:TheBufferManager.RestoreBufferAToActive()
+        
+        # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+        # and I really don't feel like trying to figure out how to grab the buffer manually
+        $Script:GpsRestoredFromBatBackup             = $true
+        $Script:TheSceneWindow.SceneImageDirty       = $true
+        $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+        $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+        $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+        $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+        $Script:TheCommandWindow.CommandHistoryDirty = $true
+        $Script:TheMessageWindow.MessageADirty       = $true
+        $Script:TheMessageWindow.MessageBDirty       = $true
+        $Script:TheMessageWindow.MessageCDirty       = $true
+        Write-Host "$([ATControlSequences]::CursorShow)"
+    } Elseif(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::PlayerStatusScreen) -AND ($Script:GpsRestoredFromStaBackup -EQ $false)) {
+        $Script:TheBufferManager.RestoreBufferAToActive()
+        
+        # Force redraws of the content; a restoration from a buffer capture will NOT retain the 24-bit color information
+        # and I really don't feel like trying to figure out how to grab the buffer manually
+        $Script:GpsRestoredFromStaBackup             = $true
+        $Script:TheSceneWindow.SceneImageDirty       = $true
+        $Script:TheStatusWindow.PlayerNameDrawDirty  = $true
+        $Script:TheStatusWindow.PlayerHpDrawDirty    = $true
+        $Script:TheStatusWindow.PlayerMpDrawDirty    = $true
+        $Script:TheStatusWindow.PlayerGoldDrawDirty  = $true
+        $Script:TheCommandWindow.CommandHistoryDirty = $true
+        $Script:TheMessageWindow.MessageADirty       = $true
+        $Script:TheMessageWindow.MessageBDirty       = $true
+        $Script:TheMessageWindow.MessageCDirty       = $true
+        Write-Host "$([ATControlSequences]::CursorShow)"
+    }
+
+    $Script:ThePlayer.Update()
+    $Script:TheStatusWindow.Draw()
+    $Script:TheCommandWindow.Draw()
+    $Script:TheSceneWindow.Draw()
+    $Script:TheMessageWindow.Draw()
+    $Script:TheCommandWindow.HandleInput()
+}
+
+[ScriptBlock]$Script:TheInventoryScreenState = {
+    If($null -EQ $Script:TheInventoryWindow) {
+        Try {
+            $Script:TheInventoryWindow = [InventoryWindow]::new()
+        } Catch {
+            Write-Error $_.Exception.Message
+            Write-Error $_.Exception.StackTrace
+        }
+    }
+    If($Script:GpsRestoredFromInvBackup -EQ $true) {
+        $Script:GpsRestoredFromInvBackup = $false
+    }
+    $Script:TheInventoryWindow.Draw()
+    $Script:TheInventoryWindow.HandleInput()
+}
+
+[ScriptBlock]$Script:TheBattleScreenState = {
+    If($Script:HasBattleIntroPlayed -EQ $false) {
+        If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
+            [ATString]$Banner = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleMintLight24]::new()
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = 7
+                        Column = 40 - (15 / 2)
+                    }
+                }
+                UserData   = 'BATTLE COMMENCE'
+                UseATReset = $true
+            }
+            Write-Host "$($Banner.ToAnsiControlSequenceString())"
+            Write-Host "$([ATControlSequences]::CursorHide)"
+            Try {
+                $Script:TheSfxMPlayer.Open($Script:SfxBattleIntro)
+                $Script:TheSfxMPlayer.Play()
+            } Catch {}
+            Start-Sleep -Seconds 1.75
+            Clear-Host
+        }
+        $Script:HasBattleIntroPlayed = $true
+    }
+    If($null -EQ $Script:TheBattleManager) {
+        $Script:TheBattleManager       = [BattleManager]::new()
+        $Script:TheBattleManager.State = [BattleManagerState]::TurnIncrement
+    }
+    If($Script:BattleCursorVisible -EQ $false) {
+        Write-Host "$([ATControlSequences]::CursorHide)"
+        $Script:BattleCursorVisible = $true
+    }
+    If($null -EQ $Script:ThePlayerBattleStatWindow) {
+        $Script:ThePlayerBattleStatWindow = [BattleEntityStatusWindow]::new(1, 1, 17, 19, $Script:ThePlayer)
+    }
+    If($null -EQ $Script:TheEnemyBattleStatWindow) {
+        $Script:TheEnemyBattleStatWindow = [BattleEntityStatusWindow]::new(1, 22, 17, 40, $Script:TheCurrentEnemy)
+    }
+    If($null -EQ $Script:ThePlayerBattleActionWindow) {
+        $Script:ThePlayerBattleActionWindow = [BattlePlayerActionWindow]::new()
+    }
+    If($null -EQ $Script:TheBattleStatusMessageWindow) {
+        $Script:TheBattleStatusMessageWindow = [BattleStatusMessageWindow]::new()
+    }
+    If($null -EQ $Script:TheBattleEnemyImageWindow) {
+        $Script:TheBattleEnemyImageWindow = [BattleEnemyImageWindow]::new()
+    }
+    If($null -EQ $Script:TheBattlePhaseIndicator) {
+        $Script:TheBattlePhaseIndicator = [BattlePhaseIndicator]::new()
+    }
+    If($Script:GpsRestoredFromBatBackup -EQ $true) {
+        $Script:GpsRestoredFromBatBackup = $false
+    }
+    If($Script:IsBattleBgmPlaying -EQ $false) {
+        $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
+        $Script:TheBgmMPlayer.Volume = 0.5
+        $Script:TheBgmMPlayer.Play()
+        $Script:IsBattleBgmPlaying = $true
+    }
+    $Script:TheBattleManager.Update()
+}
+
+[ScriptBlock]$Script:ThePlayerStatusScreenState = {
+    Write-Host "$([ATControlSequences]::CursorHide)"
+    $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
+
+    If($null -EQ $Script:TheStatusHudWindow) {
+        $Script:TheStatusHudWindow = [StatusHudWindow]::new()
+    }
+    If($null -EQ $Script:TheStatusTechSelectionWindow) {
+        $Script:TheStatusTechSelectionWindow = [StatusTechniqueSelectionWindow]::new()
+    }
+    If($null -EQ $Script:TheStatusTechInventoryWindow) {
+        $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
+    }
+    If($Script:GpsRestoredFromStaBackup -EQ $true) {
+        $Script:GpsRestoredFromStaBackup = $false
+    }
+    $Script:TheStatusHudWindow.Draw()
+    $Script:TheStatusTechSelectionWindow.Draw()
+    $Script:TheStatusTechInventoryWindow.Draw()
+    Switch($Script:StatusScreenMode) {
+        ([StatusScreenMode]::EquippedTechSelection) {
+            If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
+                $Script:TheStatusTechSelectionWindow.SetAllActionDrawDirty()
+                $Script:TheStatusTechSelectionWindow.IsActive = $true
+            }
+            If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
+                $Script:TheStatusTechInventoryWindow.IsActive = $false
+                $Script:TheStatusTechInventoryWindow.SetFlagsDirty()
+            }
+            $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
+            $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
+            $Script:TheStatusTechInventoryWindow.Draw()
+            $Script:TheStatusTechSelectionWindow.HandleInput()
+            $Script:TheStatusTechSelectionWindow.Draw()
+        }
+
+        ([StatusScreenMode]::TechInventorySelection) {
+            If($Script:TheStatusTechSelectionWindow.IsActive -NE $false) {
+                $Script:TheStatusTechSelectionWindow.IsActive = $false
+            }
+            If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
+                $Script:TheStatusTechInventoryWindow.IsActive = $true
+            }
+            $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
+            $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
+            $Script:TheStatusTechInventoryWindow.Draw()
+            $Script:TheStatusTechInventoryWindow.HandleInput()
+            $Script:TheStatusTechInventoryWindow.Draw()
+        }
+
+        Default {
+            # DO NOTHING
+            # BECAUSE I'M A FUCKING GENIUS
+        }
+    }
+}
+
+[ScriptBlock]$Script:TheCleanupState = {}
+
+[ScriptBlock]$Script:TheMoveCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('move', $args)
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If([String]::IsNullOrEmpty($a0) -EQ $true) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteBadArg0Message('move', '')
+
+            Return
+        } Else {
+            Switch($a0) {
+                { $_ -IEQ 'north' -OR $_ -IEQ 'n' } {
+                    $Script:ThePlayer.MapMoveNorth()
+                }
+    
+                { $_ -IEQ 'south' -OR $_ -IEQ 's' } {
+                    $Script:ThePlayer.MapMoveSouth()
+                }
+    
+                { $_ -IEQ 'east' -OR $_ -IEQ 'e' } {
+                    $Script:ThePlayer.MapMoveEast()
+                }
+    
+                { $_ -IEQ 'west' -OR $_ -IEQ 'w' } {
+                    $Script:ThePlayer.MapMoveWest()
+                }
+    
+                Default {
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    $Script:TheMessageWindow.WriteBadCommandMessage('move')
+    
+                    Return
+                }
+            }
+        }
+    } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+
+    Return
+}
+
+[ScriptBlock]$Script:TheLookCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('look', $args)
+    }
+
+    $Script:TheCommandWindow.UpdateCommandHistory($true)
+
+    $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+    $b = 78
+    $c = ''
+    $f = ''
+    $z = 0
+    $y = $false
+
+    If($a.Count -LE 0) {
+        $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+        Return
+    }
+    Foreach($d in $a) {
+        If($z -EQ $a.Count - 1) {
+            $c += $d.Name
+        } Else {
+            $c += $d.Name + ', '
+        }
+        $z++
+    }
+    $e = $c.Length
+    If($e -GT $b) {
+        $y = $true
+        $c -MATCH '([\s,]+\w+){5}$' | Out-Null
+        If($_ -EQ $true) {
+            $c = $c -REPLACE '([\s,]+\w+){5}$', ''
+            $f = $matches[0].Remove(0, 2)
+        }
+    }
+
+    $Script:TheMessageWindow.WriteLookMessage($c, $f, $y)
+
+    Return
+}
+
+[ScriptBlock]$Script:TheInventoryCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('inventory', $args)
+    }
+
+    $Script:TheCommandWindow.UpdateCommandHistory($true)
+    $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+    $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+    $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
+
+    Return
+}
+
+[ScriptBlock]$Script:TheExamineCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtrasArgsWarning('examine', $args)
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If([String]::IsNullOrEmpty($a0) -EQ $true) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteBadArg0Message('examine', '')
+
+            Return
+        } Else {
+            Foreach($a in $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing) {
+                If($a.Name -IEQ $a0) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    $Script:TheMessageWindow.WriteItemExamineMessage($a.ExamineString)
+    
+                    Return
+                }
+            }
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMapInvalidItemMessage($ItemName)
+    
+            Return
+        }
+    } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+
+    Return
+}
+
+[ScriptBlock]$Script:TheGetCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('get', $args)
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If([String]::IsNullOrEmpty($a0) -EQ $true) {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteBadArg0Message('get', '')
+
+            Return
+        } Else {
+            $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+
+            If($a.Count -LE 0) {
+                $Script:TheCommandWindow.UpdateCommandHistory($false)
+                $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+
+                Return
+            }
+            Foreach($b in $a) {
+                If($b.Name -IEQ $a0) {
+                    If($b.CanAddToInventory -EQ $true) {
+                        $Script:ThePlayer.Inventory.Add($b) | Out-Null
+                        $c = $a.Remove($b) | Out-Null
+                        If($c -EQ $false) {
+                            Write-Error 'Failed to remove an item from the Map Tile!'
+
+                            Exit
+                        } Else {
+                            $Script:TheCommandWindow.UpdateCommandHistory($true)
+                            $Script:TheMessageWindow.WriteItemTakenMessage($a0)
+
+                            Return
+                        }
+                    } Else {
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+                        $Script:TheMessageWindow.WriteItemCantTakeMessage($a0)
+
+                        Return
+                    }
+                }
+            }
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteMapInvalidItemMessage($a0)
+
+            Return
+        }
+    } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+
+    Return
+}
+
+[ScriptBlock]$Script:TheUseCommand = {
+    Param(
+        [String]$a0,
+        [String]$a1
+    )
+
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtrasArgsWarning('use', $args)
+    }
+
+    If(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ($PSBoundParameters.ContainsKey('a1') -EQ $true)) {
+        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+            If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1) -EQ $true) {
+                [MapTileObject]$pi  = $Script:ThePlayer.GetItemReference($a0)
+                [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)
+
+                If($mti.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
+                    $Script:TheCommandWindow.UpdateCommandHistory($true)
+                    Invoke-Command $mti.Effect -ArgumentList $mti, $pi
+                } Else {
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    $Script:TheMessageWindow.WriteCantUseItemMessage($a0, $a1)
+                }
+            } Else {
+                If($a1 -IEQ 'self') {
+                    [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
+
+                    # This code is problematic if the filter has no items in it
+                    If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
+                        $Script:TheCommandWindow.UpdateCommandHistory($true)
+                        Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
+                    } Else {
+                        $Script:TheCommandWindow.UpdateCommandHistory($false)
+                        $Script:TheMessageWindow.WriteCatUseItemOnSelfMessage($a0)
+                    }
+                } Else {
+                    $Script:TheCommandWindow.UpdateCommandHistory($false)
+                    $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+                }
+            }
+        } Else {
+            # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteNoItemInInvMessage($a0)
+
+            Return
+        }
+    } Elseif(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+            $Script:TheMessageWindow.WriteNoItemTargetMessage($a0)
+        } Else {
+            $Script:TheMessageWindow.WriteItemUseUnsureMessage($a0)
+        }
+    } Elseif(((-NOT $PSBoundParameters.ContainsKey('a0')) -EQ $true) -AND ((-NOT $PSBoundParameters.ContainsKey('a1')) -EQ $true)) {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+    }
+}
+
+[ScriptBlock]$Script:TheDropCommand = {
+    Param(
+        [String]$a0
+    )
+
+    If($args.Length -GE 1) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+        $Script:TheMessageWindow.WriteCantDropMultMessage()
+
+        Return
+    }
+
+    If($PSBoundParameters.ContainsKey('a0') -EQ $true) {
+        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+            If($Script:ThePlayer.RemoveInventoryItemByName($a0) -EQ [ItemRemovalStatus]::Success) {
+                $Script:TheCommandWindow.UpdateCommandHistory($true)
+                $Script:TheMessageWindow.WriteItemDroppedMessage($a0)
+
+                Return
+            } Else {
+                # WARNING
+                # At this point, this branch is considered a fatal error
+                # There really should be a better way of handling this, however
+                Exit
+            }
+        } Else {
+            $Script:TheCommandWindow.UpdateCommandHistory($false)
+            $Script:TheMessageWindow.WriteNoItemInInvMessage($a0)
+
+            Return
+        }
+    } Else {
+        $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        Return
+    }
+}
+
+[ScriptBlock]$Script:TheStatusCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('use', $args)
+    }
+
+    $Script:TheCommandWindow.UpdateCommandHistory($true)
+    $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+    $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+    $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
+}
+
+[ScriptBlock]$Script:TheEnterCommand = {
+    If($args.Length -GT 0) {
+        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('enter', $args)
+    }
+
+    $a = $Script:CurrentMap.GetTileAtPlayerCoordinates().ObjectListing
+
+    If($a.Count -LE 0) {
+        $Script:TheCommandWindow.UpdateCommandHistory($false)
+
+        # THIS MAY NEED MODIFIED TO A DIFFERENT METHOD CALL GIVEN THE NATURE
+        # OF THE ACTION.
+        $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
+
+        Return
+    }
+
+    Foreach($b in $a) {
+        # THIS COULD BE PROBLEMATIC IF THERE ARE MULTIPLE WARPABLE ITEMS ON A SINGLE TILE
+        # BUT REALLY? WHY?
+        If($b -IS [MTOWarpable]) {
+            # ASIDE FROM THE OTHER WAYS IN WHICH WARPABLES DIFFER FROM THEIR OTHER MTO
+            # CONTEMPORARIES IS THAT THEY DON'T MAKE USE OF THE MTO TARGET OF FILTER.
+            # WE'RE JUST GOING TO INVOKE THE EFFECT METHOD, WHICH WOULD BE THE MAP
+            # WARPING FUNCTION.
+            $Script:TheCommandWindow.UpdateCommandHistory($true)
+            Invoke-Command $b.Effect -ArgumentList $b.WarpToReference.Value, $b.WarpToX, $b.WarpToY
+
+            # I MAY ALSO WANT TO WRITE A MESSAGE TO THE MESSAGE WINDOW ABOUT HAVING
+            # ENTERED A MAP? I'LL LEAVE THIS AS A TODO HERE.
+
+            $Script:TheSceneWindow.UpdateCurrentImage($Script:CurrentMap.GetTileAtPlayerCoordinates().BackgroundImage)
+            
+            # THIS NEXT PART IS LIKELY SUBJECT TO CHANGE BECAUSE IT WOULD IMPLY THAT
+            # BATTLES CAN OCCUR ON THE WARPING TILES, AND THIS MAY NOT MAKE MUCH SENSE
+            $Script:CurrentMap.GetTileAtPlayerCoordinates().BattleStep()
+
+            Return
+        }
+    }
+
+    # THERE ARE NO WARPABLE INSTANCES ON THIS TILE, REPORT TO THE MESSAGE WINDOW
+    $Script:TheCommandWindow.UpdateCommandHistory($false)
+    $Script:TheMessageWindow.WriteBadCommandRetortMessage()
+}
+
+$Script:TheCommandTable = @{
+    'move'      = $Script:TheMoveCommand
+    'm'         = $Script:TheMoveCommand
+    'look'      = $Script:TheLookCommand
+    'l'         = $Script:TheLookCommand
+    'inventory' = $Script:TheInventoryCommand
+    'i'         = $Script:TheInventoryCommand
+    'inv'       = $Script:TheInventoryCommand
+    'examine'   = $Script:TheExamineCommand
+    'exa'       = $Script:TheExamineCommand
+    'get'       = $Script:TheGetCommand
+    'g'         = $Script:TheGetCommand
+    'take'      = $Script:TheGetCommand
+    't'         = $Script:TheGetCommand
+    'use'       = $Script:TheUseCommand
+    'u'         = $Script:TheUseCommand
+    'drop'      = $Script:TheDropCommand
+    'd'         = $Script:TheDropCommand
+    'status'    = $Script:TheStatusCommand
+    'sta'       = $Script:TheStatusCommand
+    'enter'     = $Script:TheEnterCommand
+    'en'        = $Script:TheEnterCommand
+    'exit'      = $Script:TheEnterCommand
+    'ex'        = $Script:TheEnterCommand
+}
+
+[ScriptBlock]$Script:BaCalc = {
+    Param(
+        [BattleEntity]$Self,
+        [BattleEntity]$Target,
+        [BattleAction]$SelfAction
+    )
+
+    [Boolean]$CanExecute   = $false
+    [Boolean]$ReduceSelfMp = $false
+
+    If($SelfAction.MpCost -GT 0) {
+        If($Self.Stats[[StatId]::MagicPoints].Base -GE $SelfAction.MpCost) {
+            $CanExecute   = $true
+            $ReduceSelfMp = $true
+        }
+    } Elseif($SelfAction.MpCost -LE 0) {
+        $CanExecute = $true
+    }
+
+    If($CanExecute -EQ $true) {
+        If($ReduceSelfMp -EQ $true) {
+            [Int]$DecRes = $Self.Stats[[StatId]::MagicPoints].DecrementBase($SelfAction.MpCost * -1)
+            If($Self -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.MpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.MpDrawDirty = $true
+            }
+        }
+
+        $ExecuteChance = Get-Random -Minimum 0.0 -Maximum 1.0
+        If($ExecuteChance -GT $SelfAction.Chance) {
+            Return [BattleActionResult]@{
+                Type            = [BattleActionResultType]::FailedAttackFailed
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = 0
+            }
+        }
+
+        $TargetEffectiveEvasion = [Math]::Round((0.1 + ($Target.Stats[[StatId]::Speed].Base * (Get-Random -Minimum 0.001 -Maximum 0.003))) * 100)
+        $EvRandFactor           = Get-Random -Minimum 1 -Maximum 100
+        If($EvRandFactor -LE $TargetEffectiveEvasion) {
+            Return [BattleActionResult]@{
+                Type            = [BattleActionResultType]::FailedAttackMissed
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = 0
+            }
+        }
+
+        $EffectiveDamageP1 = [Math]::Round([Math]::Abs(
+            $SelfAction.EffectValue * (
+                ($Self.Stats[[StatId]::Attack].Base - $Target.Stats[[StatId]::Defense].Base) *
+                (1 + ($Self.Stats[[StatId]::Luck].Base - $Target.Stats[[StatId]::Luck].Base))
+            ) * (Get-Random -Minimum 0.07 -Maximum 0.15)
+        ))
+        $EffectiveDamageCritFactor     = 1.0
+        $EffectiveDamageAffinityFactor = 1.0
+
+        $CriticalChance = Get-Random -Minimum 1 -Maximum 1000
+        If($CriticalChance -LE $Self.Stats[[StatId]::Luck].Base) {
+            $EffectiveDamageCritFactor = 1.5
+        }
+
+        $EffectiveDamageAffinityFactor = $Script:BATLut[$SelfAction.Type][$Target.Affinity]
+
+        $FinalDamage = [Math]::Round($EffectiveDamageP1 * $EffectiveDamageCritFactor * $EffectiveDamageAffinityFactor)
+
+        [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
+
+        If(0 -NE $DecRes) {
+            Return [BattleActionResultType]@{
+                Type            = [BattleActionResultType]::FailedAttackFailed
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = $FinalDamage
+            }
+        } Else {
+            If($Target -IS [Player]) {
+                $Script:ThePlayerBattleStatWindow.HpDrawDirty = $true
+            } Else {
+                $Script:TheEnemyBattleStatWindow.HpDrawDirty = $true
+            }
+
+            If($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -EQ 1.0) {
+                Return [BattleActionResult]@{
+                    Type            = [BattleActionResultType]::SuccessWithCritical
+                    Originator      = $Self
+                    Target          = $Target
+                    ActionEffectSum = $FinalDamage
+                }
+            } Elseif($EffectiveDamageCritFactor -EQ 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                Return [BattleActionResult]@{
+                    Type            = [BattleActionResultType]::SuccessWithAffinityBonus
+                    Originator      = $Self
+                    Target          = $Target
+                    ActionEffectSum = $FinalDamage
+                }
+            } Elseif($EffectiveDamageCritFactor -GT 1.0 -AND $EffectiveDamageAffinityFactor -GT 1.0) {
+                Return [BattleActionResult]@{
+                    Type            = [BattleActionResultType]::SuccessWithCritAndAffinityBonus
+                    Originator      = $Self
+                    Target          = $Target
+                    ActionEffectSum = $FinalDamage
+                }
+            }
+
+            Return [BattleActionResult]@{
+                Type            = [BattleActionResultType]::Success
+                Originator      = $Self
+                Target          = $Target
+                ActionEffectSum = $FinalDamage
+            }
+        }
+    } Else {
+        Return [BattleActionResult]@{
+            Type            = [BattleActionResultType]::FailedNoUsesRemaining
+            Originator      = $Self
+            Target          = $Target
+            ActionEffectSum = 0
+        }
+    }
+}
+
+[Player]$Script:ThePlayer = [Player]@{
+    Name  = 'Steve'
+    Stats = @{
+        [StatId]::HitPoints = [BattleEntityProperty]@{
+            Base                = 1000
+            Max                 = 1000
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                        Return
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                        Return
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                        Return
+                    }
+                }
+            }
+        }
+        [StatId]::MagicPoints = [BattleEntityProperty]@{
+            Base                = 500
+            Max                 = 500
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Switch($Self.Base) {
+                    { $_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution) } {
+                        $Self.State = [StatNumberState]::Normal
+                        Return
+                    }
+
+                    { ($_ -GT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger)) -AND ($_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdCaution)) } {
+                        $Self.State = [StatNumberState]::Caution
+                        Return
+                    }
+
+                    { $_ -LT ($Self.Max * [BattleEntityProperty]::StatNumThresholdDanger) } {
+                        $Self.State = [StatNumberState]::Danger
+                        Return
+                    }
+                }
+            }
+        }
+        [StatId]::Attack = [BattleEntityProperty]@{
+            Base                = 25
+            BasePre             = 25
+            BaseAugmentValue    = 5
+            Max                 = 15
+            MaxPre              = 15
+            MaxAugmentValue     = 0
+            AugmentTurnDuration = 2
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return $Self.Base
+            }
+        }
+        [StatId]::Defense = [BattleEntityProperty]@{
+            Base                = 8
+            Max                 = 8
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicAttack = [BattleEntityProperty]@{
+            Base                = 6
+            Max                 = 6
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::MagicDefense = [BattleEntityProperty]@{
+            Base                = 4
+            Max                 = 4
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Speed = [BattleEntityProperty]@{
+            Base                = 9
+            Max                 = 9
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Luck = [BattleEntityProperty]@{
+            Base                = 5
+            Max                 = 5
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+        [StatId]::Accuracy = [BattleEntityProperty]@{
+            Base                = 9
+            BaseAugmentValue    = -5
+            Max                 = 9
+            AugmentTurnDuration = 2
+            ValidateFunction    = {
+                Param(
+                    [BattleEntityProperty]$Self
+                )
+                
+                Return
+            }
+        }
+    }
+    ActionListing = @{
+        [ActionSlot]::A = [BAPunch]::new()
+        [ActionSlot]::B = [BAKick]::new()
+        [ActionSlot]::C = [BAFlamePunch]::new()
+        [ActionSlot]::D = [BAIKill]::new()
+    }
+    SpoilsEffect    = {}
+    ActionMarbleBag = @()
+    CurrentGold     = 500
+    Affinity        = [BattleActionType]::ElementalFire
+}
+
+$Script:TheGlobalStateBlockTable = @{
+    [GameStatePrimary]::SplashScreenA      = $Script:TheSplashScreenAState
+    [GameStatePrimary]::SplashScreenB      = $Script:TheSplashScreenBState
+    [GameStatePrimary]::TitleScreen        = $Script:TheTitleScreenState
+    [GameStatePrimary]::PlayerSetupScreen  = $Script:ThePlayerSetupState
+    [GameStatePrimary]::GamePlayScreen     = $Script:TheGamePlayScreenState
+    [GameStatePrimary]::InventoryScreen    = $Script:TheInventoryScreenState
+    [GameStatePrimary]::BattleScreen       = $Script:TheBattleScreenState
+    [GameStatePrimary]::PlayerStatusScreen = $Script:ThePlayerStatusScreenState
+    [GameStatePrimary]::Cleanup            = $Script:TheCleanupState
+}
