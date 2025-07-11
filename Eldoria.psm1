@@ -151,3 +151,10 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimiti
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\UI\Windows\*.ps1")) {
     . $File.FullName
 }
+
+
+
+#//////////////////////////////////////////////////////////////////////////////
+# BATTLE MANAGER SUPPORT
+#//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Classes\BattleManager.ps1"
