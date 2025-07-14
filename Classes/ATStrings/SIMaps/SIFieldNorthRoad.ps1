@@ -9,5 +9,5 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SIFieldNorthRoad : SIInternalBase {
-    SIFieldNorthRoad() : base("$(Get-Location)\Image Data\SIFieldNorthRoadNew.json") {}
+    SIFieldNorthRoad() : base("$PSScriptRoot\..\..\..\Resources\ImageData\SIFieldNorthRoadNew.json") {}
 }

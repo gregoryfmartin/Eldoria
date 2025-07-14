@@ -13,25 +13,25 @@ Set-StrictMode -Version Latest
 #
 ###############################################################################
 
-[Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$(Get-Location)\Image Data").Count
+[Int]                             $Script:SceneImagesToLoad            = $(Get-ChildItem "$PSScriptRoot\..\Resources\ImageData").Count
 [Int]                             $Script:SceneImagesLoaded            = 0
 [Int]                             $Script:MaxWidth                     = 80
 [Int]                             $Script:SSAPECounter                 = 0
 [Int]                             $Script:SSAPETimeout                 = 1000
-[String]                          $Script:SfxUiChevronMove             = "$(Get-Location)\Assets\SFX\UI Chevron Move.wav"
-[String]                          $Script:SfxUiSelectionValid          = "$(Get-Location)\Assets\SFX\UI Selection Valid.wav"
-[String]                          $Script:SfxBaPhysicalStrikeA         = "$(Get-Location)\Assets\SFX\BA Physical Strike 0001.wav"
-[String]                          $Script:SfxBaMissFail                = "$(Get-Location)\Assets\SFX\BA Miss Fail.wav"
-[String]                          $Script:SfxBaActionDisabled          = "$(Get-Location)\Assets\SFX\BA Action Disabled.wav"
-[String]                          $Script:SfxBaFireStrikeA             = "$(Get-Location)\Assets\SFX\BA Fire Strike 0001.wav"
-[String]                          $Script:SfxBattleIntro               = "$(Get-Location)\Assets\SFX\Battle Intro.wav"
-[String]                          $Script:SfxBattlePlayerWin           = "$(Get-Location)\Assets\SFX\Battle Player Win.wav"
-[String]                          $Script:SfxBattlePlayerLose          = "$(Get-Location)\Assets\SFX\Battle Player Lose.wav"
-[String]                          $Script:BgmBattleThemeA              = "$(Get-Location)\Assets\BGM\Battle Theme A.wav"
-[String]                          $Script:SfxBattleNem                 = "$(Get-Location)\Assets\SFX\UI Selection NEM.wav"
-[String]                          $Script:BgmTitleThemeA               = "$(Get-Location)\Assets\BGM\Title Theme A.wav"
-[String]                          $Script:BgmTitleThemeB               = "$(Get-Location)\Assets\BGM\Title Theme B.wav"
-[String]                          $Script:BgmPlayerSetupThemeA         = "$(Get-Location)\Assets\BGM\Player Setup Theme A.wav"
+[String]                          $Script:SfxUiChevronMove             = "$PSScriptRoot\..\Resources\SFX\UI Chevron Move.wav"
+[String]                          $Script:SfxUiSelectionValid          = "$PSScriptRoot\..\Resources\SFX\UI Selection Valid.wav"
+[String]                          $Script:SfxBaPhysicalStrikeA         = "$PSScriptRoot\..\Resources\SFX\BA Physical Strike 0001.wav"
+[String]                          $Script:SfxBaMissFail                = "$PSScriptRoot\..\Resources\SFX\BA Miss Fail.wav"
+[String]                          $Script:SfxBaActionDisabled          = "$PSScriptRoot\..\Resources\SFX\BA Action Disabled.wav"
+[String]                          $Script:SfxBaFireStrikeA             = "$PSScriptRoot\..\Resources\SFX\BA Fire Strike 0001.wav"
+[String]                          $Script:SfxBattleIntro               = "$PSScriptRoot\..\Resources\SFX\Battle Intro.wav"
+[String]                          $Script:SfxBattlePlayerWin           = "$PSScriptRoot\..\Resources\SFX\Battle Player Win.wav"
+[String]                          $Script:SfxBattlePlayerLose          = "$PSScriptRoot\..\Resources\SFX\Battle Player Lose.wav"
+[String]                          $Script:BgmBattleThemeA              = "$PSScriptRoot\..\Resources\BGM\Battle Theme A.wav"
+[String]                          $Script:SfxBattleNem                 = "$PSScriptRoot\..\Resources\SFX\UI Selection NEM.wav"
+[String]                          $Script:BgmTitleThemeA               = "$PSScriptRoot\..\Resources\BGM\Title Theme A.wav"
+[String]                          $Script:BgmTitleThemeB               = "$PSScriptRoot\..\Resources\BGM\Title Theme B.wav"
+[String]                          $Script:BgmPlayerSetupThemeA         = "$PSScriptRoot\..\Resources\BGM\Player Setup Theme A.wav"
 [String]                          $Script:TheGameSubtitle              = 'A NOT GARY GAME'
 [Hashtable]                       $Script:SpectreBBPRounded            = @{}
 [Hashtable]                       $Script:SpectreBBPSquare             = @{}
@@ -192,9 +192,9 @@ Set-StrictMode -Version Latest
     # CORRECTION: THIS HAS BEEN MOVED TO THE COMMAND BLOCK CALL RATHER THAN HERE.
 }
 
-[Map]$Script:SampleMap       = [Map]::new('Map Data\SampleMap.json')
-[Map]$Script:SampleWarpMap01 = [Map]::new('Map Data\MapWarpTest01.json')
-[Map]$Script:SampleWarpMap02 = [Map]::new('Map Data\MapWarpTest02.json')
+[Map]$Script:SampleMap       = [Map]::new("$PSScriptRoot\..\Resources\MapData\SampleMap.json")
+[Map]$Script:SampleWarpMap01 = [Map]::new("$PSScriptRoot\..\Resources\MapData\MapWarpTest01.json")
+[Map]$Script:SampleWarpMap02 = [Map]::new("$PSScriptRoot\..\Resources\MapData\MapWarpTest02.json")
 [Map]$Script:CurrentMap      = $Script:SampleWarpMap01
 
 $Script:BadCommandRetorts = @(

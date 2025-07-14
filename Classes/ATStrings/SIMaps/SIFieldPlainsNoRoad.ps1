@@ -9,5 +9,5 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SIFieldPlainsNoRoad : SIInternalBase {
-    SIFieldPlainsNoRoad() : base("$(Get-Location)\Image Data\SIFieldPlainsNoRoad.json") {}
+    SIFieldPlainsNoRoad() : base("$PSScriptRoot\..\..\..\Resources\ImageData\SIFieldPlainsNoRoad.json") {}
 }

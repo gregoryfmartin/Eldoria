@@ -4,10 +4,14 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# SI RIVER ON SOUTH EAST AT SOUTH EAST
+# START-ELDORIA.PS1
+#
+# STARTS THE ELDORIA GAME
 #
 ###############################################################################
 
-Class SIRiverOnSouthEastAtSouthEast : SIInternalBase {
-    SIRiverOnSouthEastAtSouthEast() : base("$(Get-Location)\Image Data\SIRiverOnSouthEastAtSouthEast.json") {}
+Function Start-Eldoria {
+    Clear-Host
+
+    $Script:TheGameCore.Run()
 }

@@ -9,5 +9,5 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SIRiverRoadSample : SIInternalBase {
-    SIRiverRoadSample() : base("$(Get-Location)\Image Data\SIRiverRoadSample.json") {}
+    SIRiverRoadSample() : base("$PSScriptRoot\..\..\..\Resources\ImageData\SIRiverRoadSample.json") {}
 }

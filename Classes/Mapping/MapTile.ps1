@@ -29,10 +29,11 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class MapTile {
-    [Int]$TileExitNorth
-    [Int]$TileExitSouth
-    [Int]$TileExitEast
-    [Int]$TileExitWest
+    Static [Int]$TileExitNorth = 0
+    Static [Int]$TileExitSouth = 1
+    Static [Int]$TileExitEast  = 2
+    Static [Int]$TileExitWest  = 3
+    
     [SceneImage]$BackgroundImage
     [List[MapTileObject]]$ObjectListing
     [Boolean[]]$Exits
@@ -41,10 +42,6 @@ Class MapTile {
     [Int]$RegionCode
 
     MapTile() {
-        $this.TileExitNorth   = 0
-        $this.TileExitSouth   = 1
-        $this.TileExitEast    = 2
-        $this.TileExitWest    = 3
         $this.BackgroundImage = [SIEmpty]::new()
         $this.ObjectListing   = [List[MapTileObject]]::new()
         $this.Exits = @(
@@ -63,10 +60,6 @@ Class MapTile {
         [MapTileObject[]]$ObjectListing,
         [Boolean[]]$Exits
     ) {
-        $this.TileExitNorth   = 0
-        $this.TileExitSouth   = 1
-        $this.TileExitEast    = 2
-        $this.TileExitWest    = 3
         $this.BackgroundImage = $BackgroundImage
         $this.ObjectListing   = [List[MapTileObject]]::new()
         $this.Exits           = $Exits
@@ -87,10 +80,6 @@ Class MapTile {
         [Double]$EncounterRate,
         [Int]$RegionCode
     ) {
-        $this.TileExitNorth   = 0
-        $this.TileExitSouth   = 1
-        $this.TileExitEast    = 2
-        $this.TileExitWest    = 3
         $this.BackgroundImage = $BackgroundImage
         $this.ObjectListing   = [List[MapTileObject]]::new()
         $this.Exits           = $Exits
@@ -106,10 +95,6 @@ Class MapTile {
     MapTile(
         [Hashtable]$JsonData
     ) {
-        $this.TileExitNorth   = 0
-        $this.TileExitSouth   = 1
-        $this.TileExitEast    = 2
-        $this.TileExitWest    = 3
         $this.BackgroundImage = $Script:TheSceneImages[$JsonData['BackgroundImage']]
         $this.Exits           = $JsonData['Exits']
         $this.BattleAllowed   = $JsonData['BattleAllowed']

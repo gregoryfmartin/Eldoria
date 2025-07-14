@@ -9,5 +9,5 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SIRiverOnWestAtSouth : SIInternalBase {
-    SIRiverOnWestAtSouth() : base("$(Get-Location)\Image Data\SIRiverOnWestAtSouth.json") {}
+    SIRiverOnWestAtSouth() : base("$PSScriptRoot\..\..\..\Resources\ImageData\SIRiverOnWestAtSouth.json") {}
 }

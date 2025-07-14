@@ -47,12 +47,12 @@ Class BufferManager {
     [Void]RestoreBufferAToActive() {
         Clear-Host
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferA)
-        $this.ScreenBufferA = New-Object 'BufferCell[,]' 80, 80
+        $this.ScreenBufferA = New-Object 'System.Management.Automation.Host.BufferCell[,]' 80, 80
     }
 
     [Void]RestoreBufferBToActive() {
         Clear-Host
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
-        $this.ScreenBufferB = New-Object 'BufferCell[,]' 80, 80
+        $this.ScreenBufferB = New-Object 'System.Management.Automation.Host.BufferCell[,]' 80, 80
     }
 }

@@ -19,28 +19,31 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SceneImage {
-    [Int]$Width
-    [Int]$Height
+    Static [Int]$Width  = 48
+    Static [Int]$Height = 18
+
+    #[Int]$LWidth
+    #[Int]$LHeight
     [ATSceneImageString[,]]$Image
 
     SceneImage() {
-        $this.Width  = 48
-        $this.Height = 18
-        $this.Image  = New-Object 'ATSceneImageString[,]' ([Int32]$this.Height), ([Int32]$this.Width)
+        [Int]$LWidth  = [SceneImage]::Width
+        [Int]$LHeight = [SceneImage]::Height
+        $this.Image  = New-Object 'ATSceneImageString[,]' ([Int32]([SceneImage]::Height)), ([Int32]([SceneImage]::Width))
     }
 
     SceneImage(
         [ATSceneImageString[,]]$Image
     ) {
-        $this.Width  = 48
-        $this.Height = 18
+        #$this.LWidth  = [SceneImage]::Width
+        #$this.LHeight = [SceneImage]::Height
         $this.Image  = $Image
     }
 
     [Void]CreateSceneImageATString([ATBackgroundColor24[]]$ImageColorMap) {
-        For($r = 0; $r -LT $this.Height; $r++) {
-            For($c = 0; $c -LT $this.Width; $c++) {
-                $rf = ($r * $this.Width) + $c
+        For($r = 0; $r -LT [SceneImage]::Height; $r++) {
+            For($c = 0; $c -LT [SceneImage]::Width; $c++) {
+                $rf = ($r * [SceneImage]::Width) + $c
                 
                 # THE VALUES HERE HAVE BEEN CHANGED SINCE BEING MODULARIZED
                 # THEY WERE ORIGINALLY PULLED FROM STATIC MEMBERS IN THE SCENE WINDOW CLASS,
@@ -57,8 +60,8 @@ Class SceneImage {
     [String]ToAnsiControlSequenceString() {
         [String]$a = ''
 
-        For($r = 0; $r -LT $this.Height; $r++) {
-            For($c = 0; $c -LT $this.Width; $c++) {
+        For($r = 0; $r -LT [SceneImage]::Height; $r++) {
+            For($c = 0; $c -LT [SceneImage]::Width; $c++) {
                 $a += $this.Image[$r, $c].ToAnsiControlSequenceString()
             }
         }

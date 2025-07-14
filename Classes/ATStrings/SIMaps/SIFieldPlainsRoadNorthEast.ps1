@@ -9,5 +9,5 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SIFieldPlainsRoadNorthEast : SIInternalBase {
-    SIFieldPlainsRoadNorthEast() : base("$(Get-Location)\Image Data\SIFieldPlainsRoadNorthEast.json") {}
+    SIFieldPlainsRoadNorthEast() : base("$PSScriptRoot\..\..\..\Resources\ImageData\SIFieldPlainsRoadNorthEast.json") {}
 }
