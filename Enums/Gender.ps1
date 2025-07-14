@@ -1,0 +1,17 @@
+#//////////////////////////////////////////////////////////////////////////////
+#
+# GENDER
+#
+# SIMPLE ENOUGH. WHEN CREATING A NEW CHARACTER, THE PLAYER CAN CHOOSE TO BE EITHER
+# MALE OR FEMALE. THIS HAS SEVERAL EFFECTS THROUGHOUT THE ENGINE, NOT LEAST OF
+# WHICH IS WHAT KINDS OF ARMOR CAN THE PLAYER EQUIP, HENCE THE INCLUSION OF
+# UNISEX, WHICH IS PREDOMINANTLY USED FOR SPECIFYING THAT A PIECE OF EQUIPMENT CAN
+# BE USED BY EITHER MALE OR FEMALE.
+#
+#//////////////////////////////////////////////////////////////////////////////
+
+Enum Gender {
+    Male
+    Female
+    Unisex # INTENDED FOR EQUIPMENT PURPOSES
+}
