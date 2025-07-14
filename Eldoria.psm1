@@ -85,6 +85,15 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\ATStrings\SIMaps\*.
     . $File.FullName
 }
 
+
+
+
+
+
+
+
+
+
 #//////////////////////////////////////////////////////////////////////////////
 # COMBAT ENGINE SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
@@ -270,4 +279,4 @@ Write-Progress -Activity $Script:ProgressActivity -Status ($Script:GlobalsLoadSt
 
 
 Clear-Host; Clear-Host
-Write-Host "Loading complete! Run `e[38;2;228;208;10m`e[5mStart-Eldoria`e[m to play!`n`n"
+Write-Host "`e[1;1HLoading complete! Run `e[38;2;228;208;10m`e[5mStart-Eldoria`e[m to play!`n`n"
