@@ -580,12 +580,15 @@ $Script:BATLut = @(
             Write-Error $_.Exception.Message
             Write-Error $_.Exception.StackTrace
         }
-    }
+        Write-Host "$([ATControlSequences]::CursorHide)"
+    }    
     If($Script:GpsRestoredFromInvBackup -EQ $true) {
         $Script:GpsRestoredFromInvBackup = $false
     }
     $Script:TheInventoryWindow.Draw()
     $Script:TheInventoryWindow.HandleInput()
+    
+    Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 }
 
 [ScriptBlock]$Script:TheBattleScreenState = {

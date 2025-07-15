@@ -729,6 +729,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
             13 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+
                 $Script:StatusIsSelected      = $this.PageRefs[$this.ActiveIChevronIndex]
                 [BattleAction]$EquippedAction = $Script:ThePlayer.ActionListing[$Script:StatusEsSelectedSlot]
                 If($null -EQ $EquippedAction) {
@@ -747,6 +751,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             38 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
@@ -773,6 +781,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             40 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
@@ -799,6 +811,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             39 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
@@ -825,6 +841,10 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             37 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
@@ -851,10 +871,18 @@ Class StatusTechniqueInventoryWindow : WindowBase {
             }
 
             68 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 $this.TurnPageForward()
             }
 
             65 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 $this.TurnPageBackward()
             }
         }
