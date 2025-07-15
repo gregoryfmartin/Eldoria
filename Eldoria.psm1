@@ -18,9 +18,11 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 
 
+#//////////////////////////////////////////////////////////////////////////////
+# WRITE THE LOADING STRINGS TO THE TERMINAL
+#//////////////////////////////////////////////////////////////////////////////
 Clear-Host
 Write-Host "`e[?25l" -NoNewLine
-
 Write-Host "`e[38;2;0;123;167m`e[5m$($Script:ModuleStringLoad)`e[m`n`n"
 Write-Host "`e[38;2;205;28;24m`e[5m$($Script:ModuleStringEldoria)`e[m`n`n"
 
@@ -46,6 +48,15 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\ConsoleColor\CC*.ps
 
 Write-Progress -Activity $Script:ProgressActivity -Status ($Script:FnlLoadStrings | Get-Random) -PercentComplete -1
 . "$PSScriptRoot\Classes\Mapping\FastNoiseLite\FastNoiseLite.ps1"
+
+
+
+
+
+
+
+
+
 
 Write-Progress -Activity $Script:ProgressActivity -Status ($Script:AnsiLoadStrings | Get-Random) -PercentComplete -1
 #//////////////////////////////////////////////////////////////////////////////
@@ -257,16 +268,6 @@ Write-Progress -Activity $Script:ProgressActivity -Status ($Script:GlobalsLoadSt
 # VARIABLES
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Private\Variables.ps1"
-
-
-
-
-
-
-
-
-
-
 . "$PSScriptRoot\Public\Start-Eldoria.ps1"
 
 

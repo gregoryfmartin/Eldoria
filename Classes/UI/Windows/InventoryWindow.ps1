@@ -764,12 +764,16 @@ Class InventoryWindow : WindowBase {
         #
         #######################################################################
         Switch($keyCap.VirtualKeyCode) {
-            27 {
+            27 {             
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
             }
 
             38 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 If(($this.ActiveIChevronIndex - 1) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -789,6 +793,10 @@ Class InventoryWindow : WindowBase {
             }
 
             40 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -808,6 +816,10 @@ Class InventoryWindow : WindowBase {
             }
 
             39 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 If(($this.ActiveIChevronIndex + 5) -LT $this.PageRefs.Count) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -827,6 +839,10 @@ Class InventoryWindow : WindowBase {
             }
 
             37 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 If(($this.ActiveIChevronIndex -5) -GE 0) {
                     $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
                     $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [InventoryWindow]::IChevronBlankCharacter
@@ -846,14 +862,26 @@ Class InventoryWindow : WindowBase {
             }
 
             68 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 $this.TurnPageForward()
             }
 
             65 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 $this.TurnPageBackward()
             }
 
             83 {
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
                 Switch($this.CurrentPage) {
                     1 {
                         [ItemRemovalStatus]$a = $Script:ThePlayer.RemoveInventoryItemByIndex($this.ActiveIChevronIndex)
