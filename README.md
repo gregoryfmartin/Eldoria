@@ -21,23 +21,23 @@ Eldoria has migrated to a PowerShell Module layout. This has changed how the gam
 
 Running `Import-Module .\Eldoria.psm1 -Force` will start the game bootstrapping process.
 
-PUT IMAGE HERE
+<img width="1210" height="495" alt="image" src="https://github.com/user-attachments/assets/1bf9bf78-ad8e-4295-aa4b-95229e236b18" />
 
 This process could take some time since there's quite a bit of code to process. Once the bootstrap process is complete, you'll be prompted that you can start the game using the `Start-Eldoria` cmdlet:
 
-PUT IMAGE HERE
+<img width="479" height="92" alt="image" src="https://github.com/user-attachments/assets/a8b6ace7-8c4f-4fb4-885c-1ffc272278b4" />
 
 # Title Screen
 
 Eldoria has a nice little title sequence and animation:
 
-PUT GIF HERE
+![Eldoria Title Screen - Made with Clipchamp](https://github.com/user-attachments/assets/e6e65d19-a5fb-4916-8d1e-24be9b984356)
 
 # Player Setup Screen
 
 Eldoria allows you to customize your player before starting to play.
 
-PUT IMAGE HERE
+<img width="761" height="373" alt="image" src="https://github.com/user-attachments/assets/93fa867c-6372-4273-8d75-a0ea94fec8e2" />
 
 The following customizations are available:
 
@@ -51,7 +51,7 @@ The following customizations are available:
 
 The map can be navigated using the command "move" followed by a cardinal direction: north, south, east, or west.
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 34 28 PM" src="https://github.com/user-attachments/assets/e9866e3b-2656-48db-bb5b-eccb4d2dc063" />
+<img width="807" height="601" alt="image" src="https://github.com/user-attachments/assets/ee1bec83-349e-4d49-b256-0cad743a7e2d" />
 
 The movement commands can be abbreviated. The word "move" can be shortened to simply "m", and each of the cardinal directions can be abbreviated to "n", "s", "e", and "w" respectively:
 
