@@ -1,6 +1,6 @@
 Welcome to the Eldoria game repository! Please keep in mind that this project is currently under active development and is not in a finished state. You can download and run the game program on your own computer, but be aware that none of the scripts are signed and it's currently not in a ready-to-use state. That said, if you do decide to download and use it, feedback is always welcome!
 
-Please read the GitHub wiki for more information.
+Please read the wiki for more information.
 
 # Prerequisites
 
@@ -10,9 +10,42 @@ Please read the GitHub wiki for more information.
 
 # Setup
 
+Eldoria has migrated to a PowerShell Module layout. This has changed how the game is setup/invoked. When the game is complete, it'll hopefully be uploaded to PSGallery. Until then, you can perform the following steps to download/bootstrap/run the game:
+
 * Download this repository in its entirety or clone the master branch into a local directory on your computer.
 * Open Windows Terminal and navigate to the directory where the repository is located at.
-* Run the script as follows: `Set-ExecutionPolicy Bypass -Scope Process -Force; .\EldoriaAlpha.ps1`
+* Import the module: `Import-Module .\Eldoria.psm1 -Force`. This will bootstrap the game (could take a minute or two).
+* Once the bootstrap is complete, you'll be told that you can start the game by running the cmdlet `Start-Eldoria`. Run this to start the game.
+
+# Bootstrapping Eldoria
+
+Running `Import-Module .\Eldoria.psm1 -Force` will start the game bootstrapping process.
+
+PUT IMAGE HERE
+
+This process could take some time since there's quite a bit of code to process. Once the bootstrap process is complete, you'll be prompted that you can start the game using the `Start-Eldoria` cmdlet:
+
+PUT IMAGE HERE
+
+# Title Screen
+
+Eldoria has a nice little title sequence and animation:
+
+PUT GIF HERE
+
+# Player Setup Screen
+
+Eldoria allows you to customize your player before starting to play.
+
+PUT IMAGE HERE
+
+The following customizations are available:
+
+* Name - Type in the name of your player.
+* Gender - Select the gender of your player. This has some influence over stat bonuses and what kinds of profile images you can select.
+* Bonus Points - Allocate a fixed number of bonus points for various stats for the player. You have a maximum of 10 bonus points to freely allocate. If you don't like your base stats, you can re-roll using the `R` key.
+* Affinity - This is the elemental affinity you want for your character. This has an influence over your use of magic. Magic use that aligns with the affinity receives a slight bonus, whereas magic use of an opposing or neutral affinity either receives no or a negative bonus.
+* Profile Image - A profile image to use for your player.
 
 # Navigating the World Map
 
