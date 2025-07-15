@@ -55,31 +55,31 @@ The map can be navigated using the command "move" followed by a cardinal directi
 
 The movement commands can be abbreviated. The word "move" can be shortened to simply "m", and each of the cardinal directions can be abbreviated to "n", "s", "e", and "w" respectively:
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 35 34 PM" src="https://github.com/user-attachments/assets/757ac60a-2019-4761-ad23-d8c4fc57fec4" />
+<img width="804" height="597" alt="image" src="https://github.com/user-attachments/assets/90960fd4-859d-4737-bb6f-fff34e57f1a8" />
 
 If a door, or some other kind of entrance, is on a tile, you can enter or exit it with either the "enter" or "exit" keywords (abbr. "en" or "ex" respectively):
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 41 46 PM" src="https://github.com/user-attachments/assets/6c733e44-98be-40ca-9e83-942771ee806c" />
+<img width="806" height="596" alt="image" src="https://github.com/user-attachments/assets/40a59221-566a-4ca9-a38a-46d032b0aafa" />
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 44 07 PM" src="https://github.com/user-attachments/assets/c90729ac-3e4d-47f6-8acc-d3ef141b0698" />
+<img width="802" height="594" alt="image" src="https://github.com/user-attachments/assets/ec1bd9e9-33ed-4c97-9a49-3126593ab104" />
 
 # Interacting with Items on Tiles
 
 Items on a tile can be determined using the "look" keyword (abbr. "l"):
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 36 19 PM" src="https://github.com/user-attachments/assets/982eb70a-1de0-4839-91e2-ca638ebd9918" />
+<img width="803" height="596" alt="image" src="https://github.com/user-attachments/assets/6f074013-8c59-4045-97fc-9742c6fdd97e" />
 
 Items on a tile can be examined for further details using the "examine" keyword (abbr. "exa"):
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 37 04 PM" src="https://github.com/user-attachments/assets/b25ad2ee-55dd-4b84-9996-4c1fd092bb3c" />
+<img width="804" height="602" alt="image" src="https://github.com/user-attachments/assets/a1b698ea-2992-4980-9ba5-75c6cfb5e960" />
 
 Certain items can be picked up and placed into the Player's inventory using either the "take" or "get" keywords (abbr "t" or "g" respectively):
 
-<img width="744" alt="Screenshot 2025-01-13 at 5 38 03 PM" src="https://github.com/user-attachments/assets/96b8509f-18df-44cd-a6de-530de3a5400f" />
+<img width="803" height="597" alt="image" src="https://github.com/user-attachments/assets/931b5e77-c624-4ef4-ae79-406d0bf2bbf7" />
 
-Items from the Player's inventory can be used on items in the current tile. For example, you can tie a Rope from your inventory to a Tree using the "use" keyword (abbr. "u") followed by "rope" and then "tree":
+Items from the Player's inventory can be used on items in the current tile. For example, you can tie a Rope from your inventory to a Tree using the "use" keyword (abbr. "u") followed by "rope" and then "tree". In this example, the player doesn't have a rope in their inventory, so the game informs them:
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 33 26 PM" src="https://github.com/user-attachments/assets/c0102e14-42e5-4a4c-8502-ef746663dd3a" />
+<img width="803" height="599" alt="image" src="https://github.com/user-attachments/assets/e86cbb1e-0b4b-4bce-9dfc-a121ce3ae11b" />
 
 # Player's Inventory
 
