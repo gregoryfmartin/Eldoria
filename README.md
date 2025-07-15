@@ -85,19 +85,19 @@ Items from the Player's inventory can be used on items in the current tile. For 
 
 The Player's inventory can be accessed from the Navigation Screen using the "inventory" keyword (abbr. "i"):
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 36 36 PM" src="https://github.com/user-attachments/assets/658ba259-11d0-4cfe-ad01-4318f97a7619" />
+<img width="803" height="600" alt="image" src="https://github.com/user-attachments/assets/e45e54f3-9a7e-459f-8abf-9bb496070858" />
 
 The Inventory Screen works very much like a book. Each page of the inventory contains at most 10 items. If there are more than 10 items, pages are created to the right of the first one (indicated by the yellow chevron in the top-right corner). Each item has a description which is dynamically updated in the bottom portion of the window.
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 37 05 PM" src="https://github.com/user-attachments/assets/ea388f1f-5ba4-4b66-a24d-daf195a54053" />
+<img width="807" height="486" alt="image" src="https://github.com/user-attachments/assets/9bc68c9f-5dea-4d62-8c5b-ac34937ccee9" />
 
 Subsequent pages can be accessed by turning right (D) or turning left (A):
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 39 49 PM" src="https://github.com/user-attachments/assets/e5b4cee4-1aab-401f-83f3-0ad3b477c1ec" />
+<img width="806" height="483" alt="image" src="https://github.com/user-attachments/assets/6fc1fc51-2d51-408c-8807-b1cbc7657ac7" />
 
 Items that can be used on the Player themselves offer more specific information regarding their effects on stats:
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 40 27 PM" src="https://github.com/user-attachments/assets/100fe319-9b58-4e44-b0d6-e0a527e77aa9" />
+<img width="800" height="478" alt="image" src="https://github.com/user-attachments/assets/a773dafb-c8cb-4544-9378-6382801b9d70" />
 
 Item's effects are randomized:
 
