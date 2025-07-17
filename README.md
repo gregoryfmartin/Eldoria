@@ -101,11 +101,11 @@ Items that can be used on the Player themselves offer more specific information 
 
 Item's effects are randomized:
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 40 45 PM" src="https://github.com/user-attachments/assets/0f6fe3a3-4355-4752-aca5-364114da1e4a" />
+<img width="798" height="476" alt="image" src="https://github.com/user-attachments/assets/6660b6e9-f008-4ed7-9be0-ba75451531a0" />
 
 When the Player issues a "use" command from the Navigation Screen, the very first instance of a matching item is used. Unsafe items can be dropped from the Player's inventory by pressing the S key. A beep will indicate a successful drop. Be aware that some items can't be dropped (these are called Key Items).
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 42 12 PM" src="https://github.com/user-attachments/assets/d27438ab-76b5-424c-b133-436402a9f51e" />
+<img width="799" height="474" alt="image" src="https://github.com/user-attachments/assets/1d8c9f8f-8830-4ed1-b04c-2d387149dff4" />
 
 The Inventory Screen can be exited by pressing the Escape key.
 
@@ -113,19 +113,17 @@ The Inventory Screen can be exited by pressing the Escape key.
 
 The Player's status and inventory technique selection screen is bundled into one. It can be accessed from the Navigation Screen by using the keyword "status" (abbreviation. "sta"):
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 43 38 PM" src="https://github.com/user-attachments/assets/5acc75a8-3d7c-4e7c-8943-3d29d6d902b6" />
+<img width="797" height="599" alt="image" src="https://github.com/user-attachments/assets/c0cba08a-6003-4cc0-b567-ef50e5c737e9" />
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 43 53 PM" src="https://github.com/user-attachments/assets/fdceb3bb-5236-4189-ba3b-b66d2b56464f" />
+<img width="805" height="388" alt="image" src="https://github.com/user-attachments/assets/211fd4a0-2919-4f27-88de-79bc5703b3ce" />
 
 The box in the bottom-left allows you to move the chevron up/down to select a technique to replace. Position the chevron using the up/down arrow keys and press Enter to access the Battle Action Inventory:
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 45 01 PM" src="https://github.com/user-attachments/assets/6ac94d96-0e58-49c2-babc-7b64a0b05562" />
+<img width="806" height="385" alt="image" src="https://github.com/user-attachments/assets/a3adae6f-2d24-41a5-81b8-8f8dc5b4e4e1" />
 
 This inventory window behaves much the same as the Item Inventory window, just smaller and displaying information specific to the Battle Action you have selected. When you find a technique you want to use instead, press the Enter key again to equip the new action. If you don't wish to equip any actions, press the Escape key to return:
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 46 34 PM" src="https://github.com/user-attachments/assets/fa09580b-20cc-449e-a196-1b64897bc229" />
-
-<img width="744" alt="Screenshot 2025-01-13 at 6 47 02 PM" src="https://github.com/user-attachments/assets/0ccd1fbf-9b59-461f-832c-9c43bce80be7" />
+<img width="806" height="382" alt="image" src="https://github.com/user-attachments/assets/e369fa24-46de-4699-8a70-78c6a1c8a238" />
 
 To exit the Player's Status Screen, press the Escape key until you're back at the Navigation Screen (at most 2 times).
 
@@ -133,15 +131,10 @@ To exit the Player's Status Screen, press the Escape key until you're back at th
 
 Battle encounters are random and can occur on tile moves. If you do encounter an enemy, a BATTLE COMMENCE message will appear and then the battle will start.
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 50 57 PM" src="https://github.com/user-attachments/assets/605d43cc-bacd-4926-a132-27454b70c710" />
+<img width="815" height="570" alt="image" src="https://github.com/user-attachments/assets/5cbfc2af-f785-42a8-bb15-fc28fb599f7b" />
 
 Enemies are randomly assigned each time a battle starts. Battles are turn based. Whomever has the current turn will have their window highlighted yellow. When it's the enemy's turn, they will randomly select an attack and use it against the Player. When it's the Player's turn, you can use the up/down arrow keys to select an action and press Enter to use it:
 
-<img width="744" alt="Screenshot 2025-01-13 at 6 52 39 PM" src="https://github.com/user-attachments/assets/e7b30856-7b0f-4104-9b99-434df3169b11" />
-
-<img width="744" alt="Screenshot 2025-01-13 at 6 52 42 PM" src="https://github.com/user-attachments/assets/63fb10e2-611d-4b89-aeaa-cf70a2d8e5d1" />
+<img width="815" height="574" alt="image" src="https://github.com/user-attachments/assets/094c870b-d750-46c4-885d-d58d81f72ca7" />
 
 When the Player wins a battle, spoils are given and you're prompted to press the Enter key to return to the Navigation Screen. If the Player loses a battle, the game is over.
-
-
-
