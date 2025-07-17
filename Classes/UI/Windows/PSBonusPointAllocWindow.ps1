@@ -121,7 +121,7 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.MdfModPoints = 0
         $this.SpdModPoints = 0
         $this.AccModPoints = 0
-        $this.LckModPoints = 0        
+        $this.LckModPoints = 0
         
         $this.GenerateStats()
         
@@ -1112,6 +1112,30 @@ Class PSBonusPointAllocWindow : WindowBase {
             
             13 { # ENTER
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupAffinitySelect
+            }
+            
+            82 { # R
+                # FORCE A RE-ROLL OF THE STATS
+                # THIS NEEDS TO RESET ALL THE MOD POINTS AND POINT POOL BEFORE REGENERATING
+                $this.PointsPool   = 10
+                $this.AtkModPoints = 0
+                $this.DefModPoints = 0
+                $this.MatModPoints = 0
+                $this.MdfModPoints = 0
+                $this.SpdModPoints = 0
+                $this.AccModPoints = 0
+                $this.LckModPoints = 0
+                $this.GenerateStats()
+                $this.UpdatePointsLeftActual()
+                $this.UpdateAtkPromptActual()
+                $this.UpdateDefPromptActual()
+                $this.UpdateMatPromptActual()
+                $this.UpdateMdfPromptActual()
+                $this.UpdateSpdPromptActual()
+                $this.UpdateAccPromptActual()
+                $this.UpdateLckPromptActual()
+                
+                Break
             }
         }
     }
