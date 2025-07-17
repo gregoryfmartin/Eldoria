@@ -417,7 +417,8 @@ $Script:BATLut = @(
         
         ([PlayerSetupScreenStates]::PlayerSetupNameEntry) {
             If($null -EQ $Script:ThePSNameEntryWindow) {
-                $Script:ThePSNameEntryWindow = [PSNameEntryWindow]::new()
+                $Script:ThePSNameEntryWindow           = [PSNameEntryWindow]::new()
+                $Script:ThePSNameEntryWindow.IsActive = $true
             }
             
             $Script:ThePSNameEntryWindow.Draw()
@@ -427,8 +428,14 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {
+            If($Script:ThePSNameEntryWindow.IsActive -EQ $true) {
+                $Script:ThePSNameEntryWindow.IsActive = $false
+                $Script:ThePSNameEntryWindow.Draw()
+            }
+            
             If($null -EQ $Script:ThePSGenderSelectionWindow) {
-                $Script:ThePSGenderSelectionWindow = [PSGenderSelectionWindow]::new()
+                $Script:ThePSGenderSelectionWindow          = [PSGenderSelectionWindow]::new()
+                $Script:ThePSGenderSelectionWindow.IsActive = $true
             }
             
             $Script:ThePSGenderSelectionWindow.Draw()
@@ -438,8 +445,15 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {
+            If($Script:ThePSGenderSelectionWindow.IsActive -EQ $true) {
+                $Script:ThePSGenderSelectionWindow.IsActive             = $false
+                $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSGenderSelectionWindow.Draw()
+            }
+
             If($null -EQ $Script:ThePSBonusPointAllocWindow) {
-                $Script:ThePSBonusPointAllocWindow = [PSBonusPointAllocWindow]::new()
+                $Script:ThePSBonusPointAllocWindow          = [PSBonusPointAllocWindow]::new()
+                $Script:ThePSBonusPointAllocWindow.IsActive = $true
             }
             
             $Script:ThePSBonusPointAllocWindow.Draw()
@@ -447,8 +461,15 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {
+            If($Script:ThePSBonusPointAllocWindow.IsActive -EQ $true) {
+                $Script:ThePSBonusPointAllocWindow.IsActive = $false
+                $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSBonusPointAllocWindow.Draw()
+            }
+        
             If($null -EQ $Script:ThePSAffinitySelectWindow) {
                 $Script:ThePSAffinitySelectWindow = [PSAffinitySelectWindow]::new()
+                $Script:ThePSAffinitySelectWindow.IsActive = $true
             }
             
             $Script:ThePSAffinitySelectWindow.Draw()
@@ -456,9 +477,16 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupProfileSelect) {
+            If($Script:ThePSAffinitySelectWindow.IsActive -EQ $true) {
+                $Script:ThePSAffinitySelectWindow.IsActive = $false
+                $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSAffinitySelectWindow.Draw()
+            }
+            
             If($null -EQ $Script:ThePSProfileSelectWindow) {
                 Try {
                     $Script:ThePSProfileSelectWindow = [PSProfileSelectWindow]::new()
+                    $Script:ThePSProfileSelectWindow.IsActive = $true
                 } Catch {
                     Clear-Host
                     Write-Error "$($_.Exception.Message)"

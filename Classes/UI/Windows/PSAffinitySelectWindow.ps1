@@ -37,6 +37,8 @@ Class PSAffinitySelectWindow : WindowBase {
     [Boolean]$ChevronDirty
     [Boolean]$AffinityListDirty
     [Boolean]$ActiveItemBlinking
+    [Boolean]$IsActive
+    [Boolean]$HasBorderBeenRedrawn
     
     [List[ValueTuple[[ATString], [Boolean]]]]$ChevronsActual
     [List[ATStringComposite]]$AffinityLabelsActual
@@ -60,6 +62,8 @@ Class PSAffinitySelectWindow : WindowBase {
         $this.ChevronDirty = $true
         $this.AffinityListDirty = $true
         $this.ActiveItemBlinking = $false
+        $this.IsActive = $false
+        $this.HasBorderBeenRedrawn = $false
         
         $this.CreateChevrons()
         $this.CreateChevronBlanks()
@@ -280,6 +284,58 @@ Class PSAffinitySelectWindow : WindowBase {
     }
     
     [Void]Draw() {
+        If($this.IsActive -EQ $true) {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        } Else {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        }
+        
         ([WindowBase]$this).Draw()
         
         If($this.AffinityListDirty -EQ $true) {

@@ -11,9 +11,9 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class PSNameEntryWindow : WindowBase {
-    Static [Int]$WindowLTRow = 1
+    Static [Int]$WindowLTRow    = 1
     Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowRBRow = 3
+    Static [Int]$WindowRBRow    = 3
     Static [Int]$WindowRBColumn = 16
     
     Static [String]$WindowTitle = 'Name'
@@ -23,14 +23,15 @@ Class PSNameEntryWindow : WindowBase {
     
     [ATString]$NameActual
     [ATString]$NameBlankActual
+    [Boolean]$IsActive
     
     PSNameEntryWindow() : base() {
         $this.LeftTop = [ATCoordinates]@{
-            Row = [PSNameEntryWindow]::WindowLTRow
+            Row    = [PSNameEntryWindow]::WindowLTRow
             Column = [PSNameEntryWindow]::WindowLTColumn
         }
         $this.RightBottom = [ATCoordinates]@{
-            Row = [PSNameEntryWindow]::WindowRBRow
+            Row    = [PSNameEntryWindow]::WindowRBRow
             Column = [PSNameEntryWindow]::WindowRBColumn
         }
         
@@ -40,7 +41,7 @@ Class PSNameEntryWindow : WindowBase {
         $this.NameActual = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]@{
-                    Row = 10
+                    Row    = 10
                     Column = 1
                 }
             }
@@ -49,22 +50,69 @@ Class PSNameEntryWindow : WindowBase {
         $this.NameBlankActual = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]@{
-                    Row = 2
+                    Row    = 2
                     Column = 2
                 }
             }
-            UserData = [PSNameEntryWindow]::NameBlankData
+            UserData   = [PSNameEntryWindow]::NameBlankData
             UseATReset = $true
         }
+        $this.IsActive = $false
     }
     
     [Void]Draw() {
+        If($this.IsActive -EQ $true) {
+            $this.BorderDrawColors = [ConsoleColor24[]](
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new(),
+                [CCAppleYellowDark24]::new()
+            )
+            $this.BorderDrawDirty = [Boolean[]](
+                $true,
+                $true,
+                $true,
+                $true,
+                $true,
+                $true,
+                $true,
+                $true
+            )
+            $this.TitleDirty = $true
+        } Else {
+            $this.BorderDrawColors = [ConsoleColor24[]](
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new(),
+                [CCWindowBorderDefault24]::new()
+            )
+            $this.BorderDrawDirty = [Boolean[]](
+                $true,
+                $true,
+                $true,
+                $true,
+                $true,
+                $true,
+                $true,
+                $true
+            )
+            $this.TitleDirty = $true
+        }
+
         ([WindowBase]$this).Draw()
     }
     
     [Void]HandleInput() {
         $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 2; Column = 1 }).ToAutomationCoordinates()
-        $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+        $KeyCap                    = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         
         While($KeyCap.VirtualKeyCode -NE 13) {
             $CPX = $Script:Rui.CursorPosition.X

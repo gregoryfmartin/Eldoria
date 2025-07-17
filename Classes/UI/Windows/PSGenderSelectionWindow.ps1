@@ -28,6 +28,7 @@ Class PSGenderSelectionWindow : WindowBase {
     [Boolean]$MaleSymbolDirty
     [Boolean]$FemaleSymbolDirty
     [Boolean]$IsActive
+    [Boolean]$HasBorderBeenRedrawn
     [ATCoordinates]$MaleSymbolDrawCoords
     [ATCoordinates]$FemaleSymbolDrawCoords
     [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons
@@ -48,12 +49,13 @@ Class PSGenderSelectionWindow : WindowBase {
         $this.UpdateDimensions()
         $this.SetupTitle([PSGenderSelectionWindow]::WindowTitle, [CCTextDefault24]::new())
 
-        $this.ActiveChevronIndex = 0
-        $this.PlayerChevronDirty = $true
-        $this.MaleSymbolDirty    = $true
-        $this.FemaleSymbolDirty  = $true
-        $this.IsActive           = $false
-        $this.SelectedGender     = [Gender]::Unisex # THIS IS A TOTAL BS DEFAULT VALUE; IT SHOULDN'T BE THIS LATER!
+        $this.ActiveChevronIndex   = 0
+        $this.PlayerChevronDirty   = $true
+        $this.MaleSymbolDirty      = $true
+        $this.FemaleSymbolDirty    = $true
+        $this.IsActive             = $false
+        $this.HasBorderBeenRedrawn = $false
+        $this.SelectedGender       = [Gender]::Unisex # THIS IS A TOTAL BS DEFAULT VALUE; IT SHOULDN'T BE THIS LATER!
 
         $this.MaleSymbolDrawCoords = [ATCoordinates]@{
             Row    = $this.LeftTop.Row + 1
@@ -90,7 +92,7 @@ Class PSGenderSelectionWindow : WindowBase {
             [ValueTuple]::Create(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        ForegroundColor = [CCTextDefault24]::new()
                         Coordinates     = [ATCoordinates]@{
                             Row    = $this.MaleSymbolDrawCoords.Row
                             Column = $this.MaleSymbolDrawCoords.Column - 1
@@ -106,7 +108,7 @@ Class PSGenderSelectionWindow : WindowBase {
             [ValueTuple]::Create(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleGreenLight24]::new()
+                        ForegroundColor = [CCTextDefault24]::new()
                         Coordinates     = [ATCoordinates]@{
                             Row    = $this.FemaleSymbolDrawCoords.Row
                             Column = $this.FemaleSymbolDrawCoords.Column - 1
@@ -121,6 +123,58 @@ Class PSGenderSelectionWindow : WindowBase {
     }
 
     [Void]Draw() {
+        If($this.IsActive -EQ $true) {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        } Else {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        }
+
         ([WindowBase]$this).Draw()
 
         If($this.MaleSymbolDirty -EQ $true) {
@@ -133,13 +187,8 @@ Class PSGenderSelectionWindow : WindowBase {
             $this.FemaleSymbolDirty = $false
         }
 
-        If($this.PlayerChevronDirty -EQ $true -OR $this.IsActive -EQ $true) {
+        If($this.PlayerChevronDirty -EQ $true) {
             Foreach($c in $this.Chevrons) {
-                If($this.IsActive -EQ $true) {
-                    $c.Item1.Prefix.ForegroundColor = [CCAppleNGreenLight24]::new()
-                } Else {
-                    $c.Item1.Prefix.ForegroundColor = [CCAppleNOrangeLight24]::new()
-                }
                 Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
             }
             $this.PlayerChevronDirty = $false
