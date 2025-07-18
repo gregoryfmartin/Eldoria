@@ -416,6 +416,11 @@ Class PSAffinitySelectWindow : WindowBase {
             $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         }
         
+        If($Script:ThePSProfileSelectWindow -NE $null) {
+            $Script:ThePSProfileSelectWindow.IsActive = $true
+            $Script:ThePSProfileSelectWindow.HasBorderBeenRedrawn = $false
+        }
+        
         $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupProfileSelect
     }
 }

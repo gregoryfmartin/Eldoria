@@ -186,6 +186,12 @@ Class PSProfileSelectWindow : WindowBase {
                 Break
             }
             
+            27 { # ESCAPE
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupAffinitySelect
+                
+                Break
+            }
+            
             37 { # LEFT ARROW
                 If($KeyCap.KeyDown -EQ $true) {
                     Switch($Script:ThePSGenderSelectionWindow.SelectedGender) {

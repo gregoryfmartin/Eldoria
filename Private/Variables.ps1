@@ -466,6 +466,17 @@ $Script:BATLut = @(
                 $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
                 $Script:ThePSBonusPointAllocWindow.Draw()
             }
+            
+            If($Script:ThePSProfileSelectWindow -NE $null) {
+                If($Script:ThePSProfileSelectWindow.IsActive -EQ $true) {
+                    $Script:ThePSProfileSelectWindow.IsActive = $false
+                    $Script:ThePSProfileSelectWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSProfileSelectWindow.Draw()
+                    
+                    $Script:ThePSAffinitySelectWindow.IsActive = $true
+                    $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                }
+            }
         
             If($null -EQ $Script:ThePSAffinitySelectWindow) {
                 $Script:ThePSAffinitySelectWindow = [PSAffinitySelectWindow]::new()
@@ -484,14 +495,8 @@ $Script:BATLut = @(
             }
             
             If($null -EQ $Script:ThePSProfileSelectWindow) {
-                Try {
-                    $Script:ThePSProfileSelectWindow = [PSProfileSelectWindow]::new()
-                    $Script:ThePSProfileSelectWindow.IsActive = $true
-                } Catch {
-                    Clear-Host
-                    Write-Error "$($_.Exception.Message)"
-                    Write-Error "$($_.Exception.StackTrace)"
-                }
+                $Script:ThePSProfileSelectWindow = [PSProfileSelectWindow]::new()
+                $Script:ThePSProfileSelectWindow.IsActive = $true
             }
             
             $Script:ThePSProfileSelectWindow.Draw()
