@@ -362,65 +362,63 @@ Class PSAffinitySelectWindow : WindowBase {
     [Void]HandleInput() {
         $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         
-        While($KeyCap.VirtualKeyCode -NE 13) {
-            Switch($KeyCap.VirtualKeyCode) {
-                38 { # UP ARROW
-                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
-                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $false)
-                    
-                    If($this.ActiveChevronIndex -EQ 0) {
-                        $this.ActiveChevronIndex = [PSAffinitySelectWindow]::AffinityLabelData.Count - 1
-                    } Else {
-                        $this.ActiveChevronIndex--
-                    }
-                    
-                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
-                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $true)
-                    
-                    $this.ChevronDirty = $true
-                    
-                    Try {
-                        $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
-                        $Script:TheSfxMPlayer.Play()
-                    } Catch {}
-                    
-                    Break
+        Switch($KeyCap.VirtualKeyCode) {
+            38 { # UP ARROW
+                $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $false)
+                
+                If($this.ActiveChevronIndex -EQ 0) {
+                    $this.ActiveChevronIndex = [PSAffinitySelectWindow]::AffinityLabelData.Count - 1
+                } Else {
+                    $this.ActiveChevronIndex--
                 }
                 
-                40 { # DOWN ARROW
-                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
-                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $false)
+                $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $true)
+                
+                $this.ChevronDirty = $true
                     
-                    If($this.ActiveChevronIndex -EQ ([PSAffinitySelectWindow]::AffinityLabelData.Count - 1)) {
-                        $this.ActiveChevronIndex = 0
-                    } Else {
-                        $this.ActiveChevronIndex++
-                    }
-                    
-                    $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
-                    $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $true)
-                    
-                    $this.ChevronDirty = $true
-                    
-                    Try {
-                        $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
-                        $Script:TheSfxMPlayer.Play()
-                    } Catch {}
-                    
-                    Break
-                }
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
+                
+                Break
             }
-            
-            $this.Draw()
+                
+            40 { # DOWN ARROW
+                $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $false)
+                    
+                If($this.ActiveChevronIndex -EQ ([PSAffinitySelectWindow]::AffinityLabelData.Count - 1)) {
+                    $this.ActiveChevronIndex = 0
+                } Else {
+                    $this.ActiveChevronIndex++
+                }
+                    
+                $CurChev = $this.ChevronsActual[$this.ActiveChevronIndex]
+                $this.ChevronsActual[$this.ActiveChevronIndex] = [ValueTuple]::Create($CurChev.Item1, $true)
+                    
+                $this.ChevronDirty = $true
+                    
+                Try {
+                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+                    $Script:TheSfxMPlayer.Play()
+                } Catch {}
+                    
+                Break
+            }
+                
+            13 { # ENTER
+                If($Script:ThePSProfileSelectWindow -NE $null) {
+                    $Script:ThePSProfileSelectWindow.IsActive = $true
+                    $Script:ThePSProfileSelectWindow.HasBorderBeenRedrawn = $false
+                }
         
-            $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupProfileSelect
+                    
+                Break
+            }
         }
-        
-        If($Script:ThePSProfileSelectWindow -NE $null) {
-            $Script:ThePSProfileSelectWindow.IsActive = $true
-            $Script:ThePSProfileSelectWindow.HasBorderBeenRedrawn = $false
-        }
-        
-        $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupProfileSelect
     }
 }
