@@ -1244,6 +1244,11 @@ Class PSBonusPointAllocWindow : WindowBase {
             }
             
             13 { # ENTER
+                If($Script:ThePSAffinitySelectWindow -NE $null) {
+                    $Script:ThePSAffinitySelectWindow.IsActive = $true
+                    $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                }
+                
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupAffinitySelect
             }
             

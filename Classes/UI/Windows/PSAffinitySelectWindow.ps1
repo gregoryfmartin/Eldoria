@@ -419,6 +419,12 @@ Class PSAffinitySelectWindow : WindowBase {
                     
                 Break
             }
+            
+            27 { # ESCAPE
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
+                
+                Break
+            }
         }
     }
 }

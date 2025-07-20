@@ -450,6 +450,17 @@ $Script:BATLut = @(
                 $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
                 $Script:ThePSGenderSelectionWindow.Draw()
             }
+            
+            If($Script:ThePSAffinitySelectWindow -NE $null) {
+                If($Script:ThePSAffinitySelectWindow.IsActive -EQ $true) {
+                    $Script:ThePSAffinitySelectWindow.IsActive = $false
+                    $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSAffinitySelectWindow.Draw()
+                    
+                    $Script:ThePSBonusPointAllocWindow.IsActive = $true
+                    $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                }
+            }
 
             If($null -EQ $Script:ThePSBonusPointAllocWindow) {
                 $Script:ThePSBonusPointAllocWindow          = [PSBonusPointAllocWindow]::new()
