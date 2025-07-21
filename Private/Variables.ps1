@@ -416,8 +416,20 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupNameEntry) {
+            If($Script:ThePSGenderSelectionWindow -NE $null) {
+                If($Script:ThePSGenderSelectionWindow.IsActive -EQ $true) {
+                    $Script:ThePSGenderSelectionWindow.IsActive = $false
+                    $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSGenderSelectionWindow.Draw()
+                    
+                    $Script:ThePSNameEntryWindow.IsActive = $true
+                    $Script:ThePSNameEntryWindow.HasBorderBeenRedrawn = $false
+                }
+            }
+            
             If($null -EQ $Script:ThePSNameEntryWindow) {
-                $Script:ThePSNameEntryWindow = [PSNameEntryWindow]::new()
+                $Script:ThePSNameEntryWindow           = [PSNameEntryWindow]::new()
+                $Script:ThePSNameEntryWindow.IsActive = $true
             }
             
             $Script:ThePSNameEntryWindow.Draw()
@@ -427,8 +439,26 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {
+            If($Script:ThePSNameEntryWindow.IsActive -EQ $true) {
+                $Script:ThePSNameEntryWindow.IsActive = $false
+                $Script:ThePSNameEntryWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSNameEntryWindow.Draw()
+            }
+            
+            If($Script:ThePSBonusPointAllocWindow -NE $null) {
+                If($Script:ThePSBonusPointAllocWindow.IsActive -EQ $true) {
+                    $Script:ThePSBonusPointAllocWindow.IsActive = $false
+                    $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSBonusPointAllocWindow.Draw()
+                    
+                    $Script:ThePSGenderSelectionWindow.IsActive = $true
+                    $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+                }
+            }
+            
             If($null -EQ $Script:ThePSGenderSelectionWindow) {
-                $Script:ThePSGenderSelectionWindow = [PSGenderSelectionWindow]::new()
+                $Script:ThePSGenderSelectionWindow          = [PSGenderSelectionWindow]::new()
+                $Script:ThePSGenderSelectionWindow.IsActive = $true
             }
             
             $Script:ThePSGenderSelectionWindow.Draw()
@@ -438,8 +468,26 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupPointAllocate) {
+            If($Script:ThePSGenderSelectionWindow.IsActive -EQ $true) {
+                $Script:ThePSGenderSelectionWindow.IsActive             = $false
+                $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSGenderSelectionWindow.Draw()
+            }
+            
+            If($Script:ThePSAffinitySelectWindow -NE $null) {
+                If($Script:ThePSAffinitySelectWindow.IsActive -EQ $true) {
+                    $Script:ThePSAffinitySelectWindow.IsActive = $false
+                    $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSAffinitySelectWindow.Draw()
+                    
+                    $Script:ThePSBonusPointAllocWindow.IsActive = $true
+                    $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                }
+            }
+
             If($null -EQ $Script:ThePSBonusPointAllocWindow) {
-                $Script:ThePSBonusPointAllocWindow = [PSBonusPointAllocWindow]::new()
+                $Script:ThePSBonusPointAllocWindow          = [PSBonusPointAllocWindow]::new()
+                $Script:ThePSBonusPointAllocWindow.IsActive = $true
             }
             
             $Script:ThePSBonusPointAllocWindow.Draw()
@@ -447,8 +495,26 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupAffinitySelect) {
+            If($Script:ThePSBonusPointAllocWindow.IsActive -EQ $true) {
+                $Script:ThePSBonusPointAllocWindow.IsActive = $false
+                $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSBonusPointAllocWindow.Draw()
+            }
+            
+            If($Script:ThePSProfileSelectWindow -NE $null) {
+                If($Script:ThePSProfileSelectWindow.IsActive -EQ $true) {
+                    $Script:ThePSProfileSelectWindow.IsActive = $false
+                    $Script:ThePSProfileSelectWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSProfileSelectWindow.Draw()
+                    
+                    $Script:ThePSAffinitySelectWindow.IsActive = $true
+                    $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                }
+            }
+        
             If($null -EQ $Script:ThePSAffinitySelectWindow) {
                 $Script:ThePSAffinitySelectWindow = [PSAffinitySelectWindow]::new()
+                $Script:ThePSAffinitySelectWindow.IsActive = $true
             }
             
             $Script:ThePSAffinitySelectWindow.Draw()
@@ -456,14 +522,15 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupProfileSelect) {
+            If($Script:ThePSAffinitySelectWindow.IsActive -EQ $true) {
+                $Script:ThePSAffinitySelectWindow.IsActive = $false
+                $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                $Script:ThePSAffinitySelectWindow.Draw()
+            }
+            
             If($null -EQ $Script:ThePSProfileSelectWindow) {
-                Try {
-                    $Script:ThePSProfileSelectWindow = [PSProfileSelectWindow]::new()
-                } Catch {
-                    Clear-Host
-                    Write-Error "$($_.Exception.Message)"
-                    Write-Error "$($_.Exception.StackTrace)"
-                }
+                $Script:ThePSProfileSelectWindow = [PSProfileSelectWindow]::new()
+                $Script:ThePSProfileSelectWindow.IsActive = $true
             }
             
             $Script:ThePSProfileSelectWindow.Draw()

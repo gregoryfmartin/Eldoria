@@ -65,6 +65,8 @@ Class PSBonusPointAllocWindow : WindowBase {
     [Boolean]$SpdDataDirty
     [Boolean]$AccDataDirty
     [Boolean]$LckDataDirty
+    [Boolean]$IsActive
+    [Boolean]$HasBorderBeenRedrawn
     
     [ATStringComposite]$PointsLeftActual
     [ATStringComposite]$AtkPromptActual
@@ -106,6 +108,8 @@ Class PSBonusPointAllocWindow : WindowBase {
         $this.SpdDataDirty = $false
         $this.AccDataDirty = $false
         $this.LckDataDirty = $false
+        $this.IsActive = $false
+        $this.HasBorderBeenRedrawn = $false
         $this.State = [PSBonusPointAllocState]::AtkPointsMod
         $this.PointsPool = 10
         $this.AtkPoints = 0
@@ -1088,6 +1092,58 @@ Class PSBonusPointAllocWindow : WindowBase {
     }
     
     [Void]Draw() {
+        If($this.IsActive -EQ $true) {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        } Else {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        }
+        
         ([WindowBase]$this).Draw()
         
         If($this.PointsLeftPromptDirty -EQ $true) {
@@ -1188,6 +1244,11 @@ Class PSBonusPointAllocWindow : WindowBase {
             }
             
             13 { # ENTER
+                If($Script:ThePSAffinitySelectWindow -NE $null) {
+                    $Script:ThePSAffinitySelectWindow.IsActive = $true
+                    $Script:ThePSAffinitySelectWindow.HasBorderBeenRedrawn = $false
+                }
+                
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupAffinitySelect
             }
             
@@ -1211,6 +1272,12 @@ Class PSBonusPointAllocWindow : WindowBase {
                 $this.UpdateSpdPromptActual()
                 $this.UpdateAccPromptActual()
                 $this.UpdateLckPromptActual()
+                
+                Break
+            }
+            
+            27 { # ESCAPE
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupGenderSelection
                 
                 Break
             }

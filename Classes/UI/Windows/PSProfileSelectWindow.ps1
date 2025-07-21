@@ -26,11 +26,15 @@ Class PSProfileSelectWindow : WindowBase {
     [ATCoordinates]$DrawOffset
     
     [Int]$ProfileImageProbe
+    
     [Boolean]$ProfileImgDirty
     [Boolean]$DialArrowLeftDirty
     [Boolean]$DialArrowRightDirty
     [Boolean]$DialArrowLeftActive
     [Boolean]$DialArrowRightActive
+    [Boolean]$IsActive
+    [Boolean]$HasBorderBeenRedrawn
+    
     [ATString[]]$DialArrowsActual
 
     PSProfileSelectWindow() : base() {
@@ -57,6 +61,8 @@ Class PSProfileSelectWindow : WindowBase {
         $this.DialArrowRightDirty = $true
         $this.DialArrowLeftActive = $false
         $this.DialArrowRightActive = $false
+        $this.IsActive = $false
+        $this.HasBorderBeenRedrawn = $false
         
         $this.DialArrowsActual = @(
             [ATString]@{
@@ -85,6 +91,58 @@ Class PSProfileSelectWindow : WindowBase {
     }
     
     [Void]Draw() {
+        If($this.IsActive -EQ $true) {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        } Else {
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
+        }
+        
         ([WindowBase]$this).Draw()
         
         If($this.ProfileImgDirty -EQ $true) {
@@ -124,6 +182,12 @@ Class PSProfileSelectWindow : WindowBase {
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
                 Clear-Host
+                
+                Break
+            }
+            
+            27 { # ESCAPE
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupAffinitySelect
                 
                 Break
             }
