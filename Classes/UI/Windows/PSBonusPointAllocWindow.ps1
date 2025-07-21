@@ -1275,6 +1275,12 @@ Class PSBonusPointAllocWindow : WindowBase {
                 
                 Break
             }
+            
+            27 { # ESCAPE
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupGenderSelection
+                
+                Break
+            }
         }
     }
 }

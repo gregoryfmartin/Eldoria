@@ -209,6 +209,11 @@ Class PSGenderSelectionWindow : WindowBase {
                 } Elseif($this.ActiveChevronIndex -EQ 1) {
                     $this.SelectedGender = [Gender]::Female
                 }
+                
+                If($Script:ThePSBonusPointAllocWindow -NE $null) {
+                    $Script:ThePSBonusPointAllocWindow.IsActive = $true
+                    $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                }
 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
             }

@@ -416,6 +416,17 @@ $Script:BATLut = @(
         }
         
         ([PlayerSetupScreenStates]::PlayerSetupNameEntry) {
+            If($Script:ThePSGenderSelectionWindow -NE $null) {
+                If($Script:ThePSGenderSelectionWindow.IsActive -EQ $true) {
+                    $Script:ThePSGenderSelectionWindow.IsActive = $false
+                    $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSGenderSelectionWindow.Draw()
+                    
+                    $Script:ThePSNameEntryWindow.IsActive = $true
+                    $Script:ThePSNameEntryWindow.HasBorderBeenRedrawn = $false
+                }
+            }
+            
             If($null -EQ $Script:ThePSNameEntryWindow) {
                 $Script:ThePSNameEntryWindow           = [PSNameEntryWindow]::new()
                 $Script:ThePSNameEntryWindow.IsActive = $true
@@ -430,7 +441,19 @@ $Script:BATLut = @(
         ([PlayerSetupScreenStates]::PlayerSetupGenderSelection) {
             If($Script:ThePSNameEntryWindow.IsActive -EQ $true) {
                 $Script:ThePSNameEntryWindow.IsActive = $false
+                $Script:ThePSNameEntryWindow.HasBorderBeenRedrawn = $false
                 $Script:ThePSNameEntryWindow.Draw()
+            }
+            
+            If($Script:ThePSBonusPointAllocWindow -NE $null) {
+                If($Script:ThePSBonusPointAllocWindow.IsActive -EQ $true) {
+                    $Script:ThePSBonusPointAllocWindow.IsActive = $false
+                    $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                    $Script:ThePSBonusPointAllocWindow.Draw()
+                    
+                    $Script:ThePSGenderSelectionWindow.IsActive = $true
+                    $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+                }
             }
             
             If($null -EQ $Script:ThePSGenderSelectionWindow) {

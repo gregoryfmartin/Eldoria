@@ -23,7 +23,9 @@ Class PSNameEntryWindow : WindowBase {
     
     [ATString]$NameActual
     [ATString]$NameBlankActual
+    
     [Boolean]$IsActive
+    [Boolean]$HasBorderBeenRedrawn
     
     PSNameEntryWindow() : base() {
         $this.LeftTop = [ATCoordinates]@{
@@ -58,53 +60,60 @@ Class PSNameEntryWindow : WindowBase {
             UseATReset = $true
         }
         $this.IsActive = $false
+        $this.HasBorderBeenRedrawn = $false
     }
     
     [Void]Draw() {
         If($this.IsActive -EQ $true) {
-            $this.BorderDrawColors = [ConsoleColor24[]](
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new(),
-                [CCAppleYellowDark24]::new()
-            )
-            $this.BorderDrawDirty = [Boolean[]](
-                $true,
-                $true,
-                $true,
-                $true,
-                $true,
-                $true,
-                $true,
-                $true
-            )
-            $this.TitleDirty = $true
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new(),
+                    [CCAppleYellowDark24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
         } Else {
-            $this.BorderDrawColors = [ConsoleColor24[]](
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new(),
-                [CCWindowBorderDefault24]::new()
-            )
-            $this.BorderDrawDirty = [Boolean[]](
-                $true,
-                $true,
-                $true,
-                $true,
-                $true,
-                $true,
-                $true,
-                $true
-            )
-            $this.TitleDirty = $true
+            If($this.HasBorderBeenRedrawn -EQ $false) {
+                $this.BorderDrawColors = [ConsoleColor24[]](
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new(),
+                    [CCTextDefault24]::new()
+                )
+                $this.BorderDrawDirty = [Boolean[]](
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true,
+                    $true
+                )
+                $this.TitleDirty = $true
+                $this.HasBorderBeenRedrawn = $true
+            }
         }
 
         ([WindowBase]$this).Draw()
@@ -162,6 +171,11 @@ Class PSNameEntryWindow : WindowBase {
             $Script:TheSfxMPlayer.Open($Script:SfxUiSelectionValid)
             $Script:TheSfxMPlayer.Play()
         } Catch {}
+        
+        If($Script:ThePSGenderSelectionWindow -NE $null) {
+            $Script:ThePSGenderSelectionWindow.IsActive = $true
+            $Script:ThePSGenderSelectionWindow.HasBorderBeenRedrawn = $false
+        }
         
         # AT THIS POINT, WE'D NEED TO CHANGE SUBSTATE
         $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupGenderSelection
