@@ -1283,4 +1283,24 @@ Class PSBonusPointAllocWindow : WindowBase {
             }
         }
     }
+    
+    [Void]SetAllDirty() {
+        $this.PointsLeftPromptDirty = $true
+        $this.AtkPromptDirty = $true
+        $this.DefPromptDirty = $true
+        $this.MatPromptDirty = $true
+        $this.MdfPromptDirty = $true
+        $this.SpdPromptDirty = $true
+        $this.AccPromptDirty = $true
+        $this.LckPromptDirty = $true
+        $this.PointsLeftDataDirty = $true
+        $this.AtkDataDirty = $true
+        $this.DefDataDirty = $true
+        $this.MatDataDirty = $true
+        $this.MdfDataDirty = $true
+        $this.SpdDataDirty = $true
+        $this.AccDataDirty = $true
+        $this.LckDataDirty = $true
+        $this.HasBorderBeenRedrawn = $false
+    }
 }

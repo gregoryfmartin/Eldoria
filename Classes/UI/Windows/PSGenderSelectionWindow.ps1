@@ -19,8 +19,8 @@ Class PSGenderSelectionWindow : WindowBase {
 
     Static [String]$PlayerChevronCharacter      = '❱'
     Static [String]$PlayerChevronBlankCharacter = ' '
-    Static [String]$MaleSymbol                  = '♂'
-    Static [String]$FemaleSymbol                = '♀'
+    Static [String]$MaleSymbol                  = "`u{2642}"
+    Static [String]$FemaleSymbol                = "`u{2640}"
     Static [String]$WindowTitle                 = 'Gender'
 
     [Int]$ActiveChevronIndex

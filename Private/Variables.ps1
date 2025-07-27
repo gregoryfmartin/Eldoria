@@ -87,7 +87,7 @@ Set-StrictMode -Version Latest
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::TitleScreen
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::PlayerSetupScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                    = $null
 [Map]                             $Script:SampleWarpMap01              = $null
@@ -107,6 +107,7 @@ Set-StrictMode -Version Latest
 [PSBonusPointAllocWindow]         $Script:ThePSBonusPointAllocWindow   = $null
 [PSAffinitySelectWindow]          $Script:ThePSAffinitySelectWindow    = $null
 [PSProfileSelectWindow]           $Script:ThePSProfileSelectWindow     = $null
+[PSConfirmDialog]                 $Script:ThePSConfirmDialog           = $null
 
 [String[]]$Script:FemaleImageData = @(
     $Script:ElfFemaleImageDataA,
@@ -314,6 +315,8 @@ $Script:BATLut = @(
         $Script:HasSSASetupRunspace = $true
     }
 
+    # TEMPORARILY DISABLE THE TITLE TRACK FROM PLAYING!!!
+    <#
     If($Script:HasTitleBgmStarted -EQ $false) {
         Start-Sleep -Seconds 1
         Try {
@@ -322,6 +325,7 @@ $Script:BATLut = @(
         } Catch {}
         $Script:HasTitleBgmStarted = $true
     }
+    #>
 
     $Script:TheTitleFiglet.Draw()
 
@@ -537,7 +541,14 @@ $Script:BATLut = @(
             $Script:ThePSProfileSelectWindow.HandleInput()
         }
         
-        ([PlayerSetupScreenStates]::PlayerSetupConfirmation) {}
+        ([PlayerSetupScreenStates]::PlayerSetupConfirmation) {
+            If($null -EQ $Script:ThePSConfirmDialog) {
+                $Script:ThePSConfirmDialog = [PSConfirmDialog]::new()
+            }
+            
+            $Script:ThePSConfirmDialog.Draw()
+            $Script:ThePSConfirmDialog.HandleInput()
+        }
     }
 }
 

@@ -15,7 +15,7 @@ Class GameCore {
 
     GameCore() {
         $this.GameRunning          = $true
-        $Script:TheGlobalGameState = [GameStatePrimary]::TitleScreen
+        $Script:TheGlobalGameState = [GameStatePrimary]::PlayerSetupScreen
     }
 
     [Void]Run() {

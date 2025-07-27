@@ -20,7 +20,7 @@ Class PSAffinitySelectWindow : WindowBase {
     Static [String]$ChevronData = '❱'
     Static [String]$ChevronBlankData = ' '
     Static [String]$AffinityNameBlankData = ' ' * 7
-    Static [String]$WindowTitle = ' Affinity'
+    Static [String]$WindowTitle = 'Affinity'
     
     Static [String[]]$AffinityLabelData = @(
         'Fire',
@@ -45,6 +45,8 @@ Class PSAffinitySelectWindow : WindowBase {
     [List[ATString]]$AffinityLabelBlanksActual
     [List[ATString]]$ChevronBlanksActual
     
+    [ATStringComposite]$SelectedAffinity
+    
     PSAffinitySelectWindow() : base() {
         $this.LeftTop = [ATCoordinates]@{
             Row = [PSAffinitySelectWindow]::WindowLTRow
@@ -64,6 +66,7 @@ Class PSAffinitySelectWindow : WindowBase {
         $this.ActiveItemBlinking = $false
         $this.IsActive = $false
         $this.HasBorderBeenRedrawn = $false
+        $this.SelectedAffinity = [ATStringComposite]::new()
         
         $this.CreateChevrons()
         $this.CreateChevronBlanks()
@@ -410,6 +413,8 @@ Class PSAffinitySelectWindow : WindowBase {
             }
                 
             13 { # ENTER
+                $this.SelectedAffinity = $this.AffinityLabelsActual[$this.ActiveChevronIndex]
+            
                 If($Script:ThePSProfileSelectWindow -NE $null) {
                     $Script:ThePSProfileSelectWindow.IsActive = $true
                     $Script:ThePSProfileSelectWindow.HasBorderBeenRedrawn = $false
@@ -426,5 +431,11 @@ Class PSAffinitySelectWindow : WindowBase {
                 Break
             }
         }
+    }
+    
+    [Void]SetAllDirty() {
+        $this.ChevronDirty = $true
+        $this.AffinityListDirty = $true
+        $this.HasBorderBeenRedrawn = $false
     }
 }
