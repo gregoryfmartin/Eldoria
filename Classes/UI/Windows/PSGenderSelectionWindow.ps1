@@ -225,6 +225,16 @@ Class PSGenderSelectionWindow : WindowBase {
                 } Catch {}
                 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
+                
+                <#
+                If($Script:ThePSNameEntryWindow.NameActual.UserData.Length -GT 0) {
+                    $Script:Rui.CursorPosition = ([ATCoordinates]@{
+                        Row = $Script:ThePSNameEntryWindow.LeftTop.Row + 1
+                        Column = ($Script:ThePSNameEntryWindow.LeftTop.Column + 1) + $Script:ThePSNameEntryWindow.NameActual.UserData.Length
+                    }).ToAutomationCoordinates()
+                    Write-Host "$([ATControlSequences]::CursorShow)"
+                }
+                #>
             }
             
             37 { # LEFT ARROW

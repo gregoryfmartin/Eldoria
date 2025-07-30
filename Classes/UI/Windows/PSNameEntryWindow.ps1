@@ -120,8 +120,15 @@ Class PSNameEntryWindow : WindowBase {
     }
     
     [Void]HandleInput() {
-        $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 2; Column = 1 }).ToAutomationCoordinates()
-        $KeyCap                    = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
+        If($null -NE $Script:ThePSGenderSelectionWindow) {
+            Write-Host "$([ATControlSequences]::CursorShow)"
+            Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
+            
+            $this.NameActual.UserData = ''
+        }
+        
+        $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 1; Column = 2 }).ToAutomationCoordinates()        
+        $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         
         While($KeyCap.VirtualKeyCode -NE 13) {
             $CPX = $Script:Rui.CursorPosition.X
@@ -135,7 +142,7 @@ Class PSNameEntryWindow : WindowBase {
                             $this.NameActual.UserData = $this.NameActual.UserData.Remove($this.NameActual.UserData.Length - 1, 1)
                         }
                     } Elseif($fpx -LT 2) {
-                        $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 2; Column = 1 }).ToAutomationCoordinates()
+                        $Script:Rui.CursorPosition = ([ATCoordinates]@{ Row = 1; Column = 2 }).ToAutomationCoordinates()
                     } Elseif($fpx -EQ 2) {
                         Write-Host " `b" -NoNewline
                         If($this.NameActual.UserData.Length -GT 0) {
@@ -162,9 +169,6 @@ Class PSNameEntryWindow : WindowBase {
             
             $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         }
-        
-        # THIS SHOULD LIKELY HAPPEN WHEN THE USER COMES BACK TO THIS STATE FROM A FORWARD STATE
-        # Write-Host "$($this.NameBlankActual.ToAnsiControlSequenceString())"
         
         # PLAY A SFX TO ACK THE ENTRY
         Try {
