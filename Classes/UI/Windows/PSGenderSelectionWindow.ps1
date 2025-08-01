@@ -213,9 +213,23 @@ Class PSGenderSelectionWindow : WindowBase {
                 If($Script:ThePSBonusPointAllocWindow -NE $null) {
                     $Script:ThePSBonusPointAllocWindow.IsActive = $true
                     $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                    
+                    $Script:ThePSBonusPointAllocWindow.SetupAtkPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupDefPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupMatPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupMdfPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupSpdPromptActual()
+                    
+                    $Script:ThePSBonusPointAllocWindow.AtkPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.DefPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.MatPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.MdfPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.SpdPromptDirty = $true
                 }
 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
+                
+                Break
             }
             
             27 { # ESCAPE
@@ -226,15 +240,7 @@ Class PSGenderSelectionWindow : WindowBase {
                 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
                 
-                <#
-                If($Script:ThePSNameEntryWindow.NameActual.UserData.Length -GT 0) {
-                    $Script:Rui.CursorPosition = ([ATCoordinates]@{
-                        Row = $Script:ThePSNameEntryWindow.LeftTop.Row + 1
-                        Column = ($Script:ThePSNameEntryWindow.LeftTop.Column + 1) + $Script:ThePSNameEntryWindow.NameActual.UserData.Length
-                    }).ToAutomationCoordinates()
-                    Write-Host "$([ATControlSequences]::CursorShow)"
-                }
-                #>
+                Break
             }
             
             37 { # LEFT ARROW
@@ -249,6 +255,8 @@ Class PSGenderSelectionWindow : WindowBase {
                 $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                 $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
                 $this.PlayerChevronDirty                                = $true
+                
+                Break
             }
             
             39 { # RIGHT ARROW
@@ -263,6 +271,8 @@ Class PSGenderSelectionWindow : WindowBase {
                 $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                 $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
                 $this.PlayerChevronDirty                                = $true
+                
+                Break
             }
         }
     }

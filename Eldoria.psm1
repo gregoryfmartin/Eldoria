@@ -46,6 +46,7 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\ConsoleColor\CC*.ps
     . $File.FullName
 }
 
+
 Write-Progress -Activity $Script:ProgressActivity -Status ($Script:FnlLoadStrings | Get-Random) -PercentComplete -1
 . "$PSScriptRoot\Classes\Mapping\FastNoiseLite\FastNoiseLite.ps1"
 

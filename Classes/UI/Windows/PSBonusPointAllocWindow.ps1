@@ -650,19 +650,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData   = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Male) {
-            $this.AtkPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.AtkPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.AtkPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -723,19 +724,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Male) {
-            $this.DefPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.DefPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.DefPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -795,19 +797,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Female) {
-            $this.MatPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.MatPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.MatPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -868,19 +871,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Female) {
-            $this.MdfPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.MdfPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.MdfPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -941,19 +945,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Female) {
-            $this.SpdPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.SpdPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.SpdPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
