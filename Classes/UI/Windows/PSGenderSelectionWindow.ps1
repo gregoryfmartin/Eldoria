@@ -210,7 +210,7 @@ Class PSGenderSelectionWindow : WindowBase {
                     $this.SelectedGender = [Gender]::Female
                 }
                 
-                If($Script:ThePSBonusPointAllocWindow -NE $null) {
+                If($null -NE $Script:ThePSBonusPointAllocWindow) {
                     $Script:ThePSBonusPointAllocWindow.IsActive = $true
                     $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
                     
@@ -227,6 +227,12 @@ Class PSGenderSelectionWindow : WindowBase {
                     $Script:ThePSBonusPointAllocWindow.SpdPromptDirty = $true
                     
                     $Script:ThePSBonusPointAllocWindow.RerollStats()
+                }
+                
+                If($null -NE $Script:ThePSProfileSelectWindow) {
+                    $Script:ThePSProfileSelectWindow.ProfileImageProbe = 0
+                    $Script:ThePSProfileSelectWindow.ProfileImgDirty = $true
+                    $Script:ThePSProfileSelectWindow.Draw()
                 }
 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
