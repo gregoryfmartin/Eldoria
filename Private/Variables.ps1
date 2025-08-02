@@ -316,7 +316,6 @@ $Script:BATLut = @(
     }
 
     # TEMPORARILY DISABLE THE TITLE TRACK FROM PLAYING!!!
-    <#
     If($Script:HasTitleBgmStarted -EQ $false) {
         Start-Sleep -Seconds 1
         Try {
@@ -325,7 +324,6 @@ $Script:BATLut = @(
         } Catch {}
         $Script:HasTitleBgmStarted = $true
     }
-    #>
 
     $Script:TheTitleFiglet.Draw()
 

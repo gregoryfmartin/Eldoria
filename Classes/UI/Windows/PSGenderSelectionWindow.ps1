@@ -225,6 +225,8 @@ Class PSGenderSelectionWindow : WindowBase {
                     $Script:ThePSBonusPointAllocWindow.MatPromptDirty = $true
                     $Script:ThePSBonusPointAllocWindow.MdfPromptDirty = $true
                     $Script:ThePSBonusPointAllocWindow.SpdPromptDirty = $true
+                    
+                    $Script:ThePSBonusPointAllocWindow.RerollStats()
                 }
 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
