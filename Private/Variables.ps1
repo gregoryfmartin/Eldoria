@@ -87,7 +87,7 @@ Set-StrictMode -Version Latest
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::PlayerSetupScreen
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::TitleScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                    = $null
 [Map]                             $Script:SampleWarpMap01              = $null
