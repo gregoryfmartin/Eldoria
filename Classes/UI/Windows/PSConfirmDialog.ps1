@@ -127,6 +127,24 @@ Class PSConfirmDialog : WindowBase {
         $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
         Switch($KeyCap.VirtualKeyCode) {
             13 { # ENTER
+                # ASSIGN THE DATA TO THE PLAYER CONSTRUCT
+                $Script:ThePlayer.Name = $Script:ThePSNameEntryWindow.NameActual.UserData
+                $Script:ThePlayer.Gen = $Script:ThePSGenderSelectionWindow.SelectedGender
+                $Script:ThePlayer.Stats[[StatId]::Attack].Base = ($Script:ThePSBonusPointAllocWindow.AtkPoints + $Script:ThePSBonusPointAllocWindow.AtkModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Defense].Base = ($Script:ThePSBonusPointAllocWindow.DefPoints + $Script:ThePSBonusPointAllocWindow.DefModPoints)
+                $Script:ThePlayer.Stats[[StatId]::MagicAttack].Base = ($Script:ThePSBonusPointAllocWindow.MatPoints + $Script:ThePSBonusPointAllocWindow.MatModPoints)
+                $Script:ThePlayer.Stats[[StatId]::MagicDefense].Base = ($Script:ThePSBonusPointAllocWindow.MdfPoints + $Script:ThePSBonusPointAllocWindow.MdfModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Speed].Base = ($Script:ThePSBonusPointAllocWindow.SpdPoints + $Script:ThePSBonusPointAllocWindow.SpdModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Luck].Base = ($Script:ThePSBonusPointAllocWindow.LckPoints + $Script:ThePSBonusPointAllocWindow.LckModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Accuracy].Base = ($Script:ThePSBonusPointAllocWindow.AccPoints + $Script:ThePSBonusPointAllocWindow.AccModPoints)
+                $Script:ThePlayer.Affinity = "Elemental$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[1].UserData.Trim())"
+                
+                # CHANGE THE STATE TO THE GAME PLAY STATE
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+                
+                Clear-Host
+            
                 Break
             }
             

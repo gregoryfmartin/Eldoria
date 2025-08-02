@@ -26,6 +26,7 @@ Class BattleEntity {
     [ActionSlot[]]$ActionMarbleBag
     [ConsoleColor24]$NameDrawColor
     [BattleActionType]$Affinity
+    [Gender]$Gen
 
     BattleEntity() {
         $this.Name            = ''
@@ -36,6 +37,7 @@ Class BattleEntity {
         $this.ActionMarbleBag = $null
         $this.NameDrawColor   = [CCTextDefault24]::new()
         $this.Affinity        = [BattleActionType]::None
+        $this.Gen = [Gender]::Unisex
     }
 
     [Void]Update() {
