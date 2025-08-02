@@ -650,19 +650,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData   = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Male) {
-            $this.AtkPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.AtkPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.AtkPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -723,19 +724,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Male) {
-            $this.DefPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.DefPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.DefPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -795,19 +797,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Female) {
-            $this.MatPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.MatPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.MatPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -868,19 +871,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Female) {
-            $this.MdfPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.MdfPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.MdfPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -941,19 +945,20 @@ Class PSBonusPointAllocWindow : WindowBase {
                 }
                 UserData = "$([PSBonusPointAllocWindow]::NumberDialRightArrowData)"
                 UseATReset = $true
+            },
+            [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCAppleVYellowLight24]::new()
+                }
+                UserData = '  '
+                UseATReset = $true
             }
         ))
         
         If($Script:ThePSGenderSelectionWindow.SelectedGender -EQ [Gender]::Female) {
-            $this.SpdPromptActual.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCAppleVYellowLight24]::new()
-                    }
-                    UserData   = " `u{2729}"
-                    UseATReset = $true
-                }
-            )
+            $this.SpdPromptActual.CompositeActual[4].UserData = " `u{2729}"
+        } Else {
+            $this.SpdPromptActual.CompositeActual[4].UserData = '  '
         }
     }
     
@@ -1255,23 +1260,7 @@ Class PSBonusPointAllocWindow : WindowBase {
             82 { # R
                 # FORCE A RE-ROLL OF THE STATS
                 # THIS NEEDS TO RESET ALL THE MOD POINTS AND POINT POOL BEFORE REGENERATING
-                $this.PointsPool   = 10
-                $this.AtkModPoints = 0
-                $this.DefModPoints = 0
-                $this.MatModPoints = 0
-                $this.MdfModPoints = 0
-                $this.SpdModPoints = 0
-                $this.AccModPoints = 0
-                $this.LckModPoints = 0
-                $this.GenerateStats()
-                $this.UpdatePointsLeftActual()
-                $this.UpdateAtkPromptActual()
-                $this.UpdateDefPromptActual()
-                $this.UpdateMatPromptActual()
-                $this.UpdateMdfPromptActual()
-                $this.UpdateSpdPromptActual()
-                $this.UpdateAccPromptActual()
-                $this.UpdateLckPromptActual()
+                $this.RerollStats()
                 
                 Break
             }
@@ -1282,5 +1271,45 @@ Class PSBonusPointAllocWindow : WindowBase {
                 Break
             }
         }
+    }
+    
+    [Void]SetAllDirty() {
+        $this.PointsLeftPromptDirty = $true
+        $this.AtkPromptDirty = $true
+        $this.DefPromptDirty = $true
+        $this.MatPromptDirty = $true
+        $this.MdfPromptDirty = $true
+        $this.SpdPromptDirty = $true
+        $this.AccPromptDirty = $true
+        $this.LckPromptDirty = $true
+        $this.PointsLeftDataDirty = $true
+        $this.AtkDataDirty = $true
+        $this.DefDataDirty = $true
+        $this.MatDataDirty = $true
+        $this.MdfDataDirty = $true
+        $this.SpdDataDirty = $true
+        $this.AccDataDirty = $true
+        $this.LckDataDirty = $true
+        $this.HasBorderBeenRedrawn = $false
+    }
+    
+    [Void]RerollStats() {
+        $this.PointsPool   = 10
+        $this.AtkModPoints = 0
+        $this.DefModPoints = 0
+        $this.MatModPoints = 0
+        $this.MdfModPoints = 0
+        $this.SpdModPoints = 0
+        $this.AccModPoints = 0
+        $this.LckModPoints = 0
+        $this.GenerateStats()
+        $this.UpdatePointsLeftActual()
+        $this.UpdateAtkPromptActual()
+        $this.UpdateDefPromptActual()
+        $this.UpdateMatPromptActual()
+        $this.UpdateMdfPromptActual()
+        $this.UpdateSpdPromptActual()
+        $this.UpdateAccPromptActual()
+        $this.UpdateLckPromptActual()
     }
 }

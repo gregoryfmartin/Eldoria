@@ -179,9 +179,17 @@ Class PSProfileSelectWindow : WindowBase {
         
         Switch($KeyCap.VirtualKeyCode) {
             13 { # ENTER
-                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
-                Clear-Host
+                #$Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                #$Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+                #Clear-Host
+                
+                $Script:TheBufferManager.CopyActiveToBufferB()
+                
+                $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupConfirmation
+                
+                If($null -NE $Script:ThePSConfirmDialog) {
+                    $Script:ThePSConfirmDialog.SetAllDirty()
+                }
                 
                 Break
             }
@@ -250,5 +258,10 @@ Class PSProfileSelectWindow : WindowBase {
                 Break
             }
         }
+    }
+    
+    [Void]SetAllDirty() {
+        $this.ProfileImgDirty = $true
+        $this.HasBorderBeenRedrawn = $false
     }
 }

@@ -51,6 +51,6 @@ Class ATCoordinates {
     }
 
     [Coordinates]ToAutomationCoordinates() {
-        Return [Coordinates]::new($this.Row, $this.Column)
+        Return [Coordinates]::new($this.Column, $this.Row)
     }
 }

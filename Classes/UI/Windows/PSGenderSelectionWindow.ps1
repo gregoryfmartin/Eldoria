@@ -19,8 +19,8 @@ Class PSGenderSelectionWindow : WindowBase {
 
     Static [String]$PlayerChevronCharacter      = '❱'
     Static [String]$PlayerChevronBlankCharacter = ' '
-    Static [String]$MaleSymbol                  = '♂'
-    Static [String]$FemaleSymbol                = '♀'
+    Static [String]$MaleSymbol                  = "`u{2642}"
+    Static [String]$FemaleSymbol                = "`u{2640}"
     Static [String]$WindowTitle                 = 'Gender'
 
     [Int]$ActiveChevronIndex
@@ -210,12 +210,34 @@ Class PSGenderSelectionWindow : WindowBase {
                     $this.SelectedGender = [Gender]::Female
                 }
                 
-                If($Script:ThePSBonusPointAllocWindow -NE $null) {
+                If($null -NE $Script:ThePSBonusPointAllocWindow) {
                     $Script:ThePSBonusPointAllocWindow.IsActive = $true
                     $Script:ThePSBonusPointAllocWindow.HasBorderBeenRedrawn = $false
+                    
+                    $Script:ThePSBonusPointAllocWindow.SetupAtkPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupDefPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupMatPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupMdfPromptActual()
+                    $Script:ThePSBonusPointAllocWindow.SetupSpdPromptActual()
+                    
+                    $Script:ThePSBonusPointAllocWindow.AtkPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.DefPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.MatPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.MdfPromptDirty = $true
+                    $Script:ThePSBonusPointAllocWindow.SpdPromptDirty = $true
+                    
+                    $Script:ThePSBonusPointAllocWindow.RerollStats()
+                }
+                
+                If($null -NE $Script:ThePSProfileSelectWindow) {
+                    $Script:ThePSProfileSelectWindow.ProfileImageProbe = 0
+                    $Script:ThePSProfileSelectWindow.ProfileImgDirty = $true
+                    $Script:ThePSProfileSelectWindow.Draw()
                 }
 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupPointAllocate
+                
+                Break
             }
             
             27 { # ESCAPE
@@ -225,6 +247,8 @@ Class PSGenderSelectionWindow : WindowBase {
                 } Catch {}
                 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
+                
+                Break
             }
             
             37 { # LEFT ARROW
@@ -239,6 +263,8 @@ Class PSGenderSelectionWindow : WindowBase {
                 $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                 $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
                 $this.PlayerChevronDirty                                = $true
+                
+                Break
             }
             
             39 { # RIGHT ARROW
@@ -253,6 +279,8 @@ Class PSGenderSelectionWindow : WindowBase {
                 $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                 $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PSGenderSelectionWindow]::PlayerChevronCharacter
                 $this.PlayerChevronDirty                                = $true
+                
+                Break
             }
         }
     }
