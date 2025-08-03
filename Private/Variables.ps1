@@ -108,6 +108,8 @@ Set-StrictMode -Version Latest
 [PSAffinitySelectWindow]          $Script:ThePSAffinitySelectWindow    = $null
 [PSProfileSelectWindow]           $Script:ThePSProfileSelectWindow     = $null
 [PSConfirmDialog]                 $Script:ThePSConfirmDialog           = $null
+[PlayerStatusScreenState]         $Script:ThePlayerStatusScreenState   = [PlayerStatusScreenState]::MainMenu
+
 
 [String[]]$Script:FemaleImageData = @(
     $Script:ElfFemaleImageDataA,
