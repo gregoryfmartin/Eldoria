@@ -316,6 +316,7 @@ $Script:BATLut = @(
     }
 
     # TEMPORARILY DISABLE THE TITLE TRACK FROM PLAYING!!!
+    <#
     If($Script:HasTitleBgmStarted -EQ $false) {
         Start-Sleep -Seconds 1
         Try {
@@ -324,6 +325,7 @@ $Script:BATLut = @(
         } Catch {}
         $Script:HasTitleBgmStarted = $true
     }
+    #>
 
     $Script:TheTitleFiglet.Draw()
 
@@ -1249,7 +1251,7 @@ $Script:TheCommandTable = @{
         [Int]$DecRes = $Target.Stats[[StatId]::HitPoints].DecrementBase(($FinalDamage * -1))
 
         If(0 -NE $DecRes) {
-            Return [BattleActionResultType]@{
+            Return [BattleActionResult]@{
                 Type            = [BattleActionResultType]::FailedAttackFailed
                 Originator      = $Self
                 Target          = $Target
