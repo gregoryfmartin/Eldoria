@@ -53,8 +53,8 @@ Class PlayerStatusMainMenu : WindowBase {
         $this.SetupTitle([PlayerStatusMainMenu]::WindowTitle, [CCTextDefault24]::new())
 
         $this.ActiveChevronIndex = 0
-        $this.ChevronDirty      = $true
-        $this.MenuLabelsDirty   = $true
+        $this.ChevronDirty       = $true
+        $this.MenuLabelsDirty    = $true
 
         $this.CreateChevrons()
         $this.CreateMenuLabels()
@@ -74,7 +74,7 @@ Class PlayerStatusMainMenu : WindowBase {
                                 Column = $this.LeftTop.Column + 1
                             }
                         }
-                        UserData   = $(If($i -EQ 0) { [PlayerStatusMainMenu]::ChevronCharacter } Else { [PlayerStatusMainMenu]::ChevronBlankCharacter })
+                        UserData   = "$(If($i -EQ 0) { [PlayerStatusMainMenu]::ChevronCharacter } Else { [PlayerStatusMainMenu]::ChevronBlankCharacter })"
                         UseATReset = $true
                     },
                     $($i -EQ 0)
@@ -124,7 +124,7 @@ Class PlayerStatusMainMenu : WindowBase {
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
         Switch($keyCap.VirtualKeyCode) {
-            38 { # Up Arrow
+            38 { # UP ARROW
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
@@ -150,7 +150,7 @@ Class PlayerStatusMainMenu : WindowBase {
                 Break
             }
 
-            40 { # Down Arrow
+            40 { # DOWN ARROW
                 Try {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
@@ -176,15 +176,15 @@ Class PlayerStatusMainMenu : WindowBase {
                 Break
             }
 
-            27 { # Escape key
+            27 { # ESCAPE
                 $Script:ThePreviousGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
-                $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
                 
                 Break
             }
 
-            13 { # Enter key
-                # Logic to be added for menu selection
+            13 { # ENTER
+                # TODO: ADD LOGIC LATER
                 Break
             }
         }
