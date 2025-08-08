@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# PLAYER STATUS SCREEN STATE
+# STATUS SCREEN STATE
 #
 # MAIN MENU
 #     THE PLAYER CAN CONTROL THE CHEVRON OF THE MAIN MENU TO MOVE UP AND DOWN.
@@ -39,7 +39,8 @@ Set-StrictMode -Version Latest
 #
 ###############################################################################
 
-Enum PlayerStatusScreenState {
+Enum StatusScreenState {
+    Setup
     MainMenu
     Status
     Items

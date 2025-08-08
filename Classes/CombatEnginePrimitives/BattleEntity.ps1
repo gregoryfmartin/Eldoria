@@ -37,7 +37,7 @@ Class BattleEntity {
         $this.ActionMarbleBag = $null
         $this.NameDrawColor   = [CCTextDefault24]::new()
         $this.Affinity        = [BattleActionType]::None
-        $this.Gen = [Gender]::Unisex
+        $this.Gen             = [Gender]::Unisex
     }
 
     [Void]Update() {

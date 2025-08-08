@@ -19,7 +19,7 @@ Class PlayerStatusMainMenu : WindowBase {
     Static [Int]$WindowRBRow    = 8
     Static [Int]$WindowRBColumn = 11
 
-    Static [String]$WindowTitle = 'Main Menu'
+    Static [String]$WindowTitle = 'Menu'
 
     Static [String]$ChevronCharacter      = '❱'
     Static [String]$ChevronBlankCharacter = ' '
@@ -34,8 +34,11 @@ Class PlayerStatusMainMenu : WindowBase {
     )
 
     [Int]$ActiveChevronIndex
+    
     [Boolean]$ChevronDirty
     [Boolean]$MenuLabelsDirty
+    [Boolean]$CursorHidden
+    
     [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons
     [List[ATString]]$MenuLabels
 
@@ -53,8 +56,10 @@ Class PlayerStatusMainMenu : WindowBase {
         $this.SetupTitle([PlayerStatusMainMenu]::WindowTitle, [CCTextDefault24]::new())
 
         $this.ActiveChevronIndex = 0
+        
         $this.ChevronDirty       = $true
         $this.MenuLabelsDirty    = $true
+        $this.CursorHidden = $false
 
         $this.CreateChevrons()
         $this.CreateMenuLabels()
@@ -68,7 +73,7 @@ Class PlayerStatusMainMenu : WindowBase {
                 [ValueTuple]::Create(
                     [ATString]@{
                         Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [CCAppleGreenLight24]::new()
+                            ForegroundColor = [CCTextDefault24]::new()
                             Coordinates     = [ATCoordinates]@{
                                 Row    = $this.LeftTop.Row + $i + 1
                                 Column = $this.LeftTop.Column + 1
@@ -107,17 +112,22 @@ Class PlayerStatusMainMenu : WindowBase {
         ([WindowBase]$this).Draw()
 
         If($this.ChevronDirty -EQ $true) {
-            Foreach($c in $this.Chevrons) {
-                Write-Host "$($c.Item1.ToAnsiControlSequenceString())"
+            Foreach($C in $this.Chevrons) {
+                Write-Host "$($C.Item1.ToAnsiControlSequenceString())"
             }
             $this.ChevronDirty = $false
         }
 
         If($this.MenuLabelsDirty -EQ $true) {
-            Foreach($l in $this.MenuLabels) {
-                Write-Host "$($l.ToAnsiControlSequenceString())"
+            Foreach($L in $this.MenuLabels) {
+                Write-Host "$($L.ToAnsiControlSequenceString())"
             }
             $this.MenuLabelsDirty = $false
+        }
+        
+        If($this.CursorHidden -EQ $false) {
+            Write-Host "$([ATControlSequences]::CursorHide)"
+            $this.CursorHidden = $true
         }
     }
 
@@ -179,12 +189,25 @@ Class PlayerStatusMainMenu : WindowBase {
             27 { # ESCAPE
                 $Script:ThePreviousGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+                $Script:GpsRestoredFromStaBackup   = $false # PERMITS REDRAWS ON SUBSEQUENT VISITS TO THE STATUS SCREEN
                 
                 Break
             }
 
             13 { # ENTER
-                # TODO: ADD LOGIC LATER
+                # BASED ON THE CHEVRON INDEX, CHANGE STATE
+                Switch($this.ActiveChevronIndex) {
+                    0 { # STATUS
+                        $Script:TheStatusScreenState = [StatusScreenState]::Status
+                        
+                        Break
+                    }
+                    
+                    Default {
+                        Break
+                    }
+                }
+                
                 Break
             }
         }

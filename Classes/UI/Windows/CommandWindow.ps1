@@ -1,4 +1,5 @@
 using namespace System
+using namespace System.Management.Automation.Host
 
 Set-StrictMode -Version Latest
 
@@ -29,7 +30,7 @@ Class CommandWindow : WindowBase {
     Static [Int]$DrawHistoryARowOffset = 6
     Static [Int]$DrawHistoryERowOffset = 7
 
-    Static [String]$CommandBlankData = '                 '
+    Static [String]$CommandBlankData = '                '
     Static [String]$WindowCommandDiv = '─────────────────'
     Static [String]$WindowTitle      = 'Commands'
 
@@ -39,6 +40,8 @@ Class CommandWindow : WindowBase {
     Static [ATCoordinates]$CommandHistoryCDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryBDrawCoordinates = [ATCoordinatesNone]::new()
     Static [ATCoordinates]$CommandHistoryADrawCoordinates = [ATCoordinatesNone]::new()
+    
+    Static [Coordinates]$CursorDefaultPosition = [Coordinates]::new(2, 18)
 
     Static [ConsoleColor24]$HistoryEntryValid   = [CCAppleNGreenLight24]::new()
     Static [ConsoleColor24]$HistoryEntryError   = [CCAppleNRedLight24]::new()
@@ -180,6 +183,9 @@ Class CommandWindow : WindowBase {
     }
 
     [Void]HandleInput() {
+        # ENSURE THAT THE CURSOR IS DISPLAYED
+        Write-Host "$([ATControlSequences]::CursorShow)"
+        
         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
         $keyCap = $Script:Rui.ReadKey('IncludeKeyDown')
         While($keyCap.VirtualKeyCode -NE 13) {
@@ -188,20 +194,21 @@ Class CommandWindow : WindowBase {
                 Break
             }
             Switch($keyCap.VirtualKeyCode) {
-                8 { # Backspace
-                    $fpx = $Script:Rui.CursorPosition.X
-                    If($fpx -GT $Script:DefaultCursorCoordinates.Row) {
-                        Write-Host " `b" -NoNewLine
-                        If($this.CommandActual.UserData.Length -GT 0) {
+                8 { # BACKSPACE
+                    $CurrentX = $Script:Rui.CursorPosition.X
+                    If($this.CommandActual.UserData.Length -GT 0) {
+                        If($CurrentX -GE 3) {
+                            Write-Host " `b" -NoNewline
                             $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                        } Else {
+                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
+                            Write-Host "$([CommandWindow]::CommandBlank.ToAnsiControlSequenceString())" -NoNewline
+                            $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
                         }
-                    } Elseif($fpx -LT $Script:DefaultCursorCoordinates.Row) {
+                    }
+
+                    If($Script:Rui.CursorPosition.X -LT 3) {
                         $Script:Rui.CursorPosition = $Script:DefaultCursorCoordinates.ToAutomationCoordinates()
-                    } Elseif($fpx -EQ $Script:DefaultCursorCoordinates.Row) {
-                        Write-Host " `b" -NoNewline
-                        If($this.CommandActual.UserData.Length -GT 0) {
-                            $this.CommandActual.UserData = $this.CommandActual.UserData.Remove($this.CommandActual.UserData.Length - 1, 1)
-                        }
                     }
                 }
 

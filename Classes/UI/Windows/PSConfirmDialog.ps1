@@ -12,24 +12,24 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class PSConfirmDialog : WindowBase {
-    Static [Int]$WindowLTRow = 3
-    Static [Int]$WindowLTColumn = 8
-    Static [Int]$WindowRBRow = 21
-    Static [Int]$WindowRBColumn = 54
-    Static [Int]$LineName = 0
-    Static [Int]$LineGender = 1
-    Static [Int]$LineAffinity = 2
-    Static [Int]$LineStatsHeader = 3
-    Static [Int]$LineStatsAtk = 4
-    Static [Int]$LineStatsDef = 5
-    Static [Int]$LineStatsMat = 6
-    Static [Int]$LineStatsMdf = 7
-    Static [Int]$LineStatsSpd = 8
-    Static [Int]$LineStatsAcc = 9
-    Static [Int]$LineStatsLck = 10
+    Static [Int]$WindowLTRow      = 3
+    Static [Int]$WindowLTColumn   = 8
+    Static [Int]$WindowRBRow      = 21
+    Static [Int]$WindowRBColumn   = 54
+    Static [Int]$LineName         = 0
+    Static [Int]$LineGender       = 1
+    Static [Int]$LineAffinity     = 2
+    Static [Int]$LineStatsHeader  = 3
+    Static [Int]$LineStatsAtk     = 4
+    Static [Int]$LineStatsDef     = 5
+    Static [Int]$LineStatsMat     = 6
+    Static [Int]$LineStatsMdf     = 7
+    Static [Int]$LineStatsSpd     = 8
+    Static [Int]$LineStatsAcc     = 9
+    Static [Int]$LineStatsLck     = 10
     Static [Int]$LineActionPrompt = 11
     
-    Static [String]$WindowTitle = 'Confirm Character'
+    Static [String]$WindowTitle         = 'Confirm Character'
     Static [String]$WindowLineBlankData = ' ' * ([PSConfirmDialog]::WindowRBColumn - [PSConfirmDialog]::WindowLtColumn)
     
     # THIS MAY NOT EVEN BE NEEDED GIVEN THAT NOTHING NEEDS REDRAWN IN THE WINDOW DYNAMICALLY?
@@ -46,34 +46,34 @@ Class PSConfirmDialog : WindowBase {
     
     PSConfirmDialog() : base() {
         $this.LeftTop = [ATCoordinates]@{
-            Row = [PSConfirmDialog]::WindowLTRow
+            Row    = [PSConfirmDialog]::WindowLTRow
             Column = [PSConfirmDialog]::WindowLTColumn
         }
         $this.RightBottom = [ATCoordinates]@{
-            Row = [PSConfirmDialog]::WindowRBRow
+            Row    = [PSConfirmDialog]::WindowRBRow
             Column = [PSConfirmDialog]::WindowRBColumn
         }
         
         $this.UpdateDimensions()
         $this.SetupTitle([PSConfirmDialog]::WindowTitle, [CCTextDefault24]::new())
         
-        $this.BgDirty = $true
-        $this.DataDirty = $true
+        $this.BgDirty     = $true
+        $this.DataDirty   = $true
         $this.LinesActual = New-Object 'ATStringComposite[]' 12
         
         $this.ProfileImageDrawOffset = [ATCoordinates]@{
-            Row = $this.LeftTop.Row + 2
+            Row    = $this.LeftTop.Row + 2
             Column = $this.RightBottom.Column - 25
         }
         
         $this.BgActual = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]@{
-                    Row = $this.LeftTop.Row
+                    Row    = $this.LeftTop.Row
                     Column = $this.LeftTop.Column
                 }
             }
-            UserData = "$([PSConfirmDialog]::WindowLineBlankData)"
+            UserData   = "$([PSConfirmDialog]::WindowLineBlankData)"
             UseATReset = $true
         }
     }
@@ -112,10 +112,14 @@ Class PSConfirmDialog : WindowBase {
             Switch($Script:ThePSGenderSelectionWindow.SelectedGender) {
                 ([Gender]::Male) {
                     Write-Host "$($this.ProfileImageDrawOffset.ToAnsiControlSequenceString())$($Script:MaleImageData[$Script:ThePSProfileSelectWindow.ProfileImageProbe])"
+
+                    Break
                 }
                 
                 ([Gender]::Female) {
                     Write-Host "$($this.ProfileImageDrawOffset.ToAnsiControlSequenceString())$($Script:FemaleImageData[$Script:ThePSProfileSelectWindow.ProfileImageProbe])"
+
+                    Break
                 }
             }
             
@@ -128,20 +132,21 @@ Class PSConfirmDialog : WindowBase {
         Switch($KeyCap.VirtualKeyCode) {
             13 { # ENTER
                 # ASSIGN THE DATA TO THE PLAYER CONSTRUCT
-                $Script:ThePlayer.Name = $Script:ThePSNameEntryWindow.NameActual.UserData
-                $Script:ThePlayer.Gen = $Script:ThePSGenderSelectionWindow.SelectedGender
-                $Script:ThePlayer.Stats[[StatId]::Attack].Base = ($Script:ThePSBonusPointAllocWindow.AtkPoints + $Script:ThePSBonusPointAllocWindow.AtkModPoints)
-                $Script:ThePlayer.Stats[[StatId]::Defense].Base = ($Script:ThePSBonusPointAllocWindow.DefPoints + $Script:ThePSBonusPointAllocWindow.DefModPoints)
-                $Script:ThePlayer.Stats[[StatId]::MagicAttack].Base = ($Script:ThePSBonusPointAllocWindow.MatPoints + $Script:ThePSBonusPointAllocWindow.MatModPoints)
+                $Script:ThePlayer.Name                               = $Script:ThePSNameEntryWindow.NameActual.UserData
+                $Script:ThePlayer.Gen                                = $Script:ThePSGenderSelectionWindow.SelectedGender
+                $Script:ThePlayer.Stats[[StatId]::Attack].Base       = ($Script:ThePSBonusPointAllocWindow.AtkPoints + $Script:ThePSBonusPointAllocWindow.AtkModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Defense].Base      = ($Script:ThePSBonusPointAllocWindow.DefPoints + $Script:ThePSBonusPointAllocWindow.DefModPoints)
+                $Script:ThePlayer.Stats[[StatId]::MagicAttack].Base  = ($Script:ThePSBonusPointAllocWindow.MatPoints + $Script:ThePSBonusPointAllocWindow.MatModPoints)
                 $Script:ThePlayer.Stats[[StatId]::MagicDefense].Base = ($Script:ThePSBonusPointAllocWindow.MdfPoints + $Script:ThePSBonusPointAllocWindow.MdfModPoints)
-                $Script:ThePlayer.Stats[[StatId]::Speed].Base = ($Script:ThePSBonusPointAllocWindow.SpdPoints + $Script:ThePSBonusPointAllocWindow.SpdModPoints)
-                $Script:ThePlayer.Stats[[StatId]::Luck].Base = ($Script:ThePSBonusPointAllocWindow.LckPoints + $Script:ThePSBonusPointAllocWindow.LckModPoints)
-                $Script:ThePlayer.Stats[[StatId]::Accuracy].Base = ($Script:ThePSBonusPointAllocWindow.AccPoints + $Script:ThePSBonusPointAllocWindow.AccModPoints)
-                $Script:ThePlayer.Affinity = "Elemental$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[1].UserData.Trim())"
+                $Script:ThePlayer.Stats[[StatId]::Speed].Base        = ($Script:ThePSBonusPointAllocWindow.SpdPoints + $Script:ThePSBonusPointAllocWindow.SpdModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Luck].Base         = ($Script:ThePSBonusPointAllocWindow.LckPoints + $Script:ThePSBonusPointAllocWindow.LckModPoints)
+                $Script:ThePlayer.Stats[[StatId]::Accuracy].Base     = ($Script:ThePSBonusPointAllocWindow.AccPoints + $Script:ThePSBonusPointAllocWindow.AccModPoints)
+                $Script:ThePlayer.Affinity                           = "Elemental$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[1].UserData.Trim())"
+                $Script:ThePlayer.ProfileImageIndex                  = $Script:ThePSProfileSelectWindow.ProfileImageProbe
                 
                 # CHANGE THE STATE TO THE GAME PLAY STATE
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-                $Script:TheGlobalGameState = [GameStatePrimary]::GamePlayScreen
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
                 
                 Clear-Host
             
@@ -174,19 +179,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LeftTop.Row + 2
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + 2
                         Column = $this.LeftTop.Column + 2
                     }
                 }
-                UserData = 'Name: '
+                UserData   = 'Name: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "$($Script:ThePSNameEntryWindow.NameActual.UserData)"
+                UserData   = "$($Script:ThePSNameEntryWindow.NameActual.UserData)"
                 UseATReset = $true
             }
         ))
@@ -197,12 +202,12 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineName].CompositeActual[0].Prefix.Coordinates.Row + 2
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineName].CompositeActual[0].Prefix.Coordinates.Row + 2
                         Column = $this.LeftTop.Column + 2
                     }
                 }
-                UserData = 'Gender: '
+                UserData   = 'Gender: '
                 UseATReset = $true
             },
             [ATString]@{
@@ -226,19 +231,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineGender].CompositeActual[0].Prefix.Coordinates.Row + 2
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineGender].CompositeActual[0].Prefix.Coordinates.Row + 2
                         Column = $this.LeftTop.Column + 2
                     }
                 }
-                UserData = 'Affinity: '
+                UserData   = 'Affinity: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = $Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[0].Prefix.ForegroundColor
                 }
-                UserData = "$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[0].UserData)$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[1].UserData)"
+                UserData   = "$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[0].UserData)$($Script:ThePSAffinitySelectWindow.SelectedAffinity.CompositeActual[1].UserData)"
                 UseATReset = $true
             }
         ))
@@ -249,12 +254,12 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineAffinity].CompositeActual[0].Prefix.Coordinates.Row + 2
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineAffinity].CompositeActual[0].Prefix.Coordinates.Row + 2
                         Column = $this.LeftTop.Column + 2
                     }
                 }
-                UserData = 'Stats'
+                UserData   = 'Stats'
                 UseATReset = $true
             }
         ))
@@ -266,18 +271,18 @@ Class PSConfirmDialog : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
                     Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsHeader].CompositeActual[0].Prefix.Coordinates.Row + 2
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsHeader].CompositeActual[0].Prefix.Coordinates.Row + 2
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'ATK: '
+                UserData   = 'ATK: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.AtkPoints + $Script:ThePSBonusPointAllocWindow.AtkModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.AtkPoints + $Script:ThePSBonusPointAllocWindow.AtkModPoints)
                 UseATReset = $true
             }
         ))
@@ -288,7 +293,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVYellowLight24]::new()
                     }
-                    UserData = " `u{2729}"
+                    UserData   = " `u{2729}"
                     UseATReset = $true
                 }
             )
@@ -300,7 +305,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -313,18 +318,18 @@ Class PSConfirmDialog : WindowBase {
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
                     Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsAtk].CompositeActual[0].Prefix.Coordinates.Row + 1
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsAtk].CompositeActual[0].Prefix.Coordinates.Row + 1
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'DEF: '
+                UserData   = 'DEF: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.DefPoints + $Script:ThePSBonusPointAllocWindow.DefModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.DefPoints + $Script:ThePSBonusPointAllocWindow.DefModPoints)
                 UseATReset = $true
             }
         ))
@@ -335,7 +340,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVYellowLight24]::new()
                     }
-                    UserData = " `u{2729}"
+                    UserData   = " `u{2729}"
                     UseATReset = $true
                 }
             )
@@ -347,7 +352,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -359,19 +364,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsDef].CompositeActual[0].Prefix.Coordinates.Row + 1
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsDef].CompositeActual[0].Prefix.Coordinates.Row + 1
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'MAT: '
+                UserData   = 'MAT: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.MatPoints + $Script:ThePSBonusPointAllocWindow.MatModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.MatPoints + $Script:ThePSBonusPointAllocWindow.MatModPoints)
                 UseATReset = $true
             }
         ))
@@ -382,7 +387,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVYellowLight24]::new()
                     }
-                    UserData = " `u{2729}"
+                    UserData   = " `u{2729}"
                     UseATReset = $true
                 }
             )
@@ -394,7 +399,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -406,19 +411,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsMat].CompositeActual[0].Prefix.Coordinates.Row + 1
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsMat].CompositeActual[0].Prefix.Coordinates.Row + 1
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'MDF: '
+                UserData   = 'MDF: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.MdfPoints + $Script:ThePSBonusPointAllocWindow.MdfModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.MdfPoints + $Script:ThePSBonusPointAllocWindow.MdfModPoints)
                 UseATReset = $true
             }
         ))
@@ -429,7 +434,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVYellowLight24]::new()
                     }
-                    UserData = " `u{2729}"
+                    UserData   = " `u{2729}"
                     UseATReset = $true
                 }
             )
@@ -441,7 +446,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -453,19 +458,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsMdf].CompositeActual[0].Prefix.Coordinates.Row + 1
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsMdf].CompositeActual[0].Prefix.Coordinates.Row + 1
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'SPD: '
+                UserData   = 'SPD: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.SpdPoints + $Script:ThePSBonusPointAllocWindow.SpdModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.SpdPoints + $Script:ThePSBonusPointAllocWindow.SpdModPoints)
                 UseATReset = $true
             }
         ))
@@ -476,7 +481,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVYellowLight24]::new()
                     }
-                    UserData = " `u{2729}"
+                    UserData   = " `u{2729}"
                     UseATReset = $true
                 }
             )
@@ -488,7 +493,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -500,19 +505,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsSpd].CompositeActual[0].Prefix.Coordinates.Row + 1
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsSpd].CompositeActual[0].Prefix.Coordinates.Row + 1
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'ACC: '
+                UserData   = 'ACC: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.AccPoints + $Script:ThePSBonusPointAllocWindow.AccModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.AccPoints + $Script:ThePSBonusPointAllocWindow.AccModPoints)
                 UseATReset = $true
             }
         ))
@@ -523,7 +528,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -535,19 +540,19 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LinesActual[[PSConfirmDialog]::LineStatsAcc].CompositeActual[0].Prefix.Coordinates.Row + 1
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LinesActual[[PSConfirmDialog]::LineStatsAcc].CompositeActual[0].Prefix.Coordinates.Row + 1
                         Column = $this.LeftTop.Column + 4
                     }
                 }
-                UserData = 'LCK: '
+                UserData   = 'LCK: '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVOrangeLight24]::new()
                 }
-                UserData = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.LckPoints + $Script:ThePSBonusPointAllocWindow.LckModPoints)
+                UserData   = "{0:d2}" -F ($Script:ThePSBonusPointAllocWindow.LckPoints + $Script:ThePSBonusPointAllocWindow.LckModPoints)
                 UseATReset = $true
             }
         ))
@@ -558,7 +563,7 @@ Class PSConfirmDialog : WindowBase {
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCAppleVMintLight24]::new()
                     }
-                    UserData = ' ^'
+                    UserData   = ' ^'
                     UseATReset = $true
                 }
             )
@@ -570,43 +575,43 @@ Class PSConfirmDialog : WindowBase {
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.RightBottom.Row - 1
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.RightBottom.Row - 1
                         Column = $this.RightBottom.Column - 23
                     }
                 }
-                UserData = 'Press '
+                UserData   = 'Press '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVYellowLight24]::new()
-                    Decorations = [ATDecoration]@{ Blink = $true }
+                    Decorations     = [ATDecoration]@{ Blink = $true }
                 }
-                UserData = 'Enter'
+                UserData   = 'Enter'
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
                 }
-                UserData = ' or '
+                UserData   = ' or '
                 UseATReset = $true
             },
             [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleVYellowLight24]::new()
-                    Decorations = [ATDecoration]@{ Blink = $true }
+                    Decorations     = [ATDecoration]@{ Blink = $true }
                 }
-                UserData = 'Escape'
+                UserData   = 'Escape'
                 UseATReset = $true
             }
         ))
     }
     
     [Void]SetAllDirty() {
-        $this.BgDirty = $true
-        $this.DataDirty = $true
+        $this.BgDirty         = $true
+        $this.DataDirty       = $true
         $this.BorderDrawDirty = [Boolean[]](
             $true,
             $true,

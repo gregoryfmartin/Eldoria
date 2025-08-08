@@ -16,21 +16,36 @@ Class Player : BattleEntity {
     Static [ConsoleColor24]$GoldDrawColor = [CCAppleYellowLight24]::new()
     
     [Int]$CurrentGold
+    [Int]$ProfileImageIndex
+
     [ATCoordinates]$MapCoordinates
+
     [List[MapTileObject]]$Inventory
     [List[String]]$TargetOfFilter
-    #[ConsoleColor24]$AsideColor
-    #[ConsoleColor24]$GoldDrawColor
+
     [PlayerActionInventory]$ActionInventory
 
+    [Hashtable]$EquipmentListing
+
     Player() : base() {
-        $this.CurrentGold     = 0
-        $this.MapCoordinates  = [ATCoordinates]::new(0, 0)
-        $this.Inventory       = [List[MapTileObject]]::new()
-        $this.TargetOfFilter  = [List[String]]::new()
-        #$this.AsideColor      = [CCAppleIndigoLight24]::new()
-        #$this.GoldDrawColor   = [CCAppleYellowLight24]::new()
-        $this.ActionInventory = [PlayerActionInventory]::new()
+        $this.CurrentGold       = 0
+        $this.ProfileImageIndex = 0
+        $this.MapCoordinates    = [ATCoordinates]::new(0, 0)
+        $this.Inventory         = [List[MapTileObject]]::new()
+        $this.TargetOfFilter    = [List[String]]::new()
+        $this.ActionInventory   = [PlayerActionInventory]::new()
+        $this.EquipmentListing  = @{
+            [EquipmentSlot]::Armor     = $null
+            [EquipmentSlot]::Boots     = $null
+            [EquipmentSlot]::Cape      = $null
+            [EquipmentSlot]::Gauntlets = $null
+            [EquipmentSlot]::Greaves   = $null
+            [EquipmentSlot]::Helmet    = $null
+            [EquipmentSlot]::JewelryA  = $null
+            [EquipmentSlot]::JewelryB  = $null
+            [EquipmentSlot]::Pauldron  = $null
+            [EquipmentSlot]::Weapon    = $null
+        }
     }
 
     [Boolean]IsItemInInventory(

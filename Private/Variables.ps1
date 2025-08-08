@@ -87,7 +87,7 @@ Set-StrictMode -Version Latest
 [ActionSlot]                      $Script:StatusEsSelectedSlot         = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected             = $null
 [StatusScreenMode]                $Script:StatusScreenMode             = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::TitleScreen
+[GameStatePrimary]                $Script:TheGlobalGameState           = [GameStatePrimary]::PlayerSetupScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState   = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                    = $null
 [Map]                             $Script:SampleWarpMap01              = $null
@@ -108,7 +108,10 @@ Set-StrictMode -Version Latest
 [PSAffinitySelectWindow]          $Script:ThePSAffinitySelectWindow    = $null
 [PSProfileSelectWindow]           $Script:ThePSProfileSelectWindow     = $null
 [PSConfirmDialog]                 $Script:ThePSConfirmDialog           = $null
-[PlayerStatusScreenState]         $Script:ThePlayerStatusScreenState   = [PlayerStatusScreenState]::MainMenu
+[StatusScreenState]               $Script:TheStatusScreenState         = [StatusScreenState]::Setup
+[PlayerStatusMainMenu]            $Script:ThePlayerStatusMainMenu      = $null
+[PlayerStatusSummaryWindow]       $Script:ThePlayerStatusSummaryWindow = $null
+[VerticalInventoryWindow]         $Script:TheVerticalInventoryWindow   = $null
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -558,6 +561,9 @@ $Script:BATLut = @(
     If($null -NE $Script:TheInventoryWindow) {
         $Script:TheInventoryWindow = $null
     }
+    If($null -NE $Script:TheVerticalInventoryWindow) {
+        $Script:TheVerticalInventoryWindow = $null
+    }
     If($null -NE $Script:TheBattleManager) {
         $Script:TheBattleManager.Cleanup()
         $Script:TheBattleManager = $null
@@ -585,6 +591,12 @@ $Script:BATLut = @(
     }
     If($null -NE $Script:TheStatusTechInventoryWindow) {
         $Script:TheStatusTechInventoryWindow = $null
+    }
+    If($null -NE $Script:ThePlayerStatusMainMenu) {
+        $Script:ThePlayerStatusMainMenu = $null
+    }
+    If($null -NE $Script:ThePlayerStatusSummaryWindow) {
+        $Script:ThePlayerStatusSummaryWindow = $null
     }
 
     #######################################################################
@@ -653,6 +665,7 @@ $Script:BATLut = @(
 }
 
 [ScriptBlock]$Script:TheInventoryScreenState = {
+    <#
     If($null -EQ $Script:TheInventoryWindow) {
         Try {
             $Script:TheInventoryWindow = [InventoryWindow]::new()
@@ -667,6 +680,25 @@ $Script:BATLut = @(
     }
     $Script:TheInventoryWindow.Draw()
     $Script:TheInventoryWindow.HandleInput()
+    #>
+    
+    If($null -EQ $Script:TheVerticalInventoryWindow) {
+        Try {
+            $Script:TheVerticalInventoryWindow = [VerticalInventoryWindow]::new()
+        } Catch {
+            Write-Error $_.Exception.Message
+            Write-Error $_.Exception.StackTrace
+        }
+
+        Write-Host "$([ATControlSequences]::CursorHide)"
+    }
+
+    If($Script:GpsRestoredFromInvBackup -EQ $true) {
+        $Script:GpsRestoredFromInvBackup = $false
+    }
+
+    $Script:TheVerticalInventoryWindow.Draw()
+    $Script:TheVerticalInventoryWindow.HandleInput()
     
     Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
 }
@@ -735,6 +767,46 @@ $Script:BATLut = @(
 }
 
 [ScriptBlock]$Script:ThePlayerStatusScreenState = {
+    Switch($Script:TheStatusScreenState) {
+        ([StatusScreenState]::Setup) {
+            Write-Host "$([ATControlSequences]::CursorHide)"
+
+            $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
+
+            Break
+        }
+
+        ([StatusScreenState]::MainMenu) {
+            If($null -EQ $Script:ThePlayerStatusMainMenu) {
+                $Script:ThePlayerStatusMainMenu = [PlayerStatusMainMenu]::new()
+            }
+
+            $Script:ThePlayerStatusMainMenu.Draw()
+            $Script:ThePlayerStatusMainMenu.HandleInput()
+
+            Break
+        }
+        
+        ([StatusScreenState]::Status) {
+            If($null -EQ $Script:ThePlayerStatusSummaryWindow) {
+                $Script:ThePlayerStatusSummaryWindow = [PlayerStatusSummaryWindow]::new()
+            }
+            
+            $Script:ThePlayerStatusSummaryWindow.Draw()
+            
+            $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
+            
+            Break
+        }
+
+        Default {
+            $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
+
+            Break
+        }
+    }
+    
+    <#
     Write-Host "$([ATControlSequences]::CursorHide)"
     $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
 
@@ -789,6 +861,7 @@ $Script:BATLut = @(
             # BECAUSE I'M A FUCKING GENIUS
         }
     }
+    #>
 }
 
 [ScriptBlock]$Script:TheCleanupState = {}
@@ -1469,3 +1542,44 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::PlayerStatusScreen = $Script:ThePlayerStatusScreenState
     [GameStatePrimary]::Cleanup            = $Script:TheCleanupState
 }
+
+
+# MOCK INVENTORY POPULATION
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
+# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null

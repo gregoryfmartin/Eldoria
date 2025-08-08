@@ -16,5 +16,5 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class ATCoordinatesDefault : ATCoordinates {
-    ATCoordinatesDefault() : base(18, 1) {}
+    ATCoordinatesDefault() : base(18, 2) {}
 }

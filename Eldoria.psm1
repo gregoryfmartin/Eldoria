@@ -152,6 +152,7 @@ Write-Progress -Activity $Script:ProgressActivity -Status ($Script:EquipBasicLoa
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\BEPauldron.ps1"
 . "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\BEWeapon.ps1"
 
+<#
 Write-Progress -Activity $Script:ProgressActivity -Status ($Script:ArmorLoadStrings | Get-Random) -PercentComplete -1
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Armors\*.ps1")) {
     . $File.FullName
@@ -196,6 +197,7 @@ Write-Progress -Activity $Script:ProgressActivity -Status ($Script:WeaponLoadStr
 Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Classes\CombatEnginePrimitives\Equipment\Weapons\*.ps1")) {
     . $File.FullName
 }
+#>
 
 
 

@@ -35,8 +35,8 @@ Class ATCoordinates {
     ATCoordinates(
         [Coordinates]$AutomationCoordinates
     ) {
-        $this.Row    = $AutomationCoordinates.X
-        $this.Column = $AutomationCoordinates.Y
+        $this.Row    = $AutomationCoordinates.Y
+        $this.Column = $AutomationCoordinates.X
     }
 
     ATCoordinates(
