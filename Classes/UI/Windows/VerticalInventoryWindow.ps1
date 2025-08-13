@@ -487,8 +487,8 @@ Class VerticalInventoryWindow : WindowBase {
             $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
         } Catch {}
         $this.ActiveIChevronIndex                                      = 0
-        $this.IChevrons [$this.ActiveIChevronIndex].Item2              = $true
-        $this.IChevrons [$this.ActiveIChevronIndex].Item1.UserData     = [VerticalInventoryWindow]::IChevronCharacter
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [VerticalInventoryWindow]::IChevronCharacter
         $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
             Blink = $true
         }

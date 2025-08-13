@@ -1545,6 +1545,7 @@ $Script:TheGlobalStateBlockTable = @{
 
 
 # MOCK INVENTORY POPULATION
+<#
 $Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
@@ -1583,3 +1584,5 @@ $Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
 $Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
+#>
+

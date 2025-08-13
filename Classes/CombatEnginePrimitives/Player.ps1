@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class Player : BattleEntity {
-    Static [ConsoleColor24]$AsideColor = [CCAppleIndigoLight24]::new()
+    Static [ConsoleColor24]$AsideColor    = [CCAppleIndigoLight24]::new()
     Static [ConsoleColor24]$GoldDrawColor = [CCAppleYellowLight24]::new()
     
     [Int]$CurrentGold
@@ -20,8 +20,10 @@ Class Player : BattleEntity {
 
     [ATCoordinates]$MapCoordinates
 
-    [List[MapTileObject]]$Inventory
+    # [List[MapTileObject]]$Inventory
     [List[String]]$TargetOfFilter
+
+    [PlayerItemInventory]$ItemInventory
 
     [PlayerActionInventory]$ActionInventory
 
@@ -31,8 +33,9 @@ Class Player : BattleEntity {
         $this.CurrentGold       = 0
         $this.ProfileImageIndex = 0
         $this.MapCoordinates    = [ATCoordinates]::new(0, 0)
-        $this.Inventory         = [List[MapTileObject]]::new()
+        # $this.Inventory         = [List[MapTileObject]]::new()
         $this.TargetOfFilter    = [List[String]]::new()
+        $this.ItemInventory = [PlayerItemInventory]::new()
         $this.ActionInventory   = [PlayerActionInventory]::new()
         $this.EquipmentListing  = @{
             [EquipmentSlot]::Armor     = $null
@@ -48,6 +51,7 @@ Class Player : BattleEntity {
         }
     }
 
+    <#
     [Boolean]IsItemInInventory(
         [String]$ItemName
     ) {
@@ -109,6 +113,7 @@ Class Player : BattleEntity {
 
         Return [ItemRemovalStatus]::Success
     }
+    #>
 
     [Void]MapMoveSouth() {
         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
