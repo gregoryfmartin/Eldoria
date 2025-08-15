@@ -1,5 +1,6 @@
 using namespace System
 using namespace System.Collections
+using namespace System.Collections.Generic
 
 Set-StrictMode -Version Latest
 
@@ -12,94 +13,46 @@ Set-StrictMode -Version Latest
 #
 ###############################################################################
 
-Class PlayerItemInventory {
-    [Hashtable]$Listing
-
-    PlayerItemInventory() {
-        $this.Listing = @{}
-    }
+Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
+    PlayerItemInventory() {}
 
     [Boolean]AddItem(
-        [MapTileObject]$Item
-    ) {
-        If($this.Listing.ContainsKey($Item) -EQ $false) {
-            $this.Listing[$Item] = 1
-
-            Return $true
-        }
-        
-        If($this.Listing[$Item] -GE 99) {
-            Return $false
-        }
-
-        $this.Listing[$Item]++
-        Return $true
-    }
-
-    [Boolean]AddItems(
         [MapTileObject]$Item,
-        [Int]$Quantity
+        [Int]$Qty = 1
     ) {
-        If($Quantity -LE 0) {
-            Return $false
-        }
+        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
 
-        $CurrentQty = 0
-        If($this.Listing.ContainsKey($Item)) {
-            $CurrentQty = $this.Listing[$Item]
-        }
-
-        If(($CurrentQty + $Quantity) -GT 99) {
-            Return $false
-        }
-
-        If($this.Listing.ContainsKey($Item) -EQ $false) {
-            $this.Listing[$Item] = $Quantity
+        If($ExistingItem) {
+            If(($ExistingItem.Item2 + $Qty) -GT 99) {
+                Return $false
+            }
+            $ExistingItem.Item2 += $Qty
         } Else {
-            $this.Listing[$Item] += $Quantity
+            $this.Add([ValueTuple]::Create($Item, $Qty))
         }
 
         Return $true
     }
 
     [ItemRemovalStatus]RemoveItem(
-        [MapTileObject]$Item
-    ) {
-        If($this.Listing.ContainsKey($Item) -EQ $false) {
-            Return [ItemRemovalStatus]::FailGeneral
-        }
-
-        If($Item.KeyItem) {
-            Return [ItemRemovalStatus]::FailKeyItem
-        }
-
-        $this.Listing[$Item]--
-        If($this.Listing[$Item] -LE 0) {
-            $this.Listing.Remove($Item)
-        }
-
-        Return [ItemRemovalStatus]::Success
-    }
-
-    [ItemRemovalStatus]RemoveItems(
         [MapTileObject]$Item,
-        [Int]$Quantity
+        [Int]$Qty = 1
     ) {
-        If($this.Listing.ContainsKey($Item) -EQ $false) {
+        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
+
+        If($null -EQ $ExistingItem) {
             Return [ItemRemovalStatus]::FailGeneral
         }
 
-        If($Item.KeyItem) {
+        If($Item.KeyItem -EQ $true) {
             Return [ItemRemovalStatus]::FailKeyItem
         }
 
-        If($this.Listing[$Item] -LT $Quantity) {
-            Return [ItemRemovalStatus]::FailGeneral
-        }
-
-        $this.Listing[$Item] -= $Quantity
-        If($this.Listing[$Item] -LE 0) {
-            $this.Listing.Remove($Item)
+        $NewQty = $ExistingItem.Item2 - $Qty
+        If($NewQty -LE 0) {
+            $this.Remove($ExistingItem)
+        } Else {
+            $ExistingItem.Item2 = $NewQty
         }
 
         Return [ItemRemovalStatus]::Success
@@ -108,37 +61,51 @@ Class PlayerItemInventory {
     [Int]GetItemQuantity(
         [MapTileObject]$Item
     ) {
-        If($this.Listing.ContainsKey($Item) -EQ $false) {
+        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
+
+        If($null -EQ $ExistingItem) {
             Return 0
         }
 
-        Return $this.Listing[$Item]
+        Return $ExistingItem.Item2
     }
 
     [Boolean]HasItem(
         [MapTileObject]$Item
     ) {
-        Return $this.Listing.ContainsKey($Item)
+        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
+
+        Return ($null -NE $ExistingItem)
     }
 
     [ArrayList]GetSortedItems() {
         $SortedItems = [ArrayList]::new()
-        
-        Foreach($Item in $this.Listing.GetEnumerator()) {
+
+        Foreach($Item in $this) {
             $SortedItems.Add([PSCustomObject]@{
-                Item     = $Item.Key
-                Quantity = $Item.Value
+                Item     = $Item.Item1
+                Quantity = $Item.Item2
             })
         }
 
         $SortedItems.Sort(
             {
-                Param($A, $B) 
-                
-                $A.Item.Name.CompareTo($B.Item.Name)
+                Param($A, $B)
+
+                $B.Item.Name.CompareTo($A.Item.Name)
             }
         )
-        
+
         Return $SortedItems
+    }
+
+    [Void]Sort() {
+        $this.Sort(
+            {
+                Param($A, $B)
+
+                $B.Item1.Name.CompareTo($A.Item1.Name)
+            }
+        )
     }
 }

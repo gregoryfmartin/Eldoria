@@ -202,6 +202,12 @@ Class PlayerStatusMainMenu : WindowBase {
                         
                         Break
                     }
+
+                    1 { # ITEMS
+                        $Script:TheStatusScreenState = [StatusScreenState]::Items
+
+                        Break
+                    }
                     
                     Default {
                         Break

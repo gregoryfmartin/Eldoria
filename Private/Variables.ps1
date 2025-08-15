@@ -111,6 +111,8 @@ Set-StrictMode -Version Latest
 [StatusScreenState]               $Script:TheStatusScreenState         = [StatusScreenState]::Setup
 [PlayerStatusMainMenu]            $Script:ThePlayerStatusMainMenu      = $null
 [PlayerStatusSummaryWindow]       $Script:ThePlayerStatusSummaryWindow = $null
+[StatusItemInventoryWindow]       $Script:TheStatusItemInventoryWindow = $null
+[StatusItemHeaderWindow]          $Script:TheStatusItemHeaderWindow    = $null
 [VerticalInventoryWindow]         $Script:TheVerticalInventoryWindow   = $null
 
 
@@ -789,13 +791,42 @@ $Script:BATLut = @(
         
         ([StatusScreenState]::Status) {
             If($null -EQ $Script:ThePlayerStatusSummaryWindow) {
+                $Script:TheBufferManager.ClearArea(1, 13, 70, 70)
                 $Script:ThePlayerStatusSummaryWindow = [PlayerStatusSummaryWindow]::new()
+            }
+
+            If($null -NE $Script:TheStatusItemInventoryWindow) {
+                $Script:TheStatusItemInventoryWindow = $null
+            }
+            If($null -NE $Script:TheStatusItemHeaderWindow) {
+                $Script:TheStatusItemHeaderWindow = $null
             }
             
             $Script:ThePlayerStatusSummaryWindow.Draw()
             
             $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
             
+            Break
+        }
+
+        ([StatusScreenState]::Items) {
+            If($null -NE $Script:ThePlayerStatusSummaryWindow) {
+                $Script:ThePlayerStatusSummaryWindow = $null
+            }
+
+            If($null -EQ $Script:TheStatusItemInventoryWindow) {
+                $Script:TheBufferManager.ClearArea(1, 13, 70, 70)
+                $Script:TheStatusItemInventoryWindow = [StatusItemInventoryWindow]::new()
+            }
+            If($null -EQ $Script:TheStatusItemHeaderWindow) {
+                $Script:TheStatusItemHeaderWindow = [StatusItemHeaderWindow]::new()
+            }
+
+            $Script:TheStatusItemInventoryWindow.Draw()
+            $Script:TheStatusItemHeaderWindow.Draw()
+
+            # THIS ISN'T SUPPOSED TO HAPPEN, BUT I NEED TO DO IT FOR TESTING
+            $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
             Break
         }
 

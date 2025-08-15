@@ -55,4 +55,18 @@ Class BufferManager {
         $Script:Rui.SetBufferContents([Coordinates]::new(0, 0), $this.ScreenBufferB)
         $this.ScreenBufferB = New-Object 'System.Management.Automation.Host.BufferCell[,]' 80, 80
     }
+
+    [Void]ClearArea(
+        [Int]$Top,
+        [Int]$Left,
+        [Int]$Width,
+        [Int]$Height
+    ) {
+        Write-Host "$([ATControlSequences]::GenerateCoordinateString($Top, $Left))"
+        
+        For([Int]$Row = $Top; $Row -LT $Height; $Row++) {
+            Write-Host "$(' ' * ($Width - $Left))"
+            Write-Host "$([ATControlSequences]::GenerateCoordinateString($Row, $Left))"
+        }
+    }
 }
