@@ -62,11 +62,13 @@ Class BufferManager {
         [Int]$Width,
         [Int]$Height
     ) {
-        Write-Host "$([ATControlSequences]::GenerateCoordinateString($Top, $Left))"
+        $Script:Rui.CursorPosition = ([ATCoordinates]::new($Top, $Left)).ToAutomationCoordinates()
+        # Write-Host "$([ATControlSequences]::GenerateCoordinateString($Top, $Left))"
         
         For([Int]$Row = $Top; $Row -LT $Height; $Row++) {
             Write-Host "$(' ' * ($Width - $Left))"
-            Write-Host "$([ATControlSequences]::GenerateCoordinateString($Row, $Left))"
+            # Write-Host "$([ATControlSequences]::GenerateCoordinateString($Row, $Left))"
+            $Script:Rui.CursorPosition = ([ATCoordinates]::new($Row, $Left)).ToAutomationCoordinates()
         }
     }
 }

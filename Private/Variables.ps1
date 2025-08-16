@@ -18,6 +18,10 @@ Set-StrictMode -Version Latest
 [Int]                             $Script:MaxWidth                     = 80
 [Int]                             $Script:SSAPECounter                 = 0
 [Int]                             $Script:SSAPETimeout                 = 1000
+[Int]                             $Script:ItemClearAreaTop             = 1
+[Int]                             $Script:ItemClearAreaLeft            = 12
+[Int]                             $Script:ItemClearAreaRight           = 70
+[Int]                             $Script:ItemClearAreaBottom          = 25
 [String]                          $Script:SfxUiChevronMove             = "$PSScriptRoot\..\Resources\SFX\UI Chevron Move.wav"
 [String]                          $Script:SfxUiSelectionValid          = "$PSScriptRoot\..\Resources\SFX\UI Selection Valid.wav"
 [String]                          $Script:SfxBaPhysicalStrikeA         = "$PSScriptRoot\..\Resources\SFX\BA Physical Strike 0001.wav"
@@ -791,7 +795,10 @@ $Script:BATLut = @(
         
         ([StatusScreenState]::Status) {
             If($null -EQ $Script:ThePlayerStatusSummaryWindow) {
-                $Script:TheBufferManager.ClearArea(1, 13, 70, 70)
+                $Script:TheBufferManager.ClearArea($Script:ItemClearAreaTop,
+                    $Script:ItemClearAreaLeft,
+                    $Script:ItemClearAreaRight,
+                    $Script:ItemClearAreaBottom)
                 $Script:ThePlayerStatusSummaryWindow = [PlayerStatusSummaryWindow]::new()
             }
 
@@ -815,7 +822,10 @@ $Script:BATLut = @(
             }
 
             If($null -EQ $Script:TheStatusItemInventoryWindow) {
-                $Script:TheBufferManager.ClearArea(1, 13, 70, 70)
+                $Script:TheBufferManager.ClearArea($Script:ItemClearAreaTop,
+                    $Script:ItemClearAreaLeft,
+                    $Script:ItemClearAreaRight,
+                    $Script:ItemClearAreaBottom)
                 $Script:TheStatusItemInventoryWindow = [StatusItemInventoryWindow]::new()
             }
             If($null -EQ $Script:TheStatusItemHeaderWindow) {
