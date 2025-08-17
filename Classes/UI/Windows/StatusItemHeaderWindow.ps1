@@ -124,4 +124,12 @@ Class StatusItemHeaderWindow : WindowBase {
         $this.ItemEffectDirty = $true
         $this.Draw()
     }
+
+    [Void]UpdateAllData(
+        [String]$ItemDesc,
+        [String]$ItemEffect
+    ) {
+        $this.UpdateItemDesc($ItemDesc)
+        $this.UpdateItemEffect($ItemEffect)
+    }
 }

@@ -14,7 +14,7 @@ Set-StrictMode -Version Latest
 Class StatusItemInventoryWindow : WindowBase {
     Static [Int]$WindowLTRow    = 5
     Static [Int]$WindowLTColumn = 13
-    Static [Int]$WindowRBRow    = 22
+    Static [Int]$WindowRBRow    = 17
     Static [Int]$WindowRBColumn = 68
     
     Static [String]$WindowTitle                = 'Items'
@@ -417,6 +417,10 @@ Class StatusItemInventoryWindow : WindowBase {
             If($this.ItemsListDirty -EQ $true) {
                 $this.WriteItemLabels()
                 Write-Host "$([ATControlSequences]::CursorHide)"
+                $Script:TheStatusItemHeaderWindow.UpdateAllData(
+                    $this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString,
+                    $this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString
+                )
                 $this.ItemsListDirty = $false
             }
             
@@ -428,19 +432,13 @@ Class StatusItemInventoryWindow : WindowBase {
 
         Switch($KeyCap.VirtualKeyCode) {
             27 {  # ESCAPE
-                # THIS LOGIC NEEDS TO CHANGE TO GIVE INPUT BACK TO THE MAIN MENU
-                <#
-                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
-                #>
-                
                 $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
                 
                 Break
             }
 
             38 {  # UP ARROW
-                If($this.ZeroPageActive -EQ $true) {
+                If($this.ZeroPageActive -EQ $true -OR $this.ActiveIChevronIndex -EQ 0) {
                     Return
                 }
                 
@@ -461,13 +459,16 @@ Class StatusItemInventoryWindow : WindowBase {
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
 
-                # UPDATE THE INFORMATION IN THE HEADER WINDOW WITH THE CURRENT ITEM
-                $Script:TheStatusItemHeaderWindow.UpdateItemDesc($this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString)
-                $Script:TheStatusItemHeaderWindow.UpdateItemEffect($this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString)
+                $Script:TheStatusItemHeaderWindow.UpdateAllData(
+                    $this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString,
+                    $this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString
+                )
+
+                Break
             }
 
             40 {  # DOWN ARROW
-                If($this.ZeroPageActive -EQ $true) {
+                If($this.ZeroPageActive -EQ $true -OR $this.ActiveIChevronIndex -EQ $this.IChevrons.Count - 1) {
                     Return
                 }
                 
@@ -488,9 +489,12 @@ Class StatusItemInventoryWindow : WindowBase {
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
 
-                # UPDATE THE INFORMATION IN THE HEADER WINDOW WITH THE CURRENT ITEM
-                $Script:TheStatusItemHeaderWindow.UpdateItemDesc($this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString)
-                $Script:TheStatusItemHeaderWindow.UpdateItemEffect($this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString)
+                $Script:TheStatusItemHeaderWindow.UpdateAllData(
+                    $this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString,
+                    $this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString
+                )
+
+                Break
             }
 
             33 {  # PAGE UP
@@ -499,6 +503,8 @@ Class StatusItemInventoryWindow : WindowBase {
                 }
                 
                 $this.TurnPageUp()
+
+                Break
             }
 
             34 {  # PAGE DOWN
@@ -507,46 +513,9 @@ Class StatusItemInventoryWindow : WindowBase {
                 }
                 
                 $this.TurnPageDown()
+
+                Break
             }
-
-            <#
-            83 {  # S
-                If($this.ZeroPageActive -EQ $true) {
-                    Return
-                }
-                
-                Switch($this.CurrentPage) {
-                    1 {
-                        [ItemRemovalStatus]$a = $Script:ThePlayer.RemoveInventoryItemByIndex($this.ActiveIChevronIndex)
-                        If($a -EQ [ItemRemovalStatus]::Success) {
-                            [Console]::Beep(493.9, 250)
-                            [Console]::Beep((493.9 * 2), 250)
-                            $this.BookDirty        = $true
-                            $this.CurrentPageDirty = $true
-
-                            Return
-                        }
-                        [Console]::Beep(493.9, 250)
-                        [Console]::Beep((493.9 / 2), 250)
-                    }
-
-                    { $_ -GT 1 } {
-                        [Int]$a               = (($this.ItemsPerPage * ($this.CurrentPage - 1)) + $this.ActiveIChevronIndex)
-                        [ItemRemovalStatus]$b = $Script:ThePlayer.RemoveInventoryItemByIndex($a)
-                        If($b -EQ [ItemRemovalStatus]::Success) {
-                            [Console]::Beep(493.9, 250)
-                            [Console]::Beep((493.9 * 2), 250)
-                            $this.BookDirty        = $true
-                            $this.CurrentPageDirty = $true
-
-                            Return
-                        }
-                        [Console]::Beep(493.9, 250)
-                        [Console]::Beep((493.9 / 2), 250)
-                    }
-                }
-            }
-            #>
         }    
     }
 }

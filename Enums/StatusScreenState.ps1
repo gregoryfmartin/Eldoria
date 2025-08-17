@@ -44,6 +44,8 @@ Enum StatusScreenState {
     MainMenu
     Status
     Items
+    ItemsContextA
+    ItemsContextB
     Equip
     Magic
     Save
