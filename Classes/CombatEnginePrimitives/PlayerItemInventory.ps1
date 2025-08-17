@@ -14,6 +14,8 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
+    Static [Int]$QuantityMax = 99
+
     PlayerItemInventory() : base() {}
     
     [Int]IndexOfItem(
@@ -32,22 +34,32 @@ Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
         [MapTileObject]$Item,
         [Int]$Qty = 1
     ) {
+        [Int]$Tqty = 1
+
+        If($Qty -GT [PlayerItemInventory]::QuantityMax) {
+            $Tqty = [PlayerItemInventory]::QuantityMax
+        } Else {
+            $Tqty = $Qty
+        }
+
         $Idx = $this.IndexOfItem($Item)
         
         If($Idx -GE 0) {
             $Temp = $this[$Idx]
             
-            If(($Temp.Item2 + $Qty) -GT 99) {
-                Return $false
+            If(($Temp.Item2 + $Tqty) -GT [PlayerItemInventory]::QuantityMax) {
+                $Temp.Item2 = [PlayerItemInventory]::QuantityMax
+                $this[$Idx] = $Temp
+
+                Return $true
             }
             
-            $Temp.Item2 = $Temp.Item2 + $Qty
-            
+            $Temp.Item2 = $Temp.Item2 + $Tqty
             $this[$Idx] = $Temp
             
             Return $true
         } Else {
-            $this.Add([ValueTuple[[MapTileObject], [Int]]]::new($Item, $Qty))
+            $this.Add([ValueTuple[[MapTileObject], [Int]]]::new($Item, $Tqty))
             
             Return $true
         }

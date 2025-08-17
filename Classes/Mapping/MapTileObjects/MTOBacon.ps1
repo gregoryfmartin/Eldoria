@@ -13,7 +13,7 @@ Class MTOBacon : MapTileObject {
         $this.Name              = 'Bacon'
         $this.MapObjName        = $this.Name.ToLower()
         $this.CanAddToInventory = $true
-        $this.ExamineString     = 'Shredded swine flesh. Cholesterol never tasted so good.'
+        $this.ExamineString     = 'Shredded swine flesh.'
         $this.KeyItem           = $true
     }
 }

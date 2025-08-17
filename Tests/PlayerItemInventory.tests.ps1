@@ -33,6 +33,17 @@ Describe 'PlayerItemInventory' {
             $SampleInventory[0].Item1.Name | Should -Be 'Apple'
         }
 
+        It 'Should cap item adds greater than 99 at 99' {
+            $SampleInventory.AddItem($Apple, 100)
+            $SampleInventory.GetItemQuantity($Apple) | Should -Be 99
+        }
+
+        It 'Should cap quantities of items if the add results in greater than 99' {
+            $SampleInventory.AddItem($Apple, 98)
+            $SampleInventory.AddItem($Apple, 10)
+            $SampleInventory.GetItemQuantity($Apple) | Should -Be 99
+        }
+
         It 'Should remove item completely' {
             $SampleInventory.AddItem($Apple, 10)
             $SampleInventory.RemoveItem($Apple, 10)

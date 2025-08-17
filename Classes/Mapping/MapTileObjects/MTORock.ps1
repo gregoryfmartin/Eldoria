@@ -13,6 +13,6 @@ Class MTORock : MapTileObject {
         $this.Name              = 'Rock'
         $this.MapObjName        = $this.Name.ToLower()
         $this.CanAddToInventory = $true
-        $this.ExamineString     = 'A garden variety rock. Good for taunting raccoons with.'
+        $this.ExamineString     = 'Good for taunting raccoons with.'
     }
 }

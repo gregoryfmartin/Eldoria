@@ -18,10 +18,12 @@ Class StatusItemHeaderWindow : WindowBase {
     Static [Int]$WindowRBRow    = 4
     Static [Int]$WindowRBColumn = 68
 
-    Static [String]$WindowTitle = 'Description'
+    Static [String]$WindowTitle   = 'Description'
+    Static [String]$LineBlankData = ' ' * (([StatusItemHeaderWindow]::WindowRBColumn - [StatusItemHeaderWindow]::WindowLTColumn) - 2)
     
     [ATString]$ItemDesc
     [ATString]$ItemEffect
+    [ATString]$LineBlankActual
     
     [Boolean]$ItemDescDirty
     [Boolean]$ItemEffectDirty
@@ -42,26 +44,36 @@ Class StatusItemHeaderWindow : WindowBase {
         $this.ItemDesc = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CCTextDefault24]::new()
-                Coordinates = [ATCoordinates]@{
-                    Row = $this.LeftTop.Row + 1
+                Coordinates     = [ATCoordinates]@{
+                    Row    = $this.LeftTop.Row + 1
                     Column = $this.LeftTop.Column + 2
                 }
             }
-            UserData = "$('A' * ($this.Width - 3))"
+            UserData   = "$(' ' * ($this.Width - 3))"
             UseATReset = $true
         }
         $this.ItemEffect = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CCTextDefault24]::new()
-                Coordinates = [ATCoordinates]@{
-                    Row = $this.ItemDesc.Prefix.Coordinates.Row + 1
+                Coordinates     = [ATCoordinates]@{
+                    Row    = $this.ItemDesc.Prefix.Coordinates.Row + 1
                     Column = $this.ItemDesc.Prefix.Coordinates.Column
                 }
             }
-            UserData = "$('A' * ($this.Width - 3))"
+            UserData   = "$(' ' * ($this.Width - 3))"
             UseATReset = $true
         }
-        $this.ItemDescDirty = $true
+        $this.LineBlankActual = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]@{
+                    Row    = 1
+                    Column = 1
+                }
+            }
+            UserData   = "$([StatusItemHeaderWindow]::LineBlankData)"
+            UseATReset = $true
+        }
+        $this.ItemDescDirty   = $true
         $this.ItemEffectDirty = $true
     }
 
@@ -69,11 +81,19 @@ Class StatusItemHeaderWindow : WindowBase {
         ([WindowBase]$this).Draw()
         
         If($this.ItemDescDirty -EQ $true) {
-            Write-Host "$($this.ItemDesc.ToAnsiControlSequenceString())"
+            $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]@{
+                Row    = $this.ItemDesc.Prefix.Coordinates.Row
+                Column = $this.ItemDesc.Prefix.Coordinates.Column
+            }
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($this.ItemDesc.ToAnsiControlSequenceString())"
             $this.ItemDescDirty = $false
         }
         If($this.ItemEffectDirty -EQ $true) {
-            Write-Host "$($this.ItemEffect.ToAnsiControlSequenceString())"
+            $this.LineBlankActual.Prefix.Coordinates = [ATCoordinates]@{
+                Row    = $this.ItemEffect.Prefix.Coordinates.Row
+                Column = $this.ItemEffect.Prefix.Coordinates.Column
+            }
+            Write-Host "$($this.LineBlankActual.ToAnsiControlSequenceString())$($this.ItemEffect.ToAnsiControlSequenceString())"
             $this.ItemEffectDirty = $false
         }
     }
@@ -83,12 +103,25 @@ Class StatusItemHeaderWindow : WindowBase {
     ) {
         $this.ItemDesc.UserData = $ItemDesc
         $this.ItemDescDirty = $true
+        $this.Draw()
     }
     
     [Void]UpdateItemEffect(
         [String]$ItemEffect
     ) {
-        $this.ItemEffect.UserData = $ItemEffect
+        If($ItemEffect -EQ '') {
+            $this.ItemEffect.Prefix.ForegroundColor = [CCTextDefault24]::new()
+            $this.ItemEffect.Prefix.Decorations     = [ATDecorationNone]::new()
+            $this.ItemEffect.UserData               = 'No Effect'
+        } Else {
+            $this.ItemEffect.Prefix.ForegroundColor = [CCAppleVMintLight24]::new()
+            $this.ItemEffect.Prefix.Decorations     = [ATDecoration]@{
+                Blink = $true
+                Italic = $true
+            }
+            $this.ItemEffect.UserData = $ItemEffect
+        }
         $this.ItemEffectDirty = $true
+        $this.Draw()
     }
 }

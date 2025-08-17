@@ -92,7 +92,7 @@ Class StatusItemInventoryWindow : WindowBase {
         $this.ZpBlankedDirty           = $true
         $this.ZpPromptDirty            = $true
         $this.MoronCounter             = 0
-        $this.ItemsPerPage             = 10
+        $this.ItemsPerPage             = 11
         $this.NumPages                 = 1
         $this.CurrentPage              = 1
         $this.ActiveIChevronIndex      = 0
@@ -100,10 +100,49 @@ Class StatusItemInventoryWindow : WindowBase {
         $this.IChevrons                = [List[ValueTuple[[ATString], [Boolean]]]]::new()
         $this.ItemLabels               = [List[ATString]]::new()
         $this.ItemLabelBlanks          = [List[ATString]]::new()
-        $this.PagingChevronUp          = $null
-        $this.PagingChevronDown        = $null
-        $this.PagingChevronUpBlank     = $null
-        $this.PagingChevronDownBlank   = $null
+
+        $this.PagingChevronUp        = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                ForegroundColor = [CCAppleVYellowLight24]::new()
+                Coordinates     = [ATCoordinates]@{
+                    Row    = $this.LeftTop.Row + 1
+                    Column = $this.RightBottom.Column - 2
+                }
+            }
+            UserData   = "$([StatusItemInventoryWindow]::PagingChevronUpCharacter)"
+            UseATReset = $true
+        }
+        $this.PagingChevronDown      = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                ForegroundColor = [CCAppleVYellowLight24]::new()
+                Coordinates     = [ATCoordinates]@{
+                    Row    = $this.RightBottom.Row - 1
+                    Column = $this.RightBottom.Column - 2
+                }
+            }
+            UserData   = "$([StatusItemInventoryWindow]::PagingChevronDownCharacter)"
+            UseATReset = $true
+        }
+        $this.PagingChevronUpBlank   = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]@{
+                    Row    = $this.PagingChevronUp.Prefix.Coordinates.Row
+                    Column = $this.PagingChevronUp.Prefix.Coordinates.Column
+                }
+            }
+            UserData   = "$([StatusItemInventoryWindow]::PagingChevronBlankCharater)"
+            UseATReset = $true
+        }
+        $this.PagingChevronDownBlank = [ATString]@{
+            Prefix = [ATStringPrefix]@{
+                Coordinates = [ATCoordinates]@{
+                    Row    = $this.PagingChevronDown.Prefix.Coordinates.Row
+                    Column = $this.PagingChevronDown.Prefix.Coordinates.Column
+                }
+            }
+            UserData   = "$([StatusItemInventoryWindow]::PagingChevronBlankCharater)"
+            UseATReset = $true
+        }
 
         $this.CreateIChevrons()
     }
@@ -111,13 +150,13 @@ Class StatusItemInventoryWindow : WindowBase {
     [Void]CreateIChevrons() {
         $this.IChevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
 
-        For([Int]$I = 1; $I -LT $this.ItemsPerPage; $I++) {
+        For([Int]$I = 0; $I -LT $this.ItemsPerPage; $I++) {
             $this.IChevrons.Add([ValueTuple]::Create(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCTextDefault24]::new()
                         Coordinates     = [ATCoordinates]@{
-                            Row    = $this.LeftTop.Row + $I
+                            Row    = ($this.LeftTop.Row + 1) + $I
                             Column = $this.LeftTop.Column + 1
                         }
                     }
@@ -155,12 +194,12 @@ Class StatusItemInventoryWindow : WindowBase {
     [Void]CreateItemLabelBlanks() {
         $this.ItemLabelBlanks = [List[ATString]]::new()
 
-        For([Int]$I = 1; $I -LT $this.ItemsPerPage; $I++) {
+        For([Int]$I = 0; $I -LT $this.ItemsPerPage; $I++) {
             $this.ItemLabelBlanks.Add(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         Coordinates = [ATCoordinates]@{
-                            Row    = $this.LeftTop.Row + $I
+                            Row    = ($this.LeftTop.Row + 1) + $I
                             Column = $this.LeftTop.Column + 2
                         }
                     }
@@ -325,7 +364,7 @@ Class StatusItemInventoryWindow : WindowBase {
             If($this.NumPages -GT 1) {
                 If($this.CurrentPage -EQ 1) {
                     If($this.PagingChevronUpVisible -EQ $true) {
-                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronUpBlank.ToAnsiControlSequenceString())"
+                        Write-Host "$($this.PagingChevronUpBlank.ToAnsiControlSequenceString())"
                         $this.PagingChevronUpVisible = $false
                         $this.PagingChevronUpDirty = $true
                     }
@@ -333,7 +372,7 @@ Class StatusItemInventoryWindow : WindowBase {
                         $this.PagingChevronDownVisible = $true
                     }
                     If(($this.PagingChevronDownVisible -EQ $true) -AND ($this.PagingChevronDownDirty -EQ $true)) {
-                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronDown.ToAnsiControlSequenceString())"
+                        Write-Host "$($this.PagingChevronDown.ToAnsiControlSequenceString())"
                         $this.PagingChevronDownDirty = $false
                     }
                 } Elseif(($this.CurrentPage -GT 1) -AND ($this.CurrentPage -LT $this.NumPages)) {
@@ -344,16 +383,16 @@ Class StatusItemInventoryWindow : WindowBase {
                         $this.PagingChevronDownVisible = $true
                     }
                     If(($this.PagingChevronDownVisible -EQ $true) -AND ($this.PagingChevronDownDirty -EQ $true)) {
-                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronDown.ToAnsiControlSequenceString())"
+                        Write-Host "$($this.PagingChevronDown.ToAnsiControlSequenceString())"
                         $this.PagingChevronDownDirty = $false
                     }
                     If(($this.PagingChevronUpVisible -EQ $true) -AND ($this.PagingChevronUpDirty -EQ $true)) {
-                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronUp.ToAnsiControlSequenceString())"
+                        Write-Host "$($this.PagingChevronUp.ToAnsiControlSequenceString())"
                         $this.PagingChevronUpDirty = $false
                     }
                 } Elseif($this.CurrentPage -GE $this.NumPages) {
                     If($this.PagingChevronDownVisible -EQ $true) {
-                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronDownBlank.ToAnsiControlSequenceString())"
+                        Write-Host "$($this.PagingChevronDownBlank.ToAnsiControlSequenceString())"
                         $this.PagingChevronDownVisible = $false
                         $this.PagingChevronDownDirty = $true
                     }
@@ -361,7 +400,7 @@ Class StatusItemInventoryWindow : WindowBase {
                         $this.PagingChevronUpVisible = $true
                     }
                     If(($this.PagingChevronUpVisible -EQ $true) -AND ($this.PagingChevronUpDirty -EQ $true)) {
-                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronUp.ToAnsiControlSequenceString())"
+                        Write-Host "$($this.PagingChevronUp.ToAnsiControlSequenceString())"
                         $this.PagingChevronUpDirty = $false
                     }
                 }
@@ -420,6 +459,10 @@ Class StatusItemInventoryWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
+
+                # UPDATE THE INFORMATION IN THE HEADER WINDOW WITH THE CURRENT ITEM
+                $Script:TheStatusItemHeaderWindow.UpdateItemDesc($this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString)
+                $Script:TheStatusItemHeaderWindow.UpdateItemEffect($this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString)
             }
 
             40 {  # DOWN ARROW
@@ -443,6 +486,10 @@ Class StatusItemInventoryWindow : WindowBase {
                 $this.PlayerChevronDirty = $true
                 $this.ActiveItemBlinking = $false
                 $this.ItemDescDirty      = $true
+
+                # UPDATE THE INFORMATION IN THE HEADER WINDOW WITH THE CURRENT ITEM
+                $Script:TheStatusItemHeaderWindow.UpdateItemDesc($this.PageRefs[$this.ActiveIChevronIndex].Item1.ExamineString)
+                $Script:TheStatusItemHeaderWindow.UpdateItemEffect($this.PageRefs[$this.ActiveIChevronIndex].Item1.PlayerEffectString)
             }
 
             33 {  # PAGE UP

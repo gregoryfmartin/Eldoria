@@ -50,75 +50,20 @@ Class Player : BattleEntity {
             [EquipmentSlot]::Weapon    = $null
         }
         
-        $this.ItemInventory.AddItem([MTOLadder]::new(), 10)
-        $this.ItemInventory.AddItem([MTOApple]::new(), 15)
-        $this.ItemInventory.AddItem([MTOBacon]::new(), 5)
-        $this.ItemInventory.AddItem([MTORope]::new(), 50)
+        # MOCK INVENTORY ADD CODE
+        $this.ItemInventory.AddItem([MTOLadder]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOApple]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOBacon]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTORope]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOMilk]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOPole]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTORock]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTORope]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOStairs]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOStick]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOTree]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOYogurt]::new(), (Get-Random -Minimum 1 -Maximum 99))
     }
-
-    <#
-    [Boolean]IsItemInInventory(
-        [String]$ItemName
-    ) {
-        Foreach($a in $this.Inventory) {
-            If($a.Name -IEQ $ItemName) {
-                Return $true
-            }
-        }
-
-        Return $false
-    }
-
-    [MapTileObject]GetItemReference(
-        [String]$ItemName
-    ) {
-        Foreach($a in $this.Inventory) {
-            If($a.Name -IEQ $ItemName) {
-                Return $a
-            }
-        }
-
-        Return $null
-    }
-
-    [ItemRemovalStatus]RemoveInventoryItemByName(
-        [String]$ItemName
-    ) {
-        $c = 0
-
-        Foreach($a in $this.Inventory) {
-            If($a.Name -IEQ $ItemName) {
-                If($a.KeyItem -EQ $true) {
-                    Return [ItemRemovalStatus]::FailKeyItem
-                }
-                $this.Inventory.RemoveAt($c)
-
-                Return [ItemRemovalStatus]::Success
-            }
-            $c++
-        }
-
-        Return [ItemRemovalStatus]::FailGeneral
-    }
-
-    [ItemRemovalStatus]RemoveInventoryItemByIndex(
-        [Int]$Index
-    ) {
-        [MapTileObject]$a = $null
-
-        Try {
-            $a = $this.Inventory[$Index]
-        } Catch {
-            Return [ItemRemovalStatus]::FailGeneral
-        }
-        If($a.KeyItem -EQ $true) {
-            Return [ItemRemovalStatus]::FailKeyItem
-        }
-        $this.Inventory.RemoveAt($Index)
-
-        Return [ItemRemovalStatus]::Success
-    }
-    #>
 
     [Void]MapMoveSouth() {
         If($Script:CurrentMap.GetTileAtPlayerCoordinates().Exits[[MapTile]::TileExitSouth] -EQ $true) {
