@@ -111,7 +111,7 @@ Class StatusItemInventoryWindow : WindowBase {
     [Void]CreateIChevrons() {
         $this.IChevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
 
-        For([Int]$I = 0; $I -LT $this.ItemsPerPage; $I++) {
+        For([Int]$I = 1; $I -LT $this.ItemsPerPage; $I++) {
             $this.IChevrons.Add([ValueTuple]::Create(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
@@ -155,7 +155,7 @@ Class StatusItemInventoryWindow : WindowBase {
     [Void]CreateItemLabelBlanks() {
         $this.ItemLabelBlanks = [List[ATString]]::new()
 
-        For([Int]$I = 0; $I -LT $this.ItemsPerPage; $I++) {
+        For([Int]$I = 1; $I -LT $this.ItemsPerPage; $I++) {
             $this.ItemLabelBlanks.Add(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
