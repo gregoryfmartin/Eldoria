@@ -187,18 +187,18 @@ Class StatusItemInventoryWindow : WindowBase {
     [Void]TurnPageDown() {
         If(($this.CurrentPage + 1) -LE $this.NumPages) {
             $this.CurrentPage++
-            $this.CurrentPageDirty = $true
+            $this.CurrentPageDirty   = $true
             $this.ActiveItemBlinking = $false
-            $this.ItemDescDirty = $true
+            $this.ItemDescDirty      = $true
         }
     }
     
     [Void]TurnPageUp() {
         If(($this.CurrentPage - 1) -GE 1) {
             $this.CurrentPage--
-            $this.CurrentPageDirty = $true
+            $this.CurrentPageDirty   = $true
             $this.ActiveItemBlinking = $false
-            $this.ItemDescDirty = $true
+            $this.ItemDescDirty      = $true
         }
     }
     
@@ -249,12 +249,12 @@ Class StatusItemInventoryWindow : WindowBase {
                 [ATString]$B = [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = [CCTextDefault24]::new()
-                        Coordinates = [ATCoordinates]@{
-                            Row = $this.LeftTop.Row + $A
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = $this.LeftTop.Row + $A
                             Column = $this.LeftTop.Column + 1
                         }
                     }
-                    UserData = [StatusItemInventoryWindow]::ZpLineBlank
+                    UserData   = "$([StatusItemInventoryWindow]::ZpLineBlank)"
                     UseATReset = $true
                 }
                 Write-Host "$($B.ToAnsiControlSequenceString())"
@@ -265,12 +265,12 @@ Class StatusItemInventoryWindow : WindowBase {
             [ATString]$A = [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCTextDefault24]::new()
-                    Coordinates = [ATCoordinates]@{
-                        Row = $this.LeftTop.Row + ($this.Height / 2)
+                    Coordinates     = [ATCoordinates]@{
+                        Row    = $this.LeftTop.Row + ($this.Height / 2)
                         Column = $this.LeftTop.Column + (($this.Width / 2) - ([StatusItemInventoryWindow]::ZeroPagePrompt.Length / 2))
                     }
                 }
-                UserData = "$([StatusItemInventoryWindow]::ZeroPagePrompt)"
+                UserData   = "$([StatusItemInventoryWindow]::ZeroPagePrompt)"
                 UseATReset = $true
             }
             Write-Host "$($A.ToAnsiControlSequenceString())"
@@ -365,6 +365,14 @@ Class StatusItemInventoryWindow : WindowBase {
                         $this.PagingChevronUpDirty = $false
                     }
                 }
+            }
+            If($this.ActiveItemBlinking -EQ $false) {
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+                    Blink = $true
+                }
+                $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
+                $this.ItemsListDirty = $true
+                $this.ActiveItemBlinking = $true
             }
             If($this.ItemsListDirty -EQ $true) {
                 $this.WriteItemLabels()

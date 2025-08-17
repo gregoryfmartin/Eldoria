@@ -835,6 +835,8 @@ $Script:BATLut = @(
             $Script:TheStatusItemInventoryWindow.Draw()
             $Script:TheStatusItemHeaderWindow.Draw()
 
+            $Script:TheStatusItemInventoryWindow.HandleInput()
+
             # THIS ISN'T SUPPOSED TO HAPPEN, BUT I NEED TO DO IT FOR TESTING
             # $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
             
