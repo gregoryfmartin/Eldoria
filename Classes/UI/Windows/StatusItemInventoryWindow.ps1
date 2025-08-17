@@ -23,7 +23,7 @@ Class StatusItemInventoryWindow : WindowBase {
     Static [String]$PagingChevronUpCharacter   = "`u{2B61}"
     Static [String]$PagingChevronDownCharacter = "`u{2B63}"
     Static [String]$PagingChevronBlankCharater = ' '
-    Static [String]$ItemLabelBlank             = ' ' * (([StatusItemInventoryWindow]::WindowRBColumn - [StatusItemInventoryWindow]::WindowLTColumn) - 2)
+    Static [String]$ItemLabelBlank             = ' ' * (([StatusItemInventoryWindow]::WindowRBColumn - [StatusItemInventoryWindow]::WindowLTColumn) - 4)
     Static [String]$ZpLineBlank                = ' ' * (([StatusItemInventoryWindow]::WindowRBColumn - [StatusItemInventoryWindow]::WindowLTColumn) - 1)
     Static [String]$ZeroPagePrompt             = 'You have no items in your inventory.'
 
