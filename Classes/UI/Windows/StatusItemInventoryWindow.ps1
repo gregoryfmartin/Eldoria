@@ -366,7 +366,7 @@ Class StatusItemInventoryWindow : WindowBase {
                     If($this.PagingChevronUpVisible -EQ $true) {
                         Write-Host "$($this.PagingChevronUpBlank.ToAnsiControlSequenceString())"
                         $this.PagingChevronUpVisible = $false
-                        $this.PagingChevronUpDirty = $true
+                        $this.PagingChevronUpDirty   = $true
                     }
                     If($this.PagingChevronDownVisible -EQ $false) {
                         $this.PagingChevronDownVisible = $true
@@ -394,7 +394,7 @@ Class StatusItemInventoryWindow : WindowBase {
                     If($this.PagingChevronDownVisible -EQ $true) {
                         Write-Host "$($this.PagingChevronDownBlank.ToAnsiControlSequenceString())"
                         $this.PagingChevronDownVisible = $false
-                        $this.PagingChevronDownDirty = $true
+                        $this.PagingChevronDownDirty   = $true
                     }
                     If($this.PagingChevronUpVisible -EQ $false) {
                         $this.PagingChevronUpVisible = $true
@@ -410,7 +410,8 @@ Class StatusItemInventoryWindow : WindowBase {
                     Blink = $true
                 }
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
-                $this.ItemsListDirty = $true
+
+                $this.ItemsListDirty     = $true
                 $this.ActiveItemBlinking = $true
             }
             If($this.ItemsListDirty -EQ $true) {
