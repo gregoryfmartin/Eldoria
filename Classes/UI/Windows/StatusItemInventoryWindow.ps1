@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class StatusItemInventoryWindow : WindowBase {
-    Static [Int]$WindowLTRow    = 7
+    Static [Int]$WindowLTRow    = 5
     Static [Int]$WindowLTColumn = 13
     Static [Int]$WindowRBRow    = 22
     Static [Int]$WindowRBColumn = 68
@@ -23,7 +23,9 @@ Class StatusItemInventoryWindow : WindowBase {
     Static [String]$PagingChevronUpCharacter   = "`u{2B61}"
     Static [String]$PagingChevronDownCharacter = "`u{2B63}"
     Static [String]$PagingChevronBlankCharater = ' '
-    Static [String]$ItemLabelBlank             = ' ' * ([StatusItemInventoryWindow]::WindowRBColumn - [StatusItemInventoryWindow]::WindowLTColumn)
+    Static [String]$ItemLabelBlank             = ' ' * (([StatusItemInventoryWindow]::WindowRBColumn - [StatusItemInventoryWindow]::WindowLTColumn) - 2)
+    Static [String]$ZpLineBlank                = ' ' * (([StatusItemInventoryWindow]::WindowRBColumn - [StatusItemInventoryWindow]::WindowLTColumn) - 1)
+    Static [String]$ZeroPagePrompt             = 'You have no items in your inventory.'
 
     [Boolean]$DebugMode
     [Boolean]$PlayerChevronDirty
@@ -48,8 +50,6 @@ Class StatusItemInventoryWindow : WindowBase {
     [Int]$NumPages
     [Int]$CurrentPage
     [Int]$ActiveIChevronIndex
-
-    [String]$ZeroPagePrompt
 
     [List[ValueTuple[[MapTileObject], [Int]]]]$PageRefs
     [List[ValueTuple[[ATString], [Boolean]]]]$IChevrons
@@ -96,7 +96,6 @@ Class StatusItemInventoryWindow : WindowBase {
         $this.NumPages                 = 1
         $this.CurrentPage              = 1
         $this.ActiveIChevronIndex      = 0
-        $this.ZeroPagePrompt           = 'You have no items in your inventory.'
         $this.PageRefs                 = [List[ValueTuple[[MapTileObject], [Int]]]]::new()
         $this.IChevrons                = [List[ValueTuple[[ATString], [Boolean]]]]::new()
         $this.ItemLabels               = [List[ATString]]::new()
@@ -210,8 +209,8 @@ Class StatusItemInventoryWindow : WindowBase {
             $this.ZpPromptDirty    = $true
             $this.ZpBlankedDirty   = $true
             
-            If([StatusItemInventoryWindow]::MoronCounter -LT 20) {
-                [StatusItemInventoryWindow]::MoronCounter++
+            If($this.MoronCounter -LT 20) {
+                $this.MoronCounter++
             } Else {
                 $this.MoronPageActive = $true
             }
@@ -234,8 +233,264 @@ Class StatusItemInventoryWindow : WindowBase {
             $this.CurrentPageDirty = $false
         }
     }
+    
+    [Void]WriteItemLabels() {
+        Foreach($I in $this.ItemLabelBlanks) {
+            Write-Host "$($I.ToAnsiControlSequenceString())"
+        }
+        Foreach($I in $this.ItemLabels) {
+            Write-Host "$($I.ToAnsiControlSequenceString())"
+        }
+    }
+    
+    [Void]WriteZeroInventoryPage() {
+        If($this.ZpBlankedDirty -EQ $true) {
+            Foreach($A in 1..($this.Height - 1)) {
+                [ATString]$B = [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = [CCTextDefault24]::new()
+                        Coordinates = [ATCoordinates]@{
+                            Row = $this.LeftTop.Row + $A
+                            Column = $this.LeftTop.Column + 1
+                        }
+                    }
+                    UserData = [StatusItemInventoryWindow]::ZpLineBlank
+                    UseATReset = $true
+                }
+                Write-Host "$($B.ToAnsiControlSequenceString())"
+            }
+            $this.ZpBlankedDirty = $false
+        }
+        If($this.ZpPromptDirty -EQ $true) {
+            [ATString]$A = [ATString]@{
+                Prefix = [ATStringPrefix]@{
+                    ForegroundColor = [CCTextDefault24]::new()
+                    Coordinates = [ATCoordinates]@{
+                        Row = $this.LeftTop.Row + ($this.Height / 2)
+                        Column = $this.LeftTop.Column + (($this.Width / 2) - ([StatusItemInventoryWindow]::ZeroPagePrompt.Length / 2))
+                    }
+                }
+                UserData = "$([StatusItemInventoryWindow]::ZeroPagePrompt)"
+                UseATReset = $true
+            }
+            Write-Host "$($A.ToAnsiControlSequenceString())"
+            $this.ZpPromptDirty = $false
+        }
+    }
+    
+    [Void]WriteMoronPage() {}
+    
+    [Void]ResetIChevronPosition() {
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2          = $false
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData = [StatusItemInventoryWindow]::IChevronBlankCharacter
+        Try {
+            $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+            $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        } Catch {}
+        $this.ActiveIChevronIndex                                      = 0
+        $this.IChevrons[$this.ActiveIChevronIndex].Item2               = $true
+        $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData      = [StatusItemInventoryWindow]::IChevronCharacter
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{
+            Blink = $true
+        }
+        $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+        $this.PlayerChevronDirty                                           = $true
+        $this.ActiveItemBlinking                                           = $false
+        $this.ItemDescDirty                                                = $true
+    }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
+        
+        If($this.BookDirty -EQ $true) {
+            $this.CalculateNumPages()
+            $this.BookDirty = $false
+        }
+        If($this.CurrentPageDirty -EQ $true) {
+            $this.PopulatePage()
+        }
+        If($this.ZeroPageActive -EQ $true) {
+            If($this.MoronPageActive -EQ $true) {
+                $this.WriteMoronPage()
+            } Else {
+                $this.WriteZeroInventoryPage()
+            }
+        } Else {
+            If(($this.PlayerChevronVisible -EQ $true) -AND ($this.PlayerChevronDirty -EQ $true)) {
+                Foreach($IC in $this.IChevrons) {
+                    Write-Host "$($IC.Item1.ToAnsiControlSequenceString())"
+                }
+                $this.PlayerChevronDirty = $false
+            }
+            If($this.NumPages -GT 1) {
+                If($this.CurrentPage -EQ 1) {
+                    If($this.PagingChevronUpVisible -EQ $true) {
+                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronUpBlank.ToAnsiControlSequenceString())"
+                        $this.PagingChevronUpVisible = $false
+                        $this.PagingChevronUpDirty = $true
+                    }
+                    If($this.PagingChevronDownVisible -EQ $false) {
+                        $this.PagingChevronDownVisible = $true
+                    }
+                    If(($this.PagingChevronDownVisible -EQ $true) -AND ($this.PagingChevronDownDirty -EQ $true)) {
+                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronDown.ToAnsiControlSequenceString())"
+                        $this.PagingChevronDownDirty = $false
+                    }
+                } Elseif(($this.CurrentPage -GT 1) -AND ($this.CurrentPage -LT $this.NumPages)) {
+                    If($this.PagingChevronUpVisible -EQ $false) {
+                        $this.PagingChevronUpVisible = $true
+                    }
+                    If($this.PagingChevronDownVisible -EQ $false) {
+                        $this.PagingChevronDownVisible = $true
+                    }
+                    If(($this.PagingChevronDownVisible -EQ $true) -AND ($this.PagingChevronDownDirty -EQ $true)) {
+                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronDown.ToAnsiControlSequenceString())"
+                        $this.PagingChevronDownDirty = $false
+                    }
+                    If(($this.PagingChevronUpVisible -EQ $true) -AND ($this.PagingChevronUpDirty -EQ $true)) {
+                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronUp.ToAnsiControlSequenceString())"
+                        $this.PagingChevronUpDirty = $false
+                    }
+                } Elseif($this.CurrentPage -GE $this.NumPages) {
+                    If($this.PagingChevronDownVisible -EQ $true) {
+                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronDownBlank.ToAnsiControlSequenceString())"
+                        $this.PagingChevronDownVisible = $false
+                        $this.PagingChevronDownDirty = $true
+                    }
+                    If($this.PagingChevronUpVisible -EQ $false) {
+                        $this.PagingChevronUpVisible = $true
+                    }
+                    If(($this.PagingChevronUpVisible -EQ $true) -AND ($this.PagingChevronUpDirty -EQ $true)) {
+                        Write-Host "$([StatusItemInventoryWindow]::PagingChevronUp.ToAnsiControlSequenceString())"
+                        $this.PagingChevronUpDirty = $false
+                    }
+                }
+            }
+            If($this.ItemsListDirty -EQ $true) {
+                $this.WriteItemLabels()
+                Write-Host "$([ATControlSequences]::CursorHide)"
+                $this.ItemsListDirty = $false
+            }
+            
+        }
+    }
+    
+    [Void]HandleInput() {
+        $KeyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+
+        Switch($KeyCap.VirtualKeyCode) {
+            27 {  # ESCAPE
+                # THIS LOGIC NEEDS TO CHANGE TO GIVE INPUT BACK TO THE MAIN MENU
+                <#
+                $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+                $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
+                #>
+                
+                $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
+                
+                Break
+            }
+
+            38 {  # UP ARROW
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
+                If(($this.ActiveIChevronIndex - 1) -GE 0) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusItemInventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                    $this.ActiveIChevronIndex--
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusItemInventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                }
+                $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
+            }
+
+            40 {  # DOWN ARROW
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
+                If(($this.ActiveIChevronIndex + 1) -LT $this.PageRefs.Count) {
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $false
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusItemInventoryWindow]::IChevronBlankCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecorationNone]::new()
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+                    $this.ActiveIChevronIndex++
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item2                   = $true
+                    $this.IChevrons[$this.ActiveIChevronIndex].Item1.UserData          = [StatusItemInventoryWindow]::IChevronCharacter
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations     = [ATDecoration]@{
+                        Blink = $true
+                    }
+                    $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.ForegroundColor = [CCApplePinkLight24]::new()
+                }
+                $this.PlayerChevronDirty = $true
+                $this.ActiveItemBlinking = $false
+                $this.ItemDescDirty      = $true
+            }
+
+            33 {  # PAGE UP
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
+                $this.TurnPageUp()
+            }
+
+            34 {  # PAGE DOWN
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
+                $this.TurnPageDown()
+            }
+
+            <#
+            83 {  # S
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+                
+                Switch($this.CurrentPage) {
+                    1 {
+                        [ItemRemovalStatus]$a = $Script:ThePlayer.RemoveInventoryItemByIndex($this.ActiveIChevronIndex)
+                        If($a -EQ [ItemRemovalStatus]::Success) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 * 2), 250)
+                            $this.BookDirty        = $true
+                            $this.CurrentPageDirty = $true
+
+                            Return
+                        }
+                        [Console]::Beep(493.9, 250)
+                        [Console]::Beep((493.9 / 2), 250)
+                    }
+
+                    { $_ -GT 1 } {
+                        [Int]$a               = (($this.ItemsPerPage * ($this.CurrentPage - 1)) + $this.ActiveIChevronIndex)
+                        [ItemRemovalStatus]$b = $Script:ThePlayer.RemoveInventoryItemByIndex($a)
+                        If($b -EQ [ItemRemovalStatus]::Success) {
+                            [Console]::Beep(493.9, 250)
+                            [Console]::Beep((493.9 * 2), 250)
+                            $this.BookDirty        = $true
+                            $this.CurrentPageDirty = $true
+
+                            Return
+                        }
+                        [Console]::Beep(493.9, 250)
+                        [Console]::Beep((493.9 / 2), 250)
+                    }
+                }
+            }
+            #>
+        }    
     }
 }

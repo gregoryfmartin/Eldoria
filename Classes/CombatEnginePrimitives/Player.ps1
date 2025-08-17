@@ -49,6 +49,11 @@ Class Player : BattleEntity {
             [EquipmentSlot]::Pauldron  = $null
             [EquipmentSlot]::Weapon    = $null
         }
+        
+        $this.ItemInventory.AddItem([MTOLadder]::new(), 10)
+        $this.ItemInventory.AddItem([MTOApple]::new(), 15)
+        $this.ItemInventory.AddItem([MTOBacon]::new(), 5)
+        $this.ItemInventory.AddItem([MTORope]::new(), 50)
     }
 
     <#

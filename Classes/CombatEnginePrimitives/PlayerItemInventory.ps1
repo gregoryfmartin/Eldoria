@@ -14,98 +14,112 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
-    PlayerItemInventory() {}
+    PlayerItemInventory() : base() {}
+    
+    [Int]IndexOfItem(
+        [MapTileObject]$Item
+    ) {
+        For([Int]$I = 0; $I -LT $this.Count; $I++) {
+            If($this[$I].Item1 -EQ $Item) {
+                Return $I
+            }
+        }
+        
+        Return -1
+    }
 
     [Boolean]AddItem(
         [MapTileObject]$Item,
         [Int]$Qty = 1
     ) {
-        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
-
-        If($ExistingItem) {
-            If(($ExistingItem.Item2 + $Qty) -GT 99) {
+        $Idx = $this.IndexOfItem($Item)
+        
+        If($Idx -GE 0) {
+            $Temp = $this[$Idx]
+            
+            If(($Temp.Item2 + $Qty) -GT 99) {
                 Return $false
             }
-            $ExistingItem.Item2 += $Qty
+            
+            $Temp.Item2 = $Temp.Item2 + $Qty
+            
+            $this[$Idx] = $Temp
+            
+            Return $true
         } Else {
-            $this.Add([ValueTuple]::Create($Item, $Qty))
+            $this.Add([ValueTuple[[MapTileObject], [Int]]]::new($Item, $Qty))
+            
+            Return $true
         }
-
-        Return $true
     }
 
     [ItemRemovalStatus]RemoveItem(
         [MapTileObject]$Item,
         [Int]$Qty = 1
     ) {
-        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
-
-        If($null -EQ $ExistingItem) {
+        $Idx = $this.IndexOfItem($Item)
+        
+        If($Idx -LT 0) {
             Return [ItemRemovalStatus]::FailGeneral
         }
-
+        
         If($Item.KeyItem -EQ $true) {
             Return [ItemRemovalStatus]::FailKeyItem
         }
-
-        $NewQty = $ExistingItem.Item2 - $Qty
+        
+        $Temp = $this[$Idx]
+        $NewQty = $Temp.Item2 - $Qty
+        
         If($NewQty -LE 0) {
-            $this.Remove($ExistingItem)
+            $this.RemoveAt($Idx)
         } Else {
-            $ExistingItem.Item2 = $NewQty
+            $Temp.Item2 = $NewQty
+            $this[$Idx] = $Temp
         }
-
+        
         Return [ItemRemovalStatus]::Success
     }
 
     [Int]GetItemQuantity(
         [MapTileObject]$Item
     ) {
-        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
-
-        If($null -EQ $ExistingItem) {
+        $Idx = $this.IndexOfItem($Item)
+        
+        If($Idx -LT 0) {
             Return 0
         }
-
-        Return $ExistingItem.Item2
+        
+        Return $this[$Idx].Item2
     }
 
     [Boolean]HasItem(
         [MapTileObject]$Item
     ) {
-        $ExistingItem = $this | Where-Object { $_.Item1 -EQ $Item }
-
-        Return ($null -NE $ExistingItem)
+        Return ($this.IndexOfItem($Item) -GE 0)
     }
 
     [ArrayList]GetSortedItems() {
-        $SortedItems = [ArrayList]::new()
-
-        Foreach($Item in $this) {
-            $SortedItems.Add([PSCustomObject]@{
-                Item     = $Item.Item1
-                Quantity = $Item.Item2
-            })
-        }
-
-        $SortedItems.Sort(
-            {
-                Param($A, $B)
-
-                $B.Item.Name.CompareTo($A.Item.Name)
+        [ArrayList]$Al = [ArrayList]::new()
+        
+        $Projected = $this | ForEach-Object {
+            [PSCustomObject]@{
+                Item = $_.Item1
+                Quantity = $_.Item2
             }
-        )
-
-        Return $SortedItems
+        } | Sort-Object { $_.Item.Name } -Descending
+        
+        [Void]$Al.AddRange($Projected)
+        
+        Return $Al
     }
 
     [Void]Sort() {
-        $this.Sort(
-            {
-                Param($A, $B)
-
-                $B.Item1.Name.CompareTo($A.Item1.Name)
-            }
-        )
+        $Sorted = $this | Sort-Object { $_.Item1.MapObjName }
+        
+        $this.Clear()
+        
+        Foreach($T in $Sorted) {
+            [Void]$this.Add([ValueTuple[[MapTileObject], [Int]]]::new($T.Item1, $T.Item2))
+        }
     }
 }
