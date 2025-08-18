@@ -1,4 +1,5 @@
 using namespace System
+using namespace System.Collections.Generic
 
 Set-StrictMode -Version Latest
 
@@ -10,7 +11,7 @@ Set-StrictMode -Version Latest
 #
 ###############################################################################
 
-Class StatusItemInventoryContextADialog : WindowBase {
+Class StatusItemInventoryContextDialog : WindowBase {
     Static [Int]$WindowLTRow    = 1
     Static [Int]$WindowLTColumn = 1
     Static [Int]$WindowRBRow    = 1
@@ -31,7 +32,7 @@ Class StatusItemInventoryContextADialog : WindowBase {
     [List[ATString]]$OptionsActual
     [List[ValueTuple[[ATString], [Boolean]]]]$ChevronsActual
 
-    StatusItemInventoryContextADialog() : base() {
+    StatusItemInventoryContextDialog() : base() {
         $this.LeftTop = [ATCoordinates]@{
             Row    = [StatusItemInventoryContextDialog]::WindowLTRow
             Column = [StatusItemInventoryContextDialog]::WindowLTColumn
