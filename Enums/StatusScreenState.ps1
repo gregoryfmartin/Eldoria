@@ -44,10 +44,10 @@ Enum StatusScreenState {
     MainMenu
     Status
     Items
-    ItemsContextA
-    ItemsContextB
+    ItemDropConfirm
     Equip
     Magic
     Save
     Quit
 }
+

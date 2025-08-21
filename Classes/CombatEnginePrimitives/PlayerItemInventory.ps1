@@ -79,7 +79,7 @@ Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
             Return [ItemRemovalStatus]::FailKeyItem
         }
         
-        $Temp = $this[$Idx]
+        $Temp   = $this[$Idx]
         $NewQty = $Temp.Item2 - $Qty
         
         If($NewQty -LE 0) {
@@ -88,6 +88,24 @@ Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
             $Temp.Item2 = $NewQty
             $this[$Idx] = $Temp
         }
+        
+        Return [ItemRemovalStatus]::Success
+    }
+    
+    [ItemRemovalStatus]RemoveAllItem(
+        [MapTileObject]$Item
+    ) {
+        $Idx = $this.IndexOfItem($Item)
+        
+        If($Idx -LT 0) {
+            Return [ItemRemovalStatus]::FailGeneral
+        }
+        
+        If($Item.KeyItem -EQ $true) {
+            Return [ItemRemovalStatus]::FailKeyItem
+        }
+        
+        $this.RemoveAt($Idx)
         
         Return [ItemRemovalStatus]::Success
     }

@@ -30,7 +30,7 @@ Class PSConfirmDialog : WindowBase {
     Static [Int]$LineActionPrompt = 11
     
     Static [String]$WindowTitle         = 'Confirm Character'
-    Static [String]$WindowLineBlankData = ' ' * ([PSConfirmDialog]::WindowRBColumn - [PSConfirmDialog]::WindowLtColumn)
+    Static [String]$WindowLineBlankData = ' ' * ([PSConfirmDialog]::WindowRBColumn - [PSConfirmDialog]::WindowLTColumn)
     
     # THIS MAY NOT EVEN BE NEEDED GIVEN THAT NOTHING NEEDS REDRAWN IN THE WINDOW DYNAMICALLY?
     # Static [String]$LineBlankData = ' ' * 16

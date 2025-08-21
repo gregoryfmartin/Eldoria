@@ -428,9 +428,21 @@ Class StatusItemInventoryWindow : WindowBase {
     }
     
     [Void]HandleInput() {
-        $KeyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')
 
         Switch($KeyCap.VirtualKeyCode) {
+            13 { # ENTER
+                If($this.ZeroPageActive -EQ $true) {
+                    Return
+                }
+
+                $Script:TheItemToDrop = $this.PageRefs[$this.ActiveIChevronIndex].Item1
+                $Script:TheBufferManager.CopyActiveToBufferB()
+                $Script:TheStatusScreenState = [StatusScreenState]::ItemDropConfirm
+
+                Break
+            }
+
             27 {  # ESCAPE
                 $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
                 
