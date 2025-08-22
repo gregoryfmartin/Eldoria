@@ -404,6 +404,15 @@ Class StatusItemInventoryWindow : WindowBase {
                         $this.PagingChevronUpDirty = $false
                     }
                 }
+            } Elseif($this.NumPages -EQ 1) {
+                If($this.PagingChevronUpVisible -EQ $true) {
+                    $this.PagingChevronUpVisible = $false
+                    Write-Host "$($this.PagingChevronUpBlank.ToAnsiControlSequenceString())"
+                }
+                If($this.PagingChevronDownVisible -EQ $true) {
+                    $this.PagingChevronDownVisible = $false
+                    Write-Host "$($this.PagingChevronDownBlank.ToAnsiControlSequenceString())"
+                }
             }
             If($this.ActiveItemBlinking -EQ $false) {
                 $this.ItemLabels[$this.ActiveIChevronIndex].Prefix.Decorations = [ATDecoration]@{

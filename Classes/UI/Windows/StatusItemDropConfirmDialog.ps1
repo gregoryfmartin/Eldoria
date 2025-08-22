@@ -100,7 +100,7 @@ Class StatusItemDropConfirmDialog : WindowBase {
                     $Script:ThePlayer.ItemInventory.RemoveAllItem($ItemToRemove.Item1)
                 }
 
-                $Script:TheBufferManager.RestoreBufferBToActive()
+                # $Script:TheBufferManager.RestoreBufferBToActive()
                 
                 $Script:TheStatusScreenState                          = [StatusScreenState]::Items
                 $Script:TheStatusItemInventoryWindow.BookDirty        = $true
@@ -122,6 +122,10 @@ Class StatusItemDropConfirmDialog : WindowBase {
                 $Script:TheStatusItemInventoryWindow.Draw()
                 $Script:TheStatusItemHeaderWindow.Draw()
                 
+                Break
+            }
+            
+            Default {
                 Break
             }
         }
