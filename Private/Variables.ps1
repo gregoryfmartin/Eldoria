@@ -566,12 +566,15 @@ $Script:BATLut = @(
 }
 
 [ScriptBlock]$Script:TheGamePlayScreenState = {
+    <#
     If($null -NE $Script:TheInventoryWindow) {
         $Script:TheInventoryWindow = $null
     }
     If($null -NE $Script:TheVerticalInventoryWindow) {
         $Script:TheVerticalInventoryWindow = $null
     }
+    #>
+    
     If($null -NE $Script:TheBattleManager) {
         $Script:TheBattleManager.Cleanup()
         $Script:TheBattleManager = $null
@@ -605,6 +608,18 @@ $Script:BATLut = @(
     }
     If($null -NE $Script:ThePlayerStatusSummaryWindow) {
         $Script:ThePlayerStatusSummaryWindow = $null
+    }
+    If($null -NE $Script:TheStatusItemInventoryWindow) {
+        $Script:TheStatusItemInventoryWindow = $null
+    }
+    If($null -NE $Script:TheStatusItemHeaderWindow) {
+        $Script:TheStatusItemHeaderWindow = $null
+    }
+    If($null -NE $Script:TheStatusItemConfirmDropDialog) {
+        $Script:TheStatusItemConfirmDropDialog = $null
+    }
+    If($null -NE $Script:TheItemToDrop) {
+        $Script:TheItemToDrop = $null
     }
 
     #######################################################################
