@@ -22,7 +22,7 @@ Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
         [MapTileObject]$Item
     ) {
         For([Int]$I = 0; $I -LT $this.Count; $I++) {
-            If($this[$I].Item1 -EQ $Item) {
+            If($this[$I].Item1.MapObjName -EQ $Item.MapObjName) {
                 Return $I
             }
         }

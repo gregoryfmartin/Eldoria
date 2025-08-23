@@ -35,7 +35,7 @@ Class EnemyBattleEntity : BattleEntity {
                 $Script:TheBattleStatusMessageWindow.WriteItemsFoundMessage($ItemNames)
                 $Script:TheBattleStatusMessageWindow.Draw()
                 Foreach($a in $Opponent.SpoilsItems) {
-                    $Player.Inventory.Add($a) | Out-Null
+                    $Player.ItemInventory.AddItem($a, 1) | Out-Null
                 }
             }
         }
