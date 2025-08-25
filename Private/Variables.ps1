@@ -802,8 +802,21 @@ $Script:BATLut = @(
         ([StatusScreenState]::MainMenu) {
             If($null -EQ $Script:ThePlayerStatusMainMenu) {
                 $Script:ThePlayerStatusMainMenu = [PlayerStatusMainMenu]::new()
+                Write-Host "$([ATControlSequences]::CursorHide)"
             }
-
+            
+            If($null -NE $Script:TheStatusItemInventoryWindow) {
+                $Script:TheBufferManager.ClearArea($Script:ItemClearAreaTop - 1,
+                    $Script:ItemClearAreaLeft,
+                    $Script:ItemClearAreaRight,
+                    $Script:ItemClearAreaBottom)
+                $Script:TheStatusItemInventoryWindow = $null
+                $Script:TheStatusItemHeaderWindow = $null
+                $Script:ThePlayerStatusMainMenu.SetActiveChevronColor()
+                $Script:ThePlayerStatusMainMenu.ChevronDirty = $true
+                Write-Host "$([ATControlSequences]::CursorHide)"
+            }
+            
             $Script:ThePlayerStatusMainMenu.Draw()
             $Script:ThePlayerStatusMainMenu.HandleInput()
 
@@ -1305,9 +1318,9 @@ $Script:TheCommandTable = @{
     'm'         = $Script:TheMoveCommand
     'look'      = $Script:TheLookCommand
     'l'         = $Script:TheLookCommand
-    'inventory' = $Script:TheInventoryCommand
-    'i'         = $Script:TheInventoryCommand
-    'inv'       = $Script:TheInventoryCommand
+    # 'inventory' = $Script:TheInventoryCommand
+    # 'i'         = $Script:TheInventoryCommand
+    # 'inv'       = $Script:TheInventoryCommand
     'examine'   = $Script:TheExamineCommand
     'exa'       = $Script:TheExamineCommand
     'get'       = $Script:TheGetCommand

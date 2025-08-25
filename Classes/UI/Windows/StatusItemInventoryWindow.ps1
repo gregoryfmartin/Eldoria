@@ -154,13 +154,13 @@ Class StatusItemInventoryWindow : WindowBase {
             $this.IChevrons.Add([ValueTuple]::Create(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCTextDefault24]::new()
+                        ForegroundColor = [CCAppleVGreenLight24]::new()
                         Coordinates     = [ATCoordinates]@{
                             Row    = ($this.LeftTop.Row + 1) + $I
                             Column = $this.LeftTop.Column + 1
                         }
                     }
-                    UserData   = If($I -EQ 0) { [StatusItemInventoryWindow]::IChevronCharacter } Else { [StatusItemInventoryWindow]::IChevronBlankCharacter }
+                    UserData   = "$(If($I -EQ 0) { [StatusItemInventoryWindow]::IChevronCharacter } Else { [StatusItemInventoryWindow]::IChevronBlankCharacter })"
                     UseATReset = $true
                 },
                 $I -EQ 0

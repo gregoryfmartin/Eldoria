@@ -37,7 +37,6 @@ Class PlayerStatusMainMenu : WindowBase {
     
     [Boolean]$ChevronDirty
     [Boolean]$MenuLabelsDirty
-    [Boolean]$CursorHidden
     
     [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons
     [List[ATString]]$MenuLabels
@@ -59,10 +58,10 @@ Class PlayerStatusMainMenu : WindowBase {
         
         $this.ChevronDirty       = $true
         $this.MenuLabelsDirty    = $true
-        $this.CursorHidden = $false
 
         $this.CreateChevrons()
         $this.CreateMenuLabels()
+        $this.SetActiveChevronColor()
     }
 
     [Void]CreateChevrons() {
@@ -86,6 +85,14 @@ Class PlayerStatusMainMenu : WindowBase {
                 )
             )
         }
+    }
+    
+    [Void]SetActiveChevronColor() {
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
+    }
+    
+    [Void]UnsetActiveChevronColor() {
+        $this.Chevrons[$this.ActiveChevronIndex].Item1.Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
     }
 
     [Void]CreateMenuLabels() {
@@ -124,11 +131,6 @@ Class PlayerStatusMainMenu : WindowBase {
             }
             $this.MenuLabelsDirty = $false
         }
-        
-        If($this.CursorHidden -EQ $false) {
-            Write-Host "$([ATControlSequences]::CursorHide)"
-            $this.CursorHidden = $true
-        }
     }
 
     [Void]HandleInput() {
@@ -155,6 +157,7 @@ Class PlayerStatusMainMenu : WindowBase {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronCharacter
                 }
+                $this.SetActiveChevronColor()
                 $this.ChevronDirty = $true
 
                 Break
@@ -181,6 +184,7 @@ Class PlayerStatusMainMenu : WindowBase {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
                     $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronCharacter
                 }
+                $this.SetActiveChevronColor()
                 $this.ChevronDirty = $true
 
                 Break
@@ -205,6 +209,10 @@ Class PlayerStatusMainMenu : WindowBase {
 
                     1 { # ITEMS
                         $Script:TheStatusScreenState = [StatusScreenState]::Items
+                        
+                        $this.UnsetActiveChevronColor()
+                        $this.ChevronDirty = $true
+                        $this.Draw()
 
                         Break
                     }
