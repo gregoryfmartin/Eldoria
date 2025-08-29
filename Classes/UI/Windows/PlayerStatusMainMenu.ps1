@@ -21,25 +21,9 @@ Class PlayerStatusMainMenu : WindowBase {
 
     Static [String]$WindowTitle = 'Menu'
 
-    Static [String]$ChevronCharacter      = '❱'
-    Static [String]$ChevronBlankCharacter = ' '
-
-    Static [String[]]$MenuItems = @(
-        'Status',
-        'Items',
-        'Equip',
-        'Magic',
-        'Save',
-        'Quit'
-    )
-
     [Int]$ActiveChevronIndex
     
-    [Boolean]$ChevronDirty
-    [Boolean]$MenuLabelsDirty
-    
-    [List[ValueTuple[[ATString], [Boolean]]]]$Chevrons
-    [List[ATString]]$MenuLabels
+    [List[UIEMenuItem]]$MenuItems
 
     PlayerStatusMainMenu() : base() {
         $this.LeftTop = [ATCoordinates]@{
@@ -56,136 +40,97 @@ Class PlayerStatusMainMenu : WindowBase {
 
         $this.ActiveChevronIndex = 0
         
-        $this.ChevronDirty       = $true
-        $this.MenuLabelsDirty    = $true
-
-        $this.CreateChevrons()
-        $this.CreateMenuLabels()
-        $this.SetActiveChevronColor()
-    }
-
-    [Void]CreateChevrons() {
-        $this.Chevrons = [List[ValueTuple[[ATString], [Boolean]]]]::new()
+        $this.MenuItems = [List[UIEMenuItem]]::new()
         
-        For([Int]$i = 0; $i -LT [PlayerStatusMainMenu]::MenuItems.Count; $i++) {
-            $this.Chevrons.Add(
-                [ValueTuple]::Create(
-                    [ATString]@{
-                        Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [CCTextDefault24]::new()
-                            Coordinates     = [ATCoordinates]@{
-                                Row    = $this.LeftTop.Row + $i + 1
-                                Column = $this.LeftTop.Column + 1
-                            }
-                        }
-                        UserData   = "$(If($i -EQ 0) { [PlayerStatusMainMenu]::ChevronCharacter } Else { [PlayerStatusMainMenu]::ChevronBlankCharacter })"
-                        UseATReset = $true
-                    },
-                    $($i -EQ 0)
-                )
-            )
-        }
+        $this.InitializeMenuItems()
     }
-    
+
     [Void]SetActiveChevronColor() {
-        $this.Chevrons[$this.ActiveChevronIndex].Item1.Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
+        $this.MenuItems[$this.ActiveChevronIndex].Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
     }
     
     [Void]UnsetActiveChevronColor() {
-        $this.Chevrons[$this.ActiveChevronIndex].Item1.Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
+        $this.MenuItems[$this.ActiveChevronIndex].Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
     }
-
-    [Void]CreateMenuLabels() {
-        $this.MenuLabels = [List[ATString]]::new()
+    
+    [Void]InitializeMenuItems() {
+        $MenuData = @(
+            @{ Label = 'Status'; Action = { $Script:TheStatusScreenState = [StatusScreenState]::Status } },
+            @{ Label = 'Items';  Action = { 
+                $Script:TheStatusScreenState = [StatusScreenState]::Items
+                
+                $this.UnsetActiveChevronColor()
+                $this.MenuItems[$this.ActiveChevronIndex].Dirty = $true
+                $this.Draw()
+            } },
+            @{ Label = 'Equip';  Action = {} },
+            @{ Label = 'Magic';  Action = {} },
+            @{ Label = 'Save';   Action = {} },
+            @{ Label = 'Quit';   Action = {} }
+        )
         
-        For([Int]$i = 0; $i -LT [PlayerStatusMainMenu]::MenuItems.Count; $i++) {
-            $this.MenuLabels.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [CCTextDefault24]::new()
-                        Coordinates     = [ATCoordinates]@{
-                            Row    = $this.LeftTop.Row + $i + 1
-                            Column = $this.LeftTop.Column + 3
-                        }
-                    }
-                    UserData   = [PlayerStatusMainMenu]::MenuItems[$i]
-                    UseATReset = $true
+        For([Int]$A = 0; $A -LT $MenuData.Count; $A++) {
+            [ATCoordinates]$Pos = [ATCoordinates]@{
+                Row    = $this.LeftTop.Row + $A + 1
+                Column = $this.LeftTop.Column + 1
+            }
+            
+            [UIEMenuItem]$Item = [UIEMenuItem]@{
+                Prefix = [ATStringPrefix]@{
+                    Coordinates = $Pos
                 }
-            )
+                Action   = $MenuData[$A].Action
+            }
+            $Item.SetUserData("$($MenuData[$A].Label)")
+            
+            If($A -EQ 0) {
+                $Item.ToggleSelected()
+            } Else {
+                $Item.Update()
+            }
+            
+            $Item.Dirty = $true
+            
+            $this.MenuItems.Add($Item)
         }
     }
 
     [Void]Draw() {
         ([WindowBase]$this).Draw()
-
-        If($this.ChevronDirty -EQ $true) {
-            Foreach($C in $this.Chevrons) {
-                Write-Host "$($C.Item1.ToAnsiControlSequenceString())"
-            }
-            $this.ChevronDirty = $false
+        
+        Foreach($Item in $this.MenuItems) {
+            # DRAW CALLS WRITE-HOST ANYWAY, SO THERE'S NO NEED TO CALL IT HERE
+            $Item.Draw()
         }
-
-        If($this.MenuLabelsDirty -EQ $true) {
-            Foreach($L in $this.MenuLabels) {
-                Write-Host "$($L.ToAnsiControlSequenceString())"
-            }
-            $this.MenuLabelsDirty = $false
+    }
+    
+    [Void]PlayMoveSound() {
+        Try {
+            $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
+            $Script:TheSfxMPlayer.Play()
+        } Catch {
+            # DO NOTHING
         }
     }
 
     [Void]HandleInput() {
         $keyCap = $(Get-Host).UI.RawUI.ReadKey('IncludeKeyDown, NoEcho')
+        
         Switch($keyCap.VirtualKeyCode) {
             38 { # UP ARROW
-                Try {
-                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
-                    $Script:TheSfxMPlayer.Play()
-                } Catch {
-                    Write-Host 'Blew up'
-                }
-
-                If($this.ActiveChevronIndex -EQ 0) {
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronBlankCharacter
-                    $this.ActiveChevronIndex                                = [PlayerStatusMainMenu]::MenuItems.Count - 1
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronCharacter
-                } Elseif(($this.ActiveChevronIndex - 1) -GE 0) {
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronBlankCharacter
-                    $this.ActiveChevronIndex--
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronCharacter
-                }
-                $this.SetActiveChevronColor()
-                $this.ChevronDirty = $true
+                $this.MenuItems[$this.ActiveChevronIndex].ToggleSelected() # SHOULD SET THE CURRENT ITEM TO FALSE
+                $this.ActiveChevronIndex = ($this.ActiveChevronIndex -EQ 0 ? $this.MenuItems.Count - 1 : $this.ActiveChevronIndex - 1)
+                $this.MenuItems[$this.ActiveChevronIndex].ToggleSelected() # SHOULD SET THE NEW ITEM TO TRUE
+                $this.PlayMoveSound()
 
                 Break
             }
 
             40 { # DOWN ARROW
-                Try {
-                    $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
-                    $Script:TheSfxMPlayer.Play()
-                } Catch {
-                    Write-Host 'Blew up'
-                }
-
-                If(($this.ActiveChevronIndex + 1) -GE [PlayerStatusMainMenu]::MenuItems.Count) {
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronBlankCharacter
-                    $this.ActiveChevronIndex                                = 0
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronCharacter
-                } Elseif(($this.ActiveChevronIndex + 1) -LT [PlayerStatusMainMenu]::MenuItems.Count) {
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronBlankCharacter
-                    $this.ActiveChevronIndex++
-                    $this.Chevrons[$this.ActiveChevronIndex].Item2          = $true
-                    $this.Chevrons[$this.ActiveChevronIndex].Item1.UserData = [PlayerStatusMainMenu]::ChevronCharacter
-                }
-                $this.SetActiveChevronColor()
-                $this.ChevronDirty = $true
+                $this.MenuItems[$this.ActiveChevronIndex].ToggleSelected() # SHOULD SET THE CURRENT ITEM TO FALSE
+                $this.ActiveChevronIndex = ($this.ActiveChevronIndex -EQ $this.MenuItems.Count - 1 ? 0 : $this.ActiveChevronIndex + 1)
+                $this.MenuItems[$this.ActiveChevronIndex].ToggleSelected() # SHOULD SET THE NEW ITEM TO TRUE
+                $this.PlayMoveSound()
 
                 Break
             }
@@ -199,28 +144,7 @@ Class PlayerStatusMainMenu : WindowBase {
             }
 
             13 { # ENTER
-                # BASED ON THE CHEVRON INDEX, CHANGE STATE
-                Switch($this.ActiveChevronIndex) {
-                    0 { # STATUS
-                        $Script:TheStatusScreenState = [StatusScreenState]::Status
-                        
-                        Break
-                    }
-
-                    1 { # ITEMS
-                        $Script:TheStatusScreenState = [StatusScreenState]::Items
-                        
-                        $this.UnsetActiveChevronColor()
-                        $this.ChevronDirty = $true
-                        $this.Draw()
-
-                        Break
-                    }
-                    
-                    Default {
-                        Break
-                    }
-                }
+                & $this.MenuItems[$this.ActiveChevronIndex].Action
                 
                 Break
             }
