@@ -63,12 +63,14 @@ Class UIEMenu : List[UIEMenuItem] {
     }
     
     [Void]SetActiveColored() {
-        $this[$this.ActiveIndex].Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
+        $this[$this.ActiveIndex].Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
+        $this[$this.ActiveIndex].Prefix.Decorations = [ATDecoration]@{ Blink = $true }
         $this[$this.ActiveIndex].Dirty = $true
     }
     
     [Void]UnsetActiveColored() {
-        $this[$this.ActiveIndex].Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
+        $this[$this.ActiveIndex].Prefix.ForegroundColor = [CCTextDefault24]::new()
+        $this[$this.ActiveIndex].Prefix.Decorations = [ATDecorationNone]::new()
         $this[$this.ActiveIndex].Dirty = $true
     }
     

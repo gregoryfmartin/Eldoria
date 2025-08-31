@@ -37,14 +37,18 @@ Class UIEMenuItem : UIEBase {
     }
 
     [Void]Update() {
-        $this.Prefix.ForegroundColor = ($this.Selected ? [CCAppleVGreenLight24]::new() : [CCAppleVGreyDark24]::new())
+        # $this.Prefix.ForegroundColor = ($this.Selected ? [CCListItemCurrentHighlight24]::new() : [CCTextDefault24]::new())
         
         [Char[]]$Temp = $this.UserData.ToCharArray()
         
         If($this.Selected -EQ $false) {
             $Temp[0] = ' '
+            $this.Prefix.ForegroundColor = [CCTextDefault24]::new()
+            $this.Prefix.Decorations = [ATDecorationNone]::new()
         } Else {
             $Temp[0] = "$([UIEMenuItem]::ChevronData)"
+            $this.Prefix.ForegroundColor = [CCListItemCurrentHighlight24]::new()
+            $this.Prefix.Decorations = [ATDecoration]@{ Blink = $true }
         }
         
         $this.UserData = [String]::new($Temp)
