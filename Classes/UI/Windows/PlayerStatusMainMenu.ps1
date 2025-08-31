@@ -51,9 +51,9 @@ Class PlayerStatusMainMenu : WindowBase {
                 @{ Label = 'Items';  Action = { 
                     $Script:TheStatusScreenState = [StatusScreenState]::Items
                 
-                    $this.UnsetActiveChevronColor()
-                    $this.MenuItems[$this.ActiveChevronIndex].Dirty = $true
-                    $this.Draw()
+                    $Script:ThePlayerStatusMainMenu.Menu.UnsetActiveColored()
+                    # $Script:ThePlayerStatusMainMenu.Menu[$this.ActiveChevronIndex].Dirty = $true
+                    $Script:ThePlayerStatusMainMenu.Draw()
                 } },
                 @{ Label = 'Equip';  Action = {} },
                 @{ Label = 'Magic';  Action = {} },
@@ -65,11 +65,11 @@ Class PlayerStatusMainMenu : WindowBase {
     }
 
     [Void]SetActiveChevronColor() {
-        $this.MenuItems[$this.ActiveChevronIndex].Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
+        $this.Menu[$this.ActiveChevronIndex].Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
     }
     
     [Void]UnsetActiveChevronColor() {
-        $this.MenuItems[$this.ActiveChevronIndex].Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
+        $this.Menu[$this.ActiveChevronIndex].Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
     }
     
     [Void]InitializeMenuItems() {
@@ -78,9 +78,11 @@ Class PlayerStatusMainMenu : WindowBase {
             @{ Label = 'Items';  Action = { 
                 $Script:TheStatusScreenState = [StatusScreenState]::Items
                 
+                <#
                 $this.UnsetActiveChevronColor()
                 $this.MenuItems[$this.ActiveChevronIndex].Dirty = $true
                 $this.Draw()
+                #>
             } },
             @{ Label = 'Equip';  Action = {} },
             @{ Label = 'Magic';  Action = {} },

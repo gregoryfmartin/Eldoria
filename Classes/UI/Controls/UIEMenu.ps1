@@ -64,10 +64,12 @@ Class UIEMenu : List[UIEMenuItem] {
     
     [Void]SetActiveColored() {
         $this[$this.ActiveIndex].Prefix.ForegroundColor = [CCAppleVGreenLight24]::new()
+        $this[$this.ActiveIndex].Dirty = $true
     }
     
     [Void]UnsetActiveColored() {
         $this[$this.ActiveIndex].Prefix.ForegroundColor = [CCAppleVGreyDark24]::new()
+        $this[$this.ActiveIndex].Dirty = $true
     }
     
     [Void]PlayMoveSound() {
