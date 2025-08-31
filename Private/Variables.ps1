@@ -813,7 +813,6 @@ $Script:BATLut = @(
                 $Script:TheStatusItemInventoryWindow = $null
                 $Script:TheStatusItemHeaderWindow = $null
                 $Script:ThePlayerStatusMainMenu.Menu.SetActiveColored()
-                #$Script:ThePlayerStatusMainMenu.ChevronDirty = $true
                 Write-Host "$([ATControlSequences]::CursorHide)"
             }
             
