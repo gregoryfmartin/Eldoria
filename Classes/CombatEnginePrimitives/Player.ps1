@@ -63,6 +63,9 @@ Class Player : BattleEntity {
         $this.ItemInventory.AddItem([MTOStick]::new(), (Get-Random -Minimum 1 -Maximum 99))
         $this.ItemInventory.AddItem([MTOTree]::new(), (Get-Random -Minimum 1 -Maximum 99))
         $this.ItemInventory.AddItem([MTOYogurt]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOComputer]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOGuitar]::new(), (Get-Random -Minimum 1 -Maximum 99))
+        $this.ItemInventory.AddItem([MTOPencil]::new(), (Get-Random -Minimum 1 -Maximum 99))
     }
 
     [Void]MapMoveSouth() {

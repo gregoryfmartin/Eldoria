@@ -14,6 +14,10 @@ Set-StrictMode -Version Latest
 Class UIEMenu : List[UIEMenuItem] {
     [Int]$ActiveIndex
     
+    UIEMenu() : base() {
+        $this.ActiveIndex = 0
+    }
+    
     UIEMenu(
         [Hashtable[]]$ListData,
         [ATCoordinates]$DrawOrigin
@@ -31,6 +35,8 @@ Class UIEMenu : List[UIEMenuItem] {
         [Hashtable[]]$ListData,
         [ATCoordinates]$DrawOrigin
     ) {
+        $this.Clear()
+
         For([Int]$A = 0; $A -LT $ListData.Count; $A++) {
             [ATCoordinates]$P = [ATCoordinates]@{
                 Row    = $DrawOrigin.Row + $A + 1
