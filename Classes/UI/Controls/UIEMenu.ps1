@@ -104,4 +104,8 @@ Class UIEMenu : List[UIEMenuItem] {
     [Void]InvokeItemAction() {
         & $this[$this.ActiveIndex].Action
     }
+    
+    [Void]ResetActiveIndex() {
+        $this.ActiveIndex = 0
+    }
 }

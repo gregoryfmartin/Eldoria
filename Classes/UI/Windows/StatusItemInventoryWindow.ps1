@@ -188,6 +188,7 @@ Class StatusItemInventoryWindow : WindowBase {
                 $Temp.ToArray(),
                 $this.LeftTop
             )
+            $this.Listing.ResetActiveIndex()
         }
     }
     
