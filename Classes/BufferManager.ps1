@@ -71,4 +71,17 @@ Class BufferManager {
             $Script:Rui.CursorPosition = ([ATCoordinates]::new($Row, $Left)).ToAutomationCoordinates()
         }
     }
+
+    [Void]ClearArea(
+        [ATCoordinates]$LeftTop,
+        [ATCoordinates]$RightBottom,
+        [Int]$ColAdjust
+    ) {
+        $Script:Rui.CursorPosition = $LeftTop.ToAutomationCoordinates()
+
+        For([Int]$Row = $LeftTop.Row; $Row -LT $RightBottom.Row; $Row++) {
+            Write-Host "$(' ' * (($RightBottom.Column - $LeftTop.Column) - $ColAdjust))"
+            $Script:Rui.CursorPosition = ([ATCoordinates]::new($Row, $LeftTop.Column)).ToAutomationCoordinates()
+        }
+    }
 }

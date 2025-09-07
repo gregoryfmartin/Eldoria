@@ -478,7 +478,20 @@ Class StatusItemInventoryWindow : WindowBase {
                 )
                 #>
                 #>
-                
+
+                $Script:TheBufferManager.ClearArea(
+                    $this.LeftTop,
+                    $this.RightBottom,
+                    3
+                )
+                # $Script:TheBufferManager.ClearArea(
+                #     $this.LeftTop.Column + 1,
+                #     $this.LeftTop.Row + 1,
+                #     $this.RightBottom.Column - $this.LeftTop.Column,
+                #     $this.RightBottom.Row - 1
+                # )
+                # $Script:TheBufferManager.ClearArea(1, 1, 80, 80)
+
                 $Script:TheStatusItemHeaderWindow.UpdateAllData(
                     $this.PageRefs[$this.Listing.ActiveIndex].Item1.ExamineString,
                     $this.PageRefs[$this.Listing.ActiveIndex].Item1.PlayerEffectString
@@ -506,7 +519,7 @@ Class StatusItemInventoryWindow : WindowBase {
                 # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
                 
                 $Script:TheItemToDrop = $this.PageRefs[$this.Listing.ActiveIndex].Item1
-                $Script:TheBufferManager.CopyActiveToBufferB()
+                # $Script:TheBufferManager.CopyActiveToBufferB()
                 $Script:TheStatusScreenState = [StatusScreenState]::ItemDropConfirm
 
                 <#

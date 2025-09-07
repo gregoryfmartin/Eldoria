@@ -1018,6 +1018,7 @@ $Script:BATLut = @(
         $Script:TheMessageWindow.WriteMapNoItemsFoundMessage()
         Return
     }
+
     Foreach($d in $a) {
         If($z -EQ $a.Count - 1) {
             $c += $d.Name
@@ -1026,6 +1027,7 @@ $Script:BATLut = @(
         }
         $z++
     }
+    
     $e = $c.Length
     If($e -GT $b) {
         $y = $true
