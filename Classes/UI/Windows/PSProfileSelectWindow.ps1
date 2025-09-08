@@ -183,7 +183,7 @@ Class PSProfileSelectWindow : WindowBase {
                 #$Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
                 #Clear-Host
                 
-                $Script:TheBufferManager.CopyActiveToBufferB()
+                # $Script:TheBufferManager.CopyActiveToBufferB()
                 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupConfirmation
                 

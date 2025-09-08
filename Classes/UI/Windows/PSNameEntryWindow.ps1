@@ -26,6 +26,7 @@ Class PSNameEntryWindow : WindowBase {
     
     [Boolean]$IsActive
     [Boolean]$HasBorderBeenRedrawn
+    [Boolean]$IsNameDirty # THIS IS ONLY USED IF THE CONFIRM DIALOG IS EXITED WITH ESCAPE
     
     PSNameEntryWindow() : base() {
         $this.LeftTop = [ATCoordinates]@{
@@ -43,8 +44,8 @@ Class PSNameEntryWindow : WindowBase {
         $this.NameActual = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]@{
-                    Row    = 10
-                    Column = 1
+                    Row    = 2
+                    Column = 3
                 }
             }
             UseATReset = $true
@@ -59,8 +60,9 @@ Class PSNameEntryWindow : WindowBase {
             UserData   = [PSNameEntryWindow]::NameBlankData
             UseATReset = $true
         }
-        $this.IsActive = $false
+        $this.IsActive             = $false
         $this.HasBorderBeenRedrawn = $false
+        $this.IsNameDirty          = $false
     }
     
     [Void]Draw() {
@@ -114,6 +116,11 @@ Class PSNameEntryWindow : WindowBase {
                 $this.TitleDirty = $true
                 $this.HasBorderBeenRedrawn = $true
             }
+        }
+
+        If($this.IsNameDirty -EQ $true) {
+            Write-Host "$($this.NameActual.ToAnsiControlSequenceString())"
+            $this.IsNameDirty = $false
         }
 
         ([WindowBase]$this).Draw()
@@ -186,5 +193,11 @@ Class PSNameEntryWindow : WindowBase {
         
         # WRITE THE HIDE CURSOR CSI
         Write-Host "$([ATControlSequences]::CursorHide)"
+    }
+
+    [Void]SetAllDirty() {
+        $this.IsActive             = $false
+        $this.IsNameDirty          = $true
+        $this.HasBorderBeenRedrawn = $false
     }
 }

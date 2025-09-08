@@ -157,11 +157,14 @@ Class PSConfirmDialog : WindowBase {
                 $Script:TheBufferManager.RestoreBufferBToActive()
                 
                 # REDRAW ALL THE WINDOWS
-                $Script:ThePSNameEntryWindow.Draw()
-                $Script:ThePSGenderSelectionWindow.Draw()
+                $Script:ThePSNameEntryWindow.SetAllDirty(); $Script:ThePSNameEntryWindow.Draw()
+                $Script:ThePSGenderSelectionWindow.SetAllDirty(); $Script:ThePSGenderSelectionWindow.Draw()
                 $Script:ThePSBonusPointAllocWindow.SetAllDirty(); $Script:ThePSBonusPointAllocWindow.Draw()
                 $Script:ThePSAffinitySelectWindow.SetAllDirty(); $Script:ThePSAffinitySelectWindow.Draw()
                 $Script:ThePSProfileSelectWindow.SetAllDirty(); $Script:ThePSProfileSelectWindow.Draw()
+
+                # RE-HIDE THE CURSOR
+                Write-Host "$([ATControlSequences]::CursorHide)"
                 
                 $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupProfileSelect
                 

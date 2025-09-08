@@ -302,4 +302,11 @@ Class PSGenderSelectionWindow : WindowBase {
         $this.IsActive           = $false
         $this.PlayerChevronDirty = $true
     }
+
+    [Void]SetAllDirty() {
+        $this.PlayerChevronDirty   = $true
+        $this.MaleSymbolDirty      = $true
+        $this.FemaleSymbolDirty    = $true
+        $this.HasBorderBeenRedrawn = $false
+    }
 }
