@@ -1263,7 +1263,23 @@ $Script:BATLut = @(
     }
 
     $Script:TheCommandWindow.UpdateCommandHistory($true)
-    $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+    # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+    
+    $Script:TheBufferManager.ClearArea(
+        [ATCoordinates]@{
+            Row = 0
+            Column = 0
+        },
+        [ATCoordinates]@{
+            Row = 40
+            Column = 80
+        },
+        0
+    )
+    
+    # LET'S TRY THIS TO SEE IF IT WORKS
+    # Write-Host "$(`e[1;1H)$(`e[J)"
+    
     $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
     $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
 }
