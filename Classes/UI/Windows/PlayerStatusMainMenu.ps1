@@ -81,7 +81,7 @@ Class PlayerStatusMainMenu : WindowBase {
             27 { # ESCAPE
                 $Script:ThePreviousGlobalGameState = [GameStatePrimary]::PlayerStatusScreen
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
-                $Script:GpsRestoredFromStaBackup   = $false # PERMITS REDRAWS ON SUBSEQUENT VISITS TO THE STATUS SCREEN
+                $Script:GpsBufferCleared           = $false
                 
                 Break
             }

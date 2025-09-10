@@ -77,6 +77,7 @@ Set-StrictMode -Version Latest
 [Boolean]                         $Script:HasSSAPressEnterToggled        = $false
 [Boolean]                         $Script:HasSSASetupRunspace            = $false
 [Boolean]                         $Script:PlayerSetupThemePlaying        = $false
+[Boolean]                         $Script:GpsBufferCleared               = $false
 [EEIBat]                          $Script:EeiBat                         = [EEIBat]::new()
 [EEINightwing]                    $Script:EeiNightwing                   = [EEINightwing]::new()
 [EEIWingblight]                   $Script:EeiWingblight                  = [EEIWingblight]::new()
@@ -629,6 +630,7 @@ $Script:BATLut = @(
     # REMEMBER WHY I DID IT THIS WAY.
     #
     #######################################################################
+    <#
     If(($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::InventoryScreen) -AND ($Script:GpsRestoredFromInvBackup -EQ $false)) {
         $Script:TheBufferManager.RestoreBufferAToActive()
 
@@ -678,9 +680,25 @@ $Script:BATLut = @(
         $Script:TheMessageWindow.MessageCDirty       = $true
         Write-Host "$([ATControlSequences]::CursorShow)"
     }
+    #>
+
+    If($Script:GpsBufferCleared -EQ $false) {
+        $Script:TheBufferManager.ClearArea(
+            [ATCoordinates]@{
+                Row = 0
+                Column = 0
+            },
+            [ATCoordinates]@{
+                Row = 40
+                Column = 80
+            },
+            0
+        )
+        $Script:GpsBufferCleared = $true
+    }
 
     $Script:ThePlayer.Update()
-    $Script:TheStatusWindow.Draw()
+    $Script:TheStatusWindow.SetAllDirty(); $Script:TheStatusWindow.Draw()
     $Script:TheCommandWindow.Draw()
     $Script:TheSceneWindow.Draw()
     $Script:TheMessageWindow.Draw()

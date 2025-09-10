@@ -252,5 +252,14 @@ Class StatusWindow : WindowBase {
             $this.PlayerGoldDrawDirty = $false
         }
     }
+    
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+        
+        $this.PlayerNameDrawDirty = $true
+        $this.PlayerHpDrawDirty   = $true
+        $this.PlayerMpDrawDirty   = $true
+        $this.PlayerGoldDrawDirty = $true        
+    }
 }
 
