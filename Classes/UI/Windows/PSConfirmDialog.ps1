@@ -148,7 +148,7 @@ Class PSConfirmDialog : WindowBase {
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
                 
-                Clear-Host
+                $Script:GpsBufferCleared = $false
             
                 Break
             }

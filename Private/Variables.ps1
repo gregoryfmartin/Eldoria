@@ -637,45 +637,6 @@ $Script:BATLut = @(
     $Script:TheCommandWindow.HandleInput()
 }
 
-# [ScriptBlock]$Script:TheInventoryScreenState = {
-#     <#
-#     If($null -EQ $Script:TheInventoryWindow) {
-#         Try {
-#             $Script:TheInventoryWindow = [InventoryWindow]::new()
-#         } Catch {
-#             Write-Error $_.Exception.Message
-#             Write-Error $_.Exception.StackTrace
-#         }
-#         Write-Host "$([ATControlSequences]::CursorHide)"
-#     }    
-#     If($Script:GpsRestoredFromInvBackup -EQ $true) {
-#         $Script:GpsRestoredFromInvBackup = $false
-#     }
-#     $Script:TheInventoryWindow.Draw()
-#     $Script:TheInventoryWindow.HandleInput()
-#     #>
-    
-#     If($null -EQ $Script:TheVerticalInventoryWindow) {
-#         Try {
-#             $Script:TheVerticalInventoryWindow = [VerticalInventoryWindow]::new()
-#         } Catch {
-#             Write-Error $_.Exception.Message
-#             Write-Error $_.Exception.StackTrace
-#         }
-
-#         Write-Host "$([ATControlSequences]::CursorHide)"
-#     }
-
-#     If($Script:GpsRestoredFromInvBackup -EQ $true) {
-#         $Script:GpsRestoredFromInvBackup = $false
-#     }
-
-#     $Script:TheVerticalInventoryWindow.Draw()
-#     $Script:TheVerticalInventoryWindow.HandleInput()
-    
-#     Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
-# }
-
 [ScriptBlock]$Script:TheBattleScreenState = {
     If($Script:HasBattleIntroPlayed -EQ $false) {
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
@@ -936,19 +897,6 @@ $Script:BATLut = @(
     Return
 }
 
-# [ScriptBlock]$Script:TheInventoryCommand = {
-#     If($args.Length -GT 0) {
-#         $Script:TheMessageWindow.WriteCmdExtraArgsWarning('inventory', $args)
-#     }
-
-#     $Script:TheCommandWindow.UpdateCommandHistory($true)
-#     $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-#     $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-#     $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
-
-#     Return
-# }
-
 [ScriptBlock]$Script:TheExamineCommand = {
     Param(
         [String]$a0
@@ -1077,7 +1025,7 @@ $Script:BATLut = @(
                 If($a1 -IEQ 'self') {
                     [MapTileObject]$pi = $Script:ThePlayer.GetItemReference($a0)
 
-                    # This code is problematic if the filter has no items in it
+                    # THIS CODE IS PROBLEMATIC IF THE FILTER HAS NO ITEMS IN IT
                     If($Script:ThePlayer.ValidateSourceInFilter($pi.PSTypeNames[0]) -EQ $true) {
                         $Script:TheCommandWindow.UpdateCommandHistory($true)
                         Invoke-Command $pi.Effect -ArgumentList $pi, $Script:ThePlayer
@@ -1091,7 +1039,7 @@ $Script:BATLut = @(
                 }
             }
         } Else {
-            # The item isn't in the Player's Inventory, thus rendering this an inoperable command (despite not being syntactically invalid).
+            # THE ITEM ISN'T IN THE PLAYER'S INVENTORY, THUS RENDERING THIS AN INOPERABLE COMMAND (DESPITE NOT BEING SYNTACTICALLY INVALID).
             $Script:TheCommandWindow.UpdateCommandHistory($false)
             $Script:TheMessageWindow.WriteNoItemInInvMessage($a0)
 
@@ -1132,8 +1080,8 @@ $Script:BATLut = @(
                 Return
             } Else {
                 # WARNING
-                # At this point, this branch is considered a fatal error
-                # There really should be a better way of handling this, however
+                # AT THIS POINT, THIS BRANCH IS CONSIDERED A FATAL ERROR
+                # THERE REALLY SHOULD BE A BETTER WAY OF HANDLING THIS, HOWEVER
                 Exit
             }
         } Else {
@@ -1156,7 +1104,6 @@ $Script:BATLut = @(
     }
 
     $Script:TheCommandWindow.UpdateCommandHistory($true)
-    # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
     
     $Script:TheBufferManager.ClearArea(
         [ATCoordinates]@{
@@ -1169,9 +1116,6 @@ $Script:BATLut = @(
         },
         0
     )
-    
-    # LET'S TRY THIS TO SEE IF IT WORKS
-    # Write-Host "$(`e[1;1H)$(`e[J)"
     
     $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
     $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
@@ -1224,29 +1168,26 @@ $Script:BATLut = @(
 }
 
 $Script:TheCommandTable = @{
-    'move'      = $Script:TheMoveCommand
-    'm'         = $Script:TheMoveCommand
-    'look'      = $Script:TheLookCommand
-    'l'         = $Script:TheLookCommand
-    # 'inventory' = $Script:TheInventoryCommand
-    # 'i'         = $Script:TheInventoryCommand
-    # 'inv'       = $Script:TheInventoryCommand
-    'examine'   = $Script:TheExamineCommand
-    'exa'       = $Script:TheExamineCommand
-    'get'       = $Script:TheGetCommand
-    'g'         = $Script:TheGetCommand
-    'take'      = $Script:TheGetCommand
-    't'         = $Script:TheGetCommand
-    'use'       = $Script:TheUseCommand
-    'u'         = $Script:TheUseCommand
-    'drop'      = $Script:TheDropCommand
-    'd'         = $Script:TheDropCommand
-    'status'    = $Script:TheStatusCommand
-    'sta'       = $Script:TheStatusCommand
-    'enter'     = $Script:TheEnterCommand
-    'en'        = $Script:TheEnterCommand
-    'exit'      = $Script:TheEnterCommand
-    'ex'        = $Script:TheEnterCommand
+    'move'    = $Script:TheMoveCommand
+    'm'       = $Script:TheMoveCommand
+    'look'    = $Script:TheLookCommand
+    'l'       = $Script:TheLookCommand
+    'examine' = $Script:TheExamineCommand
+    'exa'     = $Script:TheExamineCommand
+    'get'     = $Script:TheGetCommand
+    'g'       = $Script:TheGetCommand
+    'take'    = $Script:TheGetCommand
+    't'       = $Script:TheGetCommand
+    'use'     = $Script:TheUseCommand
+    'u'       = $Script:TheUseCommand
+    'drop'    = $Script:TheDropCommand
+    'd'       = $Script:TheDropCommand
+    'status'  = $Script:TheStatusCommand
+    'sta'     = $Script:TheStatusCommand
+    'enter'   = $Script:TheEnterCommand
+    'en'      = $Script:TheEnterCommand
+    'exit'    = $Script:TheEnterCommand
+    'ex'      = $Script:TheEnterCommand
 }
 
 [ScriptBlock]$Script:BaCalc = {
@@ -1531,52 +1472,7 @@ $Script:TheGlobalStateBlockTable = @{
     [GameStatePrimary]::TitleScreen        = $Script:TheTitleScreenState
     [GameStatePrimary]::PlayerSetupScreen  = $Script:ThePlayerSetupState
     [GameStatePrimary]::GamePlayScreen     = $Script:TheGamePlayScreenState
-    [GameStatePrimary]::InventoryScreen    = $Script:TheInventoryScreenState
     [GameStatePrimary]::BattleScreen       = $Script:TheBattleScreenState
     [GameStatePrimary]::PlayerStatusScreen = $Script:ThePlayerStatusScreenState
     [GameStatePrimary]::Cleanup            = $Script:TheCleanupState
 }
-
-
-# MOCK INVENTORY POPULATION
-<#
-$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOLadder]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStairs]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOPole]::new()) | Out-Null
-# $Script:ThePlayer.Inventory.Add([MTOBacon]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOApple]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOStick]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOYogurt]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORock]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTORope]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOTree]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-$Script:ThePlayer.Inventory.Add([MTOMilk]::new()) | Out-Null
-#>
-
