@@ -637,44 +637,44 @@ $Script:BATLut = @(
     $Script:TheCommandWindow.HandleInput()
 }
 
-[ScriptBlock]$Script:TheInventoryScreenState = {
-    <#
-    If($null -EQ $Script:TheInventoryWindow) {
-        Try {
-            $Script:TheInventoryWindow = [InventoryWindow]::new()
-        } Catch {
-            Write-Error $_.Exception.Message
-            Write-Error $_.Exception.StackTrace
-        }
-        Write-Host "$([ATControlSequences]::CursorHide)"
-    }    
-    If($Script:GpsRestoredFromInvBackup -EQ $true) {
-        $Script:GpsRestoredFromInvBackup = $false
-    }
-    $Script:TheInventoryWindow.Draw()
-    $Script:TheInventoryWindow.HandleInput()
-    #>
+# [ScriptBlock]$Script:TheInventoryScreenState = {
+#     <#
+#     If($null -EQ $Script:TheInventoryWindow) {
+#         Try {
+#             $Script:TheInventoryWindow = [InventoryWindow]::new()
+#         } Catch {
+#             Write-Error $_.Exception.Message
+#             Write-Error $_.Exception.StackTrace
+#         }
+#         Write-Host "$([ATControlSequences]::CursorHide)"
+#     }    
+#     If($Script:GpsRestoredFromInvBackup -EQ $true) {
+#         $Script:GpsRestoredFromInvBackup = $false
+#     }
+#     $Script:TheInventoryWindow.Draw()
+#     $Script:TheInventoryWindow.HandleInput()
+#     #>
     
-    If($null -EQ $Script:TheVerticalInventoryWindow) {
-        Try {
-            $Script:TheVerticalInventoryWindow = [VerticalInventoryWindow]::new()
-        } Catch {
-            Write-Error $_.Exception.Message
-            Write-Error $_.Exception.StackTrace
-        }
+#     If($null -EQ $Script:TheVerticalInventoryWindow) {
+#         Try {
+#             $Script:TheVerticalInventoryWindow = [VerticalInventoryWindow]::new()
+#         } Catch {
+#             Write-Error $_.Exception.Message
+#             Write-Error $_.Exception.StackTrace
+#         }
 
-        Write-Host "$([ATControlSequences]::CursorHide)"
-    }
+#         Write-Host "$([ATControlSequences]::CursorHide)"
+#     }
 
-    If($Script:GpsRestoredFromInvBackup -EQ $true) {
-        $Script:GpsRestoredFromInvBackup = $false
-    }
+#     If($Script:GpsRestoredFromInvBackup -EQ $true) {
+#         $Script:GpsRestoredFromInvBackup = $false
+#     }
 
-    $Script:TheVerticalInventoryWindow.Draw()
-    $Script:TheVerticalInventoryWindow.HandleInput()
+#     $Script:TheVerticalInventoryWindow.Draw()
+#     $Script:TheVerticalInventoryWindow.HandleInput()
     
-    Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
-}
+#     Write-Host "$([ATControlSequences]::GenerateCoordinateString(1, 1))"
+# }
 
 [ScriptBlock]$Script:TheBattleScreenState = {
     If($Script:HasBattleIntroPlayed -EQ $false) {
@@ -838,63 +838,6 @@ $Script:BATLut = @(
             Break
         }
     }
-    
-    <#
-    Write-Host "$([ATControlSequences]::CursorHide)"
-    $Script:Rui.CursorPosition = [Coordinates]::new(1, 1)
-
-    If($null -EQ $Script:TheStatusHudWindow) {
-        $Script:TheStatusHudWindow = [StatusHudWindow]::new()
-    }
-    If($null -EQ $Script:TheStatusTechSelectionWindow) {
-        $Script:TheStatusTechSelectionWindow = [StatusTechniqueSelectionWindow]::new()
-    }
-    If($null -EQ $Script:TheStatusTechInventoryWindow) {
-        $Script:TheStatusTechInventoryWindow = [StatusTechniqueInventoryWindow]::new()
-    }
-    If($Script:GpsRestoredFromStaBackup -EQ $true) {
-        $Script:GpsRestoredFromStaBackup = $false
-    }
-    $Script:TheStatusHudWindow.Draw()
-    $Script:TheStatusTechSelectionWindow.Draw()
-    $Script:TheStatusTechInventoryWindow.Draw()
-    Switch($Script:StatusScreenMode) {
-        ([StatusScreenMode]::EquippedTechSelection) {
-            If($Script:TheStatusTechSelectionWindow.IsActive -NE $true) {
-                $Script:TheStatusTechSelectionWindow.SetAllActionDrawDirty()
-                $Script:TheStatusTechSelectionWindow.IsActive = $true
-            }
-            If($Script:TheStatusTechInventoryWindow.IsActive -NE $false) {
-                $Script:TheStatusTechInventoryWindow.IsActive = $false
-                $Script:TheStatusTechInventoryWindow.SetFlagsDirty()
-            }
-            $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
-            $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
-            $Script:TheStatusTechInventoryWindow.Draw()
-            $Script:TheStatusTechSelectionWindow.HandleInput()
-            $Script:TheStatusTechSelectionWindow.Draw()
-        }
-
-        ([StatusScreenMode]::TechInventorySelection) {
-            If($Script:TheStatusTechSelectionWindow.IsActive -NE $false) {
-                $Script:TheStatusTechSelectionWindow.IsActive = $false
-            }
-            If($Script:TheStatusTechInventoryWindow.IsActive -NE $true) {
-                $Script:TheStatusTechInventoryWindow.IsActive = $true
-            }
-            $Script:TheStatusTechSelectionWindow.PlayerChevronDirty = $true # Now the redraw should work... hopefully
-            $Script:TheStatusTechSelectionWindow.Draw() # See if this trips the Chevron color change; didn't work :'(
-            $Script:TheStatusTechInventoryWindow.Draw()
-            $Script:TheStatusTechInventoryWindow.HandleInput()
-            $Script:TheStatusTechInventoryWindow.Draw()
-        }
-
-        Default {
-            # DO NOTHING
-            # BECAUSE I'M A FUCKING GENIUS
-        }
-    }
-    #>
 }
 
 [ScriptBlock]$Script:TheCleanupState = {}
@@ -993,18 +936,18 @@ $Script:BATLut = @(
     Return
 }
 
-[ScriptBlock]$Script:TheInventoryCommand = {
-    If($args.Length -GT 0) {
-        $Script:TheMessageWindow.WriteCmdExtraArgsWarning('inventory', $args)
-    }
+# [ScriptBlock]$Script:TheInventoryCommand = {
+#     If($args.Length -GT 0) {
+#         $Script:TheMessageWindow.WriteCmdExtraArgsWarning('inventory', $args)
+#     }
 
-    $Script:TheCommandWindow.UpdateCommandHistory($true)
-    $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
-    $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
-    $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
+#     $Script:TheCommandWindow.UpdateCommandHistory($true)
+#     $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+#     $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
+#     $Script:TheGlobalGameState         = [GameStatePrimary]::InventoryScreen
 
-    Return
-}
+#     Return
+# }
 
 [ScriptBlock]$Script:TheExamineCommand = {
     Param(
