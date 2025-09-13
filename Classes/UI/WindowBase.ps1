@@ -237,6 +237,10 @@ Class WindowBase {
             $true,
             $true
         )
+
+        If($this.UseTitle -EQ $true) {
+            $this.TitleDirty = $true
+        }
     }
 }
 

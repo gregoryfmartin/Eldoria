@@ -291,5 +291,12 @@ Class CommandWindow : WindowBase {
         $this.CommandActual.UserData = ''
         $this.CommandHistoryDirty    = $true
     }
+
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+
+        $this.CommandDivDirty     = $true
+        $this.CommandHistoryDirty = $true
+    }
 }
 

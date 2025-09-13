@@ -59,5 +59,11 @@ Class SceneWindow : WindowBase {
         $this.Image           = $NewImage
         $this.SceneImageDirty = $true
     }
+
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+
+        $this.SceneImageDirty = $true
+    }
 }
 

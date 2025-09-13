@@ -747,4 +747,12 @@ Class MessageWindow : WindowBase {
             }
         ))
     }
+
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+
+        $this.MessageADirty = $true
+        $this.MessageBDirty = $true
+        $this.MessageCDirty = $true
+    }
 }
