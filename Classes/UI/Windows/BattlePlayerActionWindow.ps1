@@ -343,7 +343,7 @@ Class BattlePlayerActionWindow : WindowBase {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
                 } Catch {
-                    Write-Host 'Blew up'
+                    # Write-Host 'Blew up'
                 }
                 If(($this.ActiveChevronIndex - 1) -LT 0) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false
@@ -366,7 +366,7 @@ Class BattlePlayerActionWindow : WindowBase {
                     $Script:TheSfxMPlayer.Open($Script:SfxUiChevronMove)
                     $Script:TheSfxMPlayer.Play()
                 } Catch {
-                    Write-Host 'Blew up'
+                    # Write-Host 'Blew up'
                 }
                 If(($this.ActiveChevronIndex + 1) -GT 3) {
                     $this.Chevrons[$this.ActiveChevronIndex].Item2          = $false

@@ -22,6 +22,9 @@ Set-StrictMode -Version Latest
 [Int]                             $Script:ItemClearAreaLeft              = 12
 [Int]                             $Script:ItemClearAreaRight             = 70
 [Int]                             $Script:ItemClearAreaBottom            = 25
+[Int]                             $Script:BufferClearAreaTop             = 0
+[Int]                             $Script:BufferClearAreaLeft            = 0
+[Int]                             $Script:BufferClearAreaRight           = 41
 [String]                          $Script:SfxUiChevronMove               = "$PSScriptRoot\..\Resources\SFX\UI Chevron Move.wav"
 [String]                          $Script:SfxUiSelectionValid            = "$PSScriptRoot\..\Resources\SFX\UI Selection Valid.wav"
 [String]                          $Script:SfxBaPhysicalStrikeA           = "$PSScriptRoot\..\Resources\SFX\BA Physical Strike 0001.wav"
@@ -640,6 +643,18 @@ $Script:BATLut = @(
 [ScriptBlock]$Script:TheBattleScreenState = {
     If($Script:HasBattleIntroPlayed -EQ $false) {
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
+            $Script:TheBufferManager.ClearArea(
+                [ATCoordinates]@{
+                    Row = 0
+                    Column = 0
+                },
+                [ATCoordinates]@{
+                    Row = 40
+                    Column = 80
+                },
+                0
+            )
+
             [ATString]$Banner = [ATString]@{
                 Prefix = [ATStringPrefix]@{
                     ForegroundColor = [CCAppleMintLight24]::new()
@@ -653,12 +668,27 @@ $Script:BATLut = @(
             }
             Write-Host "$($Banner.ToAnsiControlSequenceString())"
             Write-Host "$([ATControlSequences]::CursorHide)"
-            Try {
-                $Script:TheSfxMPlayer.Open($Script:SfxBattleIntro)
-                $Script:TheSfxMPlayer.Play()
-            } Catch {}
+
+            # Try {
+            #     $Script:TheSfxMPlayer.Open($Script:SfxBattleIntro)
+            #     $Script:TheSfxMPlayer.Play()
+            # } Catch {}
+
             Start-Sleep -Seconds 1.75
-            Clear-Host
+
+            # Clear-Host
+
+            $Script:TheBufferManager.ClearArea(
+                [ATCoordinates]@{
+                    Row = 0
+                    Column = 0
+                },
+                [ATCoordinates]@{
+                    Row = 40
+                    Column = 80
+                },
+                0
+            )
         }
         $Script:HasBattleIntroPlayed = $true
     }
@@ -691,12 +721,14 @@ $Script:BATLut = @(
     If($Script:GpsRestoredFromBatBackup -EQ $true) {
         $Script:GpsRestoredFromBatBackup = $false
     }
-    If($Script:IsBattleBgmPlaying -EQ $false) {
-        $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
-        $Script:TheBgmMPlayer.Volume = 0.5
-        $Script:TheBgmMPlayer.Play()
-        $Script:IsBattleBgmPlaying = $true
-    }
+
+    # If($Script:IsBattleBgmPlaying -EQ $false) {
+    #     $Script:TheBgmMPlayer.Open($Script:BgmBattleThemeA)
+    #     $Script:TheBgmMPlayer.Volume = 0.5
+    #     $Script:TheBgmMPlayer.Play()
+    #     $Script:IsBattleBgmPlaying = $true
+    # }
+    
     $Script:TheBattleManager.Update()
 }
 
