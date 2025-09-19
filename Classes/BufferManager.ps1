@@ -10,6 +10,20 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class BufferManager {
+    Static [Int]$BufferClearLeft   = 0
+    Static [Int]$BufferClearTop    = 0
+    Static [Int]$BufferClearRight  = 90
+    Static [Int]$BufferClearBottom = 40
+
+    Static [ATCoordinates]$BufferClearLeftTop = [ATCoordinates]@{
+        Row    = [BufferManager]::BufferClearTop
+        Column = [BufferManager]::BufferClearLeft
+    }
+    Static [ATCoordinates]$BufferClearRightBottom = [ATCoordinates]@{
+        Row    = [BufferManager]::BufferClearBottom
+        Column = [BufferManager]::BufferClearRight
+    }
+
     [BufferCell[,]]$ScreenBufferA
     [BufferCell[,]]$ScreenBufferB
 
@@ -63,11 +77,9 @@ Class BufferManager {
         [Int]$Height
     ) {
         $Script:Rui.CursorPosition = ([ATCoordinates]::new($Top, $Left)).ToAutomationCoordinates()
-        # Write-Host "$([ATControlSequences]::GenerateCoordinateString($Top, $Left))"
         
         For([Int]$Row = $Top; $Row -LT $Height; $Row++) {
             Write-Host "$(' ' * ($Width - $Left))"
-            # Write-Host "$([ATControlSequences]::GenerateCoordinateString($Row, $Left))"
             $Script:Rui.CursorPosition = ([ATCoordinates]::new($Row, $Left)).ToAutomationCoordinates()
         }
     }
@@ -83,5 +95,13 @@ Class BufferManager {
             Write-Host "$(' ' * (($RightBottom.Column - $LeftTop.Column) - $ColAdjust))"
             $Script:Rui.CursorPosition = ([ATCoordinates]::new($Row, $LeftTop.Column)).ToAutomationCoordinates()
         }
+    }
+
+    [Void]ClearCommon() {
+        $this.ClearArea(
+            [BufferManager]::BufferClearLeftTop,
+            [BufferManager]::BufferClearRightBottom,
+            0
+        )
     }
 }

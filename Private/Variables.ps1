@@ -618,17 +618,7 @@ $Script:BATLut = @(
     }
 
     If($Script:GpsBufferCleared -EQ $false) {
-        $Script:TheBufferManager.ClearArea(
-            [ATCoordinates]@{
-                Row = 0
-                Column = 0
-            },
-            [ATCoordinates]@{
-                Row = 40
-                Column = 80
-            },
-            0
-        )
+        $Script:TheBufferManager.ClearCommon()
         $Script:GpsBufferCleared = $true
     }
 
@@ -643,17 +633,18 @@ $Script:BATLut = @(
 [ScriptBlock]$Script:TheBattleScreenState = {
     If($Script:HasBattleIntroPlayed -EQ $false) {
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
-            $Script:TheBufferManager.ClearArea(
-                [ATCoordinates]@{
-                    Row = 0
-                    Column = 0
-                },
-                [ATCoordinates]@{
-                    Row = 40
-                    Column = 80
-                },
-                0
-            )
+            $Script:TheBufferManager.ClearCommon()
+            # $Script:TheBufferManager.ClearArea(
+            #     [ATCoordinates]@{
+            #         Row = 0
+            #         Column = 0
+            #     },
+            #     [ATCoordinates]@{
+            #         Row = 40
+            #         Column = 80
+            #     },
+            #     0
+            # )
 
             [ATString]$Banner = [ATString]@{
                 Prefix = [ATStringPrefix]@{
@@ -678,17 +669,18 @@ $Script:BATLut = @(
 
             # Clear-Host
 
-            $Script:TheBufferManager.ClearArea(
-                [ATCoordinates]@{
-                    Row = 0
-                    Column = 0
-                },
-                [ATCoordinates]@{
-                    Row = 40
-                    Column = 80
-                },
-                0
-            )
+            $Script:TheBufferManager.ClearCommon()
+            # $Script:TheBufferManager.ClearArea(
+            #     [ATCoordinates]@{
+            #         Row = 0
+            #         Column = 0
+            #     },
+            #     [ATCoordinates]@{
+            #         Row = 40
+            #         Column = 80
+            #     },
+            #     0
+            # )
         }
         $Script:HasBattleIntroPlayed = $true
     }
@@ -1136,18 +1128,19 @@ $Script:BATLut = @(
     }
 
     $Script:TheCommandWindow.UpdateCommandHistory($true)
-    
-    $Script:TheBufferManager.ClearArea(
-        [ATCoordinates]@{
-            Row = 0
-            Column = 0
-        },
-        [ATCoordinates]@{
-            Row = 40
-            Column = 80
-        },
-        0
-    )
+
+    $Script:TheBufferManager.ClearCommon()
+    # $Script:TheBufferManager.ClearArea(
+    #     [ATCoordinates]@{
+    #         Row = 0
+    #         Column = 0
+    #     },
+    #     [ATCoordinates]@{
+    #         Row = 40
+    #         Column = 80
+    #     },
+    #     0
+    # )
     
     $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
     $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen

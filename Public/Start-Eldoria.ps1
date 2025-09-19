@@ -16,17 +16,5 @@ Start-Eldoria
 Ensure that $Script:TheGameCore is properly initialized before calling this function. This can be done by importing that class before this script.
 #>
 Function Start-Eldoria {
-    $Script:TheBufferManager.ClearArea(
-        [ATCoordinates]@{
-            Row = 0
-            Column = 0
-        },
-        [ATCoordinates]@{
-            Row = 40
-            Column = 80
-        },
-        0
-    )
-
-    $Script:TheGameCore.Run()
+    $Script:TheBufferManager.ClearCommon(); $Script:TheGameCore.Run()
 }
