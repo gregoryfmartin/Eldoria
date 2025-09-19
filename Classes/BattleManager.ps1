@@ -807,7 +807,7 @@ Class BattleManager {
             }
 
             ([BattleManagerState]::BattleWon) {
-                $Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
+                # $Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
                 
                 # CHECK TO SEE IF THE BATTLE WON CHIME HAS PLAYED
                 # PLAY IT IF IT HASN'T
@@ -847,6 +847,7 @@ Class BattleManager {
                 }
 
                 # CHANGE GLOBAL STATE
+                $Script:GpsBufferCleared           = $false
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::GamePlayScreen
 
@@ -854,7 +855,7 @@ Class BattleManager {
             }
 
             ([BattleManagerState]::BattleLost) {
-				$Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
+				# $Script:TheBgmMPlayer.Stop() # STOP PLAYING THE BATTLE BGM
 				
 				# CHECK TO SEE IF THE BATTLE LOST CHIME HAS PLAYED
 				# PLAY IT IF IT HASN'T

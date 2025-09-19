@@ -128,12 +128,13 @@ Class MapTile {
     }
 
     [Void]BattleStep() {
-        # THIS IS LIKELY GOING TO HAVE TO BE MOVED TO A DEDICATED SCRIPT BLOCK
         If($this.BattleAllowed -EQ $true) {
             [Double]$BattleChance = Get-Random -Minimum 0.0 -Maximum 1.0
             If($BattleChance -GT $this.EncounterRate) {
                 $Script:TheCurrentEnemy = New-Object -TypeName $($Script:BattleEncounterRegionTable[$this.RegionCode] | Get-Random)
-                $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+
+                # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+                
                 $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
                 $Script:TheGlobalGameState         = [GameStatePrimary]::BattleScreen
             }
