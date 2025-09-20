@@ -22,9 +22,6 @@ Set-StrictMode -Version Latest
 [Int]                             $Script:ItemClearAreaLeft              = 12
 [Int]                             $Script:ItemClearAreaRight             = 70
 [Int]                             $Script:ItemClearAreaBottom            = 25
-[Int]                             $Script:BufferClearAreaTop             = 0
-[Int]                             $Script:BufferClearAreaLeft            = 0
-[Int]                             $Script:BufferClearAreaRight           = 41
 [String]                          $Script:SfxUiChevronMove               = "$PSScriptRoot\..\Resources\SFX\UI Chevron Move.wav"
 [String]                          $Script:SfxUiSelectionValid            = "$PSScriptRoot\..\Resources\SFX\UI Selection Valid.wav"
 [String]                          $Script:SfxBaPhysicalStrikeA           = "$PSScriptRoot\..\Resources\SFX\BA Physical Strike 0001.wav"
@@ -634,17 +631,6 @@ $Script:BATLut = @(
     If($Script:HasBattleIntroPlayed -EQ $false) {
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
             $Script:TheBufferManager.ClearCommon()
-            # $Script:TheBufferManager.ClearArea(
-            #     [ATCoordinates]@{
-            #         Row = 0
-            #         Column = 0
-            #     },
-            #     [ATCoordinates]@{
-            #         Row = 40
-            #         Column = 80
-            #     },
-            #     0
-            # )
 
             [ATString]$Banner = [ATString]@{
                 Prefix = [ATStringPrefix]@{
@@ -667,20 +653,7 @@ $Script:BATLut = @(
 
             Start-Sleep -Seconds 1.75
 
-            # Clear-Host
-
             $Script:TheBufferManager.ClearCommon()
-            # $Script:TheBufferManager.ClearArea(
-            #     [ATCoordinates]@{
-            #         Row = 0
-            #         Column = 0
-            #     },
-            #     [ATCoordinates]@{
-            #         Row = 40
-            #         Column = 80
-            #     },
-            #     0
-            # )
         }
         $Script:HasBattleIntroPlayed = $true
     }
@@ -1130,17 +1103,6 @@ $Script:BATLut = @(
     $Script:TheCommandWindow.UpdateCommandHistory($true)
 
     $Script:TheBufferManager.ClearCommon()
-    # $Script:TheBufferManager.ClearArea(
-    #     [ATCoordinates]@{
-    #         Row = 0
-    #         Column = 0
-    #     },
-    #     [ATCoordinates]@{
-    #         Row = 40
-    #         Column = 80
-    #     },
-    #     0
-    # )
     
     $Script:ThePreviousGlobalGameState = $Script:TheGlobalGameState
     $Script:TheGlobalGameState         = [GameStatePrimary]::PlayerStatusScreen
