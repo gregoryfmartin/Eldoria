@@ -92,7 +92,7 @@ Set-StrictMode -Version Latest
 [ActionSlot]                      $Script:StatusEsSelectedSlot           = [ActionSlot]::None
 [BattleAction]                    $Script:StatusIsSelected               = $null
 [StatusScreenMode]                $Script:StatusScreenMode               = [StatusScreenMode]::EquippedTechSelection
-[GameStatePrimary]                $Script:TheGlobalGameState             = [GameStatePrimary]::PlayerSetupScreen
+[GameStatePrimary]                $Script:TheGlobalGameState             = [GameStatePrimary]::TitleScreen
 [GameStatePrimary]                $Script:ThePreviousGlobalGameState     = $Script:TheGlobalGameState
 [Map]                             $Script:SampleMap                      = $null
 [Map]                             $Script:SampleWarpMap01                = $null
@@ -401,7 +401,8 @@ $Script:BATLut = @(
             $Script:TheOffThread.Dispose()
             $Script:TheOffShell.Dispose()
 
-            $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
+            $Script:TheBufferManager.ClearCommon()
+            # $Script:TheBufferManager.CopyActiveToBufferAWithWipe()
 
             Start-Sleep -Seconds 1
 
@@ -416,7 +417,6 @@ $Script:BATLut = @(
 [ScriptBlock]$Script:ThePlayerSetupState = {
     Switch($Script:ThePssSubstate) {
         ([PlayerSetupScreenStates]::PlayerSetupSetup) {
-            # CLEANUP THE PREVIOUS STATE
             If($null -NE $Script:TheTitleFiglet) {
                 $Script:TheTitleFiglet = $null
             }
@@ -426,8 +426,9 @@ $Script:BATLut = @(
             If($null -NE $Script:TheSSAPressEnterPrompt) {
                 $Script:TheSSAPressEnterPrompt = $null
             }
+
+            Write-Host "$([ATControlSequences]::CursorShow)"
             
-            # TRANSITION TO THE NEXT STATE AUTOMATICALLY
             $Script:ThePssSubstate = [PlayerSetupScreenStates]::PlayerSetupNameEntry
             
             Break
