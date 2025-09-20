@@ -116,10 +116,10 @@ Class StatusItemDropConfirmDialog : WindowBase {
             
             27 { # ESCAPE
                 $Script:TheItemToDrop = $null
-                $Script:TheBufferManager.RestoreBufferBToActive()
+                # $Script:TheBufferManager.RestoreBufferBToActive()
                 $Script:TheStatusScreenState = [StatusScreenState]::Items
 
-                $Script:TheStatusItemInventoryWindow.Draw()
+                $Script:TheStatusItemInventoryWindow.SetListDirty(); $Script:TheStatusItemInventoryWindow.Draw()
                 $Script:TheStatusItemHeaderWindow.Draw()
                 
                 Break

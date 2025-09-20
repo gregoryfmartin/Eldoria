@@ -154,7 +154,8 @@ Class PSConfirmDialog : WindowBase {
             }
             
             27 { # ESCAPE
-                $Script:TheBufferManager.RestoreBufferBToActive()
+                # $Script:TheBufferManager.RestoreBufferBToActive()
+                $Script:TheBufferManager.ClearCommon()
                 
                 # REDRAW ALL THE WINDOWS
                 $Script:ThePSNameEntryWindow.SetAllDirty(); $Script:ThePSNameEntryWindow.Draw()

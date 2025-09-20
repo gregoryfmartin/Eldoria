@@ -334,6 +334,11 @@ Class StatusItemInventoryWindow : WindowBase {
             $this.Listing.Draw()
         }
     }
+
+    [Void]SetListDirty() {
+        $this.ItemsListDirty = $true
+        $this.Listing.SetAllDirty()
+    }
     
     [Void]HandleInput() {
         $KeyCap = $Script:Rui.ReadKey('IncludeKeyDown, NoEcho')

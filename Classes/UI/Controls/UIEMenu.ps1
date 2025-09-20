@@ -108,4 +108,12 @@ Class UIEMenu : List[UIEMenuItem] {
     [Void]ResetActiveIndex() {
         $this.ActiveIndex = 0
     }
+
+    [Void]SetAllDirty() {
+        If($this.Count -GT 0) {
+            Foreach($I in $this) {
+                $I.Dirty = $true
+            }
+        }
+    }
 }
