@@ -138,6 +138,15 @@ Class BattleManager {
 
                         # REFRESH THE PLAYER BATTLE STATUS WINDOW
                         $Script:ThePlayerBattleStatWindow.Draw()
+                        
+                        # TOASTY - RE-BUTTER THE TOAST
+                        $Script:TheToaster.ButterAPieceOfToast(
+                            'EldoriaBattleToast',
+                            @{
+                                'PlayerBarValue' = 0
+                                'EnemyBarValue'  = 0
+                            }
+                        )
                     } Else {
                         # THE PHASE ONE ENTITY IS THE ENEMY
                         # THE ACTION THE ENEMY USES IS SELECTED FROM THE "MARBLE BAG", SO NO DELAY IS NEEDED HERE.
@@ -154,6 +163,15 @@ Class BattleManager {
                         # EXECUTE THE ACTION AND UPDATE THE ENEMY'S BATTLE STATUS WINDOW
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseOneEntity, $this.PhaseTwoEntity, $ToExecute)
                         $Script:TheEnemyBattleStatWindow.Draw()
+                        
+                        # TOASTY - RE-BUTTER THE TOAST
+                        $Script:TheToaster.ButterAPieceOfToast(
+                            'EldoriaBattleToast',
+                            @{
+                                'PlayerBarValue' = 0
+                                'EnemyBarValue'  = 0
+                            }
+                        )
                     }
 
                     # WE NEED TO EXAMINE THE ACTION RESULT TO SEE WHAT HAPPENED AS A CONSEQUENCE OF RUNNING THE SELECTED ACTION
@@ -488,6 +506,15 @@ Class BattleManager {
 
                         # REFRESH THE PLAYER BATTLE STATUS WINDOW
                         $Script:ThePlayerBattleStatWindow.Draw()
+                        
+                        # TOASTY - RE-BUTTER THE TOAST
+                        $Script:TheToaster.ButterAPieceOfToast(
+                            'EldoriaBattleToast',
+                            @{
+                                'PlayerBarValue' = 0
+                                'EnemyBarValue'  = 0
+                            }
+                        )
                     } Else {
                         # THE PHASE TWO ENTITY IS THE ENEMY
                         # THE ACTION THE ENEMY USES IS SELECTED FROM THE "MARBLE BAG", SO NO DELAY IS NEEDED HERE.
@@ -504,6 +531,15 @@ Class BattleManager {
                         # EXECUTE THE ACTION AND UPDATE THE ENEMY'S BATTLE STATUS WINDOW
                         $ActionResult = $(Invoke-Command $ToExecute.Effect -ArgumentList $this.PhaseTwoEntity, $this.PhaseOneEntity, $ToExecute)
                         $Script:TheEnemyBattleStatWindow.Draw()
+                        
+                        # TOASTY - RE-BUTTER THE TOAST
+                        $Script:TheToaster.ButterAPieceOfToast(
+                            'EldoriaBattleToast',
+                            @{
+                                'PlayerBarValue' = 0
+                                'EnemyBarValue'  = 0
+                            }
+                        )
                     }
 
                     # WE NEED TO EXAMINE THE ACTION RESULT TO SEE WHAT HAPPENED AS A CONSEQUENCE OF RUNNING THE SELECTED ACTION

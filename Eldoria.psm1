@@ -11,6 +11,8 @@ $Script:Rui = $(Get-Host).UI.RawUI
 
 . "$PSScriptRoot\Private\LoadStrings.ps1"
 
+Import-Module -Force BurntToast
+
 
 
 
@@ -241,6 +243,8 @@ Write-Progress -Activity $Script:ProgressActivity -Status ($Script:FinishUpLoadS
 #//////////////////////////////////////////////////////////////////////////////
 # BATTLE MANAGER SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
+. "$PSScriptRoot\Classes\Toasty\Toast.ps1"
+. "$PSScriptRoot\Classes\Toasty\Toaster.ps1"
 . "$PSScriptRoot\Classes\BattleManager.ps1"
 
 . "$PSScriptRoot\Classes\GameCore.ps1"

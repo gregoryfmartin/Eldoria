@@ -121,6 +121,7 @@ Set-StrictMode -Version Latest
 [StatusItemDropConfirmDialog]     $Script:TheStatusItemConfirmDropDialog = $null
 [VerticalInventoryWindow]         $Script:TheVerticalInventoryWindow     = $null
 [MapTileObject]                   $Script:TheItemToDrop                  = $null
+[Toaster]                         $Script:TheToaster                     = $null
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -661,6 +662,44 @@ $Script:BATLut = @(
     If($null -EQ $Script:TheBattleManager) {
         $Script:TheBattleManager       = [BattleManager]::new()
         $Script:TheBattleManager.State = [BattleManagerState]::TurnIncrement
+        
+        # BY THIS POINT, THE CURRENT ENEMY VARIABLE SHOULD BE POPULATED
+        $Script:TheToaster = [Toaster]::new(
+            @(
+                [Toast]@{
+                    Text = 'ELDORIA BATTLE'
+                    Id = 'EldoriaBattleToast'
+                    HealthBars = @(
+                        (New-BTProgressBar -Title 'PlayerBarTitle' -Status 'PlayerBarStatus' -Value 'PlayerBarValue'),
+                        (New-BTProgressBar -Title 'EnemyBarTitle' -Status 'EnemyBarStatus' -Value 'EnemyBarValue')
+                    )
+                    Bindable = @{
+                        'PlayerBarTitle'  = "Not Gary"
+                        'PlayerBarStatus' = ''
+                        'PlayerBarValue'  = 0
+                        'EnemyBarTitle'   = "$($Script:TheCurrentEnemy.Name)"
+                        'EnemyBarStatus'  = ''
+                        'EnemyBarValue'   = 0
+                    }
+                }
+            )
+        )
+        
+        # SHOULDN'T MATTER WHAT THE VALUES ARE HERE; THIS IS TERRIBLE!
+        $Script:TheToaster.BurnAPieceOfToast('EldoriaBattleToast')
+        $Script:TheToaster.ButterAPieceOfToast(
+            'EldoriaBattleToast',
+            @{
+                'PlayerBarValue'  = 0
+                'EnemyBarValue'   = 0
+                #'PlayerBarStatus' = "$($Script:ThePlayer.Stats[[StatId]::HitPoints].Base)/$($Script:ThePlayer.Stats[[StatId]::HitPoints].Max).ToString()"
+                #'EnemyBarStatus'  = "$($Script:TheCurrentEnemy.Stats[[StatId]::HitPoints].Base)/$($Script:TheCurrentEnemy.Stats[[StatId]::HitPoints].Max).ToString()"
+            }
+        )
+        
+        <#
+        $Script:TheToaster.BurnAPieceOfToast('EldoriaBattleToast')
+        #>
     }
     If($Script:BattleCursorVisible -EQ $false) {
         Write-Host "$([ATControlSequences]::CursorHide)"
