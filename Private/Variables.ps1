@@ -674,7 +674,7 @@ $Script:BATLut = @(
                         (New-BTProgressBar -Title 'EnemyBarTitle' -Status 'EnemyBarStatus' -Value 'EnemyBarValue')
                     )
                     Bindable = @{
-                        'PlayerBarTitle'  = "Not Gary"
+                        'PlayerBarTitle'  = "$($Script:ThePlayer.Name)"
                         'PlayerBarStatus' = ''
                         'PlayerBarValue'  = 0
                         'EnemyBarTitle'   = "$($Script:TheCurrentEnemy.Name)"
