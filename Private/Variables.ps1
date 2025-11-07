@@ -123,7 +123,7 @@ Set-StrictMode -Version Latest
 # [MapTileObject]                   $Script:TheItemToDrop                  = $null
 [ValueTuple[[ATCoordinates], [MapTileObject]]]$Script:TheItemToDrop      = [ValueTuple[[ATCoordinates], [MapTileObject]]]::new([ATCoordinatesNone]::new(), [MapTileObject]::new())
 [StatusItemConfirmDialog]         $Script:TheStatusItemConfirmDialog     = $null
-[StatusItemInventoryWindowNew]    $Script:TheStatusItemInventoryWindowNew = $null
+# [StatusItemInventoryWindowNew]    $Script:TheStatusItemInventoryWindowNew = $null
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -765,6 +765,12 @@ $Script:BATLut = @(
             }
 
             If($null -NE $Script:TheStatusItemConfirmDialog) {
+                $Script:TheBufferManager.ClearArea(
+                    $Script:TheStatusItemConfirmDialog.LeftTop.Row,
+                    $Script:TheStatusItemConfirmDialog.LeftTop.Column,
+                    $Script:TheStatusItemConfirmDialog.LeftTop.Row + [StatusItemConfirmDialog]::WindowRBRow,
+                    $Script:TheStatusItemConfirmDialog.LeftTop.Column + [StatusItemConfirmDialog]::WindowRBColumn
+                )
                 $Script:TheStatusItemConfirmDialog = $null
             }
             
@@ -788,13 +794,12 @@ $Script:BATLut = @(
         }
         
         ([StatusScreenState]::ItemConfirm) {
+            # WHEN ENTERING THIS STATE, THE ITEM CONFIRM DIALOG WILL ALWAYS BEEN NULL, SO THIS IS ALWAYS
+            # GOING TO BE CALLED. A REVERSION TO THE ITEMS STATE WILL GUARANTEE IT IS NULL AGAIN.
             If($null -EQ $Script:TheStatusItemConfirmDialog) {
                 $Script:TheStatusItemConfirmDialog = [StatusItemConfirmDialog]::new()
                 $Script:TheStatusItemConfirmDialog.UpdateOrigin($Script:TheItemToDrop.Item1)
             }
-            
-            # I NEED TO SET THE LEFTTOP COORDS DYNAMICALLY.
-            # $Script:TheStatusItemConfirmDialog.UpdateOrigin($Script:TheItemToDrop.Item1)
             
             $Script:TheStatusItemConfirmDialog.Draw()
             
