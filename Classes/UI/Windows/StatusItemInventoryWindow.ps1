@@ -83,7 +83,7 @@ Class StatusItemInventoryWindow : WindowBase {
         $this.PageRefs                 = [List[ValueTuple[[MapTileObject], [Int]]]]::new()
         $this.Listing                  = [UIEMenu]::new()
 
-        $this.PagingChevronUp        = [ATString]@{
+        $this.PagingChevronUp = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CCAppleVYellowLight24]::new()
                 Coordinates     = [ATCoordinates]@{
@@ -94,7 +94,7 @@ Class StatusItemInventoryWindow : WindowBase {
             UserData   = "$([StatusItemInventoryWindow]::PagingChevronUpCharacter)"
             UseATReset = $true
         }
-        $this.PagingChevronDown      = [ATString]@{
+        $this.PagingChevronDown = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 ForegroundColor = [CCAppleVYellowLight24]::new()
                 Coordinates     = [ATCoordinates]@{
@@ -105,7 +105,7 @@ Class StatusItemInventoryWindow : WindowBase {
             UserData   = "$([StatusItemInventoryWindow]::PagingChevronDownCharacter)"
             UseATReset = $true
         }
-        $this.PagingChevronUpBlank   = [ATString]@{
+        $this.PagingChevronUpBlank = [ATString]@{
             Prefix = [ATStringPrefix]@{
                 Coordinates = [ATCoordinates]@{
                     Row    = $this.PagingChevronUp.Prefix.Coordinates.Row
@@ -354,23 +354,32 @@ Class StatusItemInventoryWindow : WindowBase {
                 # 
                 # HMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
                 
-                $Script:TheItemToDrop = $this.PageRefs[$this.Listing.ActiveIndex].Item1
+                # $Script:TheItemToDrop = $this.PageRefs[$this.Listing.ActiveIndex].Item1
+                $Script:TheItemToDrop = [ValueTuple[[ATCoordinates], [MapTileObject]]]::new(
+                    [ATCoordinates]@{
+                        Row = $this.Listing[$this.Listing.ActiveIndex].Prefix.Coordinates.Row
+                        Column = $this.RightBottom.Column + 1
+                    },
+                    #$this.Listing[$this.Listing.ActiveIndex].Prefix.Coordinates,
+                    $this.PageRefs[$this.Listing.ActiveIndex].Item1
+                )
                 
                 # THIS RAISES A SUPER SERIOUS QUESTION!!!
                 # $Script:TheBufferManager.CopyActiveToBufferB()
                 
-                $Script:TheStatusScreenState = [StatusScreenState]::ItemDropConfirm
+                # $Script:TheStatusScreenState = [StatusScreenState]::ItemDropConfirm
+                $Script:TheStatusScreenState = [StatusScreenState]::ItemConfirm
 
                 Break
             }
 
-            27 {  # ESCAPE
+            27 { # ESCAPE
                 $Script:TheStatusScreenState = [StatusScreenState]::MainMenu
                 
                 Break
             }
 
-            38 {  # UP ARROW
+            38 { # UP ARROW
                 If($this.ZeroPageActive -EQ $true) {
                     Return
                 }
@@ -386,7 +395,7 @@ Class StatusItemInventoryWindow : WindowBase {
                 Break
             }
 
-            40 {  # DOWN ARROW
+            40 { # DOWN ARROW
                 If($this.ZeroPageActive -EQ $true) {
                     Return
                 }
@@ -402,7 +411,7 @@ Class StatusItemInventoryWindow : WindowBase {
                 Break
             }
 
-            33 {  # PAGE UP
+            33 { # PAGE UP
                 If($this.ZeroPageActive -EQ $true) {
                     Return
                 }
@@ -412,7 +421,7 @@ Class StatusItemInventoryWindow : WindowBase {
                 Break
             }
 
-            34 {  # PAGE DOWN
+            34 { # PAGE DOWN
                 If($this.ZeroPageActive -EQ $true) {
                     Return
                 }

@@ -45,11 +45,24 @@ Class UIEBase : ATString {
         Return "$($this.Prefix.Coordinates.ToAnsiControlSequenceString())$($this.Blank)$(([ATString]$this).ToAnsiControlSequenceString())"
     }
     
+    [String]ToBlank() {
+        Return "$($this.Prefix.Coordinates.ToAnsiControlSequenceString())$($this.Blank)"
+    }
+    
     [Void]Draw() {
         If($this.Dirty -EQ $true) {
             Write-Host "$($this.ToAnsiControlSequenceString())"
             
             $this.Dirty = $false
         }
+    }
+    
+    [Void]DrawBlank() {
+        # If($this.Dirty -EQ $true) {
+        #     Write-Host "$($this.ToBlank())"
+            
+        #     $this.Dirty = $false
+        # }
+        Write-Host "$($this.ToBlank())"
     }
 }

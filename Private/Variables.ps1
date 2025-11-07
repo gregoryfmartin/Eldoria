@@ -764,6 +764,10 @@ $Script:BATLut = @(
                 $Script:ThePlayerStatusSummaryWindow = $null
             }
 
+            If($null -NE $Script:TheStatusItemConfirmDialog) {
+                $Script:TheStatusItemConfirmDialog = $null
+            }
+            
             If($null -EQ $Script:TheStatusItemInventoryWindow) {
                 $Script:TheBufferManager.ClearArea($Script:ItemClearAreaTop,
                     $Script:ItemClearAreaLeft,
@@ -782,7 +786,7 @@ $Script:BATLut = @(
 
             Break
         }
-
+        
         ([StatusScreenState]::ItemConfirm) {
             If($null -EQ $Script:TheStatusItemConfirmDialog) {
                 $Script:TheStatusItemConfirmDialog = [StatusItemConfirmDialog]::new()
