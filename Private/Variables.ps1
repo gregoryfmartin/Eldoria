@@ -120,7 +120,10 @@ Set-StrictMode -Version Latest
 [StatusItemHeaderWindow]          $Script:TheStatusItemHeaderWindow      = $null
 [StatusItemDropConfirmDialog]     $Script:TheStatusItemConfirmDropDialog = $null
 [VerticalInventoryWindow]         $Script:TheVerticalInventoryWindow     = $null
-[MapTileObject]                   $Script:TheItemToDrop                  = $null
+# [MapTileObject]                   $Script:TheItemToDrop                  = $null
+[ValueTuple[[ATCoordinates], [MapTileObject]]]$Script:TheItemToDrop      = [ValueTuple[[ATCoordinates], [MapTileObject]]]::new([ATCoordinatesNone]::new(), [MapTileObject]::new())
+[StatusItemConfirmDialog]         $Script:TheStatusItemConfirmDialog     = $null
+[StatusItemInventoryWindowNew]    $Script:TheStatusItemInventoryWindowNew = $null
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -611,8 +614,10 @@ $Script:BATLut = @(
     If($null -NE $Script:TheStatusItemConfirmDropDialog) {
         $Script:TheStatusItemConfirmDropDialog = $null
     }
+    
+    # THIS IS LIKELY GOING TO GET CALLED REPEATEDLY; I'LL NEED TO FIGURE OUT A BETTER WAY TO DO THIS.
     If($null -NE $Script:TheItemToDrop) {
-        $Script:TheItemToDrop = $null
+        $Script:TheItemToDrop = [ValueTuple[[ATCoordinates], [MapTileObject]]]::new([ATCoordinatesNone]::new(), [MapTileObject]::new())
     }
 
     If($Script:GpsBufferCleared -EQ $false) {
@@ -775,6 +780,22 @@ $Script:BATLut = @(
 
             $Script:TheStatusItemInventoryWindow.HandleInput()
 
+            Break
+        }
+
+        ([StatusScreenState]::ItemConfirm) {
+            If($null -EQ $Script:TheStatusItemConfirmDialog) {
+                $Script:TheStatusItemConfirmDialog = [StatusItemConfirmDialog]::new()
+                $Script:TheStatusItemConfirmDialog.UpdateOrigin($Script:TheItemToDrop.Item1)
+            }
+            
+            # I NEED TO SET THE LEFTTOP COORDS DYNAMICALLY.
+            # $Script:TheStatusItemConfirmDialog.UpdateOrigin($Script:TheItemToDrop.Item1)
+            
+            $Script:TheStatusItemConfirmDialog.Draw()
+            
+            $Script:TheStatusItemConfirmDialog.HandleInput()
+            
             Break
         }
 
