@@ -19,8 +19,6 @@ Class StatusItemDropConfirmDialog : WindowBase {
     Static [String]$WindowTitle = 'Drop?'
     Static [String]$BgData      = ' ' * ([StatusItemDropConfirmDialog]::WindowRBColumn - [StatusItemDropConfirmDialog]::WindowLTColumn)
 
-    # [MapTileObject]$ItemToDrop
-
     [ATString]$BgActual
 
     [ATStringComposite]$PromptLineActual
@@ -90,7 +88,7 @@ Class StatusItemDropConfirmDialog : WindowBase {
                 # For now, we'll just remove the item from the player's inventory.
                 $ItemToRemove = $null
                 foreach ($ItemTuple in $Script:ThePlayer.ItemInventory) {
-                    if ($ItemTuple.Item1.MapObjName -EQ $Script:TheItemToDrop.MapObjName) {
+                    if ($ItemTuple.Item1.MapObjName -EQ $Script:TheItemToDrop.Item2.MapObjName) {
                         $ItemToRemove = $ItemTuple
                         
                         Break
@@ -117,7 +115,8 @@ Class StatusItemDropConfirmDialog : WindowBase {
             27 { # ESCAPE
                 $Script:TheItemToDrop = $null
                 # $Script:TheBufferManager.RestoreBufferBToActive()
-                $Script:TheStatusScreenState = [StatusScreenState]::Items
+                # $Script:TheStatusScreenState = [StatusScreenState]::Item
+                $Script:TheStatusScreenState = [StatusScreenState]::ItemConfirm
 
                 $Script:TheStatusItemInventoryWindow.SetListDirty(); $Script:TheStatusItemInventoryWindow.Draw()
                 $Script:TheStatusItemHeaderWindow.Draw()
@@ -149,7 +148,7 @@ Class StatusItemDropConfirmDialog : WindowBase {
                     ForegroundColor = [CCAppleVYellowLight24]::new()
                     Decorations     = [ATDecoration]@{ Blink = $true }
                 }
-                UserData   = "$($Script:TheItemToDrop.Name)"
+                UserData   = "$($Script:TheItemToDrop.Item2.Name)"
                 UseATReset = $true
             },
             [ATString]@{
