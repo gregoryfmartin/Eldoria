@@ -766,11 +766,17 @@ $Script:BATLut = @(
 
             If($null -NE $Script:TheStatusItemConfirmDialog) {
                 $Script:TheBufferManager.ClearArea(
-                    $Script:TheStatusItemConfirmDialog.LeftTop.Row,
-                    $Script:TheStatusItemConfirmDialog.LeftTop.Column,
-                    $Script:TheStatusItemConfirmDialog.LeftTop.Row + [StatusItemConfirmDialog]::WindowRBRow,
-                    $Script:TheStatusItemConfirmDialog.LeftTop.Column + [StatusItemConfirmDialog]::WindowRBColumn
+                    [ATCoordinates]@{
+                        Row    = $Script:TheStatusItemConfirmDialog.LeftTop.Row - 1
+                        Column = $Script:TheStatusItemConfirmDialog.LeftTop.Column - 1
+                    },
+                    [ATCoordinates]@{
+                        Row = $Script:TheStatusItemConfirmDialog.RightBottom.Row + 1
+                        Column = $Script:TheStatusItemConfirmDialog.RightBottom.Column
+                    },
+                    0
                 )
+
                 $Script:TheStatusItemConfirmDialog = $null
             }
             
