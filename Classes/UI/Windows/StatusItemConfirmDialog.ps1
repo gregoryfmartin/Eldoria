@@ -21,7 +21,6 @@ Class StatusItemConfirmDialog : WindowBase {
     Static [Hashtable[]]$MenuData = @(
         @{ Label = 'Use';  Action = {} }
         @{ Label = 'Drop'; Action = {
-            # THE ITEM TO DROP VARIABLE SHOULD ALREADY BE SET, SO WE CAN JUST TRANSITION STATE
             $Script:TheStatusScreenState = [StatusScreenState]::ItemDropConfirm
         } }
     )
@@ -96,14 +95,13 @@ Class StatusItemConfirmDialog : WindowBase {
             }
             
             27 { # ESCAPE
-                # TODO: CHANGE STATE
                 $Script:TheStatusScreenState = [StatusScreenState]::Items
                 
                 Break
             }
             
             13 { # ENTER
-                # TODO: TAKE APPROPRIATE ACTION
+                $this.Menu.InvokeItemAction()
                 
                 Break
             }

@@ -84,11 +84,9 @@ Class StatusItemDropConfirmDialog : WindowBase {
 
         Switch($KeyCap.VirtualKeyCode) {
             13 { # ENTER
-                # This is where the item drop logic would go.
-                # For now, we'll just remove the item from the player's inventory.
                 $ItemToRemove = $null
-                foreach ($ItemTuple in $Script:ThePlayer.ItemInventory) {
-                    if ($ItemTuple.Item1.MapObjName -EQ $Script:TheItemToDrop.Item2.MapObjName) {
+                Foreach($ItemTuple in $Script:ThePlayer.ItemInventory) {
+                    If($ItemTuple.Item1.MapObjName -EQ $Script:TheItemToDrop.Item2.MapObjName) {
                         $ItemToRemove = $ItemTuple
                         
                         Break
@@ -97,15 +95,11 @@ Class StatusItemDropConfirmDialog : WindowBase {
                 If($null -NE $ItemToRemove) {
                     $Script:ThePlayer.ItemInventory.RemoveAllItem($ItemToRemove.Item1)
                 }
-
-                # $Script:TheBufferManager.RestoreBufferBToActive()
                 
                 $Script:TheStatusScreenState                          = [StatusScreenState]::Items
                 $Script:TheStatusItemInventoryWindow.BookDirty        = $true
                 $Script:TheStatusItemInventoryWindow.CurrentPageDirty = $true
-                
-                # $Script:TheStatusItemInventoryWindow.SetAllDirty()
-                # $Script:TheStatusItemHeaderWindow.SetAllDirty()
+
                 $Script:TheStatusItemInventoryWindow.Draw()
                 $Script:TheStatusItemHeaderWindow.Draw()
                 
@@ -113,9 +107,8 @@ Class StatusItemDropConfirmDialog : WindowBase {
             }
             
             27 { # ESCAPE
-                $Script:TheItemToDrop = $null
-                # $Script:TheBufferManager.RestoreBufferBToActive()
-                # $Script:TheStatusScreenState = [StatusScreenState]::Item
+                $Script:TheItemToDrop.Item1  = [ATCoordinatesNone]::new()
+                $Script:TheItemToDrop.Item2  = [MapTileObject]::new()
                 $Script:TheStatusScreenState = [StatusScreenState]::ItemConfirm
 
                 $Script:TheStatusItemInventoryWindow.SetListDirty(); $Script:TheStatusItemInventoryWindow.Draw()
