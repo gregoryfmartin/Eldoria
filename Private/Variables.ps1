@@ -1043,7 +1043,8 @@ $Script:BATLut = @(
     }
 
     If(($PSBoundParameters.ContainsKey('a0') -EQ $true) -AND ($PSBoundParameters.ContainsKey('a1') -EQ $true)) {
-        If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+        #If($Script:ThePlayer.IsItemInInventory($a0) -EQ $true) {
+        If($Script:ThePlayer.ItemInventory.HasItem($a0) -EQ $true) {
             If($Script:CurrentMap.GetTileAtPlayerCoordinates().IsItemInTile($a1) -EQ $true) {
                 [MapTileObject]$pi  = $Script:ThePlayer.GetItemReference($a0)
                 [MapTileObject]$mti = $Script:CurrentMap.GetTileAtPlayerCoordinates().GetItemReference($a1)

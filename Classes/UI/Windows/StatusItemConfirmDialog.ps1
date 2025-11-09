@@ -19,7 +19,9 @@ Class StatusItemConfirmDialog : WindowBase {
     Static [String]$WindowTitle = 'Action'
     
     Static [Hashtable[]]$MenuData = @(
-        @{ Label = 'Use';  Action = {} }
+        @{ Label = 'Use';  Action = {
+            & $Script:TheUseCommand $Script:TheItemToDrop.Item2.Name, 'self'
+        } }
         @{ Label = 'Drop'; Action = {
             $Script:TheStatusScreenState = [StatusScreenState]::ItemDropConfirm
         } }

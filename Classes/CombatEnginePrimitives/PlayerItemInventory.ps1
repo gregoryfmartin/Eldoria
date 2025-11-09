@@ -121,11 +121,31 @@ Class PlayerItemInventory : List[ValueTuple[[MapTileObject], [Int]]] {
         
         Return $this[$Idx].Item2
     }
+    
+    [MapTileObject]GetItem(
+        [String]$ItemName
+    ) {
+        If($this.HasItem($ItemName) -EQ $true) {
+            Return $this.
+        }
+    }
 
     [Boolean]HasItem(
         [MapTileObject]$Item
     ) {
         Return ($this.IndexOfItem($Item) -GE 0)
+    }
+    
+    [Boolean]HasItem(
+        [String]$ItemName
+    ) {
+        Foreach($Item in $this) {
+            If($Item.Item1.Name -EQ $ItemName) {
+                Return $true
+            }
+        }
+        
+        Return $false
     }
 
     [ArrayList]GetSortedItems() {
