@@ -121,6 +121,8 @@ Set-StrictMode -Version Latest
 [StatusItemDropConfirmDialog]     $Script:TheStatusItemConfirmDropDialog = $null
 [VerticalInventoryWindow]         $Script:TheVerticalInventoryWindow     = $null
 [MapTileObject]                   $Script:TheItemToDrop                  = $null
+[HorizontalGpsStatusWindow]       $Script:TheNewGpsStatusWindow          = [HorizontalGpsStatusWindow]::new()
+[GpsMapWalkerWindow]              $Script:TheGpsMapWalkerWindow          = [GpsMapWalkerWindow]::new()
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -621,8 +623,10 @@ $Script:BATLut = @(
     }
 
     $Script:ThePlayer.Update()
-    $Script:TheStatusWindow.SetAllDirty(); $Script:TheStatusWindow.Draw()
-    $Script:TheCommandWindow.SetAllDirty(); $Script:TheCommandWindow.Draw()
+    #$Script:TheStatusWindow.SetAllDirty(); $Script:TheStatusWindow.Draw()
+    $Script:TheNewGpsStatusWindow.SetAllDirty(); $Script:TheNewGpsStatusWindow.Draw()
+    $Script:TheGpsMapWalkerWindow.SetAllDirty(); $Script:TheGpsMapWalkerWindow.Draw()
+    #$Script:TheCommandWindow.SetAllDirty(); $Script:TheCommandWindow.Draw()
     $Script:TheSceneWindow.SetAllDirty(); $Script:TheSceneWindow.Draw()
     $Script:TheMessageWindow.SetAllDirty(); $Script:TheMessageWindow.Draw()
     $Script:TheCommandWindow.HandleInput()

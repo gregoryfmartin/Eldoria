@@ -15,10 +15,10 @@ Class MessageWindow : WindowBase {
     Static [Int]$MessageHistoryARef = 0
     Static [Int]$MessageHistoryBRef = 1
     Static [Int]$MessageHistoryCRef = 2
-    Static [Int]$WindowLTRow        = 21
+    Static [Int]$WindowLTRow        = 24
     Static [Int]$WindowLTColumn     = 1
-    Static [Int]$WindowRBRow        = 25
-    Static [Int]$WindowRBColumn     = 79
+    Static [Int]$WindowRBRow        = 28
+    Static [Int]$WindowRBColumn     = 80
 
     Static [String]$WindowTitle = 'Messages'
 

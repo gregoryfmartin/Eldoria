@@ -12,10 +12,10 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SceneWindow : WindowBase {
-    Static [Int]$WindowLTRow           = 1
-    Static [Int]$WindowLTColumn        = 30
-    Static [Int]$WindowRBRow           = 20
-    Static [Int]$WindowRBColumn        = 79
+    Static [Int]$WindowLTRow           = 4
+    Static [Int]$WindowLTColumn        = 31
+    Static [Int]$WindowRBRow           = 23
+    Static [Int]$WindowRBColumn        = 80
     Static [Int]$ImageDrawRowOffset    = [SceneWindow]::WindowLTRow + 1
     Static [Int]$ImageDrawColumnOffset = [SceneWindow]::WindowLTColumn + 1
 

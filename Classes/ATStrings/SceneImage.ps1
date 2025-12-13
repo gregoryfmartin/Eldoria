@@ -51,7 +51,7 @@ Class SceneImage {
                 # BEEN PRECOMPUTED AND PLACED IN THE EQUATION INSTEAD.
                 $this.Image[$r, $c] = [ATSceneImageString]::new(
                     $ImageColorMap[$rf],
-                    [ATCoordinates]::new((2 + $r), (31 + $c))
+                    [ATCoordinates]::new((5 + $r), (32 + $c))
                 )
             }
         }
