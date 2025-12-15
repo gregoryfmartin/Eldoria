@@ -123,6 +123,7 @@ Set-StrictMode -Version Latest
 [MapTileObject]                   $Script:TheItemToDrop                  = $null
 [HorizontalGpsStatusWindow]       $Script:TheNewGpsStatusWindow          = [HorizontalGpsStatusWindow]::new()
 [GpsMapWalkerWindow]              $Script:TheGpsMapWalkerWindow          = [GpsMapWalkerWindow]::new()
+[GpsGameInstructionsWindow]       $Script:TheGpsInstructionsWindow       = [GpsGameInstructionsWindow]::new()
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -626,6 +627,7 @@ $Script:BATLut = @(
     #$Script:TheStatusWindow.SetAllDirty(); $Script:TheStatusWindow.Draw()
     $Script:TheNewGpsStatusWindow.SetAllDirty(); $Script:TheNewGpsStatusWindow.Draw()
     $Script:TheGpsMapWalkerWindow.SetAllDirty(); $Script:TheGpsMapWalkerWindow.Draw()
+    $Script:TheGpsInstructionsWindow.SetAllDirty(); $Script:TheGpsInstructionsWindow.Draw()
     #$Script:TheCommandWindow.SetAllDirty(); $Script:TheCommandWindow.Draw()
     $Script:TheSceneWindow.SetAllDirty(); $Script:TheSceneWindow.Draw()
     $Script:TheMessageWindow.SetAllDirty(); $Script:TheMessageWindow.Draw()

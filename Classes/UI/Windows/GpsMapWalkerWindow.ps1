@@ -15,7 +15,7 @@ Set-StrictMode -Version Latest
 Class GpsMapWalkerWindow : WindowBase {
     Static [Int]$WindowLTRow = 4
     Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowRBRow = 23
+    Static [Int]$WindowRBRow = 15
     Static [Int]$WindowRBColumn = 30
     
     Static [String]$WindowTitle = 'Nav'
