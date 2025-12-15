@@ -121,7 +121,7 @@ Set-StrictMode -Version Latest
 [StatusItemDropConfirmDialog]     $Script:TheStatusItemConfirmDropDialog = $null
 [VerticalInventoryWindow]         $Script:TheVerticalInventoryWindow     = $null
 [MapTileObject]                   $Script:TheItemToDrop                  = $null
-[HorizontalGpsStatusWindow]       $Script:TheNewGpsStatusWindow          = [HorizontalGpsStatusWindow]::new()
+[GpsHorizontalStatusWindow]       $Script:TheNewGpsStatusWindow          = [GpsHorizontalStatusWindow]::new()
 [GpsMapWalkerWindow]              $Script:TheGpsMapWalkerWindow          = [GpsMapWalkerWindow]::new()
 [GpsGameInstructionsWindow]       $Script:TheGpsInstructionsWindow       = [GpsGameInstructionsWindow]::new()
 

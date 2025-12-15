@@ -4,7 +4,7 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# HORIZONTAL GPS STATUS WINDOW
+# GPS HORIZONTAL STATUS WINDOW
 #
 # A NEW WINDOW USED IN THE NAVIGATION SCREEN. THIS WINDOW DOES THE SAME EXACT
 # THING THAT THE LEGACY STATUS WINDOW DID, JUST DISPLAYED IN A HORIZONTAL
@@ -12,7 +12,7 @@ Set-StrictMode -Version Latest
 #
 ###############################################################################
 
-Class HorizontalGpsStatusWindow : WindowBase {
+Class GpsHorizontalStatusWindow : WindowBase {
     Static [Int]$PlayerStatDrawColumn = 3
     Static [Int]$PlayerStatDrawRow    = 2
     Static [Int]$WindowLTRow          = 1
@@ -26,19 +26,19 @@ Class HorizontalGpsStatusWindow : WindowBase {
 
     [Boolean]$AreLabelsSetup
 
-    HorizontalGpsStatusWindow() : base() {
+    GpsHorizontalStatusWindow() : base() {
         $this.LeftTop = [ATCoordinates]@{
-            Row    = [HorizontalGpsStatusWindow]::WindowLTRow
-            Column = [HorizontalGpsStatusWindow]::WindowLTColumn
+            Row    = [GpsHorizontalStatusWindow]::WindowLTRow
+            Column = [GpsHorizontalStatusWindow]::WindowLTColumn
         }
         $this.RightBottom = [ATCoordinates]@{
-            Row    = [HorizontalGpsStatusWindow]::WindowRBRow
-            Column = [HorizontalGpsStatusWindow]::WindowRBColumn
+            Row    = [GpsHorizontalStatusWindow]::WindowRBRow
+            Column = [GpsHorizontalStatusWindow]::WindowRBColumn
         }
 
         $this.UpdateDimensions()
         $this.SetupTitle(
-            [HorizontalGpsStatusWindow]::WindowTitle,
+            [GpsHorizontalStatusWindow]::WindowTitle,
             [CCTextDefault24]::new()
         )
 
