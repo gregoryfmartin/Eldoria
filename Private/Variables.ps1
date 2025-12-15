@@ -624,6 +624,7 @@ $Script:BATLut = @(
     }
 
     $Script:ThePlayer.Update()
+    $Script:TheNewGpsStatusWindow.SetupLabels()
     #$Script:TheStatusWindow.SetAllDirty(); $Script:TheStatusWindow.Draw()
     $Script:TheNewGpsStatusWindow.SetAllDirty(); $Script:TheNewGpsStatusWindow.Draw()
     $Script:TheGpsMapWalkerWindow.SetAllDirty(); $Script:TheGpsMapWalkerWindow.Draw()
