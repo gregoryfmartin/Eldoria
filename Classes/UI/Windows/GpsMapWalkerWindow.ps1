@@ -91,4 +91,10 @@ Class GpsMapWalkerWindow : WindowBase {
 
         ([WindowBase]$this).Draw()
     }
+    
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+        
+        $this.IsBorderUpdated = $false
+    }
 }

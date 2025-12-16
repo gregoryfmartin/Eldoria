@@ -69,6 +69,7 @@ Set-StrictMode -Version Latest
 [Boolean]                         $Script:GpsRestoredFromInvBackup       = $true
 [Boolean]                         $Script:GpsRestoredFromBatBackup       = $false
 [Boolean]                         $Script:GpsRestoredFromStaBackup       = $false
+[Boolean]                         $Script:GpsDrawnAlready                = $false
 [Boolean]                         $Script:BattleCursorVisible            = $false
 [Boolean]                         $Script:HasTitleBgmStarted             = $false
 [Boolean]                         $Script:HasSubtitleBeenWritten         = $false
@@ -124,6 +125,7 @@ Set-StrictMode -Version Latest
 [GpsHorizontalStatusWindow]       $Script:TheNewGpsStatusWindow          = [GpsHorizontalStatusWindow]::new()
 [GpsMapWalkerWindow]              $Script:TheGpsMapWalkerWindow          = [GpsMapWalkerWindow]::new()
 [GpsGameInstructionsWindow]       $Script:TheGpsInstructionsWindow       = [GpsGameInstructionsWindow]::new()
+[InputManager]                    $Script:TheInputManager                = [InputManager]::new()
 
 
 [String[]]$Script:FemaleImageData = @(
@@ -625,17 +627,30 @@ $Script:BATLut = @(
 
     $Script:ThePlayer.Update()
     $Script:TheNewGpsStatusWindow.SetupLabels()
-    #$Script:TheStatusWindow.SetAllDirty(); $Script:TheStatusWindow.Draw()
-    $Script:TheNewGpsStatusWindow.SetAllDirty(); $Script:TheNewGpsStatusWindow.Draw()
-    $Script:TheGpsMapWalkerWindow.SetAllDirty(); $Script:TheGpsMapWalkerWindow.Draw()
-    $Script:TheGpsInstructionsWindow.SetAllDirty(); $Script:TheGpsInstructionsWindow.Draw()
-    #$Script:TheCommandWindow.SetAllDirty(); $Script:TheCommandWindow.Draw()
-    $Script:TheSceneWindow.SetAllDirty(); $Script:TheSceneWindow.Draw()
-    $Script:TheMessageWindow.SetAllDirty(); $Script:TheMessageWindow.Draw()
-    $Script:TheCommandWindow.HandleInput()
+    
+    If($Script:GpsDrawnAlready -EQ $false) {
+        $Script:TheNewGpsStatusWindow.SetAllDirty()
+        $Script:TheGpsMapWalkerWindow.SetAllDirty()
+        $Script:TheGpsInstructionsWindow.SetAllDirty()
+        $Script:TheSceneWindow.SetAllDirty()
+        $Script:TheMessageWindow.SetAllDirty()
+        $Script:GpsDrawnAlready = $true
+    }
+    
+    Write-Host "`e[?2026h" -NoNewline
+    $Script:TheNewGpsStatusWindow.Draw()
+    $Script:TheGpsMapWalkerWindow.Draw()
+    $Script:TheGpsInstructionsWindow.Draw()
+    $Script:TheSceneWindow.Draw()
+    $Script:TheMessageWindow.Draw()
+    Write-Host "`e[?2026l" -NoNewline
+
+    $Script:TheInputManager.HandleInput()
 }
 
 [ScriptBlock]$Script:TheBattleScreenState = {
+    $Script:GpsDrawnAlready = $false
+
     If($Script:HasBattleIntroPlayed -EQ $false) {
         If($Script:ThePreviousGlobalGameState -EQ [GameStatePrimary]::GamePlayScreen) {
             $Script:TheBufferManager.ClearCommon()
@@ -706,6 +721,8 @@ $Script:BATLut = @(
 }
 
 [ScriptBlock]$Script:ThePlayerStatusScreenState = {
+    $Script:GpsDrawnAlready = $false
+
     Switch($Script:TheStatusScreenState) {
         ([StatusScreenState]::Setup) {
             Write-Host "$([ATControlSequences]::CursorHide)"

@@ -201,4 +201,12 @@ Class GpsHorizontalStatusWindow : WindowBase {
             $Label.Draw()
         }
     }
+    
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+        
+        Foreach($Label in $this.Labels) {
+            $Label.Dirty = $true
+        }
+    }
 }

@@ -213,6 +213,7 @@ Write-Progress -Activity $Script:ProgressActivity -Status ($Script:WindowSupport
 # BUFFER/WINDOW SUPPORT
 #//////////////////////////////////////////////////////////////////////////////
 . "$PSScriptRoot\Classes\BufferManager.ps1"
+. "$PSScriptRoot\Classes\UI\InputManager.ps1"
 . "$PSScriptRoot\Classes\UI\UIEBase.ps1"
 . "$PSScriptRoot\Classes\UI\Controls\UIELabel.ps1"
 . "$PSScriptRoot\Classes\UI\Controls\UIEMenuItem.ps1"

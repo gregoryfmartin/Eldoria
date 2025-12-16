@@ -287,4 +287,11 @@ Class GpsGameInstructionsWindow : WindowBase {
             $Label.Draw()
         }
     }
+    
+    [Void]SetAllDirty() {
+        ([WindowBase]$this).SetAllDirty()
+        Foreach($Label in $this.Instructions) {
+            $Label.Dirty = $true
+        }
+    }
 }
