@@ -2,7 +2,7 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 #
 # EQUIPMENTSLOT ENUMERATION
 #
@@ -22,7 +22,7 @@ Set-StrictMode -Version Latest
 #   - PAULDRON : SHOULDER ARMOR
 #   - WEAPON   : MAIN HAND WEAPON
 #
-###############################################################################
+#//////////////////////////////////////////////////////////////////////////////
 
 Enum EquipmentSlot {
     Armor
