@@ -21,7 +21,7 @@ Set-StrictMode -Version Latest
 Class ATString {
     [ValidateNotNull()][ATStringPrefix]$Prefix
     [ValidateNotNull()][String]$UserData
-    [ValidateNotNull()][Boolean]$UseATReset
+    [Boolean]$UseATReset
 
     ATString() {
         $this.Prefix     = [ATStringPrefixNone]::new()

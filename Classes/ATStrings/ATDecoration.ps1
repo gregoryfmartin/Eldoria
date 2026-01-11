@@ -15,10 +15,10 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class ATDecoration {
-    [ValidateNotNull()][Boolean]$Blink
-    [ValidateNotNull()][Boolean]$Italic
-    [ValidateNotNull()][Boolean]$Underline
-    [ValidateNotNull()][Boolean]$Strikethru
+    [Boolean]$Blink
+    [Boolean]$Italic
+    [Boolean]$Underline
+    [Boolean]$Strikethru
 
     ATDecoration() {
         $this.Blink      = $false

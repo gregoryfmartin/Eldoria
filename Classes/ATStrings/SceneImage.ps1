@@ -22,21 +22,15 @@ Class SceneImage {
     Static [Int]$Width  = 48
     Static [Int]$Height = 18
 
-    #[Int]$LWidth
-    #[Int]$LHeight
     [ATSceneImageString[,]]$Image
 
     SceneImage() {
-        [Int]$LWidth  = [SceneImage]::Width
-        [Int]$LHeight = [SceneImage]::Height
         $this.Image  = New-Object 'ATSceneImageString[,]' ([Int32]([SceneImage]::Height)), ([Int32]([SceneImage]::Width))
     }
 
     SceneImage(
         [ATSceneImageString[,]]$Image
     ) {
-        #$this.LWidth  = [SceneImage]::Width
-        #$this.LHeight = [SceneImage]::Height
         $this.Image  = $Image
     }
 
