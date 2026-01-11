@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # STATUS SCREEN MODE
 #
@@ -10,7 +14,7 @@
 # TECH INVENTORY SELECTION
 #    THE STATUS SCREEN IS SHOWING AND FOCUSED ON THE TECH INVENTORY SUB-WINDOW.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum StatusScreenMode {
     EquippedTechSelection

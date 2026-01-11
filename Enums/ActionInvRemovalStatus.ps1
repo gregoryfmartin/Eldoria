@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # ACTION INV REMOVAL STATUS
 #
@@ -8,7 +12,7 @@
 # FAIL
 #    THE ACTION FAILED TO BE REMOVED FROM THE ACTION INVENTORY FOR AN UNSPECIFIC REASON.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum ActionInvRemovalStatus {
     Success

@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # GENDER
 #
@@ -8,7 +12,7 @@
 # UNISEX, WHICH IS PREDOMINANTLY USED FOR SPECIFYING THAT A PIECE OF EQUIPMENT CAN
 # BE USED BY EITHER MALE OR FEMALE.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum Gender {
     Male

@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # FNL NOISE TYPE
 #
@@ -7,7 +11,7 @@
 # DEFINES THE TYPE OF NOISE TO GENERATE. I'M NOT GOING TO CLAIM THAT I UNDERSTAND
 # ALL OF THEM TO ANY SIGNIFICANT DEGREE.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum FnlNoiseType {
     OpenSimplex2

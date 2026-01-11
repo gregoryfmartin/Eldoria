@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # ITEM REMOVAL STATUS
 #
@@ -11,7 +15,7 @@
 # FAIL KEY ITEM
 #    THE ITEM FAILED TO BE REMOVED FROM THE ITEM INVENTORY BECAUSE IT'S A KEY ITEM.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum ItemRemovalStatus {
     Success

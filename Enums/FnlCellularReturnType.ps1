@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # FNL CELLULAR RETURN TYPE
 #
@@ -6,7 +10,7 @@
 #
 # SPECIFIES THE TYPE OF CELLULAR RETURN WHEN EVALUATING CELL-RELATED EXPRESSIONS.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum FnlCellularReturnType {
     CellValue

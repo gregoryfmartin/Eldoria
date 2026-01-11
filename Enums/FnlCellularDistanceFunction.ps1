@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # FNL CELLULAR DISTANCE FUNCTION
 #
@@ -6,7 +10,7 @@
 #
 # SPECIFIES THE TYPE OF CELLULAR DISTANCE FUNCTION TO USE DURING EVALUATION.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum FnlCellularDistanceFunction {
     Euclidean

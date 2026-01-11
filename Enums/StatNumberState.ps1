@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # STAT NUMBER STATE
 #
@@ -14,7 +18,7 @@
 # NOTE THAT THIS ENUMERATION MAKE NO OPINION ON WHAT DEFINES SAID TOLERANCES.
 # THIS IS LEFT TO THE IMPLEMENTATION.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum StatNumberState {
     Normal

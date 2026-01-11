@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # WINDOW BORDER PART DIRTY
 #
@@ -12,7 +16,7 @@
 # THE ADDED BENEFIT OF USING THIS ENUMERATION IS THAT IT REMOVES A HANDFUL OF STATIC
 # MEMBERS FROM EACH WINDOW CLASS.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum WindowBorderPartDirty {
     Top

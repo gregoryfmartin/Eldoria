@@ -1,4 +1,8 @@
-#//////////////////////////////////////////////////////////////////////////////
+using namespace System
+
+Set-StrictMode -Version Latest
+
+###############################################################################
 #
 # BATTLE ACTION RESULT TYPE
 #
@@ -28,7 +32,7 @@
 # FAILED NOT ENOUGH MP
 #    THE ACTION FAILED BECUASE THE USER DOESN'T HAVE ENOUGH MP.
 #
-#//////////////////////////////////////////////////////////////////////////////
+###############################################################################
 
 Enum BattleActionResultType {
     Success
