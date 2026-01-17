@@ -21,16 +21,16 @@ CompatiblePSEditions = @('Core')
 GUID = '9fa4cd9b-1e12-4ac1-b068-d7a7e80620d5'
 
 # Author of this module
-Author = 'Gregory F Martin'
+Author = 'Not Gary (Gregory F Martin)'
 
 # Company or vendor of this module
-CompanyName = 'Gregory F Martin'
+CompanyName = 'Not Company'
 
 # Copyright statement for this module
-Copyright = '(c) Gregory F Martin. All rights reserved.'
+Copyright = '(c) Not Gary (Gregory F Martin). All rights reserved.'
 
 # Description of the functionality provided by this module
-Description = 'Eldoria is a text-based game controlled via REPL.'
+Description = 'Eldoria is a text-based game.'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''
@@ -54,7 +54,7 @@ Description = 'Eldoria is a text-based game controlled via REPL.'
 # RequiredModules = @()
 
 # Assemblies that must be loaded prior to importing this module
-RequiredAssemblies = @('PresentationCore')
+# RequiredAssemblies = @('PresentationCore')
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
 # ScriptsToProcess = @()
