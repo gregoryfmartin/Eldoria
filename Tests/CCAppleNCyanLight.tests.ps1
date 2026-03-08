@@ -1,7 +1,6 @@
 Describe 'CCAppleNCyanLight24' {
     BeforeAll {
-        . $PSScriptRoot\..\Classes\ConsoleColor\ConsoleColor24.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCAppleNCyanLight.ps1
+        . $PSScriptRoot\..\Classes\ConsoleColor\CCAll.ps1
     }
 
     BeforeEach {

@@ -1,14 +1,13 @@
 # This assumes your test runner can locate and load these class files.
 # If running this file directly, you would need to dot-source all dependencies.
 # e.g., . (Join-Path $PSScriptRoot '..\..\..\Classes\ATStrings\ATControlSequences.ps1')
-#      . (Join-Path $PSScriptRoot '..\..\..\Classes\Console\ConsoleColor24.ps1')
 #      . (Join-Path $PSScriptRoot '..\..\..\Classes\ATStrings\ATCoordinates.ps1')
 #      ... and so on for all related ATString classes.
 
 Describe 'ATSceneImageString Class' {
     BeforeAll {
         . $PSScriptRoot\..\Classes\ATStrings\ATControlSequences.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\ConsoleColor24.ps1
+        . $PSScriptRoot\..\Classes\ConsoleColor\CCAll.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATDecoration.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATCoordinates.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATBackgroundColor.ps1

@@ -1,7 +1,6 @@
 Describe 'ATBackgroundColor24None' {
     BeforeAll {
-        . $PSScriptRoot\..\Classes\ConsoleColor\ConsoleColor24.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCBlack.ps1
+        . $PSScriptRoot\..\Classes\ConsoleColor\CCAll.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATControlSequences.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATBackgroundColor.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATBackgroundColorNone.ps1

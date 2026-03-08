@@ -4,10 +4,7 @@ Set-StrictMode -Version Latest
 
 Describe 'UIEMenuItem' {
     BeforeAll {
-        . $PSScriptRoot\..\Classes\ConsoleColor\ConsoleColor24.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCBlack.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCAppleVGreenLight.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCAppleVGreyDark.ps1
+        . $PSScriptRoot\..\Classes\ConsoleColor\CCAll.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATControlSequences.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATForegroundColor.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATForegroundColorNone.ps1
