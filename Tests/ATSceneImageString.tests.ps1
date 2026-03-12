@@ -7,7 +7,7 @@
 Describe 'ATSceneImageString Class' {
     BeforeAll {
         . $PSScriptRoot\..\Classes\ATStrings\ATControlSequences.ps1
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCAll.ps1
+        . $PSScriptRoot\..\Classes\TrueColorSupport.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATDecoration.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATCoordinates.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATBackgroundColor.ps1

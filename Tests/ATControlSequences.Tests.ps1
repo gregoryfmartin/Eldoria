@@ -1,6 +1,6 @@
 Describe 'ATControlSequences' {
     BeforeAll {
-        . $PSScriptRoot\.\..\Classes\ConsoleColor\CCAll.ps1
+        . $PSScriptRoot\.\..\Classes\TrueColorSupport.ps1
         . $PSScriptRoot\..\Classes\ATStrings\ATControlSequences.ps1
     }
 

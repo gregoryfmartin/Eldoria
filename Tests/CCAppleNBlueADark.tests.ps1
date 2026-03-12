@@ -1,6 +1,6 @@
 Describe 'CCAppleNBlueADark24' {
     BeforeAll {
-        . $PSScriptRoot\..\Classes\ConsoleColor\CCAll.ps1
+        . $PSScriptRoot\..\Classes\TrueColorSupport.ps1
     }
 
     BeforeEach {
