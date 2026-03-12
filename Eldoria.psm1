@@ -41,7 +41,7 @@ Foreach($File in (Get-ChildItem -Path "$PSScriptRoot\Enums\*.ps1")) {
 }
 
 Write-Progress -Activity $Script:ProgressActivity -Status ($Script:ColorLoadStrings | Get-Random) -PercentComplete -1
-. "$PSScriptRoot\Classes\ConsoleColor\CCAll.ps1"
+. "$PSScriptRoot\Classes\TrueColorSupport.ps1"
 
 
 Write-Progress -Activity $Script:ProgressActivity -Status ($Script:FnlLoadStrings | Get-Random) -PercentComplete -1
