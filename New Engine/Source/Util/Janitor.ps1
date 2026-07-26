@@ -98,9 +98,12 @@ Class Janitor {
             $ContextBroadcaster.Broadcast(
                 [CustomEvents]::BufferWidthTooSmall,
                 $this,
-                @(
-                    $this
-                )
+                [Context]::new(@(
+                    $this,
+                    [PSCustomObject]@{
+                        UserBufferWidth = [Console]::BufferWidth
+                    }
+                ))
             )
         }
     }
@@ -119,9 +122,12 @@ Class Janitor {
             $ContextBroadcaster.Broadcast(
                 [CustomEvents]::BufferHeightTooSmall,
                 $this,
-                @(
-                    $this
-                )
+                [Context]::new(@(
+                    $this,
+                    [PSCustomObject]@{
+                        UserBufferHeight = [Console]::BufferHeight
+                    }
+                ))
             )
         }
     }
