@@ -41,36 +41,6 @@ Class GameCore {
         $this.ContextBroadcaster = [ContextBroadcaster]::new()
     }
 
-    [Void]Run() {
-        # $this.Setup()
-
-        # $this.Janitor.PerformSystemSetupChecks($this.ContextBroadcaster)
-
-        While($this.IsRunning -EQ $true) {
-            [Double]$CurrentTime = $this.Sw.Elapsed.TotalSeconds
-            [Double]$Dt = $CurrentTime - $this.LastTime
-            $this.LastTime = $CurrentTime
-
-            $this.Janitor.PerformRegularChecks(
-                $this.ContextBroadcaster,
-                $this.BufferSpec
-            )
-
-            Write-Host "`e[?2026h" -NoNewline
-            $this.Logic()
-            Write-Host "`e[?2026l" -NoNewline
-
-            [Double]$FrameWorkTime = $this.Sw.Elapsed.TotalSeconds - $CurrentTime
-            [Double]$SleepTimeSeconds = $this.TargetFrameTime - $FrameWorkTime
-
-            If($SleepTimeSeconds -GT 0) {
-                [Thread]::Sleep([Int]($SleepTimeSeconds * 1000))
-            }
-
-            Write-Host "$($Dt)"
-        }
-    }
-
     [Void]Logic() {}
 
     [Void]Setup() {
