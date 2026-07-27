@@ -42,11 +42,9 @@ Class GameCore {
     }
 
     [Void]Run() {
-        $this.Setup()
+        # $this.Setup()
 
-        $this.Sw.Start()
-
-        $this.Janitor.PerformSystemSetupChecks($this.ContextBroadcaster)
+        # $this.Janitor.PerformSystemSetupChecks($this.ContextBroadcaster)
 
         While($this.IsRunning -EQ $true) {
             [Double]$CurrentTime = $this.Sw.Elapsed.TotalSeconds
@@ -93,5 +91,7 @@ Class GameCore {
 
             Write-Host ($CurrentContext.References | Out-String)
         }.GetNewClosure()
+
+        $this.Sw.Start()
     }
 }

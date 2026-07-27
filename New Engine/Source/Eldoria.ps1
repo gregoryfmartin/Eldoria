@@ -26,6 +26,17 @@ Set-StrictMode -Version Latest
 . "$($PSScriptRoot)/String/StringAnimator.ps1"
 . "$($PSScriptRoot)/Engine/GameCore.ps1"
 
-[GameCore]$TheGameCore = [GameCore]::new()
+. "$($PSScriptRoot)/Engine/GameState.ps1"
+. "$($PSScriptRoot)/Engine/GameStateDefinitions.ps1"
 
-$TheGameCore.Run()
+[GameCore]$TheGameCore = [GameCore]::new()
+[Boolean]$Global:IsRunning = $true
+
+Try {
+    While($IsRunning -EQ $true) {
+        & $Global:GameStateDefinitions[$Global:CurrentGameState] ([Context]::new(@($TheGameCore)))
+    }
+} Finally {
+    & $Global:GameStateDefinitions[[GameState]::Deinit] ([Context]::new(@($TheGameCore)))
+}
+

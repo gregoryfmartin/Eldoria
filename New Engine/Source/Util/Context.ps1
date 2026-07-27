@@ -16,7 +16,6 @@ Set-StrictMode -Version Latest
 
 Class Context {
     [Object[]]$References
-    # [Hashtable]$References
 
     Context() {
         $this.References = @{}
@@ -26,13 +25,5 @@ Class Context {
         [Object[]]$References
     ) {
         $this.References = ($null -EQ $References) ? @() : $References
-        
-        # $this.References = @{}
-
-        # If($null -NE $References) {
-        #     Foreach($Item in $References) {
-        #         $this.References[($Item.PSTypeNames[0]).ToString()] = $Item
-        #     }
-        # }
     }
 }
