@@ -2,14 +2,15 @@ using namespace System
 
 Set-StrictMode -Version Latest
 
+
+
+
+
 ###############################################################################
 #
 # AT CONTROL SEQUENCES
 #
 # CONTAINS COMMON ANSI-TERMINATED STRINGS THAT ARE USED THROUGHT THE PROGRAM.
-#
-# RELIES ON:
-#   CONSOLECOLOR24
 #
 ###############################################################################
 
@@ -27,13 +28,13 @@ Class ATControlSequences {
     Static [String]GenerateFG24String(
         [TrueColor]$Color
     ) {
-        Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
+        Return "$([ATControlSequences]::ForegroundColor24Prefix)$($Color.Red.Value);$($Color.Green.Value);$($Color.Blue.Value)m"
     }
 
     Static [String]GenerateBG24String(
         [TrueColor]$Color
     ) {
-        Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.ToString());$($Color.Green.ToString());$($Color.Blue.ToString())m"
+        Return "$([ATControlSequences]::BackgroundColor24Prefix)$($Color.Red.Value);$($Color.Green.Value);$($Color.Blue.Value)m"
     }
 
     Static [String]GenerateCoordinateString(

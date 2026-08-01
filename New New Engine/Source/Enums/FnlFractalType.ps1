@@ -1,0 +1,22 @@
+using namespace System
+
+Set-StrictMode -Version Latest
+
+
+
+
+
+###############################################################################
+#
+# FNL FRACTAL TYPE
+#
+###############################################################################
+
+Enum FnlFractalType {
+    None
+    FBm
+    Ridged
+    PingPong
+    DomainWarpProgressive
+    DomainWarpIndependent
+}
