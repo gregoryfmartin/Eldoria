@@ -19,20 +19,7 @@ Class GSSplashScreenA : SMState {
                 [Context]$Context
             )
 
-            If($null -EQ $Context) {
-                # THIS IS A FATAL ERROR
-                [ContextBroadcaster]::StaticBroadcast(
-                    "$([CustomEvents]::BadContext)",
-                    $this,
-                    [Context]::new(
-                        @(
-                            $this
-                        )
-                    )
-                )
-
-                Return
-            }
+            Confirm-Context $Context
 
             Write-Host 'Entered Splash Screen A State'
         }
@@ -42,20 +29,7 @@ Class GSSplashScreenA : SMState {
                 [Context]$Context
             )
 
-            If($null -EQ $Context) {
-                # THIS IS A FATAL ERROR
-                [ContextBroadcaster]::StaticBroadcast(
-                    "$([CustomEvents]::BadContext)",
-                    $this,
-                    [Context]::new(
-                        @(
-                            $this
-                        )
-                    )
-                )
-
-                Return
-            }
+            Confirm-Context $Context
 
             Write-Host 'Leaving Splash Screen A State'
         }
@@ -65,20 +39,7 @@ Class GSSplashScreenA : SMState {
                 [Context]$Context
             )
 
-            If($null -EQ $Context) {
-                # THIS IS A FATAL ERROR
-                [ContextBroadcaster]::StaticBroadcast(
-                    "$([CustomEvents]::BadContext)",
-                    $this,
-                    [Context]::new(
-                        @(
-                            $this
-                        )
-                    )
-                )
-
-                Return
-            }
+            Confirm-Context $Context
 
             # CONTEXT LAYOUT HERE IS
             # 0 - DELTA TIME

@@ -39,6 +39,7 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 . "$($DirUtil)/ClampableInt.ps1"
 . "$($DirUtil)/BufferSpecDefinition.ps1"
 . "$($DirUtil)/Janitor.ps1"
+. "$($DirUtil)/Functions.ps1"
 . "$($DirStateMachine)/SMState.ps1"
 . "$($DirStateMachine)/SMTransition.ps1"
 . "$($DirStateMachine)/SMStateMachine.ps1"
