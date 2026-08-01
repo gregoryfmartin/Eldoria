@@ -33,6 +33,8 @@ Class GSSplashScreenA : SMState {
 
                 Return
             }
+
+            Write-Host 'Entered Splash Screen A State'
         }
 
         $this.OnExit = {
@@ -54,6 +56,8 @@ Class GSSplashScreenA : SMState {
 
                 Return
             }
+
+            Write-Host 'Leaving Splash Screen A State'
         }
 
         $this.OnUpdate = {
@@ -76,7 +80,15 @@ Class GSSplashScreenA : SMState {
                 Return
             }
 
-            # THE FIRST ELEMENT IN THE CONTEXT IS THE DELTA TIME
+            # CONTEXT LAYOUT HERE IS
+            # 0 - DELTA TIME
+            # 1 - KEYS PRESSED
+            # 2 - ELDORIA CORE
+            If($Context.References[1].Count -GT 0) {
+                Foreach($KeyPress in $Context.References[1]) {
+                    Write-Host "$($KeyPress.Key.ToString())"
+                }
+            }
         }
     }
 }

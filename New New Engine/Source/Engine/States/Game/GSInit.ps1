@@ -13,7 +13,7 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class GSInit : SMState {
-    GSInit() : base('Init') {
+    GSInit() : base('GSInit') {
         $this.OnEnter = $null
 
         $this.OnExit = {
@@ -32,7 +32,7 @@ Class GSInit : SMState {
             # 0 - DELTA TIME
             # 1 - KEYS PRESSED
             # 2 - ELDORIA CORE
-            $Context.References[2].GameState.Trigger('Ready')
+            $Context.References[2].GameState.Trigger('Ready', $Context)
         }
     }
 }

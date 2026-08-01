@@ -99,7 +99,8 @@ Class SMStateMachine {
     }
 
     [Void]Trigger(
-        [String]$StateEvent
+        [String]$StateEvent,
+        [Context]$Context
     ) {
         # FIND A VALID TRANSITION FOR THE CURRENT STATE AND EVENT
         $ValidTransition = $null
@@ -124,12 +125,12 @@ Class SMStateMachine {
 
         # STEP 1: EXECUTE ONEXIT FOR THE CURRENT STATE
         If($null -NE $CurrentStateObj -AND $null -NE $CurrentStateObj.OnExit) {
-            $CurrentStateObj.OnExit.Invoke()
+            $CurrentStateObj.OnExit.Invoke($Context)
         }
 
         # STEP 2: EXECUTE TRANSITION SPECIFIC ACTION (IF ANY)
         If($null -NE $ValidTransition.Action) {
-            $ValidTransition.Action.Invoke()
+            $ValidTransition.Action.Invoke($Context)
         }
 
         # STEP 3: CHANGE THE CURRENT STATE
@@ -137,7 +138,7 @@ Class SMStateMachine {
 
         # STEP 4: EXECUTE ONENTER FOR THE NEW STATE
         If($null -NE $NextStateObj -AND $null -NE $NextStateObj.OnEnter) {
-            $NextStateObj.OnEnter.Invoke()
+            $NextStateObj.OnEnter.Invoke($Context)
         }
     }
 }
