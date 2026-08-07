@@ -213,6 +213,8 @@ Class ColorLibrary {
     Static [TrueColor]$AppleBrownLight      = [TrueColor]::new(0xAC7F5E)
     Static [TrueColor]$AppleBrownDark       = [TrueColor]::new(0xB78A66)
     Static [TrueColor]$MistyRose            = [TrueColor]::new(0xFFE4E1)
+    Static [TrueColor]$WindowBorderColor    = [ColorLibrary]::Ivory
+    Static [TrueColor]$TextColor            = [ColorLibrary]::GhostWhite
     Static [TrueColor]$Random               = [TrueColor]::new(
         [ColorChannel]::new((Get-Random -Minimum 1 -Maximum 255)),
         [ColorChannel]::new((Get-Random -Minimum 1 -Maximum 255)),
