@@ -33,6 +33,28 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class UIContainer {
+    Static [Hashtable]$WindowDesignRounded = @{
+        [WindowBorderPart]::LeftTop     = '╭'
+        [WindowBorderPart]::Top         = '─'
+        [WindowBorderPart]::RightTop    = '╮'
+        [WindowBorderPart]::Left        = '│'
+        [WindowBorderPart]::Right       = '│'
+        [WindowBorderPart]::LeftBottom  = '╰'
+        [WindowBorderPart]::Bottom      = '─'
+        [WindowBorderPart]::RightBottom = '╯'
+    }
+
+    Static [Hashtable]$WindowDesignSquare = @{
+        [WindowBorderPart]::LeftTop     = '┌'
+        [WindowBorderPart]::Top         = '─'
+        [WindowBorderPart]::RightTop    = '┐'
+        [WindowBorderPart]::Left        = '│'
+        [WindowBorderPart]::Right       = '│'
+        [WindowBorderPart]::LeftBottom  = '└'
+        [WindowBorderPart]::Bottom      = '─'
+        [WindowBorderPart]::RightBottom = '┘'
+    }
+
     [Int]$Width
     [Int]$Height
     [Boolean]$UseTitle
@@ -44,6 +66,7 @@ Class UIContainer {
     [TrueColor]$TitleColor
     [TrueColor[]]$BorderDrawColors
     [String]$Title
+    [Hashtable]$CurrentWindowDesigns
 
     UIContainer() {
         $this.LeftTop          = [ATCoordinatesNone]::new()
@@ -68,11 +91,85 @@ Class UIContainer {
         $this.UseTitle     = $false
         $this.TitleDirty   = $false
         $this.ComplexTitle = $false
-        $this.TitleColor   = [ColorLibrary]::TextColorß
+        $this.TitleColor   = [ColorLibrary]::TextColor
+        $this.CurrentWindowDesigns = [UIContainer]::WindowDesignRounded
     }
 
     [Void]UpdateDimensions() {
         $this.Width = $this.RightBottom.Column - $this.LeftTop.Column
         $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
+    }
+
+    [Void]SetupTitle(
+        [String]$Title,
+        [TrueColor]$Color
+    ) {
+        $this.UseTitle = $true
+        $this.TitleDirty = $true
+        $this.Title = $Title
+        $this.TitleColor = $Color
+    }
+
+    [Void]SetAllDirty() {
+        $this.BorderDrawDirty = [Boolean[]]@(
+            $true,
+            $true,
+            $true,
+            $true
+        )
+
+        If($this.UseTitle -EQ $true) {
+            $this.TitleDirty = $true
+        }
+    }
+
+    [Void]ToString() {
+        [ATStringComposite]$BorderTop = [ATStringComposite]::new()
+        [ATStringComposite]$BorderBottom = [ATStringComposite]::new()
+        [ATStringComposite]$BorderLeft = [ATStringComposite]::new()
+        [ATStringComposite]$BorderRight = [ATStringComposite]::new()
+
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Top] -EQ $true) {
+            $BorderTop = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::LeftTop]
+                        Coordinates = $this.LeftTop
+                    }
+                    UserData = "$($this.CurrentWindowDesigns[[WindowBorderPart]::LeftTop])"
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Top]
+                    }
+
+                    # I HAVE OFFICIALLY COMITTED THE CARDINAL SIN OF MULTIPLYING A STRING WITH AN INTEGER
+                    # TO REPEAT INLINE.
+                    # FUCK ME. FUCK ME. FUCK ME.
+                    UserData = "$($this.CurrentWindowDesigns[[WindowBorderPart]::Top] * ($this.Width - 1))"
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::RightTop]
+                    }
+                    UserData = "$($this.CurrentWindowDesigns[[WindowBorderPart]::RightTop])"
+                    UseATReset $true
+                }
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Top] = $false
+        }
+
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Bottom] -EQ $true) {
+            $BorderBottom = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::LeftBottom]
+                        Coordinates = [ATCoordinates]@{
+                            Row = [ClampableInt]::new(
+                        }
+                    }
+                }
+            ))
+        }
     }
 }
