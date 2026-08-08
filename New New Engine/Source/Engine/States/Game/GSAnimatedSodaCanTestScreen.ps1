@@ -978,7 +978,9 @@ Class GSAnimatedSodaCanTestScreen : SMState {
             # 2 - ELDORIA CORE
             Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
 
-            Foreach($Can in $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState].SodaCans) {
+            [SMState]$SelfState = $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState]
+
+            Foreach($Can in $SelfState.SodaCans) {
                 $Can.Update($Context.References[0])
                 Write-Host "$($Can.GetAmendedFrame())"
             }
