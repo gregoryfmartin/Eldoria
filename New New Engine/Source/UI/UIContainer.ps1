@@ -87,16 +87,16 @@ Class UIContainer {
             $true,
             $true
         )
-        $this.Title        = ''
-        $this.UseTitle     = $false
-        $this.TitleDirty   = $false
-        $this.ComplexTitle = $false
-        $this.TitleColor   = [ColorLibrary]::TextColor
+        $this.Title                = ''
+        $this.UseTitle             = $false
+        $this.TitleDirty           = $false
+        $this.ComplexTitle         = $false
+        $this.TitleColor           = [ColorLibrary]::TextColor
         $this.CurrentWindowDesigns = [UIContainer]::WindowDesignRounded
     }
 
     [Void]UpdateDimensions() {
-        $this.Width = $this.RightBottom.Column - $this.LeftTop.Column
+        $this.Width  = $this.RightBottom.Column - $this.LeftTop.Column
         $this.Height = $this.RightBottom.Row - $this.LeftTop.Row
     }
 
@@ -104,9 +104,9 @@ Class UIContainer {
         [String]$Title,
         [TrueColor]$Color
     ) {
-        $this.UseTitle = $true
+        $this.UseTitle   = $true
         $this.TitleDirty = $true
-        $this.Title = $Title
+        $this.Title      = $Title
         $this.TitleColor = $Color
     }
 
@@ -123,18 +123,19 @@ Class UIContainer {
         }
     }
 
-    [Void]ToString() {
-        [ATStringComposite]$BorderTop = [ATStringComposite]::new()
+    [String]ToAnsiControlSequenceString() {
+        [ATStringComposite]$BorderTop    = [ATStringComposite]::new()
         [ATStringComposite]$BorderBottom = [ATStringComposite]::new()
-        [ATStringComposite]$BorderLeft = [ATStringComposite]::new()
-        [ATStringComposite]$BorderRight = [ATStringComposite]::new()
+        [ATStringComposite]$BorderLeft   = [ATStringComposite]::new()
+        [ATStringComposite]$BorderRight  = [ATStringComposite]::new()
+        [ATString]$Title                 = [ATStringNone]::new()
 
         If($this.BorderDrawDirty[[WindowBorderPartDirty]::Top] -EQ $true) {
             $BorderTop = [ATStringComposite]::new(@(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::LeftTop]
-                        Coordinates = $this.LeftTop
+                        Coordinates     = $this.LeftTop
                     }
                     UserData = "$($this.CurrentWindowDesigns[[WindowBorderPart]::LeftTop])"
                 },
@@ -164,12 +165,110 @@ Class UIContainer {
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
                         ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::LeftBottom]
-                        Coordinates = [ATCoordinates]@{
-                            Row = [ClampableInt]::new(
+                        Coordinates     = [ATCoordinates]@{
+                            # THE FOLLOWING SHOULD WORK ON ACCOUNT OF THE IMPLICIT
+                            # OVERLOAD IN THE CLAMPABLE INT CLASS, BUT WE'LL FIND OUT!
+                            Row    = [ClampableInt]::new($this.RightBottom.Row)
+                            Column = [ClampableInt]::new($this.LeftTop.Column)
                         }
                     }
+                    UserData = "$($this.CurrentWindowDesigns[[WindowBorderPart]::LeftBottom])"
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Bottom]
+                    }
+                    UserData = "$($this.CurrentWindowDesigns[[WindowBorderPart]::Bottom] * ($this.Width - 1))"
+                },
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::RightBottom]
+                    }
+                    UserData   = "$($this.CurrentWindowDesigns[[WindowBorderPart]::RightBottom])"
+                    UseATReset = $true
                 }
             ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Bottom] = $false
         }
+
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Left] -EQ $true) {
+            $BorderLeft = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Left]
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = [ClampableInt]::new($this.LeftTop.Row + 1)
+                            Column = [ClampableInt]::new($this.LeftTop.Column)
+                        }
+                    }
+                    UserData = $(
+                        Invoke-Command -ScriptBlock {
+                            [String]$T = ''
+
+                            For([Int]$A = 0; $A -LT $this.Height; $A++) {
+                                [ATCoordinates]$B = [ATCoordinates]@{
+                                    Row    = [ClampableInt]::new(($this.LeftTop.Row + 1) + $A)
+                                    Column = [ClampableInt]::new($this.LeftTop.Column)
+                                }
+                                $T += "$($this.CurrentWindowDesigns[[WindowBorderPart]::Left])$($B.ToAnsiControlSequenceString())"
+                            }
+
+                            Return "$($T)"
+                        }
+                    )
+                }
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Left] = $true
+        }
+
+        If($this.BorderDrawDirty[[WindowBorderPartDirty]::Right] -EQ $true) {
+            $BorderRight = [ATStringComposite]::new(@(
+                [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.BorderDrawColors[[WindowBorderPart]::Right]
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = [ClampableInt]::new($this.LeftTop.Row + 1)
+                            Column = [ClampableInt]::new($this.RightBottom.Column)
+                        }
+                    }
+                    UserData = $(
+                        Invoke-Command -ScriptBlock {
+                            [String]$T = ''
+
+                            For([Int]$A = 0; $A -LT $this.Height; $A++) {
+                                [ATCoordinates]$B = [ATCoordinates]@{
+                                    Row    = [ClampableInt]::new(($this.LeftTop.Row + 1) + $A)
+                                    Column = [ClampableInt]::new($this.RightBottom.Column)
+                                }
+                                $T += "$($this.CurrentWindowDesigns[[WindowBorderPart]::Right])$($B.ToAnsiControlSequenceString())"
+                            }
+
+                            Return "$($T)"
+                        }
+                    )
+                }
+            ))
+            $this.BorderDrawDirty[[WindowBorderPartDirty]::Right] = $false
+        }
+
+        # THIS IS THE POINT OF DEVIATION
+        If($this.UseTitle -EQ $true) {
+            If($this.TitleDirty -EQ $true) {
+                $Title = [ATString]@{
+                    Prefix = [ATStringPrefix]@{
+                        ForegroundColor = $this.TitleColor
+                        Coordinates     = [ATCoordinates]@{
+                            Row    = [ClampableInt]::new($this.LeftTop.Row)
+                            Column = [ClampableInt]::new($this.LeftTop.Column + 2)
+                        }
+                    }
+                    UserData   = "$($this.Title)"
+                    UseATReset = $true
+                }
+                $this.TitleDirty = $false
+            }
+        }
+
+        Return "$($BorderTop.ToAnsiControlSequenceString())$($BorderBottom.ToAnsiControlSequenceString())$($BorderLeft.ToAnsiControlSequenceString())$($BorderRight.ToAnsiControlSequenceString())$($Title.ToAnsiControlSequenceString)"
     }
 }

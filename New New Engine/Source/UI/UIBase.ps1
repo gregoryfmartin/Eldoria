@@ -8,17 +8,17 @@ Set-StrictMode -Version Latest
 
 ###############################################################################
 #
-# UIEBASE
+# UIBASE
 #
 # THE BASE COMPONENT FOR ALL USER INTERFACE OBJECTS.
 #
 ###############################################################################
 
-Class UIEBase : ATString {
+Class UIBase : ATString {
     [String]$Blank
     [Boolean]$Dirty
     
-    UIEBase() : base() {
+    UIBase() : base() {
         $this.Dirty = $false
         $this.Blank = ' '
     }
