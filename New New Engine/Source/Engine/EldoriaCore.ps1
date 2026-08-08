@@ -19,14 +19,14 @@ Class EldoriaCore : GameCore {
         $this.GameState = [SMStateMachine]::new('GSInit')
 
         $this.GameState.AddState([GSInit]::new())
-
         $this.GameState.AddState([GSSplashScreenA]::new())
+        $this.GameState.AddState([GSAnimatedSodaCanTestScreen]::new())
 
         $this.GameState.AddTransition(
             [SMTransition]::new(
                 'GSInit',
                 'Ready',
-                'GSSplashScreenA'
+                'GSAnimatedSodaCanTestScreen'
             )
         )
     }   

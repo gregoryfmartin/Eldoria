@@ -94,6 +94,8 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 . "$($DirString)/EnemyEntityImage.ps1"
 . "$($DirString)/EEIEmpty.ps1"
 . "$($DirString)/EEIInternalBase.ps1"
+. "$($DirString)/TIString.ps1"
+. "$($DirString)/TIStringAnimator.ps1"
 
 
 
