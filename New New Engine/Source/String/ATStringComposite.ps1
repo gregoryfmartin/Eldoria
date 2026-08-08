@@ -53,6 +53,6 @@ Class ATStringComposite {
             $Composite += "$($Component.ToAnsiControlSequenceString())"
         }
 
-        Return "$($Component)"
+        Return "$($Composite)"
     }
 }

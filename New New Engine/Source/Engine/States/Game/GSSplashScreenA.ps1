@@ -13,7 +13,15 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class GSSplashScreenA : SMState {
+    [UIContainer]$SampleContainer
+
     GSSplashScreenA() : base('GSSplashScreenA') {
+        $this.SampleContainer             = [UIContainer]::new()
+        $this.SampleContainer.LeftTop     = [ATCoordinates]::new(1, 1)
+        $this.SampleContainer.RightBottom = [ATCoordinates]::new(5, 10)
+        $this.SampleContainer.SetupTitle('Title', [ColorLibrary]::Red)
+        $this.SampleContainer.UpdateDimensions()
+
         $this.OnEnter = {
             Param(
                 [Context]$Context
@@ -50,6 +58,13 @@ Class GSSplashScreenA : SMState {
                     Write-Host "$($KeyPress.Key.ToString())"
                 }
             }
+
+            Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
+
+            # THIS IS SUPER FUCKING DISGUSTING, AND POTENTIALLY UNSAFE, BUT REFERENCES ARE REFERENCES, AND I'M LAZY
+            $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState].SampleContainer.Draw()
+            
+            Write-Host "$([ATControlSequences]::DrawOptimizeOff)" -NoNewline
         }
     }
 }

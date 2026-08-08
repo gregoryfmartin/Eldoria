@@ -97,6 +97,8 @@ Class GameCore {
         }
 
         $this.Sw.Start()
+
+        Clear-Host
     }
 
     [Void]Logic(

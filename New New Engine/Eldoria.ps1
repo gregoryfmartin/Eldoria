@@ -109,7 +109,7 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 
 . "$($DirUi)/UIBase.ps1"
 . "$($DirUi)/UILabel.ps1"
-# . "$($DirUi)/UIContainer.ps1"
+. "$($DirUi)/UIContainer.ps1"
 
 
 

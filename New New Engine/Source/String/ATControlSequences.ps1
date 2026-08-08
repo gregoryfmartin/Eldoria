@@ -24,6 +24,8 @@ Class ATControlSequences {
     Static [String]$ModifierReset           = "`e[0m"
     Static [String]$CursorHide              = "`e[?25l"
     Static [String]$CursorShow              = "`e[?25h"
+    Static [String]$DrawOptimizeOn          = "`e[?2026h"
+    Static [String]$DrawOptimizeOff         = "`e[?2026l"
 
     Static [String]GenerateFG24String(
         [TrueColor]$Color
