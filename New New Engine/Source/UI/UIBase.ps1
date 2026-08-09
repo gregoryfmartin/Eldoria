@@ -17,11 +17,18 @@ Set-StrictMode -Version Latest
 Class UIBase : ATString {
     [String]$Blank
     [Boolean]$Dirty
+    [Boolean]$CanHaveFocus
+    [Boolean]$HasFocus
     
     UIBase() : base() {
-        $this.Dirty = $false
-        $this.Blank = ' '
+        $this.Dirty        = $false
+        $this.CanHaveFocus = $false
+        $this.HasFocus     = $false
+        $this.Blank        = ' '
+        $this.Prefix       = [ATStringPrefix]::new() # FIXES A SMALL LITTLE BUGGY
     }
+
+    [Void]ToggleFocus() {}
     
     [Void]SetUserData(
         [String]$UserData

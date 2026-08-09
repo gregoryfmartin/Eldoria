@@ -215,6 +215,8 @@ Class ColorLibrary {
     Static [TrueColor]$MistyRose            = [TrueColor]::new(0xFFE4E1)
     Static [TrueColor]$WindowBorderColor    = [ColorLibrary]::Ivory
     Static [TrueColor]$TextColor            = [ColorLibrary]::GhostWhite
+    Static [TrueColor]$UICheckboxHasFocus   = [ColorLibrary]::AppleMintLight
+    Static [TrueColor]$UICheckboxChecked    = [ColorLibrary]::AppleGreenLight
     Static [TrueColor]$Random               = [TrueColor]::new(
         [ColorChannel]::new((Get-Random -Minimum 1 -Maximum 255)),
         [ColorChannel]::new((Get-Random -Minimum 1 -Maximum 255)),
