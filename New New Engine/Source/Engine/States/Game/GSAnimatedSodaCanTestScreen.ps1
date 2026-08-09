@@ -978,6 +978,10 @@ Class GSAnimatedSodaCanTestScreen : SMState {
             # 2 - ELDORIA CORE
             Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
 
+            # FYI - FOR FUTURE READERS, THIS VARIABLE HOLDS A REFERENCE
+            # TO VERIFY THIS, ALL YOU NEED DO IS THE FOLLOWING CONDITIONAL:
+            #
+            # [OBJECT]::REFERENCEEQUALS($SELFSTATE, $CONTEXT.REFERENCES[2].GAMESTATE.STATES[$CONTEXT.REFERENCES[2].GAMESTATE.CURRENTSTATE])
             [SMState]$SelfState = $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState]
 
             Foreach($Can in $SelfState.SodaCans) {
