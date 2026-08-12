@@ -10,6 +10,9 @@ Set-StrictMode -Version Latest
 #
 # UICHECKBOX
 #
+# THIS ELEMENT CAN'T REALLY RELY ON POLYMORPHIC LOGIC TOO MUCH BECAUSE OF
+# NEEDING TO HANDLE THE CHECKBOX SEPARATELY FROM THE ASSOCIATED LABEL.
+#
 ###############################################################################
 
 Class UICheckbox : UIBase {
@@ -20,15 +23,17 @@ Class UICheckbox : UIBase {
     [ATCoordinates]$DrawCoordinates
 
     UICheckbox() : base() {
-        $this.State = [UICheckboxState]::Unchecked
-        $this.Dirty = $true
+        $this.State           = [UICheckboxState]::Unchecked
+        $this.DrawCoordinates = [ATCoordinates]::new(1, 1)
+        $this.Dirty           = $true
     }
 
     UICheckbox(
         [String]$LabelText
     ) : base() {
-        $this.Dirty = $true
-        $this.State = [UICheckboxState]::Unchecked
+        $this.Dirty           = $true
+        $this.State           = [UICheckboxState]::Unchecked
+        $this.DrawCoordinates = [ATCoordinates]::new(1, 1)
         $this.SetUserData($LabelText)
     }
 
@@ -114,7 +119,7 @@ Class UICheckbox : UIBase {
             }
         }
 
-        If($this.CanHaveFocus -EQ $true -AND $this.HasFocus -EQ $true) {
+        If($this.Behavior.CanHaveFocus -EQ $true -AND $this.Behavior.HasFocus -EQ $true) {
             $A.CompositeActual.Add(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{

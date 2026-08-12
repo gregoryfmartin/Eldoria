@@ -217,6 +217,9 @@ Class ColorLibrary {
     Static [TrueColor]$TextColor            = [ColorLibrary]::GhostWhite
     Static [TrueColor]$UICheckboxHasFocus   = [ColorLibrary]::AppleMintLight
     Static [TrueColor]$UICheckboxChecked    = [ColorLibrary]::AppleGreenLight
+    Static [TrueColor]$UIChevronActive      = [ColorLibrary]::GhostWhite
+    Static [TrueColor]$UIChevronInactive    = [ColorLibrary]::DarkSlateGrey
+    Static [TrueColor]$UIChevronHasFocus    = [ColorLibrary]::AppleMintLight
     Static [TrueColor]$Random               = [TrueColor]::new(
         [ColorChannel]::new((Get-Random -Minimum 1 -Maximum 255)),
         [ColorChannel]::new((Get-Random -Minimum 1 -Maximum 255)),

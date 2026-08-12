@@ -982,10 +982,10 @@ Class GSAnimatedSodaCanTestScreen : SMState {
             # TO VERIFY THIS, ALL YOU NEED DO IS THE FOLLOWING CONDITIONAL:
             #
             # [OBJECT]::REFERENCEEQUALS($SELFSTATE, $CONTEXT.REFERENCES[2].GAMESTATE.STATES[$CONTEXT.REFERENCES[2].GAMESTATE.CURRENTSTATE])
-            [SMState]$SelfState = $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState]
+            [SMState]$SelfState = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
 
             Foreach($Can in $SelfState.SodaCans) {
-                $Can.Update($Context.References[0])
+                $Can.Update($Context.References[[SMState]::ContextDeltaTime])
                 Write-Host "$($Can.GetAmendedFrame())"
             }
 

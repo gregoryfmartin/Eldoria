@@ -60,6 +60,7 @@ Class UIContainer {
     [Boolean]$UseTitle
     [Boolean]$TitleDirty
     [Boolean]$ComplexTitle
+    [Boolean]$Active
     [Boolean[]]$BorderDrawDirty
     [ATCoordinates]$LeftTop
     [ATCoordinates]$RightBottom
@@ -91,6 +92,7 @@ Class UIContainer {
         $this.UseTitle             = $false
         $this.TitleDirty           = $false
         $this.ComplexTitle         = $false
+        $this.Active               = $false
         $this.TitleColor           = [ColorLibrary]::TextColor
         $this.CurrentWindowDesigns = [UIContainer]::WindowDesignRounded
     }

@@ -32,7 +32,7 @@ Class GSInit : SMState {
             # 0 - DELTA TIME
             # 1 - KEYS PRESSED
             # 2 - ELDORIA CORE
-            $Context.References[2].GameState.Trigger('Ready', $Context)
+            $Context.References[[SMState]::ContextEldoriaCore].GameState.Trigger('Ready', $Context)
         }
     }
 }

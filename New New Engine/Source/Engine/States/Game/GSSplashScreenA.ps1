@@ -53,8 +53,8 @@ Class GSSplashScreenA : SMState {
             # 0 - DELTA TIME
             # 1 - KEYS PRESSED
             # 2 - ELDORIA CORE
-            If($Context.References[1].Count -GT 0) {
-                Foreach($KeyPress in $Context.References[1]) {
+            If($Context.References[[SMState]::ContextKeysPressed].Count -GT 0) {
+                Foreach($KeyPress in $Context.References[[SMState]::ContextKeysPressed]) {
                     Write-Host "$($KeyPress.Key.ToString())"
                 }
             }
@@ -62,7 +62,7 @@ Class GSSplashScreenA : SMState {
             Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
 
             # THIS IS SUPER FUCKING DISGUSTING, AND POTENTIALLY UNSAFE, BUT REFERENCES ARE REFERENCES, AND I'M LAZY
-            $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState].SampleContainer.Draw()
+            $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState].SampleContainer.Draw()
             
             Write-Host "$([ATControlSequences]::DrawOptimizeOff)" -NoNewline
         }

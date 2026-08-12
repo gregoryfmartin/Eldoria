@@ -12,15 +12,20 @@ Set-StrictMode -Version Latest
 #
 ################################################################################
 
-Class GSUiTestScreen : SMState {
-    [UICheckbox]$SampleCheckbox
-
+Class GSUiTestScreen : UIState {
     GSUiTestScreen() : base('GSUiTestScreen') {
-        $this.SampleCheckbox = [UICheckbox]::new(
+        $this.UiElementListing[1] = [UICheckbox]::new(
             'Sample Checkbox Label',
             [ATCoordinates]::new(1, 1)
         )
-        $this.SampleCheckbox.ToggleCheckbox()
+        $this.UiElementListing[2] = [UIChevron]::new(
+            [UIChevronOrientation]::Left,
+            [ATCoordinates]::new(2, 1)
+        )
+        $this.UiElementListing[3] = [UIChevron]::new(
+            [UIChevronOrientation]::Right,
+            [ATCoordinates]::new(2, 2)
+        )
 
         $this.OnEnter = {
             Param(
@@ -28,7 +33,6 @@ Class GSUiTestScreen : SMState {
             )
 
             Confirm-Context $Context
-            # Write-Host 'Entering GSUiTestScreen'
             Clear-Host
         }
 
@@ -55,9 +59,11 @@ Class GSUiTestScreen : SMState {
 
             Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
 
-            [SMState]$SelfState = $Context.References[2].GameState.States[$Context.References[2].GameState.CurrentState]
+            [SMState]$SelfState = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
 
-            $SelfState.SampleCheckbox.Draw()
+            Foreach($UiElement in $SelfState.UiElementListing.GetEnumerator()) {
+                $UiElement.Value.Draw()
+            }
 
             Write-Host "$([ATControlSequences]::DrawOptimizeOff)" -NoNewline
         }

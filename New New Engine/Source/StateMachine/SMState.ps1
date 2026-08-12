@@ -17,6 +17,10 @@ Set-StrictMode -Version Latest
 ###############################################################################
 
 Class SMState {
+    Static [Int]$ContextDeltaTime   = 0
+    Static [Int]$ContextKeysPressed = 1
+    Static [Int]$ContextEldoriaCore = 2
+
     [String]$Name
     [ScriptBlock]$OnEnter
     [ScriptBlock]$OnExit
