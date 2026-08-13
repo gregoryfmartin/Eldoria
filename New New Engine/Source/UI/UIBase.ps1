@@ -34,6 +34,10 @@ Class UIBase : ATString {
     [Void]ToggleFocus() {}
 
     [Void]ToggleActive() {}
+
+    [Void]Update(
+        [Double]$Dt
+    ) {}
     
     [Void]SetUserData(
         [String]$UserData

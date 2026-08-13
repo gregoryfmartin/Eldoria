@@ -73,6 +73,6 @@ Class UIChevron : UIBase {
             }
         }
 
-        Return "$(([ATString]$this).ToAnsiControlSequenceString())"
+        Return "$(([UIBase]$this).ToAnsiControlSequenceString())"
     }
 }

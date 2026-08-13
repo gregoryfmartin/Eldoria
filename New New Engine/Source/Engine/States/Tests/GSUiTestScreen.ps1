@@ -26,6 +26,16 @@ Class GSUiTestScreen : UIState {
             [UIChevronOrientation]::Right,
             [ATCoordinates]::new(2, 2)
         )
+        $this.UiElementListing[4] = [UICellSpinner]::new(
+            5,
+            [ColorLibrary]::ApplePinkLight
+        )
+        $this.UiElementListing[4].Prefix.Coordinates = [ATCoordinates]::new(3, 1)
+        $this.UiElementListing[5] = [UICellSpinner]::new(
+            15,
+            [ColorLibrary]::AppleMintLight
+        )
+        $this.UiElementListing[5].Prefix.Coordinates = [ATCoordinates]::new(4, 1)
 
         $this.OnEnter = {
             Param(
@@ -33,6 +43,7 @@ Class GSUiTestScreen : UIState {
             )
 
             Confirm-Context $Context
+            Write-Host "$([ATControlSequences]::CursorHide)" -NoNewline
             Clear-Host
         }
 
@@ -62,6 +73,7 @@ Class GSUiTestScreen : UIState {
             [SMState]$SelfState = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
 
             Foreach($UiElement in $SelfState.UiElementListing.GetEnumerator()) {
+                $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
                 $UiElement.Value.Draw()
             }
 

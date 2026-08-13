@@ -96,6 +96,7 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 . "$($DirString)/EEIInternalBase.ps1"
 . "$($DirString)/TIString.ps1"
 . "$($DirString)/TIStringAnimator.ps1"
+. "$($DirString)/StringAnimator.ps1"
 
 
 
@@ -111,10 +112,13 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 
 . "$($DirUi)/UIElementBehavior.ps1"
 . "$($DirUi)/UIBase.ps1"
-. "$($DirUi)/UILabel.ps1"
 . "$($DirUi)/UIContainer.ps1"
+. "$($DirUi)/Elements/UILabel.ps1"
 . "$($DirUi)/Elements/UICheckbox.ps1"
 . "$($DirUi)/Elements/UIChevron.ps1"
+. "$($DirUi)/Elements/UICellSpinner.ps1"
+. "$($DirUi)/Elements/UiDialFaceplateDigit.ps1"
+. "$($DirUi)/Elements/UiDialFaceplate.ps1"
 
 
 
