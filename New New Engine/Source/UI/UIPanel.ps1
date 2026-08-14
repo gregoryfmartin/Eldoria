@@ -37,16 +37,20 @@ Class UIPanel : UIContainer {
     [Void]Update(
         [Context]$Context
     ) {
-        Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
-            $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
+        If($this.Active -EQ $true) {
+            Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
+                $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
+            }
         }
     }
 
     [Void]Draw() {
         ([UIContainer]$this).Draw()
-
-        Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
-            $UiElement.Value.Draw()
+        
+        If($this.Active -EQ $true) {
+            Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
+                $UiElement.Value.Draw()
+            }
         }
     }
 }

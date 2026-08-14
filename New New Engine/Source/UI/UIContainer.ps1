@@ -73,14 +73,14 @@ Class UIContainer {
         $this.LeftTop          = [ATCoordinatesNone]::new()
         $this.RightBottom      = [ATCoordinatesNone]::new()
         $this.BorderDrawColors = [TrueColor[]](
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor,
-            [ColorLibrary]::WindowBorderColor
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor,
+            [ColorLibrary]::WindowBorderActiveColor
         )
         $this.BorderDrawDirty = [Boolean[]](
             $true,
@@ -123,6 +123,65 @@ Class UIContainer {
         If($this.UseTitle -EQ $true) {
             $this.TitleDirty = $true
         }
+    }
+
+    [Void]ToggleActive() {
+        If($this.Active -EQ $true) {
+            $this.Active           = $false
+            $this.BorderDrawColors = [TrueColor[]](
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor,
+                [ColorLibrary]::WindowBorderInactiveColor
+            )
+            $this.TitleColor = [ColorLibrary]::TextInactiveColor
+            $this.SetAllDirty()
+
+            Return
+        } Else {
+            $this.Active           = $true
+            $this.BorderDrawColors = [TrueColor[]](
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor,
+                [ColorLibrary]::WindowBorderActiveColor
+            )
+            $this.TitleColor = [ColorLibrary]::TextActiveColor
+            $this.SetAllDirty()
+
+            Return
+        }
+    }
+
+    [Void]SetBorderColor(
+        [TrueColor]$Color
+    ) {
+        $this.BorderDrawColors = [TrueColor[]](
+            $Color,
+            $Color,
+            $Color,
+            $Color,
+            $Color,
+            $Color,
+            $Color,
+            $Color
+        )
+        $this.SetAllDirty()
+    }
+
+    [Void]SetBorderColors(
+        [TrueColor[]]$Colors
+    ) {
+        $this.BorderDrawColors = $Colors
+        $this.SetAllDirty()
     }
 
     [Void]Draw() {

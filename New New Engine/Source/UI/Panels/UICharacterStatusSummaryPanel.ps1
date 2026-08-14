@@ -20,11 +20,11 @@ Set-StrictMode -Version Latest
 ################################################################################
 
 Class UICharacterStatusSummaryPanel : UIPanel {
-    Static [Int]$WindowLTRow    = 1
-    Static [Int]$WindowLTColumn = 1
-    Static [Int]$WindowRBRow    = 10
-    Static [Int]$WindowRBColumn = 19
-    
+    Static [Int]$WindowLTRow    = 1 * 4
+    Static [Int]$WindowLTColumn = 1 * 4
+    Static [Int]$WindowRBRow    = 10 * 2
+    Static [Int]$WindowRBColumn = 19 * 2
+
     UICharacterStatusSummaryPanel() : base() {
         $this.LeftTop = [ATCoordinates]::new(
             [UICharacterStatusSummaryPanel]::WindowLTRow,
@@ -79,5 +79,6 @@ Class UICharacterStatusSummaryPanel : UIPanel {
             ([UICharacterStatusSummaryPanel]::WindowLTRow + 4),
             ([UICharacterStatusSummaryPanel]::WindowLTColumn + 1)
         )
+        $this.ToggleActive(); $this.ToggleActive()
     }
 }
