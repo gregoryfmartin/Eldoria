@@ -1,4 +1,5 @@
 using namespace System
+using namespace System.Collections.Generic
 
 Set-StrictMode -Version Latest
 
@@ -72,18 +73,25 @@ Class GSUiTestScreen : SMState {
             # 1 - KEYS PRESSED
             # 2 - ELDORIA CORE
 
-            Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
+            [SMState]$SelfState                = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
+            [List[ConsoleKeyInfo]]$KeysPressed = $Context.References[[SMState]::ContextKeysPressed]
 
-            [SMState]$SelfState = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
+            If($KeysPressed.Count -GT 0) {
+                If($KeysPressed[0].Key -EQ [ConsoleKey]::Spacebar) {
+                    $SelfState.SamplePanel.ToggleActive()
+                }
+                If($KeysPressed[0].Key -EQ [ConsoleKey]::A) {
+                    $SelfState.SamplePanel.SetBorderColor([ColorLibrary]::ApplePinkLight)
+                }
+                If($KeysPressed[0].Key -EQ [ConsoleKey]::B) {
+                    $SelfState.SamplePanel.SetBorderColor([ColorLibrary]::AppleOrangeLight)
+                }
+            }
 
             $SelfState.SamplePanel.Update($Context)
+
+            Write-Host "$([ATControlSequences]::DrawOptimizeOn)" -NoNewline
             $SelfState.SamplePanel.Draw()
-
-            # Foreach($UiElement in $SelfState.UiElementListing.GetEnumerator()) {
-            #     $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
-            #     $UiElement.Value.Draw()
-            # }
-
             Write-Host "$([ATControlSequences]::DrawOptimizeOff)" -NoNewline
         }
     }
