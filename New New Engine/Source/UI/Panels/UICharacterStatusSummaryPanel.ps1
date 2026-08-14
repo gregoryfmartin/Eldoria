@@ -1,4 +1,5 @@
 using namespace System
+using namespace System.Collections.Generic
 
 Set-StrictMode -Version Latest
 
@@ -80,5 +81,34 @@ Class UICharacterStatusSummaryPanel : UIPanel {
             ([UICharacterStatusSummaryPanel]::WindowLTColumn + 1)
         )
         $this.ToggleActive(); $this.ToggleActive()
+    }
+
+    [Void]Update(
+        [Context]$Context
+    ) {
+        Confirm-Context $Context
+
+        [SMState]$SelfState                = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
+        [List[ConsoleKeyInfo]]$KeysPressed = $Context.References[[SMState]::ContextKeysPressed]
+
+        If($KeysPressed.Count -GT 0) {
+            If($KeysPressed[0].Key -EQ [ConsoleKey]::Spacebar) {
+                $SelfState.SamplePanel.ToggleActive()
+            }
+            If($KeysPressed[0].Key -EQ [ConsoleKey]::A) {
+                $SelfState.SamplePanel.SetBorderColor([ColorLibrary]::ApplePinkLight)
+            }
+            If($KeysPressed[0].Key -EQ [ConsoleKey]::B) {
+                $SelfState.SamplePanel.SetBorderColor([ColorLibrary]::AppleOrangeLight)
+            }
+        }
+
+        # If($Context.References[[SMState]::ContextKeysPressed].Count -GT 0) {
+        #     If($Context.References[[SMState]::ContextKeysPressed][0].Key -EQ [ConsoleKey]::Spacebar) {
+        #         $SelfState.SamplePanel.ToggleActive()
+        #     } Elseif()
+        # }
+
+        ([UIPanel]$this).Update($Context)
     }
 }

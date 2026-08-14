@@ -164,24 +164,28 @@ Class UIContainer {
     [Void]SetBorderColor(
         [TrueColor]$Color
     ) {
-        $this.BorderDrawColors = [TrueColor[]](
-            $Color,
-            $Color,
-            $Color,
-            $Color,
-            $Color,
-            $Color,
-            $Color,
-            $Color
-        )
-        $this.SetAllDirty()
+        If($this.Active -EQ $true) {
+            $this.BorderDrawColors = [TrueColor[]](
+                $Color,
+                $Color,
+                $Color,
+                $Color,
+                $Color,
+                $Color,
+                $Color,
+                $Color
+            )
+            $this.SetAllDirty()
+        }
     }
 
     [Void]SetBorderColors(
         [TrueColor[]]$Colors
     ) {
-        $this.BorderDrawColors = $Colors
-        $this.SetAllDirty()
+        If($this.Active -EQ $true) {
+            $this.BorderDrawColors = $Colors
+            $this.SetAllDirty()
+        }
     }
 
     [Void]Draw() {
