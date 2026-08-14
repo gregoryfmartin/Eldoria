@@ -113,12 +113,14 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 . "$($DirUi)/UIElementBehavior.ps1"
 . "$($DirUi)/UIBase.ps1"
 . "$($DirUi)/UIContainer.ps1"
+. "$($DirUi)/UIPanel.ps1"
 . "$($DirUi)/Elements/UILabel.ps1"
 . "$($DirUi)/Elements/UICheckbox.ps1"
 . "$($DirUi)/Elements/UIChevron.ps1"
 . "$($DirUi)/Elements/UICellSpinner.ps1"
 . "$($DirUi)/Elements/UiDialFaceplateDigit.ps1"
 . "$($DirUi)/Elements/UiDialFaceplate.ps1"
+. "$($DirUi)/Panels/UICharacterStatusSummaryPanel.ps1"
 
 
 
@@ -132,7 +134,7 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 
 [String]$DirStates = "$($PSScriptRoot)/Source/Engine/States"
 
-. "$($DirStates)/UIState.ps1"
+# . "$($DirStates)/UIState.ps1"
 
 Foreach($File in (Get-ChildItem -Path "$($DirStates)/Game")) {
     . $File

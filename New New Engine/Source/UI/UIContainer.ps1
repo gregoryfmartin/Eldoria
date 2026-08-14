@@ -238,7 +238,6 @@ Class UIContainer {
 
         Write-Host "$($BorderTop.ToAnsiControlSequenceString())$($BorderBottom.ToAnsiControlSequenceString())$($BorderLeft.ToAnsiControlSequenceString())$($BorderRight.ToAnsiControlSequenceString())"
 
-        # THIS IS THE POINT OF DEVIATION
         If($this.UseTitle -EQ $true) {
             If($this.TitleDirty -EQ $true) {
                 $ATTitle = [ATString]@{

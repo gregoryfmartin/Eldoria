@@ -12,30 +12,34 @@ Set-StrictMode -Version Latest
 #
 ################################################################################
 
-Class GSUiTestScreen : UIState {
+Class GSUiTestScreen : SMState {
+    [UICharacterStatusSummaryPanel]$SamplePanel
+
     GSUiTestScreen() : base('GSUiTestScreen') {
-        $this.UiElementListing[1] = [UICheckbox]::new(
-            'Sample Checkbox Label',
-            [ATCoordinates]::new(1, 1)
-        )
-        $this.UiElementListing[2] = [UIChevron]::new(
-            [UIChevronOrientation]::Left,
-            [ATCoordinates]::new(2, 1)
-        )
-        $this.UiElementListing[3] = [UIChevron]::new(
-            [UIChevronOrientation]::Right,
-            [ATCoordinates]::new(2, 2)
-        )
-        $this.UiElementListing[4] = [UICellSpinner]::new(
-            5,
-            [ColorLibrary]::ApplePinkLight
-        )
-        $this.UiElementListing[4].Prefix.Coordinates = [ATCoordinates]::new(3, 1)
-        $this.UiElementListing[5] = [UICellSpinner]::new(
-            15,
-            [ColorLibrary]::AppleMintLight
-        )
-        $this.UiElementListing[5].Prefix.Coordinates = [ATCoordinates]::new(4, 1)
+        # $this.UiElementListing[1] = [UICheckbox]::new(
+        #     'Sample Checkbox Label',
+        #     [ATCoordinates]::new(1, 1)
+        # )
+        # $this.UiElementListing[2] = [UIChevron]::new(
+        #     [UIChevronOrientation]::Left,
+        #     [ATCoordinates]::new(2, 1)
+        # )
+        # $this.UiElementListing[3] = [UIChevron]::new(
+        #     [UIChevronOrientation]::Right,
+        #     [ATCoordinates]::new(2, 2)
+        # )
+        # $this.UiElementListing[4] = [UICellSpinner]::new(
+        #     5,
+        #     [ColorLibrary]::ApplePinkLight
+        # )
+        # $this.UiElementListing[4].Prefix.Coordinates = [ATCoordinates]::new(3, 1)
+        # $this.UiElementListing[5] = [UICellSpinner]::new(
+        #     35,
+        #     [ColorLibrary]::AppleMintLight
+        # )
+        # $this.UiElementListing[5].Prefix.Coordinates = [ATCoordinates]::new(4, 1)
+
+        $this.SamplePanel = [UICharacterStatusSummaryPanel]::new()
 
         $this.OnEnter = {
             Param(
@@ -72,10 +76,13 @@ Class GSUiTestScreen : UIState {
 
             [SMState]$SelfState = $Context.References[[SMState]::ContextEldoriaCore].GameState.States[$Context.References[[SMState]::ContextEldoriaCore].GameState.CurrentState]
 
-            Foreach($UiElement in $SelfState.UiElementListing.GetEnumerator()) {
-                $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
-                $UiElement.Value.Draw()
-            }
+            $SelfState.SamplePanel.Update($Context)
+            $SelfState.SamplePanel.Draw()
+
+            # Foreach($UiElement in $SelfState.UiElementListing.GetEnumerator()) {
+            #     $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
+            #     $UiElement.Value.Draw()
+            # }
 
             Write-Host "$([ATControlSequences]::DrawOptimizeOff)" -NoNewline
         }
