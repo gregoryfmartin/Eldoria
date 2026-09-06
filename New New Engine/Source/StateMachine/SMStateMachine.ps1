@@ -81,17 +81,33 @@ Class SMStateMachine {
         $this.States[$State.Name] = $State
     }
 
+    [Void]AddStates(
+        [SMState[]]$States
+    ) {
+        Foreach($State in $States) {
+            $this.States[$State.Name] = $State
+        }
+    }
+
     [Void]AddTransition(
         [SMTransition]$Transition
     ) {
         $this.Transitions.Add($Transition)
     }
 
+    [Void]AddTransitions(
+        [SMTransition[]]$Transitions
+    ) {
+        Foreach($Transition in $Transitions) {
+            $this.Transitions.Add($Transition)
+        }
+    }
+
     [Void]Update(
         [Context]$Context
     ) {
         # EACH CALL IS EXPECTED TO HAVE A CONTEXT ASSOCIATED WITH IT FOR DI
-        $CurrentStateObject = $this.States[$this.CurrentState]
+        [SMState]$CurrentStateObject = $this.States[$this.CurrentState]
 
         If($null -NE $CurrentStateObject -AND $null -NE $CurrentStateObject.OnUpdate) {
             $CurrentStateObject.OnUpdate.Invoke(@($Context))

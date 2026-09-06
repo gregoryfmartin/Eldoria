@@ -37,9 +37,14 @@ Class UIPanel : UIContainer {
     [Void]Update(
         [Context]$Context
     ) {
+        ([UIContainer]$this).Update($Context)
+
         If($this.Active -EQ $true) {
             Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
-                $UiElement.Value.Update($Context.References[[SMState]::ContextDeltaTime])
+                $UiElement.Value.Update([Context]::new(@(
+                    $UiElement.Value,
+                    $Context
+                )))
             }
         }
     }
@@ -51,6 +56,32 @@ Class UIPanel : UIContainer {
             Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
                 $UiElement.Value.Draw()
             }
+        }
+    }
+
+    [Void]Activate(
+        [Context]$Context
+    ) {
+        ([UIContainer]$this).Activate($Context)
+
+        Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
+            $UiElement.Value.Activate([Context]::new(@(
+                $UiElement.Value,
+                $Context
+            )))
+        }
+    }
+
+    [Void]Deactivate(
+        [Context]$Context
+    ) {
+        ([UIContainer]$this).Deactivate($Context)
+
+        Foreach($UiElement in $this.UiElementListing.GetEnumerator()) {
+            $UiElement.Value.Deactivate([Context]::new(@(
+                $UiElement.Value,
+                $Context
+            )))
         }
     }
 }

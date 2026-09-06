@@ -220,6 +220,8 @@ Class ColorLibrary {
     Static [TrueColor]$TextColor                 = [ColorLibrary]::GhostWhite
     Static [TrueColor]$UICheckboxHasFocus        = [ColorLibrary]::AppleMintLight
     Static [TrueColor]$UICheckboxChecked         = [ColorLibrary]::AppleGreenLight
+    Static [TrueColor]$UICheckboxInactiveColor   = [ColorLibrary]::DarkSlateGrey
+    Static [TrueColor]$UICheckboxActive          = [ColorLibrary]::GhostWhite
     Static [TrueColor]$UIChevronActive           = [ColorLibrary]::GhostWhite
     Static [TrueColor]$UIChevronInactive         = [ColorLibrary]::DarkSlateGrey
     Static [TrueColor]$UIChevronHasFocus         = [ColorLibrary]::AppleMintLight

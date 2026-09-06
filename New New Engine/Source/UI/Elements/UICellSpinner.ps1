@@ -49,9 +49,11 @@ Class UICellSpinner : UIBase {
     }
 
     [Void]Update(
-        [Double]$Dt
+        [Context]$Context
     ) {
-        $this.Animator.Update($Dt)
+        [Double]$DeltaTime = $Context.References[1].References[[SMState]::ContextDeltaTime]
+
+        $this.Animator.Update($DeltaTime)
         $this.SetUserData("$($this.Animator.GetCurrentFrame())")
 
         # THIS MIGHT NEED INVESTIGATED A BIT MORE

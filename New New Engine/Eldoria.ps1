@@ -43,6 +43,7 @@ Foreach($File in (Get-ChildItem "$($PSScriptRoot)/Source/Enums")) {
 . "$($DirStateMachine)/SMState.ps1"
 . "$($DirStateMachine)/SMTransition.ps1"
 . "$($DirStateMachine)/SMStateMachine.ps1"
+. "$($DirStateMachine)/SMUiStateMachine.ps1"
 
 
 

@@ -10,9 +10,6 @@ Set-StrictMode -Version Latest
 #
 # UICHECKBOX
 #
-# THIS ELEMENT CAN'T REALLY RELY ON POLYMORPHIC LOGIC TOO MUCH BECAUSE OF
-# NEEDING TO HANDLE THE CHECKBOX SEPARATELY FROM THE ASSOCIATED LABEL.
-#
 ###############################################################################
 
 Class UICheckbox : UIBase {
@@ -26,6 +23,7 @@ Class UICheckbox : UIBase {
         $this.State           = [UICheckboxState]::Unchecked
         $this.DrawCoordinates = [ATCoordinates]::new(1, 1)
         $this.Dirty           = $true
+        $this.SetupStates()
     }
 
     UICheckbox(
@@ -35,6 +33,7 @@ Class UICheckbox : UIBase {
         $this.State           = [UICheckboxState]::Unchecked
         $this.DrawCoordinates = [ATCoordinates]::new(1, 1)
         $this.SetUserData($LabelText)
+        $this.SetupStates()
     }
 
     UICheckbox(
@@ -45,6 +44,44 @@ Class UICheckbox : UIBase {
         $this.State           = [UICheckboxState]::Unchecked
         $this.DrawCoordinates = $DrawCoordinates
         $this.SetUserData($LabelText)
+        $this.SetupStates()
+    }
+
+    [Void]SetupStates() {
+        $this.Subscribe(@{
+            'SMUiElementInactive_OnEnter' = {
+                Param(
+                    [Context]$Context
+                )
+
+                [UICheckbox]$SelfElement = $Context.References[0]
+
+                $SelfElement.Prefix.ForegroundColor = [ColorLibrary]::UICheckboxInactiveColor
+                $SelfElement.Dirty                  = $true
+            }
+            'SMUiElementActive_OnEnter' = {
+                Param(
+                    [Context]$Context
+                )
+
+                [UICheckbox]$SelfElement = $Context.References[0]
+
+                $SelfElement.Prefix.ForegroundColor = [ColorLibrary]::UICheckboxActive
+                $SelfElement.Dirty                  = $true
+            }
+            'SMUiElementFocused_OnEnter' = {
+                Param(
+                    [Context]$Context
+                )
+
+                [UICheckbox]$SelfElement = $Context.References[0]
+
+                $SelfElement.Prefix.Decorations = [ATDecoration]@{
+                    Italic = $true
+                }
+                $SelfElement.Dirty = $true
+            }
+        })
     }
 
     [Void]ToggleCheckbox() {
@@ -77,7 +114,7 @@ Class UICheckbox : UIBase {
                 $A.CompositeActual.Add(
                     [ATString]@{
                         Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [ColorLibrary]::TextColor
+                            ForegroundColor = ($this.Behavior.Active -EQ $true) ? [ColorLibrary]::TextColor : [ColorLibrary]::UICheckboxInactiveColor
                             Coordinates     = $this.DrawCoordinates
                         }
                         UserData   = "$([UICheckbox]::UnicodeBoxUnchecked) "
@@ -92,7 +129,7 @@ Class UICheckbox : UIBase {
                 $A.CompositeActual.Add(
                     [ATString]@{
                         Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [ColorLibrary]::UICheckboxChecked
+                            ForegroundColor = ($this.Behavior.Active -EQ $true) ? [ColorLibrary]::UICheckboxChecked : [ColorLibrary]::UICheckboxInactiveColor
                             Coordinates     = $this.DrawCoordinates
                         }
                         UserData   = "$([UICheckbox]::UnicodeBoxChecked) "
@@ -107,7 +144,7 @@ Class UICheckbox : UIBase {
                 $A.CompositeActual.Add(
                     [ATString]@{
                         Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [ColorLibrary]::TextColor
+                            ForegroundColor = ($this.Behavior.Active -EQ $true) ? [ColorLibrary]::TextColor : [ColorLibrary]::UICheckboxInactiveColor
                             Coordinates     = $this.DrawCoordinates
                         }
                         UserData   = "$([UICheckbox]::UnicodeBoxUnchecked) "
@@ -119,21 +156,33 @@ Class UICheckbox : UIBase {
             }
         }
 
-        If($this.Behavior.CanHaveFocus -EQ $true -AND $this.Behavior.HasFocus -EQ $true) {
-            $A.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [ColorLibrary]::UICheckboxHasFocus
+        If($this.Behavior.Active -EQ $true) {
+            If($this.Behavior.CanHaveFocus -EQ $true -AND $this.Behavior.HasFocus -EQ $true) {
+                $A.CompositeActual.Add(
+                    [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [ColorLibrary]::UICheckboxHasFocus
+                        }
+                        UserData   = "$($this.UserData)"
+                        UseATReset = $true
                     }
-                    UserData   = "$($this.UserData)"
-                    UseATReset = $true
-                }
-            )
+                )
+            } Else {
+                $A.CompositeActual.Add(
+                    [ATString]@{
+                        Prefix = [ATStringPrefix]@{
+                            ForegroundColor = [ColorLibrary]::TextColor
+                        }
+                        UserData   = "$($this.UserData)"
+                        UseATReset = $true
+                    }
+                )
+            }
         } Else {
             $A.CompositeActual.Add(
                 [ATString]@{
                     Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [ColorLibrary]::TextColor
+                        ForegroundColor = [ColorLibrary]::UICheckboxInactiveColor
                     }
                     UserData   = "$($this.UserData)"
                     UseATReset = $true

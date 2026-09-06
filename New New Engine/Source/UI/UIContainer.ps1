@@ -32,7 +32,7 @@ Set-StrictMode -Version Latest
 #
 ###############################################################################
 
-Class UIContainer {
+Class UIContainer : UIBase {
     Static [Hashtable]$WindowDesignRounded = @{
         [WindowBorderPart]::LeftTop     = '╭'
         [WindowBorderPart]::Top         = '─'
@@ -69,7 +69,7 @@ Class UIContainer {
     [String]$Title
     [Hashtable]$CurrentWindowDesigns
 
-    UIContainer() {
+    UIContainer() : base() {
         $this.LeftTop          = [ATCoordinatesNone]::new()
         $this.RightBottom      = [ATCoordinatesNone]::new()
         $this.BorderDrawColors = [TrueColor[]](
@@ -95,6 +95,43 @@ Class UIContainer {
         $this.Active               = $false
         $this.TitleColor           = [ColorLibrary]::TextColor
         $this.CurrentWindowDesigns = [UIContainer]::WindowDesignRounded
+
+        $this.Subscribe(@{
+            'SMUiElementActive_OnEnter' = {
+                Param([Context]$Context)
+                [UIContainer]$Self = $Context.References[0]
+                $Self.BorderDrawColors = [TrueColor[]](
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor,
+                    [ColorLibrary]::WindowBorderActiveColor
+                )
+                $Self.TitleColor = [ColorLibrary]::TextActiveColor
+                $Self.Active     = $true
+                $Self.SetAllDirty()
+            }
+            'SMUiElementInactive_OnEnter' = {
+                Param([Context]$Context)
+                [UIContainer]$Self = $Context.References[0]
+                $Self.BorderDrawColors = [TrueColor[]](
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor,
+                    [ColorLibrary]::WindowBorderInactiveColor
+                )
+                $Self.TitleColor = [ColorLibrary]::TextInactiveColor
+                $Self.Active     = $false
+                $Self.SetAllDirty()
+            }
+        })
     }
 
     [Void]UpdateDimensions() {
@@ -125,39 +162,40 @@ Class UIContainer {
         }
     }
 
-    [Void]ToggleActive() {
-        If($this.Active -EQ $true) {
-            $this.Active           = $false
-            $this.BorderDrawColors = [TrueColor[]](
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor,
-                [ColorLibrary]::WindowBorderInactiveColor
-            )
-            $this.TitleColor = [ColorLibrary]::TextInactiveColor
-            $this.SetAllDirty()
+    [Void]Activate(
+        [Context]$Context
+    ) {
+        ([UIBase]$this).Activate([Context]::new(@(
+            $this,
+            $Context
+        )))
+    }
 
-            Return
+    [Void]Deactivate(
+        [Context]$Context
+    ) {
+        ([UIBase]$this).Deactivate([Context]::new(@(
+            $this,
+            $Context
+        )))
+    }
+
+    [Void]Update(
+        [Context]$Context
+    ) {
+        ([UIBase]$this).Update([Context]::new(@(
+            $this,
+            $Context
+        )))
+    }
+
+    [Void]ToggleActive(
+        [Context]$Context
+    ) {
+        If($this.BaseStateMachine.CurrentState -EQ [SMUiElementStateMachine]::StateActive) {
+            $this.Deactivate($Context)
         } Else {
-            $this.Active           = $true
-            $this.BorderDrawColors = [TrueColor[]](
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor,
-                [ColorLibrary]::WindowBorderActiveColor
-            )
-            $this.TitleColor = [ColorLibrary]::TextActiveColor
-            $this.SetAllDirty()
-
-            Return
+            $this.Activate($Context)
         }
     }
 

@@ -78,7 +78,7 @@ Class GSUiTestScreen : SMState {
 
             If($KeysPressed.Count -GT 0) {
                 If($KeysPressed[0].Key -EQ [ConsoleKey]::Spacebar) {
-                    $SelfState.SamplePanel.ToggleActive()
+                    $SelfState.SamplePanel.ToggleActive($Context)
                 }
                 If($KeysPressed[0].Key -EQ [ConsoleKey]::A) {
                     $SelfState.SamplePanel.SetBorderColor([ColorLibrary]::ApplePinkLight)

@@ -50,6 +50,7 @@ Class UICharacterStatusSummaryPanel : UIPanel {
                 ([UICharacterStatusSummaryPanel]::WindowLTColumn + 1)
             )
         )
+        # $this.UiElementListing[0].ToggleActive()
         $this.UiElementListing[1] = [UIChevron]::new(
             [UIChevronOrientation]::Left,
             [ATCoordinates]::new(
@@ -80,6 +81,6 @@ Class UICharacterStatusSummaryPanel : UIPanel {
             ([UICharacterStatusSummaryPanel]::WindowLTRow + 4),
             ([UICharacterStatusSummaryPanel]::WindowLTColumn + 1)
         )
-        $this.ToggleActive(); $this.ToggleActive()
+        # $this.ToggleActive(); $this.ToggleActive()
     }
 }
