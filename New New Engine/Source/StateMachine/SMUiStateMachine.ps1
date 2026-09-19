@@ -255,6 +255,11 @@ Class SMUiElementStateMachine : SMStateMachine {
                 [SMUiElementStateMachine]::StateInactive
             ),
             [SMTransition]::new(
+                [SMUiElementStateMachine]::StateInit,
+                [SMUiElementStateMachine]::TransitionActivate,
+                [SMUiElementStateMachine]::StateActive
+            ),
+            [SMTransition]::new(
                 [SMUiElementStateMachine]::StateInactive,
                 [SMUiElementStateMachine]::TransitionActivate,
                 [SMUiElementStateMachine]::StateActive
