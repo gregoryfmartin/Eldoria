@@ -23,6 +23,7 @@ Class UITextInput : UIBase {
         $this.InputBuffer     = ''
         $this.DrawCoordinates = [ATCoordinates]::new(1, 1)
         $this.Dirty           = $true
+        $this.UseATReset      = $true
         $this.SetupStates()
     }
 
@@ -33,6 +34,7 @@ Class UITextInput : UIBase {
         $this.InputBuffer     = ''
         $this.DrawCoordinates = [ATCoordinates]::new(1, 1)
         $this.Dirty           = $true
+        $this.UseATReset      = $true
         $this.SetupStates()
     }
 
@@ -44,6 +46,7 @@ Class UITextInput : UIBase {
         $this.InputBuffer     = ''
         $this.DrawCoordinates = $DrawCoordinates
         $this.Dirty           = $true
+        $this.UseATReset      = $true
         $this.SetupStates()
     }
 
@@ -76,86 +79,45 @@ Class UITextInput : UIBase {
 
                 [UITextInput]$SelfElement = $Context.References[0]
 
+                $SelfElement.Prefix.ForegroundColor = [ColorLibrary]::UITextInputHasFocus
                 $SelfElement.Prefix.Decorations = [ATDecoration]@{
                     Italic = $false
                 }
                 $SelfElement.Dirty = $true
             }
-        })
-    }
+            'SMUiElementFocused_OnUpdate' = {
+                Param(
+                    [Context]$Context
+                )
 
-    [Void]Update(
-        [Context]$Context
-    ) {
-        ([UIBase]$this).Update($Context)
+                [UITextInput]$SelfElement = $Context.References[0]
+                [List[ConsoleKeyInfo]]$KeysPressed = $Context.References[[SMState]::ContextKeysPressed]
 
-        # Only process input if active and focused
-        If($this.Behavior.Active -EQ $true -AND $this.Behavior.CanHaveFocus -EQ $true -AND $this.Behavior.HasFocus -EQ $true) {
-            [List[ConsoleKeyInfo]]$KeysPressed = $Context.References[[SMState]::ContextKeysPressed]
-
-            If($KeysPressed.Count -GT 0) {
-                Foreach($KeyPress in $KeysPressed) {
-                    If($KeyPress.Key -EQ [ConsoleKey]::Backspace) {
-                        If($this.InputBuffer.Length -GT 0) {
-                            $this.InputBuffer = $this.InputBuffer.Substring(0, $this.InputBuffer.Length - 1)
-                            $this.Dirty = $true
-                        }
-                    } ElseIf ($KeyPress.Key -NE [ConsoleKey]::Enter -AND $KeyPress.Key -NE [ConsoleKey]::Escape -AND $KeyPress.Key -NE [ConsoleKey]::Tab) {
-                        If($this.InputBuffer.Length -LT $this.MaxCharacters) {
-                            # Check if printable character (simplistic check)
-                            If(![char]::IsControl($KeyPress.KeyChar)) {
-                                $this.InputBuffer += $KeyPress.KeyChar
-                                $this.Dirty = $true
+                If($KeysPressed.Count -GT 0) {
+                    Foreach($KeyPress in $KeysPressed) {
+                        If($KeyPress.Key -EQ [ConsoleKey]::Backspace) {
+                            If($SelfElement.InputBuffer.Length -GT 0) {
+                                $SelfElement.InputBuffer = $SelfElement.InputBuffer.Substring(0, $SelfElement.InputBuffer.Length - 1)
+                                $SelfElement.Dirty = $true
+                            }
+                        } ElseIf ($KeyPress.Key -NE [ConsoleKey]::Enter -AND $KeyPress.Key -NE [ConsoleKey]::Escape -AND $KeyPress.Key -NE [ConsoleKey]::Tab) {
+                            If($SelfElement.InputBuffer.Length -LT $SelfElement.MaxCharacters) {
+                                If(![char]::IsControl($KeyPress.KeyChar)) {
+                                    $SelfElement.InputBuffer += $KeyPress.KeyChar
+                                    $SelfElement.Dirty = $true
+                                }
                             }
                         }
                     }
                 }
             }
-        }
+        })
     }
 
     [String]ToAnsiControlSequenceString() {
-        [ATStringComposite]$A = [ATStringComposite]::new()
+        $this.Prefix.Coordinates = [ATCoordinates]::new($this.DrawCoordinates)
+        $this.SetUserData($this.InputBuffer.PadRight($this.MaxCharacters, '_'))
 
-        [String]$DisplayText = $this.InputBuffer.PadRight($this.MaxCharacters, '_')
-
-        If($this.Behavior.Active -EQ $true) {
-            If($this.Behavior.CanHaveFocus -EQ $true -AND $this.Behavior.HasFocus -EQ $true) {
-                $A.CompositeActual.Add(
-                    [ATString]@{
-                        Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [ColorLibrary]::UITextInputHasFocus
-                            Coordinates     = $this.DrawCoordinates
-                        }
-                        UserData   = "$DisplayText"
-                        UseATReset = $true
-                    }
-                )
-            } Else {
-                $A.CompositeActual.Add(
-                    [ATString]@{
-                        Prefix = [ATStringPrefix]@{
-                            ForegroundColor = [ColorLibrary]::UITextInputActive
-                            Coordinates     = $this.DrawCoordinates
-                        }
-                        UserData   = "$DisplayText"
-                        UseATReset = $true
-                    }
-                )
-            }
-        } Else {
-            $A.CompositeActual.Add(
-                [ATString]@{
-                    Prefix = [ATStringPrefix]@{
-                        ForegroundColor = [ColorLibrary]::UITextInputInactiveColor
-                        Coordinates     = $this.DrawCoordinates
-                    }
-                    UserData   = "$DisplayText"
-                    UseATReset = $true
-                }
-            )
-        }
-
-        Return "$($A.ToAnsiControlSequenceString())"
+        Return "$(([UIBase]$this).ToAnsiControlSequenceString())"
     }
 }
