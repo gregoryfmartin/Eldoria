@@ -2,3 +2,6 @@ ASM
 *~
 *.swp
 .DS_Store
+.venv/
+__pycache__/
+*.pyc
