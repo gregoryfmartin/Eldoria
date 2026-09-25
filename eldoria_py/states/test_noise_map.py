@@ -1,6 +1,6 @@
 """
-GSNoiseMapTestScreen: Interactive terminal visualizer for procedural noise maps
-and tile navigation using FastNoiseLite and Eldoria's Map / MapTile architecture.
+GSNoiseMapTestScreen: Interactive terminal visualizer for procedural noise maps,
+4x4 macro world map exploration, POI sub-map entry/egress, and tile navigation.
 """
 
 from __future__ import annotations
@@ -18,6 +18,8 @@ from ..procgen.map_generator import (
     BiomeType,
     BIOME_CONFIGS,
 )
+from ..procgen.poi import POIDescriptor, POIType, WarpTarget
+from ..procgen.world_macro import WorldMacroMap
 from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
@@ -25,7 +27,7 @@ from ..terminal.screen import TerminalScreen
 
 
 class GSNoiseMapTestScreen(SMState):
-    """Interactive visualizer for procedural maps and tile connectivity."""
+    """Interactive visualizer for 4x4 macro world map and POI sub-maps."""
 
     NOISE_TYPES: List[NoiseType] = [
         NoiseType.OpenSimplex2,
@@ -48,58 +50,70 @@ class GSNoiseMapTestScreen(SMState):
         self.map_width = map_width
         self.map_height = map_height
         self.seed = 1337
-        self.frequency = 0.06
+        self.frequency = 0.035
         self.noise_type_idx = 0
         self.fractal_type_idx = 0
 
-        self.generator = ProceduralMapGenerator(
+        # World Macro Map (4x4 sectors = 16 interconnected sectors)
+        self.world_macro: WorldMacroMap = WorldMacroMap(
             seed=self.seed,
+            macro_width=4,
+            macro_height=4,
+            sector_width=self.map_width,
+            sector_height=self.map_height,
             frequency=self.frequency,
             noise_type=self.NOISE_TYPES[self.noise_type_idx],
             fractal_type=self.FRACTAL_TYPES[self.fractal_type_idx],
         )
-        self.world_map: Map = self.generator.generate_map(
-            width=self.map_width,
-            height=self.map_height,
-            create_road=True,
-        )
 
-        # Place player cursor on a walkable road or plains tile
-        self.player_x = 0
-        self.player_y = self.map_height // 2
-        self._find_initial_player_pos()
+        # Active sector coordinates in 4x4 macro grid
+        self.current_sector: Tuple[int, int] = self.world_macro.starter_sector
+        self.player_x, self.player_y = self.world_macro.starter_player_pos
 
-    def _find_initial_player_pos(self) -> None:
-        for y in range(self.map_height):
-            for x in range(self.map_width):
-                tile = self.world_map.tiles[y][x]
-                if tile.biome == BiomeType.ROAD:
-                    self.player_x, self.player_y = x, y
-                    return
-        for y in range(self.map_height):
-            for x in range(self.map_width):
-                if self.world_map.tiles[y][x].is_walkable:
-                    self.player_x, self.player_y = x, y
-                    return
+        # Sub-map & Warp Stack state
+        self.active_submap: Optional[Map] = None
+        self.active_poi: Optional[POIDescriptor] = None
+        self.warp_stack: List[Tuple[Tuple[int, int], Tuple[int, int]]] = []
+
+    @property
+    def world_map(self) -> Map:
+        """Backward-compatible property returning the currently active Map."""
+        return self._current_map()
+
+    def _current_map(self) -> Map:
+        """Returns the currently active Map (either sub-map or current overworld sector)."""
+        if self.active_submap is not None:
+            return self.active_submap
+        sec = self.world_macro.get_sector(self.current_sector[0], self.current_sector[1])
+        if sec is None:
+            sec = self.world_macro.sectors[0][0]
+        return sec
 
     def _regenerate(self) -> None:
-        self.generator = ProceduralMapGenerator(
+        """Regenerates the WorldMacroMap and resets player location to starter sector."""
+        self.world_macro = WorldMacroMap(
             seed=self.seed,
+            macro_width=4,
+            macro_height=4,
+            sector_width=self.map_width,
+            sector_height=self.map_height,
             frequency=self.frequency,
             noise_type=self.NOISE_TYPES[self.noise_type_idx],
             fractal_type=self.FRACTAL_TYPES[self.fractal_type_idx],
         )
-        self.world_map = self.generator.generate_map(
-            width=self.map_width,
-            height=self.map_height,
-            create_road=True,
-        )
-        self._find_initial_player_pos()
+        self.current_sector = self.world_macro.starter_sector
+        self.player_x, self.player_y = self.world_macro.starter_player_pos
+        self.active_submap = None
+        self.active_poi = None
+        self.warp_stack.clear()
+        TerminalScreen.clear_screen()
+        TerminalScreen.flush()
 
     def enter(self, context: Context) -> None:
         super().enter(context)
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
+        TerminalScreen.flush()
 
     def exit(self, context: Context) -> None:
         super().exit(context)
@@ -132,48 +146,51 @@ class GSNoiseMapTestScreen(SMState):
                     self._try_move(1, 0, MapTile.EXIT_EAST)
                     keys_pressed.remove(key_info)
                     break
-                # Reseed
+
+                # Interaction: Enter key to enter POI or leave via egress
+                elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                    self._handle_interact()
+                    keys_pressed.remove(key_info)
+                    break
+
+                # Overworld Regeneration & Tuning (Active on Overworld)
                 elif key_info.char in ("r", "R"):
                     self.seed = random.randint(1, 999999)
                     self._regenerate()
                     keys_pressed.remove(key_info)
                     break
-                # Cycle Noise Type
                 elif key_info.char in ("n", "N"):
                     self.noise_type_idx = (self.noise_type_idx + 1) % len(self.NOISE_TYPES)
                     self._regenerate()
                     keys_pressed.remove(key_info)
                     break
-                # Cycle Fractal Type
                 elif key_info.char in ("f", "F"):
                     self.fractal_type_idx = (self.fractal_type_idx + 1) % len(self.FRACTAL_TYPES)
                     self._regenerate()
                     keys_pressed.remove(key_info)
                     break
-                # Frequency Adjust (+ / -)
                 elif key_info.char in ("+", "="):
-                    self.frequency = min(0.30, self.frequency + 0.01)
+                    self.frequency = min(0.20, self.frequency + 0.005)
                     self._regenerate()
                     keys_pressed.remove(key_info)
                     break
                 elif key_info.char in ("-", "_"):
-                    self.frequency = max(0.01, self.frequency - 0.01)
+                    self.frequency = max(0.01, self.frequency - 0.005)
                     self._regenerate()
                     keys_pressed.remove(key_info)
                     break
-                # Switch to UI Test
+
+                # Screen switching
                 elif key_info.char in ("u", "U"):
                     keys_pressed.clear()
                     if core and hasattr(core, "game_state"):
                         core.game_state.trigger("ToUiTest", context)
                     return
-                # Switch to Soda Can Test
                 elif key_info.char in ("c", "C"):
                     keys_pressed.clear()
                     if core and hasattr(core, "game_state"):
                         core.game_state.trigger("ToSodaCan", context)
                     return
-                # Quit
                 elif key_info.char in ("q", "Q"):
                     keys_pressed.clear()
                     if core and hasattr(core, "is_running"):
@@ -183,13 +200,107 @@ class GSNoiseMapTestScreen(SMState):
         self._render()
 
     def _try_move(self, dx: int, dy: int, exit_dir: int) -> None:
-        curr_tile = self.world_map.tiles[self.player_y][self.player_x]
-        if curr_tile.exits[exit_dir]:
-            nx = self.player_x + dx
-            ny = self.player_y + dy
+        """Handles player movement and seamless sector boundary crossing."""
+        curr_map = self._current_map()
+        curr_tile = curr_map.tiles[self.player_y][self.player_x]
+
+        if not curr_tile.exits[exit_dir]:
+            return
+
+        nx = self.player_x + dx
+        ny = self.player_y + dy
+
+        # Sub-map movement
+        if self.active_submap is not None:
             if 0 <= nx < self.map_width and 0 <= ny < self.map_height:
                 self.player_x = nx
                 self.player_y = ny
+            return
+
+        # Overworld 4x4 sector navigation
+        sx, sy = self.current_sector
+
+        # East boundary transition
+        if nx >= self.map_width:
+            if sx < self.world_macro.macro_width - 1:
+                next_sec = self.world_macro.get_sector(sx + 1, sy)
+                if next_sec and next_sec.tiles[ny][0].is_walkable:
+                    self.current_sector = (sx + 1, sy)
+                    self.player_x = 0
+                    self.player_y = ny
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+            return
+
+        # West boundary transition
+        if nx < 0:
+            if sx > 0:
+                next_sec = self.world_macro.get_sector(sx - 1, sy)
+                if next_sec and next_sec.tiles[ny][self.map_width - 1].is_walkable:
+                    self.current_sector = (sx - 1, sy)
+                    self.player_x = self.map_width - 1
+                    self.player_y = ny
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+            return
+
+        # South boundary transition
+        if ny >= self.map_height:
+            if sy < self.world_macro.macro_height - 1:
+                next_sec = self.world_macro.get_sector(sx, sy + 1)
+                if next_sec and next_sec.tiles[0][nx].is_walkable:
+                    self.current_sector = (sx, sy + 1)
+                    self.player_x = nx
+                    self.player_y = 0
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+            return
+
+        # North boundary transition
+        if ny < 0:
+            if sy > 0:
+                next_sec = self.world_macro.get_sector(sx, sy - 1)
+                if next_sec and next_sec.tiles[self.map_height - 1][nx].is_walkable:
+                    self.current_sector = (sx, sy - 1)
+                    self.player_x = nx
+                    self.player_y = self.map_height - 1
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+            return
+
+        # Regular move within the same sector
+        self.player_x = nx
+        self.player_y = ny
+
+    def _handle_interact(self) -> None:
+        """Handles Enter key interaction: enters POI sub-map or leaves via egress."""
+        curr_map = self._current_map()
+        curr_tile = curr_map.tiles[self.player_y][self.player_x]
+
+        if self.active_submap is None:
+            # Overworld: Check for POI WarpTarget
+            if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
+                poi = curr_tile.poi
+                if poi and poi.sub_map:
+                    # Push return sector and position to warp stack
+                    self.warp_stack.append((self.current_sector, (self.player_x, self.player_y)))
+                    self.active_submap = poi.sub_map
+                    self.active_poi = poi
+                    self.player_x, self.player_y = poi.spawn_pos
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+        else:
+            # Inside Sub-Map: Check for Egress WarpTarget
+            if curr_tile.warp_target and curr_tile.warp_target.is_egress:
+                if self.warp_stack:
+                    ret_sector, (ret_x, ret_y) = self.warp_stack.pop()
+                    self.current_sector = ret_sector
+                    self.player_x = ret_x
+                    self.player_y = ret_y
+                self.active_submap = None
+                self.active_poi = None
+                TerminalScreen.clear_screen()
+                TerminalScreen.flush()
 
     @staticmethod
     def _make_border_line(left_char: str, text: str, right_char: str, width: int, fill_char: str = "─") -> str:
@@ -200,47 +311,89 @@ class GSNoiseMapTestScreen(SMState):
         return f"{left_char}{fill_char * left_pad}{text}{fill_char * right_pad}{right_char}"
 
     def _render(self) -> None:
-        """Atomic frame render of the procedural map and telemetry HUD."""
+        """Atomic frame render of the procedural map, POI highlights, and telemetry HUD."""
+        curr_map = self._current_map()
         out: List[str] = [ATControlSequences.DrawOptimizeOn]
 
-        # Top border / Header
-        cur_noise = self.NOISE_TYPES[self.noise_type_idx].name
-        h_text = f"── \033[1;37mFastNoiseLite Map\033[0m ── Seed:\033[33m{self.seed:<6}\033[0m Freq:\033[32m{self.frequency:.2f}\033[0m ──"
+        # 1. Top border / Header
+        if self.active_submap is None:
+            sx, sy = self.current_sector
+            h_text = (
+                f"── \033[1;37mWorld Map\033[0m ── "
+                f"Sec:\033[36m({sx},{sy})\033[0m/4x4 ── "
+                f"Seed:\033[33m{self.seed:<6}\033[0m "
+                f"Freq:\033[32m{self.frequency:.3f}\033[0m ──"
+            )
+        else:
+            poi_name = self.active_poi.name if self.active_poi else "Interior"
+            h_text = f"── \033[1;37mSub-Map: {poi_name}\033[0m ──"
+
         out.append(ATCoordinates(1, 1).to_ansi())
         out.append(self._make_border_line("╭", h_text, "╮", self.map_width, fill_char="─"))
 
-        # Current tile telemetry
-        curr_tile = self.world_map.tiles[self.player_y][self.player_x]
-        cur_fractal = self.FRACTAL_TYPES[self.fractal_type_idx].name
+        # 2. Current tile telemetry (row 2)
+        curr_tile = curr_map.tiles[self.player_y][self.player_x]
         ex_str = "".join([
             "N" if curr_tile.exits[MapTile.EXIT_NORTH] else "·",
             "S" if curr_tile.exits[MapTile.EXIT_SOUTH] else "·",
             "E" if curr_tile.exits[MapTile.EXIT_EAST] else "·",
             "W" if curr_tile.exits[MapTile.EXIT_WEST] else "·",
         ])
-        t_text = (
-            f" \033[36m{cur_noise:<12}\033[0m \033[35m{cur_fractal:<7}\033[0m "
-            f"Pos:({self.player_x:02d},{self.player_y:02d}) "
-            f"\033[33m{curr_tile.biome.value:<8}\033[0m [{ex_str}] "
-        )
+
+        if self.active_submap is None:
+            if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
+                t_text = (
+                    f" Pos:({self.player_x:02d},{self.player_y:02d}) "
+                    f"\033[1;32m★ {curr_tile.warp_target.prompt_label}\033[0m "
+                    f"\033[1;33m[Enter] Enter\033[0m "
+                )
+            else:
+                cur_noise = self.NOISE_TYPES[self.noise_type_idx].name
+                cur_fractal = self.FRACTAL_TYPES[self.fractal_type_idx].name
+                t_text = (
+                    f" \033[36m{cur_noise:<12}\033[0m \033[35m{cur_fractal:<7}\033[0m "
+                    f"Pos:({self.player_x:02d},{self.player_y:02d}) "
+                    f"\033[33m{curr_tile.biome.value:<8}\033[0m [{ex_str}] "
+                )
+        else:
+            if curr_tile.warp_target and curr_tile.warp_target.is_egress:
+                t_text = (
+                    f" Pos:({self.player_x:02d},{self.player_y:02d}) "
+                    f"\033[1;33m[Egress] {curr_tile.warp_target.prompt_label}\033[0m "
+                    f"\033[1;32m[Enter] Leave\033[0m "
+                )
+            else:
+                t_text = (
+                    f" Pos:({self.player_x:02d},{self.player_y:02d}) "
+                    f"\033[33m{curr_tile.biome.value:<8}\033[0m [{ex_str}] "
+                    f"\033[36mEgress Gate at South\033[0m "
+                )
+
         out.append(ATCoordinates(2, 1).to_ansi())
         out.append(self._make_border_line("│", t_text, "│", self.map_width, fill_char=" "))
 
-        # Render Map Grid starting at row 3
+        # 3. Render Map Grid starting at row 3
         map_lines = ProceduralMapGenerator.render_ansi(
-            self.world_map,
+            curr_map,
             cursor_pos=(self.player_x, self.player_y),
         )
         for idx, line in enumerate(map_lines):
             out.append(ATCoordinates(3 + idx, 1).to_ansi())
             out.append(f"│{line}│")
 
-        # Bottom controls footer
+        # 4. Bottom controls footer
         footer_y = 3 + len(map_lines)
-        f_text = (
-            " \033[33m[WASD]\033[0mMove \033[33m[R]\033[0mSeed \033[33m[N]\033[0mType "
-            "\033[33m[F]\033[0mFrac \033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0m "
-        )
+        if self.active_submap is None:
+            f_text = (
+                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mPOI "
+                "\033[33m[R]\033[0mSeed \033[33m[N]\033[0mType \033[33m[U]\033[0mUI \033[33m[Q]\033[0mQuit "
+            )
+        else:
+            f_text = (
+                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mLeave "
+                "\033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0mQuit "
+            )
+
         out.append(ATCoordinates(footer_y, 1).to_ansi())
         out.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))
 

@@ -1,0 +1,466 @@
+"""
+WorldMacroMap: 4x4 Macro World Map Grid architecture with continuous global coordinates,
+algorithmic Point of Interest (Town, Castle, Cave) placement, and sub-map linking.
+"""
+
+from __future__ import annotations
+import math
+import random
+from typing import Dict, List, Optional, Tuple
+
+from .map_generator import (
+    BiomeType,
+    BIOME_CONFIGS,
+    Map,
+    MapTile,
+    ProceduralMapGenerator,
+)
+from .noise import FastNoiseLite, FractalType, NoiseType
+from .poi import POIDescriptor, POIType, WarpTarget
+from .submap_generator import SubMapGenerator
+from ..terminal.color import TrueColor
+
+
+class WorldMacroMap:
+    """
+    Manages a 4x4 macro grid of interconnected 54x24 sectors (16 sectors total).
+    Uses continuous global noise sampling:
+        world_x = sector_x * 54 + x
+        world_y = sector_y * 24 + y
+    Ensures seamless biome borders, reciprocal boundary exits, and algorithmic
+    placement of 3 distinct POIs (Town, Castle, Cave) into separate sectors.
+    """
+
+    def __init__(
+        self,
+        seed: int = 1337,
+        macro_width: int = 4,
+        macro_height: int = 4,
+        sector_width: int = 54,
+        sector_height: int = 24,
+        frequency: float = 0.035,
+        noise_type: NoiseType = NoiseType.OpenSimplex2,
+        fractal_type: FractalType = FractalType.FBm,
+        octaves: int = 4,
+        lacunarity: float = 2.0,
+        gain: float = 0.5,
+    ) -> None:
+        self.seed = seed
+        self.macro_width = macro_width
+        self.macro_height = macro_height
+        self.sector_width = sector_width
+        self.sector_height = sector_height
+        self.frequency = frequency
+        self.noise_type = noise_type
+        self.fractal_type = fractal_type
+        self.octaves = octaves
+        self.lacunarity = lacunarity
+        self.gain = gain
+
+        self.generator = ProceduralMapGenerator(
+            seed=self.seed,
+            frequency=self.frequency,
+            noise_type=self.noise_type,
+            fractal_type=self.fractal_type,
+            octaves=self.octaves,
+            lacunarity=self.lacunarity,
+            gain=self.gain,
+        )
+
+        self.sectors: List[List[Map]] = []
+        self.pois: Dict[POIType, POIDescriptor] = {}
+        self.starter_sector: Tuple[int, int] = (0, 0)
+        self.starter_player_pos: Tuple[int, int] = (sector_width // 2, sector_height // 2)
+
+        self.generate()
+
+    def get_sector(self, sx: int, sy: int) -> Optional[Map]:
+        """Returns the Map for sector (sx, sy), or None if out of bounds."""
+        if 0 <= sy < self.macro_height and 0 <= sx < self.macro_width:
+            return self.sectors[sy][sx]
+        return None
+
+    def get_poi(self, poi_type: POIType) -> Optional[POIDescriptor]:
+        """Returns the POIDescriptor for the given POIType."""
+        return self.pois.get(poi_type)
+
+    def reseed(self, new_seed: int) -> None:
+        """Regenerates the entire 4x4 macro world with a new seed."""
+        self.seed = new_seed
+        self.generator.reseed(new_seed)
+        self.generate()
+
+    def generate(self) -> None:
+        """Generates all 16 sectors, places POIs in distinct sectors, and links exits."""
+        # 1. Generate 4x4 sectors with continuous global coordinates
+        self.sectors = []
+        for sy in range(self.macro_height):
+            row: List[Map] = []
+            for sx in range(self.macro_width):
+                offset_x = sx * self.sector_width
+                offset_y = sy * self.sector_height
+                sec_map = self.generator.generate_map(
+                    name=f"Sector_{sx}_{sy}",
+                    width=self.sector_width,
+                    height=self.sector_height,
+                    create_road=False,
+                    boundary_wrap=False,
+                    offset_x=offset_x,
+                    offset_y=offset_y,
+                )
+                row.append(sec_map)
+            self.sectors.append(row)
+
+        # 2. Algorithmic POI Selection & Placement
+        self._place_pois()
+
+        # 3. Carve Overworld Road through Town Sector
+        self._carve_town_road()
+
+        # 4. Re-calculate internal exits for any modified sectors
+        for sy in range(self.macro_height):
+            for sx in range(self.macro_width):
+                ProceduralMapGenerator._calculate_exits(self.sectors[sy][sx])
+
+        # 5. Link Inter-Sector Exits across boundaries with strict reciprocity
+        self._link_sector_exits()
+
+    def _place_pois(self) -> None:
+        """Selects 3 distinct sectors and places Town, Castle, and Cave POIs."""
+        self.pois.clear()
+        sector_stats = []
+
+        # Analyze each sector's biome distribution
+        for sy in range(self.macro_height):
+            for sx in range(self.macro_width):
+                sec = self.sectors[sy][sx]
+                counts: Dict[BiomeType, int] = {b: 0 for b in BiomeType}
+                for y in range(self.sector_height):
+                    for x in range(self.sector_width):
+                        counts[sec.tiles[y][x].biome] += 1
+
+                walkable_count = (
+                    counts[BiomeType.PLAINS]
+                    + counts[BiomeType.FOREST]
+                    + counts[BiomeType.COAST]
+                    + counts[BiomeType.ROAD]
+                )
+                sector_stats.append({
+                    "coord": (sx, sy),
+                    "walkable": walkable_count,
+                    "plains": counts[BiomeType.PLAINS],
+                    "forest": counts[BiomeType.FOREST],
+                    "mountain": counts[BiomeType.MOUNTAIN],
+                    "snow": counts[BiomeType.SNOW],
+                    "water": counts[BiomeType.WATER] + counts[BiomeType.DEEP_WATER],
+                })
+
+        used_sectors = set()
+
+        # A. Town Placement: Sector with highest plains + forest and ample walkable terrain
+        town_candidates = sorted(
+            [s for s in sector_stats if s["walkable"] >= 50],
+            key=lambda s: s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5,
+            reverse=True,
+        )
+        town_sector_coord = town_candidates[0]["coord"] if town_candidates else (0, 0)
+        used_sectors.add(town_sector_coord)
+
+        # B. Castle Placement: Sector with open plains or high ground, distinct from Town
+        castle_candidates = sorted(
+            [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 40],
+            key=lambda s: s["plains"] * 1.5 + s["forest"] * 0.8 - s["water"],
+            reverse=True,
+        )
+        if not castle_candidates:
+            # Fallback to any unused sector
+            castle_candidates = [s for s in sector_stats if s["coord"] not in used_sectors]
+        castle_sector_coord = castle_candidates[0]["coord"]
+        used_sectors.add(castle_sector_coord)
+
+        # C. Cave Placement: Sector with most mountain terrain, distinct from Town and Castle
+        cave_candidates = sorted(
+            [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 10],
+            key=lambda s: s["mountain"] * 2.5 + s["snow"] - s["water"],
+            reverse=True,
+        )
+        if not cave_candidates:
+            cave_candidates = [s for s in sector_stats if s["coord"] not in used_sectors]
+        cave_sector_coord = cave_candidates[0]["coord"]
+        used_sectors.add(cave_sector_coord)
+
+        # -------------------------------------------------------------
+        # 1. Place Town
+        # -------------------------------------------------------------
+        town_map = self.sectors[town_sector_coord[1]][town_sector_coord[0]]
+        town_pos = self._find_best_open_pos(town_map)
+        town_submap, town_spawn = SubMapGenerator.generate_town(
+            name="Oakhaven Town",
+            seed=self.seed,
+        )
+        town_poi = POIDescriptor.create_town(
+            name="Oakhaven Town",
+            sector_coord=town_sector_coord,
+            local_pos=town_pos,
+            spawn_pos=town_spawn,
+        )
+        town_poi.sub_map = town_submap
+        self._stamp_poi_on_tile(town_map, town_pos, town_poi)
+        self.pois[POIType.TOWN] = town_poi
+
+        # Set default starter sector and player start position right at Town
+        self.starter_sector = town_sector_coord
+        cand_x = min(self.sector_width - 1, town_pos[0] + 1)
+        if town_map.tiles[town_pos[1]][cand_x].is_walkable:
+            self.starter_player_pos = (cand_x, town_pos[1])
+        else:
+            self.starter_player_pos = town_pos
+
+        # -------------------------------------------------------------
+        # 2. Place Castle
+        # -------------------------------------------------------------
+        castle_map = self.sectors[castle_sector_coord[1]][castle_sector_coord[0]]
+        castle_pos = self._find_best_open_pos(castle_map)
+        castle_submap, castle_spawn = SubMapGenerator.generate_castle(
+            name="Highspire Castle",
+            seed=self.seed,
+        )
+        castle_poi = POIDescriptor.create_castle(
+            name="Highspire Castle",
+            sector_coord=castle_sector_coord,
+            local_pos=castle_pos,
+            spawn_pos=castle_spawn,
+        )
+        castle_poi.sub_map = castle_submap
+        self._stamp_poi_on_tile(castle_map, castle_pos, castle_poi)
+        self.pois[POIType.CASTLE] = castle_poi
+
+        # -------------------------------------------------------------
+        # 3. Place Cave
+        # -------------------------------------------------------------
+        cave_map = self.sectors[cave_sector_coord[1]][cave_sector_coord[0]]
+        cave_pos = self._find_cave_mouth_pos(cave_map)
+        cave_submap, cave_spawn = SubMapGenerator.generate_cave(
+            name="Shadowfen Cavern",
+            seed=self.seed,
+        )
+        cave_poi = POIDescriptor.create_cave(
+            name="Shadowfen Cavern",
+            sector_coord=cave_sector_coord,
+            local_pos=cave_pos,
+            spawn_pos=cave_spawn,
+        )
+        cave_poi.sub_map = cave_submap
+        self._stamp_poi_on_tile(cave_map, cave_pos, cave_poi)
+        self.pois[POIType.CAVE] = cave_poi
+
+    def _find_best_open_pos(self, sector_map: Map) -> Tuple[int, int]:
+        """Finds a central walkable tile surrounded by walkable land."""
+        center_x = self.sector_width // 2
+        center_y = self.sector_height // 2
+
+        best_pos = (center_x, center_y)
+        best_dist = float("inf")
+
+        for y in range(2, self.sector_height - 2):
+            for x in range(2, self.sector_width - 2):
+                tile = sector_map.tiles[y][x]
+                if tile.is_walkable and tile.poi is None:
+                    # Prefer tiles with walkable cardinal neighbors
+                    walkable_neighbors = sum(
+                        1 for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0))
+                        if sector_map.tiles[y + dy][x + dx].is_walkable
+                    )
+                    if walkable_neighbors >= 3:
+                        dist = math.hypot(x - center_x, y - center_y)
+                        if dist < best_dist:
+                            best_dist = dist
+                            best_pos = (x, y)
+
+        if best_dist < float("inf"):
+            return best_pos
+
+        # Fallback to any walkable tile
+        for y in range(self.sector_height):
+            for x in range(self.sector_width):
+                if sector_map.tiles[y][x].is_walkable and sector_map.tiles[y][x].poi is None:
+                    return (x, y)
+
+        # Extreme fallback: carve a plains tile
+        sector_map.set_tile(center_x, center_y, MapTile(biome=BiomeType.PLAINS))
+        return (center_x, center_y)
+
+    def _find_cave_mouth_pos(self, sector_map: Map) -> Tuple[int, int]:
+        """
+        Finds a walkable tile directly adjacent to a Mountain tile,
+        representing a cave mouth at the cliff base.
+        """
+        center_x = self.sector_width // 2
+        center_y = self.sector_height // 2
+
+        candidates = []
+        for y in range(1, self.sector_height - 1):
+            for x in range(1, self.sector_width - 1):
+                tile = sector_map.tiles[y][x]
+                if tile.is_walkable and tile.poi is None:
+                    # Check if any 4-neighbor is Mountain
+                    for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+                        n_tile = sector_map.tiles[y + dy][x + dx]
+                        if n_tile.biome in (BiomeType.MOUNTAIN, BiomeType.SNOW):
+                            dist = math.hypot(x - center_x, y - center_y)
+                            candidates.append((dist, (x, y)))
+                            break
+
+        if candidates:
+            candidates.sort(key=lambda c: c[0])
+            return candidates[0][1]
+
+        # If no walkable tile borders a mountain, find a walkable tile and place a mountain neighbor
+        pos = self._find_best_open_pos(sector_map)
+        px, py = pos
+        # Convert north neighbor to mountain if in bounds
+        if py > 0:
+            m_tile = MapTile(biome=BiomeType.MOUNTAIN)
+            m_tile.background_image = "Mountain"
+            sector_map.set_tile(px, py - 1, m_tile)
+        return pos
+
+    def _stamp_poi_on_tile(self, sector_map: Map, pos: Tuple[int, int], poi: POIDescriptor) -> None:
+        """Stamps the POI glyph, custom colors, and entry WarpTarget onto the sector tile."""
+        x, y = pos
+        tile = sector_map.tiles[y][x]
+        tile.poi = poi
+        tile.warp_target = WarpTarget(
+            target_map_name=poi.name,
+            target_pos=poi.spawn_pos,
+            is_egress=False,
+            prompt_label=poi.name,
+        )
+        tile.custom_glyph = poi.glyph
+        tile.custom_fg = poi.fg_color
+        tile.custom_bg = poi.bg_color
+        tile.object_listing.append(f"POI:{poi.name}")
+
+    def _carve_town_road(self) -> None:
+        """Carves a cobblestone road across the Town's sector connecting West and East edges."""
+        town_poi = self.pois.get(POIType.TOWN)
+        if not town_poi:
+            return
+
+        sx, sy = town_poi.sector_coord
+        sec_map = self.sectors[sy][sx]
+        tx, ty = town_poi.local_pos
+        w, h = self.sector_width, self.sector_height
+
+        # Pick walkable start on left edge and end on right edge near town's y
+        starts = [y for y in range(h) if sec_map.tiles[y][0].is_walkable]
+        start_y = min(starts, key=lambda y: abs(y - ty)) if starts else ty
+
+        ends = [y for y in range(h) if sec_map.tiles[y][w - 1].is_walkable]
+        end_y = min(ends, key=lambda y: abs(y - ty)) if ends else ty
+
+        # Path 1: From left edge (0, start_y) to Town (tx, ty)
+        path1 = self._find_walkable_path(sec_map, (0, start_y), (tx, ty))
+        # Path 2: From Town (tx, ty) to right edge (w - 1, end_y)
+        path2 = self._find_walkable_path(sec_map, (tx, ty), (w - 1, end_y))
+
+        road_tiles = set(path1 + path2)
+        road_cfg = BIOME_CONFIGS[BiomeType.ROAD]
+
+        for rx, ry in road_tiles:
+            tile = sec_map.tiles[ry][rx]
+            if tile.poi is None:  # Preserve POI glyph and warp target
+                tile.biome = BiomeType.ROAD
+                tile.background_image = "FieldRoad"
+                tile.battle_allowed = road_cfg.battle_allowed
+                tile.encounter_rate = road_cfg.encounter_rate
+                tile.region_code = road_cfg.region_code
+
+    @staticmethod
+    def _find_walkable_path(
+        sec_map: Map,
+        start: Tuple[int, int],
+        goal: Tuple[int, int],
+    ) -> List[Tuple[int, int]]:
+        """Greedy cost pathfinding connecting start to goal."""
+        w, h = sec_map.width, sec_map.height
+        curr_x, curr_y = start
+        gx, gy = goal
+        visited = set()
+        path = [(curr_x, curr_y)]
+        visited.add((curr_x, curr_y))
+
+        max_steps = w * h
+        steps = 0
+        while (curr_x, curr_y) != (gx, gy) and steps < max_steps:
+            steps += 1
+            candidates = []
+            for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)]:
+                nx, ny = curr_x + dx, curr_y + dy
+                if 0 <= nx < w and 0 <= ny < h and (nx, ny) not in visited:
+                    tile = sec_map.tiles[ny][nx]
+                    base_cost = 1.0 if tile.is_walkable else 12.0
+                    dist = math.hypot(nx - gx, ny - gy)
+                    candidates.append((base_cost + dist * 2.0, nx, ny))
+
+            if not candidates:
+                break
+
+            candidates.sort(key=lambda c: c[0])
+            _, curr_x, curr_y = candidates[0]
+            path.append((curr_x, curr_y))
+            visited.add((curr_x, curr_y))
+
+        return path
+
+    def _link_sector_exits(self) -> None:
+        """
+        Calculates and links cardinal exits across sector boundaries.
+        Guarantees reciprocal edge crossing:
+        Moving East from Sector (X, Y) at x=53 connects to Sector (X+1, Y) at x=0.
+        Moving South from Sector (X, Y) at y=23 connects to Sector (X, Y+1) at y=0.
+        """
+        mw = self.macro_width
+        mh = self.macro_height
+        sw = self.sector_width
+        sh = self.sector_height
+
+        for sy in range(mh):
+            for sx in range(mw):
+                sec = self.sectors[sy][sx]
+
+                # 1. Horizontal Border Link (East/West)
+                for y in range(sh):
+                    # East border of current sector
+                    if sx < mw - 1:
+                        neighbor_sec = self.sectors[sy][sx + 1]
+                        tile_a = sec.tiles[y][sw - 1]
+                        tile_b = neighbor_sec.tiles[y][0]
+                        can_cross = tile_a.is_walkable and tile_b.is_walkable
+                        tile_a.exits[MapTile.EXIT_EAST] = can_cross
+                        tile_b.exits[MapTile.EXIT_WEST] = can_cross
+                    else:
+                        # World eastern edge
+                        sec.tiles[y][sw - 1].exits[MapTile.EXIT_EAST] = False
+
+                    # World western edge
+                    if sx == 0:
+                        sec.tiles[y][0].exits[MapTile.EXIT_WEST] = False
+
+                # 2. Vertical Border Link (South/North)
+                for x in range(sw):
+                    # South border of current sector
+                    if sy < mh - 1:
+                        neighbor_sec = self.sectors[sy + 1][sx]
+                        tile_a = sec.tiles[sh - 1][x]
+                        tile_b = neighbor_sec.tiles[0][x]
+                        can_cross = tile_a.is_walkable and tile_b.is_walkable
+                        tile_a.exits[MapTile.EXIT_SOUTH] = can_cross
+                        tile_b.exits[MapTile.EXIT_NORTH] = can_cross
+                    else:
+                        # World southern edge
+                        sec.tiles[sh - 1][x].exits[MapTile.EXIT_SOUTH] = False
+
+                    # World northern edge
+                    if sy == 0:
+                        sec.tiles[0][x].exits[MapTile.EXIT_NORTH] = False

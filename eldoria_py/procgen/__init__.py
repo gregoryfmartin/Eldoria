@@ -25,6 +25,9 @@ from .map_generator import (
     BiomeConfig,
     BIOME_CONFIGS,
 )
+from .poi import POIType, POIDescriptor, WarpTarget
+from .submap_generator import SubMapGenerator
+from .world_macro import WorldMacroMap
 
 __all__ = [
     "FastNoiseLite",
@@ -48,4 +51,9 @@ __all__ = [
     "BiomeType",
     "BiomeConfig",
     "BIOME_CONFIGS",
+    "POIType",
+    "POIDescriptor",
+    "WarpTarget",
+    "SubMapGenerator",
+    "WorldMacroMap",
 ]

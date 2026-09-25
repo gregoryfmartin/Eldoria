@@ -138,6 +138,11 @@ class MapTile:
         region_code: int = 0,
         elevation: float = 0.0,
         moisture: float = 0.0,
+        warp_target: Optional[Any] = None,
+        poi: Optional[Any] = None,
+        custom_glyph: Optional[str] = None,
+        custom_fg: Optional[TrueColor] = None,
+        custom_bg: Optional[TrueColor] = None,
     ) -> None:
         self.background_image = background_image
         self.biome = biome
@@ -148,6 +153,11 @@ class MapTile:
         self.region_code = region_code
         self.elevation = elevation
         self.moisture = moisture
+        self.warp_target = warp_target
+        self.poi = poi
+        self.custom_glyph = custom_glyph
+        self.custom_fg = custom_fg
+        self.custom_bg = custom_bg
 
     @property
     def is_walkable(self) -> bool:
@@ -288,6 +298,8 @@ class ProceduralMapGenerator:
         height: int = 24,
         create_road: bool = True,
         boundary_wrap: bool = False,
+        offset_x: int = 0,
+        offset_y: int = 0,
     ) -> Map:
         """Generates a complete, interconnected Map with biomes, exits, and optional roads."""
         world_map = Map(name=name, width=width, height=height, boundary_wrap=boundary_wrap)
@@ -295,8 +307,8 @@ class ProceduralMapGenerator:
         # 1. Sample Elevation & Moisture to determine base biomes
         for y in range(height):
             for x in range(width):
-                raw_e = self.elev_noise.get_noise_2d(float(x), float(y))
-                raw_m = self.moist_noise.get_noise_2d(float(x), float(y))
+                raw_e = self.elev_noise.get_noise_2d(float(offset_x + x), float(offset_y + y))
+                raw_m = self.moist_noise.get_noise_2d(float(offset_x + x), float(offset_y + y))
 
                 # Normalize from [-1.0, 1.0] to [0.0, 1.0]
                 elevation = max(0.0, min(1.0, (raw_e + 1.0) * 0.5))
@@ -458,6 +470,19 @@ class ProceduralMapGenerator:
                 if cursor_pos and cursor_pos == (x, y):
                     # Player cursor glyph
                     row_chunks.append("\033[38;2;255;255;255m\033[48;2;220;38;38m@\033[0m")
+                    continue
+
+                if tile.poi is not None:
+                    # Interactive POI landmark glyph
+                    fg = tile.poi.fg_color.to_fg_ansi()
+                    bg = tile.poi.bg_color.to_bg_ansi()
+                    row_chunks.append(f"{fg}{bg}{tile.poi.glyph}\033[0m")
+                    continue
+
+                if tile.custom_glyph is not None:
+                    fg = tile.custom_fg.to_fg_ansi() if tile.custom_fg else "\033[38;2;255;255;255m"
+                    bg = tile.custom_bg.to_bg_ansi() if tile.custom_bg else "\033[48;2;0;0;0m"
+                    row_chunks.append(f"{fg}{bg}{tile.custom_glyph}\033[0m")
                     continue
 
                 cfg = BIOME_CONFIGS.get(tile.biome, BIOME_CONFIGS[BiomeType.PLAINS])
