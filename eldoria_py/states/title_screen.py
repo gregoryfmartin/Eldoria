@@ -1,0 +1,314 @@
+"""
+GSTitleScreen: Production title screen state using UIPanel component architecture.
+Features canonical menu options, modal dialog views, and developer hotkeys.
+Standardized around Eldoria's maximum supported buffer dimensions (80x40).
+"""
+
+from __future__ import annotations
+from typing import List, Optional
+
+from ..core.context import Context
+from ..core.fsm import SMState
+from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
+from ..terminal.color import ColorLibrary
+from ..terminal.input import KeyCode
+from ..terminal.screen import TerminalScreen
+from ..terminal.box import clear_buffer_tail
+from ..ui.panel import UIPanel
+from ..ui.elements.menu import UIMenu
+
+
+class GSTitleScreen(SMState):
+    """Production Title Screen state managing primary game start and options."""
+
+    MENU_ITEMS = [
+        "New Game",
+        "Load Game",
+        "Options",
+        "Credits",
+        "Exit",
+    ]
+
+    def __init__(self, screen_width: int = 80, screen_height: int = 24, dev_mode: bool = True) -> None:
+        super().__init__("GSTitleScreen")
+        self.screen_width: int = screen_width
+        self.screen_height: int = screen_height
+        self.dev_mode: bool = dev_mode
+
+        self.active_dialog: Optional[str] = None  # None, "LOAD", "OPTIONS", "CREDITS"
+        self.notice_message: str = ""
+        self.dialog_dirty: bool = False
+
+        # Options preferences
+        self.opt_sfx_enabled: bool = True
+        self.opt_fast_text: bool = True
+
+        self._current_context: Optional[Context] = None
+        self._current_core = None
+
+        panel_bottom_row = min(self.screen_height - 2, 22)
+
+        # Master Outer Window Panel (rows 1..22)
+        self.title_panel = UIPanel(
+            left_top=ATCoordinates(1, 1),
+            right_bottom=ATCoordinates(panel_bottom_row, self.screen_width),
+            title="── E L D O R I A ──",
+            has_border=True,
+        )
+        self.title_panel.setup_footer("[↑/↓]Navigate  [Enter]Select  [Q]Quit", ColorLibrary.AppleYellowLight)
+
+        # Banner Labels (rows 3 and 4)
+        self.banner_title = self.title_panel.add_label(
+            "⚔   THE REALMS OF ELDORIA   ⚔",
+            row=3,
+            align="center",
+            fg_color=ColorLibrary.White,
+            decorations=ATDecoration(bold=True),
+        )
+        self.banner_subtitle = self.title_panel.add_label(
+            "Chronicles of the Broken Rune",
+            row=4,
+            align="center",
+            fg_color=ColorLibrary.DarkGrey,
+        )
+
+        # Dividers at row 6 and row 20
+        self.divider_top = self.title_panel.add_divider(row=6)
+        self.divider_bottom = self.title_panel.add_divider(row=20)
+
+        # Hint Label at row 21
+        hint_text = (
+            "Dev Hotkeys: [M]Map  [B]Combat  [U]UI  [C]Cans"
+            if self.dev_mode
+            else "Use [↑/↓] or [1-5] to choose, [Enter] to select"
+        )
+        self.hint_label = self.title_panel.add_label(
+            hint_text,
+            row=21,
+            align="center",
+            fg_color=ColorLibrary.DarkGrey,
+        )
+
+        self.title_panel.activate()
+
+        # UIMenu (managing granular UIMenuItems in rows 8, 10, 12, 14, 16)
+        self.menu = UIMenu(parent=self.title_panel, start_row=8, row_spacing=2, align="center")
+        self.menu.add_item("New Game", action=lambda: self._execute_menu_action("New Game"))
+        self.menu.add_item("Load Game", action=lambda: self._execute_menu_action("Load Game"))
+        self.menu.add_item("Options", action=lambda: self._execute_menu_action("Options"))
+        self.menu.add_item("Credits", action=lambda: self._execute_menu_action("Credits"))
+        self.menu.add_item("Exit", action=lambda: self._execute_menu_action("Exit"))
+        self.menu.activate()
+
+        # Content Area sub-panels for dialog overlays (rows 7..19, borderless)
+        content_right = self.screen_width - 1
+        self.load_panel = UIPanel(
+            left_top=ATCoordinates(7, 2),
+            right_bottom=ATCoordinates(19, content_right),
+            has_border=False,
+        )
+        self.load_panel.add_label("── Load Adventure ──", row=8, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
+        self.load_panel.add_label("No saved game files detected.", row=10, align="center", fg_color=ColorLibrary.AppleYellowLight)
+        self.load_panel.add_label("Start a [New Game] to begin your quest.", row=11, align="center", fg_color=ColorLibrary.DarkGrey)
+        self.load_panel.add_label("[Press Enter or Esc to return]", row=14, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
+
+        self.options_panel = UIPanel(
+            left_top=ATCoordinates(7, 2),
+            right_bottom=ATCoordinates(19, content_right),
+            has_border=False,
+        )
+        self.options_panel.add_label("── Engine Settings ──", row=8, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
+        self.opt_sfx_lbl = self.options_panel.add_label(self._sfx_text(), row=10, align="center", fg_color=ColorLibrary.White)
+        self.opt_fast_lbl = self.options_panel.add_label(self._fast_text(), row=11, align="center", fg_color=ColorLibrary.White)
+        self.options_panel.add_label("  [3] Graphics Protocol:  ANSI 24-bit TrueColor  ", row=12, align="center", fg_color=ColorLibrary.AppleCyanLight)
+        self.options_panel.add_label("Press [1] or [2] to toggle options.", row=14, align="center", fg_color=ColorLibrary.DarkGrey)
+        self.options_panel.add_label("[Press Enter or Esc to return]", row=16, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
+
+        self.credits_panel = UIPanel(
+            left_top=ATCoordinates(7, 2),
+            right_bottom=ATCoordinates(19, content_right),
+            has_border=False,
+        )
+        self.credits_panel.add_label("── Eldoria Project Credits ──", row=7, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
+        self.credits_panel.add_label("Original Concept & Architecture:", row=9, align="center", fg_color=ColorLibrary.AppleCyanLight)
+        self.credits_panel.add_label("Gregory Frank Martin (PowerShell Eldoria)", row=10, align="center", fg_color=ColorLibrary.White)
+        self.credits_panel.add_label("Python Engine & Modernization:", row=12, align="center", fg_color=ColorLibrary.AppleCyanLight)
+        self.credits_panel.add_label("Antigravity AI (Google DeepMind)", row=13, align="center", fg_color=ColorLibrary.White)
+        self.credits_panel.add_label("FastNoiseLite • Procedural Maps • NvN Combat", row=15, align="center", fg_color=ColorLibrary.DarkGrey)
+        self.credits_panel.add_label("[Press Enter or Esc to return]", row=17, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
+
+    @property
+    def selected_idx(self) -> int:
+        return self.menu.selected_index
+
+    @selected_idx.setter
+    def selected_idx(self, val: int) -> None:
+        self.menu.select_index(val)
+
+    def _sfx_text(self) -> str:
+        status = "[ON] " if self.opt_sfx_enabled else "[OFF]"
+        return f"  [1] Audio & Sound FX:   {status}  "
+
+    def _fast_text(self) -> str:
+        status = "[ON] " if self.opt_fast_text else "[OFF]"
+        return f"  [2] Instant Text Speed: {status}  "
+
+    def _update_options_labels(self) -> None:
+        self.opt_sfx_lbl.set_user_data(self._sfx_text())
+        self.opt_fast_lbl.set_user_data(self._fast_text())
+
+    def enter(self, context: Context) -> None:
+        super().enter(context)
+        self.selected_idx = 0
+        self.active_dialog = None
+        self.notice_message = ""
+        self.dialog_dirty = False
+        self._current_context = context
+        self._current_core = context.get(SMState.ContextEldoriaCore)
+        TerminalScreen.write(ATControlSequences.CursorHide)
+        TerminalScreen.clear_screen()
+        TerminalScreen.flush()
+        self.title_panel.set_all_dirty()
+        self.menu.set_all_dirty()
+
+    def exit(self, context: Context) -> None:
+        super().exit(context)
+        TerminalScreen.clear_screen()
+        TerminalScreen.flush()
+
+    def update(self, context: Context) -> None:
+        super().update(context)
+        self._current_context = context
+        keys_pressed = context.get(SMState.ContextKeysPressed)
+        core = context.get(SMState.ContextEldoriaCore)
+        self._current_core = core
+
+        if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+            for key_info in list(keys_pressed):
+                self._handle_input(key_info, context, core)
+                keys_pressed.remove(key_info)
+                break
+
+        # Transition guard: do not render if transitioned away
+        if core and hasattr(core, "game_state") and core.game_state.current_state != self.name:
+            return
+
+        self._render()
+
+    def _handle_input(self, key_info, context: Context, core) -> None:
+        self._current_context = context
+        self._current_core = core
+
+        # If dialog overlay is active, dismiss or interact
+        if self.active_dialog is not None:
+            if self.active_dialog == "OPTIONS" and key_info.char in ("1", "s", "S"):
+                self.opt_sfx_enabled = not self.opt_sfx_enabled
+                self._update_options_labels()
+                return
+            elif self.active_dialog == "OPTIONS" and key_info.char in ("2", "f", "F"):
+                self.opt_fast_text = not self.opt_fast_text
+                self._update_options_labels()
+                return
+            elif key_info.key in (KeyCode.ENTER, KeyCode.ESCAPE, KeyCode.SPACE) or key_info.char in ("\r", "\n", " "):
+                self._close_dialog()
+            return
+
+        # Main Menu navigation delegated to UIMenu
+        if self.menu.handle_input(key_info):
+            self.notice_message = ""
+            return
+
+        # Developer hotkeys
+        if self.dev_mode and key_info.char in ("m", "M"):
+            if core and hasattr(core, "game_state"):
+                core.game_state.trigger("ToNoiseMap", context)
+        elif self.dev_mode and key_info.char in ("b", "B"):
+            if core and hasattr(core, "game_state"):
+                core.game_state.trigger("ToCombat", context)
+        elif self.dev_mode and key_info.char in ("u", "U"):
+            if core and hasattr(core, "game_state"):
+                core.game_state.trigger("ToUiTest", context)
+        elif self.dev_mode and key_info.char in ("c", "C"):
+            if core and hasattr(core, "game_state"):
+                core.game_state.trigger("ToSodaCan", context)
+        elif key_info.char in ("q", "Q"):
+            if core and hasattr(core, "is_running"):
+                core.is_running = False
+
+    def _execute_menu_item(self, context: Optional[Context] = None, core = None) -> None:
+        if context is not None:
+            self._current_context = context
+        if core is not None:
+            self._current_core = core
+        self.menu.execute_selected()
+
+    def _execute_menu_action(self, sel: str) -> None:
+        if sel == "New Game":
+            if self._current_core and hasattr(self._current_core, "game_state"):
+                self._current_core.game_state.trigger("ToPartyBuilder", self._current_context)
+        elif sel == "Load Game":
+            self._open_dialog("LOAD")
+        elif sel == "Options":
+            self._open_dialog("OPTIONS")
+        elif sel == "Credits":
+            self._open_dialog("CREDITS")
+        elif sel == "Exit":
+            if self._current_core and hasattr(self._current_core, "is_running"):
+                self._current_core.is_running = False
+
+    def _open_dialog(self, dialog: str) -> None:
+        self.active_dialog = dialog
+        self.dialog_dirty = True
+        self.menu.deactivate()
+        if dialog == "LOAD":
+            self.load_panel.activate()
+            self.load_panel.set_all_dirty()
+        elif dialog == "OPTIONS":
+            self._update_options_labels()
+            self.options_panel.activate()
+            self.options_panel.set_all_dirty()
+        elif dialog == "CREDITS":
+            self.credits_panel.activate()
+            self.credits_panel.set_all_dirty()
+
+    def _close_dialog(self) -> None:
+        self.active_dialog = None
+        self.dialog_dirty = True
+        self.load_panel.deactivate()
+        self.options_panel.deactivate()
+        self.credits_panel.deactivate()
+        self.menu.activate()
+        self.menu.set_all_dirty()
+
+    def _clear_content_rect_ansi(self) -> str:
+        """Clears rows 7..19 between left and right borders."""
+        left = self.title_panel.inner_left
+        width = self.title_panel.inner_width
+        blank = " " * width
+        return "".join(f"\033[{r};{left}H{blank}" for r in range(7, 20))
+
+    def _render(self) -> None:
+        TerminalScreen.write(ATControlSequences.DrawOptimizeOn)
+
+        # Draw master title panel (borders, title, dividers, banners, footer, hint)
+        self.title_panel.draw()
+
+        # If dialog state changed, wipe the interior content area
+        if self.dialog_dirty:
+            TerminalScreen.write(self._clear_content_rect_ansi())
+            self.dialog_dirty = False
+
+        # Draw active view
+        if self.active_dialog == "LOAD":
+            self.load_panel.draw()
+        elif self.active_dialog == "OPTIONS":
+            self.options_panel.draw()
+        elif self.active_dialog == "CREDITS":
+            self.credits_panel.draw()
+        else:
+            self.menu.draw()
+
+        # Clear buffer tail rows 23..40
+        TerminalScreen.write(clear_buffer_tail(self.title_panel.right_bottom.row + 1, 40))
+        TerminalScreen.write(ATControlSequences.DrawOptimizeOff)
+        TerminalScreen.flush()
