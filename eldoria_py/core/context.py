@@ -19,6 +19,7 @@ class Context:
 
     def __init__(self, references: Optional[List[Any]] = None) -> None:
         self.references: List[Any] = list(references) if references is not None else []
+        self.properties: Dict[str, Any] = {}
 
     @property
     def delta_time(self) -> float:
@@ -38,30 +39,36 @@ class Context:
             return self.references[self.ENGINE]
         return None
 
-    def get(self, index: int, default: Any = None) -> Any:
-        """Safely retrieves a reference by index, or returns default if out of bounds."""
-        if 0 <= index < len(self.references):
-            return self.references[index]
-        return default
+    def get(self, key: int | str, default: Any = None) -> Any:
+        """Safely retrieves a reference by integer index or named property by string key."""
+        if isinstance(key, int):
+            if 0 <= key < len(self.references):
+                return self.references[key]
+            return default
+        return self.properties.get(str(key), default)
 
-    def set(self, index: int, value: Any) -> None:
-        """Sets a reference by index, expanding references list if necessary."""
-        while len(self.references) <= index:
-            self.references.append(None)
-        self.references[index] = value
+    def set(self, key: int | str, value: Any) -> None:
+        """Sets a reference by index or named property by string key."""
+        if isinstance(key, int):
+            while len(self.references) <= key:
+                self.references.append(None)
+            self.references[key] = value
+        else:
+            self.properties[str(key)] = value
 
-    def __getitem__(self, index: int) -> Any:
-        return self.references[index]
+    def __getitem__(self, key: int | str) -> Any:
+        if isinstance(key, int):
+            return self.references[key]
+        return self.properties[str(key)]
 
-    def __setitem__(self, index: int, value: Any) -> None:
-        self.references[index] = value
+    def __setitem__(self, key: int | str, value: Any) -> None:
+        self.set(key, value)
 
     def __len__(self) -> int:
         return len(self.references)
 
-
     def __repr__(self) -> str:
-        return f"Context(references={self.references!r})"
+        return f"Context(references={self.references!r}, properties={self.properties!r})"
 
 
 class ContextBroadcaster:

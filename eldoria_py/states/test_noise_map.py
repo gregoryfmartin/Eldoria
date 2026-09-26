@@ -130,6 +130,11 @@ class GSNoiseMapTestScreen(SMState):
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
 
+        # Check if context has an active party from Party Builder
+        ctx_party = context.get("party")
+        if ctx_party is not None and isinstance(ctx_party, Party) and len(ctx_party.members) > 0:
+            self.party = ctx_party
+
         # Check if returning from a wiped party battle (Defeat)
         if self.party.is_wiped:
             # Revive party with 50% HP and 50% MP
@@ -200,6 +205,16 @@ class GSNoiseMapTestScreen(SMState):
                             self.steps_since_battle = 0
                             combat_state.start_encounter(self.party, squad)
                         core.game_state.trigger("ToCombat", context)
+                    return
+                elif key_info.char in ("p", "P"):
+                    keys_pressed.clear()
+                    if core and hasattr(core, "game_state"):
+                        core.game_state.trigger("ToPartyBuilder", context)
+                    return
+                elif key_info.char in ("t", "T"):
+                    keys_pressed.clear()
+                    if core and hasattr(core, "game_state"):
+                        core.game_state.trigger("ToTitle", context)
                     return
                 elif key_info.char in ("u", "U"):
                     keys_pressed.clear()
@@ -473,13 +488,13 @@ class GSNoiseMapTestScreen(SMState):
         footer_y = 3 + len(map_lines)
         if self.active_submap is None:
             f_text = (
-                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mEnter POI "
-                "\033[33m[B]\033[0mBattle \033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0mQuit "
+                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mEnter "
+                "\033[33m[P]\033[0mParty \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
             )
         else:
             f_text = (
-                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mLeave Gate "
-                "\033[33m[B]\033[0mBattle \033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0mQuit "
+                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mLeave "
+                "\033[33m[P]\033[0mParty \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
             )
 
         out.append(ATCoordinates(footer_y, 1).to_ansi())

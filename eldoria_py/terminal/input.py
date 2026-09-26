@@ -163,58 +163,133 @@ class InputManager:
             time.sleep(0.016)
             return
 
-        r, _, _ = select.select([sys.stdin], [], [], 0.016)
-        if r:
-            char = sys.stdin.read(1)
-            if char == "\033":
-                # Check if this is the start of an escape sequence or a standalone Escape press
-                r2, _, _ = select.select([sys.stdin], [], [], 0.03)
-                if r2:
-                    next1 = sys.stdin.read(1)
-                    if next1 == "[":
-                        # CSI sequence
-                        seq = ""
-                        while True:
-                            r3, _, _ = select.select([sys.stdin], [], [], 0.01)
-                            if not r3:
-                                break
-                            c = sys.stdin.read(1)
-                            seq += c
-                            if c.isalpha() or c == "~":
-                                break
-                        self._parse_csi(seq)
-                    else:
-                        self.input_queue.put(KeyEvent(key=KeyCode.ESCAPE, raw="\033" + next1))
-                else:
-                    self.input_queue.put(KeyEvent(key=KeyCode.ESCAPE, raw="\033"))
-            elif char in ("\r", "\n"):
-                self.input_queue.put(KeyEvent(key=KeyCode.ENTER, char="\n", raw=char))
-            elif char == "\t":
-                self.input_queue.put(KeyEvent(key=KeyCode.TAB, char="\t", raw=char))
-            elif char == " ":
-                self.input_queue.put(KeyEvent(key=KeyCode.SPACE, char=" ", raw=char))
-            elif char in ("\x7f", "\x08"):
-                self.input_queue.put(KeyEvent(key=KeyCode.BACKSPACE, raw=char))
-            elif char == "\x03":
-                # Ctrl+C
-                self.stop()
-                os._exit(0)
-            else:
-                self.input_queue.put(KeyEvent(key=KeyCode.CHAR, char=char, raw=char))
+        fd = sys.stdin.fileno()
+        try:
+            r, _, _ = select.select([fd], [], [], 0.016)
+        except (ValueError, OSError):
+            return
 
-    def _parse_csi(self, seq: str) -> None:
-        if seq == "A":
-            self.input_queue.put(KeyEvent(key=KeyCode.UP, raw="\033[" + seq))
-        elif seq == "B":
-            self.input_queue.put(KeyEvent(key=KeyCode.DOWN, raw="\033[" + seq))
-        elif seq == "C":
-            self.input_queue.put(KeyEvent(key=KeyCode.RIGHT, raw="\033[" + seq))
-        elif seq == "D":
-            self.input_queue.put(KeyEvent(key=KeyCode.LEFT, raw="\033[" + seq))
-        elif seq.startswith("3~"):
-            self.input_queue.put(KeyEvent(key=KeyCode.DELETE, raw="\033[" + seq))
-        elif seq == "Z":
-            # Shift+Tab
-            self.input_queue.put(KeyEvent(key=KeyCode.TAB, raw="\033[" + seq))
-        else:
-            self.input_queue.put(KeyEvent(key=KeyCode.NONE, raw="\033[" + seq))
+        if r:
+            try:
+                raw_bytes = os.read(fd, 1024)
+            except OSError:
+                return
+
+            if not raw_bytes:
+                return
+
+            # If the chunk ends with an incomplete escape prefix, wait briefly for remaining bytes
+            if (
+                raw_bytes == b"\x1b"
+                or raw_bytes.endswith(b"\x1b")
+                or raw_bytes.endswith(b"\x1b[")
+                or raw_bytes.endswith(b"\x1bO")
+            ):
+                try:
+                    r2, _, _ = select.select([fd], [], [], 0.025)
+                    if r2:
+                        extra = os.read(fd, 1024)
+                        raw_bytes += extra
+                except (ValueError, OSError):
+                    pass
+
+            events = self.parse_posix_bytes(raw_bytes)
+            for evt in events:
+                if evt.key == KeyCode.NONE and evt.raw == "\x03":
+                    # Ctrl+C
+                    self.stop()
+                    os._exit(0)
+                else:
+                    self.input_queue.put(evt)
+
+    @staticmethod
+    def parse_posix_bytes(raw_bytes: bytes) -> List[KeyEvent]:
+        """
+        Parses raw bytes from POSIX stdin into structured KeyEvents.
+        Correctly distinguishes standalone Escape (\x1b) from CSI (\x1b[) and SS3 (\x1bO) sequences.
+        Unrecognized escape sequences are cleanly mapped to KeyCode.NONE rather than KeyCode.ESCAPE.
+        """
+        events: List[KeyEvent] = []
+        i = 0
+        n = len(raw_bytes)
+        while i < n:
+            b = raw_bytes[i:i + 1]
+            if b == b"\x1b":
+                if i + 1 < n and raw_bytes[i + 1:i + 2] in (b"[", b"O"):
+                    prefix = raw_bytes[i + 1:i + 2]
+                    if prefix == b"[":
+                        # CSI sequence: \x1b[ ... [parameter/intermediate bytes] ... [final byte @-~]
+                        j = i + 2
+                        while j < n and not (64 <= raw_bytes[j] <= 126):
+                            j += 1
+                        if j < n:
+                            j += 1
+                        seq = raw_bytes[i:j].decode("latin1", errors="replace")
+                        body = seq[2:]
+                        if body == "A" or body.endswith("A"):
+                            events.append(KeyEvent(key=KeyCode.UP, raw=seq))
+                        elif body == "B" or body.endswith("B"):
+                            events.append(KeyEvent(key=KeyCode.DOWN, raw=seq))
+                        elif body == "C" or body.endswith("C"):
+                            events.append(KeyEvent(key=KeyCode.RIGHT, raw=seq))
+                        elif body == "D" or body.endswith("D"):
+                            events.append(KeyEvent(key=KeyCode.LEFT, raw=seq))
+                        elif body.startswith("3~"):
+                            events.append(KeyEvent(key=KeyCode.DELETE, raw=seq))
+                        elif body == "Z":
+                            events.append(KeyEvent(key=KeyCode.TAB, raw=seq))
+                        else:
+                            events.append(KeyEvent(key=KeyCode.NONE, raw=seq))
+                        i = j
+                    else:  # prefix == b"O" (SS3 cursor keypad sequences: \x1bOA, \x1bOB, etc.)
+                        j = i + 2
+                        if j < n:
+                            final_char = chr(raw_bytes[j])
+                            seq = raw_bytes[i:j + 1].decode("latin1", errors="replace")
+                            if final_char == "A":
+                                events.append(KeyEvent(key=KeyCode.UP, raw=seq))
+                            elif final_char == "B":
+                                events.append(KeyEvent(key=KeyCode.DOWN, raw=seq))
+                            elif final_char == "C":
+                                events.append(KeyEvent(key=KeyCode.RIGHT, raw=seq))
+                            elif final_char == "D":
+                                events.append(KeyEvent(key=KeyCode.LEFT, raw=seq))
+                            else:
+                                events.append(KeyEvent(key=KeyCode.NONE, raw=seq))
+                            i = j + 1
+                        else:
+                            seq = raw_bytes[i:j].decode("latin1", errors="replace")
+                            events.append(KeyEvent(key=KeyCode.NONE, raw=seq))
+                            i = j
+                else:
+                    # Standalone Escape key press
+                    events.append(KeyEvent(key=KeyCode.ESCAPE, raw="\033"))
+                    i += 1
+            elif b in (b"\r", b"\n"):
+                events.append(KeyEvent(key=KeyCode.ENTER, char="\n", raw=b.decode("latin1")))
+                i += 1
+                if b == b"\r" and i < n and raw_bytes[i:i + 1] == b"\n":
+                    i += 1
+            elif b == b"\t":
+                events.append(KeyEvent(key=KeyCode.TAB, char="\t", raw="\t"))
+                i += 1
+            elif b in (b"\x7f", b"\x08"):
+                events.append(KeyEvent(key=KeyCode.BACKSPACE, raw=b.decode("latin1")))
+                i += 1
+            elif b == b" ":
+                events.append(KeyEvent(key=KeyCode.SPACE, char=" ", raw=" "))
+                i += 1
+            elif b == b"\x03":
+                events.append(KeyEvent(key=KeyCode.NONE, raw="\x03"))
+                i += 1
+            else:
+                try:
+                    char = raw_bytes[i:].decode("utf-8")[0]
+                    char_bytes_len = len(char.encode("utf-8"))
+                    events.append(KeyEvent(key=KeyCode.CHAR, char=char, raw=char))
+                    i += char_bytes_len
+                except Exception:
+                    char = chr(raw_bytes[i])
+                    events.append(KeyEvent(key=KeyCode.CHAR, char=char, raw=char))
+                    i += 1
+        return events

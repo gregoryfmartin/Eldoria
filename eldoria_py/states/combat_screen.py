@@ -14,6 +14,7 @@ from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
+from ..terminal.box import clear_buffer_tail, strip_ansi, truncate_ansi, visible_width
 from ..combat.stats import StatId, BattleActionType, TargetScope, AffinityEffect
 from ..combat.actions import BattleAction, ActionCategory, ACTIONS
 from ..combat.entities import (
@@ -28,12 +29,11 @@ from ..combat.entities import (
 from ..combat.engine import NvNCombatEngine, CombatPhase, QueuedAction
 
 
-def _strip_ansi(text: str) -> str:
-    return re.sub(r"\033\[[0-9;]*[a-zA-Z]", "", text)
-
-
 def _pad_cell(text: str, width: int, align: str = "left", fill_char: str = " ") -> str:
-    vlen = len(_strip_ansi(text))
+    vlen = visible_width(text)
+    if vlen > width:
+        text = truncate_ansi(text, width)
+        vlen = visible_width(text)
     rem = max(0, width - vlen)
     if align == "right":
         return fill_char * rem + text
@@ -59,9 +59,10 @@ def _make_bar(current: int, maximum: int, length: int = 8) -> str:
 class GSNvNCombatScreen(SMState):
     """Full-screen interactive NvN combat state."""
 
-    TOTAL_WIDTH: int = 86
-    LEFT_COL_WIDTH: int = 59  # index 0 to 58 (59 chars), separator at index 59 (col 60)
-    RIGHT_COL_WIDTH: int = 24 # index 60 to 83 (24 chars), right border at 85
+    TOTAL_WIDTH: int = 80
+    LEFT_COL_WIDTH: int = 53  # enemy squad listing (53 chars)
+    RIGHT_COL_WIDTH: int = 24 # tactical detail (24 chars)
+
 
     def __init__(
         self,
@@ -186,6 +187,10 @@ class GSNvNCombatScreen(SMState):
                         keys_pressed.remove(key_info)
                         break
 
+        # Transition guard: do not render if transitioned away
+        if core and hasattr(core, "game_state") and core.game_state.current_state != self.name:
+            return
+
         self._render()
 
     def _handle_main_menu_input(self, key_info: any) -> None:
@@ -197,9 +202,9 @@ class GSNvNCombatScreen(SMState):
             return
 
         # Up/Down navigation
-        if key_info.key == KeyCode.UP or key_info.char in ("w", "W"):
+        if key_info.key == KeyCode.UP:
             self.main_menu_cursor = (self.main_menu_cursor - 1) % 4
-        elif key_info.key == KeyCode.DOWN or key_info.char in ("s", "S"):
+        elif key_info.key == KeyCode.DOWN:
             self.main_menu_cursor = (self.main_menu_cursor + 1) % 4
         elif key_info.char in ("1", "2", "3", "4"):
             self.main_menu_cursor = int(key_info.char) - 1
@@ -259,9 +264,9 @@ class GSNvNCombatScreen(SMState):
             self.menu_mode = "MAIN"
             return
 
-        if key_info.key == KeyCode.UP or key_info.char in ("w", "W"):
+        if key_info.key == KeyCode.UP:
             self.sub_menu_cursor = (self.sub_menu_cursor - 1) % len(act_list)
-        elif key_info.key == KeyCode.DOWN or key_info.char in ("s", "S"):
+        elif key_info.key == KeyCode.DOWN:
             self.sub_menu_cursor = (self.sub_menu_cursor + 1) % len(act_list)
         elif key_info.char in [str(i) for i in range(1, min(10, len(act_list) + 1))]:
             self.sub_menu_cursor = int(key_info.char) - 1
@@ -298,12 +303,12 @@ class GSNvNCombatScreen(SMState):
             return
 
         # Arrow navigation
-        if key_info.key in (KeyCode.LEFT, KeyCode.UP) or key_info.char in ("a", "A", "w", "W"):
+        if key_info.key in (KeyCode.LEFT, KeyCode.UP):
             cur_pos = alive_indices.index(self.target_cursor) if self.target_cursor in alive_indices else 0
             new_pos = (cur_pos - 1) % len(alive_indices)
             self.target_cursor = alive_indices[new_pos]
             self.inspected_enemy_idx = self.target_cursor
-        elif key_info.key in (KeyCode.RIGHT, KeyCode.DOWN) or key_info.char in ("d", "D", "s", "S"):
+        elif key_info.key in (KeyCode.RIGHT, KeyCode.DOWN):
             cur_pos = alive_indices.index(self.target_cursor) if self.target_cursor in alive_indices else 0
             new_pos = (cur_pos + 1) % len(alive_indices)
             self.target_cursor = alive_indices[new_pos]
@@ -358,15 +363,15 @@ class GSNvNCombatScreen(SMState):
     # Rendering
     # -------------------------------------------------------------------------
     def _render(self) -> None:
-        """Atomic frame render of the 90x40 NvN combat screen."""
+        """Atomic frame render of the 80x40 NvN combat screen."""
         out: List[str] = [ATControlSequences.DrawOptimizeOn]
 
         # Top border
         out.append(ATCoordinates(1, 1).to_ansi())
-        top_str = "┌─ ENEMY SQUAD (Up to 10 Enemies) ──────────────────────────┬─ TARGET DETAIL ────────┐"
+        top_str = "┌─ ENEMY SQUAD (Up to 10 Enemies) " + ("─" * 20) + "┬─ TARGET DETAIL " + ("─" * 8) + "┐"
         out.append(top_str)
 
-        # Lines 2..6: Enemy Squad (Left) and Target Detail (Right)
+        # Lines 2..6: Enemy Squad (Left 53 chars) and Target Detail (Right 24 chars)
         # Note: Zero ASCII art in the right panel!
         for row_idx in range(5):
             left_str = self._format_enemy_row(row_idx)
@@ -376,11 +381,11 @@ class GSNvNCombatScreen(SMState):
 
         # Divider 1 (Row 7)
         out.append(ATCoordinates(7, 1).to_ansi())
-        out.append("├───────────────────────────────────────────────────────────┴────────────────────────┤")
+        out.append("├" + ("─" * 53) + "┴" + ("─" * 24) + "┤")
 
         # Row 8: Player Party Header
         out.append(ATCoordinates(8, 1).to_ansi())
-        out.append("│ PLAYER PARTY (Up to 5 Heroes)                                                      │")
+        out.append("│ PLAYER PARTY (Up to 5 Heroes) " + (" " * 47) + "│")
 
         # Rows 9..13: Party Members
         for m_idx in range(5):
@@ -390,9 +395,9 @@ class GSNvNCombatScreen(SMState):
 
         # Divider 2 (Row 14)
         out.append(ATCoordinates(14, 1).to_ansi())
-        out.append("├──────────────────────────┬─────────────────────────────────────────────────────────┤")
+        out.append("├" + ("─" * 24) + "┬" + ("─" * 53) + "┤")
 
-        # Rows 15..22: Commands (Left 26 chars) and Combat Log (Right 57 chars)
+        # Rows 15..22: Commands (Left 24 chars) and Combat Log (Right 53 chars)
         for c_idx in range(8):
             cmd_cell = self._format_command_cell(c_idx)
             log_cell = self._format_log_cell(c_idx)
@@ -401,42 +406,45 @@ class GSNvNCombatScreen(SMState):
 
         # Bottom Border (Row 23)
         out.append(ATCoordinates(23, 1).to_ansi())
-        out.append("└──────────────────────────┴─────────────────────────────────────────────────────────┘")
+        out.append("└" + ("─" * 24) + "┴" + ("─" * 53) + "┘")
 
         # Row 24: Navigation / Action Hints
         out.append(ATCoordinates(24, 1).to_ansi())
         hints = self._format_status_hints()
         out.append(_pad_cell(f" {hints}", self.TOTAL_WIDTH))
 
+        # Clear tail lines up to 40
+        out.append(clear_buffer_tail(25, 40))
+
         out.append(ATControlSequences.DrawOptimizeOff)
         TerminalScreen.write("".join(out))
         TerminalScreen.flush()
 
     def _format_enemy_row(self, row_idx: int) -> str:
-        """Left side: Displays enemy [1..5] in col 1, [6..10] in col 2 (59 characters total)."""
+        """Left side: Displays enemy [1..5] in col 1, [6..10] in col 2 (53 characters total)."""
         idx1 = row_idx
         idx2 = row_idx + 5
 
         def format_enemy_slot(idx: int) -> str:
             if idx >= len(self.squad.enemies):
-                return " " * 28
+                return " " * 25
             e = self.squad.enemies[idx]
             tag = f"[{idx + 1}]"
             is_targeted = (self.menu_mode == "TARGET_SELECT" and self.target_cursor == idx) or (self.inspected_enemy_idx == idx)
             prefix = "\033[1;33m❱\033[0m" if is_targeted else " "
 
             if not e.is_alive:
-                text = f"{prefix}{tag:<4} {e.name:<6} \033[31m[DEAD]\033[0m"
-                return _pad_cell(text, 28)
+                text = f"{prefix}{tag:<4} {e.name[:6]:<6} \033[31m[DEAD]\033[0m"
+                return _pad_cell(text, 25)
 
-            hp_str = f"HP:{e.hp}/{e.max_hp}"
+            hp_str = f"{e.hp}/{e.max_hp}"
             aff_str = e.affinity.value.replace("Elemental", "")[:3]
-            text = f"{prefix}{tag:<4} {e.name:<6} {hp_str:<11} {aff_str:<3}"
-            return _pad_cell(text, 28)
+            text = f"{prefix}{tag:<4} {e.name[:6]:<6} {hp_str[:7]:<7} {aff_str:<3}"
+            return _pad_cell(text, 25)
 
         col1 = format_enemy_slot(idx1)
         col2 = format_enemy_slot(idx2)
-        combined = f" {col1}  {col2}"
+        combined = f" {col1} {col2} "
         return _pad_cell(combined, self.LEFT_COL_WIDTH)
 
     def _format_target_detail_row(self, row_idx: int) -> str:
@@ -474,21 +482,21 @@ class GSNvNCombatScreen(SMState):
         return " " * self.RIGHT_COL_WIDTH
 
     def _format_party_member_row(self, member_idx: int) -> str:
-        """Middle rack: Hero summary with HP, MP, equipment readiness, and planned intent (84 chars)."""
+        """Middle rack: Hero summary with HP, MP, equipment readiness, and planned intent (78 chars)."""
         if member_idx >= len(self.party.members):
-            return " " * 84
+            return " " * 78
         m = self.party.members[member_idx]
         is_active = (self.engine.phase == CombatPhase.COMMAND_PHASE and self.active_member_idx == member_idx)
         prefix = "\033[1;36m❱\033[0m" if is_active else " "
 
         name_class = f"{m.name} ({m.job_class})"
         if not m.is_alive:
-            txt = f"{prefix} {member_idx + 1}. {name_class:<20} \033[31m[FALLEN IN COMBAT]\033[0m"
-            return _pad_cell(txt, 84)
+            txt = f"{prefix} {member_idx + 1}. {name_class[:16]:<16} \033[31m[FALLEN IN COMBAT]\033[0m"
+            return _pad_cell(txt, 78)
 
         hp_str = f"HP:{m.hp}/{m.max_hp}"
         mp_str = f"MP:{m.mp}/{m.max_mp}"
-        hp_bar = _make_bar(m.hp, m.max_hp, length=6)
+        hp_bar = _make_bar(m.hp, m.max_hp, length=4)
 
         # Planned intent preview
         plan = self.engine.get_planned_action(member_idx)
@@ -504,40 +512,40 @@ class GSNvNCombatScreen(SMState):
             intent_str = "Intent: [Planning...]" if is_active else "Intent: [Waiting]"
             status_tag = "\033[33m[Ready]\033[0m"
 
-        line = f"{prefix} {member_idx + 1}. {name_class:<18} {hp_str:<12} {hp_bar} {mp_str:<10} {status_tag}  {intent_str}"
-        return _pad_cell(line, 84)
+        line = f"{prefix} {member_idx + 1}. {name_class[:16]:<16} {hp_str[:11]:<11} {hp_bar} {mp_str[:10]:<10} {status_tag} {intent_str[:18]:<18}"
+        return _pad_cell(line, 78)
 
     def _format_command_cell(self, row_idx: int) -> str:
-        """Bottom Left: Command selector or target selection prompt (26 chars)."""
+        """Bottom Left: Command selector or target selection prompt (24 chars)."""
         curr_member = self.party.get_member(self.active_member_idx)
         name = curr_member.name if curr_member else "Hero"
 
         if row_idx == 0:
             if self.engine.phase == CombatPhase.EXECUTION_PHASE:
-                return _pad_cell(" EXECUTION PHASE", 26)
+                return _pad_cell(" EXECUTION PHASE", 24)
             elif self.menu_mode == "TARGET_SELECT":
-                return _pad_cell(" SELECT TARGET", 26)
+                return _pad_cell(" SELECT TARGET", 24)
             elif self.menu_mode == "SKILLS":
-                return _pad_cell(f" SKILLS ({name})", 26)
+                return _pad_cell(f" SKILLS ({name})", 24)
             elif self.menu_mode == "SPELLS":
-                return _pad_cell(f" SPELLS ({name})", 26)
+                return _pad_cell(f" SPELLS ({name})", 24)
             else:
-                return _pad_cell(f" COMMANDS ({name})", 26)
+                return _pad_cell(f" COMMANDS ({name})", 24)
 
         if self.engine.phase == CombatPhase.EXECUTION_PHASE:
             if row_idx == 1:
-                return _pad_cell(" ❱ [Space] Step Turn", 26)
+                return _pad_cell(" ❱ [Space] Step Turn", 24)
             elif row_idx == 2:
-                return _pad_cell("   [A] Auto-Play", 26)
-            return " " * 26
+                return _pad_cell("   [A] Auto-Play", 24)
+            return " " * 24
 
         if self.menu_mode == "MAIN":
             options = ["[1] Attack", "[2] Skills", "[3] Spells", "[4] Defend"]
             opt_idx = row_idx - 1
             if 0 <= opt_idx < len(options):
                 cursor = "❱ " if self.main_menu_cursor == opt_idx else "  "
-                return _pad_cell(f" {cursor}{options[opt_idx]}", 26)
-            return " " * 26
+                return _pad_cell(f" {cursor}{options[opt_idx]}", 24)
+            return " " * 24
 
         if self.menu_mode in ("SKILLS", "SPELLS"):
             cat = ActionCategory.SKILL if self.menu_mode == "SKILLS" else ActionCategory.SPELL
@@ -547,40 +555,40 @@ class GSNvNCombatScreen(SMState):
                 act = actions[opt_idx]
                 cursor = "❱ " if self.sub_menu_cursor == opt_idx else "  "
                 txt = f" {cursor}[{opt_idx + 1}] {act.name} ({act.mp_cost}M)"
-                return _pad_cell(txt[:25], 26)
+                return _pad_cell(txt[:23], 24)
             elif opt_idx == len(actions):
-                return _pad_cell("   [Esc] Back", 26)
-            return " " * 26
+                return _pad_cell("   [Esc] Back", 24)
+            return " " * 24
 
         if self.menu_mode == "TARGET_SELECT":
             target = self.squad.get_enemy(self.target_cursor)
             target_name = target.name if target else "Enemy"
             if row_idx == 1:
-                return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 26)
+                return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 24)
             elif row_idx == 2:
-                return _pad_cell("   [Arrows] Cycle", 26)
+                return _pad_cell("   [Arrows] Cycle", 24)
             elif row_idx == 3:
-                return _pad_cell("   [1..10] Direct", 26)
+                return _pad_cell("   [1..10] Direct", 24)
             elif row_idx == 4:
-                return _pad_cell("   [Enter] Confirm", 26)
+                return _pad_cell("   [Enter] Confirm", 24)
             elif row_idx == 5:
-                return _pad_cell("   [Esc] Cancel", 26)
-            return " " * 26
+                return _pad_cell("   [Esc] Cancel", 24)
+            return " " * 24
 
-        return " " * 26
+        return " " * 24
 
     def _format_log_cell(self, row_idx: int) -> str:
-        """Bottom Right: Scrolling battle log (57 chars)."""
+        """Bottom Right: Scrolling battle log (53 chars)."""
         if row_idx == 0:
-            return _pad_cell(" COMBAT LOG", 57)
+            return _pad_cell(" COMBAT LOG", 53)
 
         # Show last 7 combat log messages
         log_slice = self.engine.combat_log[-7:]
         log_offset = row_idx - 1
         if 0 <= log_offset < len(log_slice):
             msg = log_slice[log_offset]
-            return _pad_cell(f" {msg}", 57)
-        return " " * 57
+            return _pad_cell(f" {msg}", 53)
+        return " " * 53
 
     def _format_status_hints(self) -> str:
         if self.engine.phase == CombatPhase.BATTLE_VICTORY:

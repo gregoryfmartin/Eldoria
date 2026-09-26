@@ -11,30 +11,35 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Eldoria Python Virtual Terminal Game Engine")
     parser.add_argument(
         "--screen",
-        choices=["ui", "map", "soda"],
-        default="ui",
-        help="Initial test screen to boot into (default: ui matching New New Engine)",
+        choices=["splash", "title", "party", "builder", "map", "combat", "ui", "soda"],
+        default="splash",
+        help="Initial screen to boot into (default: splash for production boot flow)",
     )
     parser.add_argument(
         "--map-width",
         type=int,
         default=54,
-        help="Width of the procedural noise map (default: 54)",
+        help="Width of the procedural noise map and UI frames (default: 54)",
     )
     parser.add_argument(
         "--map-height",
         type=int,
         default=24,
-        help="Height of the procedural noise map (default: 24)",
+        help="Height of the procedural noise map and UI frames (default: 24)",
     )
     args = parser.parse_args()
 
     screen_map = {
-        "ui": "GSUiTestScreen",
+        "splash": "GSSplashScreen",
+        "title": "GSTitleScreen",
+        "party": "GSPartyBuilderScreen",
+        "builder": "GSCharacterBuilderScreen",
         "map": "GSNoiseMapTestScreen",
+        "combat": "GSNvNCombatScreen",
+        "ui": "GSUiTestScreen",
         "soda": "GSAnimatedSodaCanTestScreen",
     }
-    initial_state = screen_map.get(args.screen, "GSUiTestScreen")
+    initial_state = screen_map.get(args.screen, "GSSplashScreen")
 
     engine = EldoriaCore(
         initial_state=initial_state,

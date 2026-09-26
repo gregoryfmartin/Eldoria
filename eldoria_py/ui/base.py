@@ -92,7 +92,7 @@ class UIBase(ATString):
     ) -> None:
         super().__init__(text, coordinates, fg_color, bg_color, decorations)
         self.user_data: str = text
-        self.blank: str = " "
+        self.blank: str = " " * len(text) if text else " "
         self.dirty: bool = True
         self.behavior: UIElementBehavior = UIElementBehavior()
         self.state_events: Dict[str, List[Callable[[Context], None]]] = {}
@@ -108,7 +108,7 @@ class UIBase(ATString):
                 self.set_blank_size(len(data))
             self.user_data = data
             self.text = data
-
+            self.dirty = True
 
     def set_blank_size(self, size: int) -> None:
         if size <= 0:
@@ -135,9 +135,9 @@ class UIBase(ATString):
             for cb in self.state_events[event_name]:
                 cb(ctx)
 
-
     def activate(self, context: Optional[Context] = None) -> bool:
         self.behavior.active = True
+        self.dirty = True
         return self.base_state_machine.trigger("Activate", context)
 
     def deactivate(self, context: Optional[Context] = None) -> bool:

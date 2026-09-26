@@ -11,6 +11,7 @@ from eldoria_py.combat.stats import (
 )
 from eldoria_py.combat.actions import BattleAction, ACTIONS
 from eldoria_py.combat.equipment import BattleEquipment, EQUIPMENT_CATALOG
+from eldoria_py.combat.portrait import Gender
 
 
 class Combatant:
@@ -126,10 +127,14 @@ class PartyMember(Combatant):
         affinity: BattleActionType = BattleActionType.PHYSICAL,
         base_stats: Optional[dict[StatId, int]] = None,
         actions: Optional[list[BattleAction]] = None,
+        gender: Gender = Gender.MALE,
+        profile_image_index: int = 0,
     ):
         super().__init__(name=name, affinity=affinity, stats=base_stats, actions=actions)
         self.job_class: str = job_class
         self.level: int = level
+        self.gender: Gender = gender
+        self.profile_image_index: int = profile_image_index
         self.equipment: dict[EquipmentSlot, Optional[BattleEquipment]] = {slot: None for slot in EquipmentSlot}
         self.base_actions: list[BattleAction] = list(self.actions)
 

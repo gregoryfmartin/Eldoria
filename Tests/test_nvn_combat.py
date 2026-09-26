@@ -405,7 +405,7 @@ class TestCombatScreenState(unittest.TestCase):
         self.assertIn("]", row2)
 
     def test_wireframe_column_alignment(self):
-        """Verifies exact wireframe row lengths match the 86-column grid."""
+        """Verifies exact wireframe row lengths match the 80-column grid."""
         for row_idx in range(5):
             left_str = self.screen._format_enemy_row(row_idx)
             right_str = self.screen._format_target_detail_row(row_idx)

@@ -58,4 +58,8 @@ __all__ = [
     "create_plains_encounter",
     "create_forest_encounter",
     "create_cave_encounter",
+    "Gender",
+    "CharacterPortrait",
+    "get_portraits_for_gender",
 ]
+from eldoria_py.combat.portrait import Gender, CharacterPortrait, get_portraits_for_gender
