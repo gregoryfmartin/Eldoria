@@ -20,6 +20,7 @@ from ..procgen.map_generator import (
 )
 from ..procgen.poi import POIDescriptor, POIType, WarpTarget
 from ..procgen.world_macro import WorldMacroMap
+from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
@@ -88,6 +89,14 @@ class GSNoiseMapTestScreen(SMState):
         self.active_poi: Optional[POIDescriptor] = None
         self.warp_stack: List[Tuple[Tuple[int, int], Tuple[int, int]]] = []
 
+        # Save / Load state
+        self.save_manager: SaveManager = SaveManager()
+        self.active_slot: Optional[int] = 1
+        self.playtime_seconds: int = 0
+        self.save_modal_open: bool = False
+        self.save_modal_slot: int = 1
+        self.slot_headers: List[Optional[SaveSlotHeader]] = []
+
     @property
     def world_map(self) -> Map:
         """Backward-compatible property returning the currently active Map."""
@@ -130,10 +139,32 @@ class GSNoiseMapTestScreen(SMState):
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
 
-        # Check if context has an active party from Party Builder
+        # Check if context has an active party from Party Builder or Load Game
         ctx_party = context.get("party")
         if ctx_party is not None and isinstance(ctx_party, Party) and len(ctx_party.members) > 0:
             self.party = ctx_party
+
+        # Check if context has active world_macro
+        ctx_macro = context.get("world_macro")
+        if ctx_macro is not None and isinstance(ctx_macro, WorldMacroMap):
+            self.world_macro = ctx_macro
+            self.current_sector = self.world_macro.starter_sector
+            self.player_x, self.player_y = self.world_macro.starter_player_pos
+
+        # Check if context has active slot
+        ctx_slot = context.get("active_slot")
+        if ctx_slot is not None:
+            self.active_slot = ctx_slot
+            self.save_modal_slot = ctx_slot
+
+        # Check if context has exploration state
+        ctx_exp = context.get("exploration_state")
+        if ctx_exp is not None and isinstance(ctx_exp, dict):
+            if "current_sector" in ctx_exp:
+                self.current_sector = tuple(ctx_exp["current_sector"])
+            if "player_pos" in ctx_exp:
+                self.player_x, self.player_y = tuple(ctx_exp["player_pos"])
+            self.playtime_seconds = ctx_exp.get("playtime_seconds", 0)
 
         # Check if returning from a wiped party battle (Defeat)
         if self.party.is_wiped:
@@ -165,12 +196,27 @@ class GSNoiseMapTestScreen(SMState):
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
+                # If Save confirmation modal is open
+                if self.save_modal_open:
+                    if key_info.char in ("1", "2", "3"):
+                        self.save_modal_slot = int(key_info.char)
+                    elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                        self._save_to_slot(self.save_modal_slot)
+                        self.active_slot = self.save_modal_slot
+                        self.save_modal_open = False
+                        self.last_status_msg = f"★ Progress saved to Slot {self.save_modal_slot}!"
+                    elif key_info.key == KeyCode.ESCAPE:
+                        self.save_modal_open = False
+                        self.last_status_msg = "Save cancelled."
+                    keys_pressed.remove(key_info)
+                    break
+
                 moved = False
-                # Movement controls: Arrows or WASD
+                # Movement controls: Arrows or W, A, D
                 if key_info.key == KeyCode.UP or key_info.char in ("w", "W"):
                     moved = self._try_move(0, -1, MapTile.EXIT_NORTH)
                     keys_pressed.remove(key_info)
-                elif key_info.key == KeyCode.DOWN or key_info.char in ("s", "S"):
+                elif key_info.key == KeyCode.DOWN:
                     moved = self._try_move(0, 1, MapTile.EXIT_SOUTH)
                     keys_pressed.remove(key_info)
                 elif key_info.key == KeyCode.LEFT or key_info.char in ("a", "A"):
@@ -179,6 +225,14 @@ class GSNoiseMapTestScreen(SMState):
                 elif key_info.key == KeyCode.RIGHT or key_info.char in ("d", "D"):
                     moved = self._try_move(1, 0, MapTile.EXIT_EAST)
                     keys_pressed.remove(key_info)
+
+                # In-Game Save Shortcut
+                elif key_info.char in ("s", "S"):
+                    self.save_modal_open = True
+                    self.save_modal_slot = self.active_slot or 1
+                    self.slot_headers = self.save_manager.list_save_slots(3)
+                    keys_pressed.remove(key_info)
+                    break
 
                 if moved:
                     self.last_status_msg = ""
@@ -358,6 +412,24 @@ class GSNoiseMapTestScreen(SMState):
         core.game_state.trigger("ToCombat", context)
         return True
 
+    def _save_to_slot(self, slot_idx: int) -> None:
+        """Atomically saves game state to the designated slot."""
+        exploration_state = {
+            "current_sector": list(self.current_sector),
+            "player_pos": [self.player_x, self.player_y],
+            "current_map_name": self.active_poi.name if self.active_poi else "Overworld",
+            "active_submap_poi": self.active_poi.name if self.active_poi else None,
+            "visited_sectors": [list(self.current_sector)],
+            "flags": {},
+        }
+        self.save_manager.save_game(
+            slot_idx=slot_idx,
+            party=self.party,
+            exploration_state=exploration_state,
+            playtime_seconds=self.playtime_seconds,
+            world_macro=self.world_macro,
+        )
+
     def _handle_interact(self) -> None:
         """Handles Enter key interaction: enters POI sub-map, rests at Inn, or leaves via egress."""
         curr_map = self._current_map()
@@ -369,7 +441,12 @@ class GSNoiseMapTestScreen(SMState):
                 m.stats[StatId.HIT_POINTS].current = m.max_hp
                 m.stats[StatId.MAGIC_POINTS].current = m.max_mp
             place_name = "Oakhaven Inn" if "MTOInn" in curr_tile.object_listing else "Town Well"
-            self.last_status_msg = f"★ Rested at {place_name}! Party fully restored."
+            if "MTOInn" in curr_tile.object_listing:
+                slot = self.active_slot or 1
+                self._save_to_slot(slot)
+                self.last_status_msg = f"★ Rested at {place_name}! Fully restored & saved to Slot {slot}."
+            else:
+                self.last_status_msg = f"★ Rested at {place_name}! Party fully restored."
             return
 
         if self.active_submap is None:
@@ -397,6 +474,37 @@ class GSNoiseMapTestScreen(SMState):
                 TerminalScreen.clear_screen()
                 TerminalScreen.flush()
 
+    def _render_save_modal(self) -> str:
+        """Generates ANSI strings for the in-game save confirmation modal."""
+        box_w = min(50, self.map_width - 4)
+        left = max(1, (self.map_width - box_w) // 2 + 1)
+        top = 8
+        lines = [
+            f"\033[{top};{left}H\033[1;37m╭{'─' * (box_w - 2)}╮\033[0m",
+            f"\033[{top+1};{left}H\033[1;37m│\033[0m\033[1;36m{'── Save Adventure ──'.center(box_w - 2)}\033[0m\033[1;37m│\033[0m",
+            f"\033[{top+2};{left}H\033[1;37m│\033[0m{' ' * (box_w - 2)}\033[1;37m│\033[0m",
+        ]
+        # Slot lines
+        for idx in range(3):
+            s_num = idx + 1
+            h = self.slot_headers[idx] if idx < len(self.slot_headers) else None
+            is_target = (s_num == self.save_modal_slot)
+            prefix = "▶ " if is_target else "  "
+            if h is not None:
+                txt = f"{prefix}[{s_num}] Slot {s_num}: ★ {h.party_leader_name} (Lv.{h.party_leader_level})"
+                col = "\033[1;32m" if is_target else "\033[37m"
+            else:
+                txt = f"{prefix}[{s_num}] Slot {s_num}: ··· Empty Slot ···"
+                col = "\033[1;33m" if is_target else "\033[90m"
+            lines.append(f"\033[{top+3+idx};{left}H\033[1;37m│\033[0m {col}{txt:<{box_w - 4}}\033[0m \033[1;37m│\033[0m")
+
+        lines.extend([
+            f"\033[{top+6};{left}H\033[1;37m│\033[0m{'─' * (box_w - 2)}\033[1;37m│\033[0m",
+            f"\033[{top+7};{left}H\033[1;37m│\033[0m\033[90m{'[1-3] Choose  [Enter] Save  [Esc] Cancel'.center(box_w - 2)}\033[0m\033[1;37m│\033[0m",
+            f"\033[{top+8};{left}H\033[1;37m╰{'─' * (box_w - 2)}╯\033[0m",
+        ])
+        return "".join(lines)
+
     @staticmethod
     def _make_border_line(left_char: str, text: str, right_char: str, width: int, fill_char: str = "─") -> str:
         vlen = len(re.sub(r"\033\[[0-9;]*[a-zA-Z]", "", text))
@@ -413,7 +521,9 @@ class GSNoiseMapTestScreen(SMState):
         # 1. Top border / Header
         if self.active_submap is None:
             sx, sy = self.current_sector
-            h_text = f"── \033[1;37mWorld Map\033[0m ── Sector: \033[36m({sx},{sy})\033[0m/4x4 ──"
+            mw = self.world_macro.macro_width
+            mh = self.world_macro.macro_height
+            h_text = f"── \033[1;37mWorld Map\033[0m ── Sector: \033[36m({sx},{sy})\033[0m/{mw}x{mh} ──"
         else:
             poi_name = self.active_poi.name if self.active_poi else "Interior"
             h_text = f"── \033[1;37mSub-Map: {poi_name}\033[0m ──"
@@ -488,17 +598,21 @@ class GSNoiseMapTestScreen(SMState):
         footer_y = 3 + len(map_lines)
         if self.active_submap is None:
             f_text = (
-                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mEnter "
-                "\033[33m[P]\033[0mParty \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
+                " \033[33m[WASD/↑↓]\033[0mMove \033[33m[Enter]\033[0mEnter "
+                "\033[33m[P]\033[0mParty \033[33m[S]\033[0mSave \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
             )
         else:
             f_text = (
-                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mLeave "
-                "\033[33m[P]\033[0mParty \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
+                " \033[33m[WASD/↑↓]\033[0mMove \033[33m[Enter]\033[0mLeave "
+                "\033[33m[P]\033[0mParty \033[33m[S]\033[0mSave \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
             )
 
         out.append(ATCoordinates(footer_y, 1).to_ansi())
         out.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))
+
+        # 5. Modal overlays if active
+        if self.save_modal_open:
+            out.append(self._render_save_modal())
 
         out.append(ATControlSequences.DrawOptimizeOff)
         TerminalScreen.write("".join(out))

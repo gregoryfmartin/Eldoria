@@ -7,11 +7,14 @@ Unit tests for the Random Encounter system:
 - Death and revival handling
 """
 
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import MagicMock
 
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
+from eldoria_py.core.save_manager import SaveManager
 from eldoria_py.combat.encounters import (
     RegionCode,
     create_plains_encounter,
@@ -118,7 +121,9 @@ class TestNoiseMapEncounterScreenIntegration(unittest.TestCase):
     """Verifies encounter triggering, grace period, party persistence, and resting in GSNoiseMapTestScreen."""
 
     def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
         self.screen = GSNoiseMapTestScreen(map_width=20, map_height=10)
+        self.screen.save_manager = SaveManager(save_dir=Path(self.temp_dir.name))
         self.context = Context()
         self.mock_core = MagicMock()
         self.mock_game_state = MagicMock()
@@ -126,6 +131,9 @@ class TestNoiseMapEncounterScreenIntegration(unittest.TestCase):
         self.mock_game_state.states = {"GSNvNCombatScreen": self.mock_combat_screen}
         self.mock_core.game_state = self.mock_game_state
         self.context.set(SMState.ContextEldoriaCore, self.mock_core)
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
 
     def test_grace_period_prevents_immediate_encounters(self):
         # Set steps since battle to 0

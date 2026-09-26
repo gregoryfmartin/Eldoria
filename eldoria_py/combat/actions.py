@@ -42,6 +42,37 @@ class BattleAction:
             description=self.description,
         )
 
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "action_type": self.action_type.value,
+            "category": self.category.value,
+            "mp_cost": self.mp_cost,
+            "effect_value": self.effect_value,
+            "accuracy": self.accuracy,
+            "target_scope": self.target_scope.value,
+            "speed_priority": self.speed_priority,
+            "description": self.description,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict | str) -> BattleAction:
+        if isinstance(data, str):
+            if data in ACTIONS:
+                return ACTIONS[data].copy()
+            raise ValueError(f"Unknown battle action name: {data}")
+        return cls(
+            name=data["name"],
+            action_type=BattleActionType(data["action_type"]),
+            category=ActionCategory(data.get("category", ActionCategory.ATTACK.value)),
+            mp_cost=data.get("mp_cost", 0),
+            effect_value=data.get("effect_value", 10),
+            accuracy=data.get("accuracy", 1.0),
+            target_scope=TargetScope(data.get("target_scope", TargetScope.SINGLE_ENEMY.value)),
+            speed_priority=data.get("speed_priority", 1.0),
+            description=data.get("description", ""),
+        )
+
 
 # Canonical library of pre-built actions
 ACTIONS: dict[str, BattleAction] = {

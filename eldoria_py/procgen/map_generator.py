@@ -248,6 +248,87 @@ class Map:
         ]
         return m
 
+    def to_compact_dict(self) -> Dict[str, Any]:
+        """Compact serialization storing 2D rows of 1-char biome tokens and a sparse list of special overrides."""
+        rows = []
+        specials = []
+        for y in range(self.height):
+            row_chars = []
+            for x in range(self.width):
+                tile = self.tiles[y][x]
+                token = BIOME_TO_CHAR.get(tile.biome, ".")
+                row_chars.append(token)
+                if tile.custom_glyph or tile.custom_fg or tile.custom_bg or tile.object_listing or tile.warp_target:
+                    s_dict: Dict[str, Any] = {"x": x, "y": y}
+                    if tile.custom_glyph:
+                        s_dict["glyph"] = tile.custom_glyph
+                    if tile.custom_fg:
+                        s_dict["fg"] = [tile.custom_fg.r, tile.custom_fg.g, tile.custom_fg.b]
+                    if tile.custom_bg:
+                        s_dict["bg"] = [tile.custom_bg.r, tile.custom_bg.g, tile.custom_bg.b]
+                    if tile.object_listing:
+                        s_dict["obj"] = list(tile.object_listing)
+                    if tile.warp_target and hasattr(tile.warp_target, "to_dict"):
+                        s_dict["warp"] = tile.warp_target.to_dict()
+                    specials.append(s_dict)
+            rows.append("".join(row_chars))
+
+        return {
+            "name": self.name,
+            "width": self.width,
+            "height": self.height,
+            "boundary_wrap": self.boundary_wrap,
+            "rows": rows,
+            "specials": specials,
+        }
+
+    @classmethod
+    def from_compact_dict(cls, data: Dict[str, Any]) -> Map:
+        m = cls(
+            name=data.get("name", "LoadedMap"),
+            width=data.get("width", 54),
+            height=data.get("height", 24),
+            boundary_wrap=data.get("boundary_wrap", False),
+        )
+        rows = data.get("rows", [])
+        for y, row_str in enumerate(rows):
+            for x, char in enumerate(row_str):
+                biome = CHAR_TO_BIOME.get(char, BiomeType.PLAINS)
+                m.tiles[y][x] = MapTile(biome=biome)
+
+        specials = data.get("specials", [])
+        for s in specials:
+            x, y = s["x"], s["y"]
+            if 0 <= y < m.height and 0 <= x < m.width:
+                tile = m.tiles[y][x]
+                if "glyph" in s:
+                    tile.custom_glyph = s["glyph"]
+                if "fg" in s:
+                    tile.custom_fg = TrueColor(*s["fg"])
+                if "bg" in s:
+                    tile.custom_bg = TrueColor(*s["bg"])
+                if "obj" in s:
+                    tile.object_listing = list(s["obj"])
+                if "warp" in s and s["warp"]:
+                    from .poi import WarpTarget
+                    tile.warp_target = WarpTarget.from_dict(s["warp"])
+
+        return m
+
+
+BIOME_TO_CHAR: Dict[BiomeType, str] = {
+    BiomeType.DEEP_WATER: "~",
+    BiomeType.WATER: "≈",
+    BiomeType.COAST: "C",
+    BiomeType.PLAINS: ".",
+    BiomeType.FOREST: "♣",
+    BiomeType.MOUNTAIN: "▲",
+    BiomeType.SNOW: "*",
+    BiomeType.ROAD: "#",
+}
+
+CHAR_TO_BIOME: Dict[str, BiomeType] = {v: k for k, v in BIOME_TO_CHAR.items()}
+
 
 class ProceduralMapGenerator:
     """Generates procedural RPG maps using FastNoiseLite and applies biome rules and road pathfinding."""

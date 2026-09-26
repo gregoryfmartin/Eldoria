@@ -9,11 +9,12 @@ from typing import List, Optional
 
 from ..core.context import Context
 from ..core.fsm import SMState
+from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
 from ..terminal.color import ColorLibrary
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
-from ..terminal.box import clear_buffer_tail
+from ..terminal.box import clear_buffer_tail, truncate_ansi, visible_width
 from ..ui.panel import UIPanel
 from ..ui.elements.menu import UIMenu
 
@@ -38,6 +39,12 @@ class GSTitleScreen(SMState):
         self.active_dialog: Optional[str] = None  # None, "LOAD", "OPTIONS", "CREDITS"
         self.notice_message: str = ""
         self.dialog_dirty: bool = False
+
+        # Save / Load service and state
+        self.save_manager = SaveManager()
+        self.load_slot_idx: int = 0
+        self.load_headers: List[Optional[SaveSlotHeader]] = []
+        self.delete_confirm_slot: Optional[int] = None
 
         # Options preferences
         self.opt_sfx_enabled: bool = True
@@ -107,10 +114,15 @@ class GSTitleScreen(SMState):
             right_bottom=ATCoordinates(19, content_right),
             has_border=False,
         )
-        self.load_panel.add_label("── Load Adventure ──", row=8, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
-        self.load_panel.add_label("No saved game files detected.", row=10, align="center", fg_color=ColorLibrary.AppleYellowLight)
-        self.load_panel.add_label("Start a [New Game] to begin your quest.", row=11, align="center", fg_color=ColorLibrary.DarkGrey)
-        self.load_panel.add_label("[Press Enter or Esc to return]", row=14, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
+        self.load_panel.add_label("── Load Adventure ──", row=7, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
+        slot_col = max(self.load_panel.inner_left + 2, (self.load_panel.inner_width - 66) // 2 + self.load_panel.inner_left)
+        self.slot1_lbl_a = self.load_panel.add_label("[Slot 1] ··· Empty Slot ···", row=9, col=slot_col, fg_color=ColorLibrary.DarkGrey)
+        self.slot1_lbl_b = self.load_panel.add_label("     No adventure recorded", row=10, col=slot_col, fg_color=ColorLibrary.DarkGrey)
+        self.slot2_lbl_a = self.load_panel.add_label("[Slot 2] ··· Empty Slot ···", row=12, col=slot_col, fg_color=ColorLibrary.DarkGrey)
+        self.slot2_lbl_b = self.load_panel.add_label("     No adventure recorded", row=13, col=slot_col, fg_color=ColorLibrary.DarkGrey)
+        self.slot3_lbl_a = self.load_panel.add_label("[Slot 3] ··· Empty Slot ···", row=15, col=slot_col, fg_color=ColorLibrary.DarkGrey)
+        self.slot3_lbl_b = self.load_panel.add_label("     No adventure recorded", row=16, col=slot_col, fg_color=ColorLibrary.DarkGrey)
+        self.load_hint_lbl = self.load_panel.add_label("[↑/↓]Navigate  [Enter]Load  [D]Delete  [Esc]Return", row=18, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
 
         self.options_panel = UIPanel(
             left_top=ATCoordinates(7, 2),
@@ -157,6 +169,61 @@ class GSTitleScreen(SMState):
         self.opt_sfx_lbl.set_user_data(self._sfx_text())
         self.opt_fast_lbl.set_user_data(self._fast_text())
 
+    def _refresh_load_panel(self) -> None:
+        """Refreshes the 3-slot preview labels from disk headers with bounds-safe formatting."""
+        self.load_headers = self.save_manager.list_save_slots(3)
+        slot_col = max(self.load_panel.inner_left + 2, (self.load_panel.inner_width - 66) // 2 + self.load_panel.inner_left)
+        max_w = self.load_panel.inner_right - slot_col + 1
+
+        for i in range(3):
+            header = self.load_headers[i] if i < len(self.load_headers) else None
+            is_sel = (i == self.load_slot_idx)
+            prefix = "▶ " if is_sel else "  "
+            lbl_a = getattr(self, f"slot{i+1}_lbl_a")
+            lbl_b = getattr(self, f"slot{i+1}_lbl_b")
+
+            lbl_a.coordinates = ATCoordinates(lbl_a.coordinates.row, slot_col)
+            lbl_b.coordinates = ATCoordinates(lbl_b.coordinates.row, slot_col)
+
+            if header is not None:
+                if max_w < 65:
+                    line_a = f"{prefix}[Slot {i+1}] ★ {header.party_leader_name} ({header.world_size_label})"
+                    line_b = f"     {header.current_location} ─ {header.formatted_playtime()}"
+                else:
+                    line_a = f"{prefix}[Slot {i+1}] ★ {header.party_leader_name} (Lv. {header.party_leader_level} {header.party_leader_class}) ─ {header.world_size_label}"
+                    line_b = f"     {header.current_location} ─ Time: {header.formatted_playtime()} ─ {header.timestamp}"
+
+                lbl_a.set_user_data(truncate_ansi(line_a, max_w))
+                lbl_a.fg_color = ColorLibrary.AppleGreenLight if is_sel else ColorLibrary.White
+                lbl_b.set_user_data(truncate_ansi(line_b, max_w))
+                lbl_b.fg_color = ColorLibrary.White if is_sel else ColorLibrary.DarkGrey
+            else:
+                line_a = f"{prefix}[Slot {i+1}] ··· Empty Slot ···"
+                line_b = "     No adventure recorded"
+                lbl_a.set_user_data(truncate_ansi(line_a, max_w))
+                lbl_a.fg_color = ColorLibrary.AppleYellowLight if is_sel else ColorLibrary.DarkGrey
+                lbl_b.set_user_data(truncate_ansi(line_b, max_w))
+                lbl_b.fg_color = ColorLibrary.DarkGrey
+
+        if self.delete_confirm_slot is not None:
+            raw_hint = f"⚠ Delete Slot {self.delete_confirm_slot}? Press [Y]/[N]"
+            hint_fg = ColorLibrary.AppleRedLight
+        elif self.notice_message:
+            raw_hint = self.notice_message
+            hint_fg = ColorLibrary.AppleYellowLight
+        else:
+            raw_hint = "[↑/↓]Select  [Enter]Load  [D]Del  [Esc]Return" if max_w < 65 else "[↑/↓]Navigate  [Enter]Load  [D]Delete  [Esc]Return"
+            hint_fg = ColorLibrary.AppleCyanLight
+
+        hint_w = min(visible_width(raw_hint), self.load_panel.inner_width)
+        hint_col = max(self.load_panel.inner_left, (self.load_panel.inner_width - hint_w) // 2 + self.load_panel.inner_left)
+        max_hint_w = self.load_panel.inner_right - hint_col + 1
+        self.load_hint_lbl.coordinates = ATCoordinates(18, hint_col)
+        self.load_hint_lbl.set_user_data(truncate_ansi(raw_hint, max_hint_w))
+        self.load_hint_lbl.fg_color = hint_fg
+
+        self.load_panel.set_all_dirty()
+
     def enter(self, context: Context) -> None:
         super().enter(context)
         self.selected_idx = 0
@@ -201,7 +268,80 @@ class GSTitleScreen(SMState):
 
         # If dialog overlay is active, dismiss or interact
         if self.active_dialog is not None:
-            if self.active_dialog == "OPTIONS" and key_info.char in ("1", "s", "S"):
+            if self.active_dialog == "LOAD":
+                if self.delete_confirm_slot is not None:
+                    if key_info.char in ("y", "Y"):
+                        self.save_manager.delete_slot(self.delete_confirm_slot)
+                        self.delete_confirm_slot = None
+                        self.notice_message = "Slot deleted."
+                        self._refresh_load_panel()
+                        return
+                    elif key_info.char in ("n", "N") or key_info.key == KeyCode.ESCAPE:
+                        self.delete_confirm_slot = None
+                        self.notice_message = ""
+                        self._refresh_load_panel()
+                        return
+                    return
+
+                if key_info.key == KeyCode.UP or key_info.char in ("k", "K"):
+                    self.load_slot_idx = (self.load_slot_idx - 1) % 3
+                    self.notice_message = ""
+                    self._refresh_load_panel()
+                    return
+                elif key_info.key == KeyCode.DOWN or key_info.char in ("j", "J"):
+                    self.load_slot_idx = (self.load_slot_idx + 1) % 3
+                    self.notice_message = ""
+                    self._refresh_load_panel()
+                    return
+                elif key_info.char in ("1", "2", "3"):
+                    self.load_slot_idx = int(key_info.char) - 1
+                    self.notice_message = ""
+                    self._refresh_load_panel()
+                    return
+                elif key_info.char in ("d", "D"):
+                    if self.load_headers and self.load_headers[self.load_slot_idx] is not None:
+                        self.delete_confirm_slot = self.load_slot_idx + 1
+                        self.notice_message = ""
+                        self._refresh_load_panel()
+                    else:
+                        self.notice_message = "Slot is empty; nothing to delete."
+                        self._refresh_load_panel()
+                    return
+                elif key_info.key == KeyCode.ESCAPE:
+                    self._close_dialog()
+                    return
+                elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                    slot_num = self.load_slot_idx + 1
+                    if self.load_headers and self.load_headers[self.load_slot_idx] is not None:
+                        try:
+                            loaded_party, loaded_macro, loaded_state = self.save_manager.load_game(slot_num)
+                            context.set("party", loaded_party)
+                            context.set("world_macro", loaded_macro)
+                            context.set("exploration_state", loaded_state)
+                            context.set("active_slot", slot_num)
+
+                            if core and hasattr(core, "game_state"):
+                                map_screen = core.game_state.states.get("GSNoiseMapTestScreen")
+                                if map_screen:
+                                    map_screen.party = loaded_party
+                                    map_screen.world_macro = loaded_macro
+                                    map_screen.active_slot = slot_num
+                                    map_screen.current_sector = tuple(loaded_state.get("current_sector", loaded_macro.starter_sector))
+                                    map_screen.player_x, map_screen.player_y = tuple(loaded_state.get("player_pos", loaded_macro.starter_player_pos))
+                                    map_screen.playtime_seconds = loaded_state.get("playtime_seconds", 0)
+                                    map_screen.last_status_msg = f"★ Loaded Slot {slot_num}."
+                                self._close_dialog()
+                                core.game_state.trigger("ToNoiseMap", context)
+                                return
+                        except Exception as e:
+                            self.notice_message = f"Error loading save: {e}"
+                            self._refresh_load_panel()
+                            return
+                    else:
+                        self.notice_message = "Slot is empty! Start a New Game."
+                        self._refresh_load_panel()
+                        return
+            elif self.active_dialog == "OPTIONS" and key_info.char in ("1", "s", "S"):
                 self.opt_sfx_enabled = not self.opt_sfx_enabled
                 self._update_options_labels()
                 return
@@ -261,6 +401,10 @@ class GSTitleScreen(SMState):
         self.dialog_dirty = True
         self.menu.deactivate()
         if dialog == "LOAD":
+            self.load_slot_idx = 0
+            self.delete_confirm_slot = None
+            self.notice_message = ""
+            self._refresh_load_panel()
             self.load_panel.activate()
             self.load_panel.set_all_dirty()
         elif dialog == "OPTIONS":

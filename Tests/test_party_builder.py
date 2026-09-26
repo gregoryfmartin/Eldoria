@@ -3,11 +3,14 @@ Unit tests for the GSPartyBuilderScreen.
 Verifies 5-slot party management, embark requirements, auto-fill templates, and state transitions.
 """
 
+from pathlib import Path
+import tempfile
 import unittest
 from unittest.mock import MagicMock
 
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
+from eldoria_py.core.save_manager import SaveManager
 from eldoria_py.terminal.input import KeyCode, KeyEvent
 from eldoria_py.combat.stats import StatId, BattleActionType
 from eldoria_py.combat.entities import PartyMember, Party
@@ -22,13 +25,18 @@ from eldoria_py.terminal.screen import TerminalScreen
 
 class TestPartyBuilder(unittest.TestCase):
     def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
         self.screen = GSPartyBuilderScreen(screen_width=54, screen_height=24)
+        self.screen.save_manager = SaveManager(save_dir=Path(self.temp_dir.name))
         self.context = Context()
         self.mock_core = MagicMock()
         self.mock_game_state = MagicMock()
         self.mock_game_state.states = {}
         self.mock_core.game_state = self.mock_game_state
         self.context.set(SMState.ContextEldoriaCore, self.mock_core)
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
 
     def test_initial_party_slots_empty(self):
         self.assertEqual(len(self.screen.party_slots), 5)
@@ -114,6 +122,14 @@ class TestPartyBuilder(unittest.TestCase):
 
         key = KeyEvent(key=KeyCode.SPACE, char=" ")
         self.screen._handle_input(key, self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 1)
+
+        # Step 1: Select World Size (2 for Medium)
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="2"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 2)
+
+        # Step 2: Select Save Slot (1 for Slot 1)
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="1"), self.context, self.mock_core)
 
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
         self.assertIsInstance(self.context.get("party"), Party)

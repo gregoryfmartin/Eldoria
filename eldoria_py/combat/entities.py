@@ -178,6 +178,87 @@ class PartyMember(Combatant):
                 names.add(act.name)
         self.actions = combined
 
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "job_class": self.job_class,
+            "level": self.level,
+            "gender": self.gender.value,
+            "profile_image_index": self.profile_image_index,
+            "affinity": self.affinity.value,
+            "stats": {stat_id.value: prop.to_dict() for stat_id, prop in self.stats.items()},
+            "equipment": {
+                slot.value: (eq.to_dict() if eq else None)
+                for slot, eq in self.equipment.items()
+            },
+            "base_actions": [a.to_dict() for a in self.base_actions],
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> PartyMember:
+        gender_val = data.get("gender", "Male")
+        try:
+            gender = Gender(gender_val)
+        except ValueError:
+            gender = Gender.MALE
+
+        affinity_val = data.get("affinity", "Physical")
+        try:
+            affinity = BattleActionType(affinity_val)
+        except ValueError:
+            affinity = BattleActionType.PHYSICAL
+
+        raw_stats = data.get("stats", {})
+        base_stats = {}
+        current_stats = {}
+        for s_key, s_data in raw_stats.items():
+            try:
+                sid = StatId(s_key)
+            except ValueError:
+                continue
+            if isinstance(s_data, dict):
+                base_stats[sid] = s_data.get("base", 0)
+                current_stats[sid] = s_data.get("current")
+            elif isinstance(s_data, int):
+                base_stats[sid] = s_data
+
+        raw_actions = data.get("base_actions", data.get("actions", []))
+        actions = []
+        for a_data in raw_actions:
+            if isinstance(a_data, str) and a_data in ACTIONS:
+                actions.append(ACTIONS[a_data].copy())
+            elif isinstance(a_data, dict):
+                actions.append(BattleAction.from_dict(a_data))
+
+        member = cls(
+            name=data.get("name", "Unknown"),
+            job_class=data.get("job_class", "Adventurer"),
+            level=data.get("level", 1),
+            affinity=affinity,
+            base_stats=base_stats,
+            actions=actions,
+            gender=gender,
+            profile_image_index=data.get("profile_image_index", 0),
+        )
+
+        # Restore current HP/MP if provided
+        for sid, cur_val in current_stats.items():
+            if cur_val is not None and sid in member.stats:
+                member.stats[sid].current = cur_val
+
+        # Restore equipment
+        raw_eq = data.get("equipment", {})
+        for slot_key, eq_data in raw_eq.items():
+            if eq_data is None:
+                continue
+            try:
+                eq_item = BattleEquipment.from_dict(eq_data)
+                member.equip(eq_item)
+            except Exception:
+                pass
+
+        return member
+
 
 class EnemyCombatant(Combatant):
     """Enemy squad member with tactical AI behavior, family tag, and loot tables."""
@@ -240,10 +321,37 @@ class EnemyCombatant(Combatant):
 
 
 class Party:
-    """Manages the player party of 1 to 5 members."""
+    """Manages the player party of 1 to 5 members with shared gold and inventory."""
 
-    def __init__(self, members: Optional[list[PartyMember]] = None):
+    def __init__(
+        self,
+        members: Optional[list[PartyMember]] = None,
+        gold: int = 0,
+        inventory: Optional[list[dict]] = None,
+        quest_items: Optional[list[str]] = None,
+    ):
         self.members: list[PartyMember] = members if members is not None else []
+        self.gold: int = gold
+        self.inventory: list[dict] = inventory if inventory is not None else []
+        self.quest_items: list[str] = quest_items if quest_items is not None else []
+
+    def to_dict(self) -> dict:
+        return {
+            "members": [m.to_dict() for m in self.members],
+            "gold": self.gold,
+            "inventory": list(self.inventory),
+            "quest_items": list(self.quest_items),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> Party:
+        members = [PartyMember.from_dict(m) for m in data.get("members", [])]
+        return cls(
+            members=members,
+            gold=data.get("gold", 0),
+            inventory=data.get("inventory", []),
+            quest_items=data.get("quest_items", []),
+        )
 
     def add_member(self, member: PartyMember) -> bool:
         if len(self.members) >= 5:

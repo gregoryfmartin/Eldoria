@@ -10,6 +10,7 @@ from typing import List, Optional
 
 from ..core.context import Context
 from ..core.fsm import SMState
+from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import ColorLibrary
 from ..terminal.input import KeyCode
@@ -67,6 +68,12 @@ class GSPartyBuilderScreen(SMState):
 
         self.party_panel.activate()
         self.slot_list.activate()
+
+        # Embark Configuration Modal State
+        self.embark_modal_step: Optional[int] = None
+        self.selected_world_size: str = "medium"
+        self.save_manager = SaveManager()
+        self.slot_headers: List[Optional[SaveSlotHeader]] = []
 
     @property
     def selected_slot_idx(self) -> int:
@@ -299,6 +306,7 @@ class GSPartyBuilderScreen(SMState):
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
+        self.embark_modal_step = None
         self._sync_slot_locks()
         self.party_panel.set_all_dirty()
         self.slot_list.set_all_dirty()
@@ -328,6 +336,69 @@ class GSPartyBuilderScreen(SMState):
         self._render()
 
     def _handle_input(self, key_info, context: Context, core) -> None:
+        # If Embark modal is open, handle modal keys
+        if self.embark_modal_step is not None:
+            if self.embark_modal_step == 1:
+                if key_info.char in ("1", "s", "S"):
+                    self.selected_world_size = "small"
+                    self.embark_modal_step = 2
+                    self.slot_headers = self.save_manager.list_save_slots(3)
+                    self.party_panel.set_all_dirty()
+                elif key_info.char in ("2", "m", "M"):
+                    self.selected_world_size = "medium"
+                    self.embark_modal_step = 2
+                    self.slot_headers = self.save_manager.list_save_slots(3)
+                    self.party_panel.set_all_dirty()
+                elif key_info.char in ("3", "l", "L"):
+                    self.selected_world_size = "large"
+                    self.embark_modal_step = 2
+                    self.slot_headers = self.save_manager.list_save_slots(3)
+                    self.party_panel.set_all_dirty()
+                elif key_info.key == KeyCode.ESCAPE:
+                    self.embark_modal_step = None
+                    self.party_panel.set_all_dirty()
+                    self.slot_list.set_all_dirty()
+                    self._update_header_and_status()
+                return
+
+            elif self.embark_modal_step == 2:
+                if key_info.char in ("1", "2", "3"):
+                    slot_idx = int(key_info.char)
+                    # Display generation overlay
+                    ov_msg = f"Forging World: Eldoria [{self.selected_world_size.upper()}] ... Carving terrain & establishing towns..."
+                    c_col = max(1, (self.screen_width - len(ov_msg)) // 2)
+                    TerminalScreen.write(f"\033[12;{c_col}H\033[1;33;44m {ov_msg} \033[0m")
+                    TerminalScreen.flush()
+
+                    party = self.build_party()
+                    world_macro, exp_state = self.save_manager.create_new_game(
+                        slot_idx=slot_idx,
+                        party=party,
+                        macro_size=self.selected_world_size,
+                    )
+                    context.set("party", party)
+                    context.set("world_macro", world_macro)
+                    context.set("exploration_state", exp_state)
+                    context.set("active_slot", slot_idx)
+
+                    if core and hasattr(core, "game_state"):
+                        map_screen = core.game_state.states.get("GSNoiseMapTestScreen")
+                        if map_screen:
+                            map_screen.party = party
+                            map_screen.world_macro = world_macro
+                            map_screen.active_slot = slot_idx
+                            map_screen.current_sector = world_macro.starter_sector
+                            map_screen.player_x, map_screen.player_y = world_macro.starter_player_pos
+                            map_screen.playtime_seconds = 0
+                            map_screen.last_status_msg = f"★ Embarked into {self.selected_world_size.title()} Eldoria!"
+                        self.embark_modal_step = None
+                        core.game_state.trigger("ToNoiseMap", context)
+                    return
+                elif key_info.key == KeyCode.ESCAPE:
+                    self.embark_modal_step = 1
+                    self.party_panel.set_all_dirty()
+                return
+
         # Move slot cursor
         if key_info.key == KeyCode.UP:
             self.slot_list.select_prev()
@@ -374,15 +445,9 @@ class GSPartyBuilderScreen(SMState):
         # Embark
         elif key_info.key == KeyCode.SPACE or key_info.char in ("e", "E"):
             if self.can_embark():
-                party = self.build_party()
-                context.set("party", party)
-
-                # Push party into noise map test screen if available
-                if core and hasattr(core, "game_state"):
-                    map_screen = core.game_state.states.get("GSNoiseMapTestScreen")
-                    if map_screen and hasattr(map_screen, "party"):
-                        map_screen.party = party
-                    core.game_state.trigger("ToNoiseMap", context)
+                self.embark_modal_step = 1
+                self.slot_headers = self.save_manager.list_save_slots(3)
+                self.party_panel.set_all_dirty()
             else:
                 self.status_message = "⚠ Party Leader (Slot 1) is required to embark!"
                 self._update_header_and_status()
@@ -400,6 +465,57 @@ class GSPartyBuilderScreen(SMState):
             if core and hasattr(core, "game_state"):
                 core.game_state.trigger("ToTitle", context)
 
+    def _render_embark_modal(self) -> None:
+        """Renders the framed embark configuration dialog over the party builder."""
+        box_width = min(66, self.screen_width - 4)
+        left_col = max(1, (self.screen_width - box_width) // 2)
+        top_row = 6
+
+        inner_content = []
+        if self.embark_modal_step == 1:
+            title = "── New Adventure: Choose World Size ──"
+            opt1 = "  [1] Small  (6x6  ─  36 Sectors)   [Quick Quest]"
+            opt2 = "  [2] Medium (12x12 ─ 144 Sectors)  [Standard Campaign]"
+            opt3 = "  [3] Large  (20x20 ─ 400 Sectors)  [Epic Odyssey]"
+            hint = "[1-3] Choose Size   [Esc] Cancel"
+
+            inner_content = [
+                f"\033[1;36m{title.center(box_width - 4)}\033[0m",
+                "",
+                f"\033[1;32m{opt1:<{box_width - 4}}\033[0m",
+                f"\033[1;33m{opt2:<{box_width - 4}}\033[0m",
+                f"\033[1;35m{opt3:<{box_width - 4}}\033[0m",
+                "",
+                "─" * (box_width - 4),
+                f"\033[90m{hint.center(box_width - 4)}\033[0m",
+            ]
+        else:
+            title = f"── Save Slot Selection ─ {self.selected_world_size.title()} World ──"
+            inner_content = [
+                f"\033[1;36m{title.center(box_width - 4)}\033[0m",
+                "",
+            ]
+            for idx in range(3):
+                h = self.slot_headers[idx] if idx < len(self.slot_headers) else None
+                if h is not None:
+                    desc = f"  [{idx + 1}] Slot {idx + 1}: ★ {h.party_leader_name} (Lv.{h.party_leader_level} {h.party_leader_class}) ─ {h.world_size_label}"
+                    inner_content.append(f"\033[1;33m{desc:<{box_width - 4}}\033[0m")
+                else:
+                    desc = f"  [{idx + 1}] Slot {idx + 1}: ··· Empty Slot ···"
+                    inner_content.append(f"\033[90m{desc:<{box_width - 4}}\033[0m")
+            inner_content.append("")
+            inner_content.append("─" * (box_width - 4))
+            hint = "[1-3] Select Slot & Embark   [Esc] Back"
+            inner_content.append(f"\033[90m{hint.center(box_width - 4)}\033[0m")
+
+        # Draw frame
+        TerminalScreen.write(f"\033[{top_row};{left_col}H\033[1;37m╭{'─' * (box_width - 2)}╮\033[0m")
+        for r_offset, content in enumerate(inner_content):
+            r = top_row + 1 + r_offset
+            # Format row padded to box interior width
+            TerminalScreen.write(f"\033[{r};{left_col}H\033[1;37m│\033[0m {content} \033[1;37m│\033[0m")
+        TerminalScreen.write(f"\033[{top_row + len(inner_content) + 1};{left_col}H\033[1;37m╰{'─' * (box_width - 2)}╯\033[0m")
+
     def _render(self) -> None:
         """Atomic frame render of the 5-slot Party Builder screen using UI components."""
         TerminalScreen.write(ATControlSequences.DrawOptimizeOn)
@@ -409,6 +525,10 @@ class GSPartyBuilderScreen(SMState):
 
         # Draw only dirty party slot items
         self.slot_list.draw()
+
+        # If embark configuration modal is active, draw it on top
+        if self.embark_modal_step is not None:
+            self._render_embark_modal()
 
         # Wipe tail lines from panel bottom row up to maximum buffer height 40
         tail_start = self.party_panel.right_bottom.row + 1

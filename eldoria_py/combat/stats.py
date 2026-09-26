@@ -128,5 +128,18 @@ class BattleEntityProperty:
             if self.augment_turns == 0:
                 self.augment_value = 0
 
+    def to_dict(self) -> dict:
+        return {
+            "base": self.base,
+            "current": self.current,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> BattleEntityProperty:
+        return cls(
+            base=data.get("base", 0),
+            current=data.get("current", None),
+        )
+
     def __repr__(self) -> str:
         return f"<Stat total={self.total} (base={self.base} eq={self.equipment_bonus} aug={self.augment_value} turns={self.augment_turns})>"

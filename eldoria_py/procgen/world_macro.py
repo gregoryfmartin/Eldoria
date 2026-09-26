@@ -6,7 +6,7 @@ algorithmic Point of Interest (Town, Castle, Cave) placement, and sub-map linkin
 from __future__ import annotations
 import math
 import random
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from .map_generator import (
     BiomeType,
@@ -20,15 +20,45 @@ from .poi import POIDescriptor, POIType, WarpTarget
 from .submap_generator import SubMapGenerator
 from ..terminal.color import TrueColor
 
+TOWN_NAMES = [
+    "Oakhaven Town",
+    "Riverwood Settlement",
+    "Highland Watch",
+    "Sunshore Haven",
+    "Ironford Outpost",
+    "Mistral Village",
+    "Falcon's Reach",
+    "Eldermere Town",
+]
+
+CASTLE_NAMES = [
+    "Highspire Castle",
+    "Stormkeep Stronghold",
+    "Dunmore Fortress",
+    "Silverguard Keep",
+    "Ravenhold Bastion",
+]
+
+CAVE_NAMES = [
+    "Shadowfen Cavern",
+    "Duskfall Grotto",
+    "Blackstone Deep",
+    "Echoing Chasm",
+    "Whispering Depths",
+    "Dragon's Maw",
+    "Crystal Hollow",
+    "Grimrock Abyss",
+]
+
 
 class WorldMacroMap:
     """
-    Manages a 4x4 macro grid of interconnected 54x24 sectors (16 sectors total).
+    Manages an interconnected macro grid of 54x24 sectors.
     Uses continuous global noise sampling:
         world_x = sector_x * 54 + x
         world_y = sector_y * 24 + y
     Ensures seamless biome borders, reciprocal boundary exits, and algorithmic
-    placement of 3 distinct POIs (Town, Castle, Cave) into separate sectors.
+    placement of distinct POIs (Towns, Castles, Caves) into separate sectors.
     """
 
     def __init__(
@@ -44,6 +74,7 @@ class WorldMacroMap:
         octaves: int = 4,
         lacunarity: float = 2.0,
         gain: float = 0.5,
+        generate: bool = True,
     ) -> None:
         self.seed = seed
         self.macro_width = macro_width
@@ -68,11 +99,13 @@ class WorldMacroMap:
         )
 
         self.sectors: List[List[Map]] = []
-        self.pois: Dict[POIType, POIDescriptor] = {}
+        self.pois: Dict[Union[POIType, str], POIDescriptor] = {}
+        self.all_pois: List[POIDescriptor] = []
         self.starter_sector: Tuple[int, int] = (0, 0)
         self.starter_player_pos: Tuple[int, int] = (sector_width // 2, sector_height // 2)
 
-        self.generate()
+        if generate:
+            self.generate()
 
     def get_sector(self, sx: int, sy: int) -> Optional[Map]:
         """Returns the Map for sector (sx, sy), or None if out of bounds."""
@@ -80,9 +113,14 @@ class WorldMacroMap:
             return self.sectors[sy][sx]
         return None
 
-    def get_poi(self, poi_type: POIType) -> Optional[POIDescriptor]:
-        """Returns the POIDescriptor for the given POIType."""
-        return self.pois.get(poi_type)
+    def get_poi(self, poi_type: Union[POIType, str]) -> Optional[POIDescriptor]:
+        """Returns the POIDescriptor for the given POIType or POI name."""
+        if poi_type in self.pois:
+            return self.pois[poi_type]
+        for poi in self.all_pois:
+            if poi.poi_type == poi_type or poi.name == poi_type:
+                return poi
+        return None
 
     def reseed(self, new_seed: int) -> None:
         """Regenerates the entire 4x4 macro world with a new seed."""
@@ -126,8 +164,9 @@ class WorldMacroMap:
         self._link_sector_exits()
 
     def _place_pois(self) -> None:
-        """Selects 3 distinct sectors and places Town, Castle, and Cave POIs."""
+        """Selects distinct sectors and places Town, Castle, and Cave POIs based on map size."""
         self.pois.clear()
+        self.all_pois.clear()
         sector_stats = []
 
         # Analyze each sector's biome distribution
@@ -157,102 +196,164 @@ class WorldMacroMap:
 
         used_sectors = set()
 
-        # A. Town Placement: Sector with highest plains + forest and ample walkable terrain
+        total_sectors = self.macro_width * self.macro_height
+        if total_sectors <= 16:
+            n_towns, n_castles, n_caves = 1, 1, 1
+        elif total_sectors <= 36:
+            n_towns, n_castles, n_caves = 1, 1, 2
+        elif total_sectors <= 144:
+            n_towns, n_castles, n_caves = 3, 2, 4
+        else:
+            n_towns, n_castles, n_caves = 6, 4, 8
+
+        # A. Towns
         town_candidates = sorted(
-            [s for s in sector_stats if s["walkable"] >= 50],
+            [s for s in sector_stats if s["walkable"] >= 40],
             key=lambda s: s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5,
             reverse=True,
         )
-        town_sector_coord = town_candidates[0]["coord"] if town_candidates else (0, 0)
-        used_sectors.add(town_sector_coord)
+        town_sectors = []
+        for cand in town_candidates:
+            coord = cand["coord"]
+            if coord not in used_sectors:
+                if town_sectors and total_sectors > 16:
+                    min_dist = min(abs(coord[0] - tc[0]) + abs(coord[1] - tc[1]) for tc in town_sectors)
+                    if min_dist < 2 and len(town_candidates) > len(town_sectors) + 2:
+                        continue
+                town_sectors.append(coord)
+                used_sectors.add(coord)
+                if len(town_sectors) >= n_towns:
+                    break
+        while len(town_sectors) < n_towns:
+            avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
+            if not avail:
+                avail = [s["coord"] for s in sector_stats]
+            pick = avail[0]
+            town_sectors.append(pick)
+            used_sectors.add(pick)
 
-        # B. Castle Placement: Sector with open plains or high ground, distinct from Town
+        # B. Castles
         castle_candidates = sorted(
-            [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 40],
+            [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 30],
             key=lambda s: s["plains"] * 1.5 + s["forest"] * 0.8 - s["water"],
             reverse=True,
         )
-        if not castle_candidates:
-            # Fallback to any unused sector
-            castle_candidates = [s for s in sector_stats if s["coord"] not in used_sectors]
-        castle_sector_coord = castle_candidates[0]["coord"]
-        used_sectors.add(castle_sector_coord)
+        castle_sectors = []
+        for cand in castle_candidates:
+            coord = cand["coord"]
+            if coord not in used_sectors:
+                castle_sectors.append(coord)
+                used_sectors.add(coord)
+                if len(castle_sectors) >= n_castles:
+                    break
+        while len(castle_sectors) < n_castles:
+            avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
+            if not avail:
+                avail = [s["coord"] for s in sector_stats]
+            pick = avail[0]
+            castle_sectors.append(pick)
+            used_sectors.add(pick)
 
-        # C. Cave Placement: Sector with most mountain terrain, distinct from Town and Castle
+        # C. Caves
         cave_candidates = sorted(
             [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 10],
             key=lambda s: s["mountain"] * 2.5 + s["snow"] - s["water"],
             reverse=True,
         )
-        if not cave_candidates:
-            cave_candidates = [s for s in sector_stats if s["coord"] not in used_sectors]
-        cave_sector_coord = cave_candidates[0]["coord"]
-        used_sectors.add(cave_sector_coord)
+        cave_sectors = []
+        for cand in cave_candidates:
+            coord = cand["coord"]
+            if coord not in used_sectors:
+                cave_sectors.append(coord)
+                used_sectors.add(coord)
+                if len(cave_sectors) >= n_caves:
+                    break
+        while len(cave_sectors) < n_caves:
+            avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
+            if not avail:
+                avail = [s["coord"] for s in sector_stats]
+            pick = avail[0]
+            cave_sectors.append(pick)
+            used_sectors.add(pick)
 
         # -------------------------------------------------------------
-        # 1. Place Town
+        # 1. Place Towns
         # -------------------------------------------------------------
-        town_map = self.sectors[town_sector_coord[1]][town_sector_coord[0]]
-        town_pos = self._find_best_open_pos(town_map)
-        town_submap, town_spawn = SubMapGenerator.generate_town(
-            name="Oakhaven Town",
-            seed=self.seed,
-        )
-        town_poi = POIDescriptor.create_town(
-            name="Oakhaven Town",
-            sector_coord=town_sector_coord,
-            local_pos=town_pos,
-            spawn_pos=town_spawn,
-        )
-        town_poi.sub_map = town_submap
-        self._stamp_poi_on_tile(town_map, town_pos, town_poi)
-        self.pois[POIType.TOWN] = town_poi
-
-        # Set default starter sector and player start position right at Town
-        self.starter_sector = town_sector_coord
-        cand_x = min(self.sector_width - 1, town_pos[0] + 1)
-        if town_map.tiles[town_pos[1]][cand_x].is_walkable:
-            self.starter_player_pos = (cand_x, town_pos[1])
-        else:
-            self.starter_player_pos = town_pos
-
-        # -------------------------------------------------------------
-        # 2. Place Castle
-        # -------------------------------------------------------------
-        castle_map = self.sectors[castle_sector_coord[1]][castle_sector_coord[0]]
-        castle_pos = self._find_best_open_pos(castle_map)
-        castle_submap, castle_spawn = SubMapGenerator.generate_castle(
-            name="Highspire Castle",
-            seed=self.seed,
-        )
-        castle_poi = POIDescriptor.create_castle(
-            name="Highspire Castle",
-            sector_coord=castle_sector_coord,
-            local_pos=castle_pos,
-            spawn_pos=castle_spawn,
-        )
-        castle_poi.sub_map = castle_submap
-        self._stamp_poi_on_tile(castle_map, castle_pos, castle_poi)
-        self.pois[POIType.CASTLE] = castle_poi
+        for idx, coord in enumerate(town_sectors):
+            name = TOWN_NAMES[idx] if idx < len(TOWN_NAMES) else f"Settlement {idx + 1}"
+            town_map = self.sectors[coord[1]][coord[0]]
+            town_pos = self._find_best_open_pos(town_map)
+            town_submap, town_spawn = SubMapGenerator.generate_town(
+                name=name,
+                seed=self.seed + idx * 37,
+            )
+            town_poi = POIDescriptor.create_town(
+                name=name,
+                sector_coord=coord,
+                local_pos=town_pos,
+                spawn_pos=town_spawn,
+            )
+            town_poi.sub_map = town_submap
+            self._stamp_poi_on_tile(town_map, town_pos, town_poi)
+            self.all_pois.append(town_poi)
+            self.pois[name] = town_poi
+            if POIType.TOWN not in self.pois:
+                self.pois[POIType.TOWN] = town_poi
+                # Set default starter sector and player start position right at primary Town
+                self.starter_sector = coord
+                cand_x = min(self.sector_width - 1, town_pos[0] + 1)
+                if town_map.tiles[town_pos[1]][cand_x].is_walkable:
+                    self.starter_player_pos = (cand_x, town_pos[1])
+                else:
+                    self.starter_player_pos = town_pos
 
         # -------------------------------------------------------------
-        # 3. Place Cave
+        # 2. Place Castles
         # -------------------------------------------------------------
-        cave_map = self.sectors[cave_sector_coord[1]][cave_sector_coord[0]]
-        cave_pos = self._find_cave_mouth_pos(cave_map)
-        cave_submap, cave_spawn = SubMapGenerator.generate_cave(
-            name="Shadowfen Cavern",
-            seed=self.seed,
-        )
-        cave_poi = POIDescriptor.create_cave(
-            name="Shadowfen Cavern",
-            sector_coord=cave_sector_coord,
-            local_pos=cave_pos,
-            spawn_pos=cave_spawn,
-        )
-        cave_poi.sub_map = cave_submap
-        self._stamp_poi_on_tile(cave_map, cave_pos, cave_poi)
-        self.pois[POIType.CAVE] = cave_poi
+        for idx, coord in enumerate(castle_sectors):
+            name = CASTLE_NAMES[idx] if idx < len(CASTLE_NAMES) else f"Fortress {idx + 1}"
+            castle_map = self.sectors[coord[1]][coord[0]]
+            castle_pos = self._find_best_open_pos(castle_map)
+            castle_submap, castle_spawn = SubMapGenerator.generate_castle(
+                name=name,
+                seed=self.seed + idx * 43,
+            )
+            castle_poi = POIDescriptor.create_castle(
+                name=name,
+                sector_coord=coord,
+                local_pos=castle_pos,
+                spawn_pos=castle_spawn,
+            )
+            castle_poi.sub_map = castle_submap
+            self._stamp_poi_on_tile(castle_map, castle_pos, castle_poi)
+            self.all_pois.append(castle_poi)
+            self.pois[name] = castle_poi
+            if POIType.CASTLE not in self.pois:
+                self.pois[POIType.CASTLE] = castle_poi
+
+        # -------------------------------------------------------------
+        # 3. Place Caves
+        # -------------------------------------------------------------
+        for idx, coord in enumerate(cave_sectors):
+            name = CAVE_NAMES[idx] if idx < len(CAVE_NAMES) else f"Cavern {idx + 1}"
+            cave_map = self.sectors[coord[1]][coord[0]]
+            cave_pos = self._find_cave_mouth_pos(cave_map)
+            cave_submap, cave_spawn = SubMapGenerator.generate_cave(
+                name=name,
+                seed=self.seed + idx * 53,
+            )
+            cave_poi = POIDescriptor.create_cave(
+                name=name,
+                sector_coord=coord,
+                local_pos=cave_pos,
+                spawn_pos=cave_spawn,
+            )
+            cave_poi.sub_map = cave_submap
+            self._stamp_poi_on_tile(cave_map, cave_pos, cave_poi)
+            self.all_pois.append(cave_poi)
+            self.pois[name] = cave_poi
+            if POIType.CAVE not in self.pois:
+                self.pois[POIType.CAVE] = cave_poi
 
     def _find_best_open_pos(self, sector_map: Map) -> Tuple[int, int]:
         """Finds a central walkable tile surrounded by walkable land."""
@@ -342,39 +443,38 @@ class WorldMacroMap:
         tile.object_listing.append(f"POI:{poi.name}")
 
     def _carve_town_road(self) -> None:
-        """Carves a cobblestone road across the Town's sector connecting West and East edges."""
-        town_poi = self.pois.get(POIType.TOWN)
-        if not town_poi:
-            return
+        """Carves a cobblestone road across all Town sectors connecting West and East edges."""
+        for poi in self.all_pois:
+            if poi.poi_type != POIType.TOWN:
+                continue
+            sx, sy = poi.sector_coord
+            sec_map = self.sectors[sy][sx]
+            tx, ty = poi.local_pos
+            w, h = self.sector_width, self.sector_height
 
-        sx, sy = town_poi.sector_coord
-        sec_map = self.sectors[sy][sx]
-        tx, ty = town_poi.local_pos
-        w, h = self.sector_width, self.sector_height
+            # Pick walkable start on left edge and end on right edge near town's y
+            starts = [y for y in range(h) if sec_map.tiles[y][0].is_walkable]
+            start_y = min(starts, key=lambda y: abs(y - ty)) if starts else ty
 
-        # Pick walkable start on left edge and end on right edge near town's y
-        starts = [y for y in range(h) if sec_map.tiles[y][0].is_walkable]
-        start_y = min(starts, key=lambda y: abs(y - ty)) if starts else ty
+            ends = [y for y in range(h) if sec_map.tiles[y][w - 1].is_walkable]
+            end_y = min(ends, key=lambda y: abs(y - ty)) if ends else ty
 
-        ends = [y for y in range(h) if sec_map.tiles[y][w - 1].is_walkable]
-        end_y = min(ends, key=lambda y: abs(y - ty)) if ends else ty
+            # Path 1: From left edge (0, start_y) to Town (tx, ty)
+            path1 = self._find_walkable_path(sec_map, (0, start_y), (tx, ty))
+            # Path 2: From Town (tx, ty) to right edge (w - 1, end_y)
+            path2 = self._find_walkable_path(sec_map, (tx, ty), (w - 1, end_y))
 
-        # Path 1: From left edge (0, start_y) to Town (tx, ty)
-        path1 = self._find_walkable_path(sec_map, (0, start_y), (tx, ty))
-        # Path 2: From Town (tx, ty) to right edge (w - 1, end_y)
-        path2 = self._find_walkable_path(sec_map, (tx, ty), (w - 1, end_y))
+            road_tiles = set(path1 + path2)
+            road_cfg = BIOME_CONFIGS[BiomeType.ROAD]
 
-        road_tiles = set(path1 + path2)
-        road_cfg = BIOME_CONFIGS[BiomeType.ROAD]
-
-        for rx, ry in road_tiles:
-            tile = sec_map.tiles[ry][rx]
-            if tile.poi is None:  # Preserve POI glyph and warp target
-                tile.biome = BiomeType.ROAD
-                tile.background_image = "FieldRoad"
-                tile.battle_allowed = road_cfg.battle_allowed
-                tile.encounter_rate = road_cfg.encounter_rate
-                tile.region_code = road_cfg.region_code
+            for rx, ry in road_tiles:
+                tile = sec_map.tiles[ry][rx]
+                if tile.poi is None:  # Preserve POI glyph and warp target
+                    tile.biome = BiomeType.ROAD
+                    tile.background_image = "FieldRoad"
+                    tile.battle_allowed = road_cfg.battle_allowed
+                    tile.encounter_rate = road_cfg.encounter_rate
+                    tile.region_code = road_cfg.region_code
 
     @staticmethod
     def _find_walkable_path(
@@ -464,3 +564,85 @@ class WorldMacroMap:
                     # World northern edge
                     if sy == 0:
                         sec.tiles[0][x].exits[MapTile.EXIT_NORTH] = False
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Serializes the entire world macro map, all sectors, and all POIs to a compact dictionary."""
+        return {
+            "macro_width": self.macro_width,
+            "macro_height": self.macro_height,
+            "sector_width": self.sector_width,
+            "sector_height": self.sector_height,
+            "seed": self.seed,
+            "frequency": self.frequency,
+            "noise_type": self.noise_type.name if hasattr(self.noise_type, "name") else str(self.noise_type),
+            "fractal_type": self.fractal_type.name if hasattr(self.fractal_type, "name") else str(self.fractal_type),
+            "octaves": self.octaves,
+            "lacunarity": self.lacunarity,
+            "gain": self.gain,
+            "starter_sector": list(self.starter_sector),
+            "starter_player_pos": list(self.starter_player_pos),
+            "pois": [poi.to_dict() for poi in self.all_pois],
+            "sectors": [
+                [sec.to_compact_dict() for sec in row]
+                for row in self.sectors
+            ],
+        }
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> WorldMacroMap:
+        """Hydrates a WorldMacroMap directly from serialized data without any FastNoiseLite generation."""
+        noise_type_val = data.get("noise_type", "OpenSimplex2")
+        fractal_type_val = data.get("fractal_type", "FBm")
+        noise_type = NoiseType[noise_type_val] if noise_type_val in NoiseType.__members__ else NoiseType.OpenSimplex2
+        fractal_type = FractalType[fractal_type_val] if fractal_type_val in FractalType.__members__ else FractalType.FBm
+
+        macro = cls(
+            seed=data.get("seed", 1337),
+            macro_width=data.get("macro_width", 4),
+            macro_height=data.get("macro_height", 4),
+            sector_width=data.get("sector_width", 54),
+            sector_height=data.get("sector_height", 24),
+            frequency=data.get("frequency", 0.035),
+            noise_type=noise_type,
+            fractal_type=fractal_type,
+            octaves=data.get("octaves", 4),
+            lacunarity=data.get("lacunarity", 2.0),
+            gain=data.get("gain", 0.5),
+            generate=False,
+        )
+        macro.starter_sector = tuple(data.get("starter_sector", [0, 0]))
+        macro.starter_player_pos = tuple(data.get("starter_player_pos", [27, 12]))
+
+        # Reconstruct sectors from compact dict
+        macro.sectors = []
+        for row_data in data.get("sectors", []):
+            sec_row = []
+            for sec_data in row_data:
+                if "rows" in sec_data:
+                    sec_map = Map.from_compact_dict(sec_data)
+                else:
+                    sec_map = Map.from_dict(sec_data)
+                sec_row.append(sec_map)
+            macro.sectors.append(sec_row)
+
+        # Reconstruct POIs
+        macro.all_pois = []
+        macro.pois = {}
+        for poi_data in data.get("pois", []):
+            poi = POIDescriptor.from_dict(poi_data)
+            macro.all_pois.append(poi)
+            macro.pois[poi.name] = poi
+            if poi.poi_type not in macro.pois:
+                macro.pois[poi.poi_type] = poi
+
+            # Stamp onto sector map
+            sx, sy = poi.sector_coord
+            if 0 <= sy < macro.macro_height and 0 <= sx < macro.macro_width:
+                sec_map = macro.sectors[sy][sx]
+                macro._stamp_poi_on_tile(sec_map, poi.local_pos, poi)
+
+        # Re-link exits across sector boundaries
+        macro._link_sector_exits()
+
+        return macro
+

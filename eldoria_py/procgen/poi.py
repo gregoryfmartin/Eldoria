@@ -24,6 +24,23 @@ class WarpTarget:
     is_egress: bool = False
     prompt_label: str = ""
 
+    def to_dict(self) -> dict:
+        return {
+            "target_map_name": self.target_map_name,
+            "target_pos": list(self.target_pos) if self.target_pos else None,
+            "is_egress": self.is_egress,
+            "prompt_label": self.prompt_label,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> WarpTarget:
+        return cls(
+            target_map_name=data["target_map_name"],
+            target_pos=tuple(data["target_pos"]) if data.get("target_pos") else None,
+            is_egress=data.get("is_egress", False),
+            prompt_label=data.get("prompt_label", ""),
+        )
+
 
 @dataclass
 class POIDescriptor:
@@ -39,6 +56,46 @@ class POIDescriptor:
     sub_map: Optional[Any] = None
     description: str = ""
     spawn_pos: Tuple[int, int] = (27, 21)
+
+    def to_dict(self) -> dict:
+        return {
+            "poi_type": self.poi_type.value,
+            "name": self.name,
+            "glyph": self.glyph,
+            "fg_color": [self.fg_color.r, self.fg_color.g, self.fg_color.b],
+            "bg_color": [self.bg_color.r, self.bg_color.g, self.bg_color.b],
+            "sector_coord": list(self.sector_coord),
+            "local_pos": list(self.local_pos),
+            "spawn_pos": list(self.spawn_pos),
+            "description": self.description,
+            "sub_map": (
+                self.sub_map.to_compact_dict()
+                if self.sub_map and hasattr(self.sub_map, "to_compact_dict")
+                else (self.sub_map.to_dict() if self.sub_map and hasattr(self.sub_map, "to_dict") else None)
+            ),
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> POIDescriptor:
+        desc = cls(
+            poi_type=POIType(data["poi_type"]),
+            name=data["name"],
+            glyph=data["glyph"],
+            fg_color=TrueColor(*data["fg_color"]),
+            bg_color=TrueColor(*data["bg_color"]),
+            sector_coord=tuple(data["sector_coord"]),
+            local_pos=tuple(data["local_pos"]),
+            spawn_pos=tuple(data.get("spawn_pos", (27, 21))),
+            description=data.get("description", ""),
+        )
+        if data.get("sub_map"):
+            from .map_generator import Map
+            sub_data = data["sub_map"]
+            if "rows" in sub_data:
+                desc.sub_map = Map.from_compact_dict(sub_data)
+            else:
+                desc.sub_map = Map.from_dict(sub_data)
+        return desc
 
     @classmethod
     def create_town(

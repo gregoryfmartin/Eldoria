@@ -19,6 +19,36 @@ class BattleEquipment:
         """Returns the bonus granted to the given stat, defaulting to 0."""
         return self.stat_bonuses.get(stat, 0)
 
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "slot": self.slot.value,
+            "stat_bonuses": {k.value: v for k, v in self.stat_bonuses.items()},
+            "unlocked_action_name": self.unlocked_action_name,
+            "description": self.description,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict | str) -> BattleEquipment:
+        if isinstance(data, str):
+            if data in EQUIPMENT_CATALOG:
+                item = EQUIPMENT_CATALOG[data]
+                return cls(
+                    name=item.name,
+                    slot=item.slot,
+                    stat_bonuses=dict(item.stat_bonuses),
+                    unlocked_action_name=item.unlocked_action_name,
+                    description=item.description,
+                )
+            raise ValueError(f"Unknown equipment catalog item: {data}")
+        return cls(
+            name=data["name"],
+            slot=EquipmentSlot(data["slot"]),
+            stat_bonuses={StatId(k): v for k, v in data.get("stat_bonuses", {}).items()},
+            unlocked_action_name=data.get("unlocked_action_name"),
+            description=data.get("description", ""),
+        )
+
 
 # Standard starting & progression equipment
 EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
