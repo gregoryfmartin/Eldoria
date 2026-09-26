@@ -6,7 +6,7 @@ Verifies 5-slot party management, embark requirements, auto-fill templates, and 
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
@@ -21,6 +21,8 @@ from eldoria_py.ui.elements.label import UILabel
 from eldoria_py.ui.elements.divider import UIDivider
 from eldoria_py.ui.elements.party_slot import UIPartySlotList, UIPartySlotItem
 from eldoria_py.terminal.screen import TerminalScreen
+from eldoria_py.terminal.color import rainbow_color, format_chromatic_wave
+from eldoria_py.terminal.box import strip_ansi
 
 
 class TestPartyBuilder(unittest.TestCase):
@@ -148,6 +150,14 @@ class TestPartyBuilder(unittest.TestCase):
             self.assertIsInstance(slot, UIPartySlotItem)
             self.assertIsInstance(slot.line1_label, UILabel)
             self.assertIsInstance(slot.line2_label, UILabel)
+
+        # Verify Embark Modal Panels conform to UI framework
+        self.assertIsInstance(self.screen.embark_size_panel, UIPanel)
+        self.assertTrue(self.screen.embark_size_panel.has_border)
+        self.assertIsInstance(self.screen.size_divider, UIDivider)
+        self.assertIsInstance(self.screen.embark_slot_panel, UIPanel)
+        self.assertTrue(self.screen.embark_slot_panel.has_border)
+        self.assertIsInstance(self.screen.slot_divider, UIDivider)
 
     def test_party_builder_slot_list_navigation(self):
         """Verify circular selection navigation within unlocked slots and selective dirty-rect marking."""
@@ -341,6 +351,106 @@ class TestPartyBuilder(unittest.TestCase):
         screen_80 = GSPartyBuilderScreen(screen_width=80, screen_height=24)
         self.assertIn("[↑/↓]", screen_80._footer_text())
         self.assertIn("[↑/↓]", screen_80.party_panel.footer)
+
+    def test_rainbow_color_and_chromatic_wave(self):
+        """Verify rainbow_color generates valid 24-bit TrueColor and format_chromatic_wave applies ANSI codes."""
+        c0 = rainbow_color(0.0)
+        self.assertEqual(c0.r, 255)
+        self.assertEqual(c0.g, 0)
+        self.assertEqual(c0.b, 0)
+
+        # Space characters preserved, characters wrapped with TrueColor codes
+        text = "Forging World"
+        formatted = format_chromatic_wave(text, phase=0.0, char_step=0.04, bold=True)
+        self.assertIn("\033[38;2;", formatted)
+        self.assertIn(" ", formatted)
+        self.assertEqual(strip_ansi(formatted), text)
+
+    def test_render_forging_world_frame_coordinates_and_text(self):
+        """Verify _render_forging_world_frame calculates centered row and column coordinates correctly."""
+        # 54x24 mode
+        with patch.object(TerminalScreen, "write") as mock_write, patch.object(TerminalScreen, "flush") as mock_flush:
+            self.screen._render_forging_world_frame(0.0)
+            mock_write.assert_called_once()
+            mock_flush.assert_called_once()
+            output = mock_write.call_args[0][0]
+            # Line 1: row 11, col 21: (54 - 13) // 2 + 1 = 21
+            self.assertIn("\033[11;21H", output)
+            # Line 2: row 13, col 12: (54 - 32) // 2 + 1 = 12
+            self.assertIn("\033[13;12H", output)
+            stripped = strip_ansi(output)
+            self.assertIn("Forging World", stripped)
+            self.assertIn("Carving and establishing terrain", stripped)
+
+        # 80x24 mode
+        screen_80 = GSPartyBuilderScreen(screen_width=80, screen_height=24)
+        with patch.object(TerminalScreen, "write") as mock_write, patch.object(TerminalScreen, "flush") as mock_flush:
+            screen_80._render_forging_world_frame(0.5)
+            mock_write.assert_called_once()
+            output = mock_write.call_args[0][0]
+            # Line 1: row 11, col 34: (80 - 13) // 2 + 1 = 34
+            self.assertIn("\033[11;34H", output)
+            # Line 2: row 13, col 25: (80 - 32) // 2 + 1 = 25
+            self.assertIn("\033[13;25H", output)
+            stripped = strip_ansi(output)
+            self.assertIn("Forging World", stripped)
+            self.assertIn("Carving and establishing terrain", stripped)
+
+    def test_forging_world_transition_eliminates_blue_banner_and_clears_buffer(self):
+        """Verify embarking clears the buffer, renders the new frame, and does NOT emit the blue banner."""
+        leader = PartyMember(name="Aiden", job_class="Warrior")
+        self.screen.set_member_slot(0, leader)
+        self.mock_game_state.states["GSNoiseMapTestScreen"] = MagicMock()
+
+        # Enter embark modal
+        self.screen._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 1)
+
+        # Select World Size (Quick)
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="1"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 2)
+
+        # Capture terminal calls during slot selection
+        with patch.object(TerminalScreen, "clear_screen") as mock_clear, \
+             patch.object(TerminalScreen, "write") as mock_write:
+            self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="1"), self.context, self.mock_core)
+            mock_clear.assert_called_once()
+            all_written = "".join(call[0][0] for call in mock_write.call_args_list)
+
+            # Ensure the old blue bar (\033[1;33;44m) is completely eliminated
+            self.assertNotIn("44m", all_written)
+            self.assertNotIn("Carving terrain & establishing towns...", all_written)
+
+            # Ensure new literals are present
+            stripped = strip_ansi(all_written)
+            self.assertIn("Forging World", stripped)
+            self.assertIn("Carving and establishing terrain", stripped)
+
+    def test_interactive_forging_world_threaded_animation(self):
+        """Verify the interactive threaded path runs the worker thread and renders animation frames."""
+        leader = PartyMember(name="Aiden", job_class="Warrior")
+        self.screen.set_member_slot(0, leader)
+        self.mock_game_state.states["GSNoiseMapTestScreen"] = MagicMock()
+        self.screen.embark_modal_step = 2
+        self.screen.selected_world_size = "quick"
+        self.screen._force_animation = True
+
+        rendered_phases = []
+        original_render_frame = self.screen._render_forging_world_frame
+
+        def capture_render(phase):
+            rendered_phases.append(phase)
+            original_render_frame(phase)
+
+        with patch.object(self.screen, "_render_forging_world_frame", side_effect=capture_render), \
+             patch("sys.stdout.isatty", return_value=True), \
+             patch("time.sleep", return_value=None):
+            self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="1"), self.context, self.mock_core)
+
+        # Multiple animation frames were rendered with progressing phases
+        self.assertGreater(len(rendered_phases), 1)
+        self.assertGreater(rendered_phases[-1], rendered_phases[0])
+        self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
 
 
 if __name__ == "__main__":

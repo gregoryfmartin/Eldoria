@@ -63,7 +63,7 @@ class TestSaveManager(unittest.TestCase):
         header1 = slots[0]
         self.assertIsNotNone(header1)
         self.assertEqual(header1.party_leader_name, "Aiden")
-        self.assertEqual(header1.world_size_label, "Small (6x6)")
+        self.assertEqual(header1.world_size_label, "Quick")
         self.assertEqual(header1.macro_width, 6)
 
         # Load game

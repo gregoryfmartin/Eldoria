@@ -151,14 +151,14 @@ class SaveManager:
             seed = random.randint(1000, 999999)
 
         size_key = macro_size.lower().strip()
-        if "small" in size_key or "6" in size_key:
-            mw, mh, label = 6, 6, "Small (6x6)"
-        elif "large" in size_key or "20" in size_key:
-            mw, mh, label = 20, 20, "Large (20x20)"
+        if "quick" in size_key or "small" in size_key or "6" in size_key:
+            mw, mh, label = 6, 6, "Quick"
+        elif "odyssey" in size_key or "large" in size_key or "20" in size_key:
+            mw, mh, label = 20, 20, "Odyssey"
         elif "4" in size_key or "classic" in size_key:
-            mw, mh, label = 4, 4, "Classic (4x4)"
+            mw, mh, label = 4, 4, "Classic"
         else:
-            mw, mh, label = 12, 12, "Medium (12x12)"
+            mw, mh, label = 12, 12, "Standard"
 
         # Generate world macro map once
         world_macro = WorldMacroMap(seed=seed, macro_width=mw, macro_height=mh, generate=True)
@@ -268,7 +268,8 @@ class SaveManager:
         leader_class = (leader.job_class.value if hasattr(leader.job_class, "value") else str(leader.job_class)) if leader else "Warrior"
         mw = existing_header.macro_width if existing_header else (world_macro.macro_width if world_macro else 12)
         mh = existing_header.macro_height if existing_header else (world_macro.macro_height if world_macro else 12)
-        size_label = existing_header.world_size_label if existing_header else f"{mw}x{mh} World"
+        default_size_label = "Quick" if mw == 6 else ("Odyssey" if mw == 20 else ("Classic" if mw == 4 else "Standard"))
+        size_label = existing_header.world_size_label if existing_header else default_size_label
 
         header = SaveSlotHeader(
             slot_index=slot_idx,

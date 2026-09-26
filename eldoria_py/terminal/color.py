@@ -3,6 +3,7 @@
 """
 
 from __future__ import annotations
+import colorsys
 import random
 from typing import Union
 
@@ -315,4 +316,28 @@ class ColorLibrary:
     UI_CHEVRON_INACTIVE = UIChevronInactive
     UI_CHEVRON_HAS_FOCUS = UIChevronHasFocus
     LIST_ITEM_CURRENT_HIGHLIGHT = ListItemCurrentHighlight
+
+
+def rainbow_color(hue: float) -> TrueColor:
+    """Returns a TrueColor corresponding to the given hue (0.0 to 1.0) with full saturation and value."""
+    r, g, b = colorsys.hsv_to_rgb(hue % 1.0, 1.0, 1.0)
+    return TrueColor(int(r * 255), int(g * 255), int(b * 255))
+
+
+def format_chromatic_wave(
+    text: str,
+    phase: float = 0.0,
+    char_step: float = 0.035,
+    bold: bool = False,
+) -> str:
+    """Renders text with a horizontal 24-bit TrueColor chromatic wave gradient."""
+    bold_code = "\033[1m" if bold else ""
+    out = []
+    for i, ch in enumerate(text):
+        if ch == " ":
+            out.append(" ")
+            continue
+        c = rainbow_color(phase + i * char_step)
+        out.append(f"{bold_code}{c.to_fg_ansi()}{ch}\033[0m")
+    return "".join(out)
 

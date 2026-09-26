@@ -6,21 +6,26 @@ Refactored to Eldoria's component UI framework (UIPanel, UIContainer, UIDivider,
 """
 
 from __future__ import annotations
+import sys
+import threading
+import time
 from typing import List, Optional
 
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..core.save_manager import SaveManager, SaveSlotHeader
-from ..terminal.ansi import ATCoordinates, ATControlSequences
-from ..terminal.color import ColorLibrary
+from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
+from ..terminal.color import ColorLibrary, format_chromatic_wave
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..combat.stats import StatId, BattleActionType
 from ..combat.actions import ACTIONS
 from ..combat.entities import PartyMember, Party
 from ..combat.portrait import Gender
-from ..terminal.box import clear_buffer_tail, visible_width
+from ..terminal.box import clear_buffer_tail, visible_width, truncate_ansi
 from ..ui.panel import UIPanel
+from ..ui.elements.label import UILabel
+from ..ui.elements.divider import UIDivider
 from ..ui.elements.party_slot import UIPartySlotList
 
 
@@ -71,9 +76,67 @@ class GSPartyBuilderScreen(SMState):
 
         # Embark Configuration Modal State
         self.embark_modal_step: Optional[int] = None
-        self.selected_world_size: str = "medium"
+        self.modal_just_closed: bool = False
+        self.selected_world_size: str = "standard"
         self.save_manager = SaveManager()
         self.slot_headers: List[Optional[SaveSlotHeader]] = []
+        self.animate_transition: bool = True
+
+        # Embark Configuration Modal Panels (formal UIPanel components)
+        modal_w = min(46, self.screen_width - 4)
+        left_c = (self.screen_width - modal_w) // 2 + 1
+        right_c = left_c + modal_w - 1
+
+        # Step 1: World Size Panel
+        self.embark_size_panel = UIPanel(
+            left_top=ATCoordinates(6, left_c),
+            right_bottom=ATCoordinates(12, right_c),
+            has_border=True,
+            title="Choose World Size",
+        )
+        self.embark_size_panel.title_color = ColorLibrary.AppleCyanLight
+        self.opt1_label = self.embark_size_panel.add_label(
+            "[1] Quick", row=7, align="center",
+            fg_color=ColorLibrary.AppleGreenLight, decorations=ATDecoration(bold=True)
+        )
+        self.opt2_label = self.embark_size_panel.add_label(
+            "[2] Standard", row=8, align="center",
+            fg_color=ColorLibrary.AppleYellowLight, decorations=ATDecoration(bold=True)
+        )
+        self.opt3_label = self.embark_size_panel.add_label(
+            "[3] Odyssey", row=9, align="center",
+            fg_color=ColorLibrary.ApplePurpleLight, decorations=ATDecoration(bold=True)
+        )
+        self.size_divider = self.embark_size_panel.add_divider(row=10)
+        self.size_hint_label = self.embark_size_panel.add_label(
+            "[1-3] Choose Size   [Esc] Cancel", row=11, align="center",
+            fg_color=ColorLibrary.DarkGrey
+        )
+        self.embark_size_panel.activate()
+
+        # Step 2: Save Slot Panel
+        self.embark_slot_panel = UIPanel(
+            left_top=ATCoordinates(6, left_c),
+            right_bottom=ATCoordinates(12, right_c),
+            has_border=True,
+            title="Select Save Slot",
+        )
+        self.embark_slot_panel.title_color = ColorLibrary.AppleCyanLight
+        self.slot1_label = self.embark_slot_panel.add_label(
+            "[1] Slot 1: ··· Empty ···", row=7, align="center", fg_color=ColorLibrary.DarkGrey
+        )
+        self.slot2_label = self.embark_slot_panel.add_label(
+            "[2] Slot 2: ··· Empty ···", row=8, align="center", fg_color=ColorLibrary.DarkGrey
+        )
+        self.slot3_label = self.embark_slot_panel.add_label(
+            "[3] Slot 3: ··· Empty ···", row=9, align="center", fg_color=ColorLibrary.DarkGrey
+        )
+        self.slot_divider = self.embark_slot_panel.add_divider(row=10)
+        self.slot_hint_label = self.embark_slot_panel.add_label(
+            "[1-3] Select Slot & Embark   [Esc] Back", row=11, align="center",
+            fg_color=ColorLibrary.DarkGrey
+        )
+        self.embark_slot_panel.activate()
 
     @property
     def selected_slot_idx(self) -> int:
@@ -339,43 +402,81 @@ class GSPartyBuilderScreen(SMState):
         # If Embark modal is open, handle modal keys
         if self.embark_modal_step is not None:
             if self.embark_modal_step == 1:
-                if key_info.char in ("1", "s", "S"):
-                    self.selected_world_size = "small"
+                if key_info.char in ("1", "q", "Q"):
+                    self.selected_world_size = "quick"
                     self.embark_modal_step = 2
-                    self.slot_headers = self.save_manager.list_save_slots(3)
-                    self.party_panel.set_all_dirty()
-                elif key_info.char in ("2", "m", "M"):
-                    self.selected_world_size = "medium"
+                    self._refresh_slot_panel()
+                elif key_info.char in ("2", "s", "S", "m", "M"):
+                    self.selected_world_size = "standard"
                     self.embark_modal_step = 2
-                    self.slot_headers = self.save_manager.list_save_slots(3)
-                    self.party_panel.set_all_dirty()
-                elif key_info.char in ("3", "l", "L"):
-                    self.selected_world_size = "large"
+                    self._refresh_slot_panel()
+                elif key_info.char in ("3", "o", "O", "l", "L"):
+                    self.selected_world_size = "odyssey"
                     self.embark_modal_step = 2
-                    self.slot_headers = self.save_manager.list_save_slots(3)
-                    self.party_panel.set_all_dirty()
+                    self._refresh_slot_panel()
                 elif key_info.key == KeyCode.ESCAPE:
                     self.embark_modal_step = None
-                    self.party_panel.set_all_dirty()
-                    self.slot_list.set_all_dirty()
+                    self.modal_just_closed = True
                     self._update_header_and_status()
                 return
 
             elif self.embark_modal_step == 2:
                 if key_info.char in ("1", "2", "3"):
                     slot_idx = int(key_info.char)
-                    # Display generation overlay
-                    ov_msg = f"Forging World: Eldoria [{self.selected_world_size.upper()}] ... Carving terrain & establishing towns..."
-                    c_col = max(1, (self.screen_width - len(ov_msg)) // 2)
-                    TerminalScreen.write(f"\033[12;{c_col}H\033[1;33;44m {ov_msg} \033[0m")
+                    # 1. Clear buffer completely to remove all prior UI elements
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.write(clear_buffer_tail(1, 40))
                     TerminalScreen.flush()
 
                     party = self.build_party()
-                    world_macro, exp_state = self.save_manager.create_new_game(
-                        slot_idx=slot_idx,
-                        party=party,
-                        macro_size=self.selected_world_size,
+
+                    # 2. Concurrency & rainbow animation during world creation
+                    is_interactive = (
+                        self.animate_transition
+                        and sys.stdout.isatty()
+                        and ("unittest" not in sys.modules or getattr(self, "_force_animation", False))
                     )
+
+                    if is_interactive:
+                        gen_result: dict = {}
+                        gen_error: list = []
+
+                        def worker() -> None:
+                            try:
+                                gen_result["data"] = self.save_manager.create_new_game(
+                                    slot_idx=slot_idx,
+                                    party=party,
+                                    macro_size=self.selected_world_size,
+                                )
+                            except Exception as ex:
+                                gen_error.append(ex)
+
+                        t = threading.Thread(target=worker, daemon=True)
+                        t.start()
+
+                        phase = 0.0
+                        start_time = time.monotonic()
+                        min_display_time = 0.6  # Brief display window to enjoy the rainbow animation
+
+                        while t.is_alive() or (time.monotonic() - start_time < min_display_time):
+                            self._render_forging_world_frame(phase)
+                            time.sleep(0.033)  # ~30 FPS
+                            phase += 0.03
+
+                        t.join()
+
+                        if gen_error:
+                            raise gen_error[0]
+
+                        world_macro, exp_state = gen_result["data"]
+                    else:
+                        # Fast-path for unit tests and headless environments
+                        self._render_forging_world_frame(0.0)
+                        world_macro, exp_state = self.save_manager.create_new_game(
+                            slot_idx=slot_idx,
+                            party=party,
+                            macro_size=self.selected_world_size,
+                        )
                     context.set("party", party)
                     context.set("world_macro", world_macro)
                     context.set("exploration_state", exp_state)
@@ -392,11 +493,11 @@ class GSPartyBuilderScreen(SMState):
                             map_screen.playtime_seconds = 0
                             map_screen.last_status_msg = f"★ Embarked into {self.selected_world_size.title()} Eldoria!"
                         self.embark_modal_step = None
+                        self.modal_just_closed = True
                         core.game_state.trigger("ToNoiseMap", context)
                     return
                 elif key_info.key == KeyCode.ESCAPE:
                     self.embark_modal_step = 1
-                    self.party_panel.set_all_dirty()
                 return
 
         # Move slot cursor
@@ -446,8 +547,7 @@ class GSPartyBuilderScreen(SMState):
         elif key_info.key == KeyCode.SPACE or key_info.char in ("e", "E"):
             if self.can_embark():
                 self.embark_modal_step = 1
-                self.slot_headers = self.save_manager.list_save_slots(3)
-                self.party_panel.set_all_dirty()
+                self.embark_size_panel.set_all_dirty()
             else:
                 self.status_message = "⚠ Party Leader (Slot 1) is required to embark!"
                 self._update_header_and_status()
@@ -465,60 +565,96 @@ class GSPartyBuilderScreen(SMState):
             if core and hasattr(core, "game_state"):
                 core.game_state.trigger("ToTitle", context)
 
+    def _clear_modal_rect(self, panel: UIPanel) -> None:
+        """Clears the rectangular footprint of the modal to prevent underlying text bleed."""
+        width = panel.right_bottom.column - panel.left_top.column + 1
+        blank = " " * width
+        ansi = "".join(
+            f"\033[{r};{panel.left_top.column}H{blank}"
+            for r in range(panel.left_top.row, panel.right_bottom.row + 1)
+        )
+        TerminalScreen.write(ansi)
+
+    def _clear_interior(self) -> None:
+        """Clears the interior of the party panel when a modal is dismissed."""
+        left = self.party_panel.inner_left
+        width = self.party_panel.inner_width
+        blank = " " * width
+        ansi = "".join(
+            f"\033[{r};{left}H{blank}"
+            for r in range(self.party_panel.inner_top, self.party_panel.inner_bottom + 1)
+        )
+        TerminalScreen.write(ansi)
+
+    def _refresh_slot_panel(self) -> None:
+        """Updates slot labels from disk headers in a bounds-safe manner."""
+        self.slot_headers = self.save_manager.list_save_slots(3)
+        self.embark_slot_panel.setup_title(f"Save Slot ─ {self.selected_world_size.title()}", ColorLibrary.AppleCyanLight)
+        max_w = self.embark_slot_panel.inner_width
+
+        for idx in range(3):
+            lbl = getattr(self, f"slot{idx+1}_label")
+            h = self.slot_headers[idx] if idx < len(self.slot_headers) else None
+            if h is not None:
+                line = f"[{idx + 1}] Slot {idx + 1}: ★ {h.party_leader_name} ({h.world_size_label})"
+                fg = ColorLibrary.AppleGreenLight
+            else:
+                line = f"[{idx + 1}] Slot {idx + 1}: ··· Empty ···"
+                fg = ColorLibrary.DarkGrey
+
+            truncated_line = truncate_ansi(line, max_w)
+            vlen = visible_width(truncated_line)
+            c = self.embark_slot_panel.inner_left + max(0, (max_w - vlen) // 2)
+            lbl.coordinates = ATCoordinates(lbl.coordinates.row, c)
+            lbl.set_user_data(truncated_line)
+            lbl.fg_color = fg
+
+        self.embark_slot_panel.set_all_dirty()
+
+    def _render_forging_world_frame(self, phase: float = 0.0) -> None:
+        """Renders the centered 'Forging World' and 'Carving and establishing terrain' labels with rainbow wave."""
+        line1 = "Forging World"
+        line2 = "Carving and establishing terrain"
+
+        col1 = max(1, (self.screen_width - len(line1)) // 2 + 1)
+        col2 = max(1, (self.screen_width - len(line2)) // 2 + 1)
+
+        mid_row = self.screen_height // 2
+        row1 = max(1, mid_row - 1)
+        row2 = min(self.screen_height, mid_row + 1)
+
+        rendered_l1 = format_chromatic_wave(line1, phase=phase, char_step=0.04, bold=True)
+        rendered_l2 = format_chromatic_wave(line2, phase=phase + 0.20, char_step=0.025, bold=False)
+
+        out = [
+            f"\033[{row1};{col1}H{rendered_l1}",
+            f"\033[{row2};{col2}H{rendered_l2}",
+        ]
+        TerminalScreen.write("".join(out))
+        TerminalScreen.flush()
+
     def _render_embark_modal(self) -> None:
-        """Renders the framed embark configuration dialog over the party builder."""
-        box_width = min(66, self.screen_width - 4)
-        left_col = max(1, (self.screen_width - box_width) // 2)
-        top_row = 6
-
-        inner_content = []
+        """Renders the active modal panel (Step 1 or Step 2) with clean background clearing."""
         if self.embark_modal_step == 1:
-            title = "── New Adventure: Choose World Size ──"
-            opt1 = "  [1] Small  (6x6  ─  36 Sectors)   [Quick Quest]"
-            opt2 = "  [2] Medium (12x12 ─ 144 Sectors)  [Standard Campaign]"
-            opt3 = "  [3] Large  (20x20 ─ 400 Sectors)  [Epic Odyssey]"
-            hint = "[1-3] Choose Size   [Esc] Cancel"
-
-            inner_content = [
-                f"\033[1;36m{title.center(box_width - 4)}\033[0m",
-                "",
-                f"\033[1;32m{opt1:<{box_width - 4}}\033[0m",
-                f"\033[1;33m{opt2:<{box_width - 4}}\033[0m",
-                f"\033[1;35m{opt3:<{box_width - 4}}\033[0m",
-                "",
-                "─" * (box_width - 4),
-                f"\033[90m{hint.center(box_width - 4)}\033[0m",
-            ]
+            panel = self.embark_size_panel
+        elif self.embark_modal_step == 2:
+            panel = self.embark_slot_panel
         else:
-            title = f"── Save Slot Selection ─ {self.selected_world_size.title()} World ──"
-            inner_content = [
-                f"\033[1;36m{title.center(box_width - 4)}\033[0m",
-                "",
-            ]
-            for idx in range(3):
-                h = self.slot_headers[idx] if idx < len(self.slot_headers) else None
-                if h is not None:
-                    desc = f"  [{idx + 1}] Slot {idx + 1}: ★ {h.party_leader_name} (Lv.{h.party_leader_level} {h.party_leader_class}) ─ {h.world_size_label}"
-                    inner_content.append(f"\033[1;33m{desc:<{box_width - 4}}\033[0m")
-                else:
-                    desc = f"  [{idx + 1}] Slot {idx + 1}: ··· Empty Slot ···"
-                    inner_content.append(f"\033[90m{desc:<{box_width - 4}}\033[0m")
-            inner_content.append("")
-            inner_content.append("─" * (box_width - 4))
-            hint = "[1-3] Select Slot & Embark   [Esc] Back"
-            inner_content.append(f"\033[90m{hint.center(box_width - 4)}\033[0m")
+            return
 
-        # Draw frame
-        TerminalScreen.write(f"\033[{top_row};{left_col}H\033[1;37m╭{'─' * (box_width - 2)}╮\033[0m")
-        for r_offset, content in enumerate(inner_content):
-            r = top_row + 1 + r_offset
-            # Format row padded to box interior width
-            TerminalScreen.write(f"\033[{r};{left_col}H\033[1;37m│\033[0m {content} \033[1;37m│\033[0m")
-        TerminalScreen.write(f"\033[{top_row + len(inner_content) + 1};{left_col}H\033[1;37m╰{'─' * (box_width - 2)}╯\033[0m")
+        self._clear_modal_rect(panel)
+        panel.set_all_dirty()
+        panel.draw()
 
     def _render(self) -> None:
         """Atomic frame render of the 5-slot Party Builder screen using UI components."""
         TerminalScreen.write(ATControlSequences.DrawOptimizeOn)
+
+        if self.modal_just_closed:
+            self._clear_interior()
+            self.party_panel.set_all_dirty()
+            self.slot_list.set_all_dirty()
+            self.modal_just_closed = False
 
         # Draw master panel (borders, title if dirty, status label if dirty, divider)
         self.party_panel.draw()

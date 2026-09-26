@@ -128,9 +128,9 @@ class TestSaveLoadUI(unittest.TestCase):
         builder._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
         self.assertEqual(builder.embark_modal_step, 1)
 
-        # Step 1: Select Medium World (key '2')
+        # Step 1: Select Standard World (key '2')
         builder._handle_input(KeyEvent(key=KeyCode.CHAR, char="2"), self.context, self.mock_core)
-        self.assertEqual(builder.selected_world_size, "medium")
+        self.assertEqual(builder.selected_world_size, "standard")
         self.assertEqual(builder.embark_modal_step, 2)
 
         # Step 2: Select Slot 2 (key '2')
