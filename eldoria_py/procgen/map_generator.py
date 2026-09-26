@@ -63,7 +63,7 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         bg_color=TrueColor(0x44, 0x3A, 0x1E),  # dark gold
         walkable=True,
         battle_allowed=True,
-        encounter_rate=0.25,
+        encounter_rate=0.08,
         region_code=1,
     ),
     BiomeType.PLAINS: BiomeConfig(
@@ -73,7 +73,7 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         bg_color=TrueColor(0x1C, 0x3A, 0x27),  # dark field green
         walkable=True,
         battle_allowed=True,
-        encounter_rate=0.50,
+        encounter_rate=0.10,
         region_code=1,
     ),
     BiomeType.FOREST: BiomeConfig(
@@ -83,7 +83,7 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         bg_color=TrueColor(0x13, 0x2F, 0x1B),  # deep forest
         walkable=True,
         battle_allowed=True,
-        encounter_rate=0.75,
+        encounter_rate=0.16,
         region_code=2,
     ),
     BiomeType.MOUNTAIN: BiomeConfig(
@@ -94,7 +94,7 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         walkable=False,
         battle_allowed=False,
         encounter_rate=0.0,
-        region_code=3,
+        region_code=0,
     ),
     BiomeType.SNOW: BiomeConfig(
         name="Snow Peak",
@@ -104,7 +104,7 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         walkable=False,
         battle_allowed=False,
         encounter_rate=0.0,
-        region_code=3,
+        region_code=0,
     ),
     BiomeType.ROAD: BiomeConfig(
         name="Cobblestone Road",
@@ -113,7 +113,7 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         bg_color=TrueColor(0x3B, 0x27, 0x1A),  # earth brown
         walkable=True,
         battle_allowed=True,
-        encounter_rate=0.15,
+        encounter_rate=0.04,
         region_code=1,
     ),
 }

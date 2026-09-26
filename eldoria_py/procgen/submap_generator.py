@@ -67,14 +67,14 @@ class SubMapGenerator:
                 for hx in range(left, left + width):
                     if hy == top or hy == top + height - 1 or hx == left or hx == left + width - 1:
                         # Wall
-                        b_tile = MapTile(biome=BiomeType.MOUNTAIN)
+                        b_tile = MapTile(biome=BiomeType.MOUNTAIN, battle_allowed=False, encounter_rate=0.0, region_code=0)
                         b_tile.custom_glyph = "#"
                         b_tile.custom_fg = TrueColor(0xA0, 0xAE, 0xC0)
                         b_tile.custom_bg = TrueColor(0x2D, 0x37, 0x48)
                         town_map.set_tile(hx, hy, b_tile)
                     else:
                         # Interior floor
-                        f_tile = MapTile(biome=BiomeType.ROAD)
+                        f_tile = MapTile(biome=BiomeType.ROAD, battle_allowed=False, encounter_rate=0.0, region_code=0)
                         f_tile.custom_glyph = "·"
                         f_tile.custom_fg = TrueColor(0xED, 0x89, 0x36)
                         f_tile.custom_bg = TrueColor(0x1A, 0x20, 0x2C)
@@ -82,7 +82,7 @@ class SubMapGenerator:
             # Door opening facing road
             door_x = left + width // 2
             door_y = top + height - 1
-            d_tile = MapTile(biome=BiomeType.ROAD)
+            d_tile = MapTile(biome=BiomeType.ROAD, battle_allowed=False, encounter_rate=0.0, region_code=0)
             d_tile.custom_glyph = "⌂"
             d_tile.custom_fg = TrueColor(0xFF, 0xD7, 0x00)
             d_tile.custom_bg = TrueColor(0x3B, 0x27, 0x1A)
@@ -97,6 +97,14 @@ class SubMapGenerator:
         build_house(6, 14, 16, 7, "MTOTownHall")
         # South-East Guild Hall
         build_house(32, 14, 16, 7, "MTOGuildHall")
+
+        # Guarantee all town tiles are strictly safe zones
+        for y in range(h):
+            for x in range(w):
+                t = town_map.tiles[y][x]
+                t.battle_allowed = False
+                t.encounter_rate = 0.0
+                t.region_code = 0
 
         # 6. Southern Egress Gate (Exit to Overworld)
         egress_x = center_x
@@ -160,7 +168,8 @@ class SubMapGenerator:
                     floor_tile = MapTile(
                         biome=BiomeType.ROAD,
                         battle_allowed=True,
-                        encounter_rate=0.40,
+                        encounter_rate=0.20,
+                        region_code=3,
                     )
                     floor_tile.custom_glyph = "·"
                     floor_tile.custom_fg = TrueColor(0x71, 0x80, 0x96)
@@ -168,7 +177,12 @@ class SubMapGenerator:
                     cave_map.set_tile(x, y, floor_tile)
                 else:
                     # Solid rock wall
-                    wall_tile = MapTile(biome=BiomeType.MOUNTAIN)
+                    wall_tile = MapTile(
+                        biome=BiomeType.MOUNTAIN,
+                        battle_allowed=False,
+                        encounter_rate=0.0,
+                        region_code=0,
+                    )
                     wall_tile.custom_glyph = "▲"
                     wall_tile.custom_fg = TrueColor(0x4A, 0x55, 0x68)
                     wall_tile.custom_bg = TrueColor(0x1A, 0x20, 0x2C)
@@ -183,7 +197,8 @@ class SubMapGenerator:
                     floor = MapTile(
                         biome=BiomeType.ROAD,
                         battle_allowed=True,
-                        encounter_rate=0.35,
+                        encounter_rate=0.20,
+                        region_code=3,
                     )
                     floor.custom_glyph = "·"
                     floor.custom_fg = TrueColor(0x71, 0x80, 0x96)
@@ -329,6 +344,14 @@ class SubMapGenerator:
             is_egress=True,
             prompt_label="Castle Portcullis Gate",
         )
+
+        # Guarantee all castle tiles are strictly safe zones
+        for y in range(h):
+            for x in range(w):
+                t = castle_map.tiles[y][x]
+                t.battle_allowed = False
+                t.encounter_rate = 0.0
+                t.region_code = 0
 
         # Recalculate exits
         for y in range(h):

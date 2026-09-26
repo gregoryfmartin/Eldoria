@@ -109,6 +109,7 @@ class EldoriaCore(GameCore):
         from ..states.test_ui import GSUiTestScreen
         from ..states.test_soda_can import GSAnimatedSodaCanTestScreen
         from ..states.test_noise_map import GSNoiseMapTestScreen
+        from ..states.combat_screen import GSNvNCombatScreen
         from .fsm import SMTransition
 
         self.game_state = SMStateMachine("GSInit")
@@ -116,6 +117,7 @@ class EldoriaCore(GameCore):
         self.game_state.add_state(GSUiTestScreen())
         self.game_state.add_state(GSAnimatedSodaCanTestScreen())
         self.game_state.add_state(GSNoiseMapTestScreen(map_width=self.map_width, map_height=self.map_height))
+        self.game_state.add_state(GSNvNCombatScreen())
 
         # Match New New Engine: Boot straight from GSInit -> initial_target_state
         self.game_state.add_transition(
@@ -131,5 +133,8 @@ class EldoriaCore(GameCore):
         self.game_state.add_transition(SMTransition("GSUiTestScreen", "ToSodaCan", "GSAnimatedSodaCanTestScreen"))
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToUiTest", "GSUiTestScreen"))
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToSodaCan", "GSAnimatedSodaCanTestScreen"))
+        self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToCombat", "GSNvNCombatScreen"))
+        self.game_state.add_transition(SMTransition("GSNvNCombatScreen", "FromCombat", "GSNoiseMapTestScreen"))
+        self.game_state.add_transition(SMTransition("GSNvNCombatScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
         self.game_state.add_transition(SMTransition("GSAnimatedSodaCanTestScreen", "ToUiTest", "GSUiTestScreen"))
         self.game_state.add_transition(SMTransition("GSAnimatedSodaCanTestScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))

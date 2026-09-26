@@ -24,6 +24,13 @@ from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
+from ..combat import (
+    StatId,
+    Party,
+    create_default_party,
+    generate_encounter,
+    create_bat_squad,
+)
 
 
 class GSNoiseMapTestScreen(SMState):
@@ -53,6 +60,12 @@ class GSNoiseMapTestScreen(SMState):
         self.frequency = 0.035
         self.noise_type_idx = 0
         self.fractal_type_idx = 0
+
+        # Persistent Player Party across Exploration & Combat
+        self.party: Party = create_default_party()
+        self.steps_since_battle: int = 5
+        self.min_grace_steps: int = 5
+        self.last_status_msg: str = ""
 
         # World Macro Map (4x4 sectors = 16 interconnected sectors)
         self.world_macro: WorldMacroMap = WorldMacroMap(
@@ -106,6 +119,8 @@ class GSNoiseMapTestScreen(SMState):
         self.active_submap = None
         self.active_poi = None
         self.warp_stack.clear()
+        self.steps_since_battle = 5
+        self.last_status_msg = ""
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
 
@@ -113,6 +128,22 @@ class GSNoiseMapTestScreen(SMState):
         super().enter(context)
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
+        TerminalScreen.flush()
+
+        # Check if returning from a wiped party battle (Defeat)
+        if self.party.is_wiped:
+            # Revive party with 50% HP and 50% MP
+            for m in self.party.members:
+                m.stats[StatId.HIT_POINTS].current = max(1, m.max_hp // 2)
+                m.stats[StatId.MAGIC_POINTS].current = max(1, m.max_mp // 2)
+            # Warp player to safety (starter sector)
+            self.current_sector = self.world_macro.starter_sector
+            self.player_x, self.player_y = self.world_macro.starter_player_pos
+            self.active_submap = None
+            self.active_poi = None
+            self.warp_stack.clear()
+            self.steps_since_battle = 0
+            self.last_status_msg = "☠ Party was revived and returned to safety."
         TerminalScreen.flush()
 
     def exit(self, context: Context) -> None:
@@ -129,58 +160,47 @@ class GSNoiseMapTestScreen(SMState):
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
+                moved = False
                 # Movement controls: Arrows or WASD
                 if key_info.key == KeyCode.UP or key_info.char in ("w", "W"):
-                    self._try_move(0, -1, MapTile.EXIT_NORTH)
+                    moved = self._try_move(0, -1, MapTile.EXIT_NORTH)
                     keys_pressed.remove(key_info)
-                    break
                 elif key_info.key == KeyCode.DOWN or key_info.char in ("s", "S"):
-                    self._try_move(0, 1, MapTile.EXIT_SOUTH)
+                    moved = self._try_move(0, 1, MapTile.EXIT_SOUTH)
                     keys_pressed.remove(key_info)
-                    break
                 elif key_info.key == KeyCode.LEFT or key_info.char in ("a", "A"):
-                    self._try_move(-1, 0, MapTile.EXIT_WEST)
+                    moved = self._try_move(-1, 0, MapTile.EXIT_WEST)
                     keys_pressed.remove(key_info)
-                    break
                 elif key_info.key == KeyCode.RIGHT or key_info.char in ("d", "D"):
-                    self._try_move(1, 0, MapTile.EXIT_EAST)
+                    moved = self._try_move(1, 0, MapTile.EXIT_EAST)
                     keys_pressed.remove(key_info)
+
+                if moved:
+                    self.last_status_msg = ""
+                    if self._check_step_encounter(context):
+                        return
                     break
 
-                # Interaction: Enter key to enter POI or leave via egress
+                # Interaction: Enter key to enter POI, rest at Inn, or leave via egress
                 elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
                     self._handle_interact()
                     keys_pressed.remove(key_info)
                     break
 
-                # Overworld Regeneration & Tuning (Active on Overworld)
-                elif key_info.char in ("r", "R"):
-                    self.seed = random.randint(1, 999999)
-                    self._regenerate()
-                    keys_pressed.remove(key_info)
-                    break
-                elif key_info.char in ("n", "N"):
-                    self.noise_type_idx = (self.noise_type_idx + 1) % len(self.NOISE_TYPES)
-                    self._regenerate()
-                    keys_pressed.remove(key_info)
-                    break
-                elif key_info.char in ("f", "F"):
-                    self.fractal_type_idx = (self.fractal_type_idx + 1) % len(self.FRACTAL_TYPES)
-                    self._regenerate()
-                    keys_pressed.remove(key_info)
-                    break
-                elif key_info.char in ("+", "="):
-                    self.frequency = min(0.20, self.frequency + 0.005)
-                    self._regenerate()
-                    keys_pressed.remove(key_info)
-                    break
-                elif key_info.char in ("-", "_"):
-                    self.frequency = max(0.01, self.frequency - 0.005)
-                    self._regenerate()
-                    keys_pressed.remove(key_info)
-                    break
-
-                # Screen switching
+                # Screen switching & Combat Encounter
+                elif key_info.char in ("b", "B"):
+                    keys_pressed.clear()
+                    if core and hasattr(core, "game_state"):
+                        combat_state = core.game_state.states.get("GSNvNCombatScreen")
+                        if combat_state:
+                            curr_map = self._current_map()
+                            curr_tile = curr_map.tiles[self.player_y][self.player_x]
+                            reg = curr_tile.region_code if curr_tile.region_code > 0 else 1
+                            squad = generate_encounter(reg) or create_bat_squad(size=6)
+                            self.steps_since_battle = 0
+                            combat_state.start_encounter(self.party, squad)
+                        core.game_state.trigger("ToCombat", context)
+                    return
                 elif key_info.char in ("u", "U"):
                     keys_pressed.clear()
                     if core and hasattr(core, "game_state"):
@@ -199,13 +219,13 @@ class GSNoiseMapTestScreen(SMState):
 
         self._render()
 
-    def _try_move(self, dx: int, dy: int, exit_dir: int) -> None:
-        """Handles player movement and seamless sector boundary crossing."""
+    def _try_move(self, dx: int, dy: int, exit_dir: int) -> bool:
+        """Handles player movement and seamless sector boundary crossing. Returns True if moved."""
         curr_map = self._current_map()
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
 
         if not curr_tile.exits[exit_dir]:
-            return
+            return False
 
         nx = self.player_x + dx
         ny = self.player_y + dy
@@ -215,7 +235,8 @@ class GSNoiseMapTestScreen(SMState):
             if 0 <= nx < self.map_width and 0 <= ny < self.map_height:
                 self.player_x = nx
                 self.player_y = ny
-            return
+                return True
+            return False
 
         # Overworld 4x4 sector navigation
         sx, sy = self.current_sector
@@ -230,7 +251,8 @@ class GSNoiseMapTestScreen(SMState):
                     self.player_y = ny
                     TerminalScreen.clear_screen()
                     TerminalScreen.flush()
-            return
+                    return True
+            return False
 
         # West boundary transition
         if nx < 0:
@@ -242,7 +264,8 @@ class GSNoiseMapTestScreen(SMState):
                     self.player_y = ny
                     TerminalScreen.clear_screen()
                     TerminalScreen.flush()
-            return
+                    return True
+            return False
 
         # South boundary transition
         if ny >= self.map_height:
@@ -254,7 +277,8 @@ class GSNoiseMapTestScreen(SMState):
                     self.player_y = 0
                     TerminalScreen.clear_screen()
                     TerminalScreen.flush()
-            return
+                    return True
+            return False
 
         # North boundary transition
         if ny < 0:
@@ -266,16 +290,72 @@ class GSNoiseMapTestScreen(SMState):
                     self.player_y = self.map_height - 1
                     TerminalScreen.clear_screen()
                     TerminalScreen.flush()
-            return
+                    return True
+            return False
 
         # Regular move within the same sector
         self.player_x = nx
         self.player_y = ny
+        return True
 
-    def _handle_interact(self) -> None:
-        """Handles Enter key interaction: enters POI sub-map or leaves via egress."""
+    def _check_step_encounter(self, context: Context) -> bool:
+        """Evaluates step-based random encounter rolls. Returns True if encounter triggered."""
+        self.steps_since_battle += 1
+        if self.steps_since_battle < self.min_grace_steps:
+            return False
+
         curr_map = self._current_map()
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
+
+        # Warp tiles, egress tiles, safe tiles never trigger encounters
+        if curr_tile.warp_target is not None:
+            return False
+
+        if not curr_tile.battle_allowed or curr_tile.encounter_rate <= 0.0:
+            return False
+
+        if curr_tile.region_code == 0:
+            return False
+
+        # Roll encounter chance
+        roll = random.random()
+        if roll < curr_tile.encounter_rate:
+            return self._trigger_encounter(context, curr_tile.region_code)
+
+        return False
+
+    def _trigger_encounter(self, context: Context, region_code: int) -> bool:
+        """Spawns an enemy squad for region_code and transitions to GSNvNCombatScreen."""
+        squad = generate_encounter(region_code)
+        if squad is None:
+            return False
+
+        core = context.get(SMState.ContextEldoriaCore)
+        if not core or not hasattr(core, "game_state"):
+            return False
+
+        combat_state = core.game_state.states.get("GSNvNCombatScreen")
+        if not combat_state:
+            return False
+
+        self.steps_since_battle = 0
+        combat_state.start_encounter(self.party, squad)
+        core.game_state.trigger("ToCombat", context)
+        return True
+
+    def _handle_interact(self) -> None:
+        """Handles Enter key interaction: enters POI sub-map, rests at Inn, or leaves via egress."""
+        curr_map = self._current_map()
+        curr_tile = curr_map.tiles[self.player_y][self.player_x]
+
+        # Check for healing interactables (Inn or Well)
+        if any(obj in curr_tile.object_listing for obj in ("MTOInn", "MTOWell")):
+            for m in self.party.members:
+                m.stats[StatId.HIT_POINTS].current = m.max_hp
+                m.stats[StatId.MAGIC_POINTS].current = m.max_mp
+            place_name = "Oakhaven Inn" if "MTOInn" in curr_tile.object_listing else "Town Well"
+            self.last_status_msg = f"★ Rested at {place_name}! Party fully restored."
+            return
 
         if self.active_submap is None:
             # Overworld: Check for POI WarpTarget
@@ -318,12 +398,7 @@ class GSNoiseMapTestScreen(SMState):
         # 1. Top border / Header
         if self.active_submap is None:
             sx, sy = self.current_sector
-            h_text = (
-                f"── \033[1;37mWorld Map\033[0m ── "
-                f"Sec:\033[36m({sx},{sy})\033[0m/4x4 ── "
-                f"Seed:\033[33m{self.seed:<6}\033[0m "
-                f"Freq:\033[32m{self.frequency:.3f}\033[0m ──"
-            )
+            h_text = f"── \033[1;37mWorld Map\033[0m ── Sector: \033[36m({sx},{sy})\033[0m/4x4 ──"
         else:
             poi_name = self.active_poi.name if self.active_poi else "Interior"
             h_text = f"── \033[1;37mSub-Map: {poi_name}\033[0m ──"
@@ -340,33 +415,46 @@ class GSNoiseMapTestScreen(SMState):
             "W" if curr_tile.exits[MapTile.EXIT_WEST] else "·",
         ])
 
-        if self.active_submap is None:
+        # Party telemetry badge
+        alive_count = sum(1 for m in self.party.members if m.is_alive)
+        total_hp = sum(m.hp for m in self.party.members)
+        total_max_hp = sum(m.max_hp for m in self.party.members)
+        hp_pct = int((total_hp / total_max_hp) * 100) if total_max_hp > 0 else 0
+        hp_color = "\033[1;32m" if hp_pct > 60 else ("\033[1;33m" if hp_pct > 25 else "\033[1;31m")
+        party_badge = f"Party:{alive_count}/{len(self.party.members)} [{hp_color}{hp_pct}%\033[0m]"
+
+        danger_str = f"R{curr_tile.region_code}" if curr_tile.battle_allowed else "Safe"
+
+        if self.last_status_msg:
+            t_text = f" {party_badge} \033[1;36m{self.last_status_msg}\033[0m"
+        elif self.active_submap is None:
             if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
                 t_text = (
-                    f" Pos:({self.player_x:02d},{self.player_y:02d}) "
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
                     f"\033[1;32m★ {curr_tile.warp_target.prompt_label}\033[0m "
-                    f"\033[1;33m[Enter] Enter\033[0m "
+                    f"\033[1;33m[Enter]\033[0m"
                 )
             else:
-                cur_noise = self.NOISE_TYPES[self.noise_type_idx].name
-                cur_fractal = self.FRACTAL_TYPES[self.fractal_type_idx].name
                 t_text = (
-                    f" \033[36m{cur_noise:<12}\033[0m \033[35m{cur_fractal:<7}\033[0m "
-                    f"Pos:({self.player_x:02d},{self.player_y:02d}) "
-                    f"\033[33m{curr_tile.biome.value:<8}\033[0m [{ex_str}] "
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
                 )
         else:
             if curr_tile.warp_target and curr_tile.warp_target.is_egress:
                 t_text = (
-                    f" Pos:({self.player_x:02d},{self.player_y:02d}) "
-                    f"\033[1;33m[Egress] {curr_tile.warp_target.prompt_label}\033[0m "
-                    f"\033[1;32m[Enter] Leave\033[0m "
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f"\033[1;33m[Egress]\033[0m \033[1;32m[Enter] Leave\033[0m"
+                )
+            elif any(obj in curr_tile.object_listing for obj in ("MTOInn", "MTOWell")):
+                obj_label = "Inn" if "MTOInn" in curr_tile.object_listing else "Well"
+                t_text = (
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f"\033[1;32m★ {obj_label}\033[0m \033[1;33m[Enter] Rest\033[0m"
                 )
             else:
                 t_text = (
-                    f" Pos:({self.player_x:02d},{self.player_y:02d}) "
-                    f"\033[33m{curr_tile.biome.value:<8}\033[0m [{ex_str}] "
-                    f"\033[36mEgress Gate at South\033[0m "
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
                 )
 
         out.append(ATCoordinates(2, 1).to_ansi())
@@ -385,13 +473,13 @@ class GSNoiseMapTestScreen(SMState):
         footer_y = 3 + len(map_lines)
         if self.active_submap is None:
             f_text = (
-                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mPOI "
-                "\033[33m[R]\033[0mSeed \033[33m[N]\033[0mType \033[33m[U]\033[0mUI \033[33m[Q]\033[0mQuit "
+                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mEnter POI "
+                "\033[33m[B]\033[0mBattle \033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0mQuit "
             )
         else:
             f_text = (
-                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mLeave "
-                "\033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0mQuit "
+                " \033[33m[WASD]\033[0mMove \033[33m[Enter]\033[0mLeave Gate "
+                "\033[33m[B]\033[0mBattle \033[33m[U]\033[0mUI \033[33m[C]\033[0mCans \033[33m[Q]\033[0mQuit "
             )
 
         out.append(ATCoordinates(footer_y, 1).to_ansi())
