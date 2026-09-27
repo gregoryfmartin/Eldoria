@@ -30,7 +30,6 @@ from ..combat import (
     Party,
     create_default_party,
     generate_encounter,
-    create_bat_squad,
 )
 
 
@@ -222,17 +221,17 @@ class GSNoiseMapTestScreen(SMState):
                     break
 
                 moved = False
-                # Movement controls: Arrows or W, A, D
-                if key_info.key == KeyCode.UP or key_info.char in ("w", "W"):
+                # Movement controls: Arrow keys only
+                if key_info.key == KeyCode.UP:
                     moved = self._try_move(0, -1, MapTile.EXIT_NORTH)
                     keys_pressed.remove(key_info)
                 elif key_info.key == KeyCode.DOWN:
                     moved = self._try_move(0, 1, MapTile.EXIT_SOUTH)
                     keys_pressed.remove(key_info)
-                elif key_info.key == KeyCode.LEFT or key_info.char in ("a", "A"):
+                elif key_info.key == KeyCode.LEFT:
                     moved = self._try_move(-1, 0, MapTile.EXIT_WEST)
                     keys_pressed.remove(key_info)
-                elif key_info.key == KeyCode.RIGHT or key_info.char in ("d", "D"):
+                elif key_info.key == KeyCode.RIGHT:
                     moved = self._try_move(1, 0, MapTile.EXIT_EAST)
                     keys_pressed.remove(key_info)
 
@@ -256,25 +255,7 @@ class GSNoiseMapTestScreen(SMState):
                     keys_pressed.remove(key_info)
                     break
 
-                # Screen switching & Combat Encounter
-                elif key_info.char in ("b", "B"):
-                    keys_pressed.clear()
-                    if core and hasattr(core, "game_state"):
-                        combat_state = core.game_state.states.get("GSNvNCombatScreen")
-                        if combat_state:
-                            curr_map = self._current_map()
-                            curr_tile = curr_map.tiles[self.player_y][self.player_x]
-                            reg = curr_tile.region_code if curr_tile.region_code > 0 else 1
-                            squad = generate_encounter(reg) or create_bat_squad(size=6)
-                            self.steps_since_battle = 0
-                            combat_state.start_encounter(self.party, squad)
-                        core.game_state.trigger("ToCombat", context)
-                    return
-                elif key_info.char in ("p", "P"):
-                    keys_pressed.clear()
-                    if core and hasattr(core, "game_state"):
-                        core.game_state.trigger("ToPartyBuilder", context)
-                    return
+                # Developer navigation shortcuts (Title, UI Test, Soda Can)
                 elif key_info.char in ("t", "T"):
                     keys_pressed.clear()
                     if core and hasattr(core, "game_state"):
@@ -289,11 +270,6 @@ class GSNoiseMapTestScreen(SMState):
                     keys_pressed.clear()
                     if core and hasattr(core, "game_state"):
                         core.game_state.trigger("ToSodaCan", context)
-                    return
-                elif key_info.char in ("q", "Q"):
-                    keys_pressed.clear()
-                    if core and hasattr(core, "is_running"):
-                        core.is_running = False
                     return
 
         self._render()
@@ -610,15 +586,9 @@ class GSNoiseMapTestScreen(SMState):
         # 4. Bottom controls footer
         footer_y = 3 + len(map_lines)
         if self.active_submap is None:
-            f_text = (
-                " \033[33m[WASD/↑↓]\033[0mMove \033[33m[Enter]\033[0mEnter "
-                "\033[33m[P]\033[0mParty \033[33m[S]\033[0mSave \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
-            )
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[S]\033[0mSave "
         else:
-            f_text = (
-                " \033[33m[WASD/↑↓]\033[0mMove \033[33m[Enter]\033[0mLeave "
-                "\033[33m[P]\033[0mParty \033[33m[S]\033[0mSave \033[33m[B]\033[0mBattle \033[33m[Q]\033[0mQuit "
-            )
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[S]\033[0mSave "
 
         out.append(ATCoordinates(footer_y, 1).to_ansi())
         out.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))

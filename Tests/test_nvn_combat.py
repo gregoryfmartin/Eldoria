@@ -417,8 +417,8 @@ class TestCombatScreenState(unittest.TestCase):
         import re
         return re.sub(r"\033\[[0-9;]*[a-zA-Z]", "", text)
 
-    def test_map_test_screen_launches_combat_via_b_key(self):
-        """Verifies that pressing [B] in GSNoiseMapTestScreen triggers 'ToCombat' state transition."""
+    def test_map_test_screen_b_key_disallowed(self):
+        """Verifies that pressing [B] in GSNoiseMapTestScreen is disallowed and does not trigger 'ToCombat'."""
         map_screen = GSNoiseMapTestScreen()
         combat_screen = GSNvNCombatScreen()
 
@@ -436,12 +436,7 @@ class TestCombatScreenState(unittest.TestCase):
         context = Context([0.016, [KeyEvent(key=KeyCode.CHAR, char="b", raw="b")], mock_core])
 
         map_screen.update(context)
-        self.assertEqual(fsm.current_state, "GSNvNCombatScreen")
-
-        # Press Enter on Victory or Escape to return
-        combat_screen.engine.phase = CombatPhase.BATTLE_VICTORY
-        context_back = Context([0.016, [KeyEvent(key=KeyCode.ENTER, char="\r", raw="\r")], mock_core])
-        combat_screen.update(context_back)
+        # B key is removed, state remains GSNoiseMapTestScreen
         self.assertEqual(fsm.current_state, "GSNoiseMapTestScreen")
 
 

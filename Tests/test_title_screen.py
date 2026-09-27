@@ -64,6 +64,10 @@ class TestSplashScreen(unittest.TestCase):
         self.splash.update(self.context)
         self.assertIn("★", self.splash.stars_label.text)
 
+    def test_splash_default_duration(self):
+        default_splash = GSSplashScreen()
+        self.assertAlmostEqual(default_splash.duration, 4.8)
+
 
 
 class TestTitleScreen(unittest.TestCase):

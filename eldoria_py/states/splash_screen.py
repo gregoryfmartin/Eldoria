@@ -19,7 +19,7 @@ from ..ui.panel import UIPanel
 class GSSplashScreen(SMState):
     """Production boot splash screen state with timing animation and skip keypress."""
 
-    def __init__(self, screen_width: int = 80, screen_height: int = 24, duration: float = 1.8) -> None:
+    def __init__(self, screen_width: int = 80, screen_height: int = 24, duration: float = 4.8) -> None:
         super().__init__("GSSplashScreen")
         self.screen_width: int = screen_width
         self.screen_height: int = screen_height
