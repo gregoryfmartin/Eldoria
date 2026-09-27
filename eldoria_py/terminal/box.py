@@ -93,6 +93,56 @@ def truncate_ansi(text: str, max_visible_len: int, ellipsis: str = "") -> str:
     return "".join(result)
 
 
+def wrap_text(text: str, max_visible_len: int, subsequent_indent: str = "") -> list[str]:
+    """
+    Wraps text into lines where length at nearest whole word exceeds max_visible_len,
+    carrying the message over to subsequent lines. Preserves ANSI codes and character widths.
+    """
+    if not text:
+        return [""]
+    if visible_width(text) <= max_visible_len:
+        return [text]
+
+    lines: list[str] = []
+    words = text.split(" ")
+    curr_line = ""
+    curr_indent = ""
+
+    for word in words:
+        if not word:
+            continue
+        test_line = f"{curr_line} {word}" if curr_line else f"{curr_indent}{word}"
+        if visible_width(test_line) <= max_visible_len:
+            curr_line = test_line
+        else:
+            if curr_line:
+                lines.append(curr_line)
+                curr_indent = subsequent_indent
+                curr_line = ""
+                test_line = f"{curr_indent}{word}"
+                if visible_width(test_line) <= max_visible_len:
+                    curr_line = test_line
+                    continue
+
+            # Word itself (plus indent) exceeds max_visible_len
+            w = word
+            while w:
+                avail = max(1, max_visible_len - visible_width(curr_indent))
+                chunk = truncate_ansi(w, avail)
+                clean_chunk = re.sub(r"\033\[0m$", "", chunk)
+                if not clean_chunk:
+                    break
+                lines.append(f"{curr_indent}{clean_chunk}")
+                w = w[len(strip_ansi(clean_chunk)):]
+                curr_indent = subsequent_indent
+            curr_line = ""
+
+    if curr_line:
+        lines.append(curr_line)
+
+    return lines
+
+
 def make_box_row(
     content: str,
     width: int = 80,

@@ -117,6 +117,28 @@ class TestTerminalBox(unittest.TestCase):
         self.assertEqual(visible_width(t7), 7)
         self.assertEqual(strip_ansi(t7), "Hero 🏹")
 
+    def test_wrap_text(self):
+        from eldoria_py.terminal.box import wrap_text, visible_width
+
+        # 1. Short text stays as single line
+        self.assertEqual(wrap_text("Short text", 20), ["Short text"])
+
+        # 2. Text wraps at whole word boundary
+        msg = "⚔ Archer B uses Attack on Aiden [★ CRIT]: 28 dmg (10/262)"
+        wrapped = wrap_text(msg, 52, subsequent_indent="  ")
+        self.assertEqual(len(wrapped), 2)
+        self.assertEqual(wrapped[0], "⚔ Archer B uses Attack on Aiden [★ CRIT]: 28 dmg")
+        self.assertEqual(wrapped[1], "  (10/262)")
+        for line in wrapped:
+            self.assertLessEqual(visible_width(line), 52)
+
+        # 3. Super long word without spaces wraps across lines
+        long_word = "A" * 60
+        wrapped_long = wrap_text(long_word, 20)
+        self.assertEqual(len(wrapped_long), 3)
+        for line in wrapped_long:
+            self.assertLessEqual(visible_width(line), 20)
+
 
 if __name__ == "__main__":
     unittest.main()

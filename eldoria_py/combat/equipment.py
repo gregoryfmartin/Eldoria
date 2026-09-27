@@ -88,6 +88,13 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         unlocked_action_name="Axe Cleave",
         description="A brutal two-handed axe of berserker fury.",
     ),
+    "Steel Broadsword": BattleEquipment(
+        name="Steel Broadsword",
+        slot=EquipmentSlot.WEAPON,
+        stat_bonuses={StatId.ATTACK: 32, StatId.ACCURACY: -4},
+        unlocked_action_name="Heavy Cleave",
+        description="A hefty double-edged broadsword designed for brutal cutting power.",
+    ),
 
     # Helmets
     "Iron Greathelm": BattleEquipment(
@@ -225,5 +232,11 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         slot=EquipmentSlot.CAPE,
         stat_bonuses={StatId.SPEED: 6, StatId.LUCK: 6, StatId.MAGIC_DEFENSE: 4},
         description="Woven of dusky fibers blending into obscurity.",
+    ),
+    "Traveler Cloak": BattleEquipment(
+        name="Traveler Cloak",
+        slot=EquipmentSlot.CAPE,
+        stat_bonuses={StatId.MAGIC_DEFENSE: 6, StatId.SPEED: 2},
+        description="A durable traveling cloak that fends off cold winds and minor hexes.",
     ),
 }

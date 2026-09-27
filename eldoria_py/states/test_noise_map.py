@@ -20,11 +20,12 @@ from ..procgen.map_generator import (
 )
 from ..procgen.poi import POIDescriptor, POIType, WarpTarget
 from ..procgen.world_macro import WorldMacroMap
-from ..core.save_manager import SaveManager, SaveSlotHeader
+from ..core.save_manager import SaveManager
 from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
+from ..terminal.box import visible_width, truncate_ansi, clear_buffer_tail
 from ..combat import (
     StatId,
     Party,
@@ -91,10 +92,21 @@ class GSNoiseMapTestScreen(SMState):
         # Save / Load state
         self.save_manager: SaveManager = SaveManager()
         self.active_slot: Optional[int] = 1
-        self.playtime_seconds: int = 0
-        self.save_modal_open: bool = False
-        self.save_modal_slot: int = 1
-        self.slot_headers: List[Optional[SaveSlotHeader]] = []
+        self._fallback_playtime_seconds: int = 0
+
+    @property
+    def playtime_seconds(self) -> int:
+        """Returns campaign playtime from party, or fallback if party is unset."""
+        if self.party is not None:
+            return self.party.playtime_seconds
+        return self._fallback_playtime_seconds
+
+    @playtime_seconds.setter
+    def playtime_seconds(self, value: int) -> None:
+        self._fallback_playtime_seconds = value
+        if self.party is not None:
+            self.party.playtime_seconds = value
+            self.party._playtime_accumulator = 0.0
 
     @property
     def world_map(self) -> Map:
@@ -154,7 +166,6 @@ class GSNoiseMapTestScreen(SMState):
         ctx_slot = context.get("active_slot")
         if ctx_slot is not None:
             self.active_slot = ctx_slot
-            self.save_modal_slot = ctx_slot
 
         # Check if context has exploration state
         ctx_exp = context.get("exploration_state")
@@ -188,7 +199,7 @@ class GSNoiseMapTestScreen(SMState):
             self.active_poi = None
             self.warp_stack.clear()
             self.steps_since_battle = 0
-            self.last_status_msg = "☠ Party was revived and returned to safety."
+            self.last_status_msg = "Revived!"
         TerminalScreen.flush()
 
     def exit(self, context: Context) -> None:
@@ -200,26 +211,17 @@ class GSNoiseMapTestScreen(SMState):
     def update(self, context: Context) -> None:
         super().update(context)
 
+        delta_time = context.get(SMState.ContextDeltaTime)
+        if delta_time is None or not isinstance(delta_time, (int, float)):
+            delta_time = 0.016
+        if self.party is not None:
+            self.party.add_playtime(delta_time)
+
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
-                # If Save confirmation modal is open
-                if self.save_modal_open:
-                    if key_info.char in ("1", "2", "3"):
-                        self.save_modal_slot = int(key_info.char)
-                    elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
-                        self._save_to_slot(self.save_modal_slot)
-                        self.active_slot = self.save_modal_slot
-                        self.save_modal_open = False
-                        self.last_status_msg = f"★ Progress saved to Slot {self.save_modal_slot}!"
-                    elif key_info.key == KeyCode.ESCAPE:
-                        self.save_modal_open = False
-                        self.last_status_msg = "Save cancelled."
-                    keys_pressed.remove(key_info)
-                    break
-
                 moved = False
                 # Movement controls: Arrow keys only
                 if key_info.key == KeyCode.UP:
@@ -235,13 +237,20 @@ class GSNoiseMapTestScreen(SMState):
                     moved = self._try_move(1, 0, MapTile.EXIT_EAST)
                     keys_pressed.remove(key_info)
 
-                # In-Game Save Shortcut
-                elif key_info.char in ("s", "S"):
-                    self.save_modal_open = True
-                    self.save_modal_slot = self.active_slot or 1
-                    self.slot_headers = self.save_manager.list_save_slots(3)
-                    keys_pressed.remove(key_info)
-                    break
+                # Main Menu trigger ([M] or [Tab])
+                elif key_info.char in ("m", "M") or key_info.key == KeyCode.TAB or key_info.char == "\t":
+                    keys_pressed.clear()
+                    if core and hasattr(core, "game_state"):
+                        menu_state = core.game_state.states.get("GSMainMenuScreen")
+                        if menu_state:
+                            menu_state.configure_menu(
+                                party=self.party,
+                                noise_map_screen=self,
+                                sector_coords=self.current_sector,
+                                playtime_seconds=self.playtime_seconds,
+                            )
+                        core.game_state.trigger("ToMenu", context)
+                    return
 
                 if moved:
                     self.last_status_msg = ""
@@ -395,6 +404,13 @@ class GSNoiseMapTestScreen(SMState):
 
         self.steps_since_battle = 0
         combat_state.start_encounter(self.party, squad)
+        transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
+        if transition_state:
+            transition_state.configure(
+                source_lines=self.generate_frame_lines(),
+                target_event="EnterCombat",
+                target_state="GSNvNCombatScreen",
+            )
         core.game_state.trigger("ToCombat", context)
         return True
 
@@ -463,49 +479,22 @@ class GSNoiseMapTestScreen(SMState):
                 TerminalScreen.clear_screen()
                 TerminalScreen.flush()
 
-    def _render_save_modal(self) -> str:
-        """Generates ANSI strings for the in-game save confirmation modal."""
-        box_w = min(50, self.map_width - 4)
-        left = max(1, (self.map_width - box_w) // 2 + 1)
-        top = 8
-        lines = [
-            f"\033[{top};{left}H\033[1;37m╭{'─' * (box_w - 2)}╮\033[0m",
-            f"\033[{top+1};{left}H\033[1;37m│\033[0m\033[1;36m{'── Save Adventure ──'.center(box_w - 2)}\033[0m\033[1;37m│\033[0m",
-            f"\033[{top+2};{left}H\033[1;37m│\033[0m{' ' * (box_w - 2)}\033[1;37m│\033[0m",
-        ]
-        # Slot lines
-        for idx in range(3):
-            s_num = idx + 1
-            h = self.slot_headers[idx] if idx < len(self.slot_headers) else None
-            is_target = (s_num == self.save_modal_slot)
-            prefix = "▶ " if is_target else "  "
-            if h is not None:
-                txt = f"{prefix}[{s_num}] Slot {s_num}: ★ {h.party_leader_name} (Lv.{h.party_leader_level})"
-                col = "\033[1;32m" if is_target else "\033[37m"
-            else:
-                txt = f"{prefix}[{s_num}] Slot {s_num}: ··· Empty Slot ···"
-                col = "\033[1;33m" if is_target else "\033[90m"
-            lines.append(f"\033[{top+3+idx};{left}H\033[1;37m│\033[0m {col}{txt:<{box_w - 4}}\033[0m \033[1;37m│\033[0m")
-
-        lines.extend([
-            f"\033[{top+6};{left}H\033[1;37m│\033[0m{'─' * (box_w - 2)}\033[1;37m│\033[0m",
-            f"\033[{top+7};{left}H\033[1;37m│\033[0m\033[90m{'[1-3] Choose  [Enter] Save  [Esc] Cancel'.center(box_w - 2)}\033[0m\033[1;37m│\033[0m",
-            f"\033[{top+8};{left}H\033[1;37m╰{'─' * (box_w - 2)}╯\033[0m",
-        ])
-        return "".join(lines)
 
     @staticmethod
     def _make_border_line(left_char: str, text: str, right_char: str, width: int, fill_char: str = "─") -> str:
-        vlen = len(re.sub(r"\033\[[0-9;]*[a-zA-Z]", "", text))
+        vlen = visible_width(text)
+        if vlen > width:
+            text = truncate_ansi(text, width)
+            vlen = visible_width(text)
         rem = max(0, width - vlen)
         left_pad = rem // 2
         right_pad = rem - left_pad
         return f"{left_char}{fill_char * left_pad}{text}{fill_char * right_pad}{right_char}"
 
-    def _render(self) -> None:
-        """Atomic frame render of the procedural map, POI highlights, and telemetry HUD."""
+    def generate_frame_lines(self) -> List[str]:
+        """Generates list of row strings representing the current visual frame."""
         curr_map = self._current_map()
-        out: List[str] = [ATControlSequences.DrawOptimizeOn]
+        lines: List[str] = []
 
         # 1. Top border / Header
         if self.active_submap is None:
@@ -517,8 +506,7 @@ class GSNoiseMapTestScreen(SMState):
             poi_name = self.active_poi.name if self.active_poi else "Interior"
             h_text = f"── \033[1;37mSub-Map: {poi_name}\033[0m ──"
 
-        out.append(ATCoordinates(1, 1).to_ansi())
-        out.append(self._make_border_line("╭", h_text, "╮", self.map_width, fill_char="─"))
+        lines.append(self._make_border_line("╭", h_text, "╮", self.map_width, fill_char="─"))
 
         # 2. Current tile telemetry (row 2)
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
@@ -571,31 +559,38 @@ class GSNoiseMapTestScreen(SMState):
                     f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
                 )
 
-        out.append(ATCoordinates(2, 1).to_ansi())
-        out.append(self._make_border_line("│", t_text, "│", self.map_width, fill_char=" "))
+        lines.append(self._make_border_line("│", t_text, "│", self.map_width, fill_char=" "))
 
         # 3. Render Map Grid starting at row 3
         map_lines = ProceduralMapGenerator.render_ansi(
             curr_map,
             cursor_pos=(self.player_x, self.player_y),
         )
-        for idx, line in enumerate(map_lines):
-            out.append(ATCoordinates(3 + idx, 1).to_ansi())
-            out.append(f"│{line}│")
+        for line in map_lines:
+            lines.append(f"│{line}│")
 
         # 4. Bottom controls footer
-        footer_y = 3 + len(map_lines)
         if self.active_submap is None:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[S]\033[0mSave "
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu "
         else:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[S]\033[0mSave "
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[M]\033[0mMenu "
 
-        out.append(ATCoordinates(footer_y, 1).to_ansi())
-        out.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))
+        lines.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))
+        return lines
 
-        # 5. Modal overlays if active
-        if self.save_modal_open:
-            out.append(self._render_save_modal())
+    def _render(self) -> None:
+        """Atomic frame render of the procedural map, POI highlights, and telemetry HUD."""
+        lines = self.generate_frame_lines()
+        out: List[str] = [ATControlSequences.DrawOptimizeOn]
+
+        for idx, line in enumerate(lines):
+            out.append(ATCoordinates(1 + idx, 1).to_ansi())
+            out.append(line)
+            out.append(ATControlSequences.ClearLineToEnd)
+
+        footer_y = len(lines)
+        # Clear tail lines up to 40 (clears leftover rows from larger 80x40 screens)
+        out.append(clear_buffer_tail(footer_y + 1, 40))
 
         out.append(ATControlSequences.DrawOptimizeOff)
         TerminalScreen.write("".join(out))

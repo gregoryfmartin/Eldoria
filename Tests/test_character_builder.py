@@ -232,11 +232,18 @@ class TestCharacterBuilder(unittest.TestCase):
         for width in (54, 80):
             screen = GSCharacterBuilderScreen(screen_width=width, screen_height=24)
             ctx = Context([screen])
-            screen.enter(ctx)
-
             for substate in CharacterBuilderSubstate:
                 screen._switch_substate(substate)
                 screen._render()
+
+    def test_name_entry_length_limit_to_4_chars(self):
+        """Verifies that name input strictly caps at 4 characters."""
+        self.screen.substate = CharacterBuilderSubstate.NAME_ENTRY
+        self.screen.char_name = ""
+        for char in "ALEXANDER":
+            self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char=char), self.context, self.mock_core)
+        self.assertEqual(self.screen.char_name, "ALEX")
+        self.assertEqual(len(self.screen.char_name), 4)
 
 
 if __name__ == "__main__":

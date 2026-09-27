@@ -21,7 +21,7 @@ from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
 from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
-from ..combat.stats import StatId, BattleActionType
+from ..combat.stats import StatId, BattleActionType, ELEMENT_AFFINITIES
 from ..combat.actions import BattleAction, ACTIONS
 from ..combat.entities import PartyMember
 from ..combat.portrait import (
@@ -70,13 +70,9 @@ class GSCharacterBuilderScreen(SMState):
     }
 
     AFFINITIES: List[Tuple[BattleActionType, str, str, TrueColor]] = [
-        (BattleActionType.ELEMENTAL_FIRE, "Fire", "♨", ColorLibrary.AppleRedLight),
-        (BattleActionType.ELEMENTAL_WATER, "Water", "≈", ColorLibrary.AppleBlueLight),
-        (BattleActionType.ELEMENTAL_EARTH, "Earth", "▲", ColorLibrary.AppleOrangeLight),
-        (BattleActionType.ELEMENTAL_WIND, "Wind", "≋", ColorLibrary.AppleGreenLight),
-        (BattleActionType.ELEMENTAL_LIGHT, "Light", "✦", ColorLibrary.AppleYellowLight),
-        (BattleActionType.ELEMENTAL_DARK, "Dark", "◆", ColorLibrary.ApplePurpleLight),
-        (BattleActionType.ELEMENTAL_ICE, "Ice", "❄", ColorLibrary.AppleTealLight),
+        (info.affinity, info.name, info.glyph, info.color)
+        for info in ELEMENT_AFFINITIES.values()
+        if info.affinity.name.startswith("ELEMENTAL_")
     ]
 
     def __init__(self, screen_width: int = 80, screen_height: int = 24) -> None:
@@ -162,7 +158,7 @@ class GSCharacterBuilderScreen(SMState):
             right_bottom=ATCoordinates(content_bottom, content_right),
             has_border=False,
         )
-        self.name_panel.add_label("Enter Character Name (up to 14 characters):", row=5, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
+        self.name_panel.add_label("Enter Character Name (up to 4 characters):", row=5, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
         self.name_display_label = self.name_panel.add_label(f"Name: {self.char_name}_", row=7, align="center", fg_color=ColorLibrary.AppleGreenLight, decorations=ATDecoration(bold=True))
         name_help1 = (
             "Type name. [Backspace] deletes characters."
@@ -542,11 +538,11 @@ class GSCharacterBuilderScreen(SMState):
             self.mod_stats = {k: 0 for k in self.STAT_KEYS}
             self.points_pool = 10
         else:
-            default_names = ["Aiden", "Lyra", "Garrick", "Vesper", "Seraphina"]
+            default_names = ["Aide", "Lyra", "Garr", "Vesp", "Sera"]
             self.char_name = (
                 default_names[self.target_slot]
                 if self.target_slot < len(default_names)
-                else f"Hero {self.target_slot + 1}"
+                else f"Hro{self.target_slot + 1}"
             )
             self.gender = Gender.MALE if self.target_slot % 2 == 0 else Gender.FEMALE
             self.affinity_idx = self.target_slot % len(self.AFFINITIES)
@@ -675,7 +671,7 @@ class GSCharacterBuilderScreen(SMState):
         if self.substate == CharacterBuilderSubstate.NAME_ENTRY:
             if key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
                 if len(self.char_name.strip()) == 0:
-                    self.char_name = f"Hero {self.target_slot + 1}"
+                    self.char_name = f"Hro{self.target_slot + 1}"
                 self._switch_substate(CharacterBuilderSubstate.GENDER_SELECTION)
             elif key_info.key == KeyCode.ESCAPE:
                 if core and hasattr(core, "game_state"):
@@ -685,7 +681,7 @@ class GSCharacterBuilderScreen(SMState):
                     self.char_name = self.char_name[:-1]
                     self._update_name_labels()
             elif key_info.char and key_info.char.isprintable() and len(key_info.char) == 1:
-                if len(self.char_name) < 14:
+                if len(self.char_name) < 4:
                     self.char_name += key_info.char
                     self._update_name_labels()
 

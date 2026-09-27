@@ -118,10 +118,13 @@ class TestMapNavigationControls(unittest.TestCase):
     def test_footer_text_and_border_alignment(self) -> None:
         """Footer text shows arrow keys only, omits B/P/Q, and fits cleanly within map width."""
         # Overworld footer
-        f_text_overworld = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[S]\033[0mSave "
+        f_text_overworld = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu "
         plain_text = re.sub(r"\033\[[0-9;]*[a-zA-Z]", "", f_text_overworld)
 
         self.assertIn("[↑↓←→]Move", plain_text)
+        self.assertIn("[Enter]Enter", plain_text)
+        self.assertIn("[M]Menu", plain_text)
+        self.assertNotIn("Save", plain_text)
         self.assertNotIn("WASD", plain_text)
         self.assertNotIn("Party", plain_text)
         self.assertNotIn("Battle", plain_text)

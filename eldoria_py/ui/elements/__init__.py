@@ -10,6 +10,7 @@ from .divider import UIDivider
 from .menu_item import UIMenuItem
 from .menu import UIMenu
 from .party_slot import UIPartySlotItem, UIPartySlotList
+from .stat_bar import UIStatBar, StatNumberState, StatBarType
 
 __all__ = [
     "UILabel",
@@ -26,4 +27,7 @@ __all__ = [
     "UIMenu",
     "UIPartySlotItem",
     "UIPartySlotList",
+    "UIStatBar",
+    "StatNumberState",
+    "StatBarType",
 ]

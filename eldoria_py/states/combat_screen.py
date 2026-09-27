@@ -14,8 +14,9 @@ from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
-from ..terminal.box import clear_buffer_tail, strip_ansi, truncate_ansi, visible_width
-from ..combat.stats import StatId, BattleActionType, TargetScope, AffinityEffect
+from ..terminal.box import clear_buffer_tail, strip_ansi, truncate_ansi, visible_width, wrap_text
+from ..ui.elements.stat_bar import UIStatBar, StatBarType, StatNumberState
+from ..combat.stats import StatId, BattleActionType, TargetScope, AffinityEffect, format_element_badge
 from ..combat.actions import BattleAction, ActionCategory, ACTIONS
 from ..combat.entities import (
     Combatant,
@@ -45,15 +46,14 @@ def _pad_cell(text: str, width: int, align: str = "left", fill_char: str = " ") 
         return text + fill_char * rem
 
 
-def _make_bar(current: int, maximum: int, length: int = 8) -> str:
-    """Creates a visual bracketed bar: [████░░░░]."""
-    if maximum <= 0:
-        pct = 0.0
-    else:
-        pct = max(0.0, min(1.0, current / maximum))
-    fill_len = int(round(pct * length))
-    empty_len = length - fill_len
-    return "[" + ("█" * fill_len) + ("░" * empty_len) + "]"
+def _make_bar(
+    current: int,
+    maximum: int,
+    length: int = 8,
+    bar_type: Union[StatBarType, str] = StatBarType.HEALTH,
+) -> str:
+    """Creates a visual bracketed bar using UIStatBar with colored stage indicators: [████░░░░]."""
+    return UIStatBar.format_bar(current, maximum, length=length, bar_type=bar_type)
 
 
 class GSNvNCombatScreen(SMState):
@@ -82,6 +82,8 @@ class GSNvNCombatScreen(SMState):
         self.selected_action: Optional[BattleAction] = None
         self.inspected_enemy_idx: int = 0
         self.target_cursor: int = 0
+        self.step_delay: float = 0.75  # 0.75s cadence between turn actions
+        self.execution_timer: float = 0.0
 
     def start_encounter(self, party: Party, squad: EnemySquad) -> None:
         """Configures a new battle encounter."""
@@ -95,6 +97,7 @@ class GSNvNCombatScreen(SMState):
         self.selected_action = None
         self.inspected_enemy_idx = 0
         self.target_cursor = 0
+        self.execution_timer = 0.0
 
     def _find_first_living_member(self) -> int:
         for i, m in enumerate(self.party.members):
@@ -128,6 +131,11 @@ class GSNvNCombatScreen(SMState):
 
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
+        delta_time = context.get(SMState.ContextDeltaTime)
+        if delta_time is None or not isinstance(delta_time, (int, float)):
+            delta_time = 0.016
+        if self.party is not None:
+            self.party.add_playtime(delta_time)
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
@@ -136,23 +144,35 @@ class GSNvNCombatScreen(SMState):
                     if key_info.key in (KeyCode.ENTER, KeyCode.SPACE) or key_info.char in ("\r", "\n", " ", "q", "Q"):
                         keys_pressed.clear()
                         if core and hasattr(core, "game_state"):
+                            transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
+                            if transition_state:
+                                transition_state.configure(
+                                    source_lines=self.generate_frame_lines(),
+                                    target_event="EnterNoiseMap",
+                                    target_state="GSNoiseMapTestScreen",
+                                )
                             core.game_state.trigger("FromCombat", context)
                         return
                     continue
 
-                # 2. Execution Phase: Step through turns or auto-play
+                # 2. Execution Phase: Keys (Cheat Win [K], Exit [Q])
                 if self.engine.phase == CombatPhase.EXECUTION_PHASE:
-                    if key_info.key in (KeyCode.ENTER, KeyCode.SPACE) or key_info.char in ("\r", "\n", " "):
-                        self.engine.step_execution()
-                        keys_pressed.remove(key_info)
-                        break
-                    elif key_info.char in ("a", "A"):
-                        self.engine.execute_all_steps()
+                    if key_info.char in ("k", "K"):
+                        for e in self.squad.enemies:
+                            e.take_damage(99999)
+                        self.engine._trigger_victory()
                         keys_pressed.remove(key_info)
                         break
                     elif key_info.char in ("q", "Q"):
                         keys_pressed.clear()
                         if core and hasattr(core, "game_state"):
+                            transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
+                            if transition_state:
+                                transition_state.configure(
+                                    source_lines=self.generate_frame_lines(),
+                                    target_event="EnterNoiseMap",
+                                    target_state="GSNoiseMapTestScreen",
+                                )
                             core.game_state.trigger("FromCombat", context)
                         return
                     continue
@@ -163,7 +183,7 @@ class GSNvNCombatScreen(SMState):
                     if key_info.char in ("k", "K"):
                         for e in self.squad.enemies:
                             e.take_damage(99999)
-                        self.engine.step_execution()
+                        self.engine._trigger_victory()
                         keys_pressed.remove(key_info)
                         break
 
@@ -171,6 +191,13 @@ class GSNvNCombatScreen(SMState):
                     if key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
                         keys_pressed.clear()
                         if core and hasattr(core, "game_state"):
+                            transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
+                            if transition_state:
+                                transition_state.configure(
+                                    source_lines=self.generate_frame_lines(),
+                                    target_event="EnterNoiseMap",
+                                    target_state="GSNoiseMapTestScreen",
+                                )
                             core.game_state.trigger("FromCombat", context)
                         return
 
@@ -187,6 +214,21 @@ class GSNvNCombatScreen(SMState):
                         keys_pressed.remove(key_info)
                         break
 
+        # Automatic step execution during EXECUTION_PHASE
+        if self.engine.phase == CombatPhase.EXECUTION_PHASE:
+            self.execution_timer += delta_time
+            if self.execution_timer >= self.step_delay:
+                self.execution_timer = 0.0
+                self.engine.step_execution()
+
+                # If round completed and returned to COMMAND_PHASE, reset active hero to hero 1
+                if self.engine.phase == CombatPhase.COMMAND_PHASE:
+                    self.active_member_idx = self._find_first_living_member()
+                    self.menu_mode = "MAIN"
+                    self.main_menu_cursor = 0
+                    self.sub_menu_cursor = 0
+                    self.selected_action = None
+
         # Transition guard: do not render if transitioned away
         if core and hasattr(core, "game_state") and core.game_state.current_state != self.name:
             return
@@ -201,7 +243,7 @@ class GSNvNCombatScreen(SMState):
                 self.active_member_idx = nxt
             return
 
-        # Up/Down navigation
+        # Up/Down navigation (arrow keys only)
         if key_info.key == KeyCode.UP:
             self.main_menu_cursor = (self.main_menu_cursor - 1) % 4
         elif key_info.key == KeyCode.DOWN:
@@ -211,7 +253,7 @@ class GSNvNCombatScreen(SMState):
             self._activate_main_menu_selection()
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
             self._activate_main_menu_selection()
-        elif key_info.char in ("b", "B"):
+        elif key_info.key == KeyCode.BACKSPACE or key_info.char in ("b", "B", "\x7f", "\x08"):
             # Go back to previous living member if any
             for i in range(self.active_member_idx - 1, -1, -1):
                 if self.party.members[i].is_alive:
@@ -350,6 +392,7 @@ class GSNvNCombatScreen(SMState):
             # Check if all living members have planned actions
             if self.engine.is_planning_complete():
                 self.engine.finalize_planning()
+                self.execution_timer = 0.0
                 self.menu_mode = "MAIN"
             else:
                 # Find any unplanned member
@@ -362,59 +405,61 @@ class GSNvNCombatScreen(SMState):
     # -------------------------------------------------------------------------
     # Rendering
     # -------------------------------------------------------------------------
-    def _render(self) -> None:
-        """Atomic frame render of the 80x40 NvN combat screen."""
-        out: List[str] = [ATControlSequences.DrawOptimizeOn]
+    def generate_frame_lines(self) -> List[str]:
+        """Generates list of row strings representing the current combat screen frame."""
+        lines: List[str] = []
 
         # Top border
-        out.append(ATCoordinates(1, 1).to_ansi())
         top_str = "┌─ ENEMY SQUAD (Up to 10 Enemies) " + ("─" * 20) + "┬─ TARGET DETAIL " + ("─" * 8) + "┐"
-        out.append(top_str)
+        lines.append(top_str)
 
         # Lines 2..6: Enemy Squad (Left 53 chars) and Target Detail (Right 24 chars)
-        # Note: Zero ASCII art in the right panel!
         for row_idx in range(5):
             left_str = self._format_enemy_row(row_idx)
             right_str = self._format_target_detail_row(row_idx)
-            out.append(ATCoordinates(2 + row_idx, 1).to_ansi())
-            out.append(f"│{left_str}│{right_str}│")
+            lines.append(f"│{left_str}│{right_str}│")
 
         # Divider 1 (Row 7)
-        out.append(ATCoordinates(7, 1).to_ansi())
-        out.append("├" + ("─" * 53) + "┴" + ("─" * 24) + "┤")
+        lines.append("├" + ("─" * 53) + "┴" + ("─" * 24) + "┤")
 
         # Row 8: Player Party Header
-        out.append(ATCoordinates(8, 1).to_ansi())
-        out.append("│ PLAYER PARTY (Up to 5 Heroes) " + (" " * 47) + "│")
+        lines.append("│ PLAYER PARTY (Up to 5 Heroes) " + (" " * 47) + "│")
 
         # Rows 9..13: Party Members
         for m_idx in range(5):
             p_str = self._format_party_member_row(m_idx)
-            out.append(ATCoordinates(9 + m_idx, 1).to_ansi())
-            out.append(f"│{p_str}│")
+            lines.append(f"│{p_str}│")
 
         # Divider 2 (Row 14)
-        out.append(ATCoordinates(14, 1).to_ansi())
-        out.append("├" + ("─" * 24) + "┬" + ("─" * 53) + "┤")
+        lines.append("├" + ("─" * 24) + "┬" + ("─" * 53) + "┤")
 
         # Rows 15..22: Commands (Left 24 chars) and Combat Log (Right 53 chars)
+        wrapped_logs = self._get_wrapped_log_lines(max_width=52)
         for c_idx in range(8):
             cmd_cell = self._format_command_cell(c_idx)
-            log_cell = self._format_log_cell(c_idx)
-            out.append(ATCoordinates(15 + c_idx, 1).to_ansi())
-            out.append(f"│{cmd_cell}│{log_cell}│")
+            log_cell = self._format_log_cell(c_idx, wrapped_logs)
+            lines.append(f"│{cmd_cell}│{log_cell}│")
 
         # Bottom Border (Row 23)
-        out.append(ATCoordinates(23, 1).to_ansi())
-        out.append("└" + ("─" * 24) + "┴" + ("─" * 53) + "┘")
+        lines.append("└" + ("─" * 24) + "┴" + ("─" * 53) + "┘")
 
         # Row 24: Navigation / Action Hints
-        out.append(ATCoordinates(24, 1).to_ansi())
         hints = self._format_status_hints()
-        out.append(_pad_cell(f" {hints}", self.TOTAL_WIDTH))
+        lines.append(_pad_cell(f" {hints}", self.TOTAL_WIDTH))
+
+        return lines
+
+    def _render(self) -> None:
+        """Atomic frame render of the 80x40 NvN combat screen."""
+        lines = self.generate_frame_lines()
+        out: List[str] = [ATControlSequences.DrawOptimizeOn]
+
+        for idx, line in enumerate(lines):
+            out.append(ATCoordinates(1 + idx, 1).to_ansi())
+            out.append(line)
 
         # Clear tail lines up to 40
-        out.append(clear_buffer_tail(25, 40))
+        out.append(clear_buffer_tail(len(lines) + 1, 40))
 
         out.append(ATControlSequences.DrawOptimizeOff)
         TerminalScreen.write("".join(out))
@@ -460,13 +505,13 @@ class GSNvNCombatScreen(SMState):
             fam_txt = f" Type: {target.family} (Lv.{target.level})"
             return _pad_cell(fam_txt[:24], self.RIGHT_COL_WIDTH)
         elif row_idx == 2:
-            bar = _make_bar(target.hp, target.max_hp, length=8)
+            bar = _make_bar(target.hp, target.max_hp, length=8, bar_type=StatBarType.HEALTH)
             hp_txt = f" HP: {target.hp}/{target.max_hp} {bar}"
-            return _pad_cell(hp_txt[:24], self.RIGHT_COL_WIDTH)
+            return _pad_cell(hp_txt, self.RIGHT_COL_WIDTH)
         elif row_idx == 3:
-            aff_name = target.affinity.value.replace("Elemental", "")
-            aff_txt = f" Affinity: {aff_name}"
-            return _pad_cell(aff_txt[:24], self.RIGHT_COL_WIDTH)
+            badge = format_element_badge(target.affinity)
+            aff_txt = f" Affinity: {badge}"
+            return _pad_cell(aff_txt, self.RIGHT_COL_WIDTH)
         elif row_idx == 4:
             # Show element weakness/threat
             if target.affinity == BattleActionType.ELEMENTAL_ICE:
@@ -496,7 +541,7 @@ class GSNvNCombatScreen(SMState):
 
         hp_str = f"HP:{m.hp}/{m.max_hp}"
         mp_str = f"MP:{m.mp}/{m.max_mp}"
-        hp_bar = _make_bar(m.hp, m.max_hp, length=4)
+        hp_bar = _make_bar(m.hp, m.max_hp, length=4, bar_type=StatBarType.HEALTH)
 
         # Planned intent preview
         plan = self.engine.get_planned_action(member_idx)
@@ -534,9 +579,9 @@ class GSNvNCombatScreen(SMState):
 
         if self.engine.phase == CombatPhase.EXECUTION_PHASE:
             if row_idx == 1:
-                return _pad_cell(" ❱ [Space] Step Turn", 24)
-            elif row_idx == 2:
-                return _pad_cell("   [A] Auto-Play", 24)
+                return _pad_cell(" Resolving turns...", 24)
+            elif row_idx == 3:
+                return _pad_cell("   [K] Cheat Win", 24)
             return " " * 24
 
         if self.menu_mode == "MAIN":
@@ -577,13 +622,23 @@ class GSNvNCombatScreen(SMState):
 
         return " " * 24
 
-    def _format_log_cell(self, row_idx: int) -> str:
+    def _get_wrapped_log_lines(self, max_width: int = 52) -> list[str]:
+        """Returns all combat log messages word-wrapped to fit within the log panel width."""
+        wrapped: list[str] = []
+        for msg in self.engine.combat_log:
+            wrapped.extend(wrap_text(msg, max_visible_len=max_width, subsequent_indent="  "))
+        return wrapped
+
+    def _format_log_cell(self, row_idx: int, wrapped_logs: Optional[list[str]] = None) -> str:
         """Bottom Right: Scrolling battle log (53 chars)."""
         if row_idx == 0:
             return _pad_cell(" COMBAT LOG", 53)
 
+        if wrapped_logs is None:
+            wrapped_logs = self._get_wrapped_log_lines(max_width=52)
+
         # Show last 7 combat log messages
-        log_slice = self.engine.combat_log[-7:]
+        log_slice = wrapped_logs[-7:]
         log_offset = row_idx - 1
         if 0 <= log_offset < len(log_slice):
             msg = log_slice[log_offset]
@@ -596,10 +651,12 @@ class GSNvNCombatScreen(SMState):
         elif self.engine.phase == CombatPhase.BATTLE_DEFEAT:
             return "\033[1;31m☠ DEFEAT! [Enter/Space] Return to Map\033[0m"
         elif self.engine.phase == CombatPhase.EXECUTION_PHASE:
-            return "\033[33m[Space/Enter] Step Turn  [A] Auto-Play  [Q] Exit Battle\033[0m"
+            return "\033[33mResolving combat actions...  [K] Cheat Win  [Q] Exit Battle\033[0m"
         elif self.menu_mode == "TARGET_SELECT":
             return "\033[33m[1..10/Arrows] Select Target  [Enter] Confirm  [Esc] Back\033[0m"
         elif self.menu_mode in ("SKILLS", "SPELLS"):
             return "\033[33m[1..N/Arrows] Select Action  [Enter] Confirm  [Esc] Back\033[0m"
         else:
-            return "\033[33m[1..4/WASD] Choose Action  [B] Previous Hero  [K] Cheat Win  [Esc] Flee\033[0m"
+            can_go_back = any(self.party.members[i].is_alive for i in range(self.active_member_idx - 1, -1, -1))
+            prev_hint = "  [B] Back" if can_go_back else ""
+            return f"\033[33m[1..4/Arrows] Choose Action{prev_hint}  [K] Cheat Win  [Esc] Flee\033[0m"

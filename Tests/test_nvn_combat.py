@@ -439,6 +439,158 @@ class TestCombatScreenState(unittest.TestCase):
         # B key is removed, state remains GSNoiseMapTestScreen
         self.assertEqual(fsm.current_state, "GSNoiseMapTestScreen")
 
+    def test_cheat_win_command_phase(self):
+        """Verifies that pressing [K] in COMMAND_PHASE immediately defeats enemies and triggers victory."""
+        context = Context([0.016, [KeyEvent(key=KeyCode.CHAR, char="k", raw="k")], None])
+        self.assertEqual(self.screen.engine.phase, CombatPhase.COMMAND_PHASE)
+        self.screen.update(context)
+        self.assertEqual(self.screen.engine.phase, CombatPhase.BATTLE_VICTORY)
+        self.assertTrue(self.screen.squad.is_wiped)
+        self.assertGreater(self.screen.engine.spoils_xp, 0)
+        self.assertIn("VICTORY! Enemy squad eliminated!", self.screen.engine.combat_log[-2])
+
+    def test_cheat_win_execution_phase(self):
+        """Verifies that pressing [K] during EXECUTION_PHASE triggers victory."""
+        self.screen.engine.phase = CombatPhase.EXECUTION_PHASE
+        context = Context([0.016, [KeyEvent(key=KeyCode.CHAR, char="k", raw="k")], None])
+        self.screen.update(context)
+        self.assertEqual(self.screen.engine.phase, CombatPhase.BATTLE_VICTORY)
+        self.assertTrue(self.screen.squad.is_wiped)
+
+    def test_status_hints_arrows_and_contextual_back(self):
+        """Verifies status hints use [1..4/Arrows], disallow WASD, and contextualize [B] Back."""
+        # Member 0 (first hero): No previous hero, so [B] Back must NOT be displayed
+        self.screen.active_member_idx = 0
+        hints_hero1 = self.screen._format_status_hints()
+        self.assertIn("[1..4/Arrows] Choose Action", hints_hero1)
+        self.assertNotIn("WASD", hints_hero1)
+        self.assertNotIn("[B]", hints_hero1)
+
+        # Member 1 (second hero): [B] Back must now appear
+        self.screen.active_member_idx = 1
+        hints_hero2 = self.screen._format_status_hints()
+        self.assertIn("[1..4/Arrows] Choose Action", hints_hero2)
+        self.assertIn("[B] Back", hints_hero2)
+
+    def test_chevron_navigation_arrows_and_wasd_ignored(self):
+        """Verifies that arrow keys navigate chevrons, WASD keys are disallowed, and Backspace/B returns to prior hero."""
+        self.assertEqual(self.screen.main_menu_cursor, 0)
+
+        # WASD keys must not navigate chevron
+        for char in ("w", "a", "s", "d", "W", "A", "S", "D"):
+            ctx = Context([0.016, [KeyEvent(key=KeyCode.CHAR, char=char, raw=char)], None])
+            self.screen.update(ctx)
+            self.assertEqual(self.screen.main_menu_cursor, 0)
+
+        # Arrow down moves cursor
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.DOWN, char="", raw="")], None])
+        self.screen.update(ctx)
+        self.assertEqual(self.screen.main_menu_cursor, 1)
+
+        # Arrow up moves cursor back
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.UP, char="", raw="")], None])
+        self.screen.update(ctx)
+        self.assertEqual(self.screen.main_menu_cursor, 0)
+
+        # Advance to hero 1
+        self.screen.active_member_idx = 1
+        # Backspace steps back to hero 0
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.BACKSPACE, char="", raw="")], None])
+        self.screen.update(ctx)
+        self.assertEqual(self.screen.active_member_idx, 0)
+
+    def test_auto_turn_execution_cadence(self):
+        """Verifies that actions execute on timer cadence and update log/display."""
+        # Plan actions for all heroes sequentially
+        for i in range(len(self.screen.party.alive_members)):
+            self.screen.active_member_idx = i
+            self.screen.engine.plan_member_action(i, ACTIONS["Attack"].copy(), self.screen.squad.enemies[0])
+            self.screen._advance_to_next_member()
+
+        self.assertEqual(self.screen.engine.phase, CombatPhase.EXECUTION_PHASE)
+        self.assertEqual(self.screen.engine.execution_index, 0)
+
+        # Delta time smaller than step_delay does not execute
+        ctx_small = Context([0.016, [], None])
+        self.screen.update(ctx_small)
+        self.assertEqual(self.screen.engine.execution_index, 0)
+
+        # Delta time >= step_delay triggers execution of step 1
+        ctx_step = Context([self.screen.step_delay, [], None])
+        self.screen.update(ctx_step)
+        self.assertEqual(self.screen.engine.execution_index, 1)
+
+        # Status hints and command cells reflect automated execution
+        hints = self.screen._format_status_hints()
+        self.assertIn("Resolving combat actions...", hints)
+        cmd_cell = self.screen._format_command_cell(1)
+        self.assertIn("Resolving turns...", cmd_cell)
+
+    def test_auto_turn_execution_completes_round_and_returns_control(self):
+        """Verifies that once all turns execute, control returns to player at Hero 1 in COMMAND_PHASE."""
+        # Give enemies high base HP so round doesn't end in victory
+        for e in self.screen.squad.enemies:
+            e.stats[StatId.HIT_POINTS].base = 9999
+            e.hp = 9999
+
+        for i in range(len(self.screen.party.alive_members)):
+            self.screen.active_member_idx = i
+            self.screen.engine.plan_member_action(i, ACTIONS["Attack"].copy(), self.screen.squad.enemies[0])
+            self.screen._advance_to_next_member()
+        self.assertEqual(self.screen.engine.phase, CombatPhase.EXECUTION_PHASE)
+
+        # Run frames until round completes
+        ctx_step = Context([self.screen.step_delay, [], None])
+        for _ in range(50):
+            if self.screen.engine.phase != CombatPhase.EXECUTION_PHASE:
+                break
+            self.screen.update(ctx_step)
+
+        self.assertEqual(self.screen.engine.phase, CombatPhase.COMMAND_PHASE)
+        self.assertEqual(self.screen.active_member_idx, 0)
+        self.assertEqual(self.screen.menu_mode, "MAIN")
+
+    def test_auto_turn_execution_stops_on_victory(self):
+        """Verifies that turn execution terminates immediately upon achieving victory."""
+        # Use a small 2-enemy squad so 5 party attacks easily eliminate the squad in round 1
+        self.screen.start_encounter(create_default_party(), create_bat_squad(size=2))
+        for e in self.screen.squad.enemies:
+            e.hp = 1
+
+        for i in range(len(self.screen.party.alive_members)):
+            self.screen.active_member_idx = i
+            self.screen.engine.plan_member_action(i, ACTIONS["Attack"].copy(), self.screen.squad.enemies[0])
+            self.screen._advance_to_next_member()
+
+        ctx_step = Context([self.screen.step_delay, [], None])
+        for _ in range(50):
+            if self.screen.engine.phase != CombatPhase.EXECUTION_PHASE:
+                break
+            self.screen.update(ctx_step)
+
+        self.assertEqual(self.screen.engine.phase, CombatPhase.BATTLE_VICTORY)
+        self.assertTrue(self.screen.squad.is_wiped)
+
+    def test_combat_log_word_wrapping(self):
+        """Verifies that long combat log messages wrap across lines at nearest whole words instead of truncating."""
+        long_msg = "⚔ Archer B uses Attack on Aiden [★ CRIT]: 28 dmg (10/262)"
+        self.screen.engine.combat_log = [long_msg]
+
+        wrapped_lines = self.screen._get_wrapped_log_lines(max_width=52)
+        self.assertEqual(len(wrapped_lines), 2)
+        self.assertEqual(wrapped_lines[0], "⚔ Archer B uses Attack on Aiden [★ CRIT]: 28 dmg")
+        self.assertEqual(wrapped_lines[1], "  (10/262)")
+
+        # Render rows 1 and 2
+        row1 = self.screen._format_log_cell(1)
+        row2 = self.screen._format_log_cell(2)
+
+        self.assertIn("28 dmg", row1)
+        self.assertIn("(10/262)", row2)
+        from eldoria_py.terminal.box import visible_width
+        self.assertEqual(visible_width(row1), 53)
+        self.assertEqual(visible_width(row2), 53)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -124,11 +124,11 @@ class TestDomainSerialization(unittest.TestCase):
         self.assertEqual(restored.quest_items, ["oakhaven_seal", "ancient_key"])
 
         # Check members
-        self.assertEqual(restored.members[0].name, "Steve")
+        self.assertEqual(restored.members[0].name, "Aide")
         self.assertEqual(restored.members[1].name, "Lyra")
-        self.assertEqual(restored.members[2].name, "Derek")
-        self.assertEqual(restored.members[3].name, "Sarah")
-        self.assertEqual(restored.members[4].name, "Vance")
+        self.assertEqual(restored.members[2].name, "Dirk")
+        self.assertEqual(restored.members[3].name, "Sara")
+        self.assertEqual(restored.members[4].name, "Vane")
 
 
 if __name__ == "__main__":

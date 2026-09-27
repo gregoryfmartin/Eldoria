@@ -80,6 +80,22 @@ class Combatant:
     def max_mp(self) -> int:
         return self.stats[StatId.MAGIC_POINTS].total
 
+    @property
+    def current_hp(self) -> int:
+        return self.hp
+
+    @current_hp.setter
+    def current_hp(self, val: int) -> None:
+        self.hp = val
+
+    @property
+    def current_mp(self) -> int:
+        return self.mp
+
+    @current_mp.setter
+    def current_mp(self, val: int) -> None:
+        self.mp = val
+
     def get_stat(self, stat_id: StatId) -> int:
         prop = self.stats.get(stat_id)
         return prop.total if prop else 0
@@ -321,7 +337,7 @@ class EnemyCombatant(Combatant):
 
 
 class Party:
-    """Manages the player party of 1 to 5 members with shared gold and inventory."""
+    """Manages the player party of 1 to 5 members with shared gold, inventory, and campaign playtime."""
 
     def __init__(
         self,
@@ -329,11 +345,33 @@ class Party:
         gold: int = 0,
         inventory: Optional[list[dict]] = None,
         quest_items: Optional[list[str]] = None,
+        playtime_seconds: int = 0,
     ):
         self.members: list[PartyMember] = members if members is not None else []
         self.gold: int = gold
         self.inventory: list[dict] = inventory if inventory is not None else []
         self.quest_items: list[str] = quest_items if quest_items is not None else []
+        self.playtime_seconds: int = playtime_seconds
+        self._playtime_accumulator: float = 0.0
+
+    def add_playtime(self, delta_time: float) -> None:
+        """Accumulates delta_time into playtime_seconds with sub-second precision and safety clamping."""
+        if delta_time <= 0:
+            return
+        dt = min(delta_time, 1.0)
+        self._playtime_accumulator += dt
+        if self._playtime_accumulator >= 1.0:
+            add_secs = int(self._playtime_accumulator)
+            self.playtime_seconds += add_secs
+            self._playtime_accumulator -= add_secs
+
+    @property
+    def formatted_playtime(self) -> str:
+        """Returns elapsed playtime formatted as HH:MM:SS."""
+        h = self.playtime_seconds // 3600
+        m = (self.playtime_seconds % 3600) // 60
+        s = self.playtime_seconds % 60
+        return f"{h:02d}:{m:02d}:{s:02d}"
 
     def to_dict(self) -> dict:
         return {
@@ -341,6 +379,7 @@ class Party:
             "gold": self.gold,
             "inventory": list(self.inventory),
             "quest_items": list(self.quest_items),
+            "playtime_seconds": self.playtime_seconds,
         }
 
     @classmethod
@@ -351,6 +390,7 @@ class Party:
             gold=data.get("gold", 0),
             inventory=data.get("inventory", []),
             quest_items=data.get("quest_items", []),
+            playtime_seconds=data.get("playtime_seconds", 0),
         )
 
     def add_member(self, member: PartyMember) -> bool:
@@ -375,6 +415,44 @@ class Party:
     def update_turn(self) -> None:
         for m in self.members:
             m.update_turn()
+
+    def add_item(self, item_id: str, qty: int = 1, item_type: str = "consumable") -> None:
+        """Adds quantity of an item to inventory, grouping if existing."""
+        if qty <= 0:
+            return
+        for entry in self.inventory:
+            if entry.get("item_id") == item_id or entry.get("name") == item_id:
+                entry["qty"] = entry.get("qty", 1) + qty
+                return
+        self.inventory.append({"item_id": item_id, "qty": qty, "type": item_type})
+
+    def remove_item(self, item_id: str, qty: int = 1) -> bool:
+        """Removes quantity of an item from inventory. Returns True if successful."""
+        if qty <= 0:
+            return True
+        for i, entry in enumerate(self.inventory):
+            if entry.get("item_id") == item_id or entry.get("name") == item_id:
+                cur_qty = entry.get("qty", 1)
+                if cur_qty > qty:
+                    entry["qty"] = cur_qty - qty
+                    return True
+                elif cur_qty == qty:
+                    self.inventory.pop(i)
+                    return True
+                else:
+                    return False
+        return False
+
+    def get_item_count(self, item_id: str) -> int:
+        """Returns the total count of an item in inventory."""
+        for entry in self.inventory:
+            if entry.get("item_id") == item_id or entry.get("name") == item_id:
+                return entry.get("qty", 0)
+        return 0
+
+    def has_item(self, item_id: str, qty: int = 1) -> bool:
+        """Returns True if the party has at least qty of an item."""
+        return self.get_item_count(item_id) >= qty
 
 
 class EnemySquad:
@@ -418,9 +496,9 @@ def create_default_party() -> Party:
     """Creates the standard 5-member player party with balanced equipment and skillsets."""
     party = Party()
 
-    # 1. Steve - Knight (Tank / Physical Single Target)
+    # 1. Aide - Knight (Tank / Physical Single Target)
     steve = PartyMember(
-        name="Steve",
+        name="Aide",
         job_class="Knight",
         level=3,
         affinity=BattleActionType.PHYSICAL,
@@ -486,9 +564,9 @@ def create_default_party() -> Party:
     lyra.equip(EQUIPMENT_CATALOG["Cloak of Protection"])
     party.add_member(lyra)
 
-    # 3. Derek - Rogue (High Speed / Crit / Physical Skills)
+    # 3. Dirk - Rogue (High Speed / Crit / Physical Skills)
     derek = PartyMember(
-        name="Derek",
+        name="Dirk",
         job_class="Rogue",
         level=3,
         affinity=BattleActionType.ELEMENTAL_WIND,
@@ -514,9 +592,9 @@ def create_default_party() -> Party:
     derek.equip(EQUIPMENT_CATALOG["Shadow Cape"])
     party.add_member(derek)
 
-    # 4. Sarah - Cleric (Healer / Holy Radiance)
+    # 4. Sara - Cleric (Healer / Holy Radiance)
     sarah = PartyMember(
-        name="Sarah",
+        name="Sara",
         job_class="Cleric",
         level=3,
         affinity=BattleActionType.ELEMENTAL_LIGHT,
@@ -547,9 +625,9 @@ def create_default_party() -> Party:
     sarah.equip(EQUIPMENT_CATALOG["Cloak of Protection"])
     party.add_member(sarah)
 
-    # 5. Vance - Berserker (Heavy Frontline Damage)
+    # 5. Vane - Berserker (Heavy Frontline Damage)
     vance = PartyMember(
-        name="Vance",
+        name="Vane",
         job_class="Berserker",
         level=3,
         affinity=BattleActionType.ELEMENTAL_EARTH,
@@ -581,6 +659,14 @@ def create_default_party() -> Party:
     for m in party.members:
         m.hp = m.max_hp
         m.mp = m.max_mp
+
+    # Default starter pouch
+    party.gold = 350
+    party.add_item("Potion", 3)
+    party.add_item("Ether", 1)
+    party.add_item("Revive Herb", 1)
+    party.add_item("Steel Broadsword", 1, item_type="equipment")
+    party.add_item("Traveler Cloak", 1, item_type="equipment")
 
     return party
 

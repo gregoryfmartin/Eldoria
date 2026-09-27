@@ -114,6 +114,8 @@ class EldoriaCore(GameCore):
         from ..states.title_screen import GSTitleScreen
         from ..states.party_builder import GSPartyBuilderScreen
         from ..states.character_builder import GSCharacterBuilderScreen
+        from ..states.main_menu_screen import GSMainMenuScreen
+        from ..states.matrix_transition import GSMatrixTransitionScreen
         from .fsm import SMTransition
 
         self.game_state = SMStateMachine("GSInit")
@@ -126,6 +128,8 @@ class EldoriaCore(GameCore):
         self.game_state.add_state(GSTitleScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSPartyBuilderScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSCharacterBuilderScreen(screen_width=self.map_width, screen_height=self.map_height))
+        self.game_state.add_state(GSMainMenuScreen())
+        self.game_state.add_state(GSMatrixTransitionScreen(screen_width=80, screen_height=40))
 
         # Match New New Engine: Boot straight from GSInit -> initial_target_state
         self.game_state.add_transition(
@@ -155,10 +159,15 @@ class EldoriaCore(GameCore):
         self.game_state.add_transition(SMTransition("GSUiTestScreen", "ToSodaCan", "GSAnimatedSodaCanTestScreen"))
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToUiTest", "GSUiTestScreen"))
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToSodaCan", "GSAnimatedSodaCanTestScreen"))
-        self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToCombat", "GSNvNCombatScreen"))
+        self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToCombat", "GSMatrixTransitionScreen"))
+        self.game_state.add_transition(SMTransition("GSMatrixTransitionScreen", "EnterCombat", "GSNvNCombatScreen"))
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToTitle", "GSTitleScreen"))
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToPartyBuilder", "GSPartyBuilderScreen"))
-        self.game_state.add_transition(SMTransition("GSNvNCombatScreen", "FromCombat", "GSNoiseMapTestScreen"))
+        self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToMenu", "GSMainMenuScreen"))
+        self.game_state.add_transition(SMTransition("GSMainMenuScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
+        self.game_state.add_transition(SMTransition("GSMainMenuScreen", "ToTitle", "GSTitleScreen"))
+        self.game_state.add_transition(SMTransition("GSNvNCombatScreen", "FromCombat", "GSMatrixTransitionScreen"))
+        self.game_state.add_transition(SMTransition("GSMatrixTransitionScreen", "EnterNoiseMap", "GSNoiseMapTestScreen"))
         self.game_state.add_transition(SMTransition("GSNvNCombatScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
         self.game_state.add_transition(SMTransition("GSAnimatedSodaCanTestScreen", "ToUiTest", "GSUiTestScreen"))
         self.game_state.add_transition(SMTransition("GSAnimatedSodaCanTestScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))

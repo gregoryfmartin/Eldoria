@@ -208,7 +208,18 @@ class TestNoiseMapEncounterScreenIntegration(unittest.TestCase):
         for m in self.screen.party.members:
             self.assertEqual(m.hp, max(1, m.max_hp // 2))
             self.assertEqual(m.mp, max(1, m.max_mp // 2))
-        self.assertIn("revived", self.screen.last_status_msg)
+        self.assertEqual(self.screen.last_status_msg, "Revived!")
+
+        # Verify that rendered header line stays strictly within window boundaries (map_width + 2)
+        alive_count = sum(1 for m in self.screen.party.members if m.is_alive)
+        total_hp = sum(m.hp for m in self.screen.party.members)
+        total_max_hp = sum(m.max_hp for m in self.screen.party.members)
+        hp_pct = int((total_hp / total_max_hp) * 100) if total_max_hp > 0 else 0
+        party_badge = f"Party:{alive_count}/{len(self.screen.party.members)} [{hp_pct}%]"
+        t_text = f" {party_badge} \033[1;36m{self.screen.last_status_msg}\033[0m"
+        rendered_line = self.screen._make_border_line("│", t_text, "│", self.screen.map_width, fill_char=" ")
+        from eldoria_py.terminal.box import visible_width
+        self.assertEqual(visible_width(rendered_line), self.screen.map_width + 2)
 
 
 if __name__ == "__main__":

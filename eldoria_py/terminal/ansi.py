@@ -43,6 +43,7 @@ class ATControlSequences:
     # Screen Clears
     ClearScreen = "\033[2J"
     ClearLine = "\033[2K"
+    ClearLineToEnd = "\033[K"
     ClearScrollback = "\033[3J"
     CursorHome = "\033[H"
     DeleteAllKittyImages = "\033_Ga=d,d=A\033\\"

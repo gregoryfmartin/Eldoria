@@ -2,7 +2,7 @@
 Unit and integration tests for Save/Load UI workflows (Phase 4):
 - Title Screen interactive 3-slot load picker and slot deletion.
 - Party Builder embark modal for world size & save slot configuration.
-- Overworld in-game [S]Save shortcut and confirmation modal.
+- Overworld in-game [S]Save shortcut removed; saves routed via Main Menu.
 - Inn rest and save integration.
 """
 
@@ -145,8 +145,8 @@ class TestSaveLoadUI(unittest.TestCase):
         self.assertTrue((slot2_dir / "state.sav").is_file())
         self.assertTrue((slot2_dir / "header.json").is_file())
 
-    def test_overworld_in_game_save_modal(self) -> None:
-        """Verify [S]Save shortcut opens save modal, slot switching, and atomic write."""
+    def test_overworld_save_shortcut_removed(self) -> None:
+        """Verify [S]Save shortcut is removed from navigation screen and pressing S does not save."""
         map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24)
         map_screen.save_manager = self.save_manager
         map_screen.world_macro = self.world_macro
@@ -155,28 +155,16 @@ class TestSaveLoadUI(unittest.TestCase):
         map_screen.player_x = 10
         map_screen.player_y = 12
 
-        # Press S to open save modal
+        # Press S on navigation screen
         map_screen.update(self.context)  # Clear initial
         self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.CHAR, char="s")])
         map_screen.update(self.context)
-        self.assertTrue(map_screen.save_modal_open)
-        self.assertEqual(map_screen.save_modal_slot, 1)
 
-        # Switch target slot to 3
-        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.CHAR, char="3")])
-        map_screen.update(self.context)
-        self.assertEqual(map_screen.save_modal_slot, 3)
-
-        # Press Enter to confirm save to Slot 3
-        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.ENTER, char="\r")])
-        map_screen.update(self.context)
-        self.assertFalse(map_screen.save_modal_open)
-        self.assertEqual(map_screen.active_slot, 3)
-        self.assertIn("Slot 3", map_screen.last_status_msg)
-
-        # Verify Slot 3 was written
+        # Confirm no save modal exists and no save was written
+        self.assertFalse(hasattr(map_screen, "save_modal_open"))
+        self.assertEqual(map_screen.last_status_msg, "")
         slot3_dir = self.save_manager.get_slot_dir(3)
-        self.assertTrue((slot3_dir / "state.sav").is_file())
+        self.assertFalse((slot3_dir / "state.sav").is_file())
 
     def test_inn_rest_and_save(self) -> None:
         """Verify resting at an Inn fully heals party and auto-saves progress."""

@@ -1,7 +1,9 @@
 """Combat engine core enumerations and entity property containers."""
 from __future__ import annotations
 from enum import Enum
-from typing import Optional
+from typing import Optional, Dict
+
+from ..terminal.color import TrueColor, ColorLibrary
 
 
 class StatId(str, Enum):
@@ -34,6 +36,102 @@ class BattleActionType(str, Enum):
     MAGIC_HEALING = "MagicHealing"
     MAGIC_STAT_AUGMENT = "MagicStatAugment"
     NONE = "None"
+
+
+class ElementAffinityInfo:
+    """Descriptor for an elemental affinity, including display name, Unicode glyph, and color."""
+
+    def __init__(self, affinity: BattleActionType, name: str, glyph: str, color: TrueColor) -> None:
+        self.affinity = affinity
+        self.name = name
+        self.glyph = glyph
+        self.color = color
+
+    def format_badge(self) -> str:
+        return f"{self.color.to_ansi_fg()}{self.glyph} {self.name}\033[0m"
+
+
+ELEMENT_AFFINITIES: Dict[BattleActionType, ElementAffinityInfo] = {
+    BattleActionType.ELEMENTAL_FIRE: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_FIRE,
+        name="Fire",
+        glyph="♨",
+        color=ColorLibrary.AppleRedLight,
+    ),
+    BattleActionType.ELEMENTAL_WATER: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_WATER,
+        name="Water",
+        glyph="≈",
+        color=ColorLibrary.AppleBlueLight,
+    ),
+    BattleActionType.ELEMENTAL_EARTH: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_EARTH,
+        name="Earth",
+        glyph="▲",
+        color=ColorLibrary.AppleOrangeLight,
+    ),
+    BattleActionType.ELEMENTAL_WIND: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_WIND,
+        name="Wind",
+        glyph="≋",
+        color=ColorLibrary.AppleGreenLight,
+    ),
+    BattleActionType.ELEMENTAL_LIGHT: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_LIGHT,
+        name="Light",
+        glyph="✦",
+        color=ColorLibrary.AppleYellowLight,
+    ),
+    BattleActionType.ELEMENTAL_DARK: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_DARK,
+        name="Dark",
+        glyph="◆",
+        color=ColorLibrary.ApplePurpleLight,
+    ),
+    BattleActionType.ELEMENTAL_ICE: ElementAffinityInfo(
+        affinity=BattleActionType.ELEMENTAL_ICE,
+        name="Ice",
+        glyph="❄",
+        color=ColorLibrary.AppleTealLight,
+    ),
+    BattleActionType.PHYSICAL: ElementAffinityInfo(
+        affinity=BattleActionType.PHYSICAL,
+        name="Physical",
+        glyph="⚔",
+        color=ColorLibrary.White,
+    ),
+    BattleActionType.NONE: ElementAffinityInfo(
+        affinity=BattleActionType.NONE,
+        name="None",
+        glyph="·",
+        color=ColorLibrary.DarkGrey,
+    ),
+}
+
+
+def get_element_info(affinity: BattleActionType | str) -> Optional[ElementAffinityInfo]:
+    if isinstance(affinity, BattleActionType):
+        return ELEMENT_AFFINITIES.get(affinity)
+    for aff, info in ELEMENT_AFFINITIES.items():
+        if affinity in (aff.value, aff.name, info.name):
+            return info
+    return None
+
+
+def get_element_glyph(affinity: BattleActionType | str) -> str:
+    info = get_element_info(affinity)
+    return info.glyph if info else "✦"
+
+
+def format_element_badge(affinity: BattleActionType | str) -> str:
+    info = get_element_info(affinity)
+    if info:
+        return info.format_badge()
+    if isinstance(affinity, BattleActionType):
+        raw_name = affinity.name.replace("ELEMENTAL_", "").capitalize()
+    else:
+        raw_name = str(affinity).replace("ELEMENTAL_", "").capitalize()
+    return f"\033[36m{raw_name}\033[0m"
 
 
 class BattleActionResultType(str, Enum):
