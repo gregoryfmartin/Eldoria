@@ -416,15 +416,31 @@ class Party:
         for m in self.members:
             m.update_turn()
 
-    def add_item(self, item_id: str, qty: int = 1, item_type: str = "consumable") -> None:
-        """Adds quantity of an item to inventory, grouping if existing."""
+    def add_item(self, item_id: str, qty: int = 1, item_type: str = "consumable") -> int:
+        """Adds quantity of an item to inventory, capping at 99 per item. Returns actual added count."""
         if qty <= 0:
-            return
+            return 0
+        from eldoria_py.combat.items import get_item, ItemType
+        c_item = get_item(item_id)
+        if c_item is not None:
+            if c_item.item_type == ItemType.KEY_ITEM:
+                item_type = "key"
+            elif c_item.item_type == ItemType.EQUIPMENT:
+                item_type = "equipment"
+            else:
+                item_type = "consumable"
+
         for entry in self.inventory:
             if entry.get("item_id") == item_id or entry.get("name") == item_id:
-                entry["qty"] = entry.get("qty", 1) + qty
-                return
-        self.inventory.append({"item_id": item_id, "qty": qty, "type": item_type})
+                cur_qty = entry.get("qty", 1)
+                can_add = max(0, 99 - cur_qty)
+                added = min(qty, can_add)
+                entry["qty"] = cur_qty + added
+                return added
+
+        actual_qty = min(99, qty)
+        self.inventory.append({"item_id": item_id, "qty": actual_qty, "type": item_type})
+        return actual_qty
 
     def remove_item(self, item_id: str, qty: int = 1) -> bool:
         """Removes quantity of an item from inventory. Returns True if successful."""
@@ -443,6 +459,24 @@ class Party:
                     return False
         return False
 
+    def discard_item(self, item_id: str, qty: int = 1) -> tuple[bool, str]:
+        """Discards an item from inventory. Key items cannot be discarded."""
+        from eldoria_py.combat.items import can_discard_item, get_item
+        if not can_discard_item(item_id):
+            return False, f"{item_id} is a key item and cannot be discarded!"
+
+        cur_qty = self.get_item_count(item_id)
+        if cur_qty <= 0:
+            return False, f"No {item_id} in inventory to discard."
+
+        discard_qty = min(qty, cur_qty)
+        success = self.remove_item(item_id, discard_qty)
+        if success:
+            c_item = get_item(item_id)
+            name = c_item.name if c_item else item_id
+            return True, f"Discarded {discard_qty}x {name}."
+        return False, f"Failed to discard {item_id}."
+
     def get_item_count(self, item_id: str) -> int:
         """Returns the total count of an item in inventory."""
         for entry in self.inventory:
@@ -453,6 +487,24 @@ class Party:
     def has_item(self, item_id: str, qty: int = 1) -> bool:
         """Returns True if the party has at least qty of an item."""
         return self.get_item_count(item_id) >= qty
+
+    def add_dev_items(self, qty: int = 99, include_equipment: bool = True) -> int:
+        """Development helper: fills inventory with qty (default 99) of each catalog item."""
+        from eldoria_py.combat.items import ITEM_CATALOG
+        total_added = 0
+        for item_id in ITEM_CATALOG.keys():
+            cur = self.get_item_count(item_id)
+            if cur < qty:
+                added = self.add_item(item_id, qty - cur)
+                total_added += added
+        if include_equipment:
+            from eldoria_py.combat.equipment import EQUIPMENT_CATALOG
+            for eq_id in EQUIPMENT_CATALOG.keys():
+                cur = self.get_item_count(eq_id)
+                if cur < qty:
+                    added = self.add_item(eq_id, qty - cur, item_type="equipment")
+                    total_added += added
+        return total_added
 
 
 class EnemySquad:

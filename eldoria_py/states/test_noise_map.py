@@ -26,12 +26,15 @@ from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import visible_width, truncate_ansi, clear_buffer_tail
+from ..ui.panel import UIPanel
+from ..ui.container import UIContainer
 from ..combat import (
     StatId,
     Party,
     create_default_party,
     generate_encounter,
 )
+from ..combat.items import is_key_item
 
 
 class GSNoiseMapTestScreen(SMState):
@@ -93,6 +96,18 @@ class GSNoiseMapTestScreen(SMState):
         self.save_manager: SaveManager = SaveManager()
         self.active_slot: Optional[int] = 1
         self._fallback_playtime_seconds: int = 0
+
+        # POI Item Picker modal state (UIPanel)
+        self.is_item_picker_active: bool = False
+        self.item_picker_cursor: int = 0
+        self.locked_poi_target: Optional[POIDescriptor] = None
+        self.item_picker_panel: UIPanel = UIPanel(
+            left_top=ATCoordinates(10, 16),
+            right_bottom=ATCoordinates(20, 64),
+            title="Use Item to Unlock",
+            has_border=True,
+        )
+        self.item_picker_panel.current_window_designs = dict(UIContainer.WINDOW_DESIGN_SQUARE)
 
     @property
     def playtime_seconds(self) -> int:
@@ -219,6 +234,43 @@ class GSNoiseMapTestScreen(SMState):
 
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
+
+        if self.is_item_picker_active:
+            picker_items = self._get_picker_items()
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                for key_info in list(keys_pressed):
+                    if key_info.key == KeyCode.UP:
+                        if self.item_picker_cursor > 0:
+                            self.item_picker_cursor -= 1
+                        keys_pressed.remove(key_info)
+                        break
+                    elif key_info.key == KeyCode.DOWN:
+                        if self.item_picker_cursor < len(picker_items) - 1:
+                            self.item_picker_cursor += 1
+                        keys_pressed.remove(key_info)
+                        break
+                    elif key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
+                        self.is_item_picker_active = False
+                        self.locked_poi_target = None
+                        self.last_status_msg = "Decided not to unlock."
+                        keys_pressed.remove(key_info)
+                        break
+                    elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                        keys_pressed.remove(key_info)
+                        if 0 <= self.item_picker_cursor < len(picker_items):
+                            chosen_item_id, _ = picker_items[self.item_picker_cursor]
+                            poi = self.locked_poi_target
+                            if poi and (poi.required_key is None or chosen_item_id == poi.required_key):
+                                poi.is_locked = False
+                                unlock_text = poi.unlock_msg or f"The lock clicks open with {chosen_item_id}!"
+                                self.last_status_msg = f"★ Used {chosen_item_id}! {unlock_text}"
+                                self.is_item_picker_active = False
+                                self.locked_poi_target = None
+                            else:
+                                self.last_status_msg = f"Tried {chosen_item_id}: It doesn't fit the lock."
+                        break
+            self._render()
+            return
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
@@ -455,14 +507,26 @@ class GSNoiseMapTestScreen(SMState):
             # Overworld: Check for POI WarpTarget
             if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
                 poi = curr_tile.poi
-                if poi and poi.sub_map:
-                    # Push return sector and position to warp stack
-                    self.warp_stack.append((self.current_sector, (self.player_x, self.player_y)))
-                    self.active_submap = poi.sub_map
-                    self.active_poi = poi
-                    self.player_x, self.player_y = poi.spawn_pos
-                    TerminalScreen.clear_screen()
-                    TerminalScreen.flush()
+                if poi:
+                    if poi.is_locked:
+                        picker_items = self._get_picker_items()
+                        if not picker_items:
+                            req = poi.required_key or "a Key"
+                            self.last_status_msg = f"Locked! Entrance requires {req}, but party has no keys."
+                            return
+                        self.is_item_picker_active = True
+                        self.item_picker_cursor = 0
+                        self.locked_poi_target = poi
+                        return
+
+                    if poi.sub_map:
+                        # Push return sector and position to warp stack
+                        self.warp_stack.append((self.current_sector, (self.player_x, self.player_y)))
+                        self.active_submap = poi.sub_map
+                        self.active_poi = poi
+                        self.player_x, self.player_y = poi.spawn_pos
+                        TerminalScreen.clear_screen()
+                        TerminalScreen.flush()
         else:
             # Inside Sub-Map: Check for Egress WarpTarget
             if curr_tile.warp_target and curr_tile.warp_target.is_egress:
@@ -479,6 +543,50 @@ class GSNoiseMapTestScreen(SMState):
                 TerminalScreen.clear_screen()
                 TerminalScreen.flush()
 
+    def _get_picker_items(self) -> List[Tuple[str, int]]:
+        """Returns list of usable keys/items from party inventory for the item picker."""
+        if not self.party or not self.party.inventory:
+            return []
+        items: List[Tuple[str, int]] = []
+        if isinstance(self.party.inventory, dict):
+            for k, v in self.party.inventory.items():
+                if v > 0 and (is_key_item(k) or "key" in str(k).lower() or "crest" in str(k).lower()):
+                    items.append((str(k), int(v)))
+        else:
+            for entry in self.party.inventory:
+                item_id = entry.get("item_id") or entry.get("name", "")
+                qty = entry.get("qty", 1)
+                item_type = entry.get("type", "")
+                if qty > 0 and (is_key_item(item_id) or item_type == "key" or "key" in item_id.lower() or "crest" in item_id.lower()):
+                    items.append((item_id, qty))
+        return items
+
+    def _render_item_picker(self) -> None:
+        """Populates item picker modal UIPanel with key/inventory choices."""
+        self.item_picker_panel.labels.clear()
+        target_name = self.locked_poi_target.name if self.locked_poi_target else "Lock"
+        self.item_picker_panel.add_label(
+            ATCoordinates(11, 18),
+            f"\033[1;36mSelect item to unlock {target_name}:\033[0m",
+        )
+        picker_items = self._get_picker_items()
+        if not picker_items:
+            self.item_picker_panel.add_label(
+                ATCoordinates(13, 18),
+                "\033[31mNo suitable keys or tools found in inventory.\033[0m",
+            )
+        else:
+            for idx, (item_id, qty) in enumerate(picker_items[:6]):
+                row = 13 + idx
+                prefix = " \033[1;33m►\033[0m " if idx == self.item_picker_cursor else "   "
+                self.item_picker_panel.add_label(
+                    ATCoordinates(row, 18),
+                    f"{prefix}\033[1;37m{item_id:<22}\033[0m \033[36mx{qty:>2}\033[0m",
+                )
+        self.item_picker_panel.add_label(
+            ATCoordinates(19, 18),
+            "\033[33m[↑/↓]\033[0m Select  \033[33m[Enter]\033[0m Use  \033[33m[Esc]\033[0m Cancel",
+        )
 
     @staticmethod
     def _make_border_line(left_char: str, text: str, right_char: str, width: int, fill_char: str = "─") -> str:
@@ -531,9 +639,10 @@ class GSNoiseMapTestScreen(SMState):
             t_text = f" {party_badge} \033[1;36m{self.last_status_msg}\033[0m"
         elif self.active_submap is None:
             if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
+                lock_badge = " \033[1;31m[Locked]\033[0m" if (curr_tile.poi and curr_tile.poi.is_locked) else ""
                 t_text = (
                     f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
-                    f"\033[1;32m★ {curr_tile.warp_target.prompt_label}\033[0m "
+                    f"\033[1;32m★ {curr_tile.warp_target.prompt_label}\033[0m{lock_badge} "
                     f"\033[1;33m[Enter]\033[0m"
                 )
             else:
@@ -587,6 +696,14 @@ class GSNoiseMapTestScreen(SMState):
             out.append(ATCoordinates(1 + idx, 1).to_ansi())
             out.append(line)
             out.append(ATControlSequences.ClearLineToEnd)
+
+        # Overlay item picker modal if active
+        if self.is_item_picker_active:
+            self._render_item_picker()
+            panel_lines = self.item_picker_panel.render_lines()
+            for p_idx, p_line in enumerate(panel_lines):
+                out.append(ATCoordinates(10 + p_idx, 16).to_ansi())
+                out.append(p_line)
 
         footer_y = len(lines)
         # Clear tail lines up to 40 (clears leftover rows from larger 80x40 screens)

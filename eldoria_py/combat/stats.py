@@ -168,6 +168,7 @@ class TargetScope(str, Enum):
     SINGLE_ALLY = "SingleAlly"
     ALL_ALLIES = "AllAllies"
     SELF = "Self"
+    NONE = "None"
 
 
 class AffinityEffect(str, Enum):

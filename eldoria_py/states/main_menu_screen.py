@@ -26,7 +26,16 @@ from ..combat.stats import StatId, EquipmentSlot, TargetScope, format_element_ba
 from ..combat.actions import BattleAction, ActionCategory, ACTIONS
 from ..combat.equipment import BattleEquipment, EQUIPMENT_CATALOG
 from ..combat.entities import PartyMember, Party, create_default_party
-from ..combat.items import ConsumableItem, ItemType, ItemEffectType, ITEM_CATALOG, get_item, apply_item_effect
+from ..combat.items import (
+    ConsumableItem,
+    ItemType,
+    ItemEffectType,
+    ITEM_CATALOG,
+    get_item,
+    apply_item_effect,
+    is_key_item,
+    can_discard_item,
+)
 from ..core.save_manager import SaveManager, SaveSlotHeader
 
 
@@ -124,9 +133,11 @@ class GSMainMenuScreen(SMState):
         self.item_filter_idx: int = 0  # 0: All, 1: Usable, 2: Equip, 3: Key
         self.item_cursor: int = 0
         self.item_page: int = 0
-        self.item_modal_mode: str = "NONE"  # "NONE", "ACTION_SELECT", "TARGET_SELECT", "DISCARD_CONFIRM"
+        self.item_modal_mode: str = "NONE"  # "NONE", "ACTION_SELECT", "TARGET_SELECT", "DISCARD_CHOICE", "DISCARD_AMOUNT", "DISCARD_CONFIRM"
         self.item_action_cursor: int = 0  # 0: Use, 1: Discard, 2: Cancel
         self.item_target_cursor: int = 0
+        self.discard_choice_cursor: int = 0  # 0: Discard 1, 1: Discard Many, 2: Discard All, 3: Cancel
+        self.discard_amount: int = 1
 
         # Submenu State: EQUIPMENT
         self.equip_slot_cursor: int = 0
@@ -158,8 +169,8 @@ class GSMainMenuScreen(SMState):
         self.quit_modal_panel.current_window_designs = dict(UIContainer.WINDOW_DESIGN_SQUARE)
 
         self.item_modal_panel: UIPanel = UIPanel(
-            left_top=ATCoordinates(28, 27),
-            right_bottom=ATCoordinates(32, 77),
+            left_top=ATCoordinates(27, 27),
+            right_bottom=ATCoordinates(36, 77),
             title="Action",
             has_border=True,
         )
@@ -311,6 +322,12 @@ class GSMainMenuScreen(SMState):
 
         # 1. CATEGORIES FOCUS (Left Rail)
         if self.focus_mode == "CATEGORIES":
+            cat = self.CATEGORIES[self.category_idx]
+            if cat == "Items" and key_info.char in ("+", "=", "9", "c", "C", "d", "D", "*", "~", "`"):
+                if self.party:
+                    added = self.party.add_dev_items(99)
+                    self._set_banner(f"★ DEV CHEAT: Stocked 99x of each item in inventory! (+{added})")
+                return
             if key_info.key == KeyCode.UP:
                 self.category_idx = (self.category_idx - 1) % len(self.CATEGORIES)
             elif key_info.key == KeyCode.DOWN:
@@ -386,15 +403,36 @@ class GSMainMenuScreen(SMState):
     # -------------------------------------------------------------------------
     def _get_filtered_items(self) -> list[dict]:
         all_inv = list(self.party.inventory)
+        inv_ids = {it.get("item_id", it.get("name", "")) for it in all_inv}
+        for q in self.party.quest_items:
+            if q not in inv_ids:
+                all_inv.append({"item_id": q, "qty": 1, "type": "key"})
+
         if self.item_filter_idx == 1:  # Usable/Consumable
-            return [it for it in all_inv if it.get("type") == "consumable" or get_item(it.get("item_id", "")) is not None]
+            return [
+                it for it in all_inv
+                if it.get("type") == "consumable" or (get_item(it.get("item_id", "")) and get_item(it.get("item_id", "")).usable_in_field)
+            ]
         elif self.item_filter_idx == 2:  # Equipment
-            return [it for it in all_inv if it.get("type") == "equipment" or it.get("item_id") in EQUIPMENT_CATALOG]
+            return [
+                it for it in all_inv
+                if it.get("type") == "equipment" or it.get("item_id") in EQUIPMENT_CATALOG
+            ]
         elif self.item_filter_idx == 3:  # Key items
-            return [{"item_id": q, "qty": 1, "type": "key"} for q in self.party.quest_items]
+            return [
+                it for it in all_inv
+                if it.get("type") == "key" or is_key_item(it.get("item_id", ""))
+            ]
         return all_inv
 
     def _handle_items_input(self, key_info: KeyEvent) -> None:
+        # Hidden dev cheat key: '+', '=', '9', 'c', 'C', 'd', 'D', '*'
+        if key_info.char in ("+", "=", "9", "c", "C", "d", "D", "*", "~", "`"):
+            if self.party:
+                added = self.party.add_dev_items(99)
+                self._set_banner(f"★ DEV CHEAT: Stocked 99x of each item in inventory! (+{added})")
+            return
+
         items = self._get_filtered_items()
         max_idx = max(0, len(items) - 1)
 
@@ -410,13 +448,22 @@ class GSMainMenuScreen(SMState):
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
             if 0 <= self.item_cursor < len(items):
                 item_entry = items[self.item_cursor]
-                item_obj = get_item(item_entry.get("item_id", ""))
-                if item_obj is not None:
+                item_id = item_entry.get("item_id", item_entry.get("name", ""))
+                item_obj = get_item(item_id)
+                if is_key_item(item_id):
                     self.focus_mode = "MODAL"
                     self.item_modal_mode = "ACTION_SELECT"
                     self.item_action_cursor = 0
+                elif item_obj is not None:
+                    self.focus_mode = "MODAL"
+                    self.item_modal_mode = "ACTION_SELECT"
+                    self.item_action_cursor = 0
+                elif item_entry.get("type") == "equipment" or item_id in EQUIPMENT_CATALOG:
+                    self.focus_mode = "MODAL"
+                    self.item_modal_mode = "ACTION_SELECT"
+                    self.item_action_cursor = 1
                 else:
-                    self._set_banner(f"{item_entry.get('item_id', 'Item')} cannot be used here.")
+                    self._set_banner(f"{item_id} cannot be used here.")
 
     def _handle_modal_input(self, key_info: KeyEvent, context: Context, core: Any) -> None:
         cat = self.CATEGORIES[self.category_idx]
@@ -446,19 +493,34 @@ class GSMainMenuScreen(SMState):
                 self.focus_mode = "SUBMENU"
                 return
             item_entry = items[self.item_cursor]
-            item_obj = get_item(item_entry.get("item_id", ""))
+            item_id = item_entry.get("item_id", item_entry.get("name", ""))
+            item_obj = get_item(item_id)
+            is_key = is_key_item(item_id)
+            cur_qty = self.party.get_item_count(item_id)
+            if cur_qty <= 0 and is_key:
+                cur_qty = item_entry.get("qty", 1)
 
             if self.item_modal_mode == "ACTION_SELECT":
+                max_opts = 2 if is_key else 3
                 if key_info.key == KeyCode.LEFT:
-                    self.item_action_cursor = (self.item_action_cursor - 1) % 3
+                    self.item_action_cursor = (self.item_action_cursor - 1) % max_opts
                 elif key_info.key == KeyCode.RIGHT:
-                    self.item_action_cursor = (self.item_action_cursor + 1) % 3
+                    self.item_action_cursor = (self.item_action_cursor + 1) % max_opts
                 elif key_info.key == KeyCode.ESCAPE:
                     self.focus_mode = "SUBMENU"
                     self.item_modal_mode = "NONE"
                 elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
-                    if self.item_action_cursor == 0:  # Use
-                        if item_obj.target_scope == TargetScope.ALL_ALLIES:
+                    if self.item_action_cursor == 0:  # Use Item
+                        if is_key:
+                            self._set_banner("Key items cannot be used directly from the menu.")
+                            self.focus_mode = "SUBMENU"
+                            self.item_modal_mode = "NONE"
+                        elif item_obj is None or not item_obj.usable_in_field:
+                            name = item_obj.name if item_obj else item_id
+                            self._set_banner(f"{name} cannot be used outside of battle!")
+                            self.focus_mode = "SUBMENU"
+                            self.item_modal_mode = "NONE"
+                        elif item_obj.target_scope == TargetScope.ALL_ALLIES:
                             success, msg = apply_item_effect(item_obj, None, self.party)
                             self._set_banner(msg)
                             self.focus_mode = "SUBMENU"
@@ -466,32 +528,90 @@ class GSMainMenuScreen(SMState):
                         else:
                             self.item_modal_mode = "TARGET_SELECT"
                             self.item_target_cursor = self.hero_idx
-                    elif self.item_action_cursor == 1:  # Discard
-                        self.item_modal_mode = "DISCARD_CONFIRM"
+                    elif not is_key and self.item_action_cursor == 1:  # Discard
+                        if not can_discard_item(item_id):
+                            self._set_banner(f"{item_id} cannot be discarded!")
+                            self.focus_mode = "SUBMENU"
+                            self.item_modal_mode = "NONE"
+                        else:
+                            self.item_modal_mode = "DISCARD_CHOICE"
+                            self.discard_choice_cursor = 0
                     else:  # Cancel
                         self.focus_mode = "SUBMENU"
                         self.item_modal_mode = "NONE"
 
             elif self.item_modal_mode == "TARGET_SELECT":
+                num_members = len(self.party.members)
                 if key_info.key == KeyCode.LEFT:
-                    self.item_target_cursor = (self.item_target_cursor - 1) % len(self.party.members)
+                    self.item_target_cursor = (self.item_target_cursor - 1) % num_members
                 elif key_info.key == KeyCode.RIGHT:
-                    self.item_target_cursor = (self.item_target_cursor + 1) % len(self.party.members)
+                    self.item_target_cursor = (self.item_target_cursor + 1) % num_members
                 elif key_info.key == KeyCode.ESCAPE:
                     self.item_modal_mode = "ACTION_SELECT"
                 elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
                     target_member = self.party.members[self.item_target_cursor]
-                    success, msg = apply_item_effect(item_obj, target_member, self.party)
+                    if item_obj is not None:
+                        # Contextual validation
+                        if item_obj.effect_type == ItemEffectType.REVIVE and target_member.is_alive:
+                            self._set_banner(f"{target_member.name} is already alive!")
+                            return
+                        elif item_obj.effect_type != ItemEffectType.REVIVE and not target_member.is_alive:
+                            self._set_banner(f"{target_member.name} has fallen! Use Revive Herb.")
+                            return
+                        elif item_obj.effect_type == ItemEffectType.RESTORE_HP and target_member.hp >= target_member.max_hp:
+                            self._set_banner(f"{target_member.name} is already at full HP!")
+                            return
+                        elif item_obj.effect_type == ItemEffectType.RESTORE_MP and target_member.mp >= target_member.max_mp:
+                            self._set_banner(f"{target_member.name} is already at full MP!")
+                            return
+
+                        success, msg = apply_item_effect(item_obj, target_member, self.party)
+                        self._set_banner(msg)
+                        self.focus_mode = "SUBMENU"
+                        self.item_modal_mode = "NONE"
+                        new_items = self._get_filtered_items()
+                        self.item_cursor = min(self.item_cursor, max(0, len(new_items) - 1))
+
+            elif self.item_modal_mode == "DISCARD_CHOICE":
+                if key_info.key == KeyCode.LEFT:
+                    self.discard_choice_cursor = (self.discard_choice_cursor - 1) % 4
+                elif key_info.key == KeyCode.RIGHT:
+                    self.discard_choice_cursor = (self.discard_choice_cursor + 1) % 4
+                elif key_info.key == KeyCode.ESCAPE:
+                    self.item_modal_mode = "ACTION_SELECT"
+                elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                    if self.discard_choice_cursor == 0:  # Discard 1
+                        self.discard_amount = 1
+                        self.item_modal_mode = "DISCARD_CONFIRM"
+                    elif self.discard_choice_cursor == 1:  # Discard Many
+                        self.discard_amount = min(cur_qty, 2) if cur_qty > 1 else 1
+                        self.item_modal_mode = "DISCARD_AMOUNT"
+                    elif self.discard_choice_cursor == 2:  # Discard All
+                        self.discard_amount = cur_qty
+                        self.item_modal_mode = "DISCARD_CONFIRM"
+                    else:  # Cancel
+                        self.item_modal_mode = "ACTION_SELECT"
+
+            elif self.item_modal_mode == "DISCARD_AMOUNT":
+                if key_info.key in (KeyCode.LEFT, KeyCode.DOWN):
+                    self.discard_amount = max(1, self.discard_amount - 1)
+                elif key_info.key in (KeyCode.RIGHT, KeyCode.UP):
+                    self.discard_amount = min(cur_qty, self.discard_amount + 1)
+                elif key_info.key == KeyCode.ESCAPE:
+                    self.item_modal_mode = "DISCARD_CHOICE"
+                elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                    self.item_modal_mode = "DISCARD_CONFIRM"
+
+            elif self.item_modal_mode == "DISCARD_CONFIRM":
+                if key_info.char in ("y", "Y") or key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
+                    success, msg = self.party.discard_item(item_id, self.discard_amount)
                     self._set_banner(msg)
                     self.focus_mode = "SUBMENU"
                     self.item_modal_mode = "NONE"
-
-            elif self.item_modal_mode == "DISCARD_CONFIRM":
-                if key_info.char in ("y", "Y"):
-                    self.party.remove_item(item_obj.item_id, 1)
-                    self._set_banner(f"Discarded 1x {item_obj.name}.")
-                    self.focus_mode = "SUBMENU"
-                    self.item_modal_mode = "NONE"
+                    new_items = self._get_filtered_items()
+                    self.item_cursor = min(self.item_cursor, max(0, len(new_items) - 1))
+                elif key_info.key == KeyCode.ESCAPE or key_info.char in ("n", "N"):
+                    self.item_modal_mode = "DISCARD_CHOICE"
                 elif key_info.key == KeyCode.ESCAPE or key_info.char in ("n", "N", "\r", "\n"):
                     self.item_modal_mode = "ACTION_SELECT"
 
@@ -854,12 +974,17 @@ class GSMainMenuScreen(SMState):
         for idx, it in enumerate(visible_items):
             real_idx = start_idx + idx
             is_cur = (real_idx == self.item_cursor and self.focus_mode in ("SUBMENU", "MODAL"))
-            cur_marker = "\033[1;36m❱\033[0m" if is_cur else " "
             name = it.get("item_id", it.get("name", "Item"))[:20]
             qty = f"x{it.get('qty', 1):02d}"
             t_tag = f"[{it.get('type', 'item')[:4].upper()}]"
-            name_color = "\033[1;37m" if is_cur else "\033[37m"
-            lines.append(f" {cur_marker} {name_color}{name:<20}\033[0m {qty:<5} \033[90m{t_tag}\033[0m")
+
+            if is_cur:
+                bg = "\033[48;2;25;55;85m"
+                base_content = f" ❱ {name:<20} {qty:<5} {t_tag}"
+                pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
+                lines.append(f"{bg} \033[1;36m❱ \033[1;37m{name:<20} \033[1;33m{qty:<5} \033[1;36m{t_tag}{' ' * pad_len}\033[0m")
+            else:
+                lines.append(f"   \033[37m{name:<20}\033[0m {qty:<5} \033[90m{t_tag}\033[0m")
 
         # Fill remaining lines up to 16
         for _ in range(page_size - len(visible_items)):
@@ -870,8 +995,17 @@ class GSMainMenuScreen(SMState):
         # Detail / Context Dialog area (Rows 18..34)
         if 0 <= self.item_cursor < len(items):
             cur_entry = items[self.item_cursor]
-            c_obj = get_item(cur_entry.get("item_id", ""))
-            desc = c_obj.description if c_obj else "Standard party inventory item."
+            item_id = cur_entry.get("item_id", cur_entry.get("name", ""))
+            c_obj = get_item(item_id)
+            if c_obj:
+                desc = c_obj.description
+            elif item_id in EQUIPMENT_CATALOG:
+                eq = EQUIPMENT_CATALOG[item_id]
+                stat_parts = [f"+{v} {k.name[:3]}" for k, v in eq.stat_bonuses.items()]
+                stat_str = ", ".join(stat_parts) if stat_parts else "No stat bonuses"
+                desc = f"Equipment ({eq.slot.value}): {stat_str}"
+            else:
+                desc = "Standard party inventory item."
             wrapped = wrap_text(desc, 53)
             for w in wrapped[:2]:
                 lines.append(f" {w}")
@@ -885,22 +1019,103 @@ class GSMainMenuScreen(SMState):
         panel = self.item_modal_panel
         panel.ui_element_listing.clear()
         panel.border_draw_colors = [ColorLibrary.AppleCyanLight for _ in range(8)]
-        panel.setup_title("Action", color=ColorLibrary.AppleCyanLight, align="left")
+
+        items = self._get_filtered_items()
+        item_entry = items[self.item_cursor] if 0 <= self.item_cursor < len(items) else {}
+        item_id = item_entry.get("item_id", item_entry.get("name", "Item"))
+        item_obj = get_item(item_id)
+        item_name = item_obj.name if item_obj else item_id
+        is_key = is_key_item(item_id)
+        cur_qty = self.party.get_item_count(item_id)
+        if cur_qty <= 0 and is_key:
+            cur_qty = item_entry.get("qty", 1)
 
         if self.item_modal_mode == "ACTION_SELECT":
-            opts = ["Use Item", "Discard", "Cancel"]
-            opt_str = "    ".join([f"\033[1;36m[{o}]\033[0m" if i == self.item_action_cursor else f" {o} " for i, o in enumerate(opts)])
+            panel.setup_title(f"Item: {item_name[:16]}", color=ColorLibrary.AppleCyanLight, align="left")
+            opts = ["Use Item", "Cancel"] if is_key else ["Use Item", "Discard", "Cancel"]
+            cur_idx = min(self.item_action_cursor, len(opts) - 1)
+            opt_str = "    ".join([
+                f"\033[1;36m[{o}]\033[0m" if i == cur_idx else f" {o} "
+                for i, o in enumerate(opts)
+            ])
             panel.add_label(opt_str, row=29, align="center")
+            hint_str = "[◄/►] Select   [Enter] Choose   [Esc] Back"
+            panel.add_label(hint_str, row=31, align="center", fg_color=ColorLibrary.DarkGrey)
+
         elif self.item_modal_mode == "TARGET_SELECT":
-            target_name = self.party.members[self.item_target_cursor].name[:4]
-            panel.add_label(f"Target Ally: [◄ {target_name} ►]", row=29, align="center", fg_color=ColorLibrary.AppleCyanLight)
-            panel.add_label("[Enter] Use Item     [Esc] Back", row=30, align="center", fg_color=ColorLibrary.DarkGrey)
+            panel.setup_title("Select Target Ally", color=ColorLibrary.AppleCyanLight, align="left")
+            target_member = self.party.members[self.item_target_cursor]
+            target_name = target_member.name[:4]
+            state_str = "\033[32mOK\033[0m" if target_member.is_alive else "\033[1;31mKO\033[0m"
+            panel.add_label(
+                f"Target: [◄ \033[1;36m{target_name}\033[0m ►] (Lv.{target_member.level})  Class: {target_member.job_class[:10]}",
+                row=28,
+                align="center",
+            )
+            hp_bar = _make_bar(target_member.hp, target_member.max_hp, 6, bar_type=StatBarType.HEALTH)
+            mp_bar = _make_bar(target_member.mp, target_member.max_mp, 6, bar_type=StatBarType.MANA)
+            panel.add_label(
+                f"HP:{target_member.hp:>3}/{target_member.max_hp:<3} {hp_bar} MP:{target_member.mp:>2}/{target_member.max_mp:<2} {mp_bar} [{state_str}]",
+                row=30,
+                align="center",
+            )
+
+            # Target validation status line
+            if item_obj is not None:
+                if item_obj.effect_type == ItemEffectType.REVIVE:
+                    if target_member.is_alive:
+                        val_msg = "\033[1;33m⚠️ Ineligible: Target is alive\033[0m"
+                    else:
+                        val_msg = "\033[1;32m★ Valid: Will revive with HP\033[0m"
+                else:
+                    if not target_member.is_alive:
+                        val_msg = "\033[1;31m⚠️ Ineligible: Target has fallen\033[0m"
+                    elif item_obj.effect_type == ItemEffectType.RESTORE_HP and target_member.hp >= target_member.max_hp:
+                        val_msg = "\033[1;33m⚠️ Ineligible: Target at full HP\033[0m"
+                    elif item_obj.effect_type == ItemEffectType.RESTORE_MP and target_member.mp >= target_member.max_mp:
+                        val_msg = "\033[1;33m⚠️ Ineligible: Target at full MP\033[0m"
+                    else:
+                        val_msg = "\033[1;32m★ Valid: Ready to use item\033[0m"
+            else:
+                val_msg = "\033[1;37mReady to use\033[0m"
+
+            panel.add_label(val_msg, row=32, align="center")
+            panel.add_label("[◄/►] Cycle Ally   [Enter] Use Item   [Esc] Back", row=34, align="center", fg_color=ColorLibrary.DarkGrey)
+
+        elif self.item_modal_mode == "DISCARD_CHOICE":
+            panel.setup_title(f"Discard: {item_name[:16]}", color=ColorLibrary.AppleCyanLight, align="left")
+            opts = ["Discard 1", "Many", "All", "Cancel"]
+            opt_str = "   ".join([
+                f"\033[1;36m[{o}]\033[0m" if i == self.discard_choice_cursor else f" {o} "
+                for i, o in enumerate(opts)
+            ])
+            panel.add_label(opt_str, row=29, align="center")
+            panel.add_label(f"Current stock in inventory: {cur_qty}", row=31, align="center", fg_color=ColorLibrary.AppleCyanLight)
+            panel.add_label("[◄/►] Choose   [Enter] Select   [Esc] Back", row=33, align="center", fg_color=ColorLibrary.DarkGrey)
+
+        elif self.item_modal_mode == "DISCARD_AMOUNT":
+            panel.setup_title("Discard Quantity", color=ColorLibrary.AppleCyanLight, align="left")
+            amt_str = f"Discard Amount: [ ◄  \033[1;33m{self.discard_amount:02d}\033[0m  ► ] / {cur_qty:02d}"
+            panel.add_label(amt_str, row=29, align="center")
+            panel.add_label("[◄/►] Adjust Qty   [Enter] Confirm   [Esc] Back", row=31, align="center", fg_color=ColorLibrary.DarkGrey)
+
         elif self.item_modal_mode == "DISCARD_CONFIRM":
-            panel.add_label("Discard 1x item? Are you sure?", row=29, align="center", fg_color=ColorLibrary.AppleRedLight)
-            panel.add_label("[Y] Yes, Discard     [N] Cancel", row=30, align="center", fg_color=ColorLibrary.White)
+            panel.setup_title("Confirm Discard", color=ColorLibrary.AppleRedLight, align="left")
+            panel.border_draw_colors = [ColorLibrary.AppleRedLight for _ in range(8)]
+            panel.add_label(
+                f"Discard \033[1;31m{self.discard_amount}x\033[0m {item_name}? Are you sure?",
+                row=29,
+                align="center",
+                fg_color=ColorLibrary.AppleRedLight,
+            )
+            panel.add_label(
+                "\033[1;37m[Y] Yes, Discard\033[0m          \033[90m[N / Esc] Cancel\033[0m",
+                row=31,
+                align="center",
+            )
 
         panel.set_all_dirty()
-        return [f"  {pl}  " for pl in panel.render_lines()]
+        return [f"  {pl}" for pl in panel.render_lines()]
 
 
     def _render_equipment_submenu(self) -> list[str]:

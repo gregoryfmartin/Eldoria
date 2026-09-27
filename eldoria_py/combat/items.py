@@ -24,11 +24,14 @@ class ItemEffectType(str, Enum):
     REVIVE = "REVIVE"
     CURE_STATUS = "CURE_STATUS"
     BUFF = "BUFF"
+    DAMAGE_PHYSICAL = "DAMAGE_PHYSICAL"
+    DAMAGE_MAGICAL = "DAMAGE_MAGICAL"
+    STATUS_EFFECT = "STATUS_EFFECT"
 
 
 @dataclass
 class ConsumableItem:
-    """Consumable item definition with power, effect mechanics, and usage scopes."""
+    """Consumable or key item definition with power, effect mechanics, and usage scopes."""
     item_id: str
     name: str
     item_type: ItemType = ItemType.CONSUMABLE
@@ -39,6 +42,13 @@ class ConsumableItem:
     usable_in_field: bool = True
     usable_in_battle: bool = True
     price: int = 25
+    can_discard: bool = True
+    consumed_on_use: bool = True
+
+    def __post_init__(self) -> None:
+        if self.item_type == ItemType.KEY_ITEM:
+            self.can_discard = False
+            self.consumed_on_use = False
 
     def to_dict(self) -> dict:
         return {
@@ -52,14 +62,47 @@ class ConsumableItem:
             "usable_in_field": self.usable_in_field,
             "usable_in_battle": self.usable_in_battle,
             "price": self.price,
+            "can_discard": self.can_discard,
+            "consumed_on_use": self.consumed_on_use,
         }
+
+    def to_battle_action(self) -> BattleAction:
+        """Converts this consumable into an executable BattleAction for combat."""
+        from eldoria_py.combat.actions import BattleAction, ActionCategory
+        from eldoria_py.combat.stats import BattleActionType
+        if self.effect_type in (ItemEffectType.RESTORE_HP, ItemEffectType.RESTORE_ALL_HP, ItemEffectType.REVIVE):
+            action_type = BattleActionType.MAGIC_HEALING
+        elif self.effect_type == ItemEffectType.DAMAGE_MAGICAL:
+            action_type = BattleActionType.FIRE
+        elif self.effect_type == ItemEffectType.STATUS_EFFECT:
+            if "sleep" in self.name.lower():
+                action_type = BattleActionType.MAGIC_SLEEP
+            else:
+                action_type = BattleActionType.MAGIC_POISON
+        else:
+            action_type = BattleActionType.PHYSICAL
+
+        return BattleAction(
+            name=self.name,
+            action_type=action_type,
+            category=ActionCategory.ITEM,
+            mp_cost=0,
+            effect_value=self.power,
+            accuracy=1.0,
+            target_scope=self.target_scope,
+            speed_priority=1.2,
+            description=self.description,
+        )
 
     @classmethod
     def from_dict(cls, data: dict) -> ConsumableItem:
+        item_type = ItemType(data.get("item_type", ItemType.CONSUMABLE.value))
+        default_can_discard = False if item_type == ItemType.KEY_ITEM else True
+        default_consumed = False if item_type == ItemType.KEY_ITEM else True
         return cls(
             item_id=data["item_id"],
             name=data["name"],
-            item_type=ItemType(data.get("item_type", ItemType.CONSUMABLE.value)),
+            item_type=item_type,
             effect_type=ItemEffectType(data.get("effect_type", ItemEffectType.RESTORE_HP.value)),
             power=data.get("power", 50),
             target_scope=TargetScope(data.get("target_scope", TargetScope.SINGLE_ALLY.value)),
@@ -67,6 +110,8 @@ class ConsumableItem:
             usable_in_field=data.get("usable_in_field", True),
             usable_in_battle=data.get("usable_in_battle", True),
             price=data.get("price", 25),
+            can_discard=data.get("can_discard", default_can_discard),
+            consumed_on_use=data.get("consumed_on_use", default_consumed),
         )
 
 
@@ -167,6 +212,142 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_battle=False,
         price=250,
     ),
+    # Offensive Combat Items
+    "Bomb": ConsumableItem(
+        item_id="Bomb",
+        name="Bomb",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.DAMAGE_PHYSICAL,
+        power=60,
+        target_scope=TargetScope.SINGLE_ENEMY,
+        description="An alchemical explosive dealing 60 physical damage to one enemy.",
+        usable_in_field=False,
+        usable_in_battle=True,
+        price=50,
+    ),
+    "Fire Flask": ConsumableItem(
+        item_id="Fire Flask",
+        name="Fire Flask",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.DAMAGE_MAGICAL,
+        power=45,
+        target_scope=TargetScope.ALL_ENEMIES,
+        description="A volatile flask bursting into flames that damages all enemies.",
+        usable_in_field=False,
+        usable_in_battle=True,
+        price=80,
+    ),
+    "Sleep Powder": ConsumableItem(
+        item_id="Sleep Powder",
+        name="Sleep Powder",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.STATUS_EFFECT,
+        power=0,
+        target_scope=TargetScope.SINGLE_ENEMY,
+        description="Enchanted spores that lull an enemy into a deep sleep.",
+        usable_in_field=False,
+        usable_in_battle=True,
+        price=35,
+    ),
+    "Poison Bottle": ConsumableItem(
+        item_id="Poison Bottle",
+        name="Poison Bottle",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.STATUS_EFFECT,
+        power=35,
+        target_scope=TargetScope.SINGLE_ENEMY,
+        description="A toxic vial that deals 35 poison damage and inflicts venom on one enemy.",
+        usable_in_field=False,
+        usable_in_battle=True,
+        price=40,
+        can_discard=True,
+        consumed_on_use=True,
+    ),
+    # Key & Progression Items (Permanent, non-discardable, not consumed on use)
+    "Iron Key": ConsumableItem(
+        item_id="Iron Key",
+        name="Iron Key",
+        item_type=ItemType.KEY_ITEM,
+        effect_type=ItemEffectType.BUFF,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="An ornate iron skeleton key that unlocks iron doors and heavy dungeon chests.",
+        usable_in_field=False,
+        usable_in_battle=False,
+        price=0,
+        can_discard=False,
+        consumed_on_use=False,
+    ),
+    "Door Key": ConsumableItem(
+        item_id="Door Key",
+        name="Door Key",
+        item_type=ItemType.KEY_ITEM,
+        effect_type=ItemEffectType.BUFF,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="A sturdy iron key that unlocks standard dungeon doors and barred gates.",
+        usable_in_field=False,
+        usable_in_battle=False,
+        price=0,
+        can_discard=False,
+        consumed_on_use=False,
+    ),
+    "Chest Key": ConsumableItem(
+        item_id="Chest Key",
+        name="Chest Key",
+        item_type=ItemType.KEY_ITEM,
+        effect_type=ItemEffectType.BUFF,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="A small brass skeleton key crafted to open locked treasure chests.",
+        usable_in_field=False,
+        usable_in_battle=False,
+        price=0,
+        can_discard=False,
+        consumed_on_use=False,
+    ),
+    "Golden Key": ConsumableItem(
+        item_id="Golden Key",
+        name="Golden Key",
+        item_type=ItemType.KEY_ITEM,
+        effect_type=ItemEffectType.BUFF,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="An intricately carved golden key radiant with ancient royal wards.",
+        usable_in_field=False,
+        usable_in_battle=False,
+        price=0,
+        can_discard=False,
+        consumed_on_use=False,
+    ),
+    "Ancient Crest": ConsumableItem(
+        item_id="Ancient Crest",
+        name="Ancient Crest",
+        item_type=ItemType.KEY_ITEM,
+        effect_type=ItemEffectType.BUFF,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="An ancient royal insignia required to unseal sanctum portals.",
+        usable_in_field=False,
+        usable_in_battle=False,
+        price=0,
+        can_discard=False,
+        consumed_on_use=False,
+    ),
+    "Cavern Key": ConsumableItem(
+        item_id="Cavern Key",
+        name="Cavern Key",
+        item_type=ItemType.KEY_ITEM,
+        effect_type=ItemEffectType.BUFF,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="An amber-tinted key that unlocks sealed subterranean gates.",
+        usable_in_field=False,
+        usable_in_battle=False,
+        price=0,
+        can_discard=False,
+        consumed_on_use=False,
+    ),
 }
 
 # Compatibility aliases
@@ -180,6 +361,23 @@ ITEM_ALIASES: dict[str, str] = {
     "revive_herb": "Revive Herb",
     "antidote": "Antidote",
     "tent": "Tent",
+    "bomb": "Bomb",
+    "fire_flask": "Fire Flask",
+    "fireflask": "Fire Flask",
+    "sleep_powder": "Sleep Powder",
+    "poison_bottle": "Poison Bottle",
+    "poisonbottle": "Poison Bottle",
+    "poison": "Poison Bottle",
+    "iron_key": "Iron Key",
+    "door_key": "Door Key",
+    "doorkey": "Door Key",
+    "chest_key": "Chest Key",
+    "chestkey": "Chest Key",
+    "golden_key": "Golden Key",
+    "goldenkey": "Golden Key",
+    "gold_key": "Golden Key",
+    "ancient_crest": "Ancient Crest",
+    "cavern_key": "Cavern Key",
 }
 
 
@@ -215,7 +413,8 @@ def apply_item_effect(
                 if m.is_alive:
                     m.current_hp = min(m.max_hp, m.current_hp + item.power)
                     m.current_mp = min(m.max_mp, m.current_mp + item.power)
-            party.remove_item(item.item_id, 1)
+            if item.consumed_on_use:
+                party.remove_item(item.item_id, 1)
             return True, f"Used {item.name}! Party HP and MP restored."
         return False, "Unsupported party effect."
 
@@ -227,7 +426,8 @@ def apply_item_effect(
         if target.is_alive:
             return False, f"{target.name} is already alive!"
         target.current_hp = min(target.max_hp, item.power)
-        party.remove_item(item.item_id, 1)
+        if item.consumed_on_use:
+            party.remove_item(item.item_id, 1)
         return True, f"{target.name} was revived with {target.current_hp} HP!"
 
     # Other items require target to be alive
@@ -240,7 +440,8 @@ def apply_item_effect(
         old_hp = target.current_hp
         target.current_hp = min(target.max_hp, target.current_hp + item.power)
         delta = target.current_hp - old_hp
-        party.remove_item(item.item_id, 1)
+        if item.consumed_on_use:
+            party.remove_item(item.item_id, 1)
         return True, f"{target.name} recovered {delta} HP!"
 
     elif item.effect_type == ItemEffectType.RESTORE_MP:
@@ -249,7 +450,8 @@ def apply_item_effect(
         old_mp = target.current_mp
         target.current_mp = min(target.max_mp, target.current_mp + item.power)
         delta = target.current_mp - old_mp
-        party.remove_item(item.item_id, 1)
+        if item.consumed_on_use:
+            party.remove_item(item.item_id, 1)
         return True, f"{target.name} restored {delta} MP!"
 
     elif item.effect_type == ItemEffectType.RESTORE_ALL_HP:
@@ -258,11 +460,28 @@ def apply_item_effect(
             return False, f"{target.name} is already at full vitals!"
         target.current_hp = target.max_hp
         target.current_mp = target.max_mp
-        party.remove_item(item.item_id, 1)
+        if item.consumed_on_use:
+            party.remove_item(item.item_id, 1)
         return True, f"{target.name} was fully restored by {item.name}!"
 
     elif item.effect_type == ItemEffectType.CURE_STATUS:
-        party.remove_item(item.item_id, 1)
+        if item.consumed_on_use:
+            party.remove_item(item.item_id, 1)
         return True, f"{target.name} was cured of all ailments!"
 
     return False, f"Cannot use {item.name} right now."
+
+
+def is_key_item(item_id: str) -> bool:
+    """Checks if an item is categorized as a key item."""
+    item = get_item(item_id)
+    return item is not None and item.item_type == ItemType.KEY_ITEM
+
+
+def can_discard_item(item_id: str) -> bool:
+    """Returns True if an item can be discarded (Key items cannot be discarded)."""
+    item = get_item(item_id)
+    if item is not None:
+        return item.can_discard
+    # If not in catalog, check if marked as key item in name
+    return "key" not in item_id.lower() and "crest" not in item_id.lower()

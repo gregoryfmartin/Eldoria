@@ -11,7 +11,7 @@ from eldoria_py.combat.stats import (
     TargetScope,
     AffinityEffect,
 )
-from eldoria_py.combat.actions import BattleAction, ACTIONS
+from eldoria_py.combat.actions import BattleAction, ACTIONS, ActionCategory
 from eldoria_py.combat.damage import calculate_damage, DamageResult
 from eldoria_py.combat.entities import Combatant, PartyMember, EnemyCombatant, Party, EnemySquad
 
@@ -176,14 +176,28 @@ class NvNCombatEngine:
             self.log(f"🛡 {actor.name} braces and enters defensive stance!")
             return queued
 
-        # 3. MP Cost verification
-        if action.mp_cost > 0:
+        # 3. MP Cost verification or Item verification
+        is_player_acting = isinstance(actor, PartyMember)
+        if action.category == ActionCategory.ITEM and is_player_acting:
+            if not self.party.has_item(action.name):
+                self.log(f"{actor.name} reached for {action.name}, but none remained in inventory!")
+                return queued
+            self.party.remove_item(action.name, 1)
+        elif action.mp_cost > 0:
             if not actor.spend_mp(action.mp_cost):
                 self.log(f"{actor.name} attempted {action.name} but lacked MP ({actor.mp}/{action.mp_cost})!")
                 return queued
 
         # 4. Resolve Targets & Smart Retargeting
-        is_player_acting = isinstance(actor, PartyMember)
+        is_revive = (action.category == ActionCategory.ITEM and action.name == "Revive Herb")
+        if is_revive:
+            if not target.is_alive:
+                target.stats[StatId.HIT_POINTS].current = min(target.max_hp, action.effect_value)
+                self.log(f"🌱 {actor.name} uses Revive Herb on {target.name}! Revived with {target.hp} HP!")
+            else:
+                self.log(f"{actor.name} used Revive Herb on {target.name}, but {target.name} is already alive!")
+            return queued
+
         targets_to_hit: list[Combatant] = []
 
         if action.target_scope == TargetScope.ALL_ENEMIES:
@@ -233,6 +247,17 @@ class NvNCombatEngine:
                 explicit_immunes=t.explicit_immunes,
                 rng=self.rng,
             )
+
+            if action.category == ActionCategory.ITEM:
+                if result.is_healing:
+                    healed = t.heal(abs(result.final_damage))
+                    self.log(f"💚 {actor.name} uses {action.name} on {t.name}: +{healed} HP! ({t.hp}/{t.max_hp})")
+                else:
+                    dmg_taken = t.take_damage(result.final_damage)
+                    self.log(f"💥 {actor.name} uses {action.name} on {t.name}: {dmg_taken} dmg ({t.hp}/{t.max_hp})")
+                    if not t.is_alive:
+                        self.log(f"☠ {t.name} was defeated!")
+                continue
 
             if result.is_healing:
                 healed = t.heal(abs(result.final_damage))

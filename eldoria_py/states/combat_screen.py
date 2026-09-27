@@ -18,6 +18,7 @@ from ..terminal.box import clear_buffer_tail, strip_ansi, truncate_ansi, visible
 from ..ui.elements.stat_bar import UIStatBar, StatBarType, StatNumberState
 from ..combat.stats import StatId, BattleActionType, TargetScope, AffinityEffect, format_element_badge
 from ..combat.actions import BattleAction, ActionCategory, ACTIONS
+from ..combat.items import ConsumableItem, ItemType, ItemEffectType, get_item
 from ..combat.entities import (
     Combatant,
     PartyMember,
@@ -76,12 +77,13 @@ class GSNvNCombatScreen(SMState):
 
         # UI Navigation State
         self.active_member_idx: int = 0
-        self.menu_mode: str = "MAIN"  # "MAIN", "SKILLS", "SPELLS", "TARGET_SELECT"
-        self.main_menu_cursor: int = 0  # 0: Attack, 1: Skills, 2: Spells, 3: Defend
+        self.menu_mode: str = "MAIN"  # "MAIN", "SKILLS", "SPELLS", "ITEMS", "TARGET_SELECT"
+        self.main_menu_cursor: int = 0  # 0: Attack, 1: Skills, 2: Spells, 3: Item, 4: Defend
         self.sub_menu_cursor: int = 0
         self.selected_action: Optional[BattleAction] = None
         self.inspected_enemy_idx: int = 0
         self.target_cursor: int = 0
+        self.target_type: str = "ENEMY"  # "ENEMY" or "ALLY"
         self.step_delay: float = 0.75  # 0.75s cadence between turn actions
         self.execution_timer: float = 0.0
 
@@ -205,7 +207,7 @@ class GSNvNCombatScreen(SMState):
                         self._handle_main_menu_input(key_info)
                         keys_pressed.remove(key_info)
                         break
-                    elif self.menu_mode in ("SKILLS", "SPELLS"):
+                    elif self.menu_mode in ("SKILLS", "SPELLS", "ITEMS"):
                         self._handle_sub_menu_input(key_info)
                         keys_pressed.remove(key_info)
                         break
@@ -228,6 +230,7 @@ class GSNvNCombatScreen(SMState):
                     self.main_menu_cursor = 0
                     self.sub_menu_cursor = 0
                     self.selected_action = None
+                    self.target_type = "ENEMY"
 
         # Transition guard: do not render if transitioned away
         if core and hasattr(core, "game_state") and core.game_state.current_state != self.name:
@@ -245,10 +248,10 @@ class GSNvNCombatScreen(SMState):
 
         # Up/Down navigation (arrow keys only)
         if key_info.key == KeyCode.UP:
-            self.main_menu_cursor = (self.main_menu_cursor - 1) % 4
+            self.main_menu_cursor = (self.main_menu_cursor - 1) % 5
         elif key_info.key == KeyCode.DOWN:
-            self.main_menu_cursor = (self.main_menu_cursor + 1) % 4
-        elif key_info.char in ("1", "2", "3", "4"):
+            self.main_menu_cursor = (self.main_menu_cursor + 1) % 5
+        elif key_info.char in ("1", "2", "3", "4", "5"):
             self.main_menu_cursor = int(key_info.char) - 1
             self._activate_main_menu_selection()
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
@@ -269,6 +272,7 @@ class GSNvNCombatScreen(SMState):
         if self.main_menu_cursor == 0:  # Attack
             self.selected_action = ACTIONS["Attack"].copy()
             self.menu_mode = "TARGET_SELECT"
+            self.target_type = "ENEMY"
             self.target_cursor = self._get_first_alive_enemy_idx()
             self.inspected_enemy_idx = self.target_cursor
         elif self.main_menu_cursor == 1:  # Skills
@@ -277,10 +281,29 @@ class GSNvNCombatScreen(SMState):
         elif self.main_menu_cursor == 2:  # Spells
             self.menu_mode = "SPELLS"
             self.sub_menu_cursor = 0
-        elif self.main_menu_cursor == 3:  # Defend
+        elif self.main_menu_cursor == 3:  # Item
+            items = self._get_battle_items()
+            if not items:
+                self.engine.log("No battle-usable items in inventory!")
+                return
+            self.menu_mode = "ITEMS"
+            self.sub_menu_cursor = 0
+        elif self.main_menu_cursor == 4:  # Defend
             defend_act = ACTIONS["Defend"].copy()
             self.engine.plan_member_action(self.active_member_idx, defend_act, curr_member)
             self._advance_to_next_member()
+
+    def _get_battle_items(self) -> list[tuple[ConsumableItem, int]]:
+        """Returns all battle-usable items from inventory with quantities."""
+        results = []
+        for entry in self.party.inventory:
+            item_id = entry.get("item_id", entry.get("name", ""))
+            item_obj = get_item(item_id)
+            if item_obj is not None and item_obj.usable_in_battle:
+                qty = entry.get("qty", 1)
+                if qty > 0:
+                    results.append((item_obj, qty))
+        return results
 
     def _get_first_alive_enemy_idx(self) -> int:
         for i, e in enumerate(self.squad.enemies):
@@ -295,12 +318,31 @@ class GSNvNCombatScreen(SMState):
         return [a for a in curr_member.actions if a.category == category]
 
     def _handle_sub_menu_input(self, key_info: any) -> None:
-        cat = ActionCategory.SKILL if self.menu_mode == "SKILLS" else ActionCategory.SPELL
-        act_list = self._get_available_actions(cat)
-
         if key_info.key == KeyCode.ESCAPE or key_info.char in ("b", "B", "q", "Q"):
             self.menu_mode = "MAIN"
             return
+
+        if self.menu_mode == "ITEMS":
+            items = self._get_battle_items()
+            if not items:
+                self.menu_mode = "MAIN"
+                return
+
+            if key_info.key == KeyCode.UP:
+                self.sub_menu_cursor = (self.sub_menu_cursor - 1) % len(items)
+            elif key_info.key == KeyCode.DOWN:
+                self.sub_menu_cursor = (self.sub_menu_cursor + 1) % len(items)
+            elif key_info.char in [str(i) for i in range(1, min(10, len(items) + 1))]:
+                self.sub_menu_cursor = int(key_info.char) - 1
+                item_obj, _ = items[self.sub_menu_cursor]
+                self._choose_item_action(item_obj)
+            elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
+                item_obj, _ = items[self.sub_menu_cursor]
+                self._choose_item_action(item_obj)
+            return
+
+        cat = ActionCategory.SKILL if self.menu_mode == "SKILLS" else ActionCategory.SPELL
+        act_list = self._get_available_actions(cat)
 
         if not act_list:
             self.menu_mode = "MAIN"
@@ -316,6 +358,33 @@ class GSNvNCombatScreen(SMState):
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
             self._choose_sub_action(act_list[self.sub_menu_cursor])
 
+    def _choose_item_action(self, item_obj: ConsumableItem) -> None:
+        action = item_obj.to_battle_action()
+        self.selected_action = action.copy()
+
+        if action.target_scope == TargetScope.ALL_ENEMIES:
+            dummy_target = self.squad.enemies[0]
+            self.engine.plan_member_action(self.active_member_idx, action, dummy_target)
+            self._advance_to_next_member()
+        elif action.target_scope == TargetScope.ALL_ALLIES:
+            dummy_target = self.party.members[0]
+            self.engine.plan_member_action(self.active_member_idx, action, dummy_target)
+            self._advance_to_next_member()
+        elif action.target_scope == TargetScope.SINGLE_ALLY:
+            self.menu_mode = "TARGET_SELECT"
+            self.target_type = "ALLY"
+            if item_obj.effect_type == ItemEffectType.REVIVE:
+                ko_allies = [i for i, m in enumerate(self.party.members) if not m.is_alive]
+                self.target_cursor = ko_allies[0] if ko_allies else 0
+            else:
+                alive_allies = [i for i, m in enumerate(self.party.members) if m.is_alive]
+                self.target_cursor = alive_allies[0] if alive_allies else 0
+        else:  # SINGLE_ENEMY
+            self.menu_mode = "TARGET_SELECT"
+            self.target_type = "ENEMY"
+            self.target_cursor = self._get_first_alive_enemy_idx()
+            self.inspected_enemy_idx = self.target_cursor
+
     def _choose_sub_action(self, action: BattleAction) -> None:
         curr_member = self.party.get_member(self.active_member_idx)
         if not curr_member:
@@ -330,18 +399,56 @@ class GSNvNCombatScreen(SMState):
             dummy_target = curr_member if action.target_scope == TargetScope.SELF else self.squad.enemies[0]
             self.engine.plan_member_action(self.active_member_idx, action, dummy_target)
             self._advance_to_next_member()
+        elif action.target_scope == TargetScope.SINGLE_ALLY:
+            self.menu_mode = "TARGET_SELECT"
+            self.target_type = "ALLY"
+            alive_allies = [i for i, m in enumerate(self.party.members) if m.is_alive]
+            self.target_cursor = alive_allies[0] if alive_allies else 0
         else:
             self.menu_mode = "TARGET_SELECT"
+            self.target_type = "ENEMY"
             self.target_cursor = self._get_first_alive_enemy_idx()
             self.inspected_enemy_idx = self.target_cursor
 
     def _handle_target_input(self, key_info: any) -> None:
-        alive_indices = [i for i, e in enumerate(self.squad.enemies) if e.is_alive]
-        if not alive_indices:
-            return
-
         if key_info.key == KeyCode.ESCAPE or key_info.char in ("b", "B"):
             self.menu_mode = "MAIN"
+            return
+
+        if self.target_type == "ALLY":
+            is_revive = (
+                self.selected_action is not None
+                and self.selected_action.category == ActionCategory.ITEM
+                and self.selected_action.name == "Revive Herb"
+            )
+            if is_revive:
+                candidates = [i for i, m in enumerate(self.party.members) if not m.is_alive]
+                if not candidates:
+                    candidates = list(range(len(self.party.members)))
+            else:
+                candidates = [i for i, m in enumerate(self.party.members) if m.is_alive]
+
+            if not candidates:
+                self.menu_mode = "MAIN"
+                return
+
+            if key_info.key in (KeyCode.LEFT, KeyCode.UP):
+                cur_pos = candidates.index(self.target_cursor) if self.target_cursor in candidates else 0
+                self.target_cursor = candidates[(cur_pos - 1) % len(candidates)]
+            elif key_info.key in (KeyCode.RIGHT, KeyCode.DOWN):
+                cur_pos = candidates.index(self.target_cursor) if self.target_cursor in candidates else 0
+                self.target_cursor = candidates[(cur_pos + 1) % len(candidates)]
+            elif key_info.char in [str(i) for i in range(1, len(self.party.members) + 1)]:
+                idx = int(key_info.char) - 1
+                if idx in candidates:
+                    self.target_cursor = idx
+                    self._confirm_target_selection()
+            elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
+                self._confirm_target_selection()
+            return
+
+        alive_indices = [i for i, e in enumerate(self.squad.enemies) if e.is_alive]
+        if not alive_indices:
             return
 
         # Arrow navigation
@@ -370,14 +477,21 @@ class GSNvNCombatScreen(SMState):
             self._confirm_target_selection()
 
     def _confirm_target_selection(self) -> None:
-        target = self.squad.get_enemy(self.target_cursor)
-        if target is None or not target.is_alive:
-            return
         if self.selected_action is None:
             self.selected_action = ACTIONS["Attack"].copy()
 
-        self.engine.plan_member_action(self.active_member_idx, self.selected_action, target)
-        self._advance_to_next_member()
+        if self.target_type == "ALLY":
+            target_member = self.party.get_member(self.target_cursor)
+            if target_member is None:
+                return
+            self.engine.plan_member_action(self.active_member_idx, self.selected_action, target_member)
+            self._advance_to_next_member()
+        else:
+            target_enemy = self.squad.get_enemy(self.target_cursor)
+            if target_enemy is None or not target_enemy.is_alive:
+                return
+            self.engine.plan_member_action(self.active_member_idx, self.selected_action, target_enemy)
+            self._advance_to_next_member()
 
     def _advance_to_next_member(self) -> None:
         """Advances active planning hero or triggers execution phase if all have chosen."""
@@ -532,7 +646,11 @@ class GSNvNCombatScreen(SMState):
             return " " * 78
         m = self.party.members[member_idx]
         is_active = (self.engine.phase == CombatPhase.COMMAND_PHASE and self.active_member_idx == member_idx)
-        prefix = "\033[1;36m❱\033[0m" if is_active else " "
+        is_targeted_ally = (self.menu_mode == "TARGET_SELECT" and self.target_type == "ALLY" and self.target_cursor == member_idx)
+        if is_targeted_ally:
+            prefix = "\033[1;33m❱\033[0m"
+        else:
+            prefix = "\033[1;36m❱\033[0m" if is_active else " "
 
         name_class = f"{m.name} ({m.job_class})"
         if not m.is_alive:
@@ -569,11 +687,14 @@ class GSNvNCombatScreen(SMState):
             if self.engine.phase == CombatPhase.EXECUTION_PHASE:
                 return _pad_cell(" EXECUTION PHASE", 24)
             elif self.menu_mode == "TARGET_SELECT":
-                return _pad_cell(" SELECT TARGET", 24)
+                target_tag = "ALLY" if self.target_type == "ALLY" else "ENEMY"
+                return _pad_cell(f" TARGET {target_tag}", 24)
             elif self.menu_mode == "SKILLS":
                 return _pad_cell(f" SKILLS ({name})", 24)
             elif self.menu_mode == "SPELLS":
                 return _pad_cell(f" SPELLS ({name})", 24)
+            elif self.menu_mode == "ITEMS":
+                return _pad_cell(f" ITEMS ({name})", 24)
             else:
                 return _pad_cell(f" COMMANDS ({name})", 24)
 
@@ -585,7 +706,7 @@ class GSNvNCombatScreen(SMState):
             return " " * 24
 
         if self.menu_mode == "MAIN":
-            options = ["[1] Attack", "[2] Skills", "[3] Spells", "[4] Defend"]
+            options = ["[1] Attack", "[2] Skills", "[3] Spells", "[4] Item", "[5] Defend"]
             opt_idx = row_idx - 1
             if 0 <= opt_idx < len(options):
                 cursor = "❱ " if self.main_menu_cursor == opt_idx else "  "
@@ -605,20 +726,47 @@ class GSNvNCombatScreen(SMState):
                 return _pad_cell("   [Esc] Back", 24)
             return " " * 24
 
-        if self.menu_mode == "TARGET_SELECT":
-            target = self.squad.get_enemy(self.target_cursor)
-            target_name = target.name if target else "Enemy"
-            if row_idx == 1:
-                return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 24)
-            elif row_idx == 2:
-                return _pad_cell("   [Arrows] Cycle", 24)
-            elif row_idx == 3:
-                return _pad_cell("   [1..10] Direct", 24)
-            elif row_idx == 4:
-                return _pad_cell("   [Enter] Confirm", 24)
-            elif row_idx == 5:
-                return _pad_cell("   [Esc] Cancel", 24)
+        if self.menu_mode == "ITEMS":
+            items = self._get_battle_items()
+            opt_idx = row_idx - 1
+            if 0 <= opt_idx < len(items):
+                item_obj, qty = items[opt_idx]
+                cursor = "❱ " if self.sub_menu_cursor == opt_idx else "  "
+                txt = f" {cursor}[{opt_idx + 1}] {item_obj.name[:12]} x{qty}"
+                return _pad_cell(txt[:23], 24)
+            elif opt_idx == len(items):
+                return _pad_cell("   [Esc] Back", 24)
             return " " * 24
+
+        if self.menu_mode == "TARGET_SELECT":
+            if self.target_type == "ALLY":
+                target = self.party.get_member(self.target_cursor)
+                target_name = target.name if target else "Ally"
+                if row_idx == 1:
+                    return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 24)
+                elif row_idx == 2:
+                    return _pad_cell("   [Arrows] Cycle", 24)
+                elif row_idx == 3:
+                    return _pad_cell("   [1..5] Direct", 24)
+                elif row_idx == 4:
+                    return _pad_cell("   [Enter] Confirm", 24)
+                elif row_idx == 5:
+                    return _pad_cell("   [Esc] Cancel", 24)
+                return " " * 24
+            else:
+                target = self.squad.get_enemy(self.target_cursor)
+                target_name = target.name if target else "Enemy"
+                if row_idx == 1:
+                    return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 24)
+                elif row_idx == 2:
+                    return _pad_cell("   [Arrows] Cycle", 24)
+                elif row_idx == 3:
+                    return _pad_cell("   [1..10] Direct", 24)
+                elif row_idx == 4:
+                    return _pad_cell("   [Enter] Confirm", 24)
+                elif row_idx == 5:
+                    return _pad_cell("   [Esc] Cancel", 24)
+                return " " * 24
 
         return " " * 24
 
@@ -656,7 +804,9 @@ class GSNvNCombatScreen(SMState):
             return "\033[33m[1..10/Arrows] Select Target  [Enter] Confirm  [Esc] Back\033[0m"
         elif self.menu_mode in ("SKILLS", "SPELLS"):
             return "\033[33m[1..N/Arrows] Select Action  [Enter] Confirm  [Esc] Back\033[0m"
+        elif self.menu_mode == "ITEMS":
+            return "\033[33m[1..N/Arrows] Select Item  [Enter] Confirm  [Esc] Back\033[0m"
         else:
             can_go_back = any(self.party.members[i].is_alive for i in range(self.active_member_idx - 1, -1, -1))
             prev_hint = "  [B] Back" if can_go_back else ""
-            return f"\033[33m[1..4/Arrows] Choose Action{prev_hint}  [K] Cheat Win  [Esc] Flee\033[0m"
+            return f"\033[33m[1..5/Arrows] Choose Action{prev_hint}  [K] Cheat Win  [Esc] Flee\033[0m"

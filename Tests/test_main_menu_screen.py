@@ -214,8 +214,12 @@ class TestMainMenuScreen(unittest.TestCase):
         # Press Enter on item
         self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
 
-        # Move to 'Discard' (index 1) and press Enter
+        # Move to 'Discard' (index 1) and press Enter -> enters DISCARD_CHOICE
         self.screen._handle_input(KeyEvent(key=KeyCode.RIGHT), self.context, self.mock_core)
+        self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
+        self.assertEqual(self.screen.item_modal_mode, "DISCARD_CHOICE")
+
+        # Select 'Discard 1' (index 0) and press Enter -> enters DISCARD_CONFIRM
         self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
         self.assertEqual(self.screen.item_modal_mode, "DISCARD_CONFIRM")
 

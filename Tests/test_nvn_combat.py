@@ -458,18 +458,18 @@ class TestCombatScreenState(unittest.TestCase):
         self.assertTrue(self.screen.squad.is_wiped)
 
     def test_status_hints_arrows_and_contextual_back(self):
-        """Verifies status hints use [1..4/Arrows], disallow WASD, and contextualize [B] Back."""
+        """Verifies status hints use [1..5/Arrows], disallow WASD, and contextualize [B] Back."""
         # Member 0 (first hero): No previous hero, so [B] Back must NOT be displayed
         self.screen.active_member_idx = 0
         hints_hero1 = self.screen._format_status_hints()
-        self.assertIn("[1..4/Arrows] Choose Action", hints_hero1)
+        self.assertIn("[1..5/Arrows] Choose Action", hints_hero1)
         self.assertNotIn("WASD", hints_hero1)
         self.assertNotIn("[B]", hints_hero1)
 
         # Member 1 (second hero): [B] Back must now appear
         self.screen.active_member_idx = 1
         hints_hero2 = self.screen._format_status_hints()
-        self.assertIn("[1..4/Arrows] Choose Action", hints_hero2)
+        self.assertIn("[1..5/Arrows] Choose Action", hints_hero2)
         self.assertIn("[B] Back", hints_hero2)
 
     def test_chevron_navigation_arrows_and_wasd_ignored(self):

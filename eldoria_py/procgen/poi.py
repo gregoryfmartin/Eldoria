@@ -56,6 +56,9 @@ class POIDescriptor:
     sub_map: Optional[Any] = None
     description: str = ""
     spawn_pos: Tuple[int, int] = (27, 21)
+    is_locked: bool = False
+    required_key: Optional[str] = None
+    unlock_msg: str = ""
 
     def to_dict(self) -> dict:
         return {
@@ -68,6 +71,9 @@ class POIDescriptor:
             "local_pos": list(self.local_pos),
             "spawn_pos": list(self.spawn_pos),
             "description": self.description,
+            "is_locked": self.is_locked,
+            "required_key": self.required_key,
+            "unlock_msg": self.unlock_msg,
             "sub_map": (
                 self.sub_map.to_compact_dict()
                 if self.sub_map and hasattr(self.sub_map, "to_compact_dict")
@@ -87,6 +93,9 @@ class POIDescriptor:
             local_pos=tuple(data["local_pos"]),
             spawn_pos=tuple(data.get("spawn_pos", (27, 21))),
             description=data.get("description", ""),
+            is_locked=data.get("is_locked", False),
+            required_key=data.get("required_key", None),
+            unlock_msg=data.get("unlock_msg", ""),
         )
         if data.get("sub_map"):
             from .map_generator import Map
@@ -144,6 +153,9 @@ class POIDescriptor:
         sector_coord: Tuple[int, int] = (2, 2),
         local_pos: Tuple[int, int] = (27, 12),
         spawn_pos: Tuple[int, int] = (27, 21),
+        is_locked: bool = False,
+        required_key: Optional[str] = None,
+        unlock_msg: str = "",
     ) -> POIDescriptor:
         return cls(
             poi_type=POIType.CAVE,
@@ -155,4 +167,7 @@ class POIDescriptor:
             local_pos=local_pos,
             spawn_pos=spawn_pos,
             description="A dark underground cavern descending into treacherous stone chambers.",
+            is_locked=is_locked,
+            required_key=required_key,
+            unlock_msg=unlock_msg,
         )
