@@ -166,6 +166,16 @@ class GSNoiseMapTestScreen(SMState):
                 self.player_x, self.player_y = tuple(ctx_exp["player_pos"])
             self.playtime_seconds = ctx_exp.get("playtime_seconds", 0)
 
+            submap_name = ctx_exp.get("active_submap_poi")
+            if submap_name:
+                poi = self.world_macro.get_poi(submap_name)
+                if poi and poi.sub_map:
+                    self.active_poi = poi
+                    self.active_submap = poi.sub_map
+            else:
+                self.active_submap = None
+                self.active_poi = None
+
         # Check if returning from a wiped party battle (Defeat)
         if self.party.is_wiped:
             # Revive party with 50% HP and 50% MP
@@ -469,6 +479,9 @@ class GSNoiseMapTestScreen(SMState):
                     self.current_sector = ret_sector
                     self.player_x = ret_x
                     self.player_y = ret_y
+                elif self.active_poi:
+                    self.current_sector = self.active_poi.sector_coord
+                    self.player_x, self.player_y = self.active_poi.local_pos
                 self.active_submap = None
                 self.active_poi = None
                 TerminalScreen.clear_screen()

@@ -165,7 +165,7 @@ class MapTile:
         return config.walkable if config else False
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
+        d: Dict[str, Any] = {
             "BackgroundImage": self.background_image,
             "Biome": self.biome.value,
             "ObjectListing": self.object_listing,
@@ -176,6 +176,15 @@ class MapTile:
             "Elevation": round(self.elevation, 4),
             "Moisture": round(self.moisture, 4),
         }
+        if self.custom_glyph:
+            d["CustomGlyph"] = self.custom_glyph
+        if self.custom_fg:
+            d["CustomFG"] = [self.custom_fg.r, self.custom_fg.g, self.custom_fg.b]
+        if self.custom_bg:
+            d["CustomBG"] = [self.custom_bg.r, self.custom_bg.g, self.custom_bg.b]
+        if self.warp_target and hasattr(self.warp_target, "to_dict"):
+            d["WarpTarget"] = self.warp_target.to_dict()
+        return d
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> MapTile:
@@ -184,6 +193,12 @@ class MapTile:
             biome = BiomeType(biome_str)
         except ValueError:
             biome = BiomeType.PLAINS
+        custom_fg = TrueColor(*data["CustomFG"]) if "CustomFG" in data else None
+        custom_bg = TrueColor(*data["CustomBG"]) if "CustomBG" in data else None
+        warp_target = None
+        if "WarpTarget" in data and data["WarpTarget"]:
+            from .poi import WarpTarget
+            warp_target = WarpTarget.from_dict(data["WarpTarget"])
         return cls(
             background_image=data.get("BackgroundImage", "Plains"),
             biome=biome,
@@ -194,6 +209,10 @@ class MapTile:
             region_code=data.get("RegionCode", 0),
             elevation=data.get("Elevation", 0.0),
             moisture=data.get("Moisture", 0.0),
+            custom_glyph=data.get("CustomGlyph"),
+            custom_fg=custom_fg,
+            custom_bg=custom_bg,
+            warp_target=warp_target,
         )
 
 
@@ -249,16 +268,52 @@ class Map:
         return m
 
     def to_compact_dict(self) -> Dict[str, Any]:
-        """Compact serialization storing 2D rows of 1-char biome tokens and a sparse list of special overrides."""
+        """Compact serialization storing 2D rows of 1-char biome tokens, hex exit masks, and special overrides."""
         rows = []
+        exit_rows = []
         specials = []
         for y in range(self.height):
             row_chars = []
+            row_hex = []
             for x in range(self.width):
                 tile = self.tiles[y][x]
                 token = BIOME_TO_CHAR.get(tile.biome, ".")
                 row_chars.append(token)
-                if tile.custom_glyph or tile.custom_fg or tile.custom_bg or tile.object_listing or tile.warp_target:
+
+                # Encode 4-bit exit mask: N=1, S=2, E=4, W=8 -> hex char 0-f
+                mask = (
+                    (1 if tile.exits[MapTile.EXIT_NORTH] else 0)
+                    | (2 if tile.exits[MapTile.EXIT_SOUTH] else 0)
+                    | (4 if tile.exits[MapTile.EXIT_EAST] else 0)
+                    | (8 if tile.exits[MapTile.EXIT_WEST] else 0)
+                )
+                row_hex.append(f"{mask:x}")
+
+                # Check if tile has visual, battle, or asset overrides
+                cfg = BIOME_CONFIGS.get(tile.biome)
+                has_visual = (
+                    tile.custom_glyph is not None
+                    or tile.custom_fg is not None
+                    or tile.custom_bg is not None
+                    or bool(tile.object_listing)
+                    or tile.warp_target is not None
+                )
+                has_battle = False
+                has_bg_override = False
+                if cfg:
+                    if (
+                        tile.battle_allowed != cfg.battle_allowed
+                        or abs(tile.encounter_rate - cfg.encounter_rate) > 1e-4
+                        or tile.region_code != cfg.region_code
+                    ):
+                        has_battle = True
+                    expected_bg = cfg.name.replace(" ", "")
+                    if tile.background_image and tile.background_image != expected_bg:
+                        has_bg_override = True
+                elif tile.battle_allowed or tile.region_code != 0:
+                    has_battle = True
+
+                if has_visual or has_battle or has_bg_override:
                     s_dict: Dict[str, Any] = {"x": x, "y": y}
                     if tile.custom_glyph:
                         s_dict["glyph"] = tile.custom_glyph
@@ -270,8 +325,15 @@ class Map:
                         s_dict["obj"] = list(tile.object_listing)
                     if tile.warp_target and hasattr(tile.warp_target, "to_dict"):
                         s_dict["warp"] = tile.warp_target.to_dict()
+                    if has_battle:
+                        s_dict["battle_allowed"] = tile.battle_allowed
+                        s_dict["encounter_rate"] = round(tile.encounter_rate, 4)
+                        s_dict["region_code"] = tile.region_code
+                    if has_bg_override:
+                        s_dict["bg_img"] = tile.background_image
                     specials.append(s_dict)
             rows.append("".join(row_chars))
+            exit_rows.append("".join(row_hex))
 
         return {
             "name": self.name,
@@ -279,6 +341,7 @@ class Map:
             "height": self.height,
             "boundary_wrap": self.boundary_wrap,
             "rows": rows,
+            "exits": exit_rows,
             "specials": specials,
         }
 
@@ -294,7 +357,14 @@ class Map:
         for y, row_str in enumerate(rows):
             for x, char in enumerate(row_str):
                 biome = CHAR_TO_BIOME.get(char, BiomeType.PLAINS)
-                m.tiles[y][x] = MapTile(biome=biome)
+                cfg = BIOME_CONFIGS.get(biome)
+                m.tiles[y][x] = MapTile(
+                    biome=biome,
+                    background_image=cfg.name.replace(" ", "") if cfg else "Plains",
+                    battle_allowed=cfg.battle_allowed if cfg else False,
+                    encounter_rate=cfg.encounter_rate if cfg else 0.0,
+                    region_code=cfg.region_code if cfg else 0,
+                )
 
         specials = data.get("specials", [])
         for s in specials:
@@ -312,6 +382,32 @@ class Map:
                 if "warp" in s and s["warp"]:
                     from .poi import WarpTarget
                     tile.warp_target = WarpTarget.from_dict(s["warp"])
+                if "battle_allowed" in s:
+                    tile.battle_allowed = bool(s["battle_allowed"])
+                if "encounter_rate" in s:
+                    tile.encounter_rate = float(s["encounter_rate"])
+                if "region_code" in s:
+                    tile.region_code = int(s["region_code"])
+                if "bg_img" in s:
+                    tile.background_image = str(s["bg_img"])
+
+        # Hydrate authoritative exits or fall back to calculation
+        if "exits" in data:
+            exit_rows = data["exits"]
+            for y, row_hex in enumerate(exit_rows):
+                if y < m.height:
+                    for x, ch in enumerate(row_hex):
+                        if x < m.width:
+                            mask = int(ch, 16)
+                            m.tiles[y][x].exits = [
+                                bool(mask & 1),
+                                bool(mask & 2),
+                                bool(mask & 4),
+                                bool(mask & 8),
+                            ]
+        else:
+            # Legacy fallback: calculate exits based on walkability
+            ProceduralMapGenerator._calculate_exits(m)
 
         return m
 

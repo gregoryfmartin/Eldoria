@@ -213,17 +213,34 @@ class WorldMacroMap:
             reverse=True,
         )
         town_sectors = []
+
+        # Seeded RNG dedicated to POI placement to preserve determinism
+        poi_rng = random.Random(self.seed + 101)
+
+        if town_candidates:
+            # Select starter town from top 3-5 viable candidates using weighted probability
+            pool_size = min(5, len(town_candidates))
+            starter_pool = town_candidates[:pool_size]
+            weights = [max(1.0, s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5) for s in starter_pool]
+
+            chosen_starter = poi_rng.choices(starter_pool, weights=weights, k=1)[0]
+            starter_coord = chosen_starter["coord"]
+            town_sectors.append(starter_coord)
+            used_sectors.add(starter_coord)
+
+        # Place remaining towns (if any) respecting distance constraints
         for cand in town_candidates:
+            if len(town_sectors) >= n_towns:
+                break
             coord = cand["coord"]
             if coord not in used_sectors:
-                if town_sectors and total_sectors > 16:
+                if total_sectors > 16:
                     min_dist = min(abs(coord[0] - tc[0]) + abs(coord[1] - tc[1]) for tc in town_sectors)
                     if min_dist < 2 and len(town_candidates) > len(town_sectors) + 2:
                         continue
                 town_sectors.append(coord)
                 used_sectors.add(coord)
-                if len(town_sectors) >= n_towns:
-                    break
+
         while len(town_sectors) < n_towns:
             avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
             if not avail:
@@ -439,8 +456,9 @@ class WorldMacroMap:
         )
         tile.custom_glyph = poi.glyph
         tile.custom_fg = poi.fg_color
-        tile.custom_bg = poi.bg_color
-        tile.object_listing.append(f"POI:{poi.name}")
+        poi_tag = f"POI:{poi.name}"
+        if poi_tag not in tile.object_listing:
+            tile.object_listing.append(poi_tag)
 
     def _carve_town_road(self) -> None:
         """Carves a cobblestone road across all Town sectors connecting West and East edges."""
@@ -641,8 +659,21 @@ class WorldMacroMap:
                 sec_map = macro.sectors[sy][sx]
                 macro._stamp_poi_on_tile(sec_map, poi.local_pos, poi)
 
-        # Re-link exits across sector boundaries
-        macro._link_sector_exits()
+        # Check if sectors were loaded with authoritative exits
+        has_authoritative_exits = any(
+            "exits" in sec_data
+            for row in data.get("sectors", [])
+            for sec_data in row
+            if isinstance(sec_data, dict)
+        )
+        if not has_authoritative_exits:
+            # Re-calculate internal exits for all sectors (legacy fallback)
+            for sy in range(macro.macro_height):
+                for sx in range(macro.macro_width):
+                    ProceduralMapGenerator._calculate_exits(macro.sectors[sy][sx])
+
+            # Re-link exits across sector boundaries
+            macro._link_sector_exits()
 
         return macro
 

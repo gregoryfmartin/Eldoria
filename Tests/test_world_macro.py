@@ -303,6 +303,41 @@ class TestWorldMacroAndSubMaps(unittest.TestCase):
         self.assertEqual(screen.player_x, 53)
         self.assertEqual(screen.player_y, walkable_y)
 
+    def test_starter_sector_seed_determinism(self) -> None:
+        """Verify that identical seeds produce identical starter sectors and town positions."""
+        map1 = WorldMacroMap(seed=424242, macro_width=6, macro_height=6)
+        map2 = WorldMacroMap(seed=424242, macro_width=6, macro_height=6)
+        self.assertEqual(map1.starter_sector, map2.starter_sector)
+        self.assertEqual(map1.starter_player_pos, map2.starter_player_pos)
+
+        t1 = map1.get_poi(POIType.TOWN)
+        t2 = map2.get_poi(POIType.TOWN)
+        self.assertIsNotNone(t1)
+        self.assertIsNotNone(t2)
+        self.assertEqual(t1.sector_coord, t2.sector_coord)
+        self.assertEqual(t1.local_pos, t2.local_pos)
+
+    def test_starter_sector_diversity_across_seeds(self) -> None:
+        """Verify that varying seeds select diverse starter sectors rather than locking to a fixed coordinate."""
+        starter_sectors = set()
+
+        for test_seed in range(1001, 1013):
+            m = WorldMacroMap(seed=test_seed, macro_width=6, macro_height=6)
+            starter_sectors.add(m.starter_sector)
+
+            # Check that starter sector has a valid town POI
+            town = m.get_poi(POIType.TOWN)
+            self.assertIsNotNone(town)
+            self.assertEqual(town.sector_coord, m.starter_sector)
+
+            # Check player spawn position is walkable
+            spawn_sec = m.sectors[m.starter_sector[1]][m.starter_sector[0]]
+            px, py = m.starter_player_pos
+            self.assertTrue(spawn_sec.tiles[py][px].is_walkable)
+
+        # Over 12 distinct seeds, there must be multiple different starter sectors chosen
+        self.assertGreater(len(starter_sectors), 1, "Different seeds must produce diverse starter sector locations.")
+
 
 if __name__ == "__main__":
     unittest.main()

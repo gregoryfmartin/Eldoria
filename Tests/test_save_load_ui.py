@@ -206,6 +206,99 @@ class TestSaveLoadUI(unittest.TestCase):
         self.assertIn("Rested at Oakhaven Inn", map_screen.last_status_msg)
         self.assertIn("saved to Slot 1", map_screen.last_status_msg)
 
+    def test_loaded_game_player_movement(self) -> None:
+        """Verify that loading any saved game correctly populates tile exits and allows movement."""
+        loaded_party, loaded_macro, loaded_state = self.save_manager.load_game(1)
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24)
+
+        ctx = Context()
+        ctx.set("party", loaded_party)
+        ctx.set("world_macro", loaded_macro)
+        ctx.set("exploration_state", loaded_state)
+        ctx.set("active_slot", 1)
+
+        map_screen.enter(ctx)
+
+        curr_tile = map_screen._current_map().tiles[map_screen.player_y][map_screen.player_x]
+        self.assertTrue(curr_tile.is_walkable)
+        self.assertNotEqual(curr_tile.exits, [False, False, False, False], "Loaded tile must have valid cardinal exits.")
+
+        # Find a valid exit direction
+        start_x, start_y = map_screen.player_x, map_screen.player_y
+        valid_key = None
+        if curr_tile.exits[0]:  # North
+            valid_key = KeyCode.UP
+        elif curr_tile.exits[1]:  # South
+            valid_key = KeyCode.DOWN
+        elif curr_tile.exits[2]:  # East
+            valid_key = KeyCode.RIGHT
+        elif curr_tile.exits[3]:  # West
+            valid_key = KeyCode.LEFT
+
+        self.assertIsNotNone(valid_key, "Player must have at least one valid movement direction.")
+
+        # Send movement key
+        ctx.set(SMState.ContextKeysPressed, [KeyEvent(key=valid_key)])
+        map_screen.update(ctx)
+
+        new_pos = (map_screen.player_x, map_screen.player_y)
+        self.assertNotEqual((start_x, start_y), new_pos, "Player position must update when moving on loaded game.")
+
+    def test_loaded_game_submap_restoration_and_egress(self) -> None:
+        """Verify saving inside a submap restores the submap on load and allows movement and egress."""
+        # 1. Enter Oakhaven Town submap and save at Inn
+        town_poi = self.world_macro.get_poi("Oakhaven Town")
+        self.assertIsNotNone(town_poi)
+
+        exp_state = {
+            "current_sector": list(town_poi.sector_coord),
+            "player_pos": [27, 19],
+            "current_map_name": town_poi.name,
+            "active_submap_poi": town_poi.name,
+            "visited_sectors": [list(town_poi.sector_coord)],
+            "flags": {},
+        }
+        self.save_manager.save_game(
+            slot_idx=2,
+            party=Party(members=[PartyMember(name="Hero", job_class="Warrior")]),
+            exploration_state=exp_state,
+            world_macro=self.world_macro,
+        )
+
+        # 2. Load Slot 2
+        loaded_party, loaded_macro, loaded_state = self.save_manager.load_game(2)
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24)
+
+        ctx = Context()
+        ctx.set("party", loaded_party)
+        ctx.set("world_macro", loaded_macro)
+        ctx.set("exploration_state", loaded_state)
+        ctx.set("active_slot", 2)
+
+        map_screen.enter(ctx)
+
+        # Verify active_submap and active_poi are restored
+        self.assertIsNotNone(map_screen.active_submap)
+        self.assertIsNotNone(map_screen.active_poi)
+        self.assertEqual(map_screen.active_poi.name, "Oakhaven Town")
+        self.assertEqual((map_screen.player_x, map_screen.player_y), (27, 19))
+
+        # Check movement inside submap
+        sub_tile = map_screen.active_submap.tiles[19][27]
+        self.assertTrue(sub_tile.is_walkable)
+        self.assertNotEqual(sub_tile.exits, [False, False, False, False])
+
+        # Walk to southern egress gate at (27, 23)
+        map_screen.player_x = 27
+        map_screen.player_y = 23
+        map_screen._handle_interact()
+
+        # Verify returned to Overworld at town coordinates
+        self.assertIsNone(map_screen.active_submap)
+        self.assertIsNone(map_screen.active_poi)
+        self.assertEqual(map_screen.current_sector, town_poi.sector_coord)
+        self.assertEqual((map_screen.player_x, map_screen.player_y), town_poi.local_pos)
+
 
 if __name__ == "__main__":
     unittest.main()

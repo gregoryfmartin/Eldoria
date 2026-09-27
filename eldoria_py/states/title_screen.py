@@ -330,6 +330,16 @@ class GSTitleScreen(SMState):
                                     map_screen.player_x, map_screen.player_y = tuple(loaded_state.get("player_pos", loaded_macro.starter_player_pos))
                                     map_screen.playtime_seconds = loaded_state.get("playtime_seconds", 0)
                                     map_screen.last_status_msg = f"★ Loaded Slot {slot_num}."
+
+                                    submap_name = loaded_state.get("active_submap_poi")
+                                    if submap_name:
+                                        poi = loaded_macro.get_poi(submap_name)
+                                        if poi and poi.sub_map:
+                                            map_screen.active_poi = poi
+                                            map_screen.active_submap = poi.sub_map
+                                    else:
+                                        map_screen.active_submap = None
+                                        map_screen.active_poi = None
                                 self._close_dialog()
                                 core.game_state.trigger("ToNoiseMap", context)
                                 return
