@@ -178,6 +178,25 @@ class TestMainMenuScreen(unittest.TestCase):
         self.screen._handle_input(KeyEvent(key=KeyCode.LEFT), self.context, self.mock_core)
         self.assertEqual(self.screen.hero_idx, 4)
 
+    def test_status_category_cannot_be_selected(self):
+        """Verifies that pressing Enter on Status category does not transition to SUBMENU and Left/Right switches heroes."""
+        self.screen.category_idx = 0  # Status
+        self.screen.focus_mode = "CATEGORIES"
+
+        # Press Enter on Status -> remains in CATEGORIES
+        self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
+        self.assertEqual(self.screen.focus_mode, "CATEGORIES")
+
+        # Status hints omit [Enter] Confirm
+        hints = self.screen._format_status_hints()
+        self.assertNotIn("[Enter]", hints)
+        self.assertIn("[◄►] Switch Hero", hints)
+
+        # Left/Right arrow keys continue to cycle heroes freely
+        self.screen._handle_input(KeyEvent(key=KeyCode.RIGHT), self.context, self.mock_core)
+        self.assertEqual(self.screen.hero_idx, 1)
+        self.assertEqual(self.screen.focus_mode, "CATEGORIES")
+
     def test_item_use_healing_flow(self):
         """Tests navigating items, opening action modal, and healing target hero."""
         self.screen.category_idx = 1  # Items
@@ -275,6 +294,49 @@ class TestMainMenuScreen(unittest.TestCase):
         self.assertIsNone(hero.equipment[EquipmentSlot.WEAPON])
         self.assertTrue(self.party.has_item(cur_weapon.name))
 
+    def test_equipment_submenu_line_highlighting(self):
+        """Verifies full-width blue line highlighting on active equipped slot and drawer items."""
+        self.screen.category_idx = 2  # Equipment
+        self.screen.focus_mode = "SUBMENU"
+        self.screen.equip_slot_cursor = 0  # Weapon slot active
+        self.screen.equip_drawer_open = False
+
+        eq_lines = self.screen._render_equipment_submenu()
+        # Row 1 is Weapon slot
+        weapon_line = eq_lines[1]
+        self.assertIn("\033[48;2;25;55;85m", weapon_line)
+        self.assertIn("Weapon", weapon_line)
+        self.assertIn("❱", weapon_line)
+        self.assertEqual(visible_width(weapon_line), 55)
+
+        # Row 2 is Helmet slot (inactive)
+        helmet_line = eq_lines[2]
+        self.assertNotIn("\033[48;2;25;55;85m", helmet_line)
+        self.assertIn("Helmet", helmet_line)
+        self.assertNotIn("❱", helmet_line)
+
+        # Now open drawer
+        self.screen.equip_drawer_open = True
+        self.screen.equip_drawer_items = [EQUIPMENT_CATALOG["Iron Longsword"], None]
+        self.screen.equip_drawer_cursor = 0
+
+        drawer_lines = self.screen._render_equipment_submenu()
+        # In EQUIPPED SLOTS, weapon slot should no longer have bg highlight, but has active indicator
+        self.assertNotIn("\033[48;2;25;55;85m", drawer_lines[1])
+        self.assertIn("›", drawer_lines[1])
+
+        # In AVAILABLE GEAR IN BAG, line 12 is first gear option (active)
+        active_gear_line = drawer_lines[12]
+        self.assertIn("\033[48;2;25;55;85m", active_gear_line)
+        self.assertIn("Iron Longsword", active_gear_line)
+        self.assertIn("❱", active_gear_line)
+        self.assertEqual(visible_width(active_gear_line), 55)
+
+        # Line 13 is unequip option (inactive)
+        unequip_line = drawer_lines[13]
+        self.assertNotIn("\033[48;2;25;55;85m", unequip_line)
+        self.assertIn("Unequip Current Gear", unequip_line)
+
     def test_magic_field_casting(self):
         """Tests casting a healing spell from the Magic submenu in the field."""
         self.screen.category_idx = 3  # Magic
@@ -304,6 +366,42 @@ class TestMainMenuScreen(unittest.TestCase):
         self.assertLess(cleric.mp, old_cleric_mp)
         self.assertGreater(target.hp, target.max_hp - 50)
         self.assertIn("cast Heal", self.screen.banner_message)
+
+    def test_magic_submenu_line_highlighting(self):
+        """Verifies full-width blue line highlighting on active spell in Magic submenu."""
+        self.screen.category_idx = 3  # Magic
+        self.screen.hero_idx = 1  # Lyra (has Fireball, Ice Bolt, Arctic Blast)
+        self.screen.focus_mode = "SUBMENU"
+        self.screen.magic_cursor = 0
+
+        magic_lines = self.screen._render_magic_submenu()
+        # Line 0 is header, line 1 is divider, line 2 is first spell (Fireball, active)
+        active_spell_line = magic_lines[2]
+        self.assertIn("\033[48;2;25;55;85m", active_spell_line)
+        self.assertIn("❱", active_spell_line)
+        self.assertIn("Fireball", active_spell_line)
+        self.assertEqual(visible_width(active_spell_line), 55)
+
+        # Line 3 is second spell (Ice Bolt, inactive)
+        inactive_spell_line = magic_lines[3]
+        self.assertNotIn("\033[48;2;25;55;85m", inactive_spell_line)
+        self.assertNotIn("❱", inactive_spell_line)
+        self.assertIn("Ice Bolt", inactive_spell_line)
+
+        # When moving cursor to 1 (Ice Bolt)
+        self.screen.magic_cursor = 1
+        magic_lines_cur1 = self.screen._render_magic_submenu()
+        self.assertNotIn("\033[48;2;25;55;85m", magic_lines_cur1[2])
+        self.assertIn("\033[48;2;25;55;85m", magic_lines_cur1[3])
+        self.assertIn("❱", magic_lines_cur1[3])
+        self.assertIn("Ice Bolt", magic_lines_cur1[3])
+        self.assertEqual(visible_width(magic_lines_cur1[3]), 55)
+
+        # When in CATEGORIES mode, neither has active highlight
+        self.screen.focus_mode = "CATEGORIES"
+        cat_lines = self.screen._render_magic_submenu()
+        self.assertNotIn("\033[48;2;25;55;85m", cat_lines[2])
+        self.assertNotIn("\033[48;2;25;55;85m", cat_lines[3])
 
     def test_save_slot_selection_and_execution(self):
         """Tests selecting a save slot and executing game state save."""
@@ -335,6 +433,40 @@ class TestMainMenuScreen(unittest.TestCase):
         self.screen.quit_option_cursor = 1
         self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
         self.assertFalse(self.mock_core.is_running)
+
+    def test_quit_modal_line_highlighting(self):
+        """Verifies full-width blue line highlighting on active choice in Quit modal."""
+        self.screen.category_idx = 5  # Quit
+        self.screen.focus_mode = "MODAL"
+        self.screen.quit_option_cursor = 0
+
+        quit_lines = self.screen._render_quit_modal()
+        # Row 5 is option 0 (Return to Title Screen, active)
+        active_line = quit_lines[5]
+        self.assertIn("\033[48;2;25;55;85m", active_line)
+        self.assertIn("❱", active_line)
+        self.assertIn("Return to Title Screen", active_line)
+        self.assertEqual(visible_width(active_line), 55)
+
+        # Row 6 is option 1 (Quit to Desktop, inactive)
+        inactive_line = quit_lines[6]
+        self.assertNotIn("\033[48;2;25;55;85m", inactive_line)
+        self.assertNotIn("❱", inactive_line)
+        self.assertIn("Quit to Desktop", inactive_line)
+
+        # Move cursor to option 1
+        self.screen.quit_option_cursor = 1
+        quit_lines_cur1 = self.screen._render_quit_modal()
+        self.assertNotIn("\033[48;2;25;55;85m", quit_lines_cur1[5])
+        self.assertIn("\033[48;2;25;55;85m", quit_lines_cur1[6])
+        self.assertIn("❱", quit_lines_cur1[6])
+        self.assertEqual(visible_width(quit_lines_cur1[6]), 55)
+
+        # When in CATEGORIES mode, neither has active highlight
+        self.screen.focus_mode = "CATEGORIES"
+        cat_lines = self.screen._render_quit_modal()
+        self.assertNotIn("\033[48;2;25;55;85m", cat_lines[5])
+        self.assertNotIn("\033[48;2;25;55;85m", cat_lines[6])
 
     def test_resume_exploration_via_escape(self):
         """Tests that pressing Escape from Categories returns to World Map via ToNoiseMap."""
@@ -516,7 +648,145 @@ class TestMainMenuScreen(unittest.TestCase):
         mp_line = [l for l in lines if "MP:" in strip_ansi(l)][0]
         self.assertIn(ColorLibrary.AppleCyanLight.to_ansi_fg(), mp_line)
 
+    def test_status_submenu_attributes_stat_augment_colors(self):
+        """Verifies that positive stat augments are emerald green, negative are ruby red, and zero is uncolored."""
+        from eldoria_py.terminal.color import ColorLibrary
+        self.screen.category_idx = 0  # Status
+        m = self.party.members[0]
+
+        # In default party, Hero 0 (Aide) has:
+        # ATK equipment_bonus = +31 (positive -> EmeraldGreen)
+        # SPD equipment_bonus = -1 (negative -> RubyRed)
+        # LCK equipment_bonus = 0 (zero -> uncolored)
+        lines = self.screen._render_status_submenu()
+
+        atk_line = [l for l in lines if "ATK:" in strip_ansi(l)][0]
+        spd_line = [l for l in lines if "SPD:" in strip_ansi(l)][0]
+        lck_line = [l for l in lines if "LCK:" in strip_ansi(l)][0]
+
+        # Positive augment (+31) rendered in EmeraldGreen
+        emerald_fg = ColorLibrary.EmeraldGreen.to_fg_ansi()
+        self.assertIn(emerald_fg, atk_line)
+        self.assertIn(f"{emerald_fg}31\033[0m", atk_line)
+
+        # Negative augment (-1) rendered in RubyRed
+        ruby_fg = ColorLibrary.RubyRed.to_fg_ansi()
+        self.assertIn(ruby_fg, spd_line)
+        self.assertIn(f"{ruby_fg}-1\033[0m", spd_line)
+
+        # Zero augment remains uncolored
+        self.assertIn("+  0", lck_line)
+        self.assertNotIn(f"{emerald_fg} 0", lck_line)
+        self.assertNotIn(f"{ruby_fg} 0", lck_line)
+
+        # Dynamic combat/gear augment test:
+        m.stats[StatId.LUCK].augment_value = 5
+        lines2 = self.screen._render_status_submenu()
+        lck_line2 = [l for l in lines2 if "LCK:" in strip_ansi(l)][0]
+        self.assertIn(f"{emerald_fg}5\033[0m", lck_line2)
+
+    def test_party_vitals_no_class_declaration(self):
+        """Verifies that the Class declaration under the MP bar is removed in PARTY VITALS left rail."""
+        left_lines = self.screen._render_left_rail()
+        self.assertEqual(len(left_lines), 37)
+
+        # Confirm PARTY VITALS section exists
+        vitals_idx = [i for i, l in enumerate(left_lines) if "PARTY VITALS:" in strip_ansi(l)]
+        self.assertTrue(vitals_idx, "PARTY VITALS header missing from left rail")
+
+        # Verify no line in the left rail contains "Class:"
+        for line in left_lines:
+            self.assertNotIn("Class:", strip_ansi(line))
+
+        # Verify HP and MP bars are present for members
+        raw_left = "\n".join(strip_ansi(l) for l in left_lines)
+        self.assertIn("HP:", raw_left)
+        self.assertIn("MP:", raw_left)
+
+        # Verify every line respects the 22-column budget
+        for r_idx, line in enumerate(left_lines):
+            cell = _pad_cell(line, self.screen.LEFT_WIDTH)
+            self.assertEqual(visible_width(cell), 22, f"Left rail line {r_idx} violates 22-column width: '{cell}'")
+
+    def test_status_submenu_hp_mp_gauges_moved_up_and_exp_numeric_display(self):
+        """Verifies HP and MP gauges moved up one row each, and EXP is displayed without a stat bar where MP was."""
+        self.screen.category_idx = 0  # Status
+        m = self.party.members[0]
+        m.current_xp = 45
+        m.next_level_xp = 100
+
+        lines = self.screen._render_status_submenu()
+        stripped = [strip_ansi(l) for l in lines]
+
+        # Row 0: Archetype
+        self.assertIn("Archetype:", stripped[0])
+        # Row 1: Element
+        self.assertIn("Element:", stripped[1])
+        # Row 2: HP gauge (moved up from row 3)
+        self.assertIn("HP:", stripped[2])
+        self.assertIn("[", stripped[2])  # contains stat bar
+        # Row 3: MP gauge (moved up from row 4)
+        self.assertIn("MP:", stripped[3])
+        self.assertIn("[", stripped[3])  # contains stat bar
+        # Row 4: EXP numeric display (in place of former MP gauge row)
+        self.assertIn("EXP:", stripped[4])
+        self.assertIn("45 / 100", stripped[4])
+        self.assertNotIn("[", stripped[4])  # purely numeric, no stat bar
+        self.assertNotIn("]", stripped[4])
+        # Row 5: ATTRIBUTES divider
+        self.assertIn("ATTRIBUTES", stripped[5])
+
+    def test_stat_bars_right_aligned_in_containers(self):
+        """Verifies that HP and MP stat bars are aligned to the right of their containers in both Left Rail and Status Submenu."""
+        def set_stats(member, hp, max_hp, mp, max_mp):
+            member.stats[StatId.HIT_POINTS].base = max_hp
+            member.stats[StatId.HIT_POINTS].equipment_bonus = 0
+            member.stats[StatId.HIT_POINTS].augment_value = 0
+            member.stats[StatId.HIT_POINTS].current = hp
+            member.stats[StatId.MAGIC_POINTS].base = max_mp
+            member.stats[StatId.MAGIC_POINTS].equipment_bonus = 0
+            member.stats[StatId.MAGIC_POINTS].augment_value = 0
+            member.stats[StatId.MAGIC_POINTS].current = mp
+
+        # 1. Test Left Rail (Party Vitals, LEFT_WIDTH = 22)
+        set_stats(self.party.members[0], 5, 25, 8, 10)
+        set_stats(self.party.members[1], 350, 400, 45, 60)
+        set_stats(self.party.members[2], 4242, 4272, 148, 148)
+
+        left_lines = self.screen._render_left_rail()
+        hp_lines = [l for l in left_lines if "HP:" in strip_ansi(l)]
+        mp_lines = [l for l in left_lines if "MP:" in strip_ansi(l)]
+
+        for l in hp_lines + mp_lines:
+            self.assertEqual(visible_width(l), 21)
+            self.assertTrue(strip_ansi(l).endswith("]"))
+            padded = _pad_cell(l, self.screen.LEFT_WIDTH)
+            self.assertEqual(strip_ansi(padded).rfind("]"), 20)
+
+        # 2. Test Status Submenu (RIGHT_WIDTH = 55)
+        for hp, max_hp, mp, max_mp in [
+            (5, 25, 8, 10),
+            (350, 400, 45, 60),
+            (4242, 4272, 148, 148),
+        ]:
+            set_stats(self.party.members[0], hp, max_hp, mp, max_mp)
+
+            status_lines = self.screen._render_status_submenu()
+            status_hp = [l for l in status_lines if "HP:" in strip_ansi(l)][0]
+            status_mp = [l for l in status_lines if "MP:" in strip_ansi(l)][0]
+
+            self.assertEqual(visible_width(status_hp), 54)
+            self.assertEqual(visible_width(status_mp), 54)
+            self.assertTrue(strip_ansi(status_hp).endswith("]"))
+            self.assertTrue(strip_ansi(status_mp).endswith("]"))
+
+            padded_hp = _pad_cell(status_hp, self.screen.RIGHT_WIDTH)
+            padded_mp = _pad_cell(status_mp, self.screen.RIGHT_WIDTH)
+            self.assertEqual(strip_ansi(padded_hp).rfind("]"), 53)
+            self.assertEqual(strip_ansi(padded_mp).rfind("]"), 53)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

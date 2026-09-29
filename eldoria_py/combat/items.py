@@ -72,8 +72,24 @@ class ConsumableItem:
         from eldoria_py.combat.stats import BattleActionType
         if self.effect_type in (ItemEffectType.RESTORE_HP, ItemEffectType.RESTORE_ALL_HP, ItemEffectType.REVIVE):
             action_type = BattleActionType.MAGIC_HEALING
+        elif self.effect_type == ItemEffectType.RESTORE_MP:
+            action_type = BattleActionType.NONE
         elif self.effect_type == ItemEffectType.DAMAGE_MAGICAL:
-            action_type = BattleActionType.FIRE
+            name_lower = self.name.lower()
+            if "ice" in name_lower:
+                action_type = BattleActionType.ELEMENTAL_ICE
+            elif "water" in name_lower:
+                action_type = BattleActionType.ELEMENTAL_WATER
+            elif "earth" in name_lower:
+                action_type = BattleActionType.ELEMENTAL_EARTH
+            elif "wind" in name_lower:
+                action_type = BattleActionType.ELEMENTAL_WIND
+            elif "light" in name_lower:
+                action_type = BattleActionType.ELEMENTAL_LIGHT
+            elif "dark" in name_lower:
+                action_type = BattleActionType.ELEMENTAL_DARK
+            else:
+                action_type = BattleActionType.ELEMENTAL_FIRE
         elif self.effect_type == ItemEffectType.STATUS_EFFECT:
             if "sleep" in self.name.lower():
                 action_type = BattleActionType.MAGIC_SLEEP

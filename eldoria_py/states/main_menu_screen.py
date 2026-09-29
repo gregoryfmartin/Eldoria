@@ -22,7 +22,7 @@ from ..ui.panel import UIPanel
 from ..ui.container import UIContainer, WindowBorderPart
 from ..ui.elements.label import UILabel
 from ..ui.elements.stat_bar import UIStatBar, StatBarType, StatNumberState
-from ..combat.stats import StatId, EquipmentSlot, TargetScope, format_element_badge
+from ..combat.stats import StatId, EquipmentSlot, TargetScope, format_element_badge, BattleEntityProperty
 from ..combat.actions import BattleAction, ActionCategory, ACTIONS
 from ..combat.equipment import BattleEquipment, EQUIPMENT_CATALOG
 from ..combat.entities import PartyMember, Party, create_default_party
@@ -333,7 +333,8 @@ class GSMainMenuScreen(SMState):
             elif key_info.key == KeyCode.DOWN:
                 self.category_idx = (self.category_idx + 1) % len(self.CATEGORIES)
             elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
-                self._enter_submenu()
+                if cat != "Status":
+                    self._enter_submenu()
             elif key_info.key == KeyCode.ESCAPE or key_info.char in ("m", "M"):
                 self._resume_exploration(context, core)
             return
@@ -354,8 +355,8 @@ class GSMainMenuScreen(SMState):
 
             cat = self.CATEGORIES[self.category_idx]
             if cat == "Status":
-                # Status is view-only, Esc returns to Categories
-                pass
+                self.focus_mode = "CATEGORIES"
+                return
             elif cat == "Items":
                 self._handle_items_input(key_info)
             elif cat == "Equipment":
@@ -369,7 +370,9 @@ class GSMainMenuScreen(SMState):
 
     def _enter_submenu(self) -> None:
         cat = self.CATEGORIES[self.category_idx]
-        if cat == "Quit":
+        if cat == "Status":
+            return
+        elif cat == "Quit":
             self.focus_mode = "MODAL"
             self.quit_option_cursor = 0
         elif cat == "Items":
@@ -830,7 +833,7 @@ class GSMainMenuScreen(SMState):
         # Row 13: Vitals Header
         lines.append("\033[1;37mPARTY VITALS:\033[0m")
 
-        # Rows 14..38: 5 Heroes * 5 lines = 25 lines
+        # Rows 14..33: 5 Heroes * 4 lines = 20 lines
         for m_idx in range(5):
             if m_idx < len(self.party.members):
                 m = self.party.members[m_idx]
@@ -840,12 +843,20 @@ class GSMainMenuScreen(SMState):
 
                 name_clean = m.name[:4]
                 lines.append(f"{name_prefix}{name_clean}\033[0m (Lv.{m.level:<2}) {state_str}")
-                lines.append(f"  HP:{m.hp:>3}/{m.max_hp:<3} {_make_bar(m.hp, m.max_hp, 4, bar_type=StatBarType.HEALTH)}")
-                lines.append(f"  MP:{m.mp:>3}/{m.max_mp:<3} {_make_bar(m.mp, m.max_mp, 4, bar_type=StatBarType.MANA)}")
-                lines.append(f"  Class: {m.job_class[:11]}")
+                hp_left = f"  HP:{m.hp}/{m.max_hp}"
+                hp_bar = _make_bar(m.hp, m.max_hp, 4, bar_type=StatBarType.HEALTH)
+                rem_hp = self.LEFT_WIDTH - visible_width(hp_left) - visible_width(hp_bar)
+                pad_hp = max(1, rem_hp - 1) if rem_hp >= 2 else max(0, rem_hp)
+                lines.append(f"{hp_left}{' ' * pad_hp}{hp_bar}")
+
+                mp_left = f"  MP:{m.mp}/{m.max_mp}"
+                mp_bar = _make_bar(m.mp, m.max_mp, 4, bar_type=StatBarType.MANA)
+                rem_mp = self.LEFT_WIDTH - visible_width(mp_left) - visible_width(mp_bar)
+                pad_mp = max(1, rem_mp - 1) if rem_mp >= 2 else max(0, rem_mp)
+                lines.append(f"{mp_left}{' ' * pad_mp}{mp_bar}")
                 lines.append("")
             else:
-                lines.extend(["", "", "", "", ""])
+                lines.extend(["", "", "", ""])
 
         while len(lines) < 37:
             lines.append("")
@@ -915,9 +926,22 @@ class GSMainMenuScreen(SMState):
         badge = format_element_badge(m.affinity)
         badge_pad = badge + (" " * max(0, 20 - visible_width(badge)))
         lines.append(f" Element:   {badge_pad} Gender: {m.gender.value}")
-        lines.append("")
-        lines.append(f" HP:  {m.hp:>3} / {m.max_hp:<3} {_make_bar(m.hp, m.max_hp, 20, bar_type=StatBarType.HEALTH)}")
-        lines.append(f" MP:  {m.mp:>3} / {m.max_mp:<3} {_make_bar(m.mp, m.max_mp, 20, bar_type=StatBarType.MANA)}")
+        hp_left = f" HP:  {m.hp} / {m.max_hp}"
+        hp_bar = _make_bar(m.hp, m.max_hp, 20, bar_type=StatBarType.HEALTH)
+        rem_hp = self.RIGHT_WIDTH - visible_width(hp_left) - visible_width(hp_bar)
+        pad_hp = max(1, rem_hp - 1) if rem_hp >= 2 else max(0, rem_hp)
+        lines.append(f"{hp_left}{' ' * pad_hp}{hp_bar}")
+
+        mp_left = f" MP:  {m.mp} / {m.max_mp}"
+        mp_bar = _make_bar(m.mp, m.max_mp, 20, bar_type=StatBarType.MANA)
+        rem_mp = self.RIGHT_WIDTH - visible_width(mp_left) - visible_width(mp_bar)
+        pad_mp = max(1, rem_mp - 1) if rem_mp >= 2 else max(0, rem_mp)
+        lines.append(f"{mp_left}{' ' * pad_mp}{mp_bar}")
+        if m.current_xp >= 1_000_000:
+            gold_stars = f"{ColorLibrary.Gold.to_fg_ansi()}★★\033[0m"
+            lines.append(f" EXP: {gold_stars}")
+        else:
+            lines.append(f" EXP: {m.current_xp:>3} / {m.next_level_xp:<3}")
         lines.append("── ATTRIBUTES ──────────────────────────────────────────")
 
         # 4 attribute lines without 'Base'
@@ -946,17 +970,40 @@ class GSMainMenuScreen(SMState):
 
         return lines
 
+    @staticmethod
+    def _format_stat_augment(p: BattleEntityProperty) -> str:
+        aug = p.equipment_bonus + p.augment_value
+        val_str = str(aug)
+        padded = f"{val_str:>2}"
+        leading_spaces = len(padded) - len(val_str)
+        spaces = " " * leading_spaces
+        if aug > 0:
+            return f"{spaces}{ColorLibrary.EmeraldGreen.to_fg_ansi()}{val_str}\033[0m"
+        elif aug < 0:
+            return f"{spaces}{ColorLibrary.RubyRed.to_fg_ansi()}{val_str}\033[0m"
+        else:
+            return f"{aug:>2}"
+
     def _format_attr_pair(self, m: PartyMember, s1: StatId, l1: str, s2: StatId, l2: str) -> str:
-        if l2 == "EVA/CRIT":
-            p1 = m.stats[s1]
-            c1 = f" {l1}:  {p1.total:>2} ({p1.base:>2} + {p1.equipment_bonus:>2})"
-            c2 = f" EVA:   4%   CRIT:  8%"
-            return f"{c1:<28}{c2:<27}"
+        gold_stars = f"{ColorLibrary.Gold.to_fg_ansi()}★★\033[0m"
         p1 = m.stats[s1]
+        aug1_str = self._format_stat_augment(p1)
+        tot1_str = gold_stars if p1.total >= 99 else f"{p1.total:>2}"
+        c1 = f" {l1}:  {tot1_str} ({p1.base:>2} + {aug1_str})"
+
+        if l2 == "EVA/CRIT":
+            spd = m.get_stat(StatId.SPEED)
+            lck = m.get_stat(StatId.LUCK)
+            eva_pct = max(2, min(95, int(round((spd * 0.4 + lck * 0.2) / 1.8))))
+            crit_pct = max(2, min(50, int(round(lck * 0.5))))
+            c2 = f" EVA:  {eva_pct:>2}%   CRIT: {crit_pct:>2}%"
+            return f"{_pad_cell(c1, 28)}{_pad_cell(c2, 27)}"
+
         p2 = m.stats[s2]
-        c1 = f" {l1}:  {p1.total:>2} ({p1.base:>2} + {p1.equipment_bonus:>2})"
-        c2 = f" {l2}:  {p2.total:>2} ({p2.base:>2} + {p2.equipment_bonus:>2})"
-        return f"{c1:<28}{c2:<27}"
+        aug2_str = self._format_stat_augment(p2)
+        tot2_str = gold_stars if p2.total >= 99 else f"{p2.total:>2}"
+        c2 = f" {l2}:  {tot2_str} ({p2.base:>2} + {aug2_str})"
+        return f"{_pad_cell(c1, 28)}{_pad_cell(c2, 27)}"
 
     def _render_items_submenu(self) -> list[str]:
         lines: list[str] = []
@@ -1125,27 +1172,62 @@ class GSMainMenuScreen(SMState):
         lines.append("── EQUIPPED SLOTS ──────────────────────────────────────")
         for idx, slot in enumerate(self.EQUIP_SLOTS):
             slot_name = self.SLOT_NAMES[slot]
-            is_cur = (idx == self.equip_slot_cursor and not self.equip_drawer_open)
-            cur_marker = "\033[1;36m❱\033[0m" if is_cur else " "
+            is_cur = (idx == self.equip_slot_cursor and not self.equip_drawer_open and self.focus_mode in ("SUBMENU", "MODAL"))
             eq = member.equipment.get(slot)
             if eq:
                 bonus_parts = [f"+{v}{k.name[:2]}" for k, v in eq.stat_bonuses.items()]
                 b_str = f"({', '.join(bonus_parts[:2])})" if bonus_parts else ""
-                lines.append(f" {cur_marker} {slot_name:<10}: \033[1;37m{eq.name[:18]:<18}\033[0m \033[36m{b_str:<14}\033[0m")
             else:
-                lines.append(f" {cur_marker} {slot_name:<10}: \033[90m(Empty)\033[0m")
+                b_str = ""
+
+            if is_cur:
+                bg = "\033[48;2;25;55;85m"
+                if eq:
+                    base_content = f" ❱ {slot_name:<10}: {eq.name[:18]:<18} {b_str:<14}"
+                    pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
+                    lines.append(
+                        f"{bg} \033[1;36m❱ \033[1;37m{slot_name:<10}\033[0m{bg}: \033[1;37m{eq.name[:18]:<18}\033[0m{bg} \033[1;36m{b_str:<14}\033[0m{bg}{' ' * pad_len}\033[0m"
+                    )
+                else:
+                    base_content = f" ❱ {slot_name:<10}: (Empty)"
+                    pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
+                    lines.append(
+                        f"{bg} \033[1;36m❱ \033[1;37m{slot_name:<10}\033[0m{bg}: \033[90m(Empty)\033[0m{bg}{' ' * pad_len}\033[0m"
+                    )
+            elif self.equip_drawer_open and idx == self.equip_slot_cursor:
+                if eq:
+                    lines.append(f" \033[36m› \033[1;36m{slot_name:<10}\033[0m: \033[1;37m{eq.name[:18]:<18}\033[0m \033[36m{b_str:<14}\033[0m")
+                else:
+                    lines.append(f" \033[36m› \033[1;36m{slot_name:<10}\033[0m: \033[90m(Empty)\033[0m")
+            else:
+                if eq:
+                    lines.append(f"   \033[37m{slot_name:<10}\033[0m: \033[1;37m{eq.name[:18]:<18}\033[0m \033[36m{b_str:<14}\033[0m")
+                else:
+                    lines.append(f"   \033[37m{slot_name:<10}\033[0m: \033[90m(Empty)\033[0m")
 
         lines.append("── AVAILABLE GEAR IN BAG ───────────────────────────────")
         if self.equip_drawer_open:
             for idx, item in enumerate(self.equip_drawer_items[:7]):
                 is_cur = (idx == self.equip_drawer_cursor)
-                marker = "\033[1;36m❱\033[0m" if is_cur else " "
-                if item is None:
-                    lines.append(f" {marker} \033[31m(Unequip Current Gear)\033[0m")
+                if is_cur:
+                    bg = "\033[48;2;25;55;85m"
+                    if item is None:
+                        base_content = " ❱ (Unequip Current Gear)"
+                        pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
+                        lines.append(f"{bg} \033[1;36m❱ \033[1;31m(Unequip Current Gear)\033[0m{bg}{' ' * pad_len}\033[0m")
+                    else:
+                        bonus_parts = [f"+{v}{k.name[:2]}" for k, v in item.stat_bonuses.items()]
+                        b_str = f"({', '.join(bonus_parts[:2])})" if bonus_parts else ""
+                        base_content = f" ❱ {item.name[:20]:<20} {b_str}"
+                        pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
+                        lines.append(f"{bg} \033[1;36m❱ \033[1;37m{item.name[:20]:<20}\033[0m{bg} \033[1;36m{b_str}\033[0m{bg}{' ' * pad_len}\033[0m")
                 else:
-                    bonus_parts = [f"+{v}{k.name[:2]}" for k, v in item.stat_bonuses.items()]
-                    b_str = f"({', '.join(bonus_parts[:2])})"
-                    lines.append(f" {marker} \033[1;37m{item.name[:20]:<20}\033[0m \033[36m{b_str}\033[0m")
+                    if item is None:
+                        lines.append("   \033[31m(Unequip Current Gear)\033[0m")
+                    else:
+                        bonus_parts = [f"+{v}{k.name[:2]}" for k, v in item.stat_bonuses.items()]
+                        b_str = f"({', '.join(bonus_parts[:2])})" if bonus_parts else ""
+                        lines.append(f"   \033[1;37m{item.name[:20]:<20}\033[0m \033[36m{b_str}\033[0m")
             for _ in range(7 - len(self.equip_drawer_items[:7])):
                 lines.append("")
         else:
@@ -1198,14 +1280,26 @@ class GSMainMenuScreen(SMState):
         lines.append(f" Known Spells & Skills ({len(spells)} total):")
         lines.append("─" * self.RIGHT_WIDTH)
 
-        for idx, sp in enumerate(spells[:14]):
-            is_cur = (idx == self.magic_cursor)
-            marker = "\033[1;36m❱\033[0m" if is_cur else " "
-            name_color = "\033[1;37m" if is_cur else "\033[37m"
-            mp_str = f"MP: {sp.mp_cost:>2}"
-            lines.append(f" {marker} {name_color}{sp.name[:18]:<18}\033[0m \033[33m{mp_str}\033[0m  \033[36m{sp.target_scope.name[:12]:<12}\033[0m")
+        page_size = 14
+        start_idx = (self.magic_cursor // page_size) * page_size
+        visible_spells = spells[start_idx : start_idx + page_size]
 
-        for _ in range(14 - len(spells[:14])):
+        for idx, sp in enumerate(visible_spells):
+            real_idx = start_idx + idx
+            is_cur = (real_idx == self.magic_cursor and self.focus_mode in ("SUBMENU", "MODAL"))
+            name_str = f"{sp.name[:18]:<18}"
+            mp_str = f"MP: {sp.mp_cost:>2}"
+            scope_str = f"{sp.target_scope.name[:12]:<12}"
+
+            if is_cur:
+                bg = "\033[48;2;25;55;85m"
+                base_content = f" ❱ {name_str} {mp_str}  {scope_str}"
+                pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
+                lines.append(f"{bg} \033[1;36m❱ \033[1;37m{name_str} \033[1;33m{mp_str}  \033[1;36m{scope_str}{' ' * pad_len}\033[0m")
+            else:
+                lines.append(f"   \033[37m{name_str}\033[0m \033[33m{mp_str}\033[0m  \033[36m{scope_str}\033[0m")
+
+        for _ in range(page_size - len(visible_spells)):
             lines.append("")
 
         lines.append("─" * self.RIGHT_WIDTH)
@@ -1293,11 +1387,16 @@ class GSMainMenuScreen(SMState):
         panel.add_label("Any unsaved progress will be lost!", row=14, col=panel.inner_left + 3, fg_color=ColorLibrary.AppleYellowLight)
 
         opts = ["Return to Title Screen", "Quit to Desktop", "Cancel / Keep Playing"]
+        bg = "\033[48;2;25;55;85m"
         for idx, opt in enumerate(opts):
-            is_cur = (idx == self.quit_option_cursor)
-            marker = "❱ " if is_cur else "  "
-            col = ColorLibrary.White if is_cur else ColorLibrary.DarkGrey
-            panel.add_label(f"{marker}{opt}", row=16 + idx, col=panel.inner_left + 4, fg_color=col)
+            is_cur = (idx == self.quit_option_cursor and self.focus_mode in ("SUBMENU", "MODAL"))
+            if is_cur:
+                base_content = f"    ❱ {opt}"
+                pad_len = max(0, panel.inner_width - visible_width(base_content))
+                styled = f"{bg}    \033[1;36m❱ \033[1;37m{opt}{' ' * pad_len}\033[0m"
+                panel.add_label(styled, row=16 + idx, col=panel.inner_left)
+            else:
+                panel.add_label(f"      {opt}", row=16 + idx, col=panel.inner_left, fg_color=ColorLibrary.DarkGrey)
 
         panel.set_all_dirty()
         p_lines = panel.render_lines()
@@ -1307,6 +1406,8 @@ class GSMainMenuScreen(SMState):
 
     def _format_status_hints(self) -> str:
         if self.focus_mode == "CATEGORIES":
+            if self.CATEGORIES[self.category_idx] == "Status":
+                return "\033[33m[↑↓] Select Category  [◄►] Switch Hero  [Esc/M] Resume Map\033[0m"
             return "\033[33m[↑↓] Select Category  [◄►] Switch Hero  [Enter] Confirm  [Esc/M] Resume Map\033[0m"
         elif self.focus_mode == "MODAL":
             return "\033[33m[Arrows] Select Option  [Enter] Confirm  [Esc] Cancel\033[0m"

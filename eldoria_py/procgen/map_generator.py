@@ -143,6 +143,7 @@ class MapTile:
         custom_glyph: Optional[str] = None,
         custom_fg: Optional[TrueColor] = None,
         custom_bg: Optional[TrueColor] = None,
+        npc: Optional[Any] = None,
     ) -> None:
         self.background_image = background_image
         self.biome = biome
@@ -158,6 +159,7 @@ class MapTile:
         self.custom_glyph = custom_glyph
         self.custom_fg = custom_fg
         self.custom_bg = custom_bg
+        self.npc = npc
 
     @property
     def is_walkable(self) -> bool:
@@ -184,6 +186,8 @@ class MapTile:
             d["CustomBG"] = [self.custom_bg.r, self.custom_bg.g, self.custom_bg.b]
         if self.warp_target and hasattr(self.warp_target, "to_dict"):
             d["WarpTarget"] = self.warp_target.to_dict()
+        if self.npc and hasattr(self.npc, "to_dict"):
+            d["NPC"] = self.npc.to_dict()
         return d
 
     @classmethod
@@ -199,6 +203,10 @@ class MapTile:
         if "WarpTarget" in data and data["WarpTarget"]:
             from .poi import WarpTarget
             warp_target = WarpTarget.from_dict(data["WarpTarget"])
+        npc = None
+        if "NPC" in data and data["NPC"]:
+            from .npc import NPC
+            npc = NPC.from_dict(data["NPC"])
         return cls(
             background_image=data.get("BackgroundImage", "Plains"),
             biome=biome,
@@ -213,6 +221,7 @@ class MapTile:
             custom_fg=custom_fg,
             custom_bg=custom_bg,
             warp_target=warp_target,
+            npc=npc,
         )
 
 
@@ -297,6 +306,7 @@ class Map:
                     or tile.custom_bg is not None
                     or bool(tile.object_listing)
                     or tile.warp_target is not None
+                    or tile.npc is not None
                 )
                 has_battle = False
                 has_bg_override = False
@@ -325,6 +335,8 @@ class Map:
                         s_dict["obj"] = list(tile.object_listing)
                     if tile.warp_target and hasattr(tile.warp_target, "to_dict"):
                         s_dict["warp"] = tile.warp_target.to_dict()
+                    if tile.npc and hasattr(tile.npc, "to_dict"):
+                        s_dict["npc"] = tile.npc.to_dict()
                     if has_battle:
                         s_dict["battle_allowed"] = tile.battle_allowed
                         s_dict["encounter_rate"] = round(tile.encounter_rate, 4)
@@ -382,6 +394,9 @@ class Map:
                 if "warp" in s and s["warp"]:
                     from .poi import WarpTarget
                     tile.warp_target = WarpTarget.from_dict(s["warp"])
+                if "npc" in s and s["npc"]:
+                    from .npc import NPC
+                    tile.npc = NPC.from_dict(s["npc"])
                 if "battle_allowed" in s:
                     tile.battle_allowed = bool(s["battle_allowed"])
                 if "encounter_rate" in s:
@@ -654,6 +669,13 @@ class ProceduralMapGenerator:
                     fg = tile.poi.fg_color.to_fg_ansi()
                     bg = tile.poi.bg_color.to_bg_ansi()
                     row_chunks.append(f"{fg}{bg}{tile.poi.glyph}\033[0m")
+                    continue
+
+                if tile.npc is not None:
+                    # NPC glyph
+                    fg = tile.npc.fg_color.to_fg_ansi()
+                    bg = tile.npc.bg_color.to_bg_ansi()
+                    row_chunks.append(f"{fg}{bg}{tile.npc.glyph}\033[0m")
                     continue
 
                 if tile.custom_glyph is not None:

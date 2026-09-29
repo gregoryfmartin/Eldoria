@@ -221,6 +221,106 @@ class TestNoiseMapEncounterScreenIntegration(unittest.TestCase):
         from eldoria_py.terminal.box import visible_width
         self.assertEqual(visible_width(rendered_line), self.screen.map_width + 2)
 
+    def test_danger_accumulator_paces_encounters_by_terrain(self):
+        # Test Plains pacing: 0.10 encounter rate = 1.0 danger / step
+        self.screen.steps_since_battle = 5
+        self.screen.danger_counter = 0.0
+        self.screen.danger_threshold = 30.0
+
+        curr_map = self.screen._current_map()
+        tile = curr_map.tiles[self.screen.player_y][self.screen.player_x]
+        tile.battle_allowed = True
+        tile.encounter_rate = 0.10
+        tile.region_code = 1
+        tile.warp_target = None
+
+        # Steps 1 to 29: accumulator rises from 1.0 to 29.0, no battle triggered
+        for step in range(1, 30):
+            triggered = self.screen._check_step_encounter(self.context)
+            self.assertFalse(triggered, f"Step {step} should not trigger encounter before threshold (30.0)")
+            self.assertAlmostEqual(self.screen.danger_counter, float(step), places=2)
+
+        # Step 30: accumulator hits 30.0 >= 30.0, triggers battle!
+        triggered = self.screen._check_step_encounter(self.context)
+        self.assertTrue(triggered)
+        self.assertEqual(self.screen.steps_since_battle, 0)
+        self.assertEqual(self.screen.danger_counter, 0.0)
+        self.assertTrue(26.0 <= self.screen.danger_threshold <= 44.0)
+
+    def test_danger_accumulator_terrain_weights(self):
+        # Cave: 0.20 encounter rate = 2.0 danger / step (threshold 30 / 2.0 = 15 steps)
+        self.screen.steps_since_battle = 5
+        self.screen.danger_counter = 0.0
+        self.screen.danger_threshold = 30.0
+
+        curr_map = self.screen._current_map()
+        tile = curr_map.tiles[self.screen.player_y][self.screen.player_x]
+        tile.battle_allowed = True
+        tile.encounter_rate = 0.20
+        tile.region_code = 3
+        tile.warp_target = None
+
+        for step in range(1, 15):
+            triggered = self.screen._check_step_encounter(self.context)
+            self.assertFalse(triggered)
+            self.assertAlmostEqual(self.screen.danger_counter, step * 2.0, places=2)
+
+        triggered = self.screen._check_step_encounter(self.context)
+        self.assertTrue(triggered)
+
+    def test_danger_counter_not_incremented_on_safe_tiles(self):
+        self.screen.steps_since_battle = 5
+        self.screen.danger_counter = 12.0
+        self.screen.danger_threshold = 30.0
+
+        curr_map = self.screen._current_map()
+        tile = curr_map.tiles[self.screen.player_y][self.screen.player_x]
+        tile.battle_allowed = False
+        tile.encounter_rate = 0.0
+        tile.region_code = 0
+
+        for _ in range(10):
+            triggered = self.screen._check_step_encounter(self.context)
+            self.assertFalse(triggered)
+            self.assertEqual(self.screen.danger_counter, 12.0)
+
+    def test_inn_and_well_resets_danger_accumulator(self):
+        self.screen.steps_since_battle = 15
+        self.screen.danger_counter = 28.5
+        self.screen.danger_threshold = 32.0
+
+        curr_map = self.screen._current_map()
+        tile = curr_map.tiles[self.screen.player_y][self.screen.player_x]
+        tile.object_listing = ["MTOInn"]
+
+        self.screen._handle_interact()
+        self.assertEqual(self.screen.danger_counter, 0.0)
+        self.assertEqual(self.screen.steps_since_battle, 0)
+        self.assertTrue(26.0 <= self.screen.danger_threshold <= 44.0)
+
+    def test_danger_state_save_and_load_persistence(self):
+        self.screen.danger_counter = 18.5
+        self.screen.danger_threshold = 34.0
+        self.screen.steps_since_battle = 12
+
+        self.screen._save_to_slot(1)
+
+        loaded_party, loaded_macro, loaded_state = self.screen.save_manager.load_game(1)
+        self.assertAlmostEqual(loaded_state["danger_counter"], 18.5)
+        self.assertAlmostEqual(loaded_state["danger_threshold"], 34.0)
+        self.assertEqual(loaded_state["steps_since_battle"], 12)
+
+        # Simulate title screen hydration
+        new_screen = GSNoiseMapTestScreen(map_width=20, map_height=10)
+        self.context.set("exploration_state", loaded_state)
+        self.context.set("party", loaded_party)
+        self.context.set("world_macro", loaded_macro)
+        new_screen.enter(self.context)
+
+        self.assertAlmostEqual(new_screen.danger_counter, 18.5)
+        self.assertAlmostEqual(new_screen.danger_threshold, 34.0)
+        self.assertEqual(new_screen.steps_since_battle, 12)
+
 
 if __name__ == "__main__":
     unittest.main()

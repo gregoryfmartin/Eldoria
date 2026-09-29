@@ -18,7 +18,7 @@ class TestWorldMacroSerialization(unittest.TestCase):
         """Verify 4x4 macro map serialization preserves all sectors, biomes, and POIs."""
         original = WorldMacroMap(seed=1337, macro_width=4, macro_height=4)
         self.assertEqual(len(original.sectors), 4)
-        self.assertEqual(len(original.all_pois), 3)
+        self.assertEqual(len(original.all_pois), 6)  # 1 town, 1 castle, 4 caves
 
         data = original.to_dict()
         # Verify JSON serializability
@@ -33,7 +33,7 @@ class TestWorldMacroSerialization(unittest.TestCase):
         self.assertEqual(hydrated.starter_sector, original.starter_sector)
         self.assertEqual(hydrated.starter_player_pos, original.starter_player_pos)
         self.assertEqual(len(hydrated.sectors), 4)
-        self.assertEqual(len(hydrated.all_pois), 3)
+        self.assertEqual(len(hydrated.all_pois), 6)
 
         # Check POIs match
         for orig_poi in original.all_pois:
@@ -65,7 +65,7 @@ class TestWorldMacroSerialization(unittest.TestCase):
                         )
 
     def test_small_6x6_scaling(self) -> None:
-        """Verify 6x6 world generates 1 Town, 1 Castle, 2 Caves."""
+        """Verify 6x6 world generates 8 Towns, 2 Castles, 11 Caves."""
         macro_6x6 = WorldMacroMap(seed=42, macro_width=6, macro_height=6)
         self.assertEqual(len(macro_6x6.sectors), 6)
         self.assertEqual(len(macro_6x6.sectors[0]), 6)
@@ -74,20 +74,20 @@ class TestWorldMacroSerialization(unittest.TestCase):
         castles = [p for p in macro_6x6.all_pois if p.poi_type == POIType.CASTLE]
         caves = [p for p in macro_6x6.all_pois if p.poi_type == POIType.CAVE]
 
-        self.assertEqual(len(towns), 1)
-        self.assertEqual(len(castles), 1)
-        self.assertEqual(len(caves), 2)
-        self.assertEqual(len(macro_6x6.all_pois), 4)
+        self.assertEqual(len(towns), 8)
+        self.assertEqual(len(castles), 2)
+        self.assertEqual(len(caves), 11)
+        self.assertEqual(len(macro_6x6.all_pois), 21)
 
         # Test serialization round-trip
         data = macro_6x6.to_dict()
         hydrated = WorldMacroMap.from_dict(data)
         self.assertEqual(hydrated.macro_width, 6)
         self.assertEqual(hydrated.macro_height, 6)
-        self.assertEqual(len(hydrated.all_pois), 4)
+        self.assertEqual(len(hydrated.all_pois), 21)
 
     def test_medium_12x12_scaling(self) -> None:
-        """Verify 12x12 world generates 3 Towns, 2 Castles, 4 Caves."""
+        """Verify 12x12 world generates 13 Towns, 2 Castles, 16 Caves."""
         macro_12x12 = WorldMacroMap(seed=100, macro_width=12, macro_height=12)
         self.assertEqual(len(macro_12x12.sectors), 12)
         self.assertEqual(len(macro_12x12.sectors[0]), 12)
@@ -96,10 +96,10 @@ class TestWorldMacroSerialization(unittest.TestCase):
         castles = [p for p in macro_12x12.all_pois if p.poi_type == POIType.CASTLE]
         caves = [p for p in macro_12x12.all_pois if p.poi_type == POIType.CAVE]
 
-        self.assertEqual(len(towns), 3)
+        self.assertEqual(len(towns), 13)
         self.assertEqual(len(castles), 2)
-        self.assertEqual(len(caves), 4)
-        self.assertEqual(len(macro_12x12.all_pois), 9)
+        self.assertEqual(len(caves), 16)
+        self.assertEqual(len(macro_12x12.all_pois), 31)
 
 
 if __name__ == "__main__":

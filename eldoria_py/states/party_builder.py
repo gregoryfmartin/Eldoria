@@ -20,6 +20,7 @@ from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..combat.stats import StatId, BattleActionType
 from ..combat.actions import ACTIONS
+from ..combat.equipment import EQUIPMENT_CATALOG
 from ..combat.entities import PartyMember, Party
 from ..combat.portrait import Gender
 from ..terminal.box import clear_buffer_tail, visible_width, truncate_ansi
@@ -240,7 +241,7 @@ class GSPartyBuilderScreen(SMState):
                 "profile": 1,
                 "stats": {
                     StatId.HIT_POINTS: 290,
-                    StatId.MAGIC_POINTS: 85,
+                    StatId.MAGIC_POINTS: 30,
                     StatId.ATTACK: 18,
                     StatId.DEFENSE: 18,
                     StatId.MAGIC_ATTACK: 6,
@@ -260,7 +261,7 @@ class GSPartyBuilderScreen(SMState):
                 "profile": 2,
                 "stats": {
                     StatId.HIT_POINTS: 220,
-                    StatId.MAGIC_POINTS: 160,
+                    StatId.MAGIC_POINTS: 60,
                     StatId.ATTACK: 8,
                     StatId.DEFENSE: 8,
                     StatId.MAGIC_ATTACK: 22,
@@ -280,7 +281,7 @@ class GSPartyBuilderScreen(SMState):
                 "profile": 3,
                 "stats": {
                     StatId.HIT_POINTS: 240,
-                    StatId.MAGIC_POINTS: 95,
+                    StatId.MAGIC_POINTS: 34,
                     StatId.ATTACK: 19,
                     StatId.DEFENSE: 10,
                     StatId.MAGIC_ATTACK: 10,
@@ -300,7 +301,7 @@ class GSPartyBuilderScreen(SMState):
                 "profile": 1,
                 "stats": {
                     StatId.HIT_POINTS: 230,
-                    StatId.MAGIC_POINTS: 175,
+                    StatId.MAGIC_POINTS: 52,
                     StatId.ATTACK: 10,
                     StatId.DEFENSE: 10,
                     StatId.MAGIC_ATTACK: 18,
@@ -320,7 +321,7 @@ class GSPartyBuilderScreen(SMState):
                 "profile": 0,
                 "stats": {
                     StatId.HIT_POINTS: 310,
-                    StatId.MAGIC_POINTS: 70,
+                    StatId.MAGIC_POINTS: 22,
                     StatId.ATTACK: 24,
                     StatId.DEFENSE: 14,
                     StatId.MAGIC_ATTACK: 10,
@@ -329,7 +330,7 @@ class GSPartyBuilderScreen(SMState):
                     StatId.ACCURACY: 88,
                     StatId.LUCK: 14,
                 },
-                "actions": [ACTIONS["Attack"].copy(), ACTIONS["Defend"].copy(), ACTIONS["Axe Cleave"].copy(), ACTIONS["Fireball"].copy()],
+                "actions": [ACTIONS["Attack"].copy(), ACTIONS["Defend"].copy(), ACTIONS["Flame Punch"].copy(), ACTIONS["Axe Cleave"].copy()],
             },
         ]
 
@@ -347,6 +348,23 @@ class GSPartyBuilderScreen(SMState):
                     gender=t["gender"],
                     profile_image_index=t["profile"],
                 )
+                # Equip starter archetype equipment
+                if idx == 0:  # Guardian Tank
+                    member.equip(EQUIPMENT_CATALOG["Iron Longsword"])
+                    member.equip(EQUIPMENT_CATALOG["Brigandine"])
+                elif idx == 1:  # Sorceress Striker
+                    member.equip(EQUIPMENT_CATALOG["Oak Staff"])
+                    member.equip(EQUIPMENT_CATALOG["Mage Circlet"])
+                elif idx == 2:  # Wind Rogue
+                    member.equip(EQUIPMENT_CATALOG["Twin Daggers"])
+                    member.equip(EQUIPMENT_CATALOG["Leather Hood"])
+                elif idx == 3:  # Priestess Healer
+                    member.equip(EQUIPMENT_CATALOG["Silver Mace"])
+                    member.equip(EQUIPMENT_CATALOG["Silk Vestment"])
+                elif idx == 4:  # Fire Berserker
+                    member.equip(EQUIPMENT_CATALOG["Heavy Battleaxe"])
+                    member.equip(EQUIPMENT_CATALOG["Brigandine"])
+
                 self.party_slots[idx] = member
                 self.slot_list.set_slot_member(idx, member)
                 filled_count += 1

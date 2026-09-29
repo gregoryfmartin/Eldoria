@@ -181,19 +181,56 @@ class AffinityEffect(str, Enum):
 
 
 class BattleEntityProperty:
-    """Manages a single numeric stat with equipment scaling and turn-based augments."""
+    """Manages a single numeric stat with equipment scaling, turn-based augments, and hard caps/floors."""
 
-    def __init__(self, base: int = 0, current: Optional[int] = None):
-        self.base: int = max(0, int(base))
+    def __init__(
+        self,
+        base: int = 0,
+        current: Optional[int] = None,
+        stat_id: Optional[StatId] = None,
+        min_value: Optional[int] = None,
+        max_value: Optional[int] = None,
+    ):
+        self.stat_id: Optional[StatId] = stat_id
+
+        # Determine min and max bounds
+        if min_value is not None:
+            self.min_val = int(min_value)
+        elif stat_id == StatId.HIT_POINTS:
+            self.min_val = 1
+        elif stat_id == StatId.MAGIC_POINTS:
+            self.min_val = 0
+        else:
+            self.min_val = 1
+
+        if max_value is not None:
+            self.max_val = int(max_value)
+        elif stat_id == StatId.HIT_POINTS:
+            self.max_val = 9999
+        elif stat_id == StatId.MAGIC_POINTS:
+            self.max_val = 999
+        elif stat_id is not None:
+            self.max_val = 99
+        else:
+            # Fallback if stat_id not provided: deduce from base magnitude if > 99
+            if int(base) > 999:
+                self.max_val = 9999
+            elif int(base) > 99:
+                self.max_val = 999
+            else:
+                self.max_val = 99
+
+        self.base: int = max(self.min_val, min(self.max_val, int(base))) if self.min_val > 0 else max(0, min(self.max_val, int(base)))
         self.equipment_bonus: int = 0
         self.augment_value: int = 0
         self.augment_turns: int = 0
-        self._current: int = self.total if current is None else max(0, int(current))
+        self._current: int = self.total if current is None else max(0, min(int(current), self.total))
 
     @property
     def total(self) -> int:
-        """Total effective stat value factoring in base, equipment, and active augments."""
-        return max(0, self.base + self.equipment_bonus + self.augment_value)
+        """Total effective stat value factoring in base, equipment, and active augments, bounded by [min_val, max_val]."""
+        raw = self.base + self.equipment_bonus + self.augment_value
+        return max(self.min_val, min(self.max_val, raw))
 
     @property
     def current(self) -> int:
@@ -228,16 +265,26 @@ class BattleEntityProperty:
                 self.augment_value = 0
 
     def to_dict(self) -> dict:
-        return {
+        data = {
             "base": self.base,
             "current": self.current,
         }
+        if self.stat_id is not None:
+            data["stat_id"] = self.stat_id.value
+        return data
 
     @classmethod
-    def from_dict(cls, data: dict) -> BattleEntityProperty:
+    def from_dict(cls, data: dict, stat_id: Optional[StatId] = None) -> BattleEntityProperty:
+        sid = stat_id
+        if sid is None and "stat_id" in data:
+            try:
+                sid = StatId(data["stat_id"])
+            except ValueError:
+                sid = None
         return cls(
             base=data.get("base", 0),
             current=data.get("current", None),
+            stat_id=sid,
         )
 
     def __repr__(self) -> str:

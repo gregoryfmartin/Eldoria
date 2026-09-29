@@ -23,6 +23,7 @@ from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..combat.stats import StatId, BattleActionType, ELEMENT_AFFINITIES
 from ..combat.actions import BattleAction, ACTIONS
+from ..combat.equipment import EQUIPMENT_CATALOG
 from ..combat.entities import PartyMember
 from ..combat.portrait import (
     Gender,
@@ -555,6 +556,8 @@ class GSCharacterBuilderScreen(SMState):
     def _roll_base_stats(self) -> None:
         """Rolls base stats in [3, 14] and applies innate gender modifiers."""
         self.base_stats = {k: random.randint(3, 14) for k in self.STAT_KEYS}
+        # Accuracy is a percentile combat stat with standard 82-88 baseline in Eldoria
+        self.base_stats[StatId.ACCURACY] = 82 + random.randint(0, 6)
         if self.gender == Gender.MALE:
             self.base_stats[StatId.ATTACK] += 3
             self.base_stats[StatId.DEFENSE] += 2
@@ -583,7 +586,7 @@ class GSCharacterBuilderScreen(SMState):
         mdf_val = self.base_stats.get(StatId.MAGIC_DEFENSE, 10) + self.mod_stats.get(StatId.MAGIC_DEFENSE, 0)
 
         max_hp = 160 + (def_val * 8) + (atk_val * 2)
-        max_mp = 30 + (mat_val * 8) + (mdf_val * 3)
+        max_mp = 16 + (mat_val * 2) + int(mdf_val * 0.75)
         return max_hp, max_mp
 
     def _build_combatant(self) -> PartyMember:
@@ -633,6 +636,22 @@ class GSCharacterBuilderScreen(SMState):
             gender=self.gender,
             profile_image_index=self.profile_idx,
         )
+
+        # Equip starter archetype gear matching class profile
+        p_name = portrait.name.lower()
+        if any(k in p_name for k in ("mage", "scholar", "sorceress")):
+            member.equip(EQUIPMENT_CATALOG["Oak Staff"])
+            member.equip(EQUIPMENT_CATALOG["Mage Circlet"])
+        elif any(k in p_name for k in ("priest", "paladin")):
+            member.equip(EQUIPMENT_CATALOG["Silver Mace"])
+            member.equip(EQUIPMENT_CATALOG["Silk Vestment"])
+        elif any(k in p_name for k in ("infiltrator", "ranger", "assassin", "huntress", "rogue")):
+            member.equip(EQUIPMENT_CATALOG["Twin Daggers"])
+            member.equip(EQUIPMENT_CATALOG["Leather Hood"])
+        else:  # Warrior, Brawler, Spellblade, Valkyrie, etc.
+            member.equip(EQUIPMENT_CATALOG["Iron Longsword"])
+            member.equip(EQUIPMENT_CATALOG["Brigandine"])
+
         return member
 
     def enter(self, context: Context) -> None:

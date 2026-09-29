@@ -328,7 +328,15 @@ class GSTitleScreen(SMState):
                                     map_screen.active_slot = slot_num
                                     map_screen.current_sector = tuple(loaded_state.get("current_sector", loaded_macro.starter_sector))
                                     map_screen.player_x, map_screen.player_y = tuple(loaded_state.get("player_pos", loaded_macro.starter_player_pos))
+                                    if hasattr(map_screen, "_ensure_walkable_player_pos"):
+                                        map_screen._ensure_walkable_player_pos()
                                     map_screen.playtime_seconds = loaded_state.get("playtime_seconds", 0)
+                                    if "danger_counter" in loaded_state:
+                                        map_screen.danger_counter = float(loaded_state["danger_counter"])
+                                    if "danger_threshold" in loaded_state:
+                                        map_screen.danger_threshold = float(loaded_state["danger_threshold"])
+                                    if "steps_since_battle" in loaded_state:
+                                        map_screen.steps_since_battle = int(loaded_state["steps_since_battle"])
                                     map_screen.last_status_msg = f"★ Loaded Slot {slot_num}."
 
                                     submap_name = loaded_state.get("active_submap_poi")

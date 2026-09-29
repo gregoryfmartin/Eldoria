@@ -6,6 +6,7 @@
 - Map POI lock interaction, UIPanel item picker, unlocking & key retention
 """
 
+import random
 import unittest
 from eldoria_py.core.context import Context
 from eldoria_py.terminal.input import KeyEvent, KeyCode
@@ -15,6 +16,7 @@ from eldoria_py.combat.items import (
     ItemType,
     ItemEffectType,
     ConsumableItem,
+    ITEM_CATALOG,
     get_item,
     is_key_item,
     can_discard_item,
@@ -557,7 +559,243 @@ class TestInventorySubsystem(unittest.TestCase):
         self.assertIn("❱", ether_line_after)
         self.assertEqual(visible_width(ether_line_after), 55)
 
+    def test_combat_item_selection_paged_mode_and_chevron_visibility(self):
+        """Verifies combat items list pages properly, keeps chevron visible, and navigates pages."""
+        from eldoria_py.states.main_menu_screen import visible_width, strip_ansi
+        combat_screen = GSNvNCombatScreen()
+        enemy = EnemyCombatant(
+            name="Goblin",
+            level=1,
+            affinity=BattleActionType.ELEMENTAL_EARTH,
+            stats={StatId.HIT_POINTS: 100, StatId.MAGIC_POINTS: 20, StatId.ATTACK: 10, StatId.DEFENSE: 10, StatId.MAGIC_ATTACK: 5, StatId.MAGIC_DEFENSE: 5, StatId.SPEED: 10, StatId.LUCK: 5, StatId.ACCURACY: 90},
+        )
+        squad = EnemySquad([enemy])
+
+        # Add 9 different battle-usable items to party
+        self.party.inventory.clear()
+        self.party.add_item("Potion", 10)
+        self.party.add_item("Hi-Potion", 5)
+        self.party.add_item("Ether", 5)
+        self.party.add_item("Hi-Ether", 3)
+        self.party.add_item("Elixir", 2)
+        self.party.add_item("Revive Herb", 4)
+        self.party.add_item("Antidote", 10)
+        self.party.add_item("Bomb", 2)
+        self.party.add_item("Poison Bottle", 5)
+
+        combat_screen.start_encounter(self.party, squad)
+        combat_screen.menu_mode = "ITEMS"
+        combat_screen.sub_menu_cursor = 0
+
+        # Page 1: Header shows [1/2]
+        hdr = combat_screen._format_command_cell(0)
+        self.assertIn("[1/2]", hdr)
+        self.assertEqual(visible_width(hdr), 24)
+
+        # Slot 0 (Row 1): Potion has chevron
+        row1 = combat_screen._format_command_cell(1)
+        self.assertIn("Potion", row1)
+        self.assertIn("❱", row1)
+        self.assertEqual(visible_width(row1), 24)
+
+        # Row 7: Footer shows Page indicator
+        row7 = combat_screen._format_command_cell(7)
+        self.assertIn("P.1/2", row7)
+        self.assertEqual(visible_width(row7), 24)
+
+        # Move cursor to item 6 (Antidote on page 2)
+        combat_screen.sub_menu_cursor = 6
+        hdr2 = combat_screen._format_command_cell(0)
+        self.assertIn("[2/2]", hdr2)
+
+        # On Page 2, Slot 0 (Row 1) must show Antidote AND have the chevron!
+        row1_p2 = combat_screen._format_command_cell(1)
+        self.assertIn("Antidote", row1_p2)
+        self.assertIn("❱", row1_p2)
+        self.assertEqual(visible_width(row1_p2), 24)
+
+        # Test Right Arrow input pages forward
+        combat_screen.sub_menu_cursor = 0  # Page 1
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.RIGHT))
+        self.assertEqual(combat_screen.sub_menu_cursor, 6)  # Flips to Page 2
+
+        # Test Left Arrow input pages back
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.LEFT))
+        self.assertEqual(combat_screen.sub_menu_cursor, 0)  # Flips back to Page 1
+
+        # Number keys are ignored in the command window:
+        combat_screen.sub_menu_cursor = 6
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.CHAR, char="2"))
+        self.assertEqual(combat_screen.menu_mode, "ITEMS")
+
+        # Down arrow navigates to item 7: Bomb, and Enter selects it
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.DOWN))
+        self.assertEqual(combat_screen.sub_menu_cursor, 7)
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.ENTER))
+        self.assertEqual(combat_screen.menu_mode, "TARGET_SELECT")
+        self.assertIsNotNone(combat_screen.selected_action)
+        self.assertEqual(combat_screen.selected_action.name, "Bomb")
+
+    def test_combat_escape_key_unwinds_menu_stack(self):
+        """Verifies Escape key unwinds TARGET_SELECT -> ITEMS -> MAIN, and flees only from MAIN."""
+        from eldoria_py.core.fsm import SMStateMachine, SMTransition
+        from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
+
+        noise_screen = GSNoiseMapTestScreen()
+        combat_screen = GSNvNCombatScreen()
+        fsm = SMStateMachine("GSNvNCombatScreen")
+        fsm.add_state(noise_screen)
+        fsm.add_state(combat_screen)
+        fsm.add_transition(SMTransition("GSNvNCombatScreen", "FromCombat", "GSNoiseMapTestScreen"))
+
+        class MockCore:
+            def __init__(self, game_state):
+                self.game_state = game_state
+
+        mock_core = MockCore(fsm)
+
+        self.party.inventory.clear()
+        self.party.add_item("Potion", 5)
+        enemy = EnemyCombatant(
+            name="Goblin",
+            level=1,
+            affinity=BattleActionType.ELEMENTAL_EARTH,
+            stats={StatId.HIT_POINTS: 100, StatId.MAGIC_POINTS: 20, StatId.ATTACK: 10, StatId.DEFENSE: 10, StatId.MAGIC_ATTACK: 5, StatId.MAGIC_DEFENSE: 5, StatId.SPEED: 10, StatId.LUCK: 5, StatId.ACCURACY: 90},
+        )
+        squad = EnemySquad([enemy])
+        combat_screen.start_encounter(self.party, squad)
+
+        # 1. Enter ITEMS menu
+        combat_screen.menu_mode = "ITEMS"
+        # Press [Esc] in ITEMS -> should return to MAIN, NOT flee
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.ESCAPE)], mock_core])
+        combat_screen.update(ctx)
+        self.assertEqual(combat_screen.menu_mode, "MAIN")
+        self.assertEqual(fsm.current_state, "GSNvNCombatScreen")
+
+        # 2. Select Potion -> enters TARGET_SELECT
+        combat_screen.menu_mode = "ITEMS"
+        combat_screen._choose_item_action(combat_screen._get_battle_items()[0][0])
+        self.assertEqual(combat_screen.menu_mode, "TARGET_SELECT")
+
+        # Press [Esc] in TARGET_SELECT -> should return to ITEMS, NOT flee
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.ESCAPE)], mock_core])
+        combat_screen.update(ctx)
+        self.assertEqual(combat_screen.menu_mode, "ITEMS")
+        self.assertEqual(fsm.current_state, "GSNvNCombatScreen")
+
+        # Press [Esc] in ITEMS -> returns to MAIN
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.ESCAPE)], mock_core])
+        combat_screen.update(ctx)
+        self.assertEqual(combat_screen.menu_mode, "MAIN")
+        self.assertEqual(fsm.current_state, "GSNvNCombatScreen")
+
+        # 3. Press [Esc] in MAIN -> flees battle (transitions to FromCombat)
+        ctx = Context([0.016, [KeyEvent(key=KeyCode.ESCAPE)], mock_core])
+        combat_screen.update(ctx)
+        self.assertEqual(fsm.current_state, "GSNoiseMapTestScreen")
+
+    def test_fire_flask_to_battle_action_and_combat_selection(self):
+        """Verifies Fire Flask converts to ELEMENTAL_FIRE BattleAction and can be selected without crashing."""
+        fire_flask = ITEM_CATALOG["Fire Flask"]
+        battle_act = fire_flask.to_battle_action()
+        self.assertEqual(battle_act.action_type, BattleActionType.ELEMENTAL_FIRE)
+        self.assertEqual(battle_act.target_scope, TargetScope.ALL_ENEMIES)
+
+        combat_screen = GSNvNCombatScreen()
+        self.party.inventory.clear()
+        # Add items to force 2 pages
+        all_item_names = ["Potion", "Hi-Potion", "Ether", "Hi-Ether", "Elixir", "Revive Herb", "Bomb", "Fire Flask"]
+        for name in all_item_names:
+            self.party.add_item(name, 5)
+
+        enemy = EnemyCombatant(
+            name="Ice Bat",
+            level=1,
+            affinity=BattleActionType.ELEMENTAL_ICE,
+            stats={StatId.HIT_POINTS: 100, StatId.MAGIC_POINTS: 20, StatId.ATTACK: 10, StatId.DEFENSE: 10, StatId.MAGIC_ATTACK: 5, StatId.MAGIC_DEFENSE: 5, StatId.SPEED: 10, StatId.LUCK: 5, StatId.ACCURACY: 90},
+        )
+        combat_screen.start_encounter(self.party, EnemySquad([enemy]))
+
+        # Enter ITEMS mode
+        combat_screen.menu_mode = "ITEMS"
+        # Page right to page 2 (Fire Flask is slot 1 on page 2: index 7)
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.RIGHT))
+        # Move down to Fire Flask (index 7)
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.DOWN))
+        self.assertEqual(combat_screen.sub_menu_cursor, 7)
+        cur_item, _ = combat_screen._get_battle_items()[combat_screen.sub_menu_cursor]
+        self.assertEqual(cur_item.name, "Fire Flask")
+
+        # Press ENTER: Should plan action for active hero and advance to next member without crashing!
+        combat_screen._handle_sub_menu_input(KeyEvent(key=KeyCode.ENTER))
+        # Since Fire Flask targets ALL_ENEMIES, it automatically plans action and advances
+        self.assertIn(0, combat_screen.engine.planned_actions)
+        planned = combat_screen.engine.planned_actions[0]
+        self.assertEqual(planned.action.name, "Fire Flask")
+        self.assertEqual(planned.action.action_type, BattleActionType.ELEMENTAL_FIRE)
+        self.assertEqual(combat_screen.active_member_idx, 1)
+
+    def test_fire_flask_execution_in_combat_engine(self):
+        """Verifies Fire Flask deals elemental fire damage to all alive enemies and consumes 1 item."""
+        combat_screen = GSNvNCombatScreen()
+        hero = self.party.members[0]
+        test_party = Party([hero])
+        test_party.inventory.clear()
+        test_party.add_item("Fire Flask", 3)
+
+        e1 = EnemyCombatant(name="Ice Bat A", level=1, affinity=BattleActionType.ELEMENTAL_ICE, stats={StatId.HIT_POINTS: 100, StatId.MAGIC_POINTS: 20, StatId.ATTACK: 10, StatId.DEFENSE: 10, StatId.MAGIC_ATTACK: 5, StatId.MAGIC_DEFENSE: 5, StatId.SPEED: 10, StatId.LUCK: 5, StatId.ACCURACY: 90})
+        e2 = EnemyCombatant(name="Ice Bat B", level=1, affinity=BattleActionType.ELEMENTAL_ICE, stats={StatId.HIT_POINTS: 100, StatId.MAGIC_POINTS: 20, StatId.ATTACK: 10, StatId.DEFENSE: 10, StatId.MAGIC_ATTACK: 5, StatId.MAGIC_DEFENSE: 5, StatId.SPEED: 10, StatId.LUCK: 5, StatId.ACCURACY: 90})
+        combat_screen.start_encounter(test_party, EnemySquad([e1, e2]))
+        combat_screen.engine.rng = random.Random(42)
+
+        fire_flask = ITEM_CATALOG["Fire Flask"]
+        action = fire_flask.to_battle_action()
+        combat_screen.engine.plan_member_action(0, action, e1)
+        self.assertTrue(combat_screen.engine.finalize_planning())
+
+        # Execute actions until hero 0 acts
+        while combat_screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            act = combat_screen.engine.step_execution()
+            if act and act.actor == hero:
+                break
+
+        self.assertEqual(test_party.get_item_count("Fire Flask"), 2)
+        self.assertLess(e1.hp, 100)
+        self.assertLess(e2.hp, 100)
+        self.assertTrue(any("Fire Flask" in log and "Ice Bat" in log for log in combat_screen.engine.combat_log))
+
+    def test_ether_combat_execution_restores_mp(self):
+        """Verifies Ether restores MP in combat instead of dealing damage."""
+        combat_screen = GSNvNCombatScreen()
+        hero = self.party.members[1]  # Lyra (Mage, max_mp=75)
+        hero.stats[StatId.MAGIC_POINTS].current = 10
+        self.assertEqual(hero.mp, 10)
+
+        test_party = Party([hero])
+        test_party.inventory.clear()
+        test_party.add_item("Ether", 3)
+
+        enemy = EnemyCombatant(name="Goblin", level=1, stats={StatId.HIT_POINTS: 100, StatId.MAGIC_POINTS: 20, StatId.ATTACK: 10, StatId.DEFENSE: 10, StatId.MAGIC_ATTACK: 5, StatId.MAGIC_DEFENSE: 5, StatId.SPEED: 10, StatId.LUCK: 5, StatId.ACCURACY: 90})
+        combat_screen.start_encounter(test_party, EnemySquad([enemy]))
+
+        ether = ITEM_CATALOG["Ether"]
+        action = ether.to_battle_action()
+        combat_screen.engine.plan_member_action(0, action, hero)
+        self.assertTrue(combat_screen.engine.finalize_planning())
+
+        while combat_screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            act = combat_screen.engine.step_execution()
+            if act and act.actor == hero:
+                break
+
+        self.assertEqual(test_party.get_item_count("Ether"), 2)
+        self.assertGreater(hero.mp, 10)
+        self.assertTrue(any("uses Ether on" in log and "+40 MP" in log for log in combat_screen.engine.combat_log))
+
 
 if __name__ == "__main__":
     unittest.main()
+
+
 

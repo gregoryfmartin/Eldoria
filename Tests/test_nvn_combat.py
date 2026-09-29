@@ -393,16 +393,66 @@ class TestCombatScreenState(unittest.TestCase):
             self.assertNotIn("\\===/", cell)
             self.assertNotIn("/|   |\\", cell)
 
-        # Row 0: Name and Level
+        # Row 0: Name without position brackets
         row0 = self.screen._format_target_detail_row(0)
-        self.assertIn("Name:", row0)
-        self.assertIn("Bat A", row0)
+        self.assertIn("Name: Bat A", row0)
+        self.assertNotIn("[1]", row0)
 
-        # Row 2: HP Bar
+        # Row 1: Type without experience level
+        row1 = self.screen._format_target_detail_row(1)
+        self.assertIn("Type: Beast", row1)
+        self.assertNotIn("Lv.", row1)
+
+        # Row 2: HP Bar without numeric values
         row2 = self.screen._format_target_detail_row(2)
         self.assertIn("HP:", row2)
         self.assertIn("[", row2)
         self.assertIn("]", row2)
+        self.assertNotIn("/", row2)
+
+    def test_player_party_member_row_formatting(self):
+        """Verifies party row omits parenthetical class, displays only current HP/MP, and maintains 78 chars."""
+        for m_idx in range(len(self.screen.party.members)):
+            m = self.screen.party.members[m_idx]
+            row = self.screen._format_party_member_row(m_idx)
+            stripped = self._strip_color(row)
+
+            # 78 character width
+            self.assertEqual(len(stripped), 78)
+
+            # Name displayed without parenthetical class
+            self.assertIn(m.name, stripped)
+            self.assertNotIn(f"({m.job_class})", stripped)
+
+            # Only current HP, no max HP
+            self.assertIn(f"HP:{m.hp}", stripped)
+            self.assertNotIn(f"HP:{m.hp}/{m.max_hp}", stripped)
+
+            # Only current MP, no max MP
+            self.assertIn(f"MP:{m.mp}", stripped)
+            self.assertNotIn(f"MP:{m.mp}/{m.max_mp}", stripped)
+
+    def test_level_disparity_penalty_not_logged(self):
+        """Verifies that level disparity penalty is not logged in the combat log."""
+        from eldoria_py.combat.engine import NvNCombatEngine
+        from eldoria_py.combat.entities import Party, PartyMember, EnemySquad
+        from eldoria_py.combat.encounters import build_from_template
+        from eldoria_py.combat.bestiary import BESTIARY
+
+        # High level hero (Level 30) vs Level 1 Wolf (gap = 29 > 10, 5% multiplier)
+        hero = PartyMember(name="Archmage", job_class="Wizard", level=30)
+        party = Party(members=[hero])
+        wolf = build_from_template(BESTIARY["Wolf"], level=1)
+        wolf.hp = 0  # Pre-slain to trigger victory
+        squad = EnemySquad(enemies=[wolf])
+
+        engine = NvNCombatEngine(party, squad)
+        engine._trigger_victory()
+
+        # Victory is logged, but disparity penalty is NOT logged
+        self.assertTrue(any("VICTORY" in msg for msg in engine.combat_log))
+        self.assertTrue(any("Gained" in msg for msg in engine.combat_log))
+        self.assertFalse(any("Level disparity penalty" in msg for msg in engine.combat_log))
 
     def test_wireframe_column_alignment(self):
         """Verifies exact wireframe row lengths match the 80-column grid."""
@@ -413,9 +463,40 @@ class TestCombatScreenState(unittest.TestCase):
             vlen = len(self._strip_color(row))
             self.assertEqual(vlen, self.screen.TOTAL_WIDTH)
 
+    def test_enemy_squad_omits_hp_and_affinity(self):
+        """Verifies ENEMY SQUAD window displays only enemy names without HP numbers or affinity codes."""
+        for row_idx in range(5):
+            left_str = self.screen._format_enemy_row(row_idx)
+            plain = self._strip_color(left_str)
+            # Should not contain HP slashes or affinity labels like Dar/Fir/Wat
+            self.assertNotIn("/", plain)
+            for aff in ("Dar", "Fir", "Wat", "Ear", "Win", "Lig", "Neu"):
+                self.assertNotIn(f" {aff}", plain)
+            # If enemies are present in that row, their names should be present
+            if row_idx < len(self.screen.squad.enemies):
+                e = self.screen.squad.enemies[row_idx]
+                self.assertIn(e.name[:10], plain)
+
     def _strip_color(self, text: str) -> str:
         import re
         return re.sub(r"\033\[[0-9;]*[a-zA-Z]", "", text)
+
+    def test_section_headers_no_parentheticals(self):
+        """Verifies ENEMY SQUAD and PLAYER PARTY headers omit parenthetical capacities while maintaining 80 columns."""
+        lines = self.screen.generate_frame_lines()
+        top_header = lines[0]
+        self.assertIn("ENEMY SQUAD", top_header)
+        self.assertNotIn("(Up to 10 Enemies)", top_header)
+        self.assertEqual(len(self._strip_color(top_header)), self.screen.TOTAL_WIDTH)
+
+        party_header = lines[7]
+        self.assertIn("PLAYER PARTY", party_header)
+        self.assertNotIn("(Up to 5 Heroes)", party_header)
+        self.assertEqual(len(self._strip_color(party_header)), self.screen.TOTAL_WIDTH)
+
+        self.assertEqual(len(lines), 24)
+        for idx, line in enumerate(lines):
+            self.assertEqual(len(self._strip_color(line)), self.screen.TOTAL_WIDTH, f"Line {idx} width mismatch: {line}")
 
     def test_map_test_screen_b_key_disallowed(self):
         """Verifies that pressing [B] in GSNoiseMapTestScreen is disallowed and does not trigger 'ToCombat'."""
@@ -458,18 +539,18 @@ class TestCombatScreenState(unittest.TestCase):
         self.assertTrue(self.screen.squad.is_wiped)
 
     def test_status_hints_arrows_and_contextual_back(self):
-        """Verifies status hints use [1..5/Arrows], disallow WASD, and contextualize [B] Back."""
+        """Verifies status hints use [Arrows], disallow WASD, and contextualize [B] Back."""
         # Member 0 (first hero): No previous hero, so [B] Back must NOT be displayed
         self.screen.active_member_idx = 0
         hints_hero1 = self.screen._format_status_hints()
-        self.assertIn("[1..5/Arrows] Choose Action", hints_hero1)
+        self.assertIn("[Arrows] Choose Action", hints_hero1)
         self.assertNotIn("WASD", hints_hero1)
         self.assertNotIn("[B]", hints_hero1)
 
         # Member 1 (second hero): [B] Back must now appear
         self.screen.active_member_idx = 1
         hints_hero2 = self.screen._format_status_hints()
-        self.assertIn("[1..5/Arrows] Choose Action", hints_hero2)
+        self.assertIn("[Arrows] Choose Action", hints_hero2)
         self.assertIn("[B] Back", hints_hero2)
 
     def test_chevron_navigation_arrows_and_wasd_ignored(self):
@@ -590,6 +671,22 @@ class TestCombatScreenState(unittest.TestCase):
         from eldoria_py.terminal.box import visible_width
         self.assertEqual(visible_width(row1), 53)
         self.assertEqual(visible_width(row2), 53)
+
+    def test_combat_log_no_hp_numbers_on_damage_or_heal(self):
+        """Verifies that damage and healing log messages state the damage or HP change without appending target HP numbers."""
+        enemy = self.screen.squad.enemies[0]
+        for i in range(len(self.screen.party.alive_members)):
+            self.screen.engine.plan_member_action(i, ACTIONS["Attack"].copy(), enemy)
+        self.assertTrue(self.screen.engine.finalize_planning())
+        while self.screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            self.screen.engine.step_execution()
+
+        dmg_logs = [log for log in self.screen.engine.combat_log if "uses Attack on" in log]
+        self.assertTrue(len(dmg_logs) > 0)
+        for log in dmg_logs:
+            # Must end with damage value and not contain (curr/max) HP
+            self.assertRegex(log, r"\d+ dmg$")
+            self.assertNotIn(f"/{enemy.max_hp}", log)
 
 
 if __name__ == "__main__":

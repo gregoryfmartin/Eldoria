@@ -255,13 +255,14 @@ def calculate_damage(
     if is_magic:
         atk_val = attacker_stats.get(StatId.MAGIC_ATTACK, 10)
         def_val = target_stats.get(StatId.MAGIC_DEFENSE, 10)
+        effective_def = def_val * 0.7 if is_crit else float(def_val)
+        # Elemental spells possess an inherent base floor (power * 0.8) so spending MP deals substantial damage
+        base_dmg = max(1.0, (power * 0.8) + ((power * atk_val) / 10.0) - (effective_def / 3.0))
     else:
         atk_val = attacker_stats.get(StatId.ATTACK, 10)
         def_val = target_stats.get(StatId.DEFENSE, 10)
-
-    # Critical hits ignore 30% of target defense
-    effective_def = def_val * 0.7 if is_crit else float(def_val)
-    base_dmg = max(1.0, ((power * atk_val) / 12.0) - (effective_def / 4.0))
+        effective_def = def_val * 0.7 if is_crit else float(def_val)
+        base_dmg = max(1.0, ((power * atk_val) / 12.0) - (effective_def / 4.0))
 
     # Variance (0.92 to 1.08)
     var = variance if variance is not None else r.uniform(0.92, 1.08)

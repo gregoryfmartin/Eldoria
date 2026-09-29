@@ -144,10 +144,10 @@ class TestCharacterBuilder(unittest.TestCase):
         self.screen.mod_stats[StatId.MAGIC_DEFENSE] = 0
 
         # Max HP = 160 + (15 * 8) + (20 * 2) = 160 + 120 + 40 = 320
-        # Max MP = 30 + (10 * 8) + (8 * 3) = 30 + 80 + 24 = 134
+        # Max MP = 16 + (10 * 2) + int(8 * 0.75) = 16 + 20 + 6 = 42
         hp, mp = self.screen._derive_hp_mp()
         self.assertEqual(hp, 320)
-        self.assertEqual(mp, 134)
+        self.assertEqual(mp, 42)
 
     def test_confirmation_substate_commits_to_party_builder(self):
         self.screen.target_slot = 1

@@ -90,9 +90,17 @@ class TestMapSerializationCompleteness(unittest.TestCase):
             for t in row if t.is_walkable and t.warp_target is None
         ]
         self.assertGreater(len(cave_floors), 0)
+        orig_cave = world_macro.get_poi(POIType.CAVE)
+        self.assertIsNotNone(orig_cave)
+        orig_floors = [
+            t for row in orig_cave.sub_map.tiles
+            for t in row if t.is_walkable and t.warp_target is None
+        ]
+        expected_cave_region = orig_floors[0].region_code
+        self.assertGreaterEqual(expected_cave_region, 1)
         for tile in cave_floors:
             self.assertTrue(tile.battle_allowed)
-            self.assertEqual(tile.region_code, 3)
+            self.assertEqual(tile.region_code, expected_cave_region)
             self.assertAlmostEqual(tile.encounter_rate, 0.20, places=4)
 
         # 2. Town Submap

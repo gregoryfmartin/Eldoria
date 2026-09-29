@@ -6,7 +6,7 @@ GSNoiseMapTestScreen: Interactive terminal visualizer for procedural noise maps,
 from __future__ import annotations
 import random
 import re
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Union
 
 from ..core.context import Context
 from ..core.fsm import SMState
@@ -69,6 +69,8 @@ class GSNoiseMapTestScreen(SMState):
         self.party: Party = create_default_party()
         self.steps_since_battle: int = 5
         self.min_grace_steps: int = 5
+        self.danger_counter: float = 0.0
+        self.danger_threshold: float = self._roll_danger_threshold()
         self.last_status_msg: str = ""
 
         # World Macro Map (4x4 sectors = 16 interconnected sectors)
@@ -96,6 +98,7 @@ class GSNoiseMapTestScreen(SMState):
         self.save_manager: SaveManager = SaveManager()
         self.active_slot: Optional[int] = 1
         self._fallback_playtime_seconds: int = 0
+        self.exploration_flags: dict[str, Any] = {}
 
         # POI Item Picker modal state (UIPanel)
         self.is_item_picker_active: bool = False
@@ -155,6 +158,8 @@ class GSNoiseMapTestScreen(SMState):
         self.active_poi = None
         self.warp_stack.clear()
         self.steps_since_battle = 5
+        self.danger_counter = 0.0
+        self.danger_threshold = self._roll_danger_threshold()
         self.last_status_msg = ""
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
@@ -201,6 +206,26 @@ class GSNoiseMapTestScreen(SMState):
                 self.active_submap = None
                 self.active_poi = None
 
+            if "flags" in ctx_exp and isinstance(ctx_exp["flags"], dict):
+                self.exploration_flags = dict(ctx_exp["flags"])
+
+            if "danger_counter" in ctx_exp:
+                self.danger_counter = float(ctx_exp["danger_counter"])
+            if "danger_threshold" in ctx_exp:
+                self.danger_threshold = float(ctx_exp["danger_threshold"])
+            if "steps_since_battle" in ctx_exp:
+                self.steps_since_battle = int(ctx_exp["steps_since_battle"])
+
+        self._ensure_walkable_player_pos()
+
+        # Check if returning from a boss encounter
+        active_boss = context.get("active_boss_fight")
+        if active_boss:
+            if not self.party.is_wiped:
+                self.exploration_flags[f"boss_defeated_{active_boss}"] = True
+                self.last_status_msg = f"★ VICTORY! {active_boss} has been defeated!"
+            context.set("active_boss_fight", None)
+
         # Check if returning from a wiped party battle (Defeat)
         if self.party.is_wiped:
             # Revive party with 50% HP and 50% MP
@@ -214,6 +239,8 @@ class GSNoiseMapTestScreen(SMState):
             self.active_poi = None
             self.warp_stack.clear()
             self.steps_since_battle = 0
+            self.danger_counter = 0.0
+            self.danger_threshold = self._roll_danger_threshold()
             self.last_status_msg = "Revived!"
         TerminalScreen.flush()
 
@@ -335,12 +362,47 @@ class GSNoiseMapTestScreen(SMState):
 
         self._render()
 
+    def _ensure_walkable_player_pos(self) -> None:
+        """Validates that the current player coordinates are on a walkable tile with no NPC.
+        If unwalkable or trapped, safely relocates the player to the closest walkable tile in the sector.
+        """
+        curr_map = self._current_map()
+        self.player_x = max(0, min(curr_map.width - 1, self.player_x))
+        self.player_y = max(0, min(curr_map.height - 1, self.player_y))
+
+        curr_tile = curr_map.tiles[self.player_y][self.player_x]
+        if curr_tile.is_walkable and curr_tile.npc is None and any(curr_tile.exits):
+            return
+
+        max_dist = max(curr_map.width, curr_map.height)
+        best_candidate: Optional[Tuple[int, int]] = None
+        for radius in range(1, max_dist):
+            for dy in range(-radius, radius + 1):
+                for dx in range(-radius, radius + 1):
+                    if abs(dx) != radius and abs(dy) != radius:
+                        continue
+                    nx = self.player_x + dx
+                    ny = self.player_y + dy
+                    if 0 <= ny < curr_map.height and 0 <= nx < curr_map.width:
+                        cand = curr_map.tiles[ny][nx]
+                        if cand.is_walkable and cand.npc is None:
+                            if any(cand.exits):
+                                self.player_x = nx
+                                self.player_y = ny
+                                return
+                            elif best_candidate is None:
+                                best_candidate = (nx, ny)
+        if best_candidate is not None:
+            self.player_x, self.player_y = best_candidate
+
     def _try_move(self, dx: int, dy: int, exit_dir: int) -> bool:
         """Handles player movement and seamless sector boundary crossing. Returns True if moved."""
         curr_map = self._current_map()
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
 
-        if not curr_tile.exits[exit_dir]:
+        # Standard exit check, with emergency unstuck fallback if player is trapped on an unwalkable tile
+        is_trapped = (not curr_tile.is_walkable) or (not any(curr_tile.exits))
+        if not curr_tile.exits[exit_dir] and not is_trapped:
             return False
 
         nx = self.player_x + dx
@@ -349,6 +411,9 @@ class GSNoiseMapTestScreen(SMState):
         # Sub-map movement
         if self.active_submap is not None:
             if 0 <= nx < self.map_width and 0 <= ny < self.map_height:
+                dest_tile = self.active_submap.tiles[ny][nx]
+                if not dest_tile.is_walkable or dest_tile.npc is not None:
+                    return False
                 self.player_x = nx
                 self.player_y = ny
                 return True
@@ -361,7 +426,7 @@ class GSNoiseMapTestScreen(SMState):
         if nx >= self.map_width:
             if sx < self.world_macro.macro_width - 1:
                 next_sec = self.world_macro.get_sector(sx + 1, sy)
-                if next_sec and next_sec.tiles[ny][0].is_walkable:
+                if next_sec and next_sec.tiles[ny][0].is_walkable and next_sec.tiles[ny][0].npc is None:
                     self.current_sector = (sx + 1, sy)
                     self.player_x = 0
                     self.player_y = ny
@@ -374,7 +439,7 @@ class GSNoiseMapTestScreen(SMState):
         if nx < 0:
             if sx > 0:
                 next_sec = self.world_macro.get_sector(sx - 1, sy)
-                if next_sec and next_sec.tiles[ny][self.map_width - 1].is_walkable:
+                if next_sec and next_sec.tiles[ny][self.map_width - 1].is_walkable and next_sec.tiles[ny][self.map_width - 1].npc is None:
                     self.current_sector = (sx - 1, sy)
                     self.player_x = self.map_width - 1
                     self.player_y = ny
@@ -387,7 +452,7 @@ class GSNoiseMapTestScreen(SMState):
         if ny >= self.map_height:
             if sy < self.world_macro.macro_height - 1:
                 next_sec = self.world_macro.get_sector(sx, sy + 1)
-                if next_sec and next_sec.tiles[0][nx].is_walkable:
+                if next_sec and next_sec.tiles[0][nx].is_walkable and next_sec.tiles[0][nx].npc is None:
                     self.current_sector = (sx, sy + 1)
                     self.player_x = nx
                     self.player_y = 0
@@ -400,7 +465,7 @@ class GSNoiseMapTestScreen(SMState):
         if ny < 0:
             if sy > 0:
                 next_sec = self.world_macro.get_sector(sx, sy - 1)
-                if next_sec and next_sec.tiles[self.map_height - 1][nx].is_walkable:
+                if next_sec and next_sec.tiles[self.map_height - 1][nx].is_walkable and next_sec.tiles[self.map_height - 1][nx].npc is None:
                     self.current_sector = (sx, sy - 1)
                     self.player_x = nx
                     self.player_y = self.map_height - 1
@@ -409,21 +474,36 @@ class GSNoiseMapTestScreen(SMState):
                     return True
             return False
 
-        # Regular move within the same sector
+        # Regular move within the same sector: strictly require destination to be walkable & free of NPCs
+        dest_tile = curr_map.tiles[ny][nx]
+        if not dest_tile.is_walkable or dest_tile.npc is not None:
+            return False
         self.player_x = nx
         self.player_y = ny
         return True
 
+    def _roll_danger_threshold(self) -> float:
+        """Rolls a random danger threshold between 26.0 and 44.0 points."""
+        return random.uniform(26.0, 44.0)
+
     def _check_step_encounter(self, context: Context) -> bool:
-        """Evaluates step-based random encounter rolls. Returns True if encounter triggered."""
+        """Evaluates step-based random encounter rolls using danger accumulator. Returns True if encounter triggered."""
         self.steps_since_battle += 1
-        if self.steps_since_battle < self.min_grace_steps:
-            return False
 
         curr_map = self._current_map()
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
 
-        # Warp tiles, egress tiles, safe tiles never trigger encounters
+        # Check for Boss encounter tile
+        for obj in curr_tile.object_listing:
+            if obj.startswith("Boss:"):
+                boss_name = obj.split(":", 1)[1]
+                boss_flag = f"boss_defeated_{boss_name}"
+                if not self.exploration_flags.get(boss_flag, False):
+                    return self._trigger_boss_encounter(context, boss_name)
+                else:
+                    return False
+
+        # Warp tiles, egress tiles, safe tiles never accumulate danger or trigger encounters
         if curr_tile.warp_target is not None:
             return False
 
@@ -433,16 +513,25 @@ class GSNoiseMapTestScreen(SMState):
         if curr_tile.region_code == 0:
             return False
 
-        # Roll encounter chance
-        roll = random.random()
-        if roll < curr_tile.encounter_rate:
-            return self._trigger_encounter(context, curr_tile.region_code)
+        # Danger Accumulator logic:
+        # Step danger scales with tile encounter_rate (x10)
+        # e.g., Road (0.04) -> 0.4, Coast (0.08) -> 0.8, Plains (0.10) -> 1.0, Forest (0.16) -> 1.6, Cave (0.20) -> 2.0
+        step_danger = max(0.1, curr_tile.encounter_rate * 10.0)
+        if curr_tile.encounter_rate >= 1.0:
+            self.danger_counter = max(self.danger_counter, self.danger_threshold)
+        else:
+            self.danger_counter += step_danger
+
+        # Trigger encounter once accumulated danger meets threshold and minimum grace steps have passed
+        if self.steps_since_battle >= self.min_grace_steps and self.danger_counter >= self.danger_threshold:
+            return self._trigger_encounter(context, curr_tile.biome, curr_tile.region_code)
 
         return False
 
-    def _trigger_encounter(self, context: Context, region_code: int) -> bool:
-        """Spawns an enemy squad for region_code and transitions to GSNvNCombatScreen."""
-        squad = generate_encounter(region_code)
+    def _trigger_boss_encounter(self, context: Context, boss_name: str) -> bool:
+        """Spawns a solo boss encounter and transitions to GSNvNCombatScreen."""
+        from eldoria_py.combat.encounters import create_boss_encounter
+        squad = create_boss_encounter(boss_name)
         if squad is None:
             return False
 
@@ -455,6 +544,40 @@ class GSNoiseMapTestScreen(SMState):
             return False
 
         self.steps_since_battle = 0
+        self.danger_counter = 0.0
+        self.danger_threshold = self._roll_danger_threshold()
+        context.set("active_boss_fight", boss_name)
+        combat_state.start_encounter(self.party, squad)
+        transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
+        if transition_state:
+            transition_state.configure(
+                source_lines=self.generate_frame_lines(),
+                target_event="EnterCombat",
+                target_state="GSNvNCombatScreen",
+            )
+        core.game_state.trigger("ToCombat", context)
+        return True
+
+    def _trigger_encounter(self, context: Context, biome: Union[BiomeType, int], region_code: Optional[int] = None) -> bool:
+        """Spawns an enemy squad for biome and region_code and transitions to GSNvNCombatScreen."""
+        if region_code is None and isinstance(biome, int):
+            squad = generate_encounter(biome)
+        else:
+            squad = generate_encounter(biome, region_code)
+        if squad is None:
+            return False
+
+        core = context.get(SMState.ContextEldoriaCore)
+        if not core or not hasattr(core, "game_state"):
+            return False
+
+        combat_state = core.game_state.states.get("GSNvNCombatScreen")
+        if not combat_state:
+            return False
+
+        self.steps_since_battle = 0
+        self.danger_counter = 0.0
+        self.danger_threshold = self._roll_danger_threshold()
         combat_state.start_encounter(self.party, squad)
         transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
         if transition_state:
@@ -468,13 +591,17 @@ class GSNoiseMapTestScreen(SMState):
 
     def _save_to_slot(self, slot_idx: int) -> None:
         """Atomically saves game state to the designated slot."""
+        self._ensure_walkable_player_pos()
         exploration_state = {
             "current_sector": list(self.current_sector),
             "player_pos": [self.player_x, self.player_y],
             "current_map_name": self.active_poi.name if self.active_poi else "Overworld",
             "active_submap_poi": self.active_poi.name if self.active_poi else None,
             "visited_sectors": [list(self.current_sector)],
-            "flags": {},
+            "flags": dict(self.exploration_flags),
+            "danger_counter": round(self.danger_counter, 2),
+            "danger_threshold": round(self.danger_threshold, 2),
+            "steps_since_battle": self.steps_since_battle,
         }
         self.save_manager.save_game(
             slot_idx=slot_idx,
@@ -494,6 +621,9 @@ class GSNoiseMapTestScreen(SMState):
             for m in self.party.members:
                 m.stats[StatId.HIT_POINTS].current = m.max_hp
                 m.stats[StatId.MAGIC_POINTS].current = m.max_mp
+            self.steps_since_battle = 0
+            self.danger_counter = 0.0
+            self.danger_threshold = self._roll_danger_threshold()
             place_name = "Oakhaven Inn" if "MTOInn" in curr_tile.object_listing else "Town Well"
             if "MTOInn" in curr_tile.object_listing:
                 slot = self.active_slot or 1

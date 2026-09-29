@@ -139,6 +139,45 @@ class TestMapNavigationControls(unittest.TestCase):
         self.assertTrue(raw_border.startswith("╰"))
         self.assertTrue(raw_border.endswith("╯"))
 
+    def test_movement_blocked_by_unwalkable_destination(self) -> None:
+        """Moving towards a mountain/unwalkable tile is strictly blocked."""
+        # Set tile to the right (11, 10) to Mountain
+        sec = self.screen._current_map()
+        sec.set_tile(11, 10, MapTile(biome=BiomeType.MOUNTAIN))
+        # Ensure starting tile (10, 10) has exit East artificially set to True
+        sec.tiles[10][10].exits[MapTile.EXIT_EAST] = True
+
+        moved = self.screen._try_move(1, 0, MapTile.EXIT_EAST)
+        self.assertFalse(moved)
+        self.assertEqual((self.screen.player_x, self.screen.player_y), (10, 10))
+
+    def test_emergency_unstuck_escape(self) -> None:
+        """If player is trapped on an unwalkable tile with no exits, they can step to adjacent walkable tile."""
+        sec = self.screen._current_map()
+        sec.set_tile(10, 10, MapTile(biome=BiomeType.MOUNTAIN))
+        # Mountain has all exits False
+        sec.tiles[10][10].exits = [False, False, False, False]
+        self.screen.player_x = 10
+        self.screen.player_y = 10
+
+        # Move West into walkable plains at (9, 10)
+        moved = self.screen._try_move(-1, 0, MapTile.EXIT_WEST)
+        self.assertTrue(moved)
+        self.assertEqual((self.screen.player_x, self.screen.player_y), (9, 10))
+
+    def test_ensure_walkable_player_pos_relocation(self) -> None:
+        """_ensure_walkable_player_pos relocates an unwalkable player to nearest valid walkable tile."""
+        sec = self.screen._current_map()
+        sec.set_tile(10, 10, MapTile(biome=BiomeType.MOUNTAIN))
+        sec.tiles[10][10].exits = [False, False, False, False]
+        self.screen.player_x = 10
+        self.screen.player_y = 10
+
+        self.screen._ensure_walkable_player_pos()
+        self.assertNotEqual((self.screen.player_x, self.screen.player_y), (10, 10))
+        new_tile = sec.tiles[self.screen.player_y][self.screen.player_x]
+        self.assertTrue(new_tile.is_walkable)
+
 
 if __name__ == "__main__":
     unittest.main()

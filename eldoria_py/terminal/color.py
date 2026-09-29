@@ -285,6 +285,10 @@ class ColorLibrary:
     AppleBrownLight = TrueColor(hex_val=0xAC7F5E)
     AppleBrownDark = TrueColor(hex_val=0xB78A66)
 
+    # Gemstone Colors
+    EmeraldGreen = TrueColor(hex_val=0x50C878)
+    RubyRed = TrueColor(hex_val=0xE0115F)
+
     # Game UI Design Tokens
     WindowBorderActiveColor = Ivory
     WindowBorderInactiveColor = DarkSlateGrey
@@ -316,6 +320,8 @@ class ColorLibrary:
     UI_CHEVRON_INACTIVE = UIChevronInactive
     UI_CHEVRON_HAS_FOCUS = UIChevronHasFocus
     LIST_ITEM_CURRENT_HIGHLIGHT = ListItemCurrentHighlight
+    EMERALD_GREEN = EmeraldGreen
+    RUBY_RED = RubyRed
 
 
 def rainbow_color(hue: float) -> TrueColor:

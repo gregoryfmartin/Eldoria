@@ -29,6 +29,14 @@ TOWN_NAMES = [
     "Mistral Village",
     "Falcon's Reach",
     "Eldermere Town",
+    "Silverbrook Crossing",
+    "Galeshire Port",
+    "Bramblewick Village",
+    "Starfall Sanctum",
+    "Aethelgard Haven",
+    "Dawnspire Refuge",
+    "Winterhold Outpost",
+    "Verdant Glen",
 ]
 
 CASTLE_NAMES = [
@@ -48,7 +56,83 @@ CAVE_NAMES = [
     "Dragon's Maw",
     "Crystal Hollow",
     "Grimrock Abyss",
+    "Obsidian Pit",
+    "Frostpeak Hollow",
+    "Blighted Vault",
+    "Nether Chasm",
+    "Stormcrag Pit",
+    "Brimstone Den",
+    "Abyssal Sump",
+    "Oblivion Citadel",
 ]
+
+
+BOSS_CAVE_MAPPING: List[Tuple[str, int, str, List[str]]] = [
+    # (boss_name, region, cave_name, preferred_biomes)
+    ("Rattus", 1, "Shadowfen Cavern", ["Plains", "Road"]),
+    ("Grumble", 1, "Duskfall Grotto", ["Forest"]),
+    ("Brigand", 2, "Blackstone Deep", ["Plains", "Road"]),
+    ("Fangclaw", 2, "Echoing Chasm", ["Forest"]),
+    ("Broodfang", 3, "Whispering Depths", ["Cave", "Mountain"]),
+    ("Craghorn", 3, "Dragon's Maw", ["Mountain"]),
+    ("Tideclaw", 4, "Crystal Hollow", ["Coast"]),
+    ("Ironhide", 4, "Grimrock Abyss", ["Plains", "Mountain"]),
+    ("Venomtail", 5, "Obsidian Pit", ["Forest"]),
+    ("Gargoyle", 5, "Frostpeak Hollow", ["Mountain"]),
+    ("Frostfang", 6, "Blighted Vault", ["Snow"]),
+    ("Magmadon", 6, "Brimstone Den", ["Cave", "Mountain"]),
+    ("Stormlord", 7, "Stormcrag Pit", ["Mountain"]),
+    ("Deathclaw", 7, "Nether Chasm", ["Cave"]),
+    ("Archdemon", 8, "Abyssal Sump", ["Cave", "Citadel"]),
+    ("Malakor", 9, "Oblivion Citadel", ["Citadel", "Cave"]),
+]
+
+
+def calculate_concentric_region_code(
+    gx: int,
+    gy: int,
+    spawn_gx: int,
+    spawn_gy: int,
+    aspect_ratio: float = 2.0,
+    max_region: int = 9,
+    scale: float = 1.0,
+) -> int:
+    """Calculates non-equidistant concentric distance ring (1 to max_region) from spawn position.
+    Compensates for terminal character aspect ratio (2:1 vertical).
+    Bands:
+    R1: 0 <= D < 18 (delta = 18) - Starter buffer
+    R2: 18 <= D < 32 (delta = 14) - Outskirts
+    R3: 32 <= D < 56 (delta = 24) - Midlands
+    R4: 56 <= D < 76 (delta = 20) - Frontier
+    R5: 76 <= D < 94 (delta = 18) - Wilds
+    R6: 94 <= D < 114 (delta = 20) - Highlands
+    R7: 114 <= D < 138 (delta = 24) - Hazard Wastes
+    R8: 138 <= D < 160 (delta = 22) - Shadow Lands
+    R9: D >= 160 - Periphery Citadel
+    """
+    dx = float(gx - spawn_gx)
+    dy = float(gy - spawn_gy) * aspect_ratio
+    d = math.hypot(dx, dy) / max(0.1, scale)
+
+    if d < 18.0:
+        raw = 1
+    elif d < 32.0:
+        raw = 2
+    elif d < 56.0:
+        raw = 3
+    elif d < 76.0:
+        raw = 4
+    elif d < 94.0:
+        raw = 5
+    elif d < 114.0:
+        raw = 6
+    elif d < 138.0:
+        raw = 7
+    elif d < 160.0:
+        raw = 8
+    else:
+        raw = 9
+    return min(max_region, raw)
 
 
 class WorldMacroMap:
@@ -74,6 +158,7 @@ class WorldMacroMap:
         octaves: int = 4,
         lacunarity: float = 2.0,
         gain: float = 0.5,
+        max_region: Optional[int] = None,
         generate: bool = True,
     ) -> None:
         self.seed = seed
@@ -87,6 +172,21 @@ class WorldMacroMap:
         self.octaves = octaves
         self.lacunarity = lacunarity
         self.gain = gain
+
+        total_sectors = self.macro_width * self.macro_height
+        if max_region is not None:
+            self.max_region = max_region
+        elif total_sectors <= 16:
+            self.max_region = 3
+        elif total_sectors <= 36:
+            self.max_region = 6
+        else:
+            self.max_region = 9
+
+        if max(self.macro_width, self.macro_height) <= 6:
+            self.region_scale = 1.0
+        else:
+            self.region_scale = max(1.0, max(self.macro_width, self.macro_height) / 4.5)
 
         self.generator = ProceduralMapGenerator(
             seed=self.seed,
@@ -163,8 +263,41 @@ class WorldMacroMap:
         # 5. Link Inter-Sector Exits across boundaries with strict reciprocity
         self._link_sector_exits()
 
+        # 6. Assign non-equidistant concentric danger regions (1-9) radiating from starter town
+        self._assign_concentric_regions()
+
+    def _assign_concentric_regions(self) -> None:
+        """Assigns non-equidistant concentric danger regions (1-max_region) radiating from starter town."""
+        spawn_gx = self.starter_sector[0] * self.sector_width + self.starter_player_pos[0]
+        spawn_gy = self.starter_sector[1] * self.sector_height + self.starter_player_pos[1]
+
+        for sy in range(self.macro_height):
+            for sx in range(self.macro_width):
+                sec = self.sectors[sy][sx]
+                for y in range(self.sector_height):
+                    for x in range(self.sector_width):
+                        tile = sec.tiles[y][x]
+                        # Safe zones (towns/castles) and non-battle tiles remain 0; cave POIs preserve their danger region
+                        if tile.poi is not None:
+                            if tile.poi.poi_type != POIType.CAVE:
+                                tile.region_code = 0
+                            elif tile.region_code == 0:
+                                gx = sx * self.sector_width + x
+                                gy = sy * self.sector_height + y
+                                tile.region_code = calculate_concentric_region_code(
+                                    gx, gy, spawn_gx, spawn_gy, max_region=self.max_region, scale=self.region_scale
+                                )
+                        elif not tile.battle_allowed or tile.encounter_rate <= 0.0:
+                            tile.region_code = 0
+                        else:
+                            gx = sx * self.sector_width + x
+                            gy = sy * self.sector_height + y
+                            tile.region_code = calculate_concentric_region_code(
+                                gx, gy, spawn_gx, spawn_gy, max_region=self.max_region, scale=self.region_scale
+                            )
+
     def _place_pois(self) -> None:
-        """Selects distinct sectors and places Town, Castle, and Cave POIs based on map size."""
+        """Selects distinct sectors and places Town, Castle, and Cave POIs based on map size and regional tiers."""
         self.pois.clear()
         self.all_pois.clear()
         sector_stats = []
@@ -198,142 +331,231 @@ class WorldMacroMap:
 
         total_sectors = self.macro_width * self.macro_height
         if total_sectors <= 16:
-            n_towns, n_castles, n_caves = 1, 1, 1
+            n_caves = 4
+            n_towns = max(1, n_caves - 3)  # 1 town
+            n_castles = 1
         elif total_sectors <= 36:
-            n_towns, n_castles, n_caves = 1, 1, 2
-        elif total_sectors <= 144:
-            n_towns, n_castles, n_caves = 3, 2, 4
+            n_caves = 11
+            n_towns = n_caves - 3          # 8 towns
+            n_castles = 2
         else:
-            n_towns, n_castles, n_caves = 6, 4, 8
+            n_caves = 16
+            n_towns = n_caves - 3          # 13 towns
+            n_castles = 2
 
-        # A. Towns
+        # -------------------------------------------------------------
+        # 1. Place Starter Town and Establish Concentric Regions
+        # -------------------------------------------------------------
         town_candidates = sorted(
             [s for s in sector_stats if s["walkable"] >= 40],
             key=lambda s: s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5,
             reverse=True,
         )
-        town_sectors = []
 
         # Seeded RNG dedicated to POI placement to preserve determinism
         poi_rng = random.Random(self.seed + 101)
 
-        if town_candidates:
-            # Select starter town from top 3-5 viable candidates using weighted probability
-            pool_size = min(5, len(town_candidates))
-            starter_pool = town_candidates[:pool_size]
-            weights = [max(1.0, s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5) for s in starter_pool]
+        pool_size = min(5, len(town_candidates))
+        starter_pool = town_candidates[:pool_size] if town_candidates else sector_stats[:pool_size]
+        weights = [max(1.0, s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5) for s in starter_pool]
 
-            chosen_starter = poi_rng.choices(starter_pool, weights=weights, k=1)[0]
-            starter_coord = chosen_starter["coord"]
-            town_sectors.append(starter_coord)
-            used_sectors.add(starter_coord)
+        chosen_starter = poi_rng.choices(starter_pool, weights=weights, k=1)[0]
+        starter_coord = chosen_starter["coord"]
+        town_sectors = [starter_coord]
+        used_sectors.add(starter_coord)
+        self.starter_sector = starter_coord
 
-        # Place remaining towns (if any) respecting distance constraints
-        for cand in town_candidates:
-            if len(town_sectors) >= n_towns:
-                break
-            coord = cand["coord"]
-            if coord not in used_sectors:
-                if total_sectors > 16:
+        starter_map = self.sectors[starter_coord[1]][starter_coord[0]]
+        town_pos = self._find_best_open_pos(starter_map)
+        cand_x = min(self.sector_width - 1, town_pos[0] + 1)
+        if starter_map.tiles[town_pos[1]][cand_x].is_walkable:
+            self.starter_player_pos = (cand_x, town_pos[1])
+        else:
+            self.starter_player_pos = town_pos
+
+        # Assign concentric regions immediately once starter position is anchored
+        self._assign_concentric_regions()
+
+        def get_sector_region(coord: Tuple[int, int]) -> int:
+            center_gx = coord[0] * self.sector_width + self.sector_width // 2
+            center_gy = coord[1] * self.sector_height + self.sector_height // 2
+            spawn_gx = self.starter_sector[0] * self.sector_width + self.starter_player_pos[0]
+            spawn_gy = self.starter_sector[1] * self.sector_height + self.starter_player_pos[1]
+            return calculate_concentric_region_code(
+                center_gx, center_gy, spawn_gx, spawn_gy, max_region=self.max_region, scale=self.region_scale
+            )
+
+        # Place Starter Town POI
+        starter_name = TOWN_NAMES[0]
+        starter_submap, starter_spawn = SubMapGenerator.generate_town(
+            name=starter_name,
+            seed=self.seed,
+            region=1,
+            is_endgame=False,
+        )
+        starter_poi = POIDescriptor.create_town(
+            name=starter_name,
+            sector_coord=starter_coord,
+            local_pos=town_pos,
+            spawn_pos=starter_spawn,
+        )
+        starter_poi.sub_map = starter_submap
+        self._stamp_poi_on_tile(starter_map, town_pos, starter_poi)
+        self.all_pois.append(starter_poi)
+        self.pois[starter_name] = starter_poi
+        self.pois[POIType.TOWN] = starter_poi
+
+        # -------------------------------------------------------------
+        # 2. Place Remaining Towns (Strictly Region <= 7, Varied Layouts)
+        # -------------------------------------------------------------
+        endgame_town_coord: Optional[Tuple[int, int]] = None
+
+        if n_towns > 1:
+            # If map spans Region 7, designate exactly 1 End-Game Town in Region 7
+            if self.max_region >= 7:
+                eg_candidates = [
+                    s for s in sector_stats
+                    if s["coord"] not in used_sectors
+                    and get_sector_region(s["coord"]) == 7
+                    and s["walkable"] >= 30
+                ]
+                eg_candidates.sort(
+                    key=lambda s: s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5,
+                    reverse=True,
+                )
+                if eg_candidates:
+                    eg_coord = eg_candidates[0]["coord"]
+                    endgame_town_coord = eg_coord
+                    town_sectors.append(eg_coord)
+                    used_sectors.add(eg_coord)
+
+            # Fill remaining towns in Regions 1 to min(7, max_region)
+            max_town_reg = min(7, self.max_region)
+            remaining_cands = [
+                s for s in sector_stats
+                if s["coord"] not in used_sectors
+                and 1 <= get_sector_region(s["coord"]) <= max_town_reg
+                and s["walkable"] >= 30
+            ]
+            remaining_cands.sort(
+                key=lambda s: s["plains"] * 2.0 + s["forest"] - s["water"] * 1.5,
+                reverse=True,
+            )
+
+            # First pass: enforce inter-town spacing >= 2 where available
+            for cand in remaining_cands:
+                if len(town_sectors) >= n_towns:
+                    break
+                coord = cand["coord"]
+                if coord not in used_sectors:
                     min_dist = min(abs(coord[0] - tc[0]) + abs(coord[1] - tc[1]) for tc in town_sectors)
-                    if min_dist < 2 and len(town_candidates) > len(town_sectors) + 2:
+                    if min_dist < 2 and len(remaining_cands) > len(town_sectors) + 2:
                         continue
-                town_sectors.append(coord)
-                used_sectors.add(coord)
+                    town_sectors.append(coord)
+                    used_sectors.add(coord)
 
-        while len(town_sectors) < n_towns:
-            avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
-            if not avail:
-                avail = [s["coord"] for s in sector_stats]
-            pick = avail[0]
-            town_sectors.append(pick)
-            used_sectors.add(pick)
+            # Second pass: relax spacing if needed to satisfy quota
+            if len(town_sectors) < n_towns:
+                for cand in remaining_cands:
+                    if len(town_sectors) >= n_towns:
+                        break
+                    coord = cand["coord"]
+                    if coord not in used_sectors:
+                        town_sectors.append(coord)
+                        used_sectors.add(coord)
 
-        # B. Castles
-        castle_candidates = sorted(
-            [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 30],
+            # Ultimate fallback if sector count is constrained
+            while len(town_sectors) < n_towns:
+                avail = [
+                    s["coord"] for s in sector_stats
+                    if s["coord"] not in used_sectors and get_sector_region(s["coord"]) <= max_town_reg
+                ]
+                if not avail:
+                    break
+                pick = avail[0]
+                town_sectors.append(pick)
+                used_sectors.add(pick)
+
+            # Instantiate and stamp all remaining towns
+            for idx in range(1, len(town_sectors)):
+                coord = town_sectors[idx]
+                name = TOWN_NAMES[idx] if idx < len(TOWN_NAMES) else f"Settlement {idx + 1}"
+                town_map = self.sectors[coord[1]][coord[0]]
+                town_pos = self._find_best_open_pos(town_map)
+                reg = get_sector_region(coord)
+                is_eg = (coord == endgame_town_coord)
+                town_submap, town_spawn = SubMapGenerator.generate_town(
+                    name=name,
+                    seed=self.seed + idx * 37,
+                    region=reg,
+                    is_endgame=is_eg,
+                )
+                town_poi = POIDescriptor.create_town(
+                    name=name,
+                    sector_coord=coord,
+                    local_pos=town_pos,
+                    spawn_pos=town_spawn,
+                )
+                town_poi.sub_map = town_submap
+                self._stamp_poi_on_tile(town_map, town_pos, town_poi)
+                self.all_pois.append(town_poi)
+                self.pois[name] = town_poi
+
+        # -------------------------------------------------------------
+        # 3. Place Castles (1 for <=16 sectors, 2 for other sizes; Region <= 7)
+        # -------------------------------------------------------------
+        max_castle_reg = min(7, self.max_region)
+        castle_candidates = [
+            s for s in sector_stats
+            if s["coord"] not in used_sectors
+            and 1 <= get_sector_region(s["coord"]) <= max_castle_reg
+            and s["walkable"] >= 30
+        ]
+        castle_candidates.sort(
             key=lambda s: s["plains"] * 1.5 + s["forest"] * 0.8 - s["water"],
             reverse=True,
         )
+
         castle_sectors = []
         for cand in castle_candidates:
+            if len(castle_sectors) >= n_castles:
+                break
             coord = cand["coord"]
             if coord not in used_sectors:
+                if total_sectors > 16 and used_sectors:
+                    min_dist = min(abs(coord[0] - tc[0]) + abs(coord[1] - tc[1]) for tc in used_sectors)
+                    if min_dist < 2 and len(castle_candidates) > len(castle_sectors) + 2:
+                        continue
                 castle_sectors.append(coord)
                 used_sectors.add(coord)
-                if len(castle_sectors) >= n_castles:
-                    break
+
         while len(castle_sectors) < n_castles:
-            avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
+            avail = [
+                s["coord"] for s in sector_stats
+                if s["coord"] not in used_sectors and get_sector_region(s["coord"]) <= max_castle_reg
+            ]
             if not avail:
-                avail = [s["coord"] for s in sector_stats]
+                break
             pick = avail[0]
             castle_sectors.append(pick)
             used_sectors.add(pick)
 
-        # C. Caves
-        cave_candidates = sorted(
-            [s for s in sector_stats if s["coord"] not in used_sectors and s["walkable"] >= 10],
-            key=lambda s: s["mountain"] * 2.5 + s["snow"] - s["water"],
-            reverse=True,
-        )
-        cave_sectors = []
-        for cand in cave_candidates:
-            coord = cand["coord"]
-            if coord not in used_sectors:
-                cave_sectors.append(coord)
-                used_sectors.add(coord)
-                if len(cave_sectors) >= n_caves:
-                    break
-        while len(cave_sectors) < n_caves:
-            avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
-            if not avail:
-                avail = [s["coord"] for s in sector_stats]
-            pick = avail[0]
-            cave_sectors.append(pick)
-            used_sectors.add(pick)
-
-        # -------------------------------------------------------------
-        # 1. Place Towns
-        # -------------------------------------------------------------
-        for idx, coord in enumerate(town_sectors):
-            name = TOWN_NAMES[idx] if idx < len(TOWN_NAMES) else f"Settlement {idx + 1}"
-            town_map = self.sectors[coord[1]][coord[0]]
-            town_pos = self._find_best_open_pos(town_map)
-            town_submap, town_spawn = SubMapGenerator.generate_town(
-                name=name,
-                seed=self.seed + idx * 37,
-            )
-            town_poi = POIDescriptor.create_town(
-                name=name,
-                sector_coord=coord,
-                local_pos=town_pos,
-                spawn_pos=town_spawn,
-            )
-            town_poi.sub_map = town_submap
-            self._stamp_poi_on_tile(town_map, town_pos, town_poi)
-            self.all_pois.append(town_poi)
-            self.pois[name] = town_poi
-            if POIType.TOWN not in self.pois:
-                self.pois[POIType.TOWN] = town_poi
-                # Set default starter sector and player start position right at primary Town
-                self.starter_sector = coord
-                cand_x = min(self.sector_width - 1, town_pos[0] + 1)
-                if town_map.tiles[town_pos[1]][cand_x].is_walkable:
-                    self.starter_player_pos = (cand_x, town_pos[1])
-                else:
-                    self.starter_player_pos = town_pos
-
-        # -------------------------------------------------------------
-        # 2. Place Castles
-        # -------------------------------------------------------------
         for idx, coord in enumerate(castle_sectors):
             name = CASTLE_NAMES[idx] if idx < len(CASTLE_NAMES) else f"Fortress {idx + 1}"
             castle_map = self.sectors[coord[1]][coord[0]]
             castle_pos = self._find_best_open_pos(castle_map)
+
+            # Configure boss bounties tailored to castle tier
+            if idx == 0:
+                bounties = ["Rattus", "Grumble", "Brigand"]
+            else:
+                bounties = ["Broodfang", "Craghorn", "Tideclaw", "Ironhide"]
+
             castle_submap, castle_spawn = SubMapGenerator.generate_castle(
                 name=name,
                 seed=self.seed + idx * 43,
+                castle_idx=idx,
+                bounties=bounties,
             )
             castle_poi = POIDescriptor.create_castle(
                 name=name,
@@ -349,28 +571,117 @@ class WorldMacroMap:
                 self.pois[POIType.CASTLE] = castle_poi
 
         # -------------------------------------------------------------
-        # 3. Place Caves
+        # 4. Place Cave POIs for Requisite Bosses in Matching Regions
         # -------------------------------------------------------------
-        for idx, coord in enumerate(cave_sectors):
-            name = CAVE_NAMES[idx] if idx < len(CAVE_NAMES) else f"Cavern {idx + 1}"
-            cave_map = self.sectors[coord[1]][coord[0]]
-            cave_pos = self._find_cave_mouth_pos(cave_map)
+        if self.max_region == 3:
+            # 4x4 (Classic / Prologue): Capped at Region 3 (4 bosses)
+            active_bosses = [b for b in BOSS_CAVE_MAPPING if b[0] in ("Rattus", "Grumble", "Brigand", "Broodfang")]
+        elif self.max_region == 6:
+            # 6x6 (Quick Campaign): Capped at Region 6 (11 bosses)
+            active_bosses = [b for b in BOSS_CAVE_MAPPING if b[1] <= 6 and b[0] != "Magmadon"]
+        else:
+            # 12x12 & 20x20 (Standard & Odyssey): Full campaign (all 16 bosses culminating in Malakor)
+            active_bosses = BOSS_CAVE_MAPPING
+
+        for idx, (boss_name, boss_reg, cave_name, preferred_biomes) in enumerate(active_bosses):
+            candidates = []
+            avail_sectors = [
+                (sx, sy)
+                for sy in range(self.macro_height)
+                for sx in range(self.macro_width)
+                if (sx, sy) not in used_sectors
+            ]
+            target_sectors = avail_sectors if avail_sectors else [
+                (sx, sy)
+                for sy in range(self.macro_height)
+                for sx in range(self.macro_width)
+            ]
+
+            for (sx, sy) in target_sectors:
+                sec = self.sectors[sy][sx]
+                for y in range(1, self.sector_height - 1):
+                    for x in range(1, self.sector_width - 1):
+                        t = sec.tiles[y][x]
+                        if not t.is_walkable or t.poi is not None:
+                            continue
+
+                        gx = sx * self.sector_width + x
+                        gy = sy * self.sector_height + y
+
+                        min_poi_dist = min(
+                            math.hypot(
+                                gx - (p.sector_coord[0] * self.sector_width + p.local_pos[0]),
+                                (gy - (p.sector_coord[1] * self.sector_height + p.local_pos[1])) * 2.0
+                            )
+                            for p in self.all_pois
+                        )
+                        if min_poi_dist < 8.0:
+                            continue
+
+                        borders_mountain = any(
+                            sec.tiles[y + dy][x + dx].biome in (BiomeType.MOUNTAIN, BiomeType.SNOW)
+                            for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0))
+                        )
+
+                        b_score = 0.0
+                        if t.biome == BiomeType.FOREST and "Forest" in preferred_biomes:
+                            b_score += 50.0
+                        if t.biome == BiomeType.PLAINS and "Plains" in preferred_biomes:
+                            b_score += 40.0
+                        if borders_mountain and ("Mountain" in preferred_biomes or "Cave" in preferred_biomes):
+                            b_score += 60.0
+                        if t.biome == BiomeType.SNOW and "Snow" in preferred_biomes:
+                            b_score += 80.0
+                        if (t.biome == BiomeType.COAST or any(sec.tiles[y + dy][x + dx].biome == BiomeType.WATER for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)))) and "Coast" in preferred_biomes:
+                            b_score += 70.0
+
+                        is_used_sec = (sx, sy) in used_sectors
+                        sec_bonus = 0.0 if is_used_sec else 1000.0
+                        reg_diff = abs(t.region_code - boss_reg) if t.region_code > 0 else 5
+
+                        score = sec_bonus - reg_diff * 100.0 + b_score + min_poi_dist * 0.1
+                        candidates.append((score, (sx, sy), (x, y), borders_mountain))
+
+            if candidates:
+                candidates.sort(key=lambda c: c[0], reverse=True)
+                _, best_coord, cave_pos, borders_mountain = candidates[0]
+                sec_map = self.sectors[best_coord[1]][best_coord[0]]
+                if not borders_mountain and cave_pos[1] > 0:
+                    bx, by = cave_pos
+                    m_tile = MapTile(biome=BiomeType.MOUNTAIN)
+                    m_tile.background_image = "Mountain"
+                    sec_map.set_tile(bx, by - 1, m_tile)
+            else:
+                avail = [s["coord"] for s in sector_stats if s["coord"] not in used_sectors]
+                best_coord = avail[0] if avail else (0, 0)
+                sec_map = self.sectors[best_coord[1]][best_coord[0]]
+                cave_pos = self._find_cave_mouth_pos(sec_map, target_region=boss_reg)
+
+            used_sectors.add(best_coord)
+
             cave_submap, cave_spawn = SubMapGenerator.generate_cave(
-                name=name,
+                name=cave_name,
                 seed=self.seed + idx * 53,
+                floor_level=0,
+                base_region=boss_reg,
+                boss_name=boss_name,
             )
             cave_poi = POIDescriptor.create_cave(
-                name=name,
-                sector_coord=coord,
+                name=cave_name,
+                sector_coord=best_coord,
                 local_pos=cave_pos,
                 spawn_pos=cave_spawn,
+                description=f"A dark underground cavern harboring the dread threat of {boss_name}.",
             )
             cave_poi.sub_map = cave_submap
-            self._stamp_poi_on_tile(cave_map, cave_pos, cave_poi)
+            self._stamp_poi_on_tile(sec_map, cave_pos, cave_poi)
+            sec_map.tiles[cave_pos[1]][cave_pos[0]].region_code = boss_reg
+
             self.all_pois.append(cave_poi)
-            self.pois[name] = cave_poi
+            self.pois[cave_name] = cave_poi
             if POIType.CAVE not in self.pois:
                 self.pois[POIType.CAVE] = cave_poi
+            used_sectors.add(best_coord)
 
     def _find_best_open_pos(self, sector_map: Map) -> Tuple[int, int]:
         """Finds a central walkable tile surrounded by walkable land."""
@@ -408,35 +719,63 @@ class WorldMacroMap:
         sector_map.set_tile(center_x, center_y, MapTile(biome=BiomeType.PLAINS))
         return (center_x, center_y)
 
-    def _find_cave_mouth_pos(self, sector_map: Map) -> Tuple[int, int]:
+    def _find_cave_mouth_pos(
+        self,
+        sector_map: Map,
+        target_region: Optional[int] = None,
+        min_dist_from_pois: int = 6,
+    ) -> Tuple[int, int]:
         """
         Finds a walkable tile directly adjacent to a Mountain tile,
         representing a cave mouth at the cliff base.
+        Prioritizes tiles matching target_region and maintaining separation from other POIs.
         """
         center_x = self.sector_width // 2
         center_y = self.sector_height // 2
+
+        existing_poi_pos = [
+            (x, y)
+            for y in range(self.sector_height)
+            for x in range(self.sector_width)
+            if sector_map.tiles[y][x].poi is not None
+        ]
 
         candidates = []
         for y in range(1, self.sector_height - 1):
             for x in range(1, self.sector_width - 1):
                 tile = sector_map.tiles[y][x]
-                if tile.is_walkable and tile.poi is None:
-                    # Check if any 4-neighbor is Mountain
-                    for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
-                        n_tile = sector_map.tiles[y + dy][x + dx]
-                        if n_tile.biome in (BiomeType.MOUNTAIN, BiomeType.SNOW):
-                            dist = math.hypot(x - center_x, y - center_y)
-                            candidates.append((dist, (x, y)))
-                            break
+                if not tile.is_walkable or tile.poi is not None:
+                    continue
+
+                if existing_poi_pos:
+                    dist_to_poi = min(math.hypot(x - px, y - py) for px, py in existing_poi_pos)
+                    if dist_to_poi < min_dist_from_pois:
+                        continue
+
+                borders_mountain = any(
+                    sector_map.tiles[y + dy][x + dx].biome in (BiomeType.MOUNTAIN, BiomeType.SNOW)
+                    for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0))
+                )
+
+                reg_diff = abs(tile.region_code - target_region) if target_region and tile.region_code > 0 else 0
+                dist_to_center = math.hypot(x - center_x, y - center_y)
+
+                score = (0 if borders_mountain else 100) + reg_diff * 25 + dist_to_center
+                candidates.append((score, (x, y), borders_mountain))
 
         if candidates:
             candidates.sort(key=lambda c: c[0])
-            return candidates[0][1]
+            best_pos = candidates[0][1]
+            if not candidates[0][2]:
+                bx, by = best_pos
+                if by > 0:
+                    m_tile = MapTile(biome=BiomeType.MOUNTAIN)
+                    m_tile.background_image = "Mountain"
+                    sector_map.set_tile(bx, by - 1, m_tile)
+            return best_pos
 
-        # If no walkable tile borders a mountain, find a walkable tile and place a mountain neighbor
         pos = self._find_best_open_pos(sector_map)
         px, py = pos
-        # Convert north neighbor to mountain if in bounds
         if py > 0:
             m_tile = MapTile(biome=BiomeType.MOUNTAIN)
             m_tile.background_image = "Mountain"
@@ -588,6 +927,7 @@ class WorldMacroMap:
         return {
             "macro_width": self.macro_width,
             "macro_height": self.macro_height,
+            "max_region": self.max_region,
             "sector_width": self.sector_width,
             "sector_height": self.sector_height,
             "seed": self.seed,
@@ -618,6 +958,7 @@ class WorldMacroMap:
             seed=data.get("seed", 1337),
             macro_width=data.get("macro_width", 4),
             macro_height=data.get("macro_height", 4),
+            max_region=data.get("max_region", None),
             sector_width=data.get("sector_width", 54),
             sector_height=data.get("sector_height", 24),
             frequency=data.get("frequency", 0.035),

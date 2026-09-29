@@ -9,7 +9,7 @@ from eldoria_py.combat.stats import (
     TargetScope,
     BattleEntityProperty,
 )
-from eldoria_py.combat.actions import BattleAction, ACTIONS
+from eldoria_py.combat.actions import BattleAction, ACTIONS, ActionCategory
 from eldoria_py.combat.equipment import BattleEquipment, EQUIPMENT_CATALOG
 from eldoria_py.combat.portrait import Gender
 
@@ -47,7 +47,7 @@ class Combatant:
             defaults.update(stats)
 
         for stat_id, val in defaults.items():
-            self.stats[stat_id] = BattleEntityProperty(base=val)
+            self.stats[stat_id] = BattleEntityProperty(base=val, stat_id=stat_id)
 
         # Actions
         self.actions: list[BattleAction] = actions if actions is not None else [ACTIONS["Attack"].copy()]
@@ -107,7 +107,11 @@ class Combatant:
         """Apply damage reduction if defending, decrement HP, return actual delta."""
         if not self.is_alive or amount <= 0:
             return 0
-        final_amt = int(max(1, amount // 2)) if self.is_defending else amount
+        if self.is_defending:
+            mult = getattr(self, "defend_damage_multiplier", 0.5)
+            final_amt = int(max(1, int(amount * mult)))
+        else:
+            final_amt = amount
         return abs(self.stats[StatId.HIT_POINTS].modify_current(-final_amt))
 
     def heal(self, amount: int) -> int:
@@ -115,6 +119,12 @@ class Combatant:
         if not self.is_alive or amount <= 0:
             return 0
         return self.stats[StatId.HIT_POINTS].modify_current(amount)
+
+    def restore_mp(self, amount: int) -> int:
+        """Restores MP bounded by max_mp, returning actual restored amount."""
+        if not self.is_alive or amount <= 0:
+            return 0
+        return self.stats[StatId.MAGIC_POINTS].modify_current(amount)
 
     def spend_mp(self, cost: int) -> bool:
         """Attempts to spend MP; returns True on success, False if insufficient."""
@@ -132,6 +142,142 @@ class Combatant:
             prop.update()
 
 
+def calculate_required_xp(level: int, job_class: str = "Knight", gender: Gender | str = Gender.MALE) -> int:
+    """Calculates cumulative XP required to reach `level` (1 to 99).
+    Level 1 requires 0 XP. Level 99 requires exactly 1,000,000 XP.
+    Strictly monotonically increasing across all levels, modulated by archetype and gender curves.
+    """
+    if level <= 1:
+        return 0
+    if level >= 99:
+        return 1_000_000
+
+    job_lower = job_class.lower()
+    if "berserk" in job_lower or "warrior" in job_lower:
+        class_factor = 0.94
+    elif "rogue" in job_lower or "thief" in job_lower:
+        class_factor = 0.96
+    elif "knight" in job_lower or "paladin" in job_lower:
+        class_factor = 1.00
+    elif "cleric" in job_lower or "priest" in job_lower:
+        class_factor = 1.03
+    elif "mage" in job_lower or "wizard" in job_lower:
+        class_factor = 1.06
+    else:
+        class_factor = 1.00
+
+    gender_val = gender.value if isinstance(gender, Gender) else str(gender)
+    g_lower = gender_val.lower()
+    if "male" in g_lower and "female" not in g_lower:
+        gender_early = 0.95
+        gender_late = 1.05
+    elif "female" in g_lower:
+        gender_early = 1.05
+        gender_late = 0.95
+    else:
+        gender_early = 1.00
+        gender_late = 1.00
+
+    t = (level - 1) / 98.0
+    p1 = 1.6 * (class_factor * gender_early)
+    p2 = 2.8 * (class_factor * gender_late)
+    w = 0.045
+    raw = 1_000_000 * (w * (t ** p1) + (1.0 - w) * (t ** p2))
+    return int(round(raw))
+
+
+# Archetype growth curves ensuring base attributes alone never hit 99 by Level 99
+CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
+    "Knight": {
+        StatId.HIT_POINTS: 75.0,
+        StatId.MAGIC_POINTS: 3.0,
+        StatId.ATTACK: 0.38,
+        StatId.DEFENSE: 0.45,
+        StatId.MAGIC_ATTACK: 0.15,
+        StatId.MAGIC_DEFENSE: 0.35,
+        StatId.SPEED: 0.24,
+        StatId.LUCK: 0.20,
+        StatId.ACCURACY: 0.08,
+    },
+    "Mage": {
+        StatId.HIT_POINTS: 38.0,
+        StatId.MAGIC_POINTS: 7.5,
+        StatId.ATTACK: 0.15,
+        StatId.DEFENSE: 0.20,
+        StatId.MAGIC_ATTACK: 0.38,
+        StatId.MAGIC_DEFENSE: 0.40,
+        StatId.SPEED: 0.30,
+        StatId.LUCK: 0.26,
+        StatId.ACCURACY: 0.06,
+    },
+    "Rogue": {
+        StatId.HIT_POINTS: 45.0,
+        StatId.MAGIC_POINTS: 3.5,
+        StatId.ATTACK: 0.36,
+        StatId.DEFENSE: 0.24,
+        StatId.MAGIC_ATTACK: 0.16,
+        StatId.MAGIC_DEFENSE: 0.24,
+        StatId.SPEED: 0.45,
+        StatId.LUCK: 0.45,
+        StatId.ACCURACY: 0.05,
+    },
+    "Cleric": {
+        StatId.HIT_POINTS: 50.0,
+        StatId.MAGIC_POINTS: 6.8,
+        StatId.ATTACK: 0.20,
+        StatId.DEFENSE: 0.28,
+        StatId.MAGIC_ATTACK: 0.38,
+        StatId.MAGIC_DEFENSE: 0.42,
+        StatId.SPEED: 0.26,
+        StatId.LUCK: 0.28,
+        StatId.ACCURACY: 0.06,
+    },
+    "Berserker": {
+        StatId.HIT_POINTS: 80.0,
+        StatId.MAGIC_POINTS: 2.2,
+        StatId.ATTACK: 0.40,
+        StatId.DEFENSE: 0.30,
+        StatId.MAGIC_ATTACK: 0.12,
+        StatId.MAGIC_DEFENSE: 0.20,
+        StatId.SPEED: 0.32,
+        StatId.LUCK: 0.24,
+        StatId.ACCURACY: 0.08,
+    },
+}
+
+DEFAULT_GROWTH_RATES: dict[StatId, float] = {
+    StatId.HIT_POINTS: 50.0,
+    StatId.MAGIC_POINTS: 4.0,
+    StatId.ATTACK: 0.30,
+    StatId.DEFENSE: 0.30,
+    StatId.MAGIC_ATTACK: 0.25,
+    StatId.MAGIC_DEFENSE: 0.25,
+    StatId.SPEED: 0.25,
+    StatId.LUCK: 0.25,
+    StatId.ACCURACY: 0.06,
+}
+
+
+def resolve_class_growth_rates(job_class: str) -> dict[StatId, float]:
+    """Resolves archetype stat and MP growth rates by matching job class keywords."""
+    if not job_class:
+        return DEFAULT_GROWTH_RATES
+    if job_class in CLASS_GROWTH_RATES:
+        return CLASS_GROWTH_RATES[job_class]
+    jb = job_class.lower()
+    if any(k in jb for k in ("mage", "sorcer", "wizard")):
+        return CLASS_GROWTH_RATES["Mage"]
+    if any(k in jb for k in ("cleric", "priest", "healer")):
+        return CLASS_GROWTH_RATES["Cleric"]
+    if any(k in jb for k in ("rogue", "thief", "shadow", "assassin")):
+        return CLASS_GROWTH_RATES["Rogue"]
+    if any(k in jb for k in ("knight", "guardian", "paladin", "tank")):
+        return CLASS_GROWTH_RATES["Knight"]
+    if any(k in jb for k in ("berserk", "warrior", "barbarian")):
+        return CLASS_GROWTH_RATES["Berserker"]
+    return DEFAULT_GROWTH_RATES
+
+
 class PartyMember(Combatant):
     """Player-controlled character equipped with 10 gear slots and distinct class skills."""
 
@@ -145,14 +291,88 @@ class PartyMember(Combatant):
         actions: Optional[list[BattleAction]] = None,
         gender: Gender = Gender.MALE,
         profile_image_index: int = 0,
+        xp: int = 0,
     ):
         super().__init__(name=name, affinity=affinity, stats=base_stats, actions=actions)
         self.job_class: str = job_class
-        self.level: int = level
+        self.level: int = max(1, min(99, int(level)))
         self.gender: Gender = gender
         self.profile_image_index: int = profile_image_index
         self.equipment: dict[EquipmentSlot, Optional[BattleEquipment]] = {slot: None for slot in EquipmentSlot}
         self.base_actions: list[BattleAction] = list(self.actions)
+        if xp == 0 and self.level > 1:
+            self.xp: int = calculate_required_xp(self.level, self.job_class, self.gender)
+        else:
+            self.xp = max(0, min(1_000_000, int(xp)))
+        self._next_level_xp: Optional[int] = None
+
+    @property
+    def current_xp(self) -> int:
+        return self.xp
+
+    @current_xp.setter
+    def current_xp(self, val: int) -> None:
+        self.xp = max(0, min(1_000_000, int(val)))
+
+    @property
+    def next_level_xp(self) -> int:
+        """Total XP required to reach the next level."""
+        if getattr(self, "_next_level_xp", None) is not None:
+            return self._next_level_xp
+        if self.level >= 99:
+            return 1_000_000
+        return calculate_required_xp(self.level + 1, self.job_class, self.gender)
+
+    @next_level_xp.setter
+    def next_level_xp(self, val: int) -> None:
+        self._next_level_xp = max(1, int(val))
+
+    def add_xp(self, amount: int) -> list[dict]:
+        """Adds experience points, handles level promotion(s), applies stat growths, and carries over excess XP.
+        Returns a list of dicts summarizing each level gained:
+        [{"level": 4, "gains": {StatId.HIT_POINTS: 75, StatId.ATTACK: 1, ...}}, ...]
+        """
+        if amount <= 0 or self.level >= 99:
+            return []
+
+        self.xp = min(1_000_000, self.xp + amount)
+        summaries: list[dict] = []
+        rates = resolve_class_growth_rates(self.job_class)
+
+        while self.level < 99 and self.xp >= self.next_level_xp:
+            # Clear manual override if any
+            self._next_level_xp = None
+            old_level = self.level
+            self.level += 1
+
+            # Compute stat gains for old_level -> self.level
+            gains: dict[StatId, int] = {}
+            for stat_id, rate in rates.items():
+                gain = int(round(rate * self.level)) - int(round(rate * old_level))
+                if gain > 0 and stat_id in self.stats:
+                    prop = self.stats[stat_id]
+                    old_base = prop.base
+                    prop.base = min(prop.max_val, prop.base + gain)
+                    actual_gain = prop.base - old_base
+                    if actual_gain > 0:
+                        gains[stat_id] = actual_gain
+                        if stat_id == StatId.HIT_POINTS:
+                            prop.current = min(prop.total, prop.current + actual_gain)
+                        elif stat_id == StatId.MAGIC_POINTS:
+                            prop.current = min(prop.total, prop.current + actual_gain)
+
+            summaries.append({
+                "level": self.level,
+                "gains": gains,
+            })
+
+            # Re-recalculate equipment to maintain proper derived total
+            self.recalculate_equipment()
+
+        if self.level >= 99:
+            self.xp = 1_000_000
+
+        return summaries
 
     def equip(self, item: BattleEquipment) -> Optional[BattleEquipment]:
         """Equip an item into its designated slot and recalculate stat bonuses."""
@@ -199,6 +419,7 @@ class PartyMember(Combatant):
             "name": self.name,
             "job_class": self.job_class,
             "level": self.level,
+            "xp": self.xp,
             "gender": self.gender.value,
             "profile_image_index": self.profile_image_index,
             "affinity": self.affinity.value,
@@ -255,6 +476,7 @@ class PartyMember(Combatant):
             actions=actions,
             gender=gender,
             profile_image_index=data.get("profile_image_index", 0),
+            xp=data.get("xp", 0),
         )
 
         # Restore current HP/MP if provided
@@ -291,6 +513,11 @@ class EnemyCombatant(Combatant):
         action_marble_bag: Optional[list[BattleAction]] = None,
         xp_reward: int = 25,
         gold_reward: int = 15,
+        is_boss: bool = False,
+        defend_chance: float = 0.06,
+        defend_damage_multiplier: float = 0.5,
+        negate_crits_when_defending: bool = False,
+        drop_table: Optional[list[Any]] = None,
     ):
         super().__init__(name=name, affinity=affinity, stats=stats, actions=actions)
         self.family: str = family
@@ -301,6 +528,11 @@ class EnemyCombatant(Combatant):
         )
         self.xp_reward: int = xp_reward
         self.gold_reward: int = gold_reward
+        self.is_boss: bool = is_boss
+        self.defend_chance: float = defend_chance
+        self.defend_damage_multiplier: float = defend_damage_multiplier
+        self.negate_crits_when_defending: bool = negate_crits_when_defending
+        self.drop_table: list[Any] = drop_table if drop_table is not None else []
 
     def choose_action(
         self,
@@ -310,7 +542,28 @@ class EnemyCombatant(Combatant):
     ) -> tuple[BattleAction, Combatant]:
         """AI intent decision: select action from marble bag and appropriate target."""
         r = rng if rng is not None else random
-        action = r.choice(self.action_marble_bag)
+
+        # 1. Low-probability defensive stance roll
+        if self.defend_chance > 0.0 and r.random() < self.defend_chance:
+            defend_act = ACTIONS.get("Defend")
+            if defend_act:
+                return defend_act.copy(), self
+
+        # 2. Filter actions ensuring strict elemental affinity alignment
+        elemental_types = {
+            BattleActionType.ELEMENTAL_FIRE, BattleActionType.ELEMENTAL_WATER,
+            BattleActionType.ELEMENTAL_EARTH, BattleActionType.ELEMENTAL_WIND,
+            BattleActionType.ELEMENTAL_LIGHT, BattleActionType.ELEMENTAL_DARK,
+            BattleActionType.ELEMENTAL_ICE,
+        }
+        valid_actions = [
+            act for act in self.action_marble_bag
+            if not (act.category == ActionCategory.SPELL and act.action_type in elemental_types and act.action_type != self.affinity)
+        ]
+        if not valid_actions:
+            valid_actions = [ACTIONS["Attack"].copy()]
+
+        action = r.choice(valid_actions)
 
         if action.target_scope in (TargetScope.SINGLE_ALLY, TargetScope.ALL_ALLIES):
             # Target alive ally with lowest HP ratio
@@ -556,7 +809,7 @@ def create_default_party() -> Party:
         affinity=BattleActionType.PHYSICAL,
         base_stats={
             StatId.HIT_POINTS: 420,
-            StatId.MAGIC_POINTS: 80,
+            StatId.MAGIC_POINTS: 36,
             StatId.ATTACK: 28,
             StatId.DEFENSE: 26,
             StatId.MAGIC_ATTACK: 12,
@@ -587,7 +840,7 @@ def create_default_party() -> Party:
         affinity=BattleActionType.ELEMENTAL_FIRE,
         base_stats={
             StatId.HIT_POINTS: 260,
-            StatId.MAGIC_POINTS: 220,
+            StatId.MAGIC_POINTS: 75,
             StatId.ATTACK: 12,
             StatId.DEFENSE: 14,
             StatId.MAGIC_ATTACK: 35,
@@ -624,7 +877,7 @@ def create_default_party() -> Party:
         affinity=BattleActionType.ELEMENTAL_WIND,
         base_stats={
             StatId.HIT_POINTS: 310,
-            StatId.MAGIC_POINTS: 110,
+            StatId.MAGIC_POINTS: 41,
             StatId.ATTACK: 25,
             StatId.DEFENSE: 18,
             StatId.MAGIC_ATTACK: 14,
@@ -652,7 +905,7 @@ def create_default_party() -> Party:
         affinity=BattleActionType.ELEMENTAL_LIGHT,
         base_stats={
             StatId.HIT_POINTS: 330,
-            StatId.MAGIC_POINTS: 190,
+            StatId.MAGIC_POINTS: 66,
             StatId.ATTACK: 18,
             StatId.DEFENSE: 20,
             StatId.MAGIC_ATTACK: 26,
@@ -685,7 +938,7 @@ def create_default_party() -> Party:
         affinity=BattleActionType.ELEMENTAL_EARTH,
         base_stats={
             StatId.HIT_POINTS: 490,
-            StatId.MAGIC_POINTS: 70,
+            StatId.MAGIC_POINTS: 27,
             StatId.ATTACK: 34,
             StatId.DEFENSE: 22,
             StatId.MAGIC_ATTACK: 8,

@@ -84,7 +84,7 @@ class GSNvNCombatScreen(SMState):
         self.inspected_enemy_idx: int = 0
         self.target_cursor: int = 0
         self.target_type: str = "ENEMY"  # "ENEMY" or "ALLY"
-        self.step_delay: float = 0.75  # 0.75s cadence between turn actions
+        self.step_delay: float = 1.25  # 1.25s cadence between turn actions (allows comfortable reading)
         self.execution_timer: float = 0.0
 
     def start_encounter(self, party: Party, squad: EnemySquad) -> None:
@@ -189,21 +189,20 @@ class GSNvNCombatScreen(SMState):
                         keys_pressed.remove(key_info)
                         break
 
-                    # Flee / Return to Overworld [Esc]
-                    if key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
-                        keys_pressed.clear()
-                        if core and hasattr(core, "game_state"):
-                            transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
-                            if transition_state:
-                                transition_state.configure(
-                                    source_lines=self.generate_frame_lines(),
-                                    target_event="EnterNoiseMap",
-                                    target_state="GSNoiseMapTestScreen",
-                                )
-                            core.game_state.trigger("FromCombat", context)
-                        return
-
                     if self.menu_mode == "MAIN":
+                        # Flee / Return to Overworld [Esc] or [Q] from MAIN menu
+                        if key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
+                            keys_pressed.clear()
+                            if core and hasattr(core, "game_state"):
+                                transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
+                                if transition_state:
+                                    transition_state.configure(
+                                        source_lines=self.generate_frame_lines(),
+                                        target_event="EnterNoiseMap",
+                                        target_state="GSNoiseMapTestScreen",
+                                    )
+                                core.game_state.trigger("FromCombat", context)
+                            return
                         self._handle_main_menu_input(key_info)
                         keys_pressed.remove(key_info)
                         break
@@ -251,9 +250,6 @@ class GSNvNCombatScreen(SMState):
             self.main_menu_cursor = (self.main_menu_cursor - 1) % 5
         elif key_info.key == KeyCode.DOWN:
             self.main_menu_cursor = (self.main_menu_cursor + 1) % 5
-        elif key_info.char in ("1", "2", "3", "4", "5"):
-            self.main_menu_cursor = int(key_info.char) - 1
-            self._activate_main_menu_selection()
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
             self._activate_main_menu_selection()
         elif key_info.key == KeyCode.BACKSPACE or key_info.char in ("b", "B", "\x7f", "\x08"):
@@ -320,6 +316,7 @@ class GSNvNCombatScreen(SMState):
     def _handle_sub_menu_input(self, key_info: any) -> None:
         if key_info.key == KeyCode.ESCAPE or key_info.char in ("b", "B", "q", "Q"):
             self.menu_mode = "MAIN"
+            self.sub_menu_cursor = 0
             return
 
         if self.menu_mode == "ITEMS":
@@ -328,17 +325,32 @@ class GSNvNCombatScreen(SMState):
                 self.menu_mode = "MAIN"
                 return
 
+            page_size = 6
+            total_pages = max(1, (len(items) + page_size - 1) // page_size)
+            cur_page = self.sub_menu_cursor // page_size
+
             if key_info.key == KeyCode.UP:
                 self.sub_menu_cursor = (self.sub_menu_cursor - 1) % len(items)
             elif key_info.key == KeyCode.DOWN:
                 self.sub_menu_cursor = (self.sub_menu_cursor + 1) % len(items)
-            elif key_info.char in [str(i) for i in range(1, min(10, len(items) + 1))]:
-                self.sub_menu_cursor = int(key_info.char) - 1
-                item_obj, _ = items[self.sub_menu_cursor]
-                self._choose_item_action(item_obj)
+            elif key_info.key == KeyCode.LEFT or key_info.char in ("[", "p", "P"):
+                new_page = (cur_page - 1) % total_pages
+                slot = self.sub_menu_cursor % page_size
+                new_cursor = new_page * page_size + slot
+                if new_cursor >= len(items):
+                    new_cursor = len(items) - 1
+                self.sub_menu_cursor = new_cursor
+            elif key_info.key == KeyCode.RIGHT or key_info.char in ("]", "n", "N"):
+                new_page = (cur_page + 1) % total_pages
+                slot = self.sub_menu_cursor % page_size
+                new_cursor = new_page * page_size + slot
+                if new_cursor >= len(items):
+                    new_cursor = len(items) - 1
+                self.sub_menu_cursor = new_cursor
             elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
-                item_obj, _ = items[self.sub_menu_cursor]
-                self._choose_item_action(item_obj)
+                if 0 <= self.sub_menu_cursor < len(items):
+                    item_obj, _ = items[self.sub_menu_cursor]
+                    self._choose_item_action(item_obj)
             return
 
         cat = ActionCategory.SKILL if self.menu_mode == "SKILLS" else ActionCategory.SPELL
@@ -348,15 +360,31 @@ class GSNvNCombatScreen(SMState):
             self.menu_mode = "MAIN"
             return
 
+        page_size = 6
+        total_pages = max(1, (len(act_list) + page_size - 1) // page_size)
+        cur_page = self.sub_menu_cursor // page_size
+
         if key_info.key == KeyCode.UP:
             self.sub_menu_cursor = (self.sub_menu_cursor - 1) % len(act_list)
         elif key_info.key == KeyCode.DOWN:
             self.sub_menu_cursor = (self.sub_menu_cursor + 1) % len(act_list)
-        elif key_info.char in [str(i) for i in range(1, min(10, len(act_list) + 1))]:
-            self.sub_menu_cursor = int(key_info.char) - 1
-            self._choose_sub_action(act_list[self.sub_menu_cursor])
+        elif key_info.key == KeyCode.LEFT or key_info.char in ("[", "p", "P"):
+            new_page = (cur_page - 1) % total_pages
+            slot = self.sub_menu_cursor % page_size
+            new_cursor = new_page * page_size + slot
+            if new_cursor >= len(act_list):
+                new_cursor = len(act_list) - 1
+            self.sub_menu_cursor = new_cursor
+        elif key_info.key == KeyCode.RIGHT or key_info.char in ("]", "n", "N"):
+            new_page = (cur_page + 1) % total_pages
+            slot = self.sub_menu_cursor % page_size
+            new_cursor = new_page * page_size + slot
+            if new_cursor >= len(act_list):
+                new_cursor = len(act_list) - 1
+            self.sub_menu_cursor = new_cursor
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
-            self._choose_sub_action(act_list[self.sub_menu_cursor])
+            if 0 <= self.sub_menu_cursor < len(act_list):
+                self._choose_sub_action(act_list[self.sub_menu_cursor])
 
     def _choose_item_action(self, item_obj: ConsumableItem) -> None:
         action = item_obj.to_battle_action()
@@ -411,8 +439,16 @@ class GSNvNCombatScreen(SMState):
             self.inspected_enemy_idx = self.target_cursor
 
     def _handle_target_input(self, key_info: any) -> None:
-        if key_info.key == KeyCode.ESCAPE or key_info.char in ("b", "B"):
-            self.menu_mode = "MAIN"
+        if key_info.key == KeyCode.ESCAPE or key_info.char in ("b", "B", "q", "Q"):
+            if self.selected_action and self.selected_action.category == ActionCategory.ITEM:
+                self.menu_mode = "ITEMS"
+            elif self.selected_action and self.selected_action.category == ActionCategory.SKILL:
+                self.menu_mode = "SKILLS"
+            elif self.selected_action and self.selected_action.category == ActionCategory.SPELL:
+                self.menu_mode = "SPELLS"
+            else:
+                self.menu_mode = "MAIN"
+            self.selected_action = None
             return
 
         if self.target_type == "ALLY":
@@ -438,11 +474,6 @@ class GSNvNCombatScreen(SMState):
             elif key_info.key in (KeyCode.RIGHT, KeyCode.DOWN):
                 cur_pos = candidates.index(self.target_cursor) if self.target_cursor in candidates else 0
                 self.target_cursor = candidates[(cur_pos + 1) % len(candidates)]
-            elif key_info.char in [str(i) for i in range(1, len(self.party.members) + 1)]:
-                idx = int(key_info.char) - 1
-                if idx in candidates:
-                    self.target_cursor = idx
-                    self._confirm_target_selection()
             elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
                 self._confirm_target_selection()
             return
@@ -462,17 +493,6 @@ class GSNvNCombatScreen(SMState):
             new_pos = (cur_pos + 1) % len(alive_indices)
             self.target_cursor = alive_indices[new_pos]
             self.inspected_enemy_idx = self.target_cursor
-        elif key_info.char in [str(i) for i in range(1, 10)]:
-            idx = int(key_info.char) - 1
-            if idx < len(self.squad.enemies) and self.squad.enemies[idx].is_alive:
-                self.target_cursor = idx
-                self.inspected_enemy_idx = idx
-                self._confirm_target_selection()
-        elif key_info.char == "0":
-            if len(self.squad.enemies) >= 10 and self.squad.enemies[9].is_alive:
-                self.target_cursor = 9
-                self.inspected_enemy_idx = 9
-                self._confirm_target_selection()
         elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n", " "):
             self._confirm_target_selection()
 
@@ -524,7 +544,7 @@ class GSNvNCombatScreen(SMState):
         lines: List[str] = []
 
         # Top border
-        top_str = "┌─ ENEMY SQUAD (Up to 10 Enemies) " + ("─" * 20) + "┬─ TARGET DETAIL " + ("─" * 8) + "┐"
+        top_str = "┌─ ENEMY SQUAD " + ("─" * 39) + "┬─ TARGET DETAIL " + ("─" * 8) + "┐"
         lines.append(top_str)
 
         # Lines 2..6: Enemy Squad (Left 53 chars) and Target Detail (Right 24 chars)
@@ -537,7 +557,7 @@ class GSNvNCombatScreen(SMState):
         lines.append("├" + ("─" * 53) + "┴" + ("─" * 24) + "┤")
 
         # Row 8: Player Party Header
-        lines.append("│ PLAYER PARTY (Up to 5 Heroes) " + (" " * 47) + "│")
+        lines.append("│ PLAYER PARTY " + (" " * 64) + "│")
 
         # Rows 9..13: Party Members
         for m_idx in range(5):
@@ -593,12 +613,10 @@ class GSNvNCombatScreen(SMState):
             prefix = "\033[1;33m❱\033[0m" if is_targeted else " "
 
             if not e.is_alive:
-                text = f"{prefix}{tag:<4} {e.name[:6]:<6} \033[31m[DEAD]\033[0m"
+                text = f"{prefix}{tag:<4} {e.name[:12]} \033[31m[DEAD]\033[0m"
                 return _pad_cell(text, 25)
 
-            hp_str = f"{e.hp}/{e.max_hp}"
-            aff_str = e.affinity.value.replace("Elemental", "")[:3]
-            text = f"{prefix}{tag:<4} {e.name[:6]:<6} {hp_str[:7]:<7} {aff_str:<3}"
+            text = f"{prefix}{tag:<4} {e.name[:19]}"
             return _pad_cell(text, 25)
 
         col1 = format_enemy_slot(idx1)
@@ -613,14 +631,14 @@ class GSNvNCombatScreen(SMState):
             return " " * self.RIGHT_COL_WIDTH
 
         if row_idx == 0:
-            name_txt = f" Name: [{self.inspected_enemy_idx + 1}] {target.name}"
+            name_txt = f" Name: {target.name}"
             return _pad_cell(name_txt[:24], self.RIGHT_COL_WIDTH)
         elif row_idx == 1:
-            fam_txt = f" Type: {target.family} (Lv.{target.level})"
+            fam_txt = f" Type: {target.family}"
             return _pad_cell(fam_txt[:24], self.RIGHT_COL_WIDTH)
         elif row_idx == 2:
-            bar = _make_bar(target.hp, target.max_hp, length=8, bar_type=StatBarType.HEALTH)
-            hp_txt = f" HP: {target.hp}/{target.max_hp} {bar}"
+            bar = _make_bar(target.hp, target.max_hp, length=12, bar_type=StatBarType.HEALTH)
+            hp_txt = f" HP: {bar}"
             return _pad_cell(hp_txt, self.RIGHT_COL_WIDTH)
         elif row_idx == 3:
             badge = format_element_badge(target.affinity)
@@ -652,14 +670,14 @@ class GSNvNCombatScreen(SMState):
         else:
             prefix = "\033[1;36m❱\033[0m" if is_active else " "
 
-        name_class = f"{m.name} ({m.job_class})"
+        name_str = m.name
         if not m.is_alive:
-            txt = f"{prefix} {member_idx + 1}. {name_class[:16]:<16} \033[31m[FALLEN IN COMBAT]\033[0m"
+            txt = f"{prefix} {member_idx + 1}. {name_str[:12]:<12} \033[31m[FALLEN IN COMBAT]\033[0m"
             return _pad_cell(txt, 78)
 
-        hp_str = f"HP:{m.hp}/{m.max_hp}"
-        mp_str = f"MP:{m.mp}/{m.max_mp}"
-        hp_bar = _make_bar(m.hp, m.max_hp, length=4, bar_type=StatBarType.HEALTH)
+        hp_str = f"HP:{m.hp}"
+        mp_str = f"MP:{m.mp}"
+        hp_bar = _make_bar(m.hp, m.max_hp, length=6, bar_type=StatBarType.HEALTH)
 
         # Planned intent preview
         plan = self.engine.get_planned_action(member_idx)
@@ -675,7 +693,7 @@ class GSNvNCombatScreen(SMState):
             intent_str = "Intent: [Planning...]" if is_active else "Intent: [Waiting]"
             status_tag = "\033[33m[Ready]\033[0m"
 
-        line = f"{prefix} {member_idx + 1}. {name_class[:16]:<16} {hp_str[:11]:<11} {hp_bar} {mp_str[:10]:<10} {status_tag} {intent_str[:18]:<18}"
+        line = f"{prefix} {member_idx + 1}. {name_str[:12]:<12} {hp_str[:7]:<7} {hp_bar} {mp_str[:6]:<6} {status_tag} {intent_str[:22]:<22}"
         return _pad_cell(line, 78)
 
     def _format_command_cell(self, row_idx: int) -> str:
@@ -690,13 +708,31 @@ class GSNvNCombatScreen(SMState):
                 target_tag = "ALLY" if self.target_type == "ALLY" else "ENEMY"
                 return _pad_cell(f" TARGET {target_tag}", 24)
             elif self.menu_mode == "SKILLS":
-                return _pad_cell(f" SKILLS ({name})", 24)
+                actions = self._get_available_actions(ActionCategory.SKILL)
+                page_size = 6
+                total_pages = max(1, (len(actions) + page_size - 1) // page_size)
+                cur_page = self.sub_menu_cursor // page_size
+                if total_pages > 1:
+                    return _pad_cell(f" SKILLS ({name[:4]}) [{cur_page + 1}/{total_pages}]", 24)
+                return _pad_cell(f" SKILLS ({name[:6]})", 24)
             elif self.menu_mode == "SPELLS":
-                return _pad_cell(f" SPELLS ({name})", 24)
+                actions = self._get_available_actions(ActionCategory.SPELL)
+                page_size = 6
+                total_pages = max(1, (len(actions) + page_size - 1) // page_size)
+                cur_page = self.sub_menu_cursor // page_size
+                if total_pages > 1:
+                    return _pad_cell(f" SPELLS ({name[:4]}) [{cur_page + 1}/{total_pages}]", 24)
+                return _pad_cell(f" SPELLS ({name[:6]})", 24)
             elif self.menu_mode == "ITEMS":
-                return _pad_cell(f" ITEMS ({name})", 24)
+                items = self._get_battle_items()
+                page_size = 6
+                total_pages = max(1, (len(items) + page_size - 1) // page_size)
+                cur_page = self.sub_menu_cursor // page_size
+                if total_pages > 1:
+                    return _pad_cell(f" ITEMS ({name[:4]}) [{cur_page + 1}/{total_pages}]", 24)
+                return _pad_cell(f" ITEMS ({name[:6]})", 24)
             else:
-                return _pad_cell(f" COMMANDS ({name})", 24)
+                return _pad_cell(f" COMMANDS ({name[:6]})", 24)
 
         if self.engine.phase == CombatPhase.EXECUTION_PHASE:
             if row_idx == 1:
@@ -706,36 +742,90 @@ class GSNvNCombatScreen(SMState):
             return " " * 24
 
         if self.menu_mode == "MAIN":
-            options = ["[1] Attack", "[2] Skills", "[3] Spells", "[4] Item", "[5] Defend"]
+            options = ["Attack", "Skills", "Spells", "Items", "Defend"]
             opt_idx = row_idx - 1
             if 0 <= opt_idx < len(options):
-                cursor = "❱ " if self.main_menu_cursor == opt_idx else "  "
-                return _pad_cell(f" {cursor}{options[opt_idx]}", 24)
+                is_cur = (self.main_menu_cursor == opt_idx)
+                if is_cur:
+                    cursor = "\033[1;36m❱\033[0m "
+                    opt_txt = f"\033[1;37m{options[opt_idx]}\033[0m"
+                    return _pad_cell(f" {cursor}{opt_txt}", 24)
+                else:
+                    return _pad_cell(f"   \033[37m{options[opt_idx]}\033[0m", 24)
             return " " * 24
 
         if self.menu_mode in ("SKILLS", "SPELLS"):
             cat = ActionCategory.SKILL if self.menu_mode == "SKILLS" else ActionCategory.SPELL
             actions = self._get_available_actions(cat)
-            opt_idx = row_idx - 1
-            if 0 <= opt_idx < len(actions):
-                act = actions[opt_idx]
-                cursor = "❱ " if self.sub_menu_cursor == opt_idx else "  "
-                txt = f" {cursor}[{opt_idx + 1}] {act.name} ({act.mp_cost}M)"
-                return _pad_cell(txt[:23], 24)
-            elif opt_idx == len(actions):
-                return _pad_cell("   [Esc] Back", 24)
+            if not actions:
+                if row_idx == 1:
+                    return _pad_cell("   No actions", 24)
+                elif row_idx == 7:
+                    return _pad_cell("   [Esc] Back", 24)
+                return " " * 24
+
+            page_size = 6
+            total_pages = max(1, (len(actions) + page_size - 1) // page_size)
+            cur_page = self.sub_menu_cursor // page_size
+            start_idx = cur_page * page_size
+
+            if 1 <= row_idx <= page_size:
+                slot_idx = row_idx - 1
+                act_idx = start_idx + slot_idx
+                if act_idx < len(actions):
+                    act = actions[act_idx]
+                    is_cur = (self.sub_menu_cursor == act_idx)
+                    name_str = act.name[:13]
+                    if is_cur:
+                        cursor = "\033[1;36m❱\033[0m "
+                        txt = f" {cursor}\033[1;37m{name_str:<13}\033[0m \033[1;36m{act.mp_cost:>2}M\033[0m"
+                    else:
+                        txt = f"   \033[37m{name_str:<13}\033[0m \033[90m{act.mp_cost:>2}M\033[0m"
+                    return _pad_cell(txt, 24)
+                return " " * 24
+            elif row_idx == 7:
+                if total_pages > 1:
+                    p_txt = f"\033[1;36m◄\033[0m P.{cur_page + 1}/{total_pages} (◄/►) \033[1;36m►\033[0m"
+                    return _pad_cell(f" {p_txt}", 24, align="center")
+                else:
+                    return _pad_cell("   [Esc] Back", 24)
             return " " * 24
 
         if self.menu_mode == "ITEMS":
             items = self._get_battle_items()
-            opt_idx = row_idx - 1
-            if 0 <= opt_idx < len(items):
-                item_obj, qty = items[opt_idx]
-                cursor = "❱ " if self.sub_menu_cursor == opt_idx else "  "
-                txt = f" {cursor}[{opt_idx + 1}] {item_obj.name[:12]} x{qty}"
-                return _pad_cell(txt[:23], 24)
-            elif opt_idx == len(items):
-                return _pad_cell("   [Esc] Back", 24)
+            if not items:
+                if row_idx == 1:
+                    return _pad_cell("   No items", 24)
+                elif row_idx == 7:
+                    return _pad_cell("   [Esc] Back", 24)
+                return " " * 24
+
+            page_size = 6
+            total_pages = max(1, (len(items) + page_size - 1) // page_size)
+            cur_page = self.sub_menu_cursor // page_size
+            start_idx = cur_page * page_size
+
+            if 1 <= row_idx <= page_size:
+                slot_idx = row_idx - 1
+                item_idx = start_idx + slot_idx
+                if item_idx < len(items):
+                    item_obj, qty = items[item_idx]
+                    is_cur = (self.sub_menu_cursor == item_idx)
+                    name_str = item_obj.name[:15]
+                    if is_cur:
+                        bg = "\033[48;2;25;55;85m"
+                        base_txt = f" ❱ {name_str:<15} x{qty:<2}"
+                        pad_len = max(0, 24 - visible_width(base_txt))
+                        return f"{bg} \033[1;36m❱\033[0m{bg} \033[1;37m{name_str:<15}\033[0m{bg} \033[1;33mx{qty:<2}\033[0m{bg}{' ' * pad_len}\033[0m"
+                    else:
+                        return _pad_cell(f"   \033[37m{name_str:<15}\033[0m \033[90mx{qty:<2}\033[0m", 24)
+                return " " * 24
+            elif row_idx == 7:
+                if total_pages > 1:
+                    p_txt = f"\033[1;36m◄\033[0m P.{cur_page + 1}/{total_pages} (◄/►) \033[1;36m►\033[0m"
+                    return _pad_cell(f" {p_txt}", 24, align="center")
+                else:
+                    return _pad_cell("   [Esc] Back", 24)
             return " " * 24
 
         if self.menu_mode == "TARGET_SELECT":
@@ -743,29 +833,25 @@ class GSNvNCombatScreen(SMState):
                 target = self.party.get_member(self.target_cursor)
                 target_name = target.name if target else "Ally"
                 if row_idx == 1:
-                    return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 24)
+                    return _pad_cell(f" \033[1;36m❱\033[0m \033[1;37m{target_name[:18]}\033[0m", 24)
                 elif row_idx == 2:
                     return _pad_cell("   [Arrows] Cycle", 24)
                 elif row_idx == 3:
-                    return _pad_cell("   [1..5] Direct", 24)
-                elif row_idx == 4:
                     return _pad_cell("   [Enter] Confirm", 24)
-                elif row_idx == 5:
-                    return _pad_cell("   [Esc] Cancel", 24)
+                elif row_idx == 4:
+                    return _pad_cell("   [Esc] Back", 24)
                 return " " * 24
             else:
                 target = self.squad.get_enemy(self.target_cursor)
                 target_name = target.name if target else "Enemy"
                 if row_idx == 1:
-                    return _pad_cell(f" ❱ [{self.target_cursor + 1}] {target_name}", 24)
+                    return _pad_cell(f" \033[1;33m❱\033[0m \033[1;37m{target_name[:18]}\033[0m", 24)
                 elif row_idx == 2:
                     return _pad_cell("   [Arrows] Cycle", 24)
                 elif row_idx == 3:
-                    return _pad_cell("   [1..10] Direct", 24)
-                elif row_idx == 4:
                     return _pad_cell("   [Enter] Confirm", 24)
-                elif row_idx == 5:
-                    return _pad_cell("   [Esc] Cancel", 24)
+                elif row_idx == 4:
+                    return _pad_cell("   [Esc] Back", 24)
                 return " " * 24
 
         return " " * 24
@@ -801,12 +887,21 @@ class GSNvNCombatScreen(SMState):
         elif self.engine.phase == CombatPhase.EXECUTION_PHASE:
             return "\033[33mResolving combat actions...  [K] Cheat Win  [Q] Exit Battle\033[0m"
         elif self.menu_mode == "TARGET_SELECT":
-            return "\033[33m[1..10/Arrows] Select Target  [Enter] Confirm  [Esc] Back\033[0m"
+            return "\033[33m[Arrows] Select Target  [Enter] Confirm  [Esc] Back\033[0m"
         elif self.menu_mode in ("SKILLS", "SPELLS"):
-            return "\033[33m[1..N/Arrows] Select Action  [Enter] Confirm  [Esc] Back\033[0m"
+            cat = ActionCategory.SKILL if self.menu_mode == "SKILLS" else ActionCategory.SPELL
+            actions = self._get_available_actions(cat)
+            if len(actions) > 6:
+                return "\033[33m[↑↓] Select  [←→] Page  [Enter] Confirm  [Esc] Back\033[0m"
+            else:
+                return "\033[33m[↑↓] Select Action  [Enter] Confirm  [Esc] Back\033[0m"
         elif self.menu_mode == "ITEMS":
-            return "\033[33m[1..N/Arrows] Select Item  [Enter] Confirm  [Esc] Back\033[0m"
+            items = self._get_battle_items()
+            if len(items) > 6:
+                return "\033[33m[↑↓] Select  [←→] Page  [Enter] Use  [Esc] Back\033[0m"
+            else:
+                return "\033[33m[↑↓] Select Item  [Enter] Use  [Esc] Back\033[0m"
         else:
             can_go_back = any(self.party.members[i].is_alive for i in range(self.active_member_idx - 1, -1, -1))
             prev_hint = "  [B] Back" if can_go_back else ""
-            return f"\033[33m[1..5/Arrows] Choose Action{prev_hint}  [K] Cheat Win  [Esc] Flee\033[0m"
+            return f"\033[33m[Arrows] Choose Action{prev_hint}  [K] Cheat Win  [Esc] Flee\033[0m"

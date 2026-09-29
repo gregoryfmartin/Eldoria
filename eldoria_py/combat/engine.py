@@ -57,6 +57,7 @@ class NvNCombatEngine:
         self.combat_log: list[str] = [f"Battle began! Round {self.round_number} Command Phase."]
         self.spoils_xp: int = 0
         self.spoils_gold: int = 0
+        self.spoils_items: list[tuple[str, int]] = []
 
     def log(self, text: str) -> None:
         """Appends a message to the battle log."""
@@ -235,6 +236,7 @@ class NvNCombatEngine:
         # 5. Apply action to all selected targets
         target_count = len(targets_to_hit)
         for t in targets_to_hit:
+            force_crit = False if (t.is_defending and getattr(t, "negate_crits_when_defending", False)) else None
             result = calculate_damage(
                 attacker_stats=actor.get_all_stat_totals(),
                 target_stats=t.get_all_stat_totals(),
@@ -246,22 +248,37 @@ class NvNCombatEngine:
                 explicit_absorbs=t.explicit_absorbs,
                 explicit_immunes=t.explicit_immunes,
                 rng=self.rng,
+                force_crit=force_crit,
             )
 
             if action.category == ActionCategory.ITEM:
-                if result.is_healing:
+                if "Ether" in action.name:
+                    restored = t.restore_mp(action.effect_value)
+                    self.log(f"🔷 {actor.name} uses {action.name} on {t.name}: +{restored} MP! ({t.mp}/{t.max_mp})")
+                elif action.name == "Elixir":
+                    healed = t.heal(t.max_hp)
+                    restored = t.restore_mp(t.max_mp)
+                    self.log(f"✨ {actor.name} uses {action.name} on {t.name}: Fully restored HP & MP!")
+                elif action.name == "Antidote":
+                    self.log(f"🧪 {actor.name} uses Antidote on {t.name}! Cured of toxins.")
+                elif action.name == "Sleep Powder":
+                    self.log(f"💤 {actor.name} uses {action.name} on {t.name}! {t.name} fell asleep.")
+                elif result.is_healing:
                     healed = t.heal(abs(result.final_damage))
-                    self.log(f"💚 {actor.name} uses {action.name} on {t.name}: +{healed} HP! ({t.hp}/{t.max_hp})")
+                    self.log(f"💚 {actor.name} uses {action.name} on {t.name}: +{healed} HP!")
                 else:
                     dmg_taken = t.take_damage(result.final_damage)
-                    self.log(f"💥 {actor.name} uses {action.name} on {t.name}: {dmg_taken} dmg ({t.hp}/{t.max_hp})")
+                    crit_tag = " [★ CRIT]" if result.is_critical else ""
+                    weak_tag = " [★ WEAKNESS]" if result.affinity_effect == AffinityEffect.WEAK else ""
+                    res_tag = " [Resisted]" if result.affinity_effect == AffinityEffect.RESIST else ""
+                    self.log(f"💥 {actor.name} uses {action.name} on {t.name}{crit_tag}{weak_tag}{res_tag}: {dmg_taken} dmg")
                     if not t.is_alive:
                         self.log(f"☠ {t.name} was defeated!")
                 continue
 
             if result.is_healing:
                 healed = t.heal(abs(result.final_damage))
-                self.log(f"💚 {actor.name} casts {action.name} on {t.name}: +{healed} HP! ({t.hp}/{t.max_hp})")
+                self.log(f"💚 {actor.name} casts {action.name} on {t.name}: +{healed} HP!")
             elif not result.hit:
                 self.log(f"💨 {actor.name} used {action.name} on {t.name}, but it missed!")
             elif result.result_type == BattleActionResultType.IMMUNE:
@@ -272,7 +289,7 @@ class NvNCombatEngine:
                 weak_tag = " [★ WEAKNESS]" if result.affinity_effect == AffinityEffect.WEAK else ""
                 res_tag = " [Resisted]" if result.affinity_effect == AffinityEffect.RESIST else ""
                 self.log(
-                    f"⚔ {actor.name} uses {action.name} on {t.name}{crit_tag}{weak_tag}{res_tag}: {dmg_taken} dmg ({t.hp}/{t.max_hp})"
+                    f"⚔ {actor.name} uses {action.name} on {t.name}{crit_tag}{weak_tag}{res_tag}: {dmg_taken} dmg"
                 )
 
                 if not t.is_alive:
@@ -305,10 +322,103 @@ class NvNCombatEngine:
     def _trigger_victory(self) -> None:
         """Handles party victory and calculates rewards."""
         self.phase = CombatPhase.BATTLE_VICTORY
-        self.spoils_xp = self.squad.total_xp()
+        base_xp = self.squad.total_xp()
         self.spoils_gold = self.squad.total_gold()
+
+        survivors = self.party.alive_members
+        ko_members = [m for m in self.party.members if not m.is_alive]
+
+        # Calculate average party and squad levels to apply tiered level-gap penalty
+        avg_party_level = sum(m.level for m in survivors) / max(1, len(survivors)) if survivors else 1.0
+        avg_squad_level = sum(e.level for e in self.squad.enemies) / max(1, len(self.squad.enemies)) if self.squad.enemies else 1.0
+        level_gap = int(round(avg_party_level - avg_squad_level))
+
+        if level_gap <= 3:
+            xp_multiplier = 1.0
+        elif 4 <= level_gap <= 6:
+            xp_multiplier = 0.60
+        elif 7 <= level_gap <= 10:
+            xp_multiplier = 0.25
+        else:  # level_gap > 10
+            xp_multiplier = 0.05
+
+        raw_spoils = int(round(base_xp * xp_multiplier))
+        # Ensure at least 1 XP per defeated enemy
+        self.spoils_xp = max(len(self.squad.enemies), raw_spoils) if base_xp > 0 else 0
+
         self.log(f"🏆 VICTORY! Enemy squad eliminated!")
         self.log(f"Gained {self.spoils_xp} XP and {self.spoils_gold} Gold.")
+
+        # Credit spoils gold to party
+        if hasattr(self.party, "gold"):
+            self.party.gold += self.spoils_gold
+
+        # Resolve item loot drops from defeated enemies
+        self.spoils_items = []
+        from eldoria_py.combat.items import is_key_item
+        dropped_summary: list[str] = []
+        for enemy in self.squad.enemies:
+            drop_table = getattr(enemy, "drop_table", [])
+            for drop in drop_table:
+                # Absolute invariant: Enemies should NEVER drop key items
+                if is_key_item(drop.item_id):
+                    continue
+                # Bosses have 100% guaranteed drop rate; regular enemies roll against drop.chance
+                is_drop = True if getattr(enemy, "is_boss", False) else (self.rng.random() < drop.chance)
+                if is_drop:
+                    min_q = getattr(drop, "min_qty", 1)
+                    max_q = getattr(drop, "max_qty", 1)
+                    qty = self.rng.randint(min_q, max_q) if max_q >= min_q else min_q
+                    if hasattr(self.party, "add_item"):
+                        actual_added = self.party.add_item(drop.item_id, qty)
+                        if actual_added > 0:
+                            self.spoils_items.append((drop.item_id, actual_added))
+                            dropped_summary.append(f"{drop.item_id} x{actual_added}")
+
+        if dropped_summary:
+            self.log(f"🎁 Spoils: Obtained {', '.join(dropped_summary)}!")
+
+        if not survivors:
+            return
+
+        share_xp = self.spoils_xp // len(survivors)
+        if ko_members:
+            ko_names = ", ".join(m.name for m in ko_members)
+            self.log(f"☠ {ko_names} was KO'd and received no XP ({share_xp} XP each to survivors).")
+
+        STAT_SHORT_NAMES = {
+            StatId.HIT_POINTS: "HP",
+            StatId.MAGIC_POINTS: "MP",
+            StatId.ATTACK: "ATK",
+            StatId.DEFENSE: "DEF",
+            StatId.MAGIC_ATTACK: "MAT",
+            StatId.MAGIC_DEFENSE: "MDF",
+            StatId.SPEED: "SPD",
+            StatId.LUCK: "LCK",
+            StatId.ACCURACY: "ACC",
+        }
+
+        for survivor in survivors:
+            if hasattr(survivor, "add_xp"):
+                summaries = survivor.add_xp(share_xp)
+                for s in summaries:
+                    gains_dict = s.get("gains", {})
+                    gain_parts = []
+                    for sid in (
+                        StatId.HIT_POINTS,
+                        StatId.MAGIC_POINTS,
+                        StatId.ATTACK,
+                        StatId.DEFENSE,
+                        StatId.MAGIC_ATTACK,
+                        StatId.MAGIC_DEFENSE,
+                        StatId.SPEED,
+                        StatId.LUCK,
+                        StatId.ACCURACY,
+                    ):
+                        if sid in gains_dict:
+                            gain_parts.append(f"{STAT_SHORT_NAMES.get(sid, sid.name)} +{gains_dict[sid]}")
+                    gains_str = ", ".join(gain_parts) if gain_parts else "Stats increased"
+                    self.log(f"★ {survivor.name} reached Lv. {s['level']}! ({gains_str})")
 
     def _trigger_defeat(self) -> None:
         """Handles party wipeout."""
