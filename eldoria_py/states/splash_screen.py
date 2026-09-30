@@ -56,17 +56,17 @@ class GSSplashScreen(SMState):
             fg_color=ColorLibrary.AppleCyanLight,
         )
         self.subtitle_label = self.splash_panel.add_label(
-            "A Retro Tactical Virtual Terminal RPG",
+            "A Retro VT RPG",
             row=11,
             align="center",
             fg_color=ColorLibrary.DarkGrey,
         )
-        self.engine_label = self.splash_panel.add_label(
-            "Powered by Eldoria Python Engine",
-            row=13,
-            align="center",
-            fg_color=ColorLibrary.AppleYellowLight,
-        )
+        # self.engine_label = self.splash_panel.add_label(
+        #     "Powered by Eldoria Python Engine",
+        #     row=13,
+        #     align="center",
+        #     fg_color=ColorLibrary.AppleYellowLight,
+        # )
         self.prompt_label = self.splash_panel.add_label(
             "Press any key to start",
             row=18,

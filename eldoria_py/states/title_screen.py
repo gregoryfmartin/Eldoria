@@ -143,11 +143,13 @@ class GSTitleScreen(SMState):
         )
         self.credits_panel.add_label("── Eldoria Project Credits ──", row=7, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
         self.credits_panel.add_label("Original Concept & Architecture:", row=9, align="center", fg_color=ColorLibrary.AppleCyanLight)
-        self.credits_panel.add_label("Gregory Frank Martin (PowerShell Eldoria)", row=10, align="center", fg_color=ColorLibrary.White)
-        self.credits_panel.add_label("Python Engine & Modernization:", row=12, align="center", fg_color=ColorLibrary.AppleCyanLight)
-        self.credits_panel.add_label("Antigravity AI (Google DeepMind)", row=13, align="center", fg_color=ColorLibrary.White)
-        self.credits_panel.add_label("FastNoiseLite • Procedural Maps • NvN Combat", row=15, align="center", fg_color=ColorLibrary.DarkGrey)
-        self.credits_panel.add_label("[Press Enter or Esc to return]", row=17, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
+        self.credits_panel.add_label("Not Gary (Gregory F Martin)", row=10, align="center", fg_color=ColorLibrary.White)
+        self.credits_panel.add_label("Programming:", row=12, align="center", fg_color=ColorLibrary.AppleCyanLight)
+        self.credits_panel.add_label("Not Gary; Antigravity", row=13, align="center", fg_color=ColorLibrary.White)
+        self.credits_panel.add_label("Original FastNoiseLite:", row=15, align="center", fg_color=ColorLibrary.AppleCyanLight)
+        self.credits_panel.add_label("Auburn", row=16, align="center", fg_color=ColorLibrary.White)
+        # self.credits_panel.add_label("FastNoiseLite • Procedural Maps • NvN Combat", row=15, align="center", fg_color=ColorLibrary.DarkGrey)
+        self.credits_panel.add_label("[Press Enter or Esc to return]", row=18, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
 
     @property
     def selected_idx(self) -> int:
