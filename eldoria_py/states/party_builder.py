@@ -6,6 +6,7 @@ Refactored to Eldoria's component UI framework (UIPanel, UIContainer, UIDivider,
 """
 
 from __future__ import annotations
+import random
 import sys
 import threading
 import time
@@ -15,7 +16,7 @@ from ..core.context import Context
 from ..core.fsm import SMState
 from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
-from ..terminal.color import ColorLibrary, format_chromatic_wave
+from ..terminal.color import ColorLibrary, format_chromatic_wave, interpolate_alizarin_to_emerald
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..combat.stats import StatId, BattleActionType
@@ -28,6 +29,25 @@ from ..ui.panel import UIPanel
 from ..ui.elements.label import UILabel
 from ..ui.elements.divider import UIDivider
 from ..ui.elements.party_slot import UIPartySlotList
+
+
+SNARKY_WORLD_GEN_MESSAGES: List[str] = [
+    "Carving and establishing terrain",
+    "Polishing goblin teeth...",
+    "Calibrating mimic bite radius...",
+    "Hiding chests behind waterfalls...",
+    "Teaching skeletons how to rattle...",
+    "Placing dubious traps in hallways...",
+    "Consulting ancient cartographers...",
+    "Stashing boss keys in silly pots...",
+    "Tuning ambient cave dripping...",
+    "Negotiating with wandering slime...",
+    "Inventing insurmountable bushes...",
+    "Assembling absurd dungeon rooms...",
+    "Scattering suspicious cracked walls...",
+    "Rolling critical failures...",
+    "Coaxing dragons out of retirement...",
+]
 
 
 class GSPartyBuilderScreen(SMState):
@@ -234,7 +254,7 @@ class GSPartyBuilderScreen(SMState):
         templates = [
             # Slot 0: Guardian (Earth / High Defense Tank)
             {
-                "name": "Aiden",
+                "name": "Aide",
                 "class": "Earth Guardian",
                 "gender": Gender.MALE,
                 "affinity": BattleActionType.ELEMENTAL_EARTH,
@@ -274,7 +294,7 @@ class GSPartyBuilderScreen(SMState):
             },
             # Slot 2: Shadow Rogue (Wind / High Speed & Crit)
             {
-                "name": "Vesper",
+                "name": "Vesp",
                 "class": "Wind Rogue",
                 "gender": Gender.MALE,
                 "affinity": BattleActionType.ELEMENTAL_WIND,
@@ -294,7 +314,7 @@ class GSPartyBuilderScreen(SMState):
             },
             # Slot 3: High Priestess (Light / Healer Support)
             {
-                "name": "Seraphina",
+                "name": "Sera",
                 "class": "Light Priestess",
                 "gender": Gender.FEMALE,
                 "affinity": BattleActionType.ELEMENTAL_LIGHT,
@@ -314,7 +334,7 @@ class GSPartyBuilderScreen(SMState):
             },
             # Slot 4: Flame Berserker (Fire / Frontline DPS)
             {
-                "name": "Brand",
+                "name": "Bran",
                 "class": "Fire Berserker",
                 "gender": Gender.MALE,
                 "affinity": BattleActionType.ELEMENTAL_FIRE,
@@ -458,6 +478,10 @@ class GSPartyBuilderScreen(SMState):
                     if is_interactive:
                         gen_result: dict = {}
                         gen_error: list = []
+                        shared_progress: dict = {"val": 0.0}
+
+                        def on_progress(p: float) -> None:
+                            shared_progress["val"] = max(shared_progress["val"], p)
 
                         def worker() -> None:
                             try:
@@ -465,6 +489,7 @@ class GSPartyBuilderScreen(SMState):
                                     slot_idx=slot_idx,
                                     party=party,
                                     macro_size=self.selected_world_size,
+                                    progress_callback=on_progress,
                                 )
                             except Exception as ex:
                                 gen_error.append(ex)
@@ -473,11 +498,38 @@ class GSPartyBuilderScreen(SMState):
                         t.start()
 
                         phase = 0.0
+                        display_progress = 0.0
                         start_time = time.monotonic()
                         min_display_time = 0.6  # Brief display window to enjoy the rainbow animation
 
-                        while t.is_alive() or (time.monotonic() - start_time < min_display_time):
-                            self._render_forging_world_frame(phase)
+                        # Snarky message cycling
+                        messages_pool = list(SNARKY_WORLD_GEN_MESSAGES)
+                        current_msg = messages_pool[0]
+                        remaining_msgs = [m for m in messages_pool if m != current_msg]
+                        next_msg_time = time.monotonic() + random.uniform(1.4, 2.6)
+
+                        while t.is_alive() or (time.monotonic() - start_time < min_display_time) or (display_progress < 0.99 and not gen_error):
+                            now = time.monotonic()
+                            if now >= next_msg_time:
+                                if not remaining_msgs:
+                                    remaining_msgs = [m for m in messages_pool if m != current_msg]
+                                next_msg = random.choice(remaining_msgs)
+                                remaining_msgs.remove(next_msg)
+                                current_msg = next_msg
+                                next_msg_time = now + random.uniform(1.4, 2.6)
+
+                            target_p = shared_progress["val"]
+                            if not t.is_alive() and not gen_error:
+                                target_p = 1.0
+                            display_progress += (target_p - display_progress) * 0.25
+                            if abs(target_p - display_progress) < 0.005:
+                                display_progress = target_p
+
+                            self._render_forging_world_frame(
+                                phase=phase,
+                                message=current_msg,
+                                progress=display_progress,
+                            )
                             time.sleep(0.033)  # ~30 FPS
                             phase += 0.03
 
@@ -489,7 +541,11 @@ class GSPartyBuilderScreen(SMState):
                         world_macro, exp_state = gen_result["data"]
                     else:
                         # Fast-path for unit tests and headless environments
-                        self._render_forging_world_frame(0.0)
+                        self._render_forging_world_frame(
+                            phase=0.0,
+                            message=SNARKY_WORLD_GEN_MESSAGES[0],
+                            progress=1.0,
+                        )
                         world_macro, exp_state = self.save_manager.create_new_game(
                             slot_idx=slot_idx,
                             party=party,
@@ -629,10 +685,15 @@ class GSPartyBuilderScreen(SMState):
 
         self.embark_slot_panel.set_all_dirty()
 
-    def _render_forging_world_frame(self, phase: float = 0.0) -> None:
-        """Renders the centered 'Forging World' and 'Carving and establishing terrain' labels with rainbow wave."""
+    def _render_forging_world_frame(
+        self,
+        phase: float = 0.0,
+        message: str = "Carving and establishing terrain",
+        progress: float = 0.0,
+    ) -> None:
+        """Renders the centered 'Forging World', snarky message, and color-shifting progress bar."""
         line1 = "Forging World"
-        line2 = "Carving and establishing terrain"
+        line2 = message
 
         col1 = max(1, (self.screen_width - len(line1)) // 2 + 1)
         col2 = max(1, (self.screen_width - len(line2)) // 2 + 1)
@@ -640,13 +701,37 @@ class GSPartyBuilderScreen(SMState):
         mid_row = self.screen_height // 2
         row1 = max(1, mid_row - 1)
         row2 = min(self.screen_height, mid_row + 1)
+        row3 = min(self.screen_height, row2 + 3)
 
         rendered_l1 = format_chromatic_wave(line1, phase=phase, char_step=0.04, bold=True)
         rendered_l2 = format_chromatic_wave(line2, phase=phase + 0.20, char_step=0.025, bold=False)
 
+        clamped_p = max(0.0, min(1.0, progress))
+        gauge_len = 20
+        filled_len = int(round(clamped_p * gauge_len))
+        unfilled_len = gauge_len - filled_len
+        pct_int = int(round(clamped_p * 100))
+
+        bar_color = interpolate_alizarin_to_emerald(clamped_p)
+        bracket_fg = ColorLibrary.Grey.to_fg_ansi()
+        bar_fg = bar_color.to_fg_ansi()
+        dim_fg = ColorLibrary.DarkSlateGrey.to_fg_ansi()
+        reset = "\033[0m"
+
+        rendered_bar = (
+            f"{bracket_fg}[{reset}"
+            f"{bar_fg}{'█' * filled_len}{reset}"
+            f"{dim_fg}{'░' * unfilled_len}{reset}"
+            f"{bracket_fg}]{reset} "
+            f"{bar_fg}{pct_int:>3}%{reset}"
+        )
+        bar_raw_len = 1 + gauge_len + 1 + 1 + 4  # 27 chars
+        col3 = max(1, (self.screen_width - bar_raw_len) // 2 + 1)
+
         out = [
-            f"\033[{row1};{col1}H{rendered_l1}",
-            f"\033[{row2};{col2}H{rendered_l2}",
+            f"\033[{row1};1H\033[2K\033[{row1};{col1}H{rendered_l1}",
+            f"\033[{row2};1H\033[2K\033[{row2};{col2}H{rendered_l2}",
+            f"\033[{row3};1H\033[2K\033[{row3};{col3}H{rendered_bar}",
         ]
         TerminalScreen.write("".join(out))
         TerminalScreen.flush()

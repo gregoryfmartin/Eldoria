@@ -6,7 +6,7 @@ algorithmic Point of Interest (Town, Castle, Cave) placement, and sub-map linkin
 from __future__ import annotations
 import math
 import random
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 from .map_generator import (
     BiomeType,
@@ -160,6 +160,7 @@ class WorldMacroMap:
         gain: float = 0.5,
         max_region: Optional[int] = None,
         generate: bool = True,
+        progress_callback: Optional[Callable[[float], None]] = None,
     ) -> None:
         self.seed = seed
         self.macro_width = macro_width
@@ -205,7 +206,7 @@ class WorldMacroMap:
         self.starter_player_pos: Tuple[int, int] = (sector_width // 2, sector_height // 2)
 
         if generate:
-            self.generate()
+            self.generate(progress_callback=progress_callback)
 
     def get_sector(self, sx: int, sy: int) -> Optional[Map]:
         """Returns the Map for sector (sx, sy), or None if out of bounds."""
@@ -222,16 +223,17 @@ class WorldMacroMap:
                 return poi
         return None
 
-    def reseed(self, new_seed: int) -> None:
-        """Regenerates the entire 4x4 macro world with a new seed."""
+    def reseed(self, new_seed: int, progress_callback: Optional[Callable[[float], None]] = None) -> None:
+        """Regenerates the entire macro world with a new seed."""
         self.seed = new_seed
         self.generator.reseed(new_seed)
-        self.generate()
+        self.generate(progress_callback=progress_callback)
 
-    def generate(self) -> None:
-        """Generates all 16 sectors, places POIs in distinct sectors, and links exits."""
-        # 1. Generate 4x4 sectors with continuous global coordinates
+    def generate(self, progress_callback: Optional[Callable[[float], None]] = None) -> None:
+        """Generates all sectors, places POIs in distinct sectors, and links exits."""
+        # 1. Generate sectors with continuous global coordinates
         self.sectors = []
+        total_sectors = self.macro_width * self.macro_height
         for sy in range(self.macro_height):
             row: List[Map] = []
             for sx in range(self.macro_width):
@@ -247,13 +249,20 @@ class WorldMacroMap:
                     offset_y=offset_y,
                 )
                 row.append(sec_map)
+                if progress_callback:
+                    sec_idx = sy * self.macro_width + sx + 1
+                    progress_callback(0.85 * (sec_idx / max(1, total_sectors)))
             self.sectors.append(row)
 
         # 2. Algorithmic POI Selection & Placement
         self._place_pois()
+        if progress_callback:
+            progress_callback(0.88)
 
         # 3. Carve Overworld Road through Town Sector
         self._carve_town_road()
+        if progress_callback:
+            progress_callback(0.91)
 
         # 4. Re-calculate internal exits for any modified sectors
         for sy in range(self.macro_height):
@@ -262,9 +271,13 @@ class WorldMacroMap:
 
         # 5. Link Inter-Sector Exits across boundaries with strict reciprocity
         self._link_sector_exits()
+        if progress_callback:
+            progress_callback(0.93)
 
         # 6. Assign non-equidistant concentric danger regions (1-9) radiating from starter town
         self._assign_concentric_regions()
+        if progress_callback:
+            progress_callback(0.95)
 
     def _assign_concentric_regions(self) -> None:
         """Assigns non-equidistant concentric danger regions (1-max_region) radiating from starter town."""

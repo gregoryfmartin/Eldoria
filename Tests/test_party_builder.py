@@ -15,13 +15,13 @@ from eldoria_py.terminal.input import KeyCode, KeyEvent
 from eldoria_py.combat.stats import StatId, BattleActionType
 from eldoria_py.combat.entities import PartyMember, Party
 from eldoria_py.combat.portrait import Gender
-from eldoria_py.states.party_builder import GSPartyBuilderScreen
+from eldoria_py.states.party_builder import GSPartyBuilderScreen, SNARKY_WORLD_GEN_MESSAGES
 from eldoria_py.ui.panel import UIPanel
 from eldoria_py.ui.elements.label import UILabel
 from eldoria_py.ui.elements.divider import UIDivider
 from eldoria_py.ui.elements.party_slot import UIPartySlotList, UIPartySlotItem
 from eldoria_py.terminal.screen import TerminalScreen
-from eldoria_py.terminal.color import rainbow_color, format_chromatic_wave
+from eldoria_py.terminal.color import rainbow_color, format_chromatic_wave, ColorLibrary, interpolate_alizarin_to_emerald
 from eldoria_py.terminal.box import strip_ansi
 
 
@@ -438,9 +438,9 @@ class TestPartyBuilder(unittest.TestCase):
         rendered_phases = []
         original_render_frame = self.screen._render_forging_world_frame
 
-        def capture_render(phase):
+        def capture_render(phase, *args, **kwargs):
             rendered_phases.append(phase)
-            original_render_frame(phase)
+            original_render_frame(phase, *args, **kwargs)
 
         with patch.object(self.screen, "_render_forging_world_frame", side_effect=capture_render), \
              patch("sys.stdout.isatty", return_value=True), \
@@ -452,6 +452,141 @@ class TestPartyBuilder(unittest.TestCase):
         self.assertGreater(rendered_phases[-1], rendered_phases[0])
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
 
+    def test_party_slot_formatting_compact_spacing_and_archetype(self):
+        """Verify single space between name and gender glyph, and archetype is not prematurely truncated."""
+        m_4letter = PartyMember(name="Aide", job_class="Wind Warrior", gender=Gender.MALE)
+        self.screen.set_member_slot(0, m_4letter)
+        slot0 = self.screen.slot_list.slots[0]
+        line1_text = slot0._format_line1()
+        line1_stripped = strip_ansi(line1_text)
+
+        # Single space between name and gender glyph
+        self.assertIn("Aide ♂", line1_stripped)
+        self.assertNotIn("Aide  ♂", line1_stripped)
+
+        # Full archetype "Wind Warrior" should be preserved (not truncated to "Wind Warri")
+        self.assertIn("Wind Warrior", line1_stripped)
+
+        # Fits comfortably within container
+        self.assertLessEqual(len(line1_stripped), self.screen.party_panel.inner_width)
+
+        # 3-letter name should also have exactly a single space before gender glyph
+        m_3letter = PartyMember(name="Dan", job_class="Earth Guardian", gender=Gender.MALE)
+        self.screen.set_member_slot(1, m_3letter)
+        slot1 = self.screen.slot_list.slots[1]
+        line1_3_text = slot1._format_line1()
+        line1_3_stripped = strip_ansi(line1_3_text)
+
+        self.assertIn("Dan ♂", line1_3_stripped)
+        self.assertNotIn("Dan  ♂", line1_3_stripped)
+        self.assertIn("Earth Guardian", line1_3_stripped)
+        self.assertLessEqual(len(line1_3_stripped), self.screen.party_panel.inner_width)
+
+    def test_party_slot_formatting_wide_spacing(self):
+        """Verify standard 80-col mode formats single space before glyph and full fields."""
+        wide_screen = GSPartyBuilderScreen(screen_width=80, screen_height=24)
+        m = PartyMember(name="Aide", job_class="Wind Warrior", gender=Gender.MALE)
+        wide_screen.set_member_slot(0, m)
+        slot0 = wide_screen.slot_list.slots[0]
+        line1_text = slot0._format_line1()
+        line1_stripped = strip_ansi(line1_text)
+
+        self.assertIn("Aide ♂", line1_stripped)
+        self.assertNotIn("Aide  ♂", line1_stripped)
+        self.assertIn("Wind Warrior", line1_stripped)
+        self.assertLessEqual(len(line1_stripped), wide_screen.party_panel.inner_width)
+
+    def test_snarky_messages_catalog_specifications(self):
+        """Verify that all snarky loading literals meet length and formatting constraints."""
+        self.assertGreaterEqual(len(SNARKY_WORLD_GEN_MESSAGES), 10)
+        self.assertLessEqual(len(SNARKY_WORLD_GEN_MESSAGES), 15)
+
+        for idx, msg in enumerate(SNARKY_WORLD_GEN_MESSAGES):
+            self.assertIsInstance(msg, str)
+            self.assertTrue(len(msg) > 0, f"Message {idx} is empty")
+            # Strictly single-line
+            self.assertNotIn("\n", msg, f"Message {idx} contains newline")
+            self.assertNotIn("\r", msg, f"Message {idx} contains carriage return")
+            # Max permissible length <= 41 to guarantee safety on 54-wide screen
+            self.assertLessEqual(
+                len(msg),
+                41,
+                f"Message '{msg}' length {len(msg)} exceeds 41 characters",
+            )
+
+    def test_interpolate_alizarin_to_emerald(self):
+        """Verify piecewise color interpolation from Alizarin to Amber to Emerald."""
+        # t = 0.0: Alizarin Crimson
+        c0 = interpolate_alizarin_to_emerald(0.0)
+        self.assertEqual(c0, ColorLibrary.AlizarinCrimson)
+        self.assertEqual((c0.r, c0.g, c0.b), (227, 38, 54))
+
+        # t = 0.5: Amber Gold
+        c_mid = interpolate_alizarin_to_emerald(0.5)
+        self.assertEqual(c_mid, ColorLibrary.AmberGold)
+        self.assertEqual((c_mid.r, c_mid.g, c_mid.b), (229, 169, 60))
+
+        # t = 1.0: Emerald Green
+        c1 = interpolate_alizarin_to_emerald(1.0)
+        self.assertEqual(c1, ColorLibrary.EmeraldGreen)
+        self.assertEqual((c1.r, c1.g, c1.b), (80, 200, 120))
+
+        # Clamping behavior
+        self.assertEqual(interpolate_alizarin_to_emerald(-0.5), ColorLibrary.AlizarinCrimson)
+        self.assertEqual(interpolate_alizarin_to_emerald(1.5), ColorLibrary.EmeraldGreen)
+
+    def test_progress_bar_row_and_visual_elements(self):
+        """Verify progress bar layout, two-row offset below text, and percentage calculation."""
+        with patch.object(TerminalScreen, "write") as mock_write, patch.object(TerminalScreen, "flush") as mock_flush:
+            self.screen._render_forging_world_frame(
+                phase=0.0,
+                message="Polishing goblin teeth...",
+                progress=0.5,
+            )
+            mock_write.assert_called_once()
+            output = mock_write.call_args[0][0]
+
+            # Row 11: Forging World
+            # Row 13: Polishing goblin teeth...
+            # Row 15: Progress bar (row2 + 2 == 15)
+            self.assertIn("\033[11;", output)
+            self.assertIn("\033[13;", output)
+            self.assertIn("\033[15;", output)
+            # Row 15 centered on 54-wide screen: (54 - 27) // 2 + 1 = 14
+            self.assertIn("\033[15;14H", output)
+
+            stripped = strip_ansi(output)
+            self.assertIn("Forging World", stripped)
+            self.assertIn("Polishing goblin teeth...", stripped)
+            self.assertIn("[██████████░░░░░░░░░░]  50%", stripped)
+
+    def test_save_manager_and_world_macro_progress_callback(self):
+        """Verify progress callback is invoked monotonically from >0 to 1.0 during new game creation."""
+        progress_steps = []
+
+        def on_progress(p: float):
+            progress_steps.append(p)
+
+        party = Party(members=[PartyMember(name="Hero", job_class="Warrior")])
+        world_macro, exp_state = self.screen.save_manager.create_new_game(
+            slot_idx=1,
+            party=party,
+            macro_size="quick",
+            progress_callback=on_progress,
+        )
+
+        self.assertIsNotNone(world_macro)
+        self.assertIsNotNone(exp_state)
+        self.assertGreater(len(progress_steps), 5)
+        # First reported progress > 0
+        self.assertGreater(progress_steps[0], 0.0)
+        # Non-decreasing
+        for i in range(len(progress_steps) - 1):
+            self.assertLessEqual(progress_steps[i], progress_steps[i + 1])
+        # Final value reaches 1.0
+        self.assertAlmostEqual(progress_steps[-1], 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()
+

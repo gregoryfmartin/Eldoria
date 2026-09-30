@@ -41,15 +41,14 @@ class TestSplashScreen(unittest.TestCase):
     def test_splash_panel_structure(self):
         self.assertIsInstance(self.splash.splash_panel, UIPanel)
         self.assertTrue(self.splash.splash_panel.is_active())
-        self.assertEqual(len(self.splash.splash_panel.ui_element_listing), 6)
+        self.assertEqual(len(self.splash.splash_panel.ui_element_listing), 5)
         for element in self.splash.splash_panel.ui_element_listing.values():
             self.assertIsInstance(element, UILabel)
             self.assertEqual(element.parent, self.splash.splash_panel)
 
         self.assertEqual(self.splash.title_label.text, "E L D O R I A")
         self.assertEqual(self.splash.divider_label.text, "────────────────────────────────────")
-        self.assertEqual(self.splash.subtitle_label.text, "A Retro Tactical Virtual Terminal RPG")
-        self.assertEqual(self.splash.engine_label.text, "Powered by Eldoria Python Engine")
+        self.assertEqual(self.splash.subtitle_label.text, "A Retro VT RPG")
         self.assertEqual(self.splash.prompt_label.text, "Press any key to start")
 
     def test_splash_panel_pulse_animation(self):

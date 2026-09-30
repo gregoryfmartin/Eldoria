@@ -77,20 +77,22 @@ class UIPartySlotItem(UIBase):
 
         m = self.member
         g_icon = "♂" if m.gender == Gender.MALE else "♀"
+        m_name = m.name[:4]
+        gender_pad = " " * (1 + max(0, 4 - len(m_name)))
 
         if self.is_compact:
             hp_str = f"HP:{m.hp:>3}/{m.max_hp:<3}"
-            m_name = m.name[:9]
-            j_class = m.job_class[:10]
+            j_class = m.job_class[:16]
             return (
-                f"{chev}{role} \033[1;32m{m_name:<9}\033[0m {g_icon} "
-                f"\033[36m{j_class:<10}\033[0m \033[32m{hp_str}\033[0m"
+                f"{chev}{role} \033[1;32m{m_name}\033[0m {g_icon}{gender_pad}"
+                f"\033[36m{j_class:<16}\033[0m \033[32m{hp_str}\033[0m"
             )
         else:
             hp_str = f"HP: {m.hp:>3}/{m.max_hp:<3}"
             mp_str = f"MP: {m.mp:>3}/{m.max_mp:<3}"
+            gender_pad_wide = " " * (2 + max(0, 4 - len(m_name)))
             return (
-                f"{chev}{role} \033[1;32m{m.name:<13}\033[0m {g_icon}  "
+                f"{chev}{role} \033[1;32m{m_name}\033[0m {g_icon}{gender_pad_wide}"
                 f"\033[36m{m.job_class:<18}\033[0m \033[32m{hp_str}\033[0m   \033[34m{mp_str}\033[0m"
             )
 

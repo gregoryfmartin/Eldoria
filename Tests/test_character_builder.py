@@ -245,6 +245,144 @@ class TestCharacterBuilder(unittest.TestCase):
         self.assertEqual(self.screen.char_name, "ALEX")
         self.assertEqual(len(self.screen.char_name), 4)
 
+    def test_name_label_position_is_fixed_when_typing_and_deleting_characters(self):
+        """Verifies that the 'Name:' label remains at a fixed column position regardless of name length, and pads spaces."""
+        from eldoria_py.terminal.box import visible_width
+
+        self.screen.substate = CharacterBuilderSubstate.NAME_ENTRY
+        fixed_col = self.screen.name_fixed_col
+        self.assertEqual(self.screen.name_display_label.coordinates.column, fixed_col)
+
+        # Clear name and check column remains fixed
+        self.screen.char_name = ""
+        self.screen._update_name_labels()
+        self.assertEqual(self.screen.name_display_label.coordinates.column, fixed_col)
+        self.assertEqual(visible_width(self.screen.name_display_label.text), 11)
+        self.assertTrue(self.screen.name_display_label.text.endswith("    "))
+
+        # Type characters one by one; column must NEVER shift
+        for char in "HERO":
+            self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char=char), self.context, self.mock_core)
+            self.assertEqual(
+                self.screen.name_display_label.coordinates.column,
+                fixed_col,
+                f"Column shifted while typing '{char}'",
+            )
+            self.assertEqual(visible_width(self.screen.name_display_label.text), 11)
+
+        # Delete characters one by one with Backspace; column must NEVER shift right
+        for expected_len in (3, 2, 1, 0):
+            self.screen._handle_input(KeyEvent(key=KeyCode.BACKSPACE), self.context, self.mock_core)
+            self.assertEqual(
+                self.screen.name_display_label.coordinates.column,
+                fixed_col,
+                f"Column shifted to right on backspace when name length is {expected_len}",
+            )
+            self.assertEqual(len(self.screen.char_name), expected_len)
+            self.assertEqual(visible_width(self.screen.name_display_label.text), 11)
+            # Ensure padding spaces exist for the remaining character slots
+            expected_pad = " " * (4 - expected_len)
+            self.assertTrue(self.screen.name_display_label.text.endswith(expected_pad))
+
+    def test_archetype_cycling_clears_description_area(self):
+        """Verifies that cycling archetypes sets profile_desc_dirty and clears rows 10..12 before writing."""
+        from unittest.mock import patch
+
+        self.screen.substate = CharacterBuilderSubstate.PROFILE_SELECTION
+        self.screen.gender = Gender.FEMALE
+        self.screen.profile_idx = 0
+        self.screen._update_profile_labels()
+        self.assertTrue(self.screen.profile_desc_dirty)
+
+        # Clear description sequence must span rows 10, 11, and 12 across inner_width
+        clear_seq = self.screen._clear_profile_desc_ansi()
+        self.assertIn("\033[10;", clear_seq)
+        self.assertIn("\033[11;", clear_seq)
+        self.assertIn("\033[12;", clear_seq)
+        blank = " " * self.screen.profile_panel.inner_width
+        self.assertEqual(clear_seq.count(blank), 3)
+
+        # Render should invoke clear sequence and reset dirty flag
+        written_chunks = []
+        with patch("eldoria_py.terminal.screen.TerminalScreen.write", side_effect=lambda s: written_chunks.append(s)):
+            self.screen._render()
+
+        self.assertFalse(self.screen.profile_desc_dirty)
+        self.assertTrue(any(clear_seq in chunk for chunk in written_chunks))
+
+        # Cycle to next archetype (Light Priestess)
+        key_right = KeyEvent(key=KeyCode.RIGHT)
+        self.screen._handle_input(key_right, self.context, self.mock_core)
+        self.assertEqual(self.screen.profile_idx, 1)
+        self.assertTrue(self.screen.profile_desc_dirty)
+
+        written_chunks.clear()
+        with patch("eldoria_py.terminal.screen.TerminalScreen.write", side_effect=lambda s: written_chunks.append(s)):
+            self.screen._render()
+
+        self.assertFalse(self.screen.profile_desc_dirty)
+        self.assertTrue(any(clear_seq in chunk for chunk in written_chunks))
+
+    def test_portrait_card_lifecycle_and_revisitation(self):
+        """Verifies portrait card border and glyph render reliably on first visit, cycling, and subsequent revisits."""
+        from unittest.mock import patch
+        from eldoria_py.terminal.box import strip_ansi
+
+        # 1. First visit to Profile selection
+        self.screen._switch_substate(CharacterBuilderSubstate.PROFILE_SELECTION)
+        self.assertTrue(self.screen.portrait_card.is_active())
+        self.assertTrue(self.screen.portrait_glyph_label.is_active())
+
+        written_chunks = []
+        with patch("eldoria_py.terminal.screen.TerminalScreen.write", side_effect=lambda s: written_chunks.append(s)):
+            self.screen._render()
+
+        rendered = strip_ansi("".join(written_chunks))
+        self.assertIn("╭───────────╮", rendered)
+        self.assertIn("⚔", rendered)
+
+        # 2. Cycle to Sun Paladin
+        self.screen.profile_idx = 1
+        self.screen._update_profile_labels()
+        written_chunks.clear()
+        with patch("eldoria_py.terminal.screen.TerminalScreen.write", side_effect=lambda s: written_chunks.append(s)):
+            self.screen._render()
+
+        rendered_paladin = strip_ansi("".join(written_chunks))
+        self.assertIn("╭───────────╮", rendered_paladin)
+        self.assertIn("🛡", rendered_paladin)
+
+        # 3. Transition to Confirmation (card should deactivate)
+        self.screen._switch_substate(CharacterBuilderSubstate.CONFIRMATION)
+        self.assertFalse(self.screen.portrait_card.is_active())
+
+        # 4. Return to Profile selection (subsequent visitation - card must NOT be absent)
+        self.screen._switch_substate(CharacterBuilderSubstate.PROFILE_SELECTION)
+        self.assertTrue(self.screen.portrait_card.is_active())
+
+        written_chunks.clear()
+        with patch("eldoria_py.terminal.screen.TerminalScreen.write", side_effect=lambda s: written_chunks.append(s)):
+            self.screen._render()
+
+        rendered_revisit = strip_ansi("".join(written_chunks))
+        self.assertIn("╭───────────╮", rendered_revisit)
+        self.assertIn("🛡", rendered_revisit)
+
+        # 5. New character creation for Slot 2
+        self.screen.exit(self.context)
+        self.screen.set_target_slot(1, None)
+        self.screen._switch_substate(CharacterBuilderSubstate.PROFILE_SELECTION)
+        self.assertTrue(self.screen.portrait_card.is_active())
+
+        written_chunks.clear()
+        with patch("eldoria_py.terminal.screen.TerminalScreen.write", side_effect=lambda s: written_chunks.append(s)):
+            self.screen._render()
+
+        rendered_slot2 = strip_ansi("".join(written_chunks))
+        self.assertIn("╭───────────╮", rendered_slot2)
+        self.assertIn("⚕", rendered_slot2)
+
 
 if __name__ == "__main__":
     unittest.main()
+

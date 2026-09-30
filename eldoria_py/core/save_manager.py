@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 import random
 import shutil
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from ..combat.entities import Party
 from ..procgen.poi import POIType
@@ -139,6 +139,7 @@ class SaveManager:
         party: Party,
         macro_size: str = "medium",
         seed: Optional[int] = None,
+        progress_callback: Optional[Callable[[float], None]] = None,
     ) -> Tuple[WorldMacroMap, Dict[str, Any]]:
         """
         Initializes a brand-new adventure in slot_idx:
@@ -161,7 +162,13 @@ class SaveManager:
             mw, mh, label = 12, 12, "Standard"
 
         # Generate world macro map once
-        world_macro = WorldMacroMap(seed=seed, macro_width=mw, macro_height=mh, generate=True)
+        world_macro = WorldMacroMap(
+            seed=seed,
+            macro_width=mw,
+            macro_height=mh,
+            generate=True,
+            progress_callback=progress_callback,
+        )
 
         slot_dir = self.get_slot_dir(slot_idx)
         slot_dir.mkdir(parents=True, exist_ok=True)
@@ -214,6 +221,9 @@ class SaveManager:
         )
         header_path = slot_dir / "header.json"
         _write_json(header_path, header.to_dict())
+
+        if progress_callback:
+            progress_callback(1.0)
 
         return world_macro, exploration_state
 

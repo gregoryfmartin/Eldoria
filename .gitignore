@@ -5,4 +5,8 @@ ASM
 .venv/
 __pycache__/
 *.pyc
-saves/
+saves/
+dist/
+*.build/
+*.dist/
+*.onefile-build/

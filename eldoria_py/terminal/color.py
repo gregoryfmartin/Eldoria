@@ -285,9 +285,12 @@ class ColorLibrary:
     AppleBrownLight = TrueColor(hex_val=0xAC7F5E)
     AppleBrownDark = TrueColor(hex_val=0xB78A66)
 
-    # Gemstone Colors
+    # Gemstone & Pigment Colors
     EmeraldGreen = TrueColor(hex_val=0x50C878)
     RubyRed = TrueColor(hex_val=0xE0115F)
+    AlizarinCrimson = TrueColor(hex_val=0xE32636)
+    Alizarin = AlizarinCrimson
+    AmberGold = TrueColor(hex_val=0xE5A93C)
 
     # Game UI Design Tokens
     WindowBorderActiveColor = Ivory
@@ -322,6 +325,8 @@ class ColorLibrary:
     LIST_ITEM_CURRENT_HIGHLIGHT = ListItemCurrentHighlight
     EMERALD_GREEN = EmeraldGreen
     RUBY_RED = RubyRed
+    ALIZARIN = AlizarinCrimson
+    ALIZARIN_CRIMSON = AlizarinCrimson
 
 
 def rainbow_color(hue: float) -> TrueColor:
@@ -346,4 +351,31 @@ def format_chromatic_wave(
         c = rainbow_color(phase + i * char_step)
         out.append(f"{bold_code}{c.to_fg_ansi()}{ch}\033[0m")
     return "".join(out)
+
+
+def interpolate_color(c1: TrueColor, c2: TrueColor, t: float) -> TrueColor:
+    """Linearly interpolates between two TrueColors by factor t (clamped to 0.0..1.0)."""
+    t = max(0.0, min(1.0, t))
+    r = int(round(c1.r + (c2.r - c1.r) * t))
+    g = int(round(c1.g + (c2.g - c1.g) * t))
+    b = int(round(c1.b + (c2.b - c1.b) * t))
+    return TrueColor(r, g, b)
+
+
+def interpolate_alizarin_to_emerald(t: float) -> TrueColor:
+    """
+    Interpolates from Alizarin Crimson (#E32636) through Amber Gold (#E5A93C)
+    to Emerald Green (#50C878) across t in [0.0, 1.0].
+    """
+    t = max(0.0, min(1.0, t))
+    c_start = ColorLibrary.AlizarinCrimson
+    c_mid = ColorLibrary.AmberGold
+    c_end = ColorLibrary.EmeraldGreen
+
+    if t <= 0.5:
+        sub_t = t / 0.5
+        return interpolate_color(c_start, c_mid, sub_t)
+    else:
+        sub_t = (t - 0.5) / 0.5
+        return interpolate_color(c_mid, c_end, sub_t)
 

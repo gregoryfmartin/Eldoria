@@ -50,6 +50,8 @@ class CharacterBuilderSubstate(IntEnum):
 class GSCharacterBuilderScreen(SMState):
     """Interactive character creation wizard for configuring party members with UI controls."""
 
+    MAX_NAME_LENGTH: int = 4
+
     STAT_KEYS: List[StatId] = [
         StatId.ATTACK,
         StatId.DEFENSE,
@@ -87,6 +89,7 @@ class GSCharacterBuilderScreen(SMState):
         # Substate tracking
         self.substate: CharacterBuilderSubstate = CharacterBuilderSubstate.NAME_ENTRY
         self.substate_dirty: bool = False
+        self.profile_desc_dirty: bool = False
 
         # Character attributes being configured
         self.char_name: str = "Hero"
@@ -112,6 +115,12 @@ class GSCharacterBuilderScreen(SMState):
     @property
     def is_compact(self) -> bool:
         return self.screen_width < 70
+
+    @property
+    def name_fixed_col(self) -> int:
+        """Fixed column position for the Name label and input field, centered on maximum name length."""
+        max_field_len = len("Name: ") + self.MAX_NAME_LENGTH + len("_")
+        return self.main_panel.inner_left + max(0, (self.main_panel.inner_width - max_field_len) // 2)
 
     def _build_title(self) -> str:
         role_tag = "★ Party Leader" if self.target_slot == 0 else f"Slot {self.target_slot + 1}"
@@ -160,7 +169,13 @@ class GSCharacterBuilderScreen(SMState):
             has_border=False,
         )
         self.name_panel.add_label("Enter Character Name (up to 4 characters):", row=5, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
-        self.name_display_label = self.name_panel.add_label(f"Name: {self.char_name}_", row=7, align="center", fg_color=ColorLibrary.AppleGreenLight, decorations=ATDecoration(bold=True))
+        self.name_display_label = self.name_panel.add_label(
+            self._name_display_text(),
+            row=7,
+            col=self.name_fixed_col,
+            fg_color=ColorLibrary.AppleGreenLight,
+            decorations=ATDecoration(bold=True),
+        )
         name_help1 = (
             "Type name. [Backspace] deletes characters."
             if self.is_compact
@@ -332,6 +347,9 @@ class GSCharacterBuilderScreen(SMState):
         self.breadcrumbs_label.set_user_data(bc_text)
 
     def _switch_substate(self, new_substate: CharacterBuilderSubstate) -> None:
+        if self.substate == CharacterBuilderSubstate.PROFILE_SELECTION and new_substate != CharacterBuilderSubstate.PROFILE_SELECTION:
+            self.portrait_card.deactivate()
+
         if self.substate in self._substate_panels:
             self._substate_panels[self.substate].deactivate()
         self.substate = new_substate
@@ -347,7 +365,9 @@ class GSCharacterBuilderScreen(SMState):
         elif new_substate == CharacterBuilderSubstate.AFFINITY_SELECTION:
             self._update_affinity_labels()
         elif new_substate == CharacterBuilderSubstate.PROFILE_SELECTION:
+            self.portrait_card.activate()
             self._update_profile_labels()
+            self.portrait_card.set_all_dirty()
         elif new_substate == CharacterBuilderSubstate.CONFIRMATION:
             self._update_confirm_labels()
 
@@ -357,13 +377,12 @@ class GSCharacterBuilderScreen(SMState):
 
     # Label Formatting & Synchronization Helpers
     def _name_display_text(self) -> str:
-        return f"Name: \033[1;32m{self.char_name}\033[1;33m_\033[0m"
+        pad = " " * max(0, self.MAX_NAME_LENGTH - len(self.char_name))
+        return f"Name: \033[1;32m{self.char_name}\033[1;33m_\033[0m{pad}"
 
     def _update_name_labels(self) -> None:
         text = self._name_display_text()
-        vlen = visible_width(text)
-        col = self.main_panel.inner_left + max(0, (self.main_panel.inner_width - vlen) // 2)
-        self.name_display_label.coordinates = ATCoordinates(7, col)
+        self.name_display_label.coordinates = ATCoordinates(7, self.name_fixed_col)
         self.name_display_label.set_user_data(text)
 
     def _male_option_text(self) -> str:
@@ -465,11 +484,18 @@ class GSCharacterBuilderScreen(SMState):
         return f"\033[1;37m{cur.name}\033[0m  \033[36m[{self.profile_idx + 1}/{len(catalog)}]\033[0m"
 
     def _update_profile_labels(self) -> None:
+        self.profile_desc_dirty = True
         catalog = get_portraits_for_gender(self.gender)
         cur = catalog[self.profile_idx % len(catalog)]
+        self.portrait_card.border_draw_colors = [cur.accent_color for _ in range(8)]
         self.portrait_card.set_border_color(cur.accent_color)
         self.portrait_glyph_label.fg_color = cur.accent_color
-        self.portrait_glyph_label.set_user_data(f"  {cur.glyph}  ")
+        glyph_text = f"  {cur.glyph}  "
+        vlen = visible_width(glyph_text)
+        col = self.portrait_card.inner_left + max(0, (self.portrait_card.inner_width - vlen) // 2)
+        self.portrait_glyph_label.coordinates = ATCoordinates(7, col)
+        self.portrait_glyph_label.set_user_data(glyph_text)
+        self.portrait_card.set_all_dirty()
         self.profile_name_label.set_user_data(self._profile_name_text())
 
         if self.is_compact:
@@ -665,6 +691,8 @@ class GSCharacterBuilderScreen(SMState):
 
     def exit(self, context: Context) -> None:
         super().exit(context)
+        if hasattr(self, "portrait_card") and self.portrait_card.is_active():
+            self.portrait_card.deactivate()
         TerminalScreen.clear_screen()
         TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
@@ -700,7 +728,7 @@ class GSCharacterBuilderScreen(SMState):
                     self.char_name = self.char_name[:-1]
                     self._update_name_labels()
             elif key_info.char and key_info.char.isprintable() and len(key_info.char) == 1:
-                if len(self.char_name) < 4:
+                if len(self.char_name) < self.MAX_NAME_LENGTH:
                     self.char_name += key_info.char
                     self._update_name_labels()
 
@@ -795,6 +823,20 @@ class GSCharacterBuilderScreen(SMState):
         blank = " " * width
         return "".join(f"\033[{r};{left}H{blank}" for r in range(4, 22))
 
+    def _clear_profile_desc_ansi(self) -> str:
+        """Erases archetype description rows 10..12 across inner_left to inner_right of the profile panel."""
+        left = self.profile_panel.inner_left
+        width = self.profile_panel.inner_width
+        blank = " " * width
+        return "".join(f"\033[{r};{left}H{blank}" for r in range(10, 13))
+
+    def _clear_portrait_card_interior_ansi(self) -> str:
+        """Erases interior row 7 of the portrait card between inner borders."""
+        left = self.portrait_card.inner_left
+        width = self.portrait_card.inner_width
+        blank = " " * width
+        return f"\033[7;{left}H{blank}"
+
     def _render(self) -> None:
         """Atomic selective rendering of the Character Builder screen using UI components."""
         TerminalScreen.write(ATControlSequences.DrawOptimizeOn)
@@ -806,6 +848,14 @@ class GSCharacterBuilderScreen(SMState):
         if self.substate_dirty:
             TerminalScreen.write(self._clear_content_rect_ansi())
             self.substate_dirty = False
+            if self.substate == CharacterBuilderSubstate.PROFILE_SELECTION:
+                self.portrait_card.set_all_dirty()
+
+        # In profile substate, completely clear the description area before writing new text
+        if self.substate == CharacterBuilderSubstate.PROFILE_SELECTION and self.profile_desc_dirty:
+            TerminalScreen.write(self._clear_profile_desc_ansi())
+            TerminalScreen.write(self._clear_portrait_card_interior_ansi())
+            self.profile_desc_dirty = False
 
         # Draw active substate panel
         active_panel = self._substate_panels.get(self.substate)
