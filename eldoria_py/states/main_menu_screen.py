@@ -81,7 +81,7 @@ class GSMainMenuScreen(SMState):
     RIGHT_WIDTH: int = 55
     TOTAL_ROWS: int = 40
 
-    CATEGORIES = ["Status", "Items", "Equipment", "Magic", "Save", "Quit"]
+    CATEGORIES = ["Status", "Items", "Equipment", "Magic", "Quests", "Save", "Quit"]
 
     EQUIP_SLOTS: list[EquipmentSlot] = [
         EquipmentSlot.WEAPON,
@@ -149,6 +149,11 @@ class GSMainMenuScreen(SMState):
         self.magic_cursor: int = 0
         self.magic_modal_mode: str = "NONE"  # "NONE", "TARGET_SELECT"
         self.magic_target_cursor: int = 0
+
+        # Submenu State: QUESTS (Structured Accordion)
+        self.quest_cursor: int = 0
+        self.quest_scroll: int = 0
+        self.quest_expanded_nodes: set[str] = set()
 
         # Submenu State: SAVE (Formal UIPanel components)
         self.save_slot_cursor: int = 0  # 0..2 (slots 1..3)
@@ -346,14 +351,17 @@ class GSMainMenuScreen(SMState):
 
         # 3. SUBMENU FOCUS (Right Pane)
         if self.focus_mode == "SUBMENU":
+            cat = self.CATEGORIES[self.category_idx]
             if key_info.key == KeyCode.ESCAPE:
                 if self.equip_drawer_open:
                     self.equip_drawer_open = False
                     return
+                if cat == "Quests":
+                    if self._handle_quests_escape():
+                        return
                 self.focus_mode = "CATEGORIES"
                 return
 
-            cat = self.CATEGORIES[self.category_idx]
             if cat == "Status":
                 self.focus_mode = "CATEGORIES"
                 return
@@ -363,6 +371,8 @@ class GSMainMenuScreen(SMState):
                 self._handle_equipment_input(key_info)
             elif cat == "Magic":
                 self._handle_magic_input(key_info)
+            elif cat == "Quests":
+                self._handle_quests_input(key_info)
             elif cat == "Save":
                 self._handle_save_input(key_info)
             elif cat == "Quit":
@@ -387,6 +397,16 @@ class GSMainMenuScreen(SMState):
             self.focus_mode = "SUBMENU"
             self.magic_cursor = 0
             self.magic_modal_mode = "NONE"
+        elif cat == "Quests":
+            self.focus_mode = "SUBMENU"
+            self.quest_cursor = 0
+            self.quest_scroll = 0
+            qm = getattr(self.party, "quest_manager", None)
+            if qm:
+                self.quest_expanded_nodes.add(qm.storyline.questline_id)
+                act_q = qm.storyline.get_active_quest()
+                if act_q:
+                    self.quest_expanded_nodes.add(act_q.quest_id)
         elif cat == "Save":
             self.focus_mode = "SUBMENU"
             self.save_slot_cursor = 0
@@ -890,6 +910,8 @@ class GSMainMenuScreen(SMState):
             sub_lines = self._render_equipment_submenu()
         elif cat == "Magic":
             sub_lines = self._render_magic_submenu()
+        elif cat == "Quests":
+            sub_lines = self._render_quests_submenu()
         elif cat == "Save":
             sub_lines = self._render_save_submenu()
         else:
@@ -1419,4 +1441,323 @@ class GSMainMenuScreen(SMState):
             return "\033[33m[↑↓] Select Item  [Tab] Category Filter  [Enter] Item Action  [Esc] Back\033[0m"
         elif self.CATEGORIES[self.category_idx] == "Save":
             return "\033[33m[↑↓] Select Slot  [Enter] Save Game  [Esc] Back\033[0m"
+        elif self.CATEGORIES[self.category_idx] == "Quests":
+            return "\033[33m[↑↓] Navigate Quests  [Enter] Expand/Collapse  [T/Space] Track  [Esc] Up\033[0m"
         return "\033[33m[↑↓] Navigate  [◄►] Switch Hero  [Enter] Select  [Esc] Back\033[0m"
+
+    # -------------------------------------------------------------------------
+    # Quest Submenu: Structured Accordion
+    # -------------------------------------------------------------------------
+    def _build_flat_quest_tree(self) -> list[dict]:
+        """
+        Flattens the hierarchical questlines -> quests -> steps structure into
+        an accordion list based on which nodes are in self.quest_expanded_nodes.
+        Completed quests and steps sink to the bottom.
+        """
+        qm = getattr(self.party, "quest_manager", None)
+        if not qm:
+            return []
+
+        flat_nodes: list[dict] = []
+        tracked_ql, tracked_q, tracked_s = qm.get_tracked_artifact()
+
+        # 1. Storyline Questline (always at top)
+        story_expanded = qm.storyline.questline_id in self.quest_expanded_nodes
+        story_tracked = (tracked_ql is qm.storyline)
+        flat_nodes.append({
+            "id": qm.storyline.questline_id,
+            "type": "QUESTLINE",
+            "depth": 0,
+            "obj": qm.storyline,
+            "parent_ql": qm.storyline,
+            "parent_q": None,
+            "is_expanded": story_expanded,
+            "is_tracked": story_tracked,
+            "is_completed": qm.storyline.is_completed,
+            "title": qm.storyline.title,
+            "is_storyline": True,
+        })
+
+        if story_expanded:
+            sorted_quests = sorted(qm.storyline.quests, key=lambda q: 1 if q.is_completed else 0)
+            for q in sorted_quests:
+                q_expanded = q.quest_id in self.quest_expanded_nodes
+                q_tracked = (story_tracked and tracked_q is q)
+                flat_nodes.append({
+                    "id": q.quest_id,
+                    "type": "QUEST",
+                    "depth": 1,
+                    "obj": q,
+                    "parent_ql": qm.storyline,
+                    "parent_q": q,
+                    "is_expanded": q_expanded,
+                    "is_tracked": q_tracked,
+                    "is_completed": q.is_completed,
+                    "title": q.title,
+                    "is_storyline": True,
+                })
+                if q_expanded:
+                    sorted_steps = sorted(q.steps, key=lambda s: 1 if s.is_completed else 0)
+                    for s in sorted_steps:
+                        s_tracked = (q_tracked and tracked_s is s)
+                        flat_nodes.append({
+                            "id": s.step_id,
+                            "type": "STEP",
+                            "depth": 2,
+                            "obj": s,
+                            "parent_ql": qm.storyline,
+                            "parent_q": q,
+                            "is_expanded": False,
+                            "is_tracked": s_tracked,
+                            "is_completed": s.is_completed,
+                            "title": s.description,
+                            "is_storyline": True,
+                        })
+
+        # 2. Side Questlines (incomplete first, completed at bottom)
+        sorted_side_qls = sorted(qm.side_questlines, key=lambda sq: 1 if sq.is_completed else 0)
+        for sq in sorted_side_qls:
+            sq_expanded = sq.questline_id in self.quest_expanded_nodes
+            sq_tracked = (tracked_ql is sq)
+            flat_nodes.append({
+                "id": sq.questline_id,
+                "type": "QUESTLINE",
+                "depth": 0,
+                "obj": sq,
+                "parent_ql": sq,
+                "parent_q": None,
+                "is_expanded": sq_expanded,
+                "is_tracked": sq_tracked,
+                "is_completed": sq.is_completed,
+                "title": sq.title,
+                "is_storyline": False,
+            })
+
+            if sq_expanded:
+                sorted_quests = sorted(sq.quests, key=lambda q: 1 if q.is_completed else 0)
+                for q in sorted_quests:
+                    q_expanded = q.quest_id in self.quest_expanded_nodes
+                    q_tracked = (sq_tracked and tracked_q is q)
+                    flat_nodes.append({
+                        "id": q.quest_id,
+                        "type": "QUEST",
+                        "depth": 1,
+                        "obj": q,
+                        "parent_ql": sq,
+                        "parent_q": q,
+                        "is_expanded": q_expanded,
+                        "is_tracked": q_tracked,
+                        "is_completed": q.is_completed,
+                        "title": q.title,
+                        "is_storyline": False,
+                    })
+                    if q_expanded:
+                        sorted_steps = sorted(q.steps, key=lambda s: 1 if s.is_completed else 0)
+                        for s in sorted_steps:
+                            s_tracked = (q_tracked and tracked_s is s)
+                            flat_nodes.append({
+                                "id": s.step_id,
+                                "type": "STEP",
+                                "depth": 2,
+                                "obj": s,
+                                "parent_ql": sq,
+                                "parent_q": q,
+                                "is_expanded": False,
+                                "is_tracked": s_tracked,
+                                "is_completed": s.is_completed,
+                                "title": s.description,
+                                "is_storyline": False,
+                            })
+
+        return flat_nodes
+
+    def _handle_quests_input(self, key_info: Any) -> None:
+        qm = getattr(self.party, "quest_manager", None)
+        if not qm:
+            return
+
+        flat_tree = self._build_flat_quest_tree()
+        if not flat_tree:
+            return
+
+        self.quest_cursor = max(0, min(len(flat_tree) - 1, self.quest_cursor))
+
+        if key_info.key == KeyCode.UP:
+            if self.quest_cursor > 0:
+                self.quest_cursor -= 1
+        elif key_info.key == KeyCode.DOWN:
+            if self.quest_cursor < len(flat_tree) - 1:
+                self.quest_cursor += 1
+        elif key_info.key in (KeyCode.ENTER, KeyCode.NONE) and (key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n")):
+            node = flat_tree[self.quest_cursor]
+            if node["type"] in ("QUESTLINE", "QUEST"):
+                node_id = node["id"]
+                if node_id in self.quest_expanded_nodes:
+                    self.quest_expanded_nodes.remove(node_id)
+                else:
+                    self.quest_expanded_nodes.add(node_id)
+            elif node["type"] == "STEP":
+                s_obj = node["obj"]
+                p_q = node["parent_q"]
+                p_ql = node["parent_ql"]
+                qm.set_tracked_artifact(
+                    questline_id=p_ql.questline_id,
+                    quest_id=p_q.quest_id if p_q else None,
+                    step_id=s_obj.step_id,
+                )
+                self._set_banner(f"📌 Tracking: {s_obj.description}")
+
+        elif key_info.char in ("t", "T", " "):
+            node = flat_tree[self.quest_cursor]
+            p_ql = node["parent_ql"]
+            p_q = node.get("parent_q")
+            if node["type"] == "QUESTLINE":
+                qm.set_tracked_artifact(questline_id=p_ql.questline_id)
+                self._set_banner(f"📌 Tracking: {p_ql.title}")
+            elif node["type"] == "QUEST":
+                qm.set_tracked_artifact(
+                    questline_id=p_ql.questline_id,
+                    quest_id=node["obj"].quest_id,
+                )
+                self._set_banner(f"📌 Tracking: {node['title']}")
+            elif node["type"] == "STEP":
+                qm.set_tracked_artifact(
+                    questline_id=p_ql.questline_id,
+                    quest_id=p_q.quest_id if p_q else None,
+                    step_id=node["obj"].step_id,
+                )
+                self._set_banner(f"📌 Tracking: {node['title']}")
+
+    def _handle_quests_escape(self) -> bool:
+        """
+        Hierarchical collapse / ascending escape logic:
+        - If on a Step: jumps to parent Quest and collapses it.
+        - If on an expanded Quest: collapses it.
+        - If on a collapsed Quest: jumps to parent Questline and collapses it.
+        - If on an expanded Questline: collapses it.
+        - If on a collapsed Questline: returns False (allowing escape to Categories rail).
+        """
+        flat_tree = self._build_flat_quest_tree()
+        if not flat_tree or self.quest_cursor >= len(flat_tree):
+            return False
+
+        node = flat_tree[self.quest_cursor]
+        node_type = node["type"]
+
+        if node_type == "STEP":
+            p_q = node["parent_q"]
+            if p_q and p_q.quest_id in self.quest_expanded_nodes:
+                self.quest_expanded_nodes.remove(p_q.quest_id)
+                for idx, n in enumerate(self._build_flat_quest_tree()):
+                    if n["id"] == p_q.quest_id:
+                        self.quest_cursor = idx
+                        break
+                return True
+
+        elif node_type == "QUEST":
+            if node["id"] in self.quest_expanded_nodes:
+                self.quest_expanded_nodes.remove(node["id"])
+                return True
+            else:
+                p_ql = node["parent_ql"]
+                if p_ql and p_ql.questline_id in self.quest_expanded_nodes:
+                    self.quest_expanded_nodes.remove(p_ql.questline_id)
+                    for idx, n in enumerate(self._build_flat_quest_tree()):
+                        if n["id"] == p_ql.questline_id:
+                            self.quest_cursor = idx
+                            break
+                    return True
+
+        elif node_type == "QUESTLINE":
+            if node["id"] in self.quest_expanded_nodes:
+                self.quest_expanded_nodes.remove(node["id"])
+                return True
+
+        return False
+
+    def _render_quests_submenu(self) -> list[str]:
+        lines: list[str] = []
+        lines.append(" \033[1;36mQuest Journal\033[0m ────────── \033[90m[Enter]Toggle [T]Track [Esc]Up\033[0m")
+        lines.append("")
+
+        qm = getattr(self.party, "quest_manager", None)
+        if not qm:
+            lines.append(" \033[90mNo active quest log found.\033[0m")
+            return lines
+
+        flat_tree = self._build_flat_quest_tree()
+        if not flat_tree:
+            lines.append(" \033[90mNo quests recorded in journal.\033[0m")
+            return lines
+
+        total_items = len(flat_tree)
+        self.quest_cursor = max(0, min(total_items - 1, self.quest_cursor))
+        max_visible = 30
+        if self.quest_cursor >= self.quest_scroll + max_visible:
+            self.quest_scroll = self.quest_cursor - max_visible + 1
+        elif self.quest_cursor < self.quest_scroll:
+            self.quest_scroll = self.quest_cursor
+        self.quest_scroll = max(0, min(self.quest_scroll, max(0, total_items - max_visible)))
+
+        visible_nodes = flat_tree[self.quest_scroll : self.quest_scroll + max_visible]
+
+        for rel_idx, node in enumerate(visible_nodes):
+            abs_idx = self.quest_scroll + rel_idx
+            is_cur = (abs_idx == self.quest_cursor and self.focus_mode == "SUBMENU")
+            cursor_str = "\033[1;36m►\033[0m " if is_cur else "  "
+
+            is_tracked = node["is_tracked"]
+            is_completed = node["is_completed"]
+            tracked_tag = " \033[1;32m[📌 TRACKED]\033[0m" if is_tracked else ""
+
+            if node["type"] == "QUESTLINE":
+                expand_glyph = "▼ " if node["is_expanded"] else "► "
+                if node["is_storyline"]:
+                    badge = "\033[1;33m★ STORY:\033[0m"
+                    title_col = "\033[1;37m" if is_cur else "\033[37m"
+                else:
+                    badge = "\033[1;36m◇ SIDE:\033[0m"
+                    title_col = "\033[1;37m" if is_cur else "\033[36m"
+
+                comp_tag = " \033[32m[Completed ✔]\033[0m" if is_completed else ""
+                line = f"{cursor_str}{expand_glyph}{badge} {title_col}{node['title']}\033[0m{comp_tag}{tracked_tag}"
+
+            elif node["type"] == "QUEST":
+                indent = "    "
+                expand_glyph = "▼ " if node["is_expanded"] else "► "
+                q_obj = node["obj"]
+                step_done_cnt = sum(1 for s in q_obj.steps if s.is_completed)
+                progress_str = f"({step_done_cnt}/{len(q_obj.steps)})"
+                if is_completed:
+                    comp_tag = " \033[32m[✔ Completed]\033[0m"
+                    title_col = "\033[90m"
+                else:
+                    comp_tag = f" \033[33m{progress_str}\033[0m"
+                    title_col = "\033[1;37m" if is_cur else "\033[37m"
+
+                line = f"{cursor_str}{indent}{expand_glyph}{title_col}{node['title']}\033[0m{comp_tag}{tracked_tag}"
+
+            else:  # STEP
+                indent = "      "
+                s_obj = node["obj"]
+                bullet = "• "
+                if is_completed:
+                    status_str = "\033[32m[✔ Done]\033[0m"
+                    title_col = "\033[90m"
+                else:
+                    status_str = f"\033[33m[{s_obj.formatted_progress}]\033[0m"
+                    title_col = "\033[37m" if not is_cur else "\033[1;37m"
+
+                line = f"{cursor_str}{indent}{bullet}{title_col}{node['title']}\033[0m {status_str}{tracked_tag}"
+
+            lines.append(line)
+
+        # Truncate lines to RIGHT_WIDTH if needed
+        trimmed_lines = []
+        for l in lines:
+            if visible_width(l) > self.RIGHT_WIDTH:
+                trimmed_lines.append(truncate_ansi(l, self.RIGHT_WIDTH))
+            else:
+                trimmed_lines.append(l)
+
+        return trimmed_lines

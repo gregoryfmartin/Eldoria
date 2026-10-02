@@ -122,7 +122,7 @@ class TestMainMenuScreen(unittest.TestCase):
             )
 
         # 4. Quit Modal
-        self.screen.category_idx = 5  # Quit
+        self.screen.category_idx = self.screen.CATEGORIES.index("Quit")
         right_lines = self.screen._render_right_pane()
         for r_idx, line in enumerate(right_lines):
             cell = _pad_cell(line, 55)
@@ -157,9 +157,9 @@ class TestMainMenuScreen(unittest.TestCase):
         self.screen._handle_input(KeyEvent(key=KeyCode.UP), self.context, self.mock_core)
         self.assertEqual(self.screen.category_idx, 0)
 
-        # Up arrow at 0 wraps to 5 (Quit)
+        # Up arrow at 0 wraps to last category (Quit)
         self.screen._handle_input(KeyEvent(key=KeyCode.UP), self.context, self.mock_core)
-        self.assertEqual(self.screen.category_idx, 5)
+        self.assertEqual(self.screen.category_idx, len(self.screen.CATEGORIES) - 1)
 
     def test_hero_cycling_arrows(self):
         """Tests that left/right arrows cycle through heroes in the party."""
@@ -405,7 +405,7 @@ class TestMainMenuScreen(unittest.TestCase):
 
     def test_save_slot_selection_and_execution(self):
         """Tests selecting a save slot and executing game state save."""
-        self.screen.category_idx = 4  # Save
+        self.screen.category_idx = self.screen.CATEGORIES.index("Save")
         self.screen.focus_mode = "SUBMENU"
         self.screen.save_slot_cursor = 0  # Slot 1
 
@@ -415,7 +415,7 @@ class TestMainMenuScreen(unittest.TestCase):
 
     def test_quit_modal_options(self):
         """Tests quit modal choices: Return to Title and Quit Desktop."""
-        self.screen.category_idx = 5  # Quit
+        self.screen.category_idx = self.screen.CATEGORIES.index("Quit")
         self.screen.focus_mode = "CATEGORIES"
 
         # Press Enter to open Quit modal
@@ -436,7 +436,7 @@ class TestMainMenuScreen(unittest.TestCase):
 
     def test_quit_modal_line_highlighting(self):
         """Verifies full-width blue line highlighting on active choice in Quit modal."""
-        self.screen.category_idx = 5  # Quit
+        self.screen.category_idx = self.screen.CATEGORIES.index("Quit")
         self.screen.focus_mode = "MODAL"
         self.screen.quit_option_cursor = 0
 
@@ -502,7 +502,7 @@ class TestMainMenuScreen(unittest.TestCase):
             self.assertEqual(panel.title, f"SLOT {idx + 1}")
 
         # Render save submenu and inspect lines
-        self.screen.category_idx = 4  # Save
+        self.screen.category_idx = self.screen.CATEGORIES.index("Save")
         right_lines = self.screen._render_save_submenu()
         self.assertGreater(len(right_lines), 0)
 

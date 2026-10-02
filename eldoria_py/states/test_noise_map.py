@@ -19,6 +19,7 @@ from ..procgen.map_generator import (
     BIOME_CONFIGS,
 )
 from ..procgen.poi import POIDescriptor, POIType, WarpTarget
+from ..procgen.npc import NPC, NPCRole, DialogCategory
 from ..procgen.world_macro import WorldMacroMap
 from ..core.save_manager import SaveManager
 from ..terminal.ansi import ATCoordinates, ATControlSequences
@@ -28,6 +29,7 @@ from ..terminal.screen import TerminalScreen
 from ..terminal.box import visible_width, truncate_ansi, clear_buffer_tail
 from ..ui.panel import UIPanel
 from ..ui.container import UIContainer
+from ..ui.npc_dialog import NPCDialogModal, DialogChoice
 from ..combat import (
     StatId,
     Party,
@@ -111,6 +113,12 @@ class GSNoiseMapTestScreen(SMState):
             has_border=True,
         )
         self.item_picker_panel.current_window_designs = dict(UIContainer.WINDOW_DESIGN_SQUARE)
+
+        # NPC Dialogue Modal (7 rows high at bottom of screen)
+        self.npc_dialog: NPCDialogModal = NPCDialogModal(
+            screen_width=self.map_width,
+            screen_height=self.map_height + 3,
+        )
 
     @property
     def playtime_seconds(self) -> int:
@@ -224,6 +232,9 @@ class GSNoiseMapTestScreen(SMState):
             if not self.party.is_wiped:
                 self.exploration_flags[f"boss_defeated_{active_boss}"] = True
                 self.last_status_msg = f"★ VICTORY! {active_boss} has been defeated!"
+                qm = getattr(self.party, "quest_manager", None)
+                if qm:
+                    qm.notify_enemy_defeated(active_boss, count=1, party=self.party)
             context.set("active_boss_fight", None)
 
         # Check if returning from a wiped party battle (Defeat)
@@ -261,6 +272,16 @@ class GSNoiseMapTestScreen(SMState):
 
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
+
+        if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                for key_info in list(keys_pressed):
+                    handled = self.npc_dialog.handle_key(key_info)
+                    if handled:
+                        keys_pressed.remove(key_info)
+                        break
+            self._render()
+            return
 
         if self.is_item_picker_active:
             picker_items = self._get_picker_items()
@@ -611,8 +632,136 @@ class GSNoiseMapTestScreen(SMState):
             world_macro=self.world_macro,
         )
 
+    def _get_adjacent_npcs(self) -> List[Tuple[NPC, str]]:
+        """Returns list of (NPC, direction_label) adjacent to player's current position."""
+        curr_map = self._current_map()
+        x, y = self.player_x, self.player_y
+        adjacent: List[Tuple[NPC, str]] = []
+
+        directions = [
+            (0, -1, "North"),
+            (0, 1, "South"),
+            (1, 0, "East"),
+            (-1, 0, "West"),
+        ]
+
+        for dx, dy, dir_label in directions:
+            nx, ny = x + dx, y + dy
+            if 0 <= ny < curr_map.height and 0 <= nx < curr_map.width:
+                tile = curr_map.tiles[ny][nx]
+                if tile.npc is not None:
+                    adjacent.append((tile.npc, dir_label))
+
+        return adjacent
+
+    def _start_npc_dialog(self, npc: NPC) -> None:
+        """Opens dialogue modal with the specified NPC and configures choice actions."""
+        self.npc_dialog.screen_width = self.map_width
+        self.npc_dialog.screen_height = self.map_height + 3
+
+        choices: Optional[List[DialogChoice]] = None
+
+        # Check for NPC Side Questline offering
+        qm = getattr(self.party, "quest_manager", None)
+        sq_idx = getattr(npc, "side_quest_template_idx", None)
+        if qm is not None and sq_idx is not None and npc.role not in (
+            NPCRole.KING, NPCRole.INNKEEPER, NPCRole.ITEM_SHOPKEEPER, NPCRole.EQUIP_SHOPKEEPER
+        ):
+            from ..quests.generator import create_side_quest_for_npc
+            loc_name = self.active_poi.name if self.active_poi else "Town"
+            sq, dialogues = create_side_quest_for_npc(
+                npc_id=npc.npc_id,
+                npc_name=npc.name,
+                location_name=loc_name,
+                template_idx=sq_idx,
+            )
+            status = qm.get_npc_quest_status(npc.npc_id)
+
+            if status == "NOT_REGISTERED":
+                npc.dialogue = dialogues["offer"]
+                npc.category = DialogCategory.CHOICE
+
+                def on_quest_yes():
+                    qm.register_side_questline(sq, party=self.party)
+                    self.last_status_msg = f"★ Quest Accepted: {sq.title}!"
+                    npc.dialogue = dialogues["in_progress"]
+                    npc.category = DialogCategory.STANDARD
+
+                def on_quest_no():
+                    self.last_status_msg = f"Declined quest from {npc.name}."
+
+                choices = [
+                    DialogChoice(label="Yes", action=on_quest_yes),
+                    DialogChoice(label="No", action=on_quest_no),
+                ]
+            elif status == "IN_PROGRESS":
+                npc.dialogue = dialogues["in_progress"]
+                npc.category = DialogCategory.STANDARD
+                choices = None
+            elif status == "READY_TO_TURN_IN":
+                npc.dialogue = dialogues["turn_in"]
+                npc.category = DialogCategory.STANDARD
+                choices = None
+                qm.claim_side_quest_rewards(sq.questline_id, party=self.party)
+                self.last_status_msg = f"★ Quest Completed: {sq.title}! ({sq.rewards.formatted_summary()})"
+            elif status == "COMPLETED":
+                npc.dialogue = dialogues["completed"]
+                npc.category = DialogCategory.STANDARD
+                choices = None
+
+        elif npc.category == DialogCategory.CHOICE:
+            if npc.role == NPCRole.INNKEEPER:
+                fee = getattr(npc, "inn_fee", 20)
+
+                def on_inn_yes():
+                    for m in self.party.members:
+                        m.stats[StatId.HIT_POINTS].current = m.max_hp
+                        m.stats[StatId.MAGIC_POINTS].current = m.max_mp
+                    slot = self.active_slot or 1
+                    self._save_to_slot(slot)
+                    self.last_status_msg = f"★ Stayed at the Inn! Party fully restored & saved to Slot {slot}."
+
+                def on_inn_no():
+                    self.last_status_msg = "Decided not to take a room."
+
+                choices = [
+                    DialogChoice(label="Yes", action=on_inn_yes),
+                    DialogChoice(label="No", action=on_inn_no),
+                ]
+            elif npc.role in (NPCRole.ITEM_SHOPKEEPER, NPCRole.EQUIP_SHOPKEEPER):
+                def on_shop_yes():
+                    self.last_status_msg = f"★ {npc.name}'s shop will open in a future update! (Wares preview available in inventory)."
+
+                def on_shop_no():
+                    self.last_status_msg = "Decided not to browse wares."
+
+                choices = [
+                    DialogChoice(label="Yes", action=on_shop_yes),
+                    DialogChoice(label="No", action=on_shop_no),
+                ]
+
+        self.npc_dialog.start_dialog(
+            npc=npc,
+            choices=choices,
+        )
+
     def _handle_interact(self) -> None:
-        """Handles Enter key interaction: enters POI sub-map, rests at Inn, or leaves via egress."""
+        """Handles Enter key interaction: adjacent NPCs, POI entry, resting, or egress."""
+        # 1. Adjacent NPC detection & interaction
+        adjacent_npcs = self._get_adjacent_npcs()
+        if len(adjacent_npcs) == 1:
+            npc, _ = adjacent_npcs[0]
+            self._start_npc_dialog(npc)
+            return
+        elif len(adjacent_npcs) >= 2:
+            self.npc_dialog.screen_width = self.map_width
+            self.npc_dialog.screen_height = self.map_height + 3
+            self.npc_dialog.start_target_selection(
+                adjacent_npcs=adjacent_npcs,
+                on_select=self._start_npc_dialog,
+            )
+            return
+
         curr_map = self._current_map()
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
 
@@ -765,8 +914,21 @@ class GSNoiseMapTestScreen(SMState):
 
         danger_str = f"R{curr_tile.region_code}" if curr_tile.battle_allowed else "Safe"
 
+        adjacent_npcs = self._get_adjacent_npcs()
+
         if self.last_status_msg:
             t_text = f" {party_badge} \033[1;36m{self.last_status_msg}\033[0m"
+        elif adjacent_npcs:
+            if len(adjacent_npcs) == 1:
+                t_text = (
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f"\033[1;32m★ Talk to {adjacent_npcs[0][0].name}\033[0m \033[1;33m[Enter]\033[0m"
+                )
+            else:
+                t_text = (
+                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f"\033[1;32m★ Talk to NPCs ({len(adjacent_npcs)})\033[0m \033[1;33m[Enter]\033[0m"
+                )
         elif self.active_submap is None:
             if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
                 lock_badge = " \033[1;31m[Locked]\033[0m" if (curr_tile.poi and curr_tile.poi.is_locked) else ""
@@ -809,7 +971,9 @@ class GSNoiseMapTestScreen(SMState):
             lines.append(f"│{line}│")
 
         # 4. Bottom controls footer
-        if self.active_submap is None:
+        if adjacent_npcs:
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mTalk  \033[33m[M]\033[0mMenu "
+        elif self.active_submap is None:
             f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu "
         else:
             f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[M]\033[0mMenu "
@@ -834,6 +998,13 @@ class GSNoiseMapTestScreen(SMState):
             for p_idx, p_line in enumerate(panel_lines):
                 out.append(ATCoordinates(10 + p_idx, 16).to_ansi())
                 out.append(p_line)
+
+        # Overlay NPC Dialogue modal if active
+        if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
+            dialog_cmds = self.npc_dialog.render_overlay()
+            for d_row, d_col, d_text in dialog_cmds:
+                out.append(ATCoordinates(d_row, d_col).to_ansi())
+                out.append(d_text)
 
         footer_y = len(lines)
         # Clear tail lines up to 40 (clears leftover rows from larger 80x40 screens)

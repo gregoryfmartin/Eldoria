@@ -11,6 +11,7 @@ from .elements.menu_item import UIMenuItem
 from .elements.menu import UIMenu
 from .elements.party_slot import UIPartySlotItem, UIPartySlotList
 from .elements.stat_bar import UIStatBar, StatNumberState, StatBarType
+from .npc_dialog import NPCDialogModal, DialogState, DialogChoice
 
 __all__ = [
     "UIBase",
@@ -27,4 +28,7 @@ __all__ = [
     "UIStatBar",
     "StatNumberState",
     "StatBarType",
+    "NPCDialogModal",
+    "DialogState",
+    "DialogChoice",
 ]

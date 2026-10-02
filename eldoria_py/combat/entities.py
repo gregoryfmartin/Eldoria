@@ -599,6 +599,7 @@ class Party:
         inventory: Optional[list[dict]] = None,
         quest_items: Optional[list[str]] = None,
         playtime_seconds: int = 0,
+        quest_manager: Optional[Any] = None,
     ):
         self.members: list[PartyMember] = members if members is not None else []
         self.gold: int = gold
@@ -606,6 +607,7 @@ class Party:
         self.quest_items: list[str] = quest_items if quest_items is not None else []
         self.playtime_seconds: int = playtime_seconds
         self._playtime_accumulator: float = 0.0
+        self.quest_manager: Optional[Any] = quest_manager
 
     def add_playtime(self, delta_time: float) -> None:
         """Accumulates delta_time into playtime_seconds with sub-second precision and safety clamping."""
@@ -618,6 +620,27 @@ class Party:
             self.playtime_seconds += add_secs
             self._playtime_accumulator -= add_secs
 
+    def add_gold(self, amount: int) -> int:
+        """Adds gold to the party and dispatches gold gain event to quest manager."""
+        if amount > 0:
+            self.gold += amount
+            if self.quest_manager is not None:
+                self.quest_manager.notify_gold_changed(
+                    delta=amount, is_gain=True, current_gold=self.gold, party=self
+                )
+        return self.gold
+
+    def spend_gold(self, amount: int) -> bool:
+        """Spends gold from the party and dispatches gold spend event to quest manager."""
+        if amount > 0 and self.gold >= amount:
+            self.gold -= amount
+            if self.quest_manager is not None:
+                self.quest_manager.notify_gold_changed(
+                    delta=amount, is_gain=False, current_gold=self.gold, party=self
+                )
+            return True
+        return False
+
     @property
     def formatted_playtime(self) -> str:
         """Returns elapsed playtime formatted as HH:MM:SS."""
@@ -627,23 +650,34 @@ class Party:
         return f"{h:02d}:{m:02d}:{s:02d}"
 
     def to_dict(self) -> dict:
-        return {
+        d = {
             "members": [m.to_dict() for m in self.members],
             "gold": self.gold,
             "inventory": list(self.inventory),
             "quest_items": list(self.quest_items),
             "playtime_seconds": self.playtime_seconds,
         }
+        if self.quest_manager is not None:
+            d["quest_manager"] = self.quest_manager.to_dict()
+        return d
 
     @classmethod
     def from_dict(cls, data: dict) -> Party:
         members = [PartyMember.from_dict(m) for m in data.get("members", [])]
+        qm = None
+        if "quest_manager" in data and data["quest_manager"]:
+            try:
+                from ..quests.manager import QuestManager
+                qm = QuestManager.from_dict(data["quest_manager"])
+            except Exception:
+                qm = None
         return cls(
             members=members,
             gold=data.get("gold", 0),
             inventory=data.get("inventory", []),
             quest_items=data.get("quest_items", []),
             playtime_seconds=data.get("playtime_seconds", 0),
+            quest_manager=qm,
         )
 
     def add_member(self, member: PartyMember) -> bool:
@@ -689,10 +723,14 @@ class Party:
                 can_add = max(0, 99 - cur_qty)
                 added = min(qty, can_add)
                 entry["qty"] = cur_qty + added
+                if added > 0 and self.quest_manager is not None:
+                    self.quest_manager.notify_inventory_changed(party=self)
                 return added
 
         actual_qty = min(99, qty)
         self.inventory.append({"item_id": item_id, "qty": actual_qty, "type": item_type})
+        if self.quest_manager is not None:
+            self.quest_manager.notify_inventory_changed(party=self)
         return actual_qty
 
     def remove_item(self, item_id: str, qty: int = 1) -> bool:
@@ -704,9 +742,13 @@ class Party:
                 cur_qty = entry.get("qty", 1)
                 if cur_qty > qty:
                     entry["qty"] = cur_qty - qty
+                    if self.quest_manager is not None:
+                        self.quest_manager.notify_inventory_changed(party=self)
                     return True
                 elif cur_qty == qty:
                     self.inventory.pop(i)
+                    if self.quest_manager is not None:
+                        self.quest_manager.notify_inventory_changed(party=self)
                     return True
                 else:
                     return False

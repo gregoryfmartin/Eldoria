@@ -177,6 +177,13 @@ class SaveManager:
         world_map_path = slot_dir / "world.map"
         _write_gzip_json(world_map_path, world_macro.to_dict())
 
+        # Ensure party has QuestManager with StorylineQuestline scaled to map size
+        if getattr(party, "quest_manager", None) is None:
+            from ..quests.generator import build_storyline_questline
+            from ..quests.manager import QuestManager
+            storyline = build_storyline_questline(macro_size)
+            party.quest_manager = QuestManager(storyline=storyline)
+
         # 2. Build initial exploration state
         primary_town = world_macro.get_poi(POIType.TOWN)
         starter_loc_name = primary_town.name if primary_town else "Oakhaven Town"

@@ -701,7 +701,7 @@ class GSPartyBuilderScreen(SMState):
         mid_row = self.screen_height // 2
         row1 = max(1, mid_row - 1)
         row2 = min(self.screen_height, mid_row + 1)
-        row3 = min(self.screen_height, row2 + 3)
+        row3 = min(self.screen_height, row2 + 2)
 
         rendered_l1 = format_chromatic_wave(line1, phase=phase, char_step=0.04, bold=True)
         rendered_l2 = format_chromatic_wave(line2, phase=phase + 0.20, char_step=0.025, bold=False)

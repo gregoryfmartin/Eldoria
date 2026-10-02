@@ -32,6 +32,12 @@ class NPCRole(str, Enum):
     MERCHANT = "Merchant"
 
 
+class DialogCategory(str, Enum):
+    """Classification of NPC interaction dialogue modality."""
+    STANDARD = "Standard"
+    CHOICE = "Choice"
+
+
 # -------------------------------------------------------------------------
 # Name Pools
 # -------------------------------------------------------------------------
@@ -158,6 +164,10 @@ class NPC:
         dialogue: str = "Greetings, traveler.",
         bounties: Optional[List[str]] = None,
         shop_inventory: Optional[List[Dict[str, Any]]] = None,
+        category: DialogCategory = DialogCategory.STANDARD,
+        choice_options: Optional[List[str]] = None,
+        inn_fee: int = 20,
+        side_quest_template_idx: Optional[int] = None,
     ) -> None:
         self.npc_id = npc_id
         self.name = name
@@ -169,6 +179,15 @@ class NPC:
         self.dialogue = dialogue
         self.bounties = list(bounties) if bounties else []
         self.shop_inventory = list(shop_inventory) if shop_inventory else []
+        self.category = category
+        if choice_options is not None:
+            self.choice_options = list(choice_options)
+        elif category == DialogCategory.CHOICE:
+            self.choice_options = ["Yes", "No"]
+        else:
+            self.choice_options = []
+        self.inn_fee = inn_fee
+        self.side_quest_template_idx: Optional[int] = side_quest_template_idx
 
     def to_dict(self) -> Dict[str, Any]:
         """Serializes NPC to JSON dictionary."""
@@ -176,16 +195,23 @@ class NPC:
             "npc_id": self.npc_id,
             "name": self.name,
             "role": self.role.value,
+            "category": self.category.value,
             "glyph": self.glyph,
             "fg_color": [self.fg_color.r, self.fg_color.g, self.fg_color.b],
             "bg_color": [self.bg_color.r, self.bg_color.g, self.bg_color.b],
             "pos": list(self.pos),
             "dialogue": self.dialogue,
         }
+        if self.choice_options:
+            d["choice_options"] = self.choice_options
+        if self.inn_fee != 20:
+            d["inn_fee"] = self.inn_fee
         if self.bounties:
             d["bounties"] = self.bounties
         if self.shop_inventory:
             d["shop_inventory"] = self.shop_inventory
+        if self.side_quest_template_idx is not None:
+            d["side_quest_template_idx"] = self.side_quest_template_idx
         return d
 
     @classmethod
@@ -198,6 +224,16 @@ class NPC:
         except ValueError:
             role = NPCRole.CITIZEN
 
+        cat_str = data.get("category", DialogCategory.STANDARD.value)
+        try:
+            category = DialogCategory(cat_str)
+        except ValueError:
+            category = DialogCategory.STANDARD
+
+        choice_opts = data.get("choice_options")
+        inn_fee = data.get("inn_fee", 20)
+        sq_idx = data.get("side_quest_template_idx")
+
         return cls(
             npc_id=data.get("npc_id", "npc_unknown"),
             name=data.get("name", "Unknown"),
@@ -209,6 +245,10 @@ class NPC:
             dialogue=data.get("dialogue", "Greetings."),
             bounties=data.get("bounties", []),
             shop_inventory=data.get("shop_inventory", []),
+            category=category,
+            choice_options=choice_opts,
+            inn_fee=inn_fee,
+            side_quest_template_idx=sq_idx,
         )
 
 
@@ -222,6 +262,17 @@ def create_king(
     bounties: Optional[List[str]] = None,
 ) -> NPC:
     """Creates a royal King NPC with boss bounty rewards."""
+    if bounties:
+        bounty_str = ", ".join(bounties)
+        dialogue = (
+            f"Welcome to my royal hall! Slay the dread monstrosities plaguing our realm for royal rewards: "
+            f"{bounty_str}. Bring me their crests to claim your rightful glory!"
+        )
+    else:
+        dialogue = (
+            "Welcome to my royal hall! Slay the dread monstrosities plaguing our realm: "
+            "Dreadfang, Bone Golem, and the Ancient Wyrm. Bring me their crests for royal rewards!"
+        )
     return NPC(
         npc_id="npc_king",
         name=name,
@@ -230,8 +281,9 @@ def create_king(
         fg_color=TrueColor(0xFF, 0xD7, 0x00),  # Royal Gold
         bg_color=TrueColor(0x9B, 0x2C, 0x2C),  # Crimson Throne Carpet
         pos=pos,
-        dialogue="Welcome to my royal hall! Slay the dread monstrosities plaguing our realm for royal rewards.",
-        bounties=bounties or [],
+        dialogue=dialogue,
+        bounties=bounties or ["Dreadfang", "Bone Golem", "Ancient Wyrm"],
+        category=DialogCategory.STANDARD,
     )
 
 
@@ -240,20 +292,27 @@ def create_service_owner(
     name: str,
     pos: Tuple[int, int],
     is_endgame: bool = False,
+    inn_fee: int = 20,
 ) -> NPC:
     """Creates a reserved town service owner (Innkeeper, Item Shop, Equip Shop, Pub)."""
+    category = DialogCategory.STANDARD
+    choice_options = []
     if role == NPCRole.INNKEEPER:
         glyph = "I"
         fg = TrueColor(0xFF, 0xEE, 0xAA)  # Warm Ivory
         bg = TrueColor(0x3B, 0x27, 0x1A)  # Dark Timber
-        dialogue = "Welcome to the Inn! Rest your weary bones and save your progress."
+        category = DialogCategory.CHOICE
+        dialogue = f"Welcome! It costs {inn_fee} gold to stay for the night. Do you want a room?"
+        choice_options = ["Yes", "No"]
         inv = []
     elif role == NPCRole.ITEM_SHOPKEEPER:
         glyph = "S"
         fg = TrueColor(0x63, 0xB3, 0xED)  # Sky Cyan
         bg = TrueColor(0x1A, 0x36, 0x5D)  # Midnight Navy
+        category = DialogCategory.CHOICE
+        dialogue = "Welcome! Would you like to buy something today?"
+        choice_options = ["Yes", "No"]
         if is_endgame:
-            dialogue = "Welcome to the Grand Empyrean Emporium! We stock rare and forbidden draughts."
             inv = [
                 {"item_id": "Elixir", "price": 1200, "qty": 99},
                 {"item_id": "Mega Potion", "price": 450, "qty": 99},
@@ -262,7 +321,6 @@ def create_service_owner(
                 {"item_id": "Panacea", "price": 300, "qty": 99},
             ]
         else:
-            dialogue = "Supplies and restorative tonics for the road!"
             inv = [
                 {"item_id": "Potion", "price": 50, "qty": 99},
                 {"item_id": "Ether", "price": 150, "qty": 99},
@@ -273,8 +331,10 @@ def create_service_owner(
         glyph = "E"
         fg = TrueColor(0xED, 0x89, 0x36)  # Forge Amber
         bg = TrueColor(0x3B, 0x27, 0x1A)  # Dark Forge Brown
+        category = DialogCategory.CHOICE
+        dialogue = "Welcome! Would you like to buy something today?"
+        choice_options = ["Yes", "No"]
         if is_endgame:
-            dialogue = "Behold legendary arms forged in dragon fire! Top-tier steel for champion hands."
             inv = [
                 {"item_id": "Excalibur", "price": 4500, "type": "equipment"},
                 {"item_id": "Dragon Shield", "price": 3200, "type": "equipment"},
@@ -283,7 +343,6 @@ def create_service_owner(
                 {"item_id": "Aegis Cloak", "price": 2800, "type": "equipment"},
             ]
         else:
-            dialogue = "Fine blades and sturdy armor to turn aside monster claws!"
             inv = [
                 {"item_id": "Iron Longsword", "price": 250, "type": "equipment"},
                 {"item_id": "Steel Broadsword", "price": 600, "type": "equipment"},
@@ -313,6 +372,9 @@ def create_service_owner(
         pos=pos,
         dialogue=dialogue,
         shop_inventory=inv,
+        category=category,
+        choice_options=choice_options,
+        inn_fee=inn_fee,
     )
 
 
@@ -320,6 +382,7 @@ def create_castle_npc(
     role: NPCRole,
     name: str,
     pos: Tuple[int, int],
+    side_quest_template_idx: Optional[int] = None,
 ) -> NPC:
     """Creates a castle guard, knight, servant, or advisor."""
     if role in (NPCRole.KNIGHT, NPCRole.ROYAL_GUARD):
@@ -352,6 +415,7 @@ def create_castle_npc(
         bg_color=bg,
         pos=pos,
         dialogue=dialogue,
+        side_quest_template_idx=side_quest_template_idx,
     )
 
 
@@ -359,6 +423,7 @@ def create_town_citizen(
     name: str,
     pos: Tuple[int, int],
     seed: int = 0,
+    side_quest_template_idx: Optional[int] = None,
 ) -> NPC:
     """Creates a random town citizen, villager, or traveler with colorful styling and casual banter."""
     rng = random.Random(seed + pos[0] * 31 + pos[1] * 17)
@@ -393,4 +458,5 @@ def create_town_citizen(
         bg_color=TrueColor(0x1A, 0x20, 0x2C),
         pos=pos,
         dialogue=dialogue,
+        side_quest_template_idx=side_quest_template_idx,
     )

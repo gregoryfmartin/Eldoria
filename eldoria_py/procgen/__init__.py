@@ -26,6 +26,7 @@ from .map_generator import (
     BIOME_CONFIGS,
 )
 from .poi import POIType, POIDescriptor, WarpTarget
+from .npc import NPC, NPCRole, DialogCategory
 from .submap_generator import SubMapGenerator
 from .world_macro import WorldMacroMap
 
@@ -54,6 +55,9 @@ __all__ = [
     "POIType",
     "POIDescriptor",
     "WarpTarget",
+    "NPC",
+    "NPCRole",
+    "DialogCategory",
     "SubMapGenerator",
     "WorldMacroMap",
 ]

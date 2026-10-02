@@ -237,6 +237,7 @@ class NvNCombatEngine:
         target_count = len(targets_to_hit)
         for t in targets_to_hit:
             force_crit = False if (t.is_defending and getattr(t, "negate_crits_when_defending", False)) else None
+            force_hit = True if action.category == ActionCategory.ITEM else None
             result = calculate_damage(
                 attacker_stats=actor.get_all_stat_totals(),
                 target_stats=t.get_all_stat_totals(),
@@ -248,6 +249,7 @@ class NvNCombatEngine:
                 explicit_absorbs=t.explicit_absorbs,
                 explicit_immunes=t.explicit_immunes,
                 rng=self.rng,
+                force_hit=force_hit,
                 force_crit=force_crit,
             )
 
@@ -272,6 +274,9 @@ class NvNCombatEngine:
                     weak_tag = " [★ WEAKNESS]" if result.affinity_effect == AffinityEffect.WEAK else ""
                     res_tag = " [Resisted]" if result.affinity_effect == AffinityEffect.RESIST else ""
                     self.log(f"💥 {actor.name} uses {action.name} on {t.name}{crit_tag}{weak_tag}{res_tag}: {dmg_taken} dmg")
+                    qm = getattr(self.party, "quest_manager", None)
+                    if qm and is_player_acting and dmg_taken > 0:
+                        qm.notify_damage_dealt(dmg_taken, party=self.party)
                     if not t.is_alive:
                         self.log(f"☠ {t.name} was defeated!")
                 continue
@@ -291,6 +296,9 @@ class NvNCombatEngine:
                 self.log(
                     f"⚔ {actor.name} uses {action.name} on {t.name}{crit_tag}{weak_tag}{res_tag}: {dmg_taken} dmg"
                 )
+                qm = getattr(self.party, "quest_manager", None)
+                if qm and is_player_acting and dmg_taken > 0:
+                    qm.notify_damage_dealt(dmg_taken, party=self.party)
 
                 if not t.is_alive:
                     self.log(f"☠ {t.name} was defeated!")
@@ -350,8 +358,16 @@ class NvNCombatEngine:
         self.log(f"Gained {self.spoils_xp} XP and {self.spoils_gold} Gold.")
 
         # Credit spoils gold to party
-        if hasattr(self.party, "gold"):
+        if hasattr(self.party, "add_gold"):
+            self.party.add_gold(self.spoils_gold)
+        elif hasattr(self.party, "gold"):
             self.party.gold += self.spoils_gold
+
+        # Notify quest manager of defeated enemies
+        qm = getattr(self.party, "quest_manager", None)
+        if qm:
+            for enemy in self.squad.enemies:
+                qm.notify_enemy_defeated(enemy.name, count=1, party=self.party)
 
         # Resolve item loot drops from defeated enemies
         self.spoils_items = []

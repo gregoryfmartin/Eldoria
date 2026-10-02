@@ -261,12 +261,14 @@ class SubMapGenerator:
 
         rng.shuffle(candidate_tiles)
         n_citizens = rng.randint(10, 20)
-        for cx, cy in candidate_tiles[:n_citizens]:
+        for c_idx, (cx, cy) in enumerate(candidate_tiles[:n_citizens]):
             c_name = rng.choice(CITIZEN_NAMES)
+            sq_idx = c_idx if c_idx < 2 else None
             citizen = create_town_citizen(
                 name=c_name,
                 pos=(cx, cy),
                 seed=rng.randint(1, 999999),
+                side_quest_template_idx=sq_idx,
             )
             town_map.tiles[cy][cx].npc = citizen
 
@@ -598,8 +600,14 @@ class SubMapGenerator:
                     castle_candidates.append((x, y))
 
         rng.shuffle(castle_candidates)
-        for (r_role, r_name), (rx, ry) in zip(roaming_roles, castle_candidates[:10]):
-            c_npc = create_castle_npc(role=r_role, name=r_name, pos=(rx, ry))
+        for c_idx, ((r_role, r_name), (rx, ry)) in enumerate(zip(roaming_roles, castle_candidates[:10])):
+            sq_idx = (c_idx + 2) if c_idx < 2 else None
+            c_npc = create_castle_npc(
+                role=r_role,
+                name=r_name,
+                pos=(rx, ry),
+                side_quest_template_idx=sq_idx,
+            )
             castle_map.tiles[ry][rx].npc = c_npc
 
         # Guarantee all castle tiles are strictly safe zones
