@@ -26,7 +26,14 @@ from ..terminal.ansi import ATCoordinates, ATControlSequences
 from ..terminal.color import ColorLibrary, TrueColor
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
-from ..terminal.box import visible_width, truncate_ansi, clear_buffer_tail
+from ..terminal.box import (
+    visible_width,
+    truncate_ansi,
+    clear_buffer_tail,
+    make_border_row,
+    make_box_row,
+    wrap_text,
+)
 from ..ui.panel import UIPanel
 from ..ui.container import UIContainer
 from ..ui.npc_dialog import NPCDialogModal, DialogChoice
@@ -119,6 +126,9 @@ class GSNoiseMapTestScreen(SMState):
             screen_width=self.map_width,
             screen_height=self.map_height + 3,
         )
+
+        # Tracked Quest quick modal overlay state
+        self.is_quest_modal_active: bool = False
 
     @property
     def playtime_seconds(self) -> int:
@@ -227,6 +237,7 @@ class GSNoiseMapTestScreen(SMState):
         self._ensure_walkable_player_pos()
 
         # Check if returning from a boss encounter
+        self.is_quest_modal_active = False
         active_boss = context.get("active_boss_fight")
         if active_boss:
             if not self.party.is_wiped:
@@ -257,6 +268,7 @@ class GSNoiseMapTestScreen(SMState):
 
     def exit(self, context: Context) -> None:
         super().exit(context)
+        self.is_quest_modal_active = False
         TerminalScreen.clear_screen()
         TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
@@ -272,6 +284,35 @@ class GSNoiseMapTestScreen(SMState):
 
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
+
+        if getattr(self, "is_quest_modal_active", False):
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                for key_info in list(keys_pressed):
+                    if key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
+                        self.is_quest_modal_active = False
+                        keys_pressed.remove(key_info)
+                        break
+                    elif key_info.char in ("m", "M") or key_info.key == KeyCode.TAB or key_info.char == "\t":
+                        self.is_quest_modal_active = False
+                        keys_pressed.clear()
+                        if core and hasattr(core, "game_state"):
+                            menu_state = core.game_state.states.get("GSMainMenuScreen")
+                            if menu_state:
+                                menu_state.configure_menu(
+                                    party=self.party,
+                                    noise_map_screen=self,
+                                    sector_coords=self.current_sector,
+                                    playtime_seconds=self.playtime_seconds,
+                                )
+                                if "Quests" in menu_state.CATEGORIES:
+                                    menu_state.category_idx = menu_state.CATEGORIES.index("Quests")
+                                    menu_state._enter_submenu()
+                            core.game_state.trigger("ToMenu", context)
+                        return
+                    else:
+                        keys_pressed.remove(key_info)
+            self._render()
+            return
 
         if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
             if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
@@ -357,6 +398,13 @@ class GSNoiseMapTestScreen(SMState):
                     if self._check_step_encounter(context):
                         return
                     break
+
+                # Tracked Quest quick modal trigger ([Q])
+                elif key_info.char in ("q", "Q"):
+                    keys_pressed.remove(key_info)
+                    self.is_quest_modal_active = True
+                    self._render()
+                    return
 
                 # Interaction: Enter key to enter POI, rest at Inn, or leave via egress
                 elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
@@ -867,6 +915,115 @@ class GSNoiseMapTestScreen(SMState):
             "\033[33m[↑/↓]\033[0m Select  \033[33m[Enter]\033[0m Use  \033[33m[Esc]\033[0m Cancel",
         )
 
+    def _render_quest_modal(self) -> List[Tuple[int, int, str]]:
+        """
+        Renders the Tracked Quest temporary modal overlay centered on the screen.
+        Displays active questline, quest, active step, directive narrative, and spoils.
+        """
+        qm = getattr(self.party, "quest_manager", None)
+        target_ql, target_q, target_s = qm.get_tracked_artifact() if qm else (None, None, None)
+
+        modal_w = min(48, max(36, self.map_width - 4))
+        modal_h = 12
+        left_c = max(2, (self.map_width - modal_w) // 2 + 1)
+        total_rows = self.map_height + 3
+        top_r = max(2, (total_rows - modal_h) // 2 + 1)
+
+        border_col = "\033[1;36m"
+        bg = "\033[48;2;16;22;34m"
+
+        def _make_border(title: str, left: str, fill: str, right: str) -> str:
+            inner_w = modal_w - 2
+            if title:
+                t_vis = visible_width(title)
+                rem = max(0, inner_w - t_vis - 2)
+                lp = rem // 2
+                rp = rem - lp
+                safe_title = title.replace("\033[0m", f"\033[0m{bg}{border_col}")
+                return f"{border_col}{left}{bg}{fill * lp} {safe_title}\033[0m{bg}{border_col} {fill * rp}{right}\033[0m"
+            return f"{border_col}{left}{bg}{fill * inner_w}{right}\033[0m"
+
+        def _make_row(text: str) -> str:
+            inner_w = modal_w - 4
+            t_vis = visible_width(text)
+            if t_vis > inner_w:
+                text = truncate_ansi(text, inner_w)
+                t_vis = visible_width(text)
+            pad = " " * max(0, inner_w - t_vis)
+            safe_text = text.replace("\033[0m", f"\033[0m{bg}")
+            return f"{border_col}│{bg} {safe_text}\033[0m{bg}{pad} {border_col}│\033[0m"
+
+        rows: List[str] = []
+        # Row 0: Top border with title
+        rows.append(_make_border(" \033[1;33m★ Tracked Quest\033[0m ", "╭", "─", "╮"))
+
+        if target_q is not None and target_ql is not None:
+            # Row 1: Questline header
+            badge = "\033[1;33m◆ STORYLINE:\033[0m" if target_ql.is_storyline else "\033[1;36m◇ SIDE QUEST:\033[0m"
+            ql_title = target_ql.title[: modal_w - 18]
+            rows.append(_make_row(f"{badge} \033[1;37m{ql_title}\033[0m"))
+
+            # Row 2: Divider
+            rows.append(_make_border("", "├", "─", "┤"))
+
+            # Row 3: Quest Title (without step counter)
+            q_title = target_q.title[: modal_w - 12]
+            rows.append(_make_row(f"\033[1;33mQuest:\033[0m \033[1;37m{q_title}\033[0m"))
+
+            # Row 4: Step / Objective Title
+            if target_s:
+                step_title = getattr(target_s, "title", "") or target_s.description
+                rows.append(_make_row(f"\033[1;33mStep:\033[0m  \033[37m{step_title[: modal_w - 12]}\033[0m"))
+            else:
+                rows.append(_make_row("\033[90mAll steps completed\033[0m"))
+
+            # Row 5: Directive header
+            rows.append(_make_row("\033[1;33mDirective:\033[0m"))
+
+            # Rows 6 & 7: Directive narrative (wrapped)
+            desc_text = target_s.description if target_s else "No further active objectives."
+            wrapped = wrap_text(desc_text, modal_w - 6)
+            line1 = f"  \033[37m{wrapped[0]}\033[0m" if len(wrapped) > 0 else ""
+            line2 = f"  \033[37m{wrapped[1]}\033[0m" if len(wrapped) > 1 else ""
+            rows.append(_make_row(line1))
+            rows.append(_make_row(line2))
+
+            # Row 8: Origin or Spoils (for side quests), line 3 if long, or blank
+            if not target_ql.is_storyline and hasattr(target_ql, "originator_name"):
+                orig_name = getattr(target_ql, "originator_name", "")
+                orig_loc = getattr(target_ql, "originator_location", "")
+                rows.append(_make_row(f"\033[90mOrigin: {orig_name[:16]} ({orig_loc[:16]})\033[0m"))
+            elif len(wrapped) > 2:
+                rows.append(_make_row(f"  \033[37m{wrapped[2]}\033[0m"))
+            else:
+                rows.append(_make_row(""))
+
+        else:
+            # Empty / No quest tracked state
+            rows.append(_make_row("\033[1;33m◆ TRACKER:\033[0m \033[90mNo Quest Pinned\033[0m"))
+            rows.append(_make_border("", "├", "─", "┤"))
+            rows.append(_make_row("\033[37mThere is no active quest currently tracked.\033[0m"))
+            rows.append(_make_row(""))
+            rows.append(_make_row("\033[36mOpen the Main Menu [M] -> Quests to browse\033[0m"))
+            rows.append(_make_row("\033[36myour journal and track an active quest.\033[0m"))
+            rows.append(_make_row(""))
+            rows.append(_make_row("\033[90mTrack a quest with [T] or [Space] in Journal.\033[0m"))
+
+        # Row 9: Divider
+        rows.append(_make_border("", "├", "─", "┤"))
+
+        # Row 10: Footer / Dismiss controls
+        rows.append(_make_row("\033[33m[Q / Esc]\033[0m Dismiss      \033[33m[M]\033[0m Open Journal"))
+
+        # Row 11: Bottom border
+        rows.append(_make_border("", "╰", "─", "╯"))
+
+        commands: List[Tuple[int, int, str]] = []
+        for idx, row_str in enumerate(rows):
+            commands.append((top_r + idx, left_c, row_str))
+
+        return commands
+
     @staticmethod
     def _make_border_line(left_char: str, text: str, right_char: str, width: int, fill_char: str = "─") -> str:
         vlen = visible_width(text)
@@ -972,11 +1129,11 @@ class GSNoiseMapTestScreen(SMState):
 
         # 4. Bottom controls footer
         if adjacent_npcs:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mTalk  \033[33m[M]\033[0mMenu "
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mTalk  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
         elif self.active_submap is None:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu "
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
         else:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[M]\033[0mMenu "
+            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
 
         lines.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))
         return lines
@@ -1005,6 +1162,13 @@ class GSNoiseMapTestScreen(SMState):
             for d_row, d_col, d_text in dialog_cmds:
                 out.append(ATCoordinates(d_row, d_col).to_ansi())
                 out.append(d_text)
+
+        # Overlay Tracked Quest modal if active
+        if getattr(self, "is_quest_modal_active", False):
+            modal_cmds = self._render_quest_modal()
+            for m_row, m_col, m_text in modal_cmds:
+                out.append(ATCoordinates(m_row, m_col).to_ansi())
+                out.append(m_text)
 
         footer_y = len(lines)
         # Clear tail lines up to 40 (clears leftover rows from larger 80x40 screens)

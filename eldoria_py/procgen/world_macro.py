@@ -606,6 +606,9 @@ class WorldMacroMap:
             # 12x12 & 20x20 (Standard & Odyssey): Full campaign (all 16 bosses culminating in Malakor)
             active_bosses = BOSS_CAVE_MAPPING
 
+        mountain_biomes = (BiomeType.MOUNTAIN, BiomeType.SNOW)
+        water_biomes = (BiomeType.WATER, BiomeType.DEEP_WATER)
+
         for idx, (boss_name, boss_reg, cave_name, preferred_biomes) in enumerate(active_bosses):
             candidates = []
             avail_sectors = [
@@ -614,62 +617,112 @@ class WorldMacroMap:
                 for sx in range(self.macro_width)
                 if (sx, sy) not in used_sectors
             ]
-            target_sectors = avail_sectors if avail_sectors else [
+
+            # Item 1: Sector-level pre-filtering by danger region
+            matching_sectors = [
+                s for s in avail_sectors
+                if abs(get_sector_region(s) - boss_reg) <= 1
+            ]
+            primary_targets = matching_sectors if matching_sectors else avail_sectors
+            target_sectors = primary_targets if primary_targets else [
                 (sx, sy)
                 for sy in range(self.macro_height)
                 for sx in range(self.macro_width)
             ]
 
-            for (sx, sy) in target_sectors:
-                sec = self.sectors[sy][sx]
-                for y in range(1, self.sector_height - 1):
-                    for x in range(1, self.sector_width - 1):
-                        t = sec.tiles[y][x]
-                        if not t.is_walkable or t.poi is not None:
-                            continue
+            # Item 2: Pre-extract POI world coordinates once per boss placement
+            poi_coords = [
+                (p.sector_coord[0] * self.sector_width + p.local_pos[0],
+                 p.sector_coord[1] * self.sector_height + p.local_pos[1])
+                for p in self.all_pois
+            ]
+            needs_coast = "Coast" in preferred_biomes
+            needs_mountain_or_cave = "Mountain" in preferred_biomes or "Cave" in preferred_biomes
 
-                        gx = sx * self.sector_width + x
-                        gy = sy * self.sector_height + y
+            for search_pass in (1, 2):
+                for (sx, sy) in target_sectors:
+                    sec = self.sectors[sy][sx]
+                    sec_tiles = sec.tiles
+                    is_used_sec = (sx, sy) in used_sectors
+                    sec_bonus = 0.0 if is_used_sec else 1000.0
 
-                        min_poi_dist = min(
-                            math.hypot(
-                                gx - (p.sector_coord[0] * self.sector_width + p.local_pos[0]),
-                                (gy - (p.sector_coord[1] * self.sector_height + p.local_pos[1])) * 2.0
+                    for y in range(1, self.sector_height - 1):
+                        row = sec_tiles[y]
+                        row_up = sec_tiles[y - 1]
+                        row_dn = sec_tiles[y + 1]
+
+                        for x in range(1, self.sector_width - 1):
+                            t = row[x]
+                            if not t.is_walkable or t.poi is not None:
+                                continue
+
+                            gx = sx * self.sector_width + x
+                            gy = sy * self.sector_height + y
+
+                            # Early-exit buffer check on squared distance (8.0^2 = 64.0)
+                            too_close = False
+                            min_sq = 1e9
+                            for px, py in poi_coords:
+                                dx = float(gx - px)
+                                dy = float(gy - py) * 2.0
+                                dsq = dx * dx + dy * dy
+                                if dsq < 64.0:
+                                    too_close = True
+                                    break
+                                if dsq < min_sq:
+                                    min_sq = dsq
+
+                            if too_close:
+                                continue
+
+                            min_poi_dist = math.sqrt(min_sq)
+
+                            # Unrolled 4-way adjacent mountain/snow border check
+                            borders_mountain = (
+                                row_up[x].biome in mountain_biomes
+                                or row_dn[x].biome in mountain_biomes
+                                or row[x - 1].biome in mountain_biomes
+                                or row[x + 1].biome in mountain_biomes
                             )
-                            for p in self.all_pois
-                        )
-                        if min_poi_dist < 8.0:
-                            continue
 
-                        borders_mountain = any(
-                            sec.tiles[y + dy][x + dx].biome in (BiomeType.MOUNTAIN, BiomeType.SNOW)
-                            for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0))
-                        )
+                            b_score = 0.0
+                            tb = t.biome
+                            if tb == BiomeType.FOREST and "Forest" in preferred_biomes:
+                                b_score += 50.0
+                            if tb == BiomeType.PLAINS and "Plains" in preferred_biomes:
+                                b_score += 40.0
+                            if borders_mountain and needs_mountain_or_cave:
+                                b_score += 60.0
+                            if tb == BiomeType.SNOW and "Snow" in preferred_biomes:
+                                b_score += 80.0
+                            if needs_coast and (
+                                tb == BiomeType.COAST
+                                or row_up[x].biome in water_biomes
+                                or row_dn[x].biome in water_biomes
+                                or row[x - 1].biome in water_biomes
+                                or row[x + 1].biome in water_biomes
+                            ):
+                                b_score += 70.0
+                            if tb == BiomeType.BADLANDS and "Badlands" in preferred_biomes:
+                                b_score += 60.0
+                            if tb == BiomeType.TUNDRA and ("Tundra" in preferred_biomes or "Snow" in preferred_biomes):
+                                b_score += 75.0
+                            if tb == BiomeType.SWAMP and ("Swamp" in preferred_biomes or "Forest" in preferred_biomes):
+                                b_score += 65.0
 
-                        b_score = 0.0
-                        if t.biome == BiomeType.FOREST and "Forest" in preferred_biomes:
-                            b_score += 50.0
-                        if t.biome == BiomeType.PLAINS and "Plains" in preferred_biomes:
-                            b_score += 40.0
-                        if borders_mountain and ("Mountain" in preferred_biomes or "Cave" in preferred_biomes):
-                            b_score += 60.0
-                        if t.biome == BiomeType.SNOW and "Snow" in preferred_biomes:
-                            b_score += 80.0
-                        if (t.biome == BiomeType.COAST or any(sec.tiles[y + dy][x + dx].biome == BiomeType.WATER for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)))) and "Coast" in preferred_biomes:
-                            b_score += 70.0
-                        if t.biome == BiomeType.BADLANDS and "Badlands" in preferred_biomes:
-                            b_score += 60.0
-                        if t.biome == BiomeType.TUNDRA and ("Tundra" in preferred_biomes or "Snow" in preferred_biomes):
-                            b_score += 75.0
-                        if t.biome == BiomeType.SWAMP and ("Swamp" in preferred_biomes or "Forest" in preferred_biomes):
-                            b_score += 65.0
+                            reg_diff = abs(t.region_code - boss_reg) if t.region_code > 0 else 5
+                            score = sec_bonus - reg_diff * 100.0 + b_score + min_poi_dist * 0.1
+                            candidates.append((score, (sx, sy), (x, y), borders_mountain))
 
-                        is_used_sec = (sx, sy) in used_sectors
-                        sec_bonus = 0.0 if is_used_sec else 1000.0
-                        reg_diff = abs(t.region_code - boss_reg) if t.region_code > 0 else 5
+                if candidates or target_sectors is avail_sectors:
+                    break
+                # Fallback to all available sectors if region-filtered search yielded no candidate
+                target_sectors = avail_sectors if avail_sectors else [
+                    (sx, sy)
+                    for sy in range(self.macro_height)
+                    for sx in range(self.macro_width)
+                ]
 
-                        score = sec_bonus - reg_diff * 100.0 + b_score + min_poi_dist * 0.1
-                        candidates.append((score, (sx, sy), (x, y), borders_mountain))
 
             if candidates:
                 candidates.sort(key=lambda c: c[0], reverse=True)

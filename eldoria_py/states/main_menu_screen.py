@@ -1468,7 +1468,7 @@ class GSMainMenuScreen(SMState):
 
         # 1. Storyline Questline (always at top)
         story_expanded = qm.storyline.questline_id in self.quest_expanded_nodes
-        story_tracked = (tracked_ql is qm.storyline)
+        story_tracked = (tracked_ql is qm.storyline and not qm.storyline.is_completed)
         flat_nodes.append({
             "id": qm.storyline.questline_id,
             "type": "QUESTLINE",
@@ -1487,7 +1487,7 @@ class GSMainMenuScreen(SMState):
             sorted_quests = sorted(qm.storyline.quests, key=lambda q: 1 if q.is_completed else 0)
             for q in sorted_quests:
                 q_expanded = q.quest_id in self.quest_expanded_nodes
-                q_tracked = (story_tracked and tracked_q is q)
+                q_tracked = (story_tracked and tracked_q is q and not q.is_completed)
                 flat_nodes.append({
                     "id": q.quest_id,
                     "type": "QUEST",
@@ -1504,7 +1504,7 @@ class GSMainMenuScreen(SMState):
                 if q_expanded:
                     sorted_steps = sorted(q.steps, key=lambda s: 1 if s.is_completed else 0)
                     for s in sorted_steps:
-                        s_tracked = (q_tracked and tracked_s is s)
+                        s_tracked = (q_tracked and tracked_s is s and not s.is_completed)
                         flat_nodes.append({
                             "id": s.step_id,
                             "type": "STEP",
@@ -1523,7 +1523,7 @@ class GSMainMenuScreen(SMState):
         sorted_side_qls = sorted(qm.side_questlines, key=lambda sq: 1 if sq.is_completed else 0)
         for sq in sorted_side_qls:
             sq_expanded = sq.questline_id in self.quest_expanded_nodes
-            sq_tracked = (tracked_ql is sq)
+            sq_tracked = (tracked_ql is sq and not sq.is_completed)
             flat_nodes.append({
                 "id": sq.questline_id,
                 "type": "QUESTLINE",
@@ -1542,7 +1542,7 @@ class GSMainMenuScreen(SMState):
                 sorted_quests = sorted(sq.quests, key=lambda q: 1 if q.is_completed else 0)
                 for q in sorted_quests:
                     q_expanded = q.quest_id in self.quest_expanded_nodes
-                    q_tracked = (sq_tracked and tracked_q is q)
+                    q_tracked = (sq_tracked and tracked_q is q and not q.is_completed)
                     flat_nodes.append({
                         "id": q.quest_id,
                         "type": "QUEST",
@@ -1559,7 +1559,7 @@ class GSMainMenuScreen(SMState):
                     if q_expanded:
                         sorted_steps = sorted(q.steps, key=lambda s: 1 if s.is_completed else 0)
                         for s in sorted_steps:
-                            s_tracked = (q_tracked and tracked_s is s)
+                            s_tracked = (q_tracked and tracked_s is s and not s.is_completed)
                             flat_nodes.append({
                                 "id": s.step_id,
                                 "type": "STEP",
@@ -1612,33 +1612,59 @@ class GSMainMenuScreen(SMState):
                 s_obj = node["obj"]
                 p_q = node["parent_q"]
                 p_ql = node["parent_ql"]
-                qm.set_tracked_artifact(
-                    questline_id=p_ql.questline_id,
-                    quest_id=p_q.quest_id if p_q else None,
-                    step_id=s_obj.step_id,
-                )
-                self._set_banner(f"★ Tracking: {s_obj.description}")
+                if node["is_completed"]:
+                    self._set_banner("Cannot track a completed quest step.")
+                elif p_q and p_q.is_completed:
+                    self._set_banner("Cannot track a step in a completed quest.")
+                elif p_ql and p_ql.is_completed:
+                    self._set_banner("Cannot track a step in a completed questline.")
+                else:
+                    if qm.set_tracked_artifact(
+                        questline_id=p_ql.questline_id,
+                        quest_id=p_q.quest_id if p_q else None,
+                        step_id=s_obj.step_id,
+                    ):
+                        self._set_banner(f"★ Tracking: {s_obj.description}")
+                    else:
+                        self._set_banner("Cannot track a completed quest step.")
 
         elif key_info.char in ("t", "T", " "):
             node = flat_tree[self.quest_cursor]
             p_ql = node["parent_ql"]
             p_q = node.get("parent_q")
+            if node["is_completed"]:
+                item_name = "questline" if node["type"] == "QUESTLINE" else ("quest" if node["type"] == "QUEST" else "step")
+                self._set_banner(f"Cannot track a completed {item_name}.")
+                return
+            if p_q and p_q.is_completed:
+                self._set_banner("Cannot track within a completed quest.")
+                return
+            if p_ql and p_ql.is_completed:
+                self._set_banner("Cannot track within a completed questline.")
+                return
+
             if node["type"] == "QUESTLINE":
-                qm.set_tracked_artifact(questline_id=p_ql.questline_id)
-                self._set_banner(f"★ Tracking: {p_ql.title}")
+                if qm.set_tracked_artifact(questline_id=p_ql.questline_id):
+                    self._set_banner(f"★ Tracking: {p_ql.title}")
+                else:
+                    self._set_banner("Cannot track a completed questline.")
             elif node["type"] == "QUEST":
-                qm.set_tracked_artifact(
+                if qm.set_tracked_artifact(
                     questline_id=p_ql.questline_id,
                     quest_id=node["obj"].quest_id,
-                )
-                self._set_banner(f"★ Tracking: {node['title']}")
+                ):
+                    self._set_banner(f"★ Tracking: {node['title']}")
+                else:
+                    self._set_banner("Cannot track a completed quest.")
             elif node["type"] == "STEP":
-                qm.set_tracked_artifact(
+                if qm.set_tracked_artifact(
                     questline_id=p_ql.questline_id,
                     quest_id=p_q.quest_id if p_q else None,
                     step_id=node["obj"].step_id,
-                )
-                self._set_banner(f"★ Tracking: {node['title']}")
+                ):
+                    self._set_banner(f"★ Tracking: {node['title']}")
+                else:
+                    self._set_banner("Cannot track a completed step.")
 
     def _handle_quests_escape(self) -> bool:
         """

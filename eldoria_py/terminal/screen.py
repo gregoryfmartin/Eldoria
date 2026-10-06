@@ -23,6 +23,7 @@ class TerminalScreen:
         cls._initialized = True
         sys.stdout.write(
             ATControlSequences.AlternateScreenEnable
+            + ATControlSequences.AlternateScreenScrollDisable
             + ATControlSequences.CursorHide
             + ATControlSequences.ClearScreen
             + ATControlSequences.CursorHome
@@ -38,6 +39,7 @@ class TerminalScreen:
         cls._initialized = False
         sys.stdout.write(
             ATControlSequences.CursorShow
+            + ATControlSequences.AlternateScreenScrollEnable
             + ATControlSequences.AlternateScreenDisable
             + ATControlSequences.ModifierReset
         )

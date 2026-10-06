@@ -539,18 +539,25 @@ class ProceduralMapGenerator:
         world_h = total_world_height if total_world_height is not None else height
         b_side = badlands_side if badlands_side is not None else ("LEFT" if (self.seed % 2 == 0) else "RIGHT")
 
+        # Precompute coordinate scaling
+        inv_w = 1.0 / max(1.0, float(world_w - 1))
+        inv_h = 1.0 / max(1.0, float(world_h - 1))
+        u_table = [float(offset_x + x) * inv_w for x in range(width)]
+
         # 1. Sample Elevation & Moisture to determine base biomes
         for y in range(height):
+            gy = float(offset_y + y)
+            v = gy * inv_h
             for x in range(width):
-                raw_e = self.elev_noise.get_noise_2d(float(offset_x + x), float(offset_y + y))
-                raw_m = self.moist_noise.get_noise_2d(float(offset_x + x), float(offset_y + y))
+                gx = float(offset_x + x)
+                raw_e = self.elev_noise.get_noise_2d(gx, gy)
+                raw_m = self.moist_noise.get_noise_2d(gx, gy)
 
                 # Normalize from [-1.0, 1.0] to [0.0, 1.0]
                 elevation = max(0.0, min(1.0, (raw_e + 1.0) * 0.5))
                 moisture = max(0.0, min(1.0, (raw_m + 1.0) * 0.5))
 
-                u = float(offset_x + x) / max(1.0, float(world_w - 1))
-                v = float(offset_y + y) / max(1.0, float(world_h - 1))
+                u = u_table[x]
 
                 biome = self._classify_biome(
                     elevation=elevation,
@@ -559,6 +566,7 @@ class ProceduralMapGenerator:
                     v=v,
                     badlands_side=b_side,
                 )
+
                 config = BIOME_CONFIGS[biome]
 
                 tile = MapTile(

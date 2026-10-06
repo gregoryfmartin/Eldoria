@@ -35,6 +35,8 @@ class ATControlSequences:
     CursorShow = "\033[?25h"
     AlternateScreenEnable = "\033[?1049h"
     AlternateScreenDisable = "\033[?1049l"
+    AlternateScreenScrollEnable = "\033[?1007h"
+    AlternateScreenScrollDisable = "\033[?1007l"
 
     # DEC Mode 2026: Synchronized Output (Tear-free frame rendering)
     DrawOptimizeOn = "\033[?2026h"

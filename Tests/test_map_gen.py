@@ -224,10 +224,12 @@ class TestProceduralMapGeneration(unittest.TestCase):
         """Loads and parses all existing Resources/MapData/*.json map files."""
         import json
         import os
+        from eldoria_py.core.assets import get_resource_path
 
-        map_dir = os.path.join(os.path.dirname(__file__), "..", "Resources", "MapData")
+        map_dir = str(get_resource_path("MapData"))
         if not os.path.isdir(map_dir):
             return
+
 
         for fname in os.listdir(map_dir):
             if fname.endswith(".json") and fname != "SampleSI.json":
@@ -244,6 +246,48 @@ class TestProceduralMapGeneration(unittest.TestCase):
                     for tile in row:
                         self.assertEqual(len(tile.exits), 4)
 
+    def test_noise_octave_caching_bit_level_integrity(self) -> None:
+        """Verifies that octave parameter caching produces bit-for-bit identical (delta == 0.0) noise output."""
+        from eldoria_py.procgen.noise import FastNoiseLite, NoiseType, FractalType, FnlNoiseType, _lerp, _to_int32
+
+        # Test both OpenSimplex2 (Elevation) and Perlin (Moisture) across multiple seeds
+        test_configs = [
+            (NoiseType.OpenSimplex2, 4, 1337, 0.06),
+            (NoiseType.Perlin, 3, 2337, 0.048),
+            (NoiseType.OpenSimplex2, 4, 9999, 0.035),
+            (NoiseType.Perlin, 3, 8888, 0.028),
+        ]
+
+        for ntype, octaves, seed, freq in test_configs:
+            fnl = FastNoiseLite(seed=seed)
+            fnl.noise_type = ntype
+            fnl.fractal_type = FractalType.FBm
+            fnl.set_fractal_octaves(octaves)
+            fnl.frequency = freq
+
+
+            # Sample via optimized engine
+            for y in range(24):
+                for x in range(54):
+                    optimized_val = fnl.get_noise_2d(float(x), float(y))
+
+                    # Compute baseline value manually step-by-step
+                    tx, ty = fnl._transform_noise_coordinate_2d(float(x), float(y))
+                    base_seed = seed
+                    base_total = 0.0
+                    base_amp = fnl.fractal_bounding
+                    for _ in range(octaves):
+                        noise = fnl._gen_noise_single_2d(base_seed, tx, ty)
+                        base_total += noise * base_amp
+                        tx *= fnl.lacunarity
+                        ty *= fnl.lacunarity
+                        base_amp *= fnl.gain
+                        base_seed = _to_int32(base_seed + 1)
+
+                    diff = abs(optimized_val - base_total)
+                    self.assertEqual(diff, 0.0, f"Bit-level drift detected for {ntype} at ({x}, {y}): diff={diff}")
+
 
 if __name__ == "__main__":
     unittest.main()
+

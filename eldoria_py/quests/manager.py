@@ -84,17 +84,25 @@ class QuestManager:
         """
         Resolves the 3-tier Currently Tracked Artifact:
         (Active Questline, Active Quest, Active Quest Step).
+        Automatically falls back to active artifacts if tracked ones are completed.
         """
         target_ql = self.get_questline(self.tracked_questline_id or "")
-        if target_ql is None:
+        if target_ql is None or (target_ql is not self.storyline and target_ql.is_completed):
             target_ql = self.storyline
+            self.tracked_questline_id = self.storyline.questline_id
+            self.tracked_quest_id = None
+            self.tracked_step_id = None
 
         # Resolve Quest within Questline
         target_q: Optional[Quest] = None
         if self.tracked_quest_id:
             for q in target_ql.quests:
                 if q.quest_id == self.tracked_quest_id:
-                    target_q = q
+                    if not q.is_completed:
+                        target_q = q
+                    else:
+                        self.tracked_quest_id = None
+                        self.tracked_step_id = None
                     break
         if target_q is None:
             target_q = target_ql.get_active_quest()
@@ -105,7 +113,10 @@ class QuestManager:
             if self.tracked_step_id:
                 for s in target_q.steps:
                     if s.step_id == self.tracked_step_id:
-                        target_s = s
+                        if not s.is_completed:
+                            target_s = s
+                        else:
+                            self.tracked_step_id = None
                         break
             if target_s is None:
                 target_s = target_q.get_active_step()
@@ -117,11 +128,29 @@ class QuestManager:
         questline_id: str,
         quest_id: Optional[str] = None,
         step_id: Optional[str] = None,
-    ) -> None:
-        """Sets the currently tracked artifact hierarchy."""
+    ) -> bool:
+        """
+        Sets the currently tracked artifact hierarchy.
+        Returns False if the requested target is completed or invalid.
+        """
+        target_ql = self.get_questline(questline_id)
+        if target_ql is None or target_ql.is_completed:
+            return False
+
+        if quest_id is not None:
+            target_q = next((q for q in target_ql.quests if q.quest_id == quest_id), None)
+            if target_q is None or target_q.is_completed:
+                return False
+
+            if step_id is not None:
+                target_s = next((s for s in target_q.steps if s.step_id == step_id), None)
+                if target_s is None or target_s.is_completed:
+                    return False
+
         self.tracked_questline_id = questline_id
         self.tracked_quest_id = quest_id
         self.tracked_step_id = step_id
+        return True
 
     # -------------------------------------------------------------------------
     # Event Dispatching

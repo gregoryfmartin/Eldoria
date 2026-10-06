@@ -1263,7 +1263,62 @@ class FastNoiseLite:
         ) * (1.0 / (1.5 * 1.5 * 1.5))
 
     # ------------------ Fractals ------------------
+    def _prepare_fbm_octaves(self) -> None:
+        """Precomputes static octave parameters and binds single-noise functions for zero-overhead FBm."""
+        params = []
+        seed = self.seed
+        amp = self.fractal_bounding
+        scale = 1.0
+        gain = self.gain
+        lac = self.lacunarity
+        for _ in range(self.octaves):
+            params.append((seed, scale, amp))
+            scale *= lac
+            amp *= gain
+            seed = _to_int32(seed + 1)
+        self._octave_params = tuple(params)
+        self._octave_seed = self.seed
+        self._octave_count = self.octaves
+
+        # Bind 2D single noise method
+        if self.noise_type == FnlNoiseType.OpenSimplex2:
+            self._single_noise_fn_2d = self._single_simplex_2d
+            self._single_noise_fn_3d = self._single_open_simplex2_3d
+        elif self.noise_type == FnlNoiseType.Perlin:
+            self._single_noise_fn_2d = self._single_perlin_2d
+            self._single_noise_fn_3d = self._single_perlin_3d
+        elif self.noise_type == FnlNoiseType.Cellular:
+            self._single_noise_fn_2d = self._single_cellular_2d
+            self._single_noise_fn_3d = self._single_cellular_3d
+        elif self.noise_type == FnlNoiseType.OpenSimplex2S:
+            self._single_noise_fn_2d = self._single_open_simplex2s_2d
+            self._single_noise_fn_3d = self._single_open_simplex2s_3d
+        elif self.noise_type == FnlNoiseType.ValueCubic:
+            self._single_noise_fn_2d = self._single_value_cubic_2d
+            self._single_noise_fn_3d = self._single_value_cubic_3d
+        elif self.noise_type == FnlNoiseType.Value:
+            self._single_noise_fn_2d = self._single_value_2d
+            self._single_noise_fn_3d = self._single_value_3d
+        else:
+            self._single_noise_fn_2d = None
+            self._single_noise_fn_3d = None
+
     def _gen_fractal_fbm_2d(self, x: float, y: float) -> float:
+        if self.weighted_strength == 0.0:
+            if (
+                not hasattr(self, "_octave_params")
+                or self._octave_params is None
+                or getattr(self, "_octave_seed", None) != self.seed
+                or getattr(self, "_octave_count", None) != self.octaves
+            ):
+                self._prepare_fbm_octaves()
+            single_fn = getattr(self, "_single_noise_fn_2d", None)
+            if single_fn is not None:
+                total = 0.0
+                for seed_k, scale_k, amp_k in self._octave_params:
+                    total += single_fn(seed_k, x * scale_k, y * scale_k) * amp_k
+                return total
+
         seed = self.seed
         total = 0.0
         amp = self.fractal_bounding
@@ -1278,6 +1333,21 @@ class FastNoiseLite:
         return total
 
     def _gen_fractal_fbm_3d(self, x: float, y: float, z: float) -> float:
+        if self.weighted_strength == 0.0:
+            if (
+                not hasattr(self, "_octave_params")
+                or self._octave_params is None
+                or getattr(self, "_octave_seed", None) != self.seed
+                or getattr(self, "_octave_count", None) != self.octaves
+            ):
+                self._prepare_fbm_octaves()
+            single_fn = getattr(self, "_single_noise_fn_3d", None)
+            if single_fn is not None:
+                total = 0.0
+                for seed_k, scale_k, amp_k in self._octave_params:
+                    total += single_fn(seed_k, x * scale_k, y * scale_k, z * scale_k) * amp_k
+                return total
+
         seed = self.seed
         total = 0.0
         amp = self.fractal_bounding
@@ -1291,6 +1361,7 @@ class FastNoiseLite:
             amp *= self.gain
             seed = _to_int32(seed + 1)
         return total
+
 
     def _gen_fractal_ridged_2d(self, x: float, y: float) -> float:
         seed = self.seed

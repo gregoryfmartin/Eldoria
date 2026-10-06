@@ -626,6 +626,106 @@ class TestQuestingSubsystem(unittest.TestCase):
         hydrated = QuestStep.from_dict(old_data)
         self.assertEqual(hydrated.title, "Defeat Grumble")
 
+    def test_completed_quest_cannot_be_tracked(self):
+        """
+        Verifies that completed quests, questlines, and steps cannot be marked as tracked,
+        both in QuestManager and via user input in GSMainMenuScreen.
+        """
+        qm = QuestManager(storyline=build_storyline_questline("classic"))
+        sq, _ = create_side_quest_for_npc("npc_1", "Jerry", template_idx=0)
+        qm.register_side_questline(sq, party=self.party)
+        self.party.quest_manager = qm
+
+        story_q1 = qm.storyline.quests[0]
+        # Mark all steps of story_q1 complete
+        for s in story_q1.steps:
+            s.is_completed = True
+        story_q1.check_completion()
+        self.assertTrue(story_q1.is_completed)
+
+        # 1. QuestManager.set_tracked_artifact rejects completed quest
+        res = qm.set_tracked_artifact(qm.storyline.questline_id, quest_id=story_q1.quest_id)
+        self.assertFalse(res)
+        self.assertNotEqual(qm.tracked_quest_id, story_q1.quest_id)
+
+        # QuestManager.set_tracked_artifact rejects completed step
+        res_step = qm.set_tracked_artifact(
+            qm.storyline.questline_id,
+            quest_id=story_q1.quest_id,
+            step_id=story_q1.steps[0].step_id,
+        )
+        self.assertFalse(res_step)
+
+        # QuestManager.get_tracked_artifact automatically falls back away from completed quest
+        ql, q, s = qm.get_tracked_artifact()
+        self.assertNotEqual(q.quest_id if q else None, story_q1.quest_id)
+
+        # Complete the side questline
+        for s in sq.quests[0].steps:
+            s.is_completed = True
+        sq.quests[0].check_completion()
+        sq.check_completion()
+        self.assertTrue(sq.is_completed)
+
+        # QuestManager.set_tracked_artifact rejects completed side questline
+        res_ql = qm.set_tracked_artifact(sq.questline_id)
+        self.assertFalse(res_ql)
+        self.assertNotEqual(qm.tracked_questline_id, sq.questline_id)
+
+        # 2. Main Menu UI: Trying to track completed quest
+        menu = GSMainMenuScreen(party=self.party)
+        menu.category_idx = menu.CATEGORIES.index("Quests")
+        menu._enter_submenu()
+
+        # Expand storyline so story_q1 is visible
+        menu.quest_expanded_nodes.add(qm.storyline.questline_id)
+        flat_tree = menu._build_flat_quest_tree()
+        q1_indices = [i for i, n in enumerate(flat_tree) if n["id"] == story_q1.quest_id]
+        self.assertTrue(len(q1_indices) > 0)
+        q1_idx = q1_indices[0]
+        self.assertTrue(flat_tree[q1_idx]["is_completed"])
+        self.assertFalse(flat_tree[q1_idx]["is_tracked"])
+
+        # Position cursor on completed quest and press 'T'
+        menu.quest_cursor = q1_idx
+        menu._handle_quests_input(KeyEvent(key=KeyCode.NONE, char="T"))
+        self.assertIn("Cannot track a completed quest", menu.banner_message)
+
+        # Press space on completed quest
+        menu.banner_message = ""
+        menu._handle_quests_input(KeyEvent(key=KeyCode.NONE, char=" "))
+        self.assertIn("Cannot track a completed quest", menu.banner_message)
+
+        # Verify quest is still not tracked in tree
+        updated_tree = menu._build_flat_quest_tree()
+        self.assertFalse(updated_tree[q1_idx]["is_tracked"])
+
+        # Render submenu and verify star is not on the completed quest, and Pinned is No
+        lines = menu._render_quests_submenu()
+        rendered = "\n".join(lines)
+        self.assertIn("Pinned:  No", rendered)
+        self.assertNotIn("Pinned:  Yes ★", rendered)
+
+        # 3. Trying to track completed step via Enter
+        menu.quest_expanded_nodes.add(story_q1.quest_id)
+        flat_tree_with_steps = menu._build_flat_quest_tree()
+        step_indices = [i for i, n in enumerate(flat_tree_with_steps) if n["type"] == "STEP" and n["is_completed"]]
+        self.assertTrue(len(step_indices) > 0)
+        menu.quest_cursor = step_indices[0]
+        menu._handle_quests_input(KeyEvent(key=KeyCode.ENTER))
+        self.assertIn("Cannot track", menu.banner_message)
+        tree_after_enter = menu._build_flat_quest_tree()
+        self.assertFalse(tree_after_enter[step_indices[0]]["is_tracked"])
+
+        # 4. Trying to track completed questline via 'T'
+        sq_indices = [i for i, n in enumerate(flat_tree_with_steps) if n["id"] == sq.questline_id]
+        self.assertTrue(len(sq_indices) > 0)
+        menu.quest_cursor = sq_indices[0]
+        menu._handle_quests_input(KeyEvent(key=KeyCode.NONE, char="T"))
+        self.assertIn("Cannot track a completed questline", menu.banner_message)
+        tree_after_ql_track = menu._build_flat_quest_tree()
+        self.assertFalse(tree_after_ql_track[sq_indices[0]]["is_tracked"])
+
 
 if __name__ == "__main__":
     unittest.main()

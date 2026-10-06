@@ -3,8 +3,10 @@ Unit tests for terminal ANSI, TrueColor, Context, and FSM.
 """
 
 import unittest
+from unittest.mock import patch
 from eldoria_py.terminal.color import TrueColor, ColorChannel, ColorLibrary
 from eldoria_py.terminal.ansi import ATControlSequences, ATCoordinates, ATDecoration, ATString
+from eldoria_py.terminal.screen import TerminalScreen
 from eldoria_py.core.context import Context, ContextBroadcaster
 from eldoria_py.core.fsm import SMState, SMTransition, SMStateMachine
 
@@ -74,6 +76,31 @@ class TestFSM(unittest.TestCase):
         self.assertEqual(fsm.current_state, "B")
         self.assertIn("Exit_A", events)
         self.assertIn("Enter_B", events)
+
+
+class TestTerminalScreen(unittest.TestCase):
+    def setUp(self):
+        TerminalScreen._initialized = False
+
+    def tearDown(self):
+        TerminalScreen._initialized = False
+
+    def test_alternate_screen_scroll_constants(self):
+        self.assertEqual(ATControlSequences.AlternateScreenScrollEnable, "\033[?1007h")
+        self.assertEqual(ATControlSequences.AlternateScreenScrollDisable, "\033[?1007l")
+
+    def test_terminal_screen_enter_and_exit_alternate_scroll(self):
+        with patch("sys.stdout.write") as mock_write, patch("sys.stdout.flush"), patch("atexit.register"):
+            TerminalScreen.enter()
+            enter_output = "".join(call.args[0] for call in mock_write.call_args_list)
+            self.assertIn("\033[?1049h", enter_output)
+            self.assertIn("\033[?1007l", enter_output)
+
+        with patch("sys.stdout.write") as mock_write, patch("sys.stdout.flush"):
+            TerminalScreen.exit()
+            exit_output = "".join(call.args[0] for call in mock_write.call_args_list)
+            self.assertIn("\033[?1007h", exit_output)
+            self.assertIn("\033[?1049l", exit_output)
 
 
 if __name__ == "__main__":
