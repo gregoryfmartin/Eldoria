@@ -31,6 +31,7 @@ from eldoria_py.quests.generator import (
 from eldoria_py.states.main_menu_screen import GSMainMenuScreen
 from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
 from eldoria_py.core.save_manager import SaveManager
+from eldoria_py.terminal.box import visible_width
 
 
 class TestQuestingSubsystem(unittest.TestCase):
@@ -462,6 +463,170 @@ class TestQuestingSubsystem(unittest.TestCase):
         self.assertIn("STORY", rendered_text)
         self.assertIn("The Fall of Malakor", rendered_text)
 
+    def test_quest_submenu_refinements_and_dual_pane_layout(self):
+        """
+        Verifies visual refinements to Quest Submenu:
+        - 34 total rows returned, each strictly 55 columns wide
+        - Header directions removed from Quest Journal line
+        - Active row line highlighting with slate-blue background and '❱' chevron
+        - No parenthetical progress numbers '(0/16)' after quest names
+        - Tracked quests show subtle star glyph instead of loud [📌 TRACKED]
+        - Bottom half divided horizontally (row 16 divider with '┬') and vertically (col 27 '│')
+        - Left bottom pane has paginated Lore & Summary
+        - Right bottom pane has Current Status colored yellow
+        - Quest titles adhere to <= 4 words constraint
+        """
+        menu = GSMainMenuScreen(party=self.party)
+        qm = QuestManager(storyline=build_storyline_questline("classic"))
+        sq, _ = create_side_quest_for_npc("npc_1", "Jerry", template_idx=0)
+        qm.register_side_questline(sq, party=self.party)
+        self.party.quest_manager = qm
+
+        menu.category_idx = menu.CATEGORIES.index("Quests")
+        menu._enter_submenu()
+
+        # 1. Row count & Column width budget
+        lines = menu._render_quests_submenu()
+        self.assertEqual(len(lines), 34, f"Quests submenu should return exactly 34 rows, got {len(lines)}")
+        for idx, l in enumerate(lines):
+            self.assertEqual(visible_width(l), 55, f"Row {idx} visible width {visible_width(l)} != 55: {repr(l)}")
+
+        # 2. Header: directions removed
+        header_line = lines[0]
+        self.assertIn("Quest Journal", header_line)
+        self.assertNotIn("[Enter]", header_line)
+        self.assertNotIn("[T]Track", header_line)
+        self.assertNotIn("[Esc]", header_line)
+
+        # 3. Active line highlighting & chevron '❱'
+        active_line = lines[1]  # quest_cursor = 0
+        self.assertIn("❱", active_line)
+        self.assertIn("\033[48;2;25;55;85m", active_line)
+        self.assertNotIn("►", active_line)
+
+        # 4. Subtle star glyph for tracked quest (no [📌 TRACKED])
+        full_text = "".join(lines)
+        self.assertNotIn("[📌 TRACKED]", full_text)
+        self.assertNotIn("[TRACKED]", full_text)
+
+        # Pin side quest as tracked
+        qm.set_tracked_artifact(questline_id=sq.questline_id)
+        tracked_lines = menu._render_quests_submenu()
+        tracked_text = "".join(tracked_lines)
+        self.assertIn("★", tracked_text)
+        self.assertNotIn("[📌 TRACKED]", tracked_text)
+
+        # 5. No parenthetical numbers on Quest lines
+        self.assertNotIn("(0/4)", full_text)
+        self.assertNotIn("(0/16)", full_text)
+        self.assertNotIn("(0/1)", full_text)
+
+        # 6. Horizontal & vertical dividers
+        div_row = lines[16]
+        self.assertIn("┬", div_row)
+        self.assertEqual(visible_width(div_row), 55)
+
+        # 7. Bottom panes: Lore & Status
+        bot_row_header = lines[17]
+        self.assertIn("Lore & Summary", bot_row_header)
+        self.assertIn("Current Status", bot_row_header)
+        self.assertIn("│", bot_row_header)
+
+        # Verify yellow coloring in status pane
+        status_line = lines[19]
+        self.assertIn("\033[33m", status_line)
+
+        # 8. Lore pagination controls
+        self.assertEqual(menu.quest_lore_page, 0)
+        menu._handle_quests_input(KeyEvent(key=KeyCode.RIGHT))
+        # Moving cursor resets page
+        menu._handle_quests_input(KeyEvent(key=KeyCode.DOWN))
+        self.assertEqual(menu.quest_lore_page, 0)
+
+        # 9. Quest Title <= 4 words constraint
+        for q in qm.storyline.quests:
+            self.assertLessEqual(len(q.title.split()), 4, f"Story quest title exceeds 4 words: '{q.title}'")
+        for side_ql in qm.side_questlines:
+            for q in side_ql.quests:
+                self.assertLessEqual(len(q.title.split()), 4, f"Side quest title exceeds 4 words: '{q.title}'")
+
+    def test_story_quest_step_titles_and_display(self):
+        """
+        Verifies that Story Quest Steps have concise titles ('Defeat {Boss}'),
+        their long descriptions remain preserved for the Directive panel,
+        and backward compatibility fallback handles old saves.
+        """
+        qm = QuestManager(storyline=build_storyline_questline("classic"))
+        self.party.quest_manager = qm
+
+        # 1. Verify all story steps have short titles
+        for step in qm.storyline.quests[0].steps:
+            self.assertTrue(step.title.startswith("Defeat "))
+            self.assertLessEqual(len(step.title.split()), 4)
+            # Full narrative directive preserved in description
+            self.assertTrue(len(step.description) > len(step.title))
+
+        # 2. Verify flat quest tree displays concise title
+        menu = GSMainMenuScreen(party=self.party)
+        menu.category_idx = menu.CATEGORIES.index("Quests")
+        menu._enter_submenu()
+
+        # Expand Story Questline and Boss Quest
+        menu.quest_expanded_nodes.add("storyline_main")
+        menu.quest_expanded_nodes.add("quest_scourge_of_eldoria")
+
+        flat_nodes = menu._build_flat_quest_tree()
+        step_nodes = [n for n in flat_nodes if n["type"] == "STEP"]
+        self.assertGreater(len(step_nodes), 0)
+        first_step_node = step_nodes[0]
+        self.assertEqual(first_step_node["title"], "Defeat Rattus")
+
+        # 3. Position cursor on first step and verify rendering
+        menu.quest_cursor = flat_nodes.index(first_step_node)
+        lines = menu._render_quests_submenu()
+        rendered_text = "\n".join(lines)
+
+        # Tree displays "Defeat Rattus" without numeric suffix like [0/1]
+        self.assertIn("Defeat Rattus", rendered_text)
+        top_tree_text = "\n".join(lines[1:16])
+        self.assertNotIn("[0/1]", top_tree_text)
+        self.assertNotIn("[0/", top_tree_text)
+
+        # Verify no digits in story step titles
+        for s in qm.storyline.quests[0].steps:
+            self.assertFalse(any(c.isdigit() for c in s.title), f"Digits found in step title: {s.title}")
+
+        # Verify no digits in side quest step titles
+        from eldoria_py.quests.generator import SIDE_QUEST_TEMPLATES
+        for tpl in SIDE_QUEST_TEMPLATES:
+            step_t = tpl.get("step_title", "")
+            self.assertFalse(any(c.isdigit() for c in step_t), f"Digits found in side quest step_title: {step_t}")
+
+        # Directive pane displays the full description
+        self.assertIn("Directive:", rendered_text)
+        self.assertIn("Vanquish Rattus", rendered_text)
+        # Lore pane displays Rattus lore
+        self.assertIn("Rattus", rendered_text)
+
+        # 4. Completed step displays [✔] without numbers
+        first_step_node["obj"].is_completed = True
+        comp_lines = menu._render_quests_submenu()
+        comp_tree_text = "\n".join(comp_lines[1:16])
+        self.assertIn("[✔]", comp_tree_text)
+        self.assertNotIn("[0/1]", comp_tree_text)
+
+        # 5. Backwards compatibility: deserialize old step without title
+        old_data = {
+            "step_id": "step_boss_grumble",
+            "description": "Vanquish Grumble in Sunken Grotto",
+            "step_type": "DEFEAT_ENEMY",
+            "target_name": "Grumble",
+            "target_count": 1,
+        }
+        hydrated = QuestStep.from_dict(old_data)
+        self.assertEqual(hydrated.title, "Defeat Grumble")
+
 
 if __name__ == "__main__":
     unittest.main()
+

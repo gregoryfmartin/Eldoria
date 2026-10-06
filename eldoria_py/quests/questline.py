@@ -85,13 +85,16 @@ class Questline:
         quests: Optional[List[Quest]] = None,
         is_completed: bool = False,
         is_storyline: bool = False,
+        lore: str = "",
     ) -> None:
         self.questline_id: str = questline_id
-        self.title: str = title
+        words = title.strip().split()
+        self.title: str = " ".join(words[:4]) if len(words) > 4 else title.strip()
         self.description: str = description
         self.quests: List[Quest] = list(quests) if quests else []
         self.is_completed: bool = is_completed
         self.is_storyline: bool = is_storyline
+        self.lore: str = lore
 
     def get_active_quest(self) -> Optional[Quest]:
         """Returns the first uncompleted Quest in the ordered sequence."""
@@ -141,6 +144,7 @@ class Questline:
             "description": self.description,
             "is_storyline": self.is_storyline,
             "is_completed": self.is_completed,
+            "lore": self.lore,
             "quests": [q.to_dict() for q in self.quests],
         }
 
@@ -156,6 +160,7 @@ class Questline:
                 description=data.get("description", ""),
                 quests=quests,
                 is_completed=data.get("is_completed", False),
+                lore=data.get("lore", ""),
             )
         else:
             rewards_data = data.get("rewards", {})
@@ -171,6 +176,7 @@ class Questline:
                 quests=quests,
                 is_completed=data.get("is_completed", False),
                 is_reward_claimed=data.get("is_reward_claimed", False),
+                lore=data.get("lore", ""),
             )
 
 
@@ -188,6 +194,7 @@ class StorylineQuestline(Questline):
         description: str = "Liberate the realm of Eldoria by vanquishing the territorial bosses.",
         quests: Optional[List[Quest]] = None,
         is_completed: bool = False,
+        lore: str = "",
     ) -> None:
         super().__init__(
             questline_id=questline_id,
@@ -196,6 +203,7 @@ class StorylineQuestline(Questline):
             quests=quests,
             is_completed=is_completed,
             is_storyline=True,
+            lore=lore,
         )
 
 
@@ -217,6 +225,7 @@ class SideQuestline(Questline):
         quests: Optional[List[Quest]] = None,
         is_completed: bool = False,
         is_reward_claimed: bool = False,
+        lore: str = "",
     ) -> None:
         super().__init__(
             questline_id=questline_id,
@@ -225,6 +234,7 @@ class SideQuestline(Questline):
             quests=quests,
             is_completed=is_completed,
             is_storyline=False,
+            lore=lore,
         )
         self.originator_npc_id: str = originator_npc_id
         self.originator_name: str = originator_name

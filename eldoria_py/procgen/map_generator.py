@@ -21,6 +21,9 @@ class BiomeType(str, Enum):
     MOUNTAIN = "Mountain"
     SNOW = "Snow"
     ROAD = "Road"
+    BADLANDS = "Badlands"
+    TUNDRA = "Tundra"
+    SWAMP = "Swamp"
 
 
 @dataclass
@@ -115,6 +118,36 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
         battle_allowed=True,
         encounter_rate=0.04,
         region_code=1,
+    ),
+    BiomeType.BADLANDS: BiomeConfig(
+        name="Badlands",
+        glyph="x",
+        fg_color=TrueColor(0xD9, 0x77, 0x36),  # terracotta clay / rust
+        bg_color=TrueColor(0x3E, 0x20, 0x14),  # dark arid russet
+        walkable=True,
+        battle_allowed=True,
+        encounter_rate=0.16,  # Same as Forest
+        region_code=2,
+    ),
+    BiomeType.TUNDRA: BiomeConfig(
+        name="Tundra",
+        glyph=",",
+        fg_color=TrueColor(0xBA, 0xE6, 0xFD),  # glacial ice cyan
+        bg_color=TrueColor(0x16, 0x4E, 0x63),  # arctic permafrost slate
+        walkable=True,  # Walkable snow area
+        battle_allowed=True,
+        encounter_rate=0.10,  # Same as Plains
+        region_code=1,
+    ),
+    BiomeType.SWAMP: BiomeConfig(
+        name="Swamp",
+        glyph="§",
+        fg_color=TrueColor(0x84, 0xCC, 0x16),  # murky moss olive
+        bg_color=TrueColor(0x1A, 0x2E, 0x16),  # stagnant mire green
+        walkable=True,
+        battle_allowed=True,
+        encounter_rate=0.16,  # Same as Forest
+        region_code=2,
     ),
 }
 
@@ -436,6 +469,9 @@ BIOME_TO_CHAR: Dict[BiomeType, str] = {
     BiomeType.MOUNTAIN: "▲",
     BiomeType.SNOW: "*",
     BiomeType.ROAD: "#",
+    BiomeType.BADLANDS: "B",
+    BiomeType.TUNDRA: "T",
+    BiomeType.SWAMP: "S",
 }
 
 CHAR_TO_BIOME: Dict[str, BiomeType] = {v: k for k, v in BIOME_TO_CHAR.items()}
@@ -492,9 +528,16 @@ class ProceduralMapGenerator:
         boundary_wrap: bool = False,
         offset_x: int = 0,
         offset_y: int = 0,
+        total_world_width: Optional[int] = None,
+        total_world_height: Optional[int] = None,
+        badlands_side: Optional[str] = None,
     ) -> Map:
         """Generates a complete, interconnected Map with biomes, exits, and optional roads."""
         world_map = Map(name=name, width=width, height=height, boundary_wrap=boundary_wrap)
+
+        world_w = total_world_width if total_world_width is not None else width
+        world_h = total_world_height if total_world_height is not None else height
+        b_side = badlands_side if badlands_side is not None else ("LEFT" if (self.seed % 2 == 0) else "RIGHT")
 
         # 1. Sample Elevation & Moisture to determine base biomes
         for y in range(height):
@@ -506,7 +549,16 @@ class ProceduralMapGenerator:
                 elevation = max(0.0, min(1.0, (raw_e + 1.0) * 0.5))
                 moisture = max(0.0, min(1.0, (raw_m + 1.0) * 0.5))
 
-                biome = self._classify_biome(elevation, moisture)
+                u = float(offset_x + x) / max(1.0, float(world_w - 1))
+                v = float(offset_y + y) / max(1.0, float(world_h - 1))
+
+                biome = self._classify_biome(
+                    elevation=elevation,
+                    moisture=moisture,
+                    u=u,
+                    v=v,
+                    badlands_side=b_side,
+                )
                 config = BIOME_CONFIGS[biome]
 
                 tile = MapTile(
@@ -531,18 +583,48 @@ class ProceduralMapGenerator:
         return world_map
 
     @staticmethod
-    def _classify_biome(elevation: float, moisture: float) -> BiomeType:
+    def _classify_biome(
+        elevation: float,
+        moisture: float,
+        u: float = 0.5,
+        v: float = 0.5,
+        badlands_side: str = "LEFT",
+    ) -> BiomeType:
         if elevation < 0.28:
             return BiomeType.DEEP_WATER
         if elevation < 0.38:
             return BiomeType.WATER
         if elevation < 0.44:
             return BiomeType.COAST
-        if elevation < 0.70:
-            return BiomeType.FOREST if moisture > 0.48 else BiomeType.PLAINS
-        if elevation < 0.85:
+        if elevation >= 0.85:
+            return BiomeType.SNOW
+        if elevation >= 0.70:
             return BiomeType.MOUNTAIN
-        return BiomeType.SNOW
+
+        # Walkable land: 0.44 <= elevation < 0.70
+        # Organic perturbation to avoid artificial laser-straight borders
+        v_eff = v + (moisture - 0.5) * 0.12
+        u_eff = u + (moisture - 0.5) * 0.12
+
+        # 1. North portion: Tundra (walkable snow)
+        if v_eff < 0.25:
+            return BiomeType.TUNDRA
+
+        # 2. South portion: Swamp (walkable bog/marsh)
+        if v_eff > 0.75:
+            return BiomeType.SWAMP
+
+        # 3. Flank: Badlands (either extreme left or right, only one per map/world)
+        side = badlands_side.upper()
+        if side == "LEFT":
+            if u_eff < 0.20 and 0.25 <= v_eff <= 0.75:
+                return BiomeType.BADLANDS
+        else:  # RIGHT
+            if u_eff > 0.80 and 0.25 <= v_eff <= 0.75:
+                return BiomeType.BADLANDS
+
+        # 4. Core temperate zone: Forest vs Plains
+        return BiomeType.FOREST if moisture > 0.48 else BiomeType.PLAINS
 
     @staticmethod
     def _generate_decorations(biome: BiomeType) -> List[str]:
@@ -558,6 +640,17 @@ class ProceduralMapGenerator:
                 objs.append("MTORock")
         elif biome == BiomeType.COAST:
             if random.random() < 0.20:
+                objs.append("MTORock")
+        elif biome == BiomeType.BADLANDS:
+            if random.random() < 0.25:
+                objs.append("MTORock")
+        elif biome == BiomeType.TUNDRA:
+            if random.random() < 0.15:
+                objs.append("MTORock")
+        elif biome == BiomeType.SWAMP:
+            if random.random() < 0.20:
+                objs.append("MTOTree")
+            if random.random() < 0.15:
                 objs.append("MTORock")
         return objs
 

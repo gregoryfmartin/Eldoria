@@ -27,6 +27,9 @@ from eldoria_py.combat.encounters import (
     create_plains_encounter,
     create_forest_encounter,
     create_cave_encounter,
+    create_badlands_encounter,
+    create_tundra_encounter,
+    create_swamp_encounter,
 )
 
 __all__ = [
@@ -58,6 +61,9 @@ __all__ = [
     "create_plains_encounter",
     "create_forest_encounter",
     "create_cave_encounter",
+    "create_badlands_encounter",
+    "create_tundra_encounter",
+    "create_swamp_encounter",
     "Gender",
     "CharacterPortrait",
     "get_portraits_for_gender",

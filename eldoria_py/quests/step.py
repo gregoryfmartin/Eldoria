@@ -37,9 +37,18 @@ class QuestStep:
         baseline_value: int = 0,
         is_completed: bool = False,
         is_active: bool = False,
+        lore: str = "",
+        title: str = "",
     ) -> None:
         self.step_id: str = step_id
         self.description: str = description
+        if title:
+            self.title: str = title
+        elif step_id.startswith("step_boss_"):
+            boss = target_name or step_id.replace("step_boss_", "").capitalize()
+            self.title = f"Defeat {boss}"
+        else:
+            self.title = description
         self.step_type: QuestStepType = (
             step_type if isinstance(step_type, QuestStepType) else QuestStepType(step_type)
         )
@@ -51,6 +60,7 @@ class QuestStep:
         self.baseline_value: int = baseline_value
         self.is_completed: bool = is_completed
         self.is_active: bool = is_active
+        self.lore: str = lore
 
         # Initialize progress_dict keys if multi-target
         if self.target_dict and not self.progress_dict:
@@ -191,6 +201,8 @@ class QuestStep:
             "baseline_value": self.baseline_value,
             "is_completed": self.is_completed,
             "is_active": self.is_active,
+            "lore": self.lore,
+            "title": self.title,
         }
 
     @classmethod
@@ -208,4 +220,6 @@ class QuestStep:
             baseline_value=data.get("baseline_value", 0),
             is_completed=data.get("is_completed", False),
             is_active=data.get("is_active", False),
+            lore=data.get("lore", ""),
+            title=data.get("title", ""),
         )

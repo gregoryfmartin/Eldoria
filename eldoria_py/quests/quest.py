@@ -19,12 +19,15 @@ class Quest:
         description: str = "",
         steps: Optional[List[QuestStep]] = None,
         is_completed: bool = False,
+        lore: str = "",
     ) -> None:
         self.quest_id: str = quest_id
-        self.title: str = title
+        words = title.strip().split()
+        self.title: str = " ".join(words[:4]) if len(words) > 4 else title.strip()
         self.description: str = description
         self.steps: List[QuestStep] = list(steps) if steps else []
         self.is_completed: bool = is_completed
+        self.lore: str = lore
 
     def get_active_steps(self) -> List[QuestStep]:
         """Returns the list of currently active QuestSteps."""
@@ -57,6 +60,7 @@ class Quest:
             "description": self.description,
             "quest_type": "GENERIC",
             "is_completed": self.is_completed,
+            "lore": self.lore,
             "steps": [s.to_dict() for s in self.steps],
         }
 
@@ -73,6 +77,7 @@ class Quest:
                 description=data.get("description", ""),
                 steps=steps,
                 is_completed=data.get("is_completed", False),
+                lore=data.get("lore", ""),
             )
         else:
             return LinearQuest(
@@ -81,6 +86,7 @@ class Quest:
                 description=data.get("description", ""),
                 steps=steps,
                 is_completed=data.get("is_completed", False),
+                lore=data.get("lore", ""),
             )
 
 
@@ -97,6 +103,7 @@ class LinearQuest(Quest):
         description: str = "",
         steps: Optional[List[QuestStep]] = None,
         is_completed: bool = False,
+        lore: str = "",
     ) -> None:
         super().__init__(
             quest_id=quest_id,
@@ -104,6 +111,7 @@ class LinearQuest(Quest):
             description=description,
             steps=steps,
             is_completed=is_completed,
+            lore=lore,
         )
         self._sync_active_step()
 
@@ -175,6 +183,7 @@ class NonlinearQuest(Quest):
         description: str = "",
         steps: Optional[List[QuestStep]] = None,
         is_completed: bool = False,
+        lore: str = "",
     ) -> None:
         super().__init__(
             quest_id=quest_id,
@@ -182,6 +191,7 @@ class NonlinearQuest(Quest):
             description=description,
             steps=steps,
             is_completed=is_completed,
+            lore=lore,
         )
         self._activate_all_uncompleted()
 

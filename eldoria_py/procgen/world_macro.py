@@ -77,10 +77,10 @@ BOSS_CAVE_MAPPING: List[Tuple[str, int, str, List[str]]] = [
     ("Craghorn", 3, "Dragon's Maw", ["Mountain"]),
     ("Tideclaw", 4, "Crystal Hollow", ["Coast"]),
     ("Ironhide", 4, "Grimrock Abyss", ["Plains", "Mountain"]),
-    ("Venomtail", 5, "Obsidian Pit", ["Forest"]),
+    ("Venomtail", 5, "Obsidian Pit", ["Swamp", "Forest"]),
     ("Gargoyle", 5, "Frostpeak Hollow", ["Mountain"]),
-    ("Frostfang", 6, "Blighted Vault", ["Snow"]),
-    ("Magmadon", 6, "Brimstone Den", ["Cave", "Mountain"]),
+    ("Frostfang", 6, "Blighted Vault", ["Tundra", "Snow"]),
+    ("Magmadon", 6, "Brimstone Den", ["Badlands", "Cave", "Mountain"]),
     ("Stormlord", 7, "Stormcrag Pit", ["Mountain"]),
     ("Deathclaw", 7, "Nether Chasm", ["Cave"]),
     ("Archdemon", 8, "Abyssal Sump", ["Cave", "Citadel"]),
@@ -234,6 +234,10 @@ class WorldMacroMap:
         # 1. Generate sectors with continuous global coordinates
         self.sectors = []
         total_sectors = self.macro_width * self.macro_height
+        total_world_width = self.macro_width * self.sector_width
+        total_world_height = self.macro_height * self.sector_height
+        badlands_side = "LEFT" if (self.seed % 2 == 0) else "RIGHT"
+
         for sy in range(self.macro_height):
             row: List[Map] = []
             for sx in range(self.macro_width):
@@ -247,6 +251,9 @@ class WorldMacroMap:
                     boundary_wrap=False,
                     offset_x=offset_x,
                     offset_y=offset_y,
+                    total_world_width=total_world_width,
+                    total_world_height=total_world_height,
+                    badlands_side=badlands_side,
                 )
                 row.append(sec_map)
                 if progress_callback:
@@ -329,6 +336,9 @@ class WorldMacroMap:
                     + counts[BiomeType.FOREST]
                     + counts[BiomeType.COAST]
                     + counts[BiomeType.ROAD]
+                    + counts[BiomeType.BADLANDS]
+                    + counts[BiomeType.TUNDRA]
+                    + counts[BiomeType.SWAMP]
                 )
                 sector_stats.append({
                     "coord": (sx, sy),
@@ -647,6 +657,12 @@ class WorldMacroMap:
                             b_score += 80.0
                         if (t.biome == BiomeType.COAST or any(sec.tiles[y + dy][x + dx].biome == BiomeType.WATER for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)))) and "Coast" in preferred_biomes:
                             b_score += 70.0
+                        if t.biome == BiomeType.BADLANDS and "Badlands" in preferred_biomes:
+                            b_score += 60.0
+                        if t.biome == BiomeType.TUNDRA and ("Tundra" in preferred_biomes or "Snow" in preferred_biomes):
+                            b_score += 75.0
+                        if t.biome == BiomeType.SWAMP and ("Swamp" in preferred_biomes or "Forest" in preferred_biomes):
+                            b_score += 65.0
 
                         is_used_sec = (sx, sy) in used_sectors
                         sec_bonus = 0.0 if is_used_sec else 1000.0

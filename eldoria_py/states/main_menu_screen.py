@@ -37,6 +37,7 @@ from ..combat.items import (
     can_discard_item,
 )
 from ..core.save_manager import SaveManager, SaveSlotHeader
+from ..quests import LinearQuest, NonlinearQuest, Questline, StorylineQuestline, SideQuestline, QuestStep
 
 
 def _pad_cell(text: str, width: int, align: str = "left", fill_char: str = " ") -> str:
@@ -150,10 +151,11 @@ class GSMainMenuScreen(SMState):
         self.magic_modal_mode: str = "NONE"  # "NONE", "TARGET_SELECT"
         self.magic_target_cursor: int = 0
 
-        # Submenu State: QUESTS (Structured Accordion)
+        # Submenu State: QUESTS (Structured Accordion & Dual-Pane Info)
         self.quest_cursor: int = 0
         self.quest_scroll: int = 0
         self.quest_expanded_nodes: set[str] = set()
+        self.quest_lore_page: int = 0
 
         # Submenu State: SAVE (Formal UIPanel components)
         self.save_slot_cursor: int = 0  # 0..2 (slots 1..3)
@@ -314,16 +316,18 @@ class GSMainMenuScreen(SMState):
         self._render()
 
     def _handle_input(self, key_info: KeyEvent, context: Context, core: Any) -> None:
-        # Global Hero switch via left/right arrows when not in modal or text input
+        # Global Hero switch via left/right arrows when not in modal, text input, or Quests submenu
         if self.focus_mode in ("CATEGORIES", "SUBMENU") and not self.equip_drawer_open:
-            if key_info.key == KeyCode.LEFT:
-                if len(self.party.members) > 1:
-                    self.hero_idx = (self.hero_idx - 1) % len(self.party.members)
-                return
-            elif key_info.key == KeyCode.RIGHT:
-                if len(self.party.members) > 1:
-                    self.hero_idx = (self.hero_idx + 1) % len(self.party.members)
-                return
+            cat = self.CATEGORIES[self.category_idx]
+            if not (self.focus_mode == "SUBMENU" and cat == "Quests"):
+                if key_info.key == KeyCode.LEFT:
+                    if len(self.party.members) > 1:
+                        self.hero_idx = (self.hero_idx - 1) % len(self.party.members)
+                    return
+                elif key_info.key == KeyCode.RIGHT:
+                    if len(self.party.members) > 1:
+                        self.hero_idx = (self.hero_idx + 1) % len(self.party.members)
+                    return
 
         # 1. CATEGORIES FOCUS (Left Rail)
         if self.focus_mode == "CATEGORIES":
@@ -401,6 +405,7 @@ class GSMainMenuScreen(SMState):
             self.focus_mode = "SUBMENU"
             self.quest_cursor = 0
             self.quest_scroll = 0
+            self.quest_lore_page = 0
             qm = getattr(self.party, "quest_manager", None)
             if qm:
                 self.quest_expanded_nodes.add(qm.storyline.questline_id)
@@ -1442,7 +1447,7 @@ class GSMainMenuScreen(SMState):
         elif self.CATEGORIES[self.category_idx] == "Save":
             return "\033[33m[↑↓] Select Slot  [Enter] Save Game  [Esc] Back\033[0m"
         elif self.CATEGORIES[self.category_idx] == "Quests":
-            return "\033[33m[↑↓] Navigate Quests  [Enter] Expand/Collapse  [T/Space] Track  [Esc] Up\033[0m"
+            return "\033[33m[↑↓] Navigate  [◄►] Page Lore  [Enter] Toggle  [T/Space] Track  [Esc] Back\033[0m"
         return "\033[33m[↑↓] Navigate  [◄►] Switch Hero  [Enter] Select  [Esc] Back\033[0m"
 
     # -------------------------------------------------------------------------
@@ -1510,7 +1515,7 @@ class GSMainMenuScreen(SMState):
                             "is_expanded": False,
                             "is_tracked": s_tracked,
                             "is_completed": s.is_completed,
-                            "title": s.description,
+                            "title": getattr(s, "title", "") or s.description,
                             "is_storyline": True,
                         })
 
@@ -1565,7 +1570,7 @@ class GSMainMenuScreen(SMState):
                                 "is_expanded": False,
                                 "is_tracked": s_tracked,
                                 "is_completed": s.is_completed,
-                                "title": s.description,
+                                "title": getattr(s, "title", "") or s.description,
                                 "is_storyline": False,
                             })
 
@@ -1585,9 +1590,16 @@ class GSMainMenuScreen(SMState):
         if key_info.key == KeyCode.UP:
             if self.quest_cursor > 0:
                 self.quest_cursor -= 1
+                self.quest_lore_page = 0
         elif key_info.key == KeyCode.DOWN:
             if self.quest_cursor < len(flat_tree) - 1:
                 self.quest_cursor += 1
+                self.quest_lore_page = 0
+        elif key_info.key == KeyCode.LEFT or key_info.char in ("[", "<"):
+            if self.quest_lore_page > 0:
+                self.quest_lore_page -= 1
+        elif key_info.key == KeyCode.RIGHT or key_info.char in ("]", ">"):
+            self.quest_lore_page += 1
         elif key_info.key in (KeyCode.ENTER, KeyCode.NONE) and (key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n")):
             node = flat_tree[self.quest_cursor]
             if node["type"] in ("QUESTLINE", "QUEST"):
@@ -1605,7 +1617,7 @@ class GSMainMenuScreen(SMState):
                     quest_id=p_q.quest_id if p_q else None,
                     step_id=s_obj.step_id,
                 )
-                self._set_banner(f"📌 Tracking: {s_obj.description}")
+                self._set_banner(f"★ Tracking: {s_obj.description}")
 
         elif key_info.char in ("t", "T", " "):
             node = flat_tree[self.quest_cursor]
@@ -1613,20 +1625,20 @@ class GSMainMenuScreen(SMState):
             p_q = node.get("parent_q")
             if node["type"] == "QUESTLINE":
                 qm.set_tracked_artifact(questline_id=p_ql.questline_id)
-                self._set_banner(f"📌 Tracking: {p_ql.title}")
+                self._set_banner(f"★ Tracking: {p_ql.title}")
             elif node["type"] == "QUEST":
                 qm.set_tracked_artifact(
                     questline_id=p_ql.questline_id,
                     quest_id=node["obj"].quest_id,
                 )
-                self._set_banner(f"📌 Tracking: {node['title']}")
+                self._set_banner(f"★ Tracking: {node['title']}")
             elif node["type"] == "STEP":
                 qm.set_tracked_artifact(
                     questline_id=p_ql.questline_id,
                     quest_id=p_q.quest_id if p_q else None,
                     step_id=node["obj"].step_id,
                 )
-                self._set_banner(f"📌 Tracking: {node['title']}")
+                self._set_banner(f"★ Tracking: {node['title']}")
 
     def _handle_quests_escape(self) -> bool:
         """
@@ -1677,87 +1689,234 @@ class GSMainMenuScreen(SMState):
 
     def _render_quests_submenu(self) -> list[str]:
         lines: list[str] = []
-        lines.append(" \033[1;36mQuest Journal\033[0m ────────── \033[90m[Enter]Toggle [T]Track [Esc]Up\033[0m")
-        lines.append("")
+        # Header (Row 0): Clean title bar without directions
+        header_txt = " \033[1;36mQuest Journal\033[0m "
+        dashes = "─" * max(0, self.RIGHT_WIDTH - visible_width(header_txt))
+        lines.append(_pad_cell(header_txt + dashes, self.RIGHT_WIDTH))
 
         qm = getattr(self.party, "quest_manager", None)
+        flat_tree = self._build_flat_quest_tree() if qm else []
+
+        # Rows 1..15 (15 rows): Top Half - Scrollable Quest Tree
+        top_tree_lines: list[str] = []
         if not qm:
-            lines.append(" \033[90mNo active quest log found.\033[0m")
-            return lines
+            top_tree_lines.append(_pad_cell("   \033[90mNo active quest log found.\033[0m", self.RIGHT_WIDTH))
+        elif not flat_tree:
+            top_tree_lines.append(_pad_cell("   \033[90mNo quests recorded in journal.\033[0m", self.RIGHT_WIDTH))
+        else:
+            total_items = len(flat_tree)
+            self.quest_cursor = max(0, min(total_items - 1, self.quest_cursor))
+            max_visible = 15
+            if self.quest_cursor >= self.quest_scroll + max_visible:
+                self.quest_scroll = self.quest_cursor - max_visible + 1
+            elif self.quest_cursor < self.quest_scroll:
+                self.quest_scroll = self.quest_cursor
+            self.quest_scroll = max(0, min(self.quest_scroll, max(0, total_items - max_visible)))
 
-        flat_tree = self._build_flat_quest_tree()
-        if not flat_tree:
-            lines.append(" \033[90mNo quests recorded in journal.\033[0m")
-            return lines
+            visible_nodes = flat_tree[self.quest_scroll : self.quest_scroll + max_visible]
 
-        total_items = len(flat_tree)
-        self.quest_cursor = max(0, min(total_items - 1, self.quest_cursor))
-        max_visible = 30
-        if self.quest_cursor >= self.quest_scroll + max_visible:
-            self.quest_scroll = self.quest_cursor - max_visible + 1
-        elif self.quest_cursor < self.quest_scroll:
-            self.quest_scroll = self.quest_cursor
-        self.quest_scroll = max(0, min(self.quest_scroll, max(0, total_items - max_visible)))
+            for rel_idx, node in enumerate(visible_nodes):
+                abs_idx = self.quest_scroll + rel_idx
+                is_cur = (abs_idx == self.quest_cursor and self.focus_mode == "SUBMENU")
 
-        visible_nodes = flat_tree[self.quest_scroll : self.quest_scroll + max_visible]
+                is_tracked = node["is_tracked"]
+                is_completed = node["is_completed"]
+                tracked_star = "\033[1;33m★ \033[0m" if is_tracked else ""
 
-        for rel_idx, node in enumerate(visible_nodes):
-            abs_idx = self.quest_scroll + rel_idx
-            is_cur = (abs_idx == self.quest_cursor and self.focus_mode == "SUBMENU")
-            cursor_str = "\033[1;36m►\033[0m " if is_cur else "  "
+                if node["type"] == "QUESTLINE":
+                    expand_glyph = "▼ " if node["is_expanded"] else "► "
+                    if node["is_storyline"]:
+                        badge = "\033[1;33m◆ STORY:\033[0m"
+                        title_col = "\033[1;37m" if is_cur else "\033[37m"
+                    else:
+                        badge = "\033[1;36m◇ SIDE:\033[0m"
+                        title_col = "\033[1;37m" if is_cur else "\033[36m"
 
-            is_tracked = node["is_tracked"]
-            is_completed = node["is_completed"]
-            tracked_tag = " \033[1;32m[📌 TRACKED]\033[0m" if is_tracked else ""
+                    comp_tag = " \033[32m[Completed ✔]\033[0m" if is_completed else ""
+                    content = f"{expand_glyph}{badge} {tracked_star}{title_col}{node['title']}\033[0m{comp_tag}"
 
-            if node["type"] == "QUESTLINE":
-                expand_glyph = "▼ " if node["is_expanded"] else "► "
-                if node["is_storyline"]:
-                    badge = "\033[1;33m★ STORY:\033[0m"
-                    title_col = "\033[1;37m" if is_cur else "\033[37m"
+                elif node["type"] == "QUEST":
+                    indent = "   "
+                    expand_glyph = "▼ " if node["is_expanded"] else "► "
+                    if is_completed:
+                        comp_tag = " \033[32m[Completed]\033[0m"
+                        title_col = "\033[90m"
+                    else:
+                        comp_tag = ""  # No numeric display in parentheses
+                        title_col = "\033[1;37m" if is_cur else "\033[37m"
+
+                    content = f"{indent}{expand_glyph}{tracked_star}{title_col}{node['title']}\033[0m{comp_tag}"
+
+                else:  # STEP
+                    indent = "      "
+                    bullet = "• "
+                    s_obj = node["obj"]
+                    if is_completed:
+                        status_str = " \033[32m[✔]\033[0m"
+                        title_col = "\033[90m"
+                    else:
+                        status_str = ""
+                        title_col = "\033[37m" if not is_cur else "\033[1;37m"
+
+                    content = f"{indent}{bullet}{tracked_star}{title_col}{node['title']}\033[0m{status_str}"
+
+                # Line highlighting with slate-blue background on active row
+                if is_cur:
+                    bg = "\033[48;2;25;55;85m"
+                    bg_content = content.replace("\033[0m", f"\033[0m{bg}")
+                    base_content = f" ❱ {content}"
+                    vis_len = visible_width(base_content)
+                    if vis_len > self.RIGHT_WIDTH:
+                        base_content = truncate_ansi(base_content, self.RIGHT_WIDTH)
+                        vis_len = visible_width(base_content)
+                    pad_len = max(0, self.RIGHT_WIDTH - vis_len)
+                    line = f"{bg} \033[1;36m❱ \033[1;37m{bg_content}{' ' * pad_len}\033[0m"
                 else:
-                    badge = "\033[1;36m◇ SIDE:\033[0m"
-                    title_col = "\033[1;37m" if is_cur else "\033[36m"
+                    line = f"   {content}"
+                    line = _pad_cell(line, self.RIGHT_WIDTH)
 
-                comp_tag = " \033[32m[Completed ✔]\033[0m" if is_completed else ""
-                line = f"{cursor_str}{expand_glyph}{badge} {title_col}{node['title']}\033[0m{comp_tag}{tracked_tag}"
+                top_tree_lines.append(line)
 
-            elif node["type"] == "QUEST":
-                indent = "    "
-                expand_glyph = "▼ " if node["is_expanded"] else "► "
-                q_obj = node["obj"]
-                step_done_cnt = sum(1 for s in q_obj.steps if s.is_completed)
-                progress_str = f"({step_done_cnt}/{len(q_obj.steps)})"
-                if is_completed:
-                    comp_tag = " \033[32m[✔ Completed]\033[0m"
-                    title_col = "\033[90m"
-                else:
-                    comp_tag = f" \033[33m{progress_str}\033[0m"
-                    title_col = "\033[1;37m" if is_cur else "\033[37m"
+        while len(top_tree_lines) < 15:
+            top_tree_lines.append(" " * self.RIGHT_WIDTH)
 
-                line = f"{cursor_str}{indent}{expand_glyph}{title_col}{node['title']}\033[0m{comp_tag}{tracked_tag}"
+        lines.extend(top_tree_lines[:15])
+
+        # Row 16: Horizontal Divider (Length 55)
+        lines.append("\033[90m" + ("─" * 27) + "┬" + ("─" * 27) + "\033[0m")
+
+        # Rows 17..33 (17 rows): Dual-Pane Bottom Half (Left: Lore 27 cols | Right: Status 27 cols)
+        cur_node = flat_tree[self.quest_cursor] if flat_tree and 0 <= self.quest_cursor < len(flat_tree) else None
+
+        # 1. Left Pane: Paginated Lore & Summary (Width 27)
+        left_pane_lines: list[str] = []
+        left_pane_lines.append(_pad_cell(" \033[1;36mLore & Summary\033[0m", 27))
+        left_pane_lines.append(_pad_cell("\033[90m" + ("─" * 27) + "\033[0m", 27))
+
+        if cur_node:
+            obj = cur_node["obj"]
+            lore_text = getattr(obj, "lore", "")
+            if not lore_text and cur_node.get("type") == "STEP" and getattr(obj, "target_name", ""):
+                from ..quests.generator import BOSS_LORE
+                lore_text = BOSS_LORE.get(obj.target_name, "")
+            if not lore_text:
+                lore_text = getattr(obj, "description", "")
+            if not lore_text:
+                lore_text = "No additional chronicles recorded for this objective."
+            wrapped_lore = wrap_text(lore_text, 25)
+        else:
+            wrapped_lore = ["Select a quest from above", "to review recorded lore."]
+
+        lore_page_size = 13
+        total_lore_pages = max(1, (len(wrapped_lore) + lore_page_size - 1) // lore_page_size)
+        self.quest_lore_page = max(0, min(total_lore_pages - 1, self.quest_lore_page))
+        lore_page_lines = wrapped_lore[self.quest_lore_page * lore_page_size : (self.quest_lore_page + 1) * lore_page_size]
+
+        for idx in range(lore_page_size):
+            if idx < len(lore_page_lines):
+                left_pane_lines.append(_pad_cell(f" {lore_page_lines[idx]}", 27))
+            else:
+                left_pane_lines.append(" " * 27)
+
+        if total_lore_pages > 1:
+            page_info = f" \033[90m◄ Pg {self.quest_lore_page + 1}/{total_lore_pages} ► [◄►]\033[0m"
+        else:
+            page_info = " \033[90mPage 1/1\033[0m"
+        left_pane_lines.append(_pad_cell(page_info, 27))
+        left_pane_lines.append(" " * 27)
+
+        # 2. Right Pane: Current Status in Yellow (Width 27)
+        right_pane_lines: list[str] = []
+        right_pane_lines.append(_pad_cell(" \033[1;33mCurrent Status\033[0m", 27))
+        right_pane_lines.append(_pad_cell("\033[90m" + ("─" * 27) + "\033[0m", 27))
+
+        status_rows: list[str] = []
+        if cur_node:
+            node_type = cur_node["type"]
+            is_tracked = cur_node["is_tracked"]
+            is_completed = cur_node["is_completed"]
+            obj = cur_node["obj"]
+
+            if node_type == "QUESTLINE":
+                st_badge = "[COMPLETED]" if is_completed else "[IN PROGRESS]"
+                status_rows.append(f" \033[1;33mStatus:\033[0m \033[33m{st_badge}\033[0m")
+                ty_label = "Storyline" if cur_node["is_storyline"] else "Side Quest"
+                status_rows.append(f" \033[33mType:    {ty_label}\033[0m")
+                total_q = len(obj.quests)
+                done_q = sum(1 for q in obj.quests if q.is_completed)
+                status_rows.append(f" \033[33mQuests:  {done_q}/{total_q} Complete\033[0m")
+                all_steps = [s for q in obj.quests for s in q.steps]
+                done_steps = sum(1 for s in all_steps if s.is_completed)
+                status_rows.append(f" \033[33mSteps:   {done_steps}/{len(all_steps)} Done\033[0m")
+                status_rows.append(f" \033[33mPinned:  {'Yes ★' if is_tracked else 'No'}\033[0m")
+                if isinstance(obj, SideQuestline):
+                    status_rows.append("")
+                    status_rows.append(f" \033[1;33mOriginator:\033[0m")
+                    status_rows.append(f" \033[33m {obj.originator_name[:24]}\033[0m")
+                    status_rows.append(f" \033[33m ({obj.originator_location[:22]})\033[0m")
+                    status_rows.append(f" \033[1;33mSpoils:\033[0m")
+                    if obj.rewards.gold:
+                        status_rows.append(f" \033[33m Gold: {obj.rewards.gold} G\033[0m")
+                    if obj.rewards.xp:
+                        status_rows.append(f" \033[33m EXP:  {obj.rewards.xp} XP\033[0m")
+                    if obj.rewards.items:
+                        it_str = ", ".join(f"{qty}x {name}" for name, qty in obj.rewards.items)
+                        status_rows.append(f" \033[33m Item: {it_str[:18]}\033[0m")
+                    status_rows.append(f" \033[33m Claim: {'Claimed' if obj.is_reward_claimed else 'Unclaimed'}\033[0m")
+
+            elif node_type == "QUEST":
+                st_badge = "[COMPLETED]" if is_completed else "[IN PROGRESS]"
+                status_rows.append(f" \033[1;33mStatus:\033[0m \033[33m{st_badge}\033[0m")
+                gating_type = "Linear (Order)" if isinstance(obj, LinearQuest) else "Nonlinear"
+                status_rows.append(f" \033[33mGating:  {gating_type}\033[0m")
+                done_steps = sum(1 for s in obj.steps if s.is_completed)
+                total_steps = len(obj.steps)
+                pct = int((done_steps / max(1, total_steps)) * 100)
+                status_rows.append(f" \033[33mSteps:   {done_steps}/{total_steps} ({pct}%)\033[0m")
+                bar_len = 14
+                filled = int(bar_len * done_steps / max(1, total_steps))
+                bar_str = "[" + "█" * filled + "░" * (bar_len - filled) + "]"
+                status_rows.append(f" \033[33mProgress:{bar_str}\033[0m")
+                status_rows.append(f" \033[33mPinned:  {'Yes ★' if is_tracked else 'No'}\033[0m")
+                act_step = obj.get_active_step()
+                if act_step and not is_completed:
+                    status_rows.append("")
+                    status_rows.append(f" \033[1;33mActive Gate:\033[0m")
+                    for w in wrap_text(act_step.description, 25)[:4]:
+                        status_rows.append(f" \033[33m {w}\033[0m")
 
             else:  # STEP
-                indent = "      "
-                s_obj = node["obj"]
-                bullet = "• "
-                if is_completed:
-                    status_str = "\033[32m[✔ Done]\033[0m"
-                    title_col = "\033[90m"
-                else:
-                    status_str = f"\033[33m[{s_obj.formatted_progress}]\033[0m"
-                    title_col = "\033[37m" if not is_cur else "\033[1;37m"
+                st_badge = "[COMPLETED]" if is_completed else ("[ACTIVE]" if obj.is_active else "[LOCKED]")
+                status_rows.append(f" \033[1;33mStatus:\033[0m \033[33m{st_badge}\033[0m")
+                status_rows.append(f" \033[33mGate:    {obj.step_type.value}\033[0m")
+                if obj.target_name:
+                    status_rows.append(f" \033[33mTarget:  {obj.target_name[:16]}\033[0m")
+                status_rows.append(f" \033[33mTally:   {obj.formatted_progress}\033[0m")
+                status_rows.append(f" \033[33mActive:  {'Yes' if obj.is_active else 'Locked'}\033[0m")
+                status_rows.append(f" \033[33mPinned:  {'Yes ★' if is_tracked else 'No'}\033[0m")
+                status_rows.append("")
+                status_rows.append(f" \033[1;33mDirective:\033[0m")
+                for w in wrap_text(obj.description, 25)[:4]:
+                    status_rows.append(f" \033[33m {w}\033[0m")
 
-                line = f"{cursor_str}{indent}{bullet}{title_col}{node['title']}\033[0m {status_str}{tracked_tag}"
+        for r_idx in range(15):
+            if r_idx < len(status_rows):
+                right_pane_lines.append(_pad_cell(status_rows[r_idx], 27))
+            else:
+                right_pane_lines.append(" " * 27)
 
-            lines.append(line)
+        # Combine Left & Right panes with vertical separator (17 rows)
+        for row_i in range(17):
+            l_str = left_pane_lines[row_i]
+            r_str = right_pane_lines[row_i]
+            lines.append(f"{l_str}\033[90m│\033[0m{r_str}")
 
-        # Truncate lines to RIGHT_WIDTH if needed
-        trimmed_lines = []
+        # Final safety check: enforce exact RIGHT_WIDTH across all lines
+        trimmed_lines: list[str] = []
         for l in lines:
             if visible_width(l) > self.RIGHT_WIDTH:
                 trimmed_lines.append(truncate_ansi(l, self.RIGHT_WIDTH))
             else:
-                trimmed_lines.append(l)
+                trimmed_lines.append(_pad_cell(l, self.RIGHT_WIDTH))
 
-        return trimmed_lines
+        return trimmed_lines[:34]

@@ -794,6 +794,267 @@ BESTIARY: Dict[str, BestiaryTemplate] = {
         actions=["Attack", "Axe Cleave", "Drop Kick", "Defend"],
         drop_table=[LootDrop("Elixir", 0.08), LootDrop("Amulet of Health", 0.04)],
     ),
+
+    # -------------------------------------------------------------------------
+    # BADLANDS
+    # -------------------------------------------------------------------------
+    # Tier 1 (Lv 1-4)
+    "Rattler": BestiaryTemplate(
+        name="Rattler", family="Reptile", affinity=BattleActionType.PHYSICAL, role="speed",
+        biomes=["Badlands"], min_region=1, max_region=2, threat_rank="D",
+        actions=["Attack", "Bite"],
+        drop_table=[LootDrop("Antidote", 0.25), LootDrop("Poison Bottle", 0.10)],
+    ),
+    "Vulture": BestiaryTemplate(
+        name="Vulture", family="Avian", affinity=BattleActionType.ELEMENTAL_WIND, role="speed",
+        biomes=["Badlands"], min_region=1, max_region=3, threat_rank="D",
+        actions=["Attack", "Screech"],
+        drop_table=[LootDrop("Potion", 0.25)],
+    ),
+    # Tier 2 (Lv 5-10)
+    "Jackal": BestiaryTemplate(
+        name="Jackal", family="Beast", affinity=BattleActionType.PHYSICAL, role="dps",
+        biomes=["Badlands"], min_region=2, max_region=4, threat_rank="D",
+        actions=["Attack", "Bite", "Drop Kick"],
+        drop_table=[LootDrop("Potion", 0.30)],
+    ),
+    "Cactoid": BestiaryTemplate(
+        name="Cactoid", family="Plant", affinity=BattleActionType.ELEMENTAL_EARTH, role="tank",
+        biomes=["Badlands"], min_region=2, max_region=4, threat_rank="D",
+        actions=["Attack", "Boulder Bash", "Defend"],
+        drop_table=[LootDrop("Potion", 0.30), LootDrop("Bomb", 0.10)],
+    ),
+    # Tier 3 (Lv 11-18)
+    "Hyena": BestiaryTemplate(
+        name="Hyena", family="Beast", affinity=BattleActionType.PHYSICAL, role="dps",
+        biomes=["Badlands"], min_region=3, max_region=5, threat_rank="C",
+        actions=["Attack", "Bite", "Double Scratch"],
+        drop_table=[LootDrop("Hi-Potion", 0.20)],
+    ),
+    "Gila": BestiaryTemplate(
+        name="Gila", family="Reptile", affinity=BattleActionType.ELEMENTAL_EARTH, role="tank",
+        biomes=["Badlands"], min_region=3, max_region=5, threat_rank="C",
+        actions=["Attack", "Boulder Bash", "Bite", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.20), LootDrop("Poison Bottle", 0.20)],
+    ),
+    # Tier 4 (Lv 19-28)
+    "Sandwurm": BestiaryTemplate(
+        name="Sandwurm", family="Monstrosity", affinity=BattleActionType.ELEMENTAL_EARTH, role="tank",
+        biomes=["Badlands"], min_region=4, max_region=6, threat_rank="B",
+        actions=["Attack", "Boulder Bash", "Axe Cleave", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.25), LootDrop("Plate Cuirass", 0.04)],
+    ),
+    "Scorcher": BestiaryTemplate(
+        name="Scorcher", family="Humanoid", affinity=BattleActionType.ELEMENTAL_FIRE, role="dps",
+        biomes=["Badlands"], min_region=4, max_region=6, threat_rank="C",
+        actions=["Attack", "Flame Punch", "Fireball"],
+        drop_table=[LootDrop("Fire Flask", 0.25), LootDrop("Iron Gauntlets", 0.04)],
+    ),
+    # Tier 5 (Lv 29-40)
+    "Dunehound": BestiaryTemplate(
+        name="Dunehound", family="Fiend", affinity=BattleActionType.ELEMENTAL_FIRE, role="speed",
+        biomes=["Badlands"], min_region=5, max_region=7, threat_rank="B",
+        actions=["Attack", "Flame Punch", "Bite"],
+        drop_table=[LootDrop("Fire Flask", 0.20), LootDrop("Winged Sandals", 0.03)],
+    ),
+    # Tier 6 (Lv 41-55)
+    "Dustwraith": BestiaryTemplate(
+        name="Dustwraith", family="Undead", affinity=BattleActionType.ELEMENTAL_DARK, role="magic",
+        biomes=["Badlands"], min_region=6, max_region=8, threat_rank="A",
+        actions=["Attack", "Dark Surge", "Defend"],
+        drop_table=[LootDrop("Hi-Ether", 0.25), LootDrop("Mage Mantle", 0.04)],
+    ),
+    # Tier 7-9 (Lv 56-95)
+    "Anubis": BestiaryTemplate(
+        name="Anubis", family="Construct", affinity=BattleActionType.ELEMENTAL_DARK, role="tank",
+        biomes=["Badlands"], min_region=7, max_region=9, threat_rank="A",
+        actions=["Attack", "Dark Surge", "Axe Cleave", "Defend"],
+        drop_table=[LootDrop("Revive Herb", 0.20), LootDrop("Shadow Cape", 0.03)],
+    ),
+    "Ifrit": BestiaryTemplate(
+        name="Ifrit", family="Elemental", affinity=BattleActionType.ELEMENTAL_FIRE, role="magic",
+        biomes=["Badlands"], min_region=8, max_region=9, threat_rank="A",
+        actions=["Attack", "Flame Punch", "Fireball", "Defend"],
+        drop_table=[LootDrop("Elixir", 0.08), LootDrop("Ring of Might", 0.04)],
+    ),
+
+    # -------------------------------------------------------------------------
+    # TUNDRA
+    # -------------------------------------------------------------------------
+    # Tier 1 (Lv 1-4)
+    "Fox": BestiaryTemplate(
+        name="Fox", family="Beast", affinity=BattleActionType.ELEMENTAL_ICE, role="speed",
+        biomes=["Tundra"], min_region=1, max_region=2, threat_rank="D",
+        actions=["Attack", "Double Scratch"],
+        drop_table=[LootDrop("Potion", 0.25)],
+    ),
+    "Penguin": BestiaryTemplate(
+        name="Penguin", family="Avian", affinity=BattleActionType.ELEMENTAL_ICE, role="balanced",
+        biomes=["Tundra"], min_region=1, max_region=3, threat_rank="D",
+        actions=["Attack", "Ice Bolt"],
+        drop_table=[LootDrop("Potion", 0.25)],
+    ),
+    # Tier 2 (Lv 5-10)
+    "Weasel": BestiaryTemplate(
+        name="Weasel", family="Beast", affinity=BattleActionType.PHYSICAL, role="speed",
+        biomes=["Tundra"], min_region=2, max_region=4, threat_rank="D",
+        actions=["Attack", "Bite", "Double Scratch"],
+        drop_table=[LootDrop("Potion", 0.30)],
+    ),
+    "Drifter": BestiaryTemplate(
+        name="Drifter", family="Elemental", affinity=BattleActionType.ELEMENTAL_ICE, role="magic",
+        biomes=["Tundra"], min_region=2, max_region=4, threat_rank="D",
+        actions=["Attack", "Ice Bolt", "Defend"],
+        drop_table=[LootDrop("Ether", 0.25)],
+    ),
+    # Tier 3 (Lv 11-18)
+    "Caribou": BestiaryTemplate(
+        name="Caribou", family="Beast", affinity=BattleActionType.PHYSICAL, role="tank",
+        biomes=["Tundra"], min_region=3, max_region=5, threat_rank="C",
+        actions=["Attack", "Drop Kick", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.20), LootDrop("Traveler Leggings", 0.04)],
+    ),
+    # Tier 4 (Lv 19-28)
+    "Walrus": BestiaryTemplate(
+        name="Walrus", family="Beast", affinity=BattleActionType.ELEMENTAL_ICE, role="tank",
+        biomes=["Tundra"], min_region=4, max_region=6, threat_rank="B",
+        actions=["Attack", "Ice Bolt", "Drop Kick", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.25), LootDrop("Heavy Battleaxe", 0.04)],
+    ),
+    "Wolverine": BestiaryTemplate(
+        name="Wolverine", family="Beast", affinity=BattleActionType.PHYSICAL, role="dps",
+        biomes=["Tundra"], min_region=4, max_region=6, threat_rank="C",
+        actions=["Attack", "Bite", "Double Scratch", "Axe Cleave"],
+        drop_table=[LootDrop("Hi-Potion", 0.25)],
+    ),
+    # Tier 5 (Lv 29-40)
+    "Mammoth": BestiaryTemplate(
+        name="Mammoth", family="Beast", affinity=BattleActionType.ELEMENTAL_ICE, role="tank",
+        biomes=["Tundra"], min_region=5, max_region=7, threat_rank="B",
+        actions=["Attack", "Ice Bolt", "Drop Kick", "Defend"],
+        drop_table=[LootDrop("Hi-Ether", 0.20), LootDrop("Steel Pauldrons", 0.04)],
+    ),
+    "Blizzard": BestiaryTemplate(
+        name="Blizzard", family="Elemental", affinity=BattleActionType.ELEMENTAL_ICE, role="magic",
+        biomes=["Tundra"], min_region=5, max_region=7, threat_rank="B",
+        actions=["Attack", "Ice Bolt", "Arctic Blast"],
+        drop_table=[LootDrop("Hi-Ether", 0.25), LootDrop("Mage Circlet", 0.04)],
+    ),
+    # Tier 6 (Lv 41-55)
+    "Frostwight": BestiaryTemplate(
+        name="Frostwight", family="Undead", affinity=BattleActionType.ELEMENTAL_ICE, role="magic",
+        biomes=["Tundra"], min_region=6, max_region=8, threat_rank="A",
+        actions=["Attack", "Ice Bolt", "Arctic Blast", "Defend"],
+        drop_table=[LootDrop("Hi-Ether", 0.25), LootDrop("Silk Vestment", 0.04)],
+    ),
+    "Glacier": BestiaryTemplate(
+        name="Glacier", family="Construct", affinity=BattleActionType.ELEMENTAL_ICE, role="tank",
+        biomes=["Tundra"], min_region=6, max_region=8, threat_rank="A",
+        actions=["Attack", "Ice Bolt", "Drop Kick", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.30), LootDrop("Plate Cuirass", 0.04)],
+    ),
+    # Tier 7-9 (Lv 56-95)
+    "Jotun": BestiaryTemplate(
+        name="Jotun", family="Giant", affinity=BattleActionType.ELEMENTAL_ICE, role="tank",
+        biomes=["Tundra"], min_region=7, max_region=9, threat_rank="A",
+        actions=["Attack", "Ice Bolt", "Axe Cleave", "Defend"],
+        drop_table=[LootDrop("Revive Herb", 0.20), LootDrop("Ring of Might", 0.03)],
+    ),
+
+    # -------------------------------------------------------------------------
+    # SWAMP
+    # -------------------------------------------------------------------------
+    # Tier 1 (Lv 1-4)
+    "Leech": BestiaryTemplate(
+        name="Leech", family="Vermicular", affinity=BattleActionType.ELEMENTAL_DARK, role="dps",
+        biomes=["Swamp"], min_region=1, max_region=2, threat_rank="D",
+        actions=["Attack", "Blood Drain"],
+        drop_table=[LootDrop("Potion", 0.25)],
+    ),
+    "Mosquito": BestiaryTemplate(
+        name="Mosquito", family="Insect", affinity=BattleActionType.ELEMENTAL_WIND, role="speed",
+        biomes=["Swamp"], min_region=1, max_region=3, threat_rank="D",
+        actions=["Attack", "Double Scratch", "Blood Drain"],
+        drop_table=[LootDrop("Antidote", 0.25)],
+    ),
+    # Tier 2 (Lv 5-10)
+    "Newt": BestiaryTemplate(
+        name="Newt", family="Amphibian", affinity=BattleActionType.ELEMENTAL_WATER, role="balanced",
+        biomes=["Swamp"], min_region=2, max_region=4, threat_rank="D",
+        actions=["Attack", "Tidal Crush"],
+        drop_table=[LootDrop("Potion", 0.30)],
+    ),
+    "Frog": BestiaryTemplate(
+        name="Frog", family="Amphibian", affinity=BattleActionType.ELEMENTAL_WATER, role="tank",
+        biomes=["Swamp"], min_region=2, max_region=4, threat_rank="D",
+        actions=["Attack", "Tidal Crush", "Defend"],
+        drop_table=[LootDrop("Potion", 0.30), LootDrop("Antidote", 0.20)],
+    ),
+    # Tier 3 (Lv 11-18)
+    "Gator": BestiaryTemplate(
+        name="Gator", family="Reptile", affinity=BattleActionType.ELEMENTAL_WATER, role="tank",
+        biomes=["Swamp"], min_region=3, max_region=5, threat_rank="C",
+        actions=["Attack", "Bite", "Tidal Crush", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.25), LootDrop("Traveler Cloak", 0.04)],
+    ),
+    "Muck": BestiaryTemplate(
+        name="Muck", family="Slime", affinity=BattleActionType.ELEMENTAL_EARTH, role="tank",
+        biomes=["Swamp"], min_region=3, max_region=5, threat_rank="C",
+        actions=["Attack", "Boulder Bash", "Defend"],
+        drop_table=[LootDrop("Poison Bottle", 0.25), LootDrop("Antidote", 0.25)],
+    ),
+    # Tier 4 (Lv 19-28)
+    "Bogwitch": BestiaryTemplate(
+        name="Bogwitch", family="Humanoid", affinity=BattleActionType.ELEMENTAL_DARK, role="magic",
+        biomes=["Swamp"], min_region=4, max_region=6, threat_rank="C",
+        actions=["Attack", "Dark Surge", "Blood Drain", "Defend"],
+        drop_table=[LootDrop("Ether", 0.25), LootDrop("Oak Staff", 0.04)],
+    ),
+    "Mudgolem": BestiaryTemplate(
+        name="Mudgolem", family="Construct", affinity=BattleActionType.ELEMENTAL_EARTH, role="tank",
+        biomes=["Swamp"], min_region=4, max_region=6, threat_rank="B",
+        actions=["Attack", "Boulder Bash", "Drop Kick", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.25), LootDrop("Plate Cuirass", 0.04)],
+    ),
+    # Tier 5 (Lv 29-40)
+    "Boa": BestiaryTemplate(
+        name="Boa", family="Reptile", affinity=BattleActionType.PHYSICAL, role="dps",
+        biomes=["Swamp"], min_region=5, max_region=7, threat_rank="B",
+        actions=["Attack", "Bite", "Double Scratch"],
+        drop_table=[LootDrop("Hi-Potion", 0.25), LootDrop("Brigandine", 0.04)],
+    ),
+    "Willows": BestiaryTemplate(
+        name="Willows", family="Plant", affinity=BattleActionType.ELEMENTAL_EARTH, role="magic",
+        biomes=["Swamp"], min_region=5, max_region=7, threat_rank="B",
+        actions=["Attack", "Boulder Bash", "Defend"],
+        drop_table=[LootDrop("Hi-Ether", 0.20), LootDrop("Mage Mantle", 0.04)],
+    ),
+    # Tier 6 (Lv 41-55)
+    "Mirebeast": BestiaryTemplate(
+        name="Mirebeast", family="Monstrosity", affinity=BattleActionType.ELEMENTAL_DARK, role="tank",
+        biomes=["Swamp"], min_region=6, max_region=8, threat_rank="A",
+        actions=["Attack", "Dark Surge", "Axe Cleave", "Defend"],
+        drop_table=[LootDrop("Hi-Potion", 0.25), LootDrop("Steel Pauldrons", 0.04)],
+    ),
+    "Hydraling": BestiaryTemplate(
+        name="Hydraling", family="Draconic", affinity=BattleActionType.ELEMENTAL_WATER, role="dps",
+        biomes=["Swamp"], min_region=6, max_region=8, threat_rank="A",
+        actions=["Attack", "Tidal Crush", "Bite"],
+        drop_table=[LootDrop("Hi-Ether", 0.25), LootDrop("Steel Broadsword", 0.04)],
+    ),
+    # Tier 7-9 (Lv 56-95)
+    "Boglord": BestiaryTemplate(
+        name="Boglord", family="Undead", affinity=BattleActionType.ELEMENTAL_DARK, role="magic",
+        biomes=["Swamp"], min_region=7, max_region=9, threat_rank="A",
+        actions=["Attack", "Dark Surge", "Cataclysm", "Defend"],
+        drop_table=[LootDrop("Revive Herb", 0.20), LootDrop("Shadow Cape", 0.03)],
+    ),
+    "Foulfang": BestiaryTemplate(
+        name="Foulfang", family="Draconic", affinity=BattleActionType.ELEMENTAL_DARK, role="dps",
+        biomes=["Swamp"], min_region=8, max_region=9, threat_rank="A",
+        actions=["Attack", "Dark Surge", "Blood Drain", "Bite"],
+        drop_table=[LootDrop("Elixir", 0.08), LootDrop("Sapphire Ring", 0.04)],
+    ),
 }
 
 

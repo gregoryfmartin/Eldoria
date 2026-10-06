@@ -389,57 +389,122 @@ def create_mountain_encounter(rng: Optional[random.Random] = None, region_code: 
     return squad
 
 
+def create_badlands_encounter(rng: Optional[random.Random] = None, region_code: int = 2) -> EnemySquad:
+    """Badlands: Arid canyon predators, reptiles, and desert fiends (4 to 7 enemies)."""
+    r = rng if rng is not None else random
+    reg = max(1, min(9, region_code))
+    lvl_min, lvl_max = REGION_LEVEL_RANGES[reg]
+    squad = EnemySquad()
+
+    templates = _pick_biome_templates("Badlands", reg)
+    count = r.randint(4, 7)
+    for _ in range(count):
+        tmpl = r.choice(templates)
+        lvl = r.randint(lvl_min, lvl_max)
+        squad.add_enemy(build_from_template(tmpl, level=lvl))
+
+    return squad
+
+
+def create_tundra_encounter(rng: Optional[random.Random] = None, region_code: int = 1) -> EnemySquad:
+    """Tundra: Permafrost beasts, arctic avians, and glacial constructs (3 to 5 enemies)."""
+    r = rng if rng is not None else random
+    reg = max(1, min(9, region_code))
+    lvl_min, lvl_max = REGION_LEVEL_RANGES[reg]
+    squad = EnemySquad()
+
+    templates = _pick_biome_templates("Tundra", reg)
+    count = r.randint(3, 5)
+    for _ in range(count):
+        tmpl = r.choice(templates)
+        lvl = r.randint(lvl_min, lvl_max)
+        squad.add_enemy(build_from_template(tmpl, level=lvl))
+
+    return squad
+
+
+def create_swamp_encounter(rng: Optional[random.Random] = None, region_code: int = 2) -> EnemySquad:
+    """Swamp: Mire monstrosities, amphibians, vermin, and bog horrors (4 to 7 enemies)."""
+    r = rng if rng is not None else random
+    reg = max(1, min(9, region_code))
+    lvl_min, lvl_max = REGION_LEVEL_RANGES[reg]
+    squad = EnemySquad()
+
+    templates = _pick_biome_templates("Swamp", reg)
+    count = r.randint(4, 7)
+    for _ in range(count):
+        tmpl = r.choice(templates)
+        lvl = r.randint(lvl_min, lvl_max)
+        squad.add_enemy(build_from_template(tmpl, level=lvl))
+
+    return squad
+
+
 # -----------------------------------------------------------------------------
 # Universal Dispatcher
 # -----------------------------------------------------------------------------
 def generate_encounter(
-    arg1: Union[BiomeType, int, str],
+    arg1: Optional[Union[BiomeType, int, str]] = None,
     arg2: Optional[Union[int, random.Random]] = None,
     rng: Optional[random.Random] = None,
+    biome: Optional[Union[BiomeType, str]] = None,
+    region_code: Optional[int] = None,
 ) -> Optional[EnemySquad]:
     """Factory creating an EnemySquad based on Biome and Region Code (1 to 9).
     Supports signatures:
       generate_encounter(biome: BiomeType, region_code: int = 1, rng = None)
       generate_encounter(region_code: int, rng = None)   # backward compatibility
+      generate_encounter(region_code=2, biome=BiomeType.BADLANDS, rng=rng)
     """
     r = rng
+    b = biome
+    reg = region_code
+
     if isinstance(arg1, (int, RegionCode)):
-        # Legacy signature: generate_encounter(region_code, rng)
-        region_code = int(arg1)
-        if isinstance(arg2, random.Random):
+        if reg is None:
+            reg = int(arg1)
+        if isinstance(arg2, random.Random) and r is None:
+            r = arg2
+    elif arg1 is not None:
+        if b is None:
+            b = arg1
+        if isinstance(arg2, (int, RegionCode)) and reg is None:
+            reg = int(arg2)
+        elif isinstance(arg2, random.Random) and r is None:
             r = arg2
 
-        if region_code == RegionCode.SAFE:
-            return None
-        elif region_code == RegionCode.OVERWORLD_FOREST:
+    if reg is None:
+        reg = 1
+
+    if reg == RegionCode.SAFE or reg == 0:
+        return None
+
+    if b is not None:
+        biome_str = str(b.value if hasattr(b, "value") else b)
+    else:
+        if reg == RegionCode.OVERWORLD_FOREST:
             biome_str = "Forest"
-        elif region_code == RegionCode.SUBTERRANEAN_CAVE:
+        elif reg == RegionCode.SUBTERRANEAN_CAVE:
             biome_str = "Cave"
         else:
             biome_str = "Plains"
-    else:
-        # Modern signature: generate_encounter(biome, region_code, rng)
-        biome_str = str(arg1.value if hasattr(arg1, "value") else arg1)
-        if isinstance(arg2, (int, RegionCode)):
-            region_code = int(arg2)
-        else:
-            region_code = 1
-            if isinstance(arg2, random.Random):
-                r = arg2
 
-    if region_code == RegionCode.SAFE:
-        return None
-
-    region_code = max(1, min(9, region_code))
+    reg = max(1, min(9, reg))
     r = r if r is not None else random
 
     b_lower = biome_str.lower()
-    if "forest" in b_lower:
-        return create_forest_encounter(rng=r, region_code=region_code)
+    if "badlands" in b_lower:
+        return create_badlands_encounter(rng=r, region_code=reg)
+    elif "tundra" in b_lower:
+        return create_tundra_encounter(rng=r, region_code=reg)
+    elif "swamp" in b_lower:
+        return create_swamp_encounter(rng=r, region_code=reg)
+    elif "forest" in b_lower:
+        return create_forest_encounter(rng=r, region_code=reg)
     elif "cave" in b_lower or "subterranean" in b_lower or "dungeon" in b_lower:
-        return create_cave_encounter(rng=r, region_code=region_code)
+        return create_cave_encounter(rng=r, region_code=reg)
     elif "mountain" in b_lower or "snow" in b_lower:
-        return create_mountain_encounter(rng=r, region_code=region_code)
+        return create_mountain_encounter(rng=r, region_code=reg)
     else:
         # Default to Plains / Coast / Road
-        return create_plains_encounter(rng=r, region_code=region_code)
+        return create_plains_encounter(rng=r, region_code=reg)
