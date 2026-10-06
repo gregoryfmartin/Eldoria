@@ -190,7 +190,11 @@ class TestMPAndMagicRebalance(unittest.TestCase):
         # Turn 1: Fireball costs 20 MP. Hero has 30 MP.
         engine.plan_member_action(0, ACTIONS["Fireball"].copy(), enemy)
         engine.finalize_planning()
+        guard1 = 0
         while engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard1 += 1
+            if guard1 > 100:
+                self.fail("Infinite loop in combat execution phase")
             engine.step_execution()
 
         self.assertEqual(hero.mp, 10)  # 30 - 20 = 10
@@ -199,7 +203,11 @@ class TestMPAndMagicRebalance(unittest.TestCase):
         # Turn 2: Attempting Fireball again with only 10 MP should fail
         engine.plan_member_action(0, ACTIONS["Fireball"].copy(), enemy)
         engine.finalize_planning()
+        guard2 = 0
         while engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard2 += 1
+            if guard2 > 100:
+                self.fail("Infinite loop in combat execution phase")
             engine.step_execution()
 
         # Engine logs lack of MP and hero still has 10 MP (no spell was cast)

@@ -96,6 +96,12 @@ class InputManager:
     def stop(self) -> None:
         """Stops the input listener thread and restores terminal mode."""
         self._running = False
+        if self._thread is not None and self._thread.is_alive() and threading.current_thread() != self._thread:
+            try:
+                self._thread.join(timeout=0.2)
+            except Exception:
+                pass
+            self._thread = None
         self.restore()
 
     def restore(self) -> None:

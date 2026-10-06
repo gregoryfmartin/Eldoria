@@ -11,7 +11,7 @@ from ..core.context import Context
 from ..core.fsm import SMState
 from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
-from ..terminal.color import ColorLibrary
+from ..terminal.color import ColorLibrary, dim_ansi
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import clear_buffer_tail, truncate_ansi, visible_width
@@ -30,11 +30,20 @@ class GSTitleScreen(SMState):
         "Exit",
     ]
 
-    def __init__(self, screen_width: int = 80, screen_height: int = 24, dev_mode: bool = True) -> None:
+    def __init__(
+        self,
+        screen_width: int = 80,
+        screen_height: int = 24,
+        dev_mode: bool = True,
+        fade_in_duration: float = 0.45,
+    ) -> None:
         super().__init__("GSTitleScreen")
         self.screen_width: int = screen_width
         self.screen_height: int = screen_height
         self.dev_mode: bool = dev_mode
+        self.fade_in_duration: float = fade_in_duration
+        self.is_fading_in: bool = False
+        self.fade_in_elapsed: float = 0.0
 
         self.active_dialog: Optional[str] = None  # None, "LOAD", "OPTIONS", "CREDITS"
         self.notice_message: str = ""
@@ -47,7 +56,9 @@ class GSTitleScreen(SMState):
         self.delete_confirm_slot: Optional[int] = None
 
         # Options preferences
-        self.opt_sfx_enabled: bool = True
+        from eldoria_py.audio import get_audio_engine
+        self.audio_engine = get_audio_engine()
+        self.opt_sfx_enabled: bool = not self.audio_engine.is_muted
         self.opt_fast_text: bool = True
 
         self._current_context: Optional[Context] = None
@@ -132,9 +143,10 @@ class GSTitleScreen(SMState):
         self.options_panel.add_label("── Engine Settings ──", row=8, align="center", fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True))
         self.opt_sfx_lbl = self.options_panel.add_label(self._sfx_text(), row=10, align="center", fg_color=ColorLibrary.White)
         self.opt_fast_lbl = self.options_panel.add_label(self._fast_text(), row=11, align="center", fg_color=ColorLibrary.White)
-        self.options_panel.add_label("  [3] Graphics Protocol:  ANSI 24-bit TrueColor  ", row=12, align="center", fg_color=ColorLibrary.AppleCyanLight)
-        self.options_panel.add_label("Press [1] or [2] to toggle options.", row=14, align="center", fg_color=ColorLibrary.DarkGrey)
-        self.options_panel.add_label("[Press Enter or Esc to return]", row=16, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
+        self.opt_vol_lbl = self.options_panel.add_label(self._volume_text(), row=12, align="center", fg_color=ColorLibrary.White)
+        self.options_panel.add_label("  [4] Graphics Protocol:  ANSI 24-bit TrueColor  ", row=13, align="center", fg_color=ColorLibrary.AppleCyanLight)
+        self.options_panel.add_label("Press [1]/[2] to toggle, [-]/[+] for volume.", row=15, align="center", fg_color=ColorLibrary.DarkGrey)
+        self.options_panel.add_label("[Press Enter or Esc to return]", row=17, align="center", fg_color=ColorLibrary.AppleCyanLight, decorations=ATDecoration(bold=True))
 
         self.credits_panel = UIPanel(
             left_top=ATCoordinates(7, 2),
@@ -167,9 +179,14 @@ class GSTitleScreen(SMState):
         status = "[ON] " if self.opt_fast_text else "[OFF]"
         return f"  [2] Instant Text Speed: {status}  "
 
+    def _volume_text(self) -> str:
+        vol_pct = int(round(self.audio_engine.get_master_volume() * 100))
+        return f"  [3] Master Volume:      [ {vol_pct:>3}% ] ([-] / [+])  "
+
     def _update_options_labels(self) -> None:
         self.opt_sfx_lbl.set_user_data(self._sfx_text())
         self.opt_fast_lbl.set_user_data(self._fast_text())
+        self.opt_vol_lbl.set_user_data(self._volume_text())
 
     def _refresh_load_panel(self) -> None:
         """Refreshes the 3-slot preview labels from disk headers with bounds-safe formatting."""
@@ -234,6 +251,13 @@ class GSTitleScreen(SMState):
         self.dialog_dirty = False
         self._current_context = context
         self._current_core = context.get(SMState.ContextEldoriaCore)
+
+        if self.fade_in_duration > 0:
+            self.is_fading_in = True
+            self.fade_in_elapsed = 0.0
+        else:
+            self.is_fading_in = False
+
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
@@ -251,8 +275,26 @@ class GSTitleScreen(SMState):
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
         self._current_core = core
+        dt = context.get(SMState.ContextDeltaTime)
+        if dt is None or not isinstance(dt, (int, float)):
+            dt = 0.033
 
-        if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+        if self.is_fading_in:
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                # Keypress during fade-in snaps immediately to 100% full brightness
+                keys_pressed.clear()
+                self.is_fading_in = False
+                self.fade_in_elapsed = self.fade_in_duration
+                self.title_panel.set_all_dirty()
+                self.menu.set_all_dirty()
+            else:
+                self.fade_in_elapsed += float(dt)
+                self.title_panel.set_all_dirty()
+                self.menu.set_all_dirty()
+                if self.fade_in_elapsed >= self.fade_in_duration:
+                    self.is_fading_in = False
+
+        if not self.is_fading_in and isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
                 self._handle_input(key_info, context, core)
                 keys_pressed.remove(key_info)
@@ -363,10 +405,26 @@ class GSTitleScreen(SMState):
                         return
             elif self.active_dialog == "OPTIONS" and key_info.char in ("1", "s", "S"):
                 self.opt_sfx_enabled = not self.opt_sfx_enabled
+                if self.audio_engine.is_muted != (not self.opt_sfx_enabled):
+                    self.audio_engine.toggle_mute()
                 self._update_options_labels()
                 return
             elif self.active_dialog == "OPTIONS" and key_info.char in ("2", "f", "F"):
                 self.opt_fast_text = not self.opt_fast_text
+                self._update_options_labels()
+                return
+            elif self.active_dialog == "OPTIONS" and key_info.char in ("3", "v", "V"):
+                curr = self.audio_engine.get_master_volume()
+                next_vol = 0.2 if curr >= 1.0 else round(min(1.0, curr + 0.2), 1)
+                self.audio_engine.set_master_volume(next_vol)
+                self._update_options_labels()
+                return
+            elif self.active_dialog == "OPTIONS" and key_info.char in ("-", "_"):
+                self.audio_engine.adjust_master_volume(-0.05)
+                self._update_options_labels()
+                return
+            elif self.active_dialog == "OPTIONS" and key_info.char in ("+", "="):
+                self.audio_engine.adjust_master_volume(0.05)
                 self._update_options_labels()
                 return
             elif key_info.key in (KeyCode.ENTER, KeyCode.ESCAPE, KeyCode.SPACE) or key_info.char in ("\r", "\n", " "):
@@ -394,6 +452,7 @@ class GSTitleScreen(SMState):
         elif key_info.char in ("q", "Q"):
             if core and hasattr(core, "is_running"):
                 core.is_running = False
+            self.audio_engine.cleanup()
 
     def _execute_menu_item(self, context: Optional[Context] = None, core = None) -> None:
         if context is not None:
@@ -415,6 +474,7 @@ class GSTitleScreen(SMState):
         elif sel == "Exit":
             if self._current_core and hasattr(self._current_core, "is_running"):
                 self._current_core.is_running = False
+            self.audio_engine.cleanup()
 
     def _open_dialog(self, dialog: str) -> None:
         self.active_dialog = dialog
@@ -452,27 +512,39 @@ class GSTitleScreen(SMState):
         return "".join(f"\033[{r};{left}H{blank}" for r in range(7, 20))
 
     def _render(self) -> None:
-        TerminalScreen.write(ATControlSequences.DrawOptimizeOn)
+        brightness = 1.0
+        if self.is_fading_in and self.fade_in_duration > 0:
+            brightness = min(1.0, self.fade_in_elapsed / self.fade_in_duration)
 
-        # Draw master title panel (borders, title, dividers, banners, footer, hint)
-        self.title_panel.draw()
-
-        # If dialog state changed, wipe the interior content area
-        if self.dialog_dirty:
-            TerminalScreen.write(self._clear_content_rect_ansi())
-            self.dialog_dirty = False
-
-        # Draw active view
-        if self.active_dialog == "LOAD":
-            self.load_panel.draw()
-        elif self.active_dialog == "OPTIONS":
-            self.options_panel.draw()
-        elif self.active_dialog == "CREDITS":
-            self.credits_panel.draw()
+        if brightness < 0.999:
+            TerminalScreen.set_write_filter(lambda s: dim_ansi(s, brightness))
         else:
-            self.menu.draw()
+            TerminalScreen.set_write_filter(None)
 
-        # Clear buffer tail rows 23..40
-        TerminalScreen.write(clear_buffer_tail(self.title_panel.right_bottom.row + 1, 40))
-        TerminalScreen.write(ATControlSequences.DrawOptimizeOff)
-        TerminalScreen.flush()
+        try:
+            TerminalScreen.write(ATControlSequences.DrawOptimizeOn)
+
+            # Draw master title panel (borders, title, dividers, banners, footer, hint)
+            self.title_panel.draw()
+
+            # If dialog state changed, wipe the interior content area
+            if self.dialog_dirty:
+                TerminalScreen.write(self._clear_content_rect_ansi())
+                self.dialog_dirty = False
+
+            # Draw active view
+            if self.active_dialog == "LOAD":
+                self.load_panel.draw()
+            elif self.active_dialog == "OPTIONS":
+                self.options_panel.draw()
+            elif self.active_dialog == "CREDITS":
+                self.credits_panel.draw()
+            else:
+                self.menu.draw()
+
+            # Clear buffer tail rows 23..40
+            TerminalScreen.write(clear_buffer_tail(self.title_panel.right_bottom.row + 1, 40))
+            TerminalScreen.write(ATControlSequences.DrawOptimizeOff)
+            TerminalScreen.flush()
+        finally:
+            TerminalScreen.set_write_filter(None)

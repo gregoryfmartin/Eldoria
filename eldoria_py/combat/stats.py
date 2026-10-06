@@ -170,6 +170,20 @@ class TargetScope(str, Enum):
     SELF = "Self"
     NONE = "None"
 
+    @property
+    def display_name(self) -> str:
+        """Returns a player-friendly display name (e.g. 'Single', 'AOE', 'Party')."""
+        mapping = {
+            TargetScope.SINGLE_ENEMY: "Single",
+            TargetScope.ALL_ENEMIES: "AOE",
+            TargetScope.CLEAVE_ENEMIES: "Cleave",
+            TargetScope.SINGLE_ALLY: "Ally",
+            TargetScope.ALL_ALLIES: "Party",
+            TargetScope.SELF: "Self",
+            TargetScope.NONE: "None",
+        }
+        return mapping.get(self, self.value)
+
 
 class AffinityEffect(str, Enum):
     """Multipliers and effects resulting from elemental affinity matchups."""

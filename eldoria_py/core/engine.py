@@ -84,7 +84,12 @@ class GameCore:
             self.cleanup()
 
     def cleanup(self) -> None:
-        """Restores terminal and stops input thread."""
+        """Restores terminal and stops input thread and audio subsystem."""
+        try:
+            from ..audio.sound_engine import get_audio_engine
+            get_audio_engine(autostart_device=False).cleanup()
+        except Exception:
+            pass
         self.input_manager.stop()
         TerminalScreen.exit()
 

@@ -678,7 +678,11 @@ class TestCombatScreenState(unittest.TestCase):
         for i in range(len(self.screen.party.alive_members)):
             self.screen.engine.plan_member_action(i, ACTIONS["Attack"].copy(), enemy)
         self.assertTrue(self.screen.engine.finalize_planning())
+        guard = 0
         while self.screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard += 1
+            if guard > 100:
+                self.fail("Infinite loop in combat execution phase")
             self.screen.engine.step_execution()
 
         dmg_logs = [log for log in self.screen.engine.combat_log if "uses Attack on" in log]

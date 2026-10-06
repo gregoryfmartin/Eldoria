@@ -380,6 +380,8 @@ class TestMainMenuScreen(unittest.TestCase):
         self.assertIn("\033[48;2;25;55;85m", active_spell_line)
         self.assertIn("❱", active_spell_line)
         self.assertIn("Fireball", active_spell_line)
+        self.assertIn("AOE", active_spell_line)
+        self.assertNotIn("ALL_ENEMIES", active_spell_line)
         self.assertEqual(visible_width(active_spell_line), 55)
 
         # Line 3 is second spell (Ice Bolt, inactive)
@@ -387,6 +389,8 @@ class TestMainMenuScreen(unittest.TestCase):
         self.assertNotIn("\033[48;2;25;55;85m", inactive_spell_line)
         self.assertNotIn("❱", inactive_spell_line)
         self.assertIn("Ice Bolt", inactive_spell_line)
+        self.assertIn("Single", inactive_spell_line)
+        self.assertNotIn("SINGLE_ENEMY", inactive_spell_line)
 
         # When moving cursor to 1 (Ice Bolt)
         self.screen.magic_cursor = 1
@@ -402,6 +406,17 @@ class TestMainMenuScreen(unittest.TestCase):
         cat_lines = self.screen._render_magic_submenu()
         self.assertNotIn("\033[48;2;25;55;85m", cat_lines[2])
         self.assertNotIn("\033[48;2;25;55;85m", cat_lines[3])
+
+    def test_target_scope_friendly_display_names(self):
+        """Verifies TargetScope enum returns friendly display names instead of ALL_CAPS."""
+        from eldoria_py.combat.stats import TargetScope
+        self.assertEqual(TargetScope.SINGLE_ENEMY.display_name, "Single")
+        self.assertEqual(TargetScope.ALL_ENEMIES.display_name, "AOE")
+        self.assertEqual(TargetScope.CLEAVE_ENEMIES.display_name, "Cleave")
+        self.assertEqual(TargetScope.SINGLE_ALLY.display_name, "Ally")
+        self.assertEqual(TargetScope.ALL_ALLIES.display_name, "Party")
+        self.assertEqual(TargetScope.SELF.display_name, "Self")
+        self.assertEqual(TargetScope.NONE.display_name, "None")
 
     def test_save_slot_selection_and_execution(self):
         """Tests selecting a save slot and executing game state save."""

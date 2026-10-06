@@ -5,6 +5,7 @@
 from __future__ import annotations
 import colorsys
 import random
+import re
 from typing import Union
 
 
@@ -378,4 +379,37 @@ def interpolate_alizarin_to_emerald(t: float) -> TrueColor:
     else:
         sub_t = (t - 0.5) / 0.5
         return interpolate_color(c_mid, c_end, sub_t)
+
+
+def scale_color(color: TrueColor, factor: float) -> TrueColor:
+    """Scales a TrueColor RGB by a factor in [0.0, 1.0]."""
+    factor = max(0.0, min(1.0, factor))
+    return TrueColor(
+        int(round(color.r * factor)),
+        int(round(color.g * factor)),
+        int(round(color.b * factor)),
+    )
+
+
+_ANSI_24BIT_COLOR_RE = re.compile(r"\033\[(38|48);2;(\d+);(\d+);(\d+)m")
+
+
+def dim_ansi(ansi_str: str, factor: float) -> str:
+    """
+    Scales all 24-bit TrueColor ANSI escape sequences in the string by factor [0.0, 1.0].
+    Used for smooth terminal fade-out and fade-in transitions.
+    """
+    factor = max(0.0, min(1.0, factor))
+    if factor >= 0.999:
+        return ansi_str
+
+    def repl(m: re.Match) -> str:
+        layer = m.group(1)
+        r = int(int(m.group(2)) * factor)
+        g = int(int(m.group(3)) * factor)
+        b = int(int(m.group(4)) * factor)
+        return f"\033[{layer};2;{r};{g};{b}m"
+
+    return _ANSI_24BIT_COLOR_RE.sub(repl, ansi_str)
+
 

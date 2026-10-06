@@ -130,6 +130,9 @@ class GSNoiseMapTestScreen(SMState):
         # Tracked Quest quick modal overlay state
         self.is_quest_modal_active: bool = False
 
+        # Boss encounter persistence
+        self.pending_boss_fight: Optional[str] = None
+
     @property
     def playtime_seconds(self) -> int:
         """Returns campaign playtime from party, or fallback if party is unset."""
@@ -235,17 +238,33 @@ class GSNoiseMapTestScreen(SMState):
                 self.steps_since_battle = int(ctx_exp["steps_since_battle"])
 
         self._ensure_walkable_player_pos()
+        if self.active_submap is not None:
+            self._cleanse_defeated_boss_tiles(self.active_submap)
 
         # Check if returning from a boss encounter
         self.is_quest_modal_active = False
-        active_boss = context.get("active_boss_fight")
-        if active_boss:
-            if not self.party.is_wiped:
-                self.exploration_flags[f"boss_defeated_{active_boss}"] = True
-                self.last_status_msg = f"★ VICTORY! {active_boss} has been defeated!"
+        boss_name = self.pending_boss_fight or context.get("active_boss_fight")
+        if boss_name:
+            core = context.get(SMState.ContextEldoriaCore)
+            combat_state = core.game_state.states.get("GSNvNCombatScreen") if core and hasattr(core, "game_state") else None
+            from ..combat.engine import CombatPhase
+            is_victory = False
+            if combat_state:
+                if getattr(combat_state, "last_battle_result", "") == "VICTORY":
+                    is_victory = True
+                elif hasattr(combat_state, "engine") and combat_state.engine.phase == CombatPhase.BATTLE_VICTORY:
+                    is_victory = True
+            elif not self.party.is_wiped:
+                is_victory = True
+
+            if is_victory and not self.party.is_wiped:
+                self.exploration_flags[f"boss_defeated_{boss_name}"] = True
+                self.last_status_msg = f"★ VICTORY! {boss_name} has been defeated!"
                 qm = getattr(self.party, "quest_manager", None)
                 if qm:
-                    qm.notify_enemy_defeated(active_boss, count=1, party=self.party)
+                    qm.notify_enemy_defeated(boss_name, count=1, party=self.party)
+                self._cleanse_defeated_boss_tiles(self._current_map())
+            self.pending_boss_fight = None
             context.set("active_boss_fight", None)
 
         # Check if returning from a wiped party battle (Defeat)
@@ -555,6 +574,21 @@ class GSNoiseMapTestScreen(SMState):
         """Rolls a random danger threshold between 26.0 and 44.0 points."""
         return random.uniform(26.0, 44.0)
 
+    def _cleanse_defeated_boss_tiles(self, map_obj: Optional[Map]) -> None:
+        """Removes Boss objects and custom glyphs from tiles of defeated bosses."""
+        if not map_obj:
+            return
+        for row in map_obj.tiles:
+            for tile in row:
+                for obj in list(tile.object_listing):
+                    if obj.startswith("Boss:"):
+                        boss_name = obj.split(":", 1)[1]
+                        if self.exploration_flags.get(f"boss_defeated_{boss_name}", False):
+                            tile.object_listing = [o for o in tile.object_listing if o != obj]
+                            tile.custom_glyph = None
+                            tile.custom_fg = None
+                            tile.custom_bg = None
+
     def _check_step_encounter(self, context: Context) -> bool:
         """Evaluates step-based random encounter rolls using danger accumulator. Returns True if encounter triggered."""
         self.steps_since_battle += 1
@@ -563,14 +597,18 @@ class GSNoiseMapTestScreen(SMState):
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
 
         # Check for Boss encounter tile
-        for obj in curr_tile.object_listing:
+        for obj in list(curr_tile.object_listing):
             if obj.startswith("Boss:"):
                 boss_name = obj.split(":", 1)[1]
                 boss_flag = f"boss_defeated_{boss_name}"
-                if not self.exploration_flags.get(boss_flag, False):
-                    return self._trigger_boss_encounter(context, boss_name)
-                else:
+                if self.exploration_flags.get(boss_flag, False):
+                    # Cleanse defeated boss tile and prevent retrigger
+                    curr_tile.object_listing = [o for o in curr_tile.object_listing if o != obj]
+                    curr_tile.custom_glyph = None
+                    curr_tile.custom_fg = None
+                    curr_tile.custom_bg = None
                     return False
+                return self._trigger_boss_encounter(context, boss_name)
 
         # Warp tiles, egress tiles, safe tiles never accumulate danger or trigger encounters
         if curr_tile.warp_target is not None:
@@ -615,8 +653,9 @@ class GSNoiseMapTestScreen(SMState):
         self.steps_since_battle = 0
         self.danger_counter = 0.0
         self.danger_threshold = self._roll_danger_threshold()
+        self.pending_boss_fight = boss_name
         context.set("active_boss_fight", boss_name)
-        combat_state.start_encounter(self.party, squad)
+        combat_state.start_encounter(self.party, squad, boss_name=boss_name)
         transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
         if transition_state:
             transition_state.configure(
@@ -852,6 +891,7 @@ class GSNoiseMapTestScreen(SMState):
                         self.active_submap = poi.sub_map
                         self.active_poi = poi
                         self.player_x, self.player_y = poi.spawn_pos
+                        self._cleanse_defeated_boss_tiles(self.active_submap)
                         TerminalScreen.clear_screen()
                         TerminalScreen.flush()
         else:

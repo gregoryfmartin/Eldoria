@@ -52,6 +52,7 @@ def main() -> None:
         pass
     finally:
         engine.cleanup()
+    sys.exit(0)
 
 
 if __name__ == "__main__":

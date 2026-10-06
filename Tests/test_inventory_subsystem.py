@@ -302,7 +302,11 @@ class TestInventorySubsystem(unittest.TestCase):
         self.assertEqual(combat_screen.engine.phase, CombatPhase.EXECUTION_PHASE)
 
         # Step execution to resolve round
+        guard = 0
         while combat_screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard += 1
+            if guard > 100:
+                self.fail("Infinite loop in combat execution phase")
             combat_screen.engine.step_execution()
         # Hero should have recovered HP and 1 Potion was consumed
         self.assertGreater(hero.hp, 100)
@@ -356,7 +360,11 @@ class TestInventorySubsystem(unittest.TestCase):
 
         # Execute round
         initial_enemy_hp = enemy.hp
+        guard = 0
         while combat_screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard += 1
+            if guard > 100:
+                self.fail("Infinite loop in combat execution phase")
             combat_screen.engine.step_execution()
 
         # Enemy took damage from Bomb and 1 Bomb was consumed
@@ -755,7 +763,11 @@ class TestInventorySubsystem(unittest.TestCase):
         self.assertTrue(combat_screen.engine.finalize_planning())
 
         # Execute actions until hero 0 acts
+        guard = 0
         while combat_screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard += 1
+            if guard > 100:
+                self.fail("Infinite loop in combat execution phase")
             act = combat_screen.engine.step_execution()
             if act and act.actor == hero:
                 break
@@ -784,7 +796,11 @@ class TestInventorySubsystem(unittest.TestCase):
         combat_screen.engine.plan_member_action(0, action, hero)
         self.assertTrue(combat_screen.engine.finalize_planning())
 
+        guard = 0
         while combat_screen.engine.phase == CombatPhase.EXECUTION_PHASE:
+            guard += 1
+            if guard > 100:
+                self.fail("Infinite loop in combat execution phase")
             act = combat_screen.engine.step_execution()
             if act and act.actor == hero:
                 break

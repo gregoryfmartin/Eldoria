@@ -1316,7 +1316,10 @@ class GSMainMenuScreen(SMState):
             is_cur = (real_idx == self.magic_cursor and self.focus_mode in ("SUBMENU", "MODAL"))
             name_str = f"{sp.name[:18]:<18}"
             mp_str = f"MP: {sp.mp_cost:>2}"
-            scope_str = f"{sp.target_scope.name[:12]:<12}"
+            scope_name = getattr(sp.target_scope, "display_name", None)
+            if scope_name is None:
+                scope_name = "Single" if "SINGLE" in str(sp.target_scope).upper() else ("AOE" if "ALL" in str(sp.target_scope).upper() else str(sp.target_scope))
+            scope_str = f"{scope_name[:12]:<12}"
 
             if is_cur:
                 bg = "\033[48;2;25;55;85m"

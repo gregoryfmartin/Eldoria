@@ -6,7 +6,7 @@ from __future__ import annotations
 import atexit
 import shutil
 import sys
-from typing import Tuple
+from typing import Callable, Optional, Tuple
 from .ansi import ATControlSequences, ATCoordinates
 
 
@@ -75,8 +75,17 @@ class TerminalScreen:
             output.append(space_str)
         sys.stdout.write("".join(output))
 
-    @staticmethod
-    def write(text: str) -> None:
+    _write_filter: Optional[Callable[[str], str]] = None
+
+    @classmethod
+    def set_write_filter(cls, filter_fn: Optional[Callable[[str], str]]) -> None:
+        """Sets or clears an optional transformation filter on all raw terminal writes."""
+        cls._write_filter = filter_fn
+
+    @classmethod
+    def write(cls, text: str) -> None:
+        if cls._write_filter is not None:
+            text = cls._write_filter(text)
         sys.stdout.write(text)
 
     @staticmethod

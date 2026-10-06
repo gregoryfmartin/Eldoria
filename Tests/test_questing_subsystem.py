@@ -342,15 +342,21 @@ class TestQuestingSubsystem(unittest.TestCase):
         self.assertEqual(len(screen.npc_dialog.choices), 2)
 
         # Advance through pages to reach choices without over-advancing
+        guard = 0
         while screen.npc_dialog.state not in (
             DialogState.CHOICE_WAITING,
             DialogState.CLOSED,
             DialogState.FINISHED,
         ):
+            guard += 1
+            if guard > 50:
+                self.fail("Infinite loop advancing dialog pages")
             if screen.npc_dialog.state == DialogState.TELETYPING:
                 screen.npc_dialog.flush_page()
             elif screen.npc_dialog.state == DialogState.PAGE_WAITING:
                 screen.npc_dialog.advance_or_act()
+            else:
+                break
 
         # Accept quest (Option 0: Yes)
         screen.npc_dialog.choice_cursor = 0

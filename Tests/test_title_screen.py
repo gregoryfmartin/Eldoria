@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
+from eldoria_py.terminal.color import ColorLibrary, TrueColor, dim_ansi, scale_color
 from eldoria_py.terminal.input import KeyCode, KeyEvent
 from eldoria_py.states.splash_screen import GSSplashScreen
 from eldoria_py.states.title_screen import GSTitleScreen
@@ -25,10 +26,18 @@ class TestSplashScreen(unittest.TestCase):
         self.context.set(SMState.ContextEldoriaCore, self.mock_core)
 
     def test_splash_advances_on_duration(self):
+        # Duration expires, triggers FADING_OUT phase
         self.context.set(SMState.ContextDeltaTime, 1.1)
         self.context.set(SMState.ContextKeysPressed, [])
 
         self.splash.update(self.context)
+        self.assertEqual(self.splash.phase, "FADING_OUT")
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Fade-out duration elapses, triggering ToTitle transition
+        self.context.set(SMState.ContextDeltaTime, self.splash.fade_out_duration)
+        self.splash.update(self.context)
+        self.assertEqual(self.splash.phase, "FINISHED")
         self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
 
     def test_splash_advances_on_keypress(self):
@@ -36,6 +45,22 @@ class TestSplashScreen(unittest.TestCase):
         self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.SPACE)])
 
         self.splash.update(self.context)
+        self.assertEqual(self.splash.phase, "FADING_OUT")
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Subsequent keypress skips fade-out directly to finished
+        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.SPACE)])
+        self.splash.update(self.context)
+        self.assertEqual(self.splash.phase, "FINISHED")
+        self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
+
+    def test_splash_instant_transition_when_fade_zero(self):
+        splash = GSSplashScreen(screen_width=54, screen_height=24, duration=1.0, fade_out_duration=0.0)
+        self.context.set(SMState.ContextDeltaTime, 1.1)
+        self.context.set(SMState.ContextKeysPressed, [])
+
+        splash.update(self.context)
+        self.assertEqual(splash.phase, "FINISHED")
         self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
 
     def test_splash_panel_structure(self):
@@ -161,14 +186,78 @@ class TestTitleScreen(unittest.TestCase):
         self.assertIsNone(self.title.active_dialog)
         self.assertTrue(self.title.menu.is_active())
 
-    def test_title_screen_credits_dialog(self):
-        self.title.selected_idx = 3
-        self.title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
-        self.assertEqual(self.title.active_dialog, "CREDITS")
-        self.assertTrue(self.title.credits_panel.is_active())
+    def test_title_fade_in_on_enter(self):
+        self.title.enter(self.context)
+        self.assertTrue(self.title.is_fading_in)
+        self.assertEqual(self.title.fade_in_elapsed, 0.0)
 
-        self.title._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
+    def test_title_fade_in_advances_and_completes(self):
+        self.title.enter(self.context)
+        self.context.set(SMState.ContextDeltaTime, 0.2)
+        self.context.set(SMState.ContextKeysPressed, [])
+
+        self.title.update(self.context)
+        self.assertTrue(self.title.is_fading_in)
+        self.assertAlmostEqual(self.title.fade_in_elapsed, 0.2)
+
+        # Advance past fade_in_duration (0.45s)
+        self.context.set(SMState.ContextDeltaTime, 0.3)
+        self.title.update(self.context)
+        self.assertFalse(self.title.is_fading_in)
+
+    def test_title_fade_in_skipped_on_keypress(self):
+        self.title.enter(self.context)
+        self.assertTrue(self.title.is_fading_in)
+
+        # Keypress during fade-in snaps immediately to full brightness and swallows key
+        keys = [KeyEvent(key=KeyCode.ENTER, char="\r")]
+        self.context.set(SMState.ContextDeltaTime, 0.05)
+        self.context.set(SMState.ContextKeysPressed, keys)
+
+        self.title.update(self.context)
+        self.assertFalse(self.title.is_fading_in)
+        self.assertEqual(len(keys), 0)
+        # Menu item was NOT activated because key was consumed by fade skip
         self.assertIsNone(self.title.active_dialog)
+
+    def test_title_screen_exit_menu_shuts_down(self):
+        self.mock_core.is_running = True
+        self.title.audio_engine.cleanup = MagicMock()
+        self.title._current_core = self.mock_core
+        self.title._execute_menu_action("Exit")
+        self.assertFalse(self.mock_core.is_running)
+        self.title.audio_engine.cleanup.assert_called_once()
+
+    def test_title_screen_q_shuts_down(self):
+        self.mock_core.is_running = True
+        self.title.audio_engine.cleanup = MagicMock()
+        self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="q"), self.context, self.mock_core)
+        self.assertFalse(self.mock_core.is_running)
+        self.title.audio_engine.cleanup.assert_called_once()
+
+
+class TestColorDimming(unittest.TestCase):
+    """Verifies ANSI TrueColor brightness scaling and escape sequence filtering."""
+
+    def test_scale_color(self):
+        color = TrueColor(100, 200, 50)
+        scaled = scale_color(color, 0.5)
+        self.assertEqual(scaled.r, 50)
+        self.assertEqual(scaled.g, 100)
+        self.assertEqual(scaled.b, 25)
+
+        # Zero and 1.0 boundary tests
+        self.assertEqual(scale_color(color, 0.0).r, 0)
+        self.assertEqual(scale_color(color, 1.0).r, 100)
+
+    def test_dim_ansi(self):
+        ansi_text = "\033[38;2;100;200;50mHello\033[0m"
+        dimmed = dim_ansi(ansi_text, 0.5)
+        self.assertEqual(dimmed, "\033[38;2;50;100;25mHello\033[0m")
+
+        # Fast path returns string unchanged
+        self.assertEqual(dim_ansi(ansi_text, 1.0), ansi_text)
+        self.assertEqual(dim_ansi("Plain text", 0.5), "Plain text")
 
 
 if __name__ == "__main__":

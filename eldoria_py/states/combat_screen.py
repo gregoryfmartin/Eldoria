@@ -86,11 +86,20 @@ class GSNvNCombatScreen(SMState):
         self.target_type: str = "ENEMY"  # "ENEMY" or "ALLY"
         self.step_delay: float = 1.25  # 1.25s cadence between turn actions (allows comfortable reading)
         self.execution_timer: float = 0.0
+        self.active_boss: Optional[str] = None
+        self.last_battle_result: str = "NONE"  # "NONE", "IN_PROGRESS", "VICTORY", "DEFEAT", "FLED"
 
-    def start_encounter(self, party: Party, squad: EnemySquad) -> None:
+    def start_encounter(
+        self,
+        party: Party,
+        squad: EnemySquad,
+        boss_name: Optional[str] = None,
+    ) -> None:
         """Configures a new battle encounter."""
         self.party = party
         self.squad = squad
+        self.active_boss = boss_name
+        self.last_battle_result = "IN_PROGRESS"
         self.engine = NvNCombatEngine(party=self.party, squad=self.squad)
         self.active_member_idx = self._find_first_living_member()
         self.menu_mode = "MAIN"
@@ -145,6 +154,7 @@ class GSNvNCombatScreen(SMState):
                 if self.engine.phase in (CombatPhase.BATTLE_VICTORY, CombatPhase.BATTLE_DEFEAT):
                     if key_info.key in (KeyCode.ENTER, KeyCode.SPACE) or key_info.char in ("\r", "\n", " ", "q", "Q"):
                         keys_pressed.clear()
+                        self.last_battle_result = "VICTORY" if self.engine.phase == CombatPhase.BATTLE_VICTORY else "DEFEAT"
                         if core and hasattr(core, "game_state"):
                             transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
                             if transition_state:
@@ -167,6 +177,7 @@ class GSNvNCombatScreen(SMState):
                         break
                     elif key_info.char in ("q", "Q"):
                         keys_pressed.clear()
+                        self.last_battle_result = "FLED"
                         if core and hasattr(core, "game_state"):
                             transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
                             if transition_state:
@@ -193,6 +204,7 @@ class GSNvNCombatScreen(SMState):
                         # Flee / Return to Overworld [Esc] or [Q] from MAIN menu
                         if key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
                             keys_pressed.clear()
+                            self.last_battle_result = "FLED"
                             if core and hasattr(core, "game_state"):
                                 transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
                                 if transition_state:
