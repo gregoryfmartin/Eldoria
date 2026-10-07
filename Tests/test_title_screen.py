@@ -6,6 +6,7 @@ Verifies production boot flow, 5 menu items, modal dialogs, and developer hotkey
 import unittest
 from unittest.mock import MagicMock
 
+from eldoria_py.audio import AudioChannel, AudioTrackInfo, PlaybackState
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
 from eldoria_py.terminal.color import ColorLibrary, TrueColor, dim_ansi, scale_color
@@ -234,6 +235,46 @@ class TestTitleScreen(unittest.TestCase):
         self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="q"), self.context, self.mock_core)
         self.assertFalse(self.mock_core.is_running)
         self.title.audio_engine.cleanup.assert_called_once()
+
+    def test_title_screen_starts_bgm_on_enter(self):
+        self.title.audio_engine.play_bgm = MagicMock()
+        self.title.audio_engine.get_current_bgm = MagicMock(return_value=None)
+        self.title.enter(self.context)
+        self.title.audio_engine.play_bgm.assert_called_once_with("Title", loop=True)
+
+    def test_title_screen_seamless_bgm_persistence(self):
+        self.title.audio_engine.play_bgm = MagicMock()
+        existing_track = AudioTrackInfo(
+            name="Title",
+            path="Resources/BGM/Title.mp3",
+            channel=AudioChannel.MUSIC,
+            state=PlaybackState.PLAYING,
+            volume=1.0,
+            duration_seconds=120.0,
+            position_seconds=15.0,
+            loop=True,
+        )
+        self.title.audio_engine.get_current_bgm = MagicMock(return_value=existing_track)
+        self.title.enter(self.context)
+        self.title.audio_engine.play_bgm.assert_not_called()
+
+    def test_title_screen_load_game_stops_bgm(self):
+        self.title.active_dialog = "LOAD"
+        self.title.load_slot_idx = 0
+        self.title.load_headers = [MagicMock()]
+        loaded_state = {"current_sector": (0, 0), "player_pos": (5, 5)}
+        self.title.save_manager.load_game = MagicMock(return_value=(MagicMock(), MagicMock(), loaded_state))
+        self.title.audio_engine.stop_bgm = MagicMock()
+
+        self.title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
+        self.title.audio_engine.stop_bgm.assert_called_once()
+        self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
+
+    def test_title_screen_dev_map_hotkey_stops_bgm(self):
+        self.title.audio_engine.stop_bgm = MagicMock()
+        self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="m"), self.context, self.mock_core)
+        self.title.audio_engine.stop_bgm.assert_called_once()
+        self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
 
 
 class TestColorDimming(unittest.TestCase):

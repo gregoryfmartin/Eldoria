@@ -110,8 +110,9 @@ class AudioStream:
         frames_needed = num_frames
 
         while frames_needed > 0:
+            to_read = min(frames_needed, 4096)
             try:
-                chunk = self._gen.send(frames_needed)
+                chunk = self._gen.send(to_read)
                 if not chunk or len(chunk) == 0:
                     raise StopIteration
 
@@ -127,7 +128,7 @@ class AudioStream:
                 if frames_needed <= 0:
                     break
 
-            except (StopIteration, Exception):
+            except StopIteration:
                 if self.loop:
                     self.loop_count += 1
                     # Seamless loop: re-initialize generator and continue filling needed frames
@@ -138,6 +139,11 @@ class AudioStream:
                     self.state = PlaybackState.STOPPED
                     self._close_generator()
                     break
+            except Exception as exc:
+                logger.warning("Error reading audio stream '%s': %s", self.name, exc)
+                self.state = PlaybackState.STOPPED
+                self._close_generator()
+                break
 
         return result
 

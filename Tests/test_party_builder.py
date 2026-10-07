@@ -131,7 +131,11 @@ class TestPartyBuilder(unittest.TestCase):
         self.assertEqual(self.screen.embark_modal_step, 2)
 
         # Step 2: Select Save Slot (1 for Slot 1)
-        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="1"), self.context, self.mock_core)
+        with patch("eldoria_py.states.party_builder.get_audio_engine") as mock_gae:
+            mock_audio = MagicMock()
+            mock_gae.return_value = mock_audio
+            self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="1"), self.context, self.mock_core)
+            mock_audio.stop_bgm.assert_called_once()
 
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
         self.assertIsInstance(self.context.get("party"), Party)

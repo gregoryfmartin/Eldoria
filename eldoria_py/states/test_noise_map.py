@@ -8,6 +8,7 @@ import random
 import re
 from typing import List, Optional, Tuple, Union
 
+from ..audio import get_audio_engine, PlaybackState
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..procgen.noise import FastNoiseLite, NoiseType, FractalType
@@ -190,6 +191,15 @@ class GSNoiseMapTestScreen(SMState):
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
+
+        # World Map background music: fade in World Map Smol if not already playing
+        try:
+            audio_engine = get_audio_engine(autostart_device=False)
+            bgm_info = audio_engine.get_current_bgm()
+            if bgm_info is None or bgm_info.name != "World Map Smol" or bgm_info.state == PlaybackState.STOPPED:
+                audio_engine.fade_to_bgm("World Map Smol", duration_seconds=1.5, loop=True)
+        except Exception:
+            pass
 
         # Check if context has an active party from Party Builder or Load Game
         ctx_party = context.get("party")
@@ -663,6 +673,10 @@ class GSNoiseMapTestScreen(SMState):
                 target_event="EnterCombat",
                 target_state="GSNvNCombatScreen",
             )
+        try:
+            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=1.0)
+        except Exception:
+            pass
         core.game_state.trigger("ToCombat", context)
         return True
 
@@ -694,6 +708,10 @@ class GSNoiseMapTestScreen(SMState):
                 target_event="EnterCombat",
                 target_state="GSNvNCombatScreen",
             )
+        try:
+            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=1.0)
+        except Exception:
+            pass
         core.game_state.trigger("ToCombat", context)
         return True
 

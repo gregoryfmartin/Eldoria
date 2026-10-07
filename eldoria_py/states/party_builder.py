@@ -12,6 +12,7 @@ import threading
 import time
 from typing import List, Optional
 
+from ..audio import get_audio_engine
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..core.save_manager import SaveManager, SaveSlotHeader
@@ -461,6 +462,8 @@ class GSPartyBuilderScreen(SMState):
             elif self.embark_modal_step == 2:
                 if key_info.char in ("1", "2", "3"):
                     slot_idx = int(key_info.char)
+                    # Stop music immediately upon slot selection before world creation
+                    get_audio_engine().stop_bgm()
                     # 1. Clear buffer completely to remove all prior UI elements
                     TerminalScreen.clear_screen()
                     TerminalScreen.write(clear_buffer_tail(1, 40))

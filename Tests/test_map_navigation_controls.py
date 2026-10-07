@@ -11,7 +11,9 @@ Unit tests for World Map navigation controls, disallowed shortcuts, and footer b
 from __future__ import annotations
 import re
 import unittest
+from unittest.mock import MagicMock, patch
 
+from eldoria_py.audio import AudioChannel, AudioTrackInfo, PlaybackState
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState, SMStateMachine, SMTransition
 from eldoria_py.procgen.map_generator import Map, MapTile, BiomeType
@@ -248,6 +250,54 @@ class TestMapNavigationControls(unittest.TestCase):
         self.assertNotEqual((self.screen.player_x, self.screen.player_y), (10, 10))
         new_tile = sec.tiles[self.screen.player_y][self.screen.player_x]
         self.assertTrue(new_tile.is_walkable)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_noise_map_starts_world_map_bgm_on_enter(self, mock_gae) -> None:
+        """Entering map exploration starts fading in World Map Smol if not playing."""
+        mock_audio = MagicMock()
+        mock_audio.get_current_bgm.return_value = None
+        mock_gae.return_value = mock_audio
+
+        ctx = Context()
+        self.screen.enter(ctx)
+        mock_audio.fade_to_bgm.assert_called_once_with("World Map Smol", duration_seconds=1.5, loop=True)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_noise_map_preserves_world_map_bgm_when_already_playing(self, mock_gae) -> None:
+        """Entering map exploration leaves World Map Smol playing seamlessly if already active."""
+        mock_audio = MagicMock()
+        existing_track = AudioTrackInfo(
+            name="World Map Smol",
+            path="Resources/BGM/World Map Smol.mp3",
+            channel=AudioChannel.MUSIC,
+            state=PlaybackState.PLAYING,
+            volume=1.0,
+            duration_seconds=180.0,
+            position_seconds=25.0,
+            loop=True,
+        )
+        mock_audio.get_current_bgm.return_value = existing_track
+        mock_gae.return_value = mock_audio
+
+        ctx = Context()
+        self.screen.enter(ctx)
+        mock_audio.fade_to_bgm.assert_not_called()
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_combat_trigger_fades_out_world_map_bgm(self, mock_gae) -> None:
+        """Triggering combat initiates a fade-out of world map music."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        mock_combat = MagicMock()
+        self.fsm.states["GSNvNCombatScreen"] = mock_combat
+
+        ctx = Context()
+        ctx.set(SMState.ContextEldoriaCore, self.mock_core)
+
+        triggered = self.screen._trigger_encounter(ctx, BiomeType.PLAINS)
+        self.assertTrue(triggered)
+        mock_audio.fade_out_bgm.assert_called_once_with(duration_seconds=1.0)
 
 
 if __name__ == "__main__":

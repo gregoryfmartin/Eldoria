@@ -234,6 +234,28 @@ class TestAudioEngineFacade(unittest.TestCase):
         self.engine.stop_sfx(handle)
         self.assertFalse(self.engine.is_sfx_playing(handle))
 
+    def test_default_buffer_size_msec(self):
+        self.assertEqual(AudioEngine.DEFAULT_BUFFER_SIZE_MSEC, 400)
+        self.assertEqual(self.engine.buffersize_msec, 400)
+
+    def test_custom_buffer_size_msec(self):
+        custom_engine = AudioEngine(autostart_device=False, buffersize_msec=500)
+        self.assertEqual(custom_engine.buffersize_msec, 500)
+        custom_engine.cleanup()
+
+    @patch("miniaudio.PlaybackDevice")
+    def test_start_device_forwards_buffer_size(self, mock_device_cls):
+        mock_device = MagicMock()
+        mock_device_cls.return_value = mock_device
+
+        engine = AudioEngine(autostart_device=False, buffersize_msec=350)
+        started = engine._start_device()
+        self.assertTrue(started)
+        mock_device_cls.assert_called_once()
+        _, kwargs = mock_device_cls.call_args
+        self.assertEqual(kwargs.get("buffersize_msec"), 350)
+        engine.cleanup()
+
 
 if __name__ == "__main__":
     unittest.main()

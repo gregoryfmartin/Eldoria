@@ -7,6 +7,7 @@ Standardized around Eldoria's maximum supported buffer dimensions (80x40).
 from __future__ import annotations
 from typing import List, Optional
 
+from ..audio import get_audio_engine, PlaybackState
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..core.save_manager import SaveManager, SaveSlotHeader
@@ -252,6 +253,11 @@ class GSTitleScreen(SMState):
         self._current_context = context
         self._current_core = context.get(SMState.ContextEldoriaCore)
 
+        # Title background music: start looping Title.mp3 if not already actively playing
+        curr_bgm = self.audio_engine.get_current_bgm()
+        if curr_bgm is None or curr_bgm.name != "Title" or curr_bgm.state == PlaybackState.STOPPED:
+            self.audio_engine.play_bgm("Title", loop=True)
+
         if self.fade_in_duration > 0:
             self.is_fading_in = True
             self.fade_in_elapsed = 0.0
@@ -357,6 +363,8 @@ class GSTitleScreen(SMState):
                 elif key_info.key == KeyCode.ENTER or key_info.char in ("\r", "\n"):
                     slot_num = self.load_slot_idx + 1
                     if self.load_headers and self.load_headers[self.load_slot_idx] is not None:
+                        # Stop music immediately upon slot selection before heavy disk I/O
+                        self.audio_engine.stop_bgm()
                         try:
                             loaded_party, loaded_macro, loaded_state = self.save_manager.load_game(slot_num)
                             context.set("party", loaded_party)
@@ -439,9 +447,11 @@ class GSTitleScreen(SMState):
         # Developer hotkeys
         if self.dev_mode and key_info.char in ("m", "M"):
             if core and hasattr(core, "game_state"):
+                self.audio_engine.stop_bgm()
                 core.game_state.trigger("ToNoiseMap", context)
         elif self.dev_mode and key_info.char in ("b", "B"):
             if core and hasattr(core, "game_state"):
+                self.audio_engine.stop_bgm()
                 core.game_state.trigger("ToCombat", context)
         elif self.dev_mode and key_info.char in ("u", "U"):
             if core and hasattr(core, "game_state"):

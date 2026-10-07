@@ -34,24 +34,29 @@ class AudioEngine:
     Coordinates device streaming, asset resolution, BGM crossfading, and polyphonic SFX.
     """
 
-    def __init__(self, autostart_device: bool = True) -> None:
+    DEFAULT_BUFFER_SIZE_MSEC: int = 400
+
+    def __init__(self, autostart_device: bool = True, buffersize_msec: Optional[int] = None) -> None:
         self.mixer = MasterMixer()
         self.is_available: bool = False
         self._device: Optional[miniaudio.PlaybackDevice] = None
         self._generator = None
         self._lock = threading.RLock()
+        self.buffersize_msec: int = buffersize_msec if buffersize_msec is not None else self.DEFAULT_BUFFER_SIZE_MSEC
 
         atexit.register(self.cleanup)
 
         if autostart_device:
             self._start_device()
 
-    def _start_device(self) -> bool:
+    def _start_device(self, buffersize_msec: Optional[int] = None) -> bool:
         """Initializes and starts the miniaudio PlaybackDevice with the master mixer callback."""
         if not MINIAUDIO_AVAILABLE:
             logger.info("miniaudio library not available; running in headless audio mode.")
             self.is_available = False
             return False
+
+        effective_buffer_msec = buffersize_msec if buffersize_msec is not None else self.buffersize_msec
 
         try:
             self._generator = self.mixer.callback_generator()
@@ -62,11 +67,14 @@ class AudioEngine:
                 output_format=miniaudio.SampleFormat.SIGNED16,
                 nchannels=MasterMixer.NCHANNELS,
                 sample_rate=MasterMixer.SAMPLE_RATE,
-                buffersize_msec=50,
+                buffersize_msec=effective_buffer_msec,
             )
             self._device.start(self._generator)
             self.is_available = True
-            logger.info("AudioEngine initialized successfully on native audio device.")
+            logger.info(
+                "AudioEngine initialized successfully on native audio device (buffer=%dms).",
+                effective_buffer_msec,
+            )
             return True
         except Exception as exc:
             logger.warning("Could not initialize native audio device (%s); running in headless audio mode.", exc)
@@ -285,11 +293,14 @@ _DEFAULT_ENGINE: Optional[AudioEngine] = None
 _ENGINE_LOCK = threading.Lock()
 
 
-def get_audio_engine(autostart_device: bool = True) -> AudioEngine:
+def get_audio_engine(autostart_device: bool = True, buffersize_msec: Optional[int] = None) -> AudioEngine:
     """Returns the process-wide AudioEngine singleton instance."""
     global _DEFAULT_ENGINE
     if _DEFAULT_ENGINE is None:
         with _ENGINE_LOCK:
             if _DEFAULT_ENGINE is None:
-                _DEFAULT_ENGINE = AudioEngine(autostart_device=autostart_device)
+                _DEFAULT_ENGINE = AudioEngine(
+                    autostart_device=autostart_device,
+                    buffersize_msec=buffersize_msec,
+                )
     return _DEFAULT_ENGINE
