@@ -17,6 +17,7 @@ from eldoria_py.audio import AudioChannel, AudioTrackInfo, PlaybackState
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState, SMStateMachine, SMTransition
 from eldoria_py.procgen.map_generator import Map, MapTile, BiomeType
+from eldoria_py.procgen.poi import POIDescriptor, POIType, WarpTarget
 from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
 from eldoria_py.terminal.input import KeyCode, KeyEvent
 
@@ -285,8 +286,19 @@ class TestMapNavigationControls(unittest.TestCase):
 
     @patch("eldoria_py.states.test_noise_map.get_audio_engine")
     def test_combat_trigger_fades_out_world_map_bgm(self, mock_gae) -> None:
-        """Triggering combat initiates a fade-out of world map music."""
+        """Triggering combat stores pre-battle track and initiates a quick 0.5s fade-out."""
         mock_audio = MagicMock()
+        mock_current = AudioTrackInfo(
+            name="World Map Smol",
+            path="Resources/BGM/World Map Smol.mp3",
+            channel=AudioChannel.MUSIC,
+            state=PlaybackState.PLAYING,
+            volume=1.0,
+            duration_seconds=180.0,
+            position_seconds=10.0,
+            loop=True,
+        )
+        mock_audio.get_current_bgm.return_value = mock_current
         mock_gae.return_value = mock_audio
 
         mock_combat = MagicMock()
@@ -297,7 +309,310 @@ class TestMapNavigationControls(unittest.TestCase):
 
         triggered = self.screen._trigger_encounter(ctx, BiomeType.PLAINS)
         self.assertTrue(triggered)
-        mock_audio.fade_out_bgm.assert_called_once_with(duration_seconds=1.0)
+        self.assertEqual(self.screen.pre_battle_bgm_track, "World Map Smol")
+        self.assertEqual(ctx.get("pre_battle_bgm_track"), "World Map Smol")
+        mock_audio.fade_out_bgm.assert_called_once_with(duration_seconds=0.5)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_return_from_battle_resumes_remembered_pre_battle_bgm(self, mock_gae) -> None:
+        """Returning from combat resumes the pre-battle BGM track remembered prior to battle."""
+        mock_audio = MagicMock()
+        mock_audio.get_current_bgm.return_value = None
+        mock_gae.return_value = mock_audio
+
+        ctx = Context()
+        ctx.set("pre_battle_bgm_track", "World Map Smol")
+
+        self.screen.enter(ctx)
+        mock_audio.fade_to_bgm.assert_called_with("World Map Smol", duration_seconds=1.5, loop=True)
+        self.assertIsNone(self.screen.pre_battle_bgm_track)
+        self.assertIsNone(ctx.get("pre_battle_bgm_track"))
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_enter_cave_stores_previous_track_and_fades_to_cave_theme(self, mock_gae) -> None:
+        """Entering a cave stores currently playing track and starts Cave Theme with quick fade."""
+        mock_audio = MagicMock()
+        mock_current = AudioTrackInfo(
+            name="World Map Smol",
+            path="Resources/BGM/World Map Smol.mp3",
+            channel=AudioChannel.MUSIC,
+            state=PlaybackState.PLAYING,
+            volume=1.0,
+            duration_seconds=180.0,
+            position_seconds=10.0,
+            loop=True,
+        )
+        mock_audio.get_current_bgm.return_value = mock_current
+        mock_gae.return_value = mock_audio
+
+        cave_map = Map(name="Cavern", width=54, height=24)
+        for y in range(24):
+            for x in range(24):
+                cave_map.set_tile(x, y, MapTile(biome=BiomeType.PLAINS, battle_allowed=False))
+        cave_poi = POIDescriptor(
+            poi_type=POIType.CAVE,
+            name="Shadow Cavern",
+            glyph="Ω",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 9),
+            sub_map=cave_map,
+            spawn_pos=(5, 5),
+        )
+        sec = self.screen._current_map()
+        target_tile = sec.tiles[9][10]
+        target_tile.poi = cave_poi
+        target_tile.warp_target = WarpTarget(target_map_name="Shadow Cavern", target_pos=(5, 5), is_egress=False)
+
+        # Move UP onto the cave entrance and press Enter to enter
+        self._send_key(KeyEvent(key=KeyCode.UP))
+        self._send_key(KeyEvent(key=KeyCode.ENTER, char="\r"))
+        self.assertEqual(self.screen.pre_cave_bgm_track, "World Map Smol")
+        mock_audio.fade_to_bgm.assert_called_with("Cave Theme", duration_seconds=0.5, loop=True)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_leave_cave_fades_to_previous_track_and_clears_reference(self, mock_gae) -> None:
+        """Leaving a cave fades out Cave Theme and resumes the remembered track."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        cave_map = Map(name="Cavern", width=54, height=24)
+        for y in range(24):
+            for x in range(24):
+                cave_map.set_tile(x, y, MapTile(biome=BiomeType.PLAINS, battle_allowed=False))
+
+        egress_tile = cave_map.tiles[9][10]
+        egress_tile.warp_target = WarpTarget(target_map_name="Overworld", is_egress=True)
+
+        cave_poi = POIDescriptor(
+            poi_type=POIType.CAVE,
+            name="Shadow Cavern",
+            glyph="Ω",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 10),
+            sub_map=cave_map,
+            spawn_pos=(5, 5),
+        )
+
+        self.screen.active_submap = cave_map
+        self.screen.active_poi = cave_poi
+        self.screen.player_x = 10
+        self.screen.player_y = 10
+        self.screen.pre_cave_bgm_track = "World Map Smol"
+        self.screen.warp_stack.append(((0, 0), (10, 10)))
+
+        # Move UP onto egress tile and press Enter to egress
+        self._send_key(KeyEvent(key=KeyCode.UP))
+        self._send_key(KeyEvent(key=KeyCode.ENTER, char="\r"))
+        mock_audio.fade_to_bgm.assert_called_with("World Map Smol", duration_seconds=0.5, loop=True)
+        self.assertIsNone(self.screen.pre_cave_bgm_track)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_enter_noise_map_inside_cave_starts_cave_theme(self, mock_gae) -> None:
+        """Calling enter() while inside a cave starts Cave Theme instead of World Map Smol."""
+        mock_audio = MagicMock()
+        mock_audio.get_current_bgm.return_value = None
+        mock_gae.return_value = mock_audio
+
+        cave_poi = POIDescriptor(
+            poi_type=POIType.CAVE,
+            name="Shadow Cavern",
+            glyph="Ω",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 10),
+        )
+        self.screen.active_poi = cave_poi
+        self.screen.enter(Context())
+        mock_audio.fade_to_bgm.assert_called_once_with("Cave Theme", duration_seconds=1.5, loop=True)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_enter_town_stores_previous_track_and_fades_to_town_theme(self, mock_gae) -> None:
+        """Entering a town stores currently playing track and starts Town Theme with quick fade."""
+        mock_audio = MagicMock()
+        mock_current = AudioTrackInfo(
+            name="World Map Smol",
+            path="Resources/BGM/World Map Smol.mp3",
+            channel=AudioChannel.MUSIC,
+            state=PlaybackState.PLAYING,
+            volume=1.0,
+            duration_seconds=180.0,
+            position_seconds=10.0,
+            loop=True,
+        )
+        mock_audio.get_current_bgm.return_value = mock_current
+        mock_gae.return_value = mock_audio
+
+        town_map = Map(name="Oakhaven", width=54, height=24)
+        for y in range(24):
+            for x in range(24):
+                town_map.set_tile(x, y, MapTile(biome=BiomeType.PLAINS, battle_allowed=False))
+        town_poi = POIDescriptor(
+            poi_type=POIType.TOWN,
+            name="Oakhaven",
+            glyph="⌂",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 9),
+            sub_map=town_map,
+            spawn_pos=(5, 5),
+        )
+        sec = self.screen._current_map()
+        target_tile = sec.tiles[9][10]
+        target_tile.poi = town_poi
+        target_tile.warp_target = WarpTarget(target_map_name="Oakhaven", target_pos=(5, 5), is_egress=False)
+
+        # Move UP onto town entrance and press Enter to enter
+        self._send_key(KeyEvent(key=KeyCode.UP))
+        self._send_key(KeyEvent(key=KeyCode.ENTER, char="\r"))
+        self.assertEqual(self.screen.pre_town_bgm_track, "World Map Smol")
+        mock_audio.fade_to_bgm.assert_called_with("Town Theme", duration_seconds=0.5, loop=True)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_leave_town_fades_to_previous_track_and_clears_reference(self, mock_gae) -> None:
+        """Leaving a town fades out Town Theme and resumes the remembered track."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        town_map = Map(name="Oakhaven", width=54, height=24)
+        for y in range(24):
+            for x in range(24):
+                town_map.set_tile(x, y, MapTile(biome=BiomeType.PLAINS, battle_allowed=False))
+
+        egress_tile = town_map.tiles[9][10]
+        egress_tile.warp_target = WarpTarget(target_map_name="Overworld", is_egress=True)
+
+        town_poi = POIDescriptor(
+            poi_type=POIType.TOWN,
+            name="Oakhaven",
+            glyph="⌂",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 10),
+            sub_map=town_map,
+            spawn_pos=(5, 5),
+        )
+
+        self.screen.active_submap = town_map
+        self.screen.active_poi = town_poi
+        self.screen.player_x = 10
+        self.screen.player_y = 10
+        self.screen.pre_town_bgm_track = "World Map Smol"
+        self.screen.warp_stack.append(((0, 0), (10, 10)))
+
+        # Move UP onto egress tile and press Enter to egress
+        self._send_key(KeyEvent(key=KeyCode.UP))
+        self._send_key(KeyEvent(key=KeyCode.ENTER, char="\r"))
+        mock_audio.fade_to_bgm.assert_called_with("World Map Smol", duration_seconds=0.5, loop=True)
+        self.assertIsNone(self.screen.pre_town_bgm_track)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_enter_castle_stores_previous_track_and_fades_to_town_theme(self, mock_gae) -> None:
+        """Entering a castle stores currently playing track and starts Town Theme with quick fade."""
+        mock_audio = MagicMock()
+        mock_current = AudioTrackInfo(
+            name="World Map Smol",
+            path="Resources/BGM/World Map Smol.mp3",
+            channel=AudioChannel.MUSIC,
+            state=PlaybackState.PLAYING,
+            volume=1.0,
+            duration_seconds=180.0,
+            position_seconds=10.0,
+            loop=True,
+        )
+        mock_audio.get_current_bgm.return_value = mock_current
+        mock_gae.return_value = mock_audio
+
+        castle_map = Map(name="Highmount Keep", width=54, height=24)
+        for y in range(24):
+            for x in range(24):
+                castle_map.set_tile(x, y, MapTile(biome=BiomeType.PLAINS, battle_allowed=False))
+        castle_poi = POIDescriptor(
+            poi_type=POIType.CASTLE,
+            name="Highmount Keep",
+            glyph="∏",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 9),
+            sub_map=castle_map,
+            spawn_pos=(5, 5),
+        )
+        sec = self.screen._current_map()
+        target_tile = sec.tiles[9][10]
+        target_tile.poi = castle_poi
+        target_tile.warp_target = WarpTarget(target_map_name="Highmount Keep", target_pos=(5, 5), is_egress=False)
+
+        # Move UP onto castle entrance and press Enter to enter
+        self._send_key(KeyEvent(key=KeyCode.UP))
+        self._send_key(KeyEvent(key=KeyCode.ENTER, char="\r"))
+        self.assertEqual(self.screen.pre_town_bgm_track, "World Map Smol")
+        mock_audio.fade_to_bgm.assert_called_with("Town Theme", duration_seconds=0.5, loop=True)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_leave_castle_fades_to_previous_track_and_clears_reference(self, mock_gae) -> None:
+        """Leaving a castle fades out Town Theme and resumes the remembered track."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        castle_map = Map(name="Highmount Keep", width=54, height=24)
+        for y in range(24):
+            for x in range(24):
+                castle_map.set_tile(x, y, MapTile(biome=BiomeType.PLAINS, battle_allowed=False))
+
+        egress_tile = castle_map.tiles[9][10]
+        egress_tile.warp_target = WarpTarget(target_map_name="Overworld", is_egress=True)
+
+        castle_poi = POIDescriptor(
+            poi_type=POIType.CASTLE,
+            name="Highmount Keep",
+            glyph="∏",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 10),
+            sub_map=castle_map,
+            spawn_pos=(5, 5),
+        )
+
+        self.screen.active_submap = castle_map
+        self.screen.active_poi = castle_poi
+        self.screen.player_x = 10
+        self.screen.player_y = 10
+        self.screen.pre_town_bgm_track = "World Map Smol"
+        self.screen.warp_stack.append(((0, 0), (10, 10)))
+
+        # Move UP onto egress tile and press Enter to egress
+        self._send_key(KeyEvent(key=KeyCode.UP))
+        self._send_key(KeyEvent(key=KeyCode.ENTER, char="\r"))
+        mock_audio.fade_to_bgm.assert_called_with("World Map Smol", duration_seconds=0.5, loop=True)
+        self.assertIsNone(self.screen.pre_town_bgm_track)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_enter_noise_map_inside_settlement_starts_town_theme(self, mock_gae) -> None:
+        """Calling enter() while inside a town or castle starts Town Theme instead of World Map Smol."""
+        mock_audio = MagicMock()
+        mock_audio.get_current_bgm.return_value = None
+        mock_gae.return_value = mock_audio
+
+        town_poi = POIDescriptor(
+            poi_type=POIType.TOWN,
+            name="Oakhaven",
+            glyph="⌂",
+            fg_color=MagicMock(),
+            bg_color=MagicMock(),
+            sector_coord=(0, 0),
+            local_pos=(10, 10),
+        )
+        self.screen.active_poi = town_poi
+        self.screen.enter(Context())
+        mock_audio.fade_to_bgm.assert_called_once_with("Town Theme", duration_seconds=1.5, loop=True)
 
 
 if __name__ == "__main__":

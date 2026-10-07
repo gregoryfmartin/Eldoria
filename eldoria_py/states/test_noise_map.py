@@ -103,6 +103,9 @@ class GSNoiseMapTestScreen(SMState):
         self.active_submap: Optional[Map] = None
         self.active_poi: Optional[POIDescriptor] = None
         self.warp_stack: List[Tuple[Tuple[int, int], Tuple[int, int]]] = []
+        self.pre_cave_bgm_track: Optional[str] = None
+        self.pre_battle_bgm_track: Optional[str] = None
+        self.pre_town_bgm_track: Optional[str] = None
 
         # Save / Load state
         self.save_manager: SaveManager = SaveManager()
@@ -179,6 +182,9 @@ class GSNoiseMapTestScreen(SMState):
         self.active_submap = None
         self.active_poi = None
         self.warp_stack.clear()
+        self.pre_cave_bgm_track = None
+        self.pre_battle_bgm_track = None
+        self.pre_town_bgm_track = None
         self.steps_since_battle = 5
         self.danger_counter = 0.0
         self.danger_threshold = self._roll_danger_threshold()
@@ -191,15 +197,6 @@ class GSNoiseMapTestScreen(SMState):
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
-
-        # World Map background music: fade in World Map Smol if not already playing
-        try:
-            audio_engine = get_audio_engine(autostart_device=False)
-            bgm_info = audio_engine.get_current_bgm()
-            if bgm_info is None or bgm_info.name != "World Map Smol" or bgm_info.state == PlaybackState.STOPPED:
-                audio_engine.fade_to_bgm("World Map Smol", duration_seconds=1.5, loop=True)
-        except Exception:
-            pass
 
         # Check if context has an active party from Party Builder or Load Game
         ctx_party = context.get("party")
@@ -246,8 +243,13 @@ class GSNoiseMapTestScreen(SMState):
                 self.danger_threshold = float(ctx_exp["danger_threshold"])
             if "steps_since_battle" in ctx_exp:
                 self.steps_since_battle = int(ctx_exp["steps_since_battle"])
+            if "pre_cave_bgm" in ctx_exp:
+                self.pre_cave_bgm_track = ctx_exp.get("pre_cave_bgm")
+            if "pre_town_bgm" in ctx_exp:
+                self.pre_town_bgm_track = ctx_exp.get("pre_town_bgm")
 
         self._ensure_walkable_player_pos()
+
         if self.active_submap is not None:
             self._cleanse_defeated_boss_tiles(self.active_submap)
 
@@ -278,6 +280,7 @@ class GSNoiseMapTestScreen(SMState):
             context.set("active_boss_fight", None)
 
         # Check if returning from a wiped party battle (Defeat)
+        was_party_wiped = self.party.is_wiped
         if self.party.is_wiped:
             # Revive party with 50% HP and 50% MP
             for m in self.party.members:
@@ -293,6 +296,31 @@ class GSNoiseMapTestScreen(SMState):
             self.danger_counter = 0.0
             self.danger_threshold = self._roll_danger_threshold()
             self.last_status_msg = "Revived!"
+
+        # Exploration background music: resume remembered pre-battle track, or fade in Town Theme if inside a settlement, Cave Theme if inside a cave, or World Map Smol on overworld
+        remembered_track = self.pre_battle_bgm_track or context.get("pre_battle_bgm_track")
+        is_cave = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) == POIType.CAVE)
+        is_settlement = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) in (POIType.TOWN, POIType.CASTLE))
+        if was_party_wiped and not is_cave and not is_settlement:
+            target_track = "World Map Smol"
+        else:
+            if is_settlement:
+                target_track = "Town Theme"
+            elif is_cave:
+                target_track = "Cave Theme"
+            else:
+                target_track = remembered_track or "World Map Smol"
+
+        self.pre_battle_bgm_track = None
+        context.set("pre_battle_bgm_track", None)
+
+        try:
+            audio_engine = get_audio_engine(autostart_device=False)
+            bgm_info = audio_engine.get_current_bgm()
+            if bgm_info is None or bgm_info.name != target_track or bgm_info.state == PlaybackState.STOPPED:
+                audio_engine.fade_to_bgm(target_track, duration_seconds=1.5, loop=True)
+        except Exception:
+            pass
         TerminalScreen.flush()
 
     def exit(self, context: Context) -> None:
@@ -674,7 +702,15 @@ class GSNoiseMapTestScreen(SMState):
                 target_state="GSNvNCombatScreen",
             )
         try:
-            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=1.0)
+            audio_engine = get_audio_engine(autostart_device=False)
+            current_bgm = audio_engine.get_current_bgm()
+            if current_bgm and current_bgm.state != PlaybackState.STOPPED:
+                self.pre_battle_bgm_track = current_bgm.name
+            else:
+                is_cave = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) == POIType.CAVE)
+                self.pre_battle_bgm_track = "Cave Theme" if is_cave else "World Map Smol"
+            context.set("pre_battle_bgm_track", self.pre_battle_bgm_track)
+            audio_engine.fade_out_bgm(duration_seconds=0.5)
         except Exception:
             pass
         core.game_state.trigger("ToCombat", context)
@@ -709,7 +745,15 @@ class GSNoiseMapTestScreen(SMState):
                 target_state="GSNvNCombatScreen",
             )
         try:
-            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=1.0)
+            audio_engine = get_audio_engine(autostart_device=False)
+            current_bgm = audio_engine.get_current_bgm()
+            if current_bgm and current_bgm.state != PlaybackState.STOPPED:
+                self.pre_battle_bgm_track = current_bgm.name
+            else:
+                is_cave = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) == POIType.CAVE)
+                self.pre_battle_bgm_track = "Cave Theme" if is_cave else "World Map Smol"
+            context.set("pre_battle_bgm_track", self.pre_battle_bgm_track)
+            audio_engine.fade_out_bgm(duration_seconds=0.5)
         except Exception:
             pass
         core.game_state.trigger("ToCombat", context)
@@ -728,6 +772,8 @@ class GSNoiseMapTestScreen(SMState):
             "danger_counter": round(self.danger_counter, 2),
             "danger_threshold": round(self.danger_threshold, 2),
             "steps_since_battle": self.steps_since_battle,
+            "pre_cave_bgm": self.pre_cave_bgm_track,
+            "pre_town_bgm": self.pre_town_bgm_track,
         }
         self.save_manager.save_game(
             slot_idx=slot_idx,
@@ -912,9 +958,28 @@ class GSNoiseMapTestScreen(SMState):
                         self._cleanse_defeated_boss_tiles(self.active_submap)
                         TerminalScreen.clear_screen()
                         TerminalScreen.flush()
+
+                        if poi.poi_type == POIType.CAVE:
+                            try:
+                                audio_engine = get_audio_engine(autostart_device=False)
+                                curr = audio_engine.get_current_bgm()
+                                self.pre_cave_bgm_track = curr.name if curr and curr.name else "World Map Smol"
+                                audio_engine.fade_to_bgm("Cave Theme", duration_seconds=0.5, loop=True)
+                            except Exception:
+                                pass
+                        elif poi.poi_type in (POIType.TOWN, POIType.CASTLE):
+                            try:
+                                audio_engine = get_audio_engine(autostart_device=False)
+                                curr = audio_engine.get_current_bgm()
+                                self.pre_town_bgm_track = curr.name if curr and curr.state != PlaybackState.STOPPED and curr.name else "World Map Smol"
+                                audio_engine.fade_to_bgm("Town Theme", duration_seconds=0.5, loop=True)
+                            except Exception:
+                                pass
         else:
             # Inside Sub-Map: Check for Egress WarpTarget
             if curr_tile.warp_target and curr_tile.warp_target.is_egress:
+                was_cave = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) == POIType.CAVE)
+                was_settlement = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) in (POIType.TOWN, POIType.CASTLE))
                 if self.warp_stack:
                     ret_sector, (ret_x, ret_y) = self.warp_stack.pop()
                     self.current_sector = ret_sector
@@ -927,6 +992,23 @@ class GSNoiseMapTestScreen(SMState):
                 self.active_poi = None
                 TerminalScreen.clear_screen()
                 TerminalScreen.flush()
+
+                if was_cave:
+                    try:
+                        audio_engine = get_audio_engine(autostart_device=False)
+                        resume_track = self.pre_cave_bgm_track or "World Map Smol"
+                        audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
+                        self.pre_cave_bgm_track = None
+                    except Exception:
+                        pass
+                elif was_settlement:
+                    try:
+                        audio_engine = get_audio_engine(autostart_device=False)
+                        resume_track = self.pre_town_bgm_track or "World Map Smol"
+                        audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
+                        self.pre_town_bgm_track = None
+                    except Exception:
+                        pass
 
     def _get_picker_items(self) -> List[Tuple[str, int]]:
         """Returns list of usable keys/items from party inventory for the item picker."""

@@ -1,6 +1,7 @@
 """Unit tests for NvN combat engine, mathematics, equipment, and screen state."""
 from __future__ import annotations
 import unittest
+from unittest.mock import patch, MagicMock
 import random
 
 from eldoria_py.combat.stats import (
@@ -33,7 +34,7 @@ from eldoria_py.combat.engine import NvNCombatEngine, CombatPhase, QueuedAction
 from eldoria_py.states.combat_screen import GSNvNCombatScreen
 from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
 from eldoria_py.core.context import Context
-from eldoria_py.core.fsm import SMStateMachine, SMTransition
+from eldoria_py.core.fsm import SMState, SMStateMachine, SMTransition
 from eldoria_py.terminal.input import KeyCode, KeyEvent
 
 
@@ -691,6 +692,127 @@ class TestCombatScreenState(unittest.TestCase):
             # Must end with damage value and not contain (curr/max) HP
             self.assertRegex(log, r"\d+ dmg$")
             self.assertNotIn(f"/{enemy.max_hp}", log)
+
+
+class TestCombatAudioTransitions(unittest.TestCase):
+    """Verifies Battle Theme, Battle Won, Battle Lost audio playback and transition lifecycles."""
+
+    def setUp(self):
+        self.party = create_default_party()
+        self.squad = create_bat_squad(size=2)
+        self.screen = GSNvNCombatScreen(party=self.party, squad=self.squad)
+        self.screen.start_encounter(self.party, self.squad)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_battle_theme_plays_and_loops_on_combat_enter(self, mock_gae):
+        """Entering combat screen starts playing and looping Battle Theme."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        ctx = Context()
+        self.screen.enter(ctx)
+
+        mock_audio.play_bgm.assert_called_once_with("Battle Theme", loop=True)
+        self.assertEqual(self.screen._last_audio_phase, CombatPhase.COMMAND_PHASE)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_battle_won_stops_theme_and_plays_victory(self, mock_gae):
+        """Winning a battle stops Battle Theme immediately and plays Battle Won."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        self.screen._last_audio_phase = CombatPhase.COMMAND_PHASE
+        self.screen.engine._trigger_victory()
+
+        ctx = Context()
+        self.screen.update(ctx)
+
+        mock_audio.stop_bgm.assert_called_once()
+        mock_audio.play_bgm.assert_called_once_with("Battle Won", loop=True)
+        self.assertEqual(self.screen._last_audio_phase, CombatPhase.BATTLE_VICTORY)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_battle_lost_stops_theme_and_plays_defeat_without_loop(self, mock_gae):
+        """Losing a battle stops Battle Theme immediately and plays Battle Lost with loop=False."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        self.screen._last_audio_phase = CombatPhase.COMMAND_PHASE
+        self.screen.engine._trigger_defeat()
+
+        ctx = Context()
+        self.screen.update(ctx)
+
+        mock_audio.stop_bgm.assert_called_once()
+        mock_audio.play_bgm.assert_called_once_with("Battle Lost", loop=False)
+        self.assertEqual(self.screen._last_audio_phase, CombatPhase.BATTLE_DEFEAT)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_post_battle_enter_key_fades_out_audio_and_transitions(self, mock_gae):
+        """Pressing Enter on victory or defeat screen initiates a quick 0.5s fade-out."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        mock_core = MagicMock()
+        mock_core.game_state.states = {"GSMatrixTransitionScreen": MagicMock()}
+
+        ctx = Context()
+        ctx.set(SMState.ContextEldoriaCore, mock_core)
+        from eldoria_py.terminal.input import KeyEvent
+        ctx.set(SMState.ContextKeysPressed, [KeyEvent(KeyCode.ENTER, "\r")])
+
+        self.screen.engine.phase = CombatPhase.BATTLE_VICTORY
+        self.screen.update(ctx)
+
+        mock_audio.fade_out_bgm.assert_called_once_with(duration_seconds=0.5)
+        mock_core.game_state.trigger.assert_called_once_with("FromCombat", ctx)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_boss_battle_theme_plays_and_loops_on_boss_combat_enter(self, mock_gae):
+        """Entering boss combat screen starts playing and looping Boss Battle Theme."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        self.screen.active_boss = "Rattus"
+        ctx = Context()
+        self.screen.enter(ctx)
+
+        mock_audio.play_bgm.assert_called_once_with("Boss Battle Theme", loop=True)
+        self.assertEqual(self.screen._last_audio_phase, CombatPhase.COMMAND_PHASE)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_boss_battle_won_stops_boss_theme_and_plays_victory(self, mock_gae):
+        """Winning a boss battle stops Boss Battle Theme immediately and plays Battle Won."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        self.screen.active_boss = "Rattus"
+        self.screen._last_audio_phase = CombatPhase.COMMAND_PHASE
+        self.screen.engine._trigger_victory()
+
+        ctx = Context()
+        self.screen.update(ctx)
+
+        mock_audio.stop_bgm.assert_called_once()
+        mock_audio.play_bgm.assert_called_once_with("Battle Won", loop=True)
+        self.assertEqual(self.screen._last_audio_phase, CombatPhase.BATTLE_VICTORY)
+
+    @patch("eldoria_py.states.combat_screen.get_audio_engine")
+    def test_boss_battle_lost_stops_boss_theme_and_plays_defeat(self, mock_gae):
+        """Losing a boss battle stops Boss Battle Theme immediately and plays Battle Lost without loop."""
+        mock_audio = MagicMock()
+        mock_gae.return_value = mock_audio
+
+        self.screen.active_boss = "Rattus"
+        self.screen._last_audio_phase = CombatPhase.COMMAND_PHASE
+        self.screen.engine._trigger_defeat()
+
+        ctx = Context()
+        self.screen.update(ctx)
+
+        mock_audio.stop_bgm.assert_called_once()
+        mock_audio.play_bgm.assert_called_once_with("Battle Lost", loop=False)
+        self.assertEqual(self.screen._last_audio_phase, CombatPhase.BATTLE_DEFEAT)
 
 
 if __name__ == "__main__":

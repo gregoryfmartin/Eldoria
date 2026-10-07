@@ -8,6 +8,7 @@ import math
 import re
 from typing import List, Optional, Tuple
 
+from ..audio import get_audio_engine, PlaybackState
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..terminal.ansi import ATCoordinates, ATControlSequences
@@ -88,6 +89,7 @@ class GSNvNCombatScreen(SMState):
         self.execution_timer: float = 0.0
         self.active_boss: Optional[str] = None
         self.last_battle_result: str = "NONE"  # "NONE", "IN_PROGRESS", "VICTORY", "DEFEAT", "FLED"
+        self._last_audio_phase: Optional[CombatPhase] = None
 
     def start_encounter(
         self,
@@ -100,6 +102,7 @@ class GSNvNCombatScreen(SMState):
         self.squad = squad
         self.active_boss = boss_name
         self.last_battle_result = "IN_PROGRESS"
+        self._last_audio_phase = None
         self.engine = NvNCombatEngine(party=self.party, squad=self.squad)
         self.active_member_idx = self._find_first_living_member()
         self.menu_mode = "MAIN"
@@ -127,6 +130,40 @@ class GSNvNCombatScreen(SMState):
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
+        is_boss = bool(
+            self.active_boss
+            or context.get("active_boss_fight")
+            or (self.squad and any(getattr(e, "is_boss", False) for e in self.squad.enemies))
+        )
+        target_track = "Boss Battle Theme" if is_boss else "Battle Theme"
+        try:
+            audio_engine = get_audio_engine(autostart_device=False)
+            audio_engine.play_bgm(target_track, loop=True)
+        except Exception:
+            pass
+        self._last_audio_phase = self.engine.phase
+
+    def _handle_audio_phase_transitions(self) -> None:
+        """Manages Battle Theme, Boss Battle Theme, Battle Won, and Battle Lost BGM transitions based on engine phase."""
+        current_phase = self.engine.phase
+        if current_phase == self._last_audio_phase:
+            return
+
+        self._last_audio_phase = current_phase
+        try:
+            audio_engine = get_audio_engine(autostart_device=False)
+            if current_phase == CombatPhase.BATTLE_VICTORY:
+                # 1. Stop playing Battle Theme immediately
+                audio_engine.stop_bgm()
+                # 2. Start playing Battle Won.mp3
+                audio_engine.play_bgm("Battle Won", loop=True)
+            elif current_phase == CombatPhase.BATTLE_DEFEAT:
+                # 1. Stop playing Battle Theme immediately
+                audio_engine.stop_bgm()
+                # 2. Start playing Battle Lost.mp3; do not loop this track
+                audio_engine.play_bgm("Battle Lost", loop=False)
+        except Exception:
+            pass
 
     def exit(self, context: Context) -> None:
         super().exit(context)
@@ -148,6 +185,8 @@ class GSNvNCombatScreen(SMState):
         if self.party is not None:
             self.party.add_playtime(delta_time)
 
+        self._handle_audio_phase_transitions()
+
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
                 # 1. Victory / Defeat Screen Navigation
@@ -155,6 +194,10 @@ class GSNvNCombatScreen(SMState):
                     if key_info.key in (KeyCode.ENTER, KeyCode.SPACE) or key_info.char in ("\r", "\n", " ", "q", "Q"):
                         keys_pressed.clear()
                         self.last_battle_result = "VICTORY" if self.engine.phase == CombatPhase.BATTLE_VICTORY else "DEFEAT"
+                        try:
+                            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=0.5)
+                        except Exception:
+                            pass
                         if core and hasattr(core, "game_state"):
                             transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
                             if transition_state:
@@ -173,11 +216,16 @@ class GSNvNCombatScreen(SMState):
                         for e in self.squad.enemies:
                             e.take_damage(99999)
                         self.engine._trigger_victory()
+                        self._handle_audio_phase_transitions()
                         keys_pressed.remove(key_info)
                         break
                     elif key_info.char in ("q", "Q"):
                         keys_pressed.clear()
                         self.last_battle_result = "FLED"
+                        try:
+                            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=0.5)
+                        except Exception:
+                            pass
                         if core and hasattr(core, "game_state"):
                             transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
                             if transition_state:
@@ -197,6 +245,7 @@ class GSNvNCombatScreen(SMState):
                         for e in self.squad.enemies:
                             e.take_damage(99999)
                         self.engine._trigger_victory()
+                        self._handle_audio_phase_transitions()
                         keys_pressed.remove(key_info)
                         break
 
@@ -205,6 +254,10 @@ class GSNvNCombatScreen(SMState):
                         if key_info.key == KeyCode.ESCAPE or key_info.char in ("q", "Q"):
                             keys_pressed.clear()
                             self.last_battle_result = "FLED"
+                            try:
+                                get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=0.5)
+                            except Exception:
+                                pass
                             if core and hasattr(core, "game_state"):
                                 transition_state = core.game_state.states.get("GSMatrixTransitionScreen")
                                 if transition_state:
@@ -233,6 +286,7 @@ class GSNvNCombatScreen(SMState):
             if self.execution_timer >= self.step_delay:
                 self.execution_timer = 0.0
                 self.engine.step_execution()
+                self._handle_audio_phase_transitions()
 
                 # If round completed and returned to COMMAND_PHASE, reset active hero to hero 1
                 if self.engine.phase == CombatPhase.COMMAND_PHASE:

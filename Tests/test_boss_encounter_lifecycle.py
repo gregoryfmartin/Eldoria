@@ -4,6 +4,7 @@ tile cleansing, and retrigger prevention.
 """
 from __future__ import annotations
 import unittest
+from unittest.mock import patch, MagicMock
 
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState, SMStateMachine, SMTransition
@@ -182,6 +183,44 @@ class TestBossEncounterLifecycle(unittest.TestCase):
             for tile in row:
                 self.assertNotIn("Boss:Rattus", tile.object_listing)
                 self.assertNotEqual(tile.custom_glyph, "Ω")
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_boss_encounter_trigger_stores_pre_battle_track_and_fades_out(self, mock_gae) -> None:
+        """Triggering a boss encounter stores currently playing track and initiates a quick 0.5s fade-out."""
+        mock_audio = MagicMock()
+        mock_track = MagicMock()
+        mock_track.name = "Cave Theme"
+        from eldoria_py.audio import PlaybackState
+        mock_track.state = PlaybackState.PLAYING
+        mock_audio.get_current_bgm.return_value = mock_track
+        mock_gae.return_value = mock_audio
+
+        ctx = Context()
+        ctx.set(SMState.ContextEldoriaCore, self.mock_core)
+
+        self.map_screen.player_x = self.boss_x
+        self.map_screen.player_y = self.boss_y
+        triggered = self.map_screen._check_step_encounter(ctx)
+
+        self.assertTrue(triggered)
+        self.assertEqual(self.map_screen.pre_battle_bgm_track, "Cave Theme")
+        self.assertEqual(ctx.get("pre_battle_bgm_track"), "Cave Theme")
+        mock_audio.fade_out_bgm.assert_called_once_with(duration_seconds=0.5)
+
+    @patch("eldoria_py.states.test_noise_map.get_audio_engine")
+    def test_boss_battle_return_to_map_resumes_pre_battle_track(self, mock_gae) -> None:
+        """Returning from boss combat to map screen resumes the remembered pre-battle track."""
+        mock_audio = MagicMock()
+        mock_audio.get_current_bgm.return_value = None
+        mock_gae.return_value = mock_audio
+
+        ctx = Context()
+        ctx.set("pre_battle_bgm_track", "Cave Theme")
+
+        self.map_screen.enter(ctx)
+        mock_audio.fade_to_bgm.assert_called_with("Cave Theme", duration_seconds=1.5, loop=True)
+        self.assertIsNone(self.map_screen.pre_battle_bgm_track)
+        self.assertIsNone(ctx.get("pre_battle_bgm_track"))
 
 
 if __name__ == "__main__":
