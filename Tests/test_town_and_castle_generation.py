@@ -24,7 +24,7 @@ class TestTownAndCastleGeneration(unittest.TestCase):
     """Test suite covering procedural Town & Castle generation rules, quotas, and NPCs."""
 
     def test_quotas_and_proportions_4x4(self) -> None:
-        """4x4 map: 4 caves -> 1 town (starter town), 1 castle."""
+        """4x4 map: 3 caves (1 per region) -> 1 town (starter town), 1 castle."""
         macro = WorldMacroMap(seed=1337, macro_width=4, macro_height=4)
         macro.generate()
 
@@ -32,7 +32,7 @@ class TestTownAndCastleGeneration(unittest.TestCase):
         castles = [p for p in macro.all_pois if p.poi_type == POIType.CASTLE]
         caves = [p for p in macro.all_pois if p.poi_type == POIType.CAVE]
 
-        self.assertEqual(len(caves), 4)
+        self.assertEqual(len(caves), 3)
         self.assertEqual(len(towns), 1)
         self.assertEqual(len(castles), 1)
 

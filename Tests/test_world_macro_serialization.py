@@ -18,7 +18,7 @@ class TestWorldMacroSerialization(unittest.TestCase):
         """Verify 4x4 macro map serialization preserves all sectors, biomes, and POIs."""
         original = WorldMacroMap(seed=1337, macro_width=4, macro_height=4)
         self.assertEqual(len(original.sectors), 4)
-        self.assertEqual(len(original.all_pois), 6)  # 1 town, 1 castle, 4 caves
+        self.assertEqual(len(original.all_pois), 5)  # 1 town, 1 castle, 3 caves
 
         data = original.to_dict()
         # Verify JSON serializability
@@ -33,7 +33,7 @@ class TestWorldMacroSerialization(unittest.TestCase):
         self.assertEqual(hydrated.starter_sector, original.starter_sector)
         self.assertEqual(hydrated.starter_player_pos, original.starter_player_pos)
         self.assertEqual(len(hydrated.sectors), 4)
-        self.assertEqual(len(hydrated.all_pois), 6)
+        self.assertEqual(len(hydrated.all_pois), 5)
 
         # Check POIs match
         for orig_poi in original.all_pois:

@@ -289,9 +289,9 @@ class TestQuestingSubsystem(unittest.TestCase):
     # -------------------------------------------------------------------------
     def test_storyline_scaling_and_game_completion(self):
         """Verifies boss count scales to macro size and final boss completes the campaign."""
-        # Classic: 4 bosses
+        # Classic: 3 bosses (1 per region)
         story_classic = build_storyline_questline("classic")
-        self.assertEqual(len(story_classic.quests[0].steps), 4)
+        self.assertEqual(len(story_classic.quests[0].steps), 3)
         self.assertEqual(story_classic.quests[0].steps[-1].target_name, "Broodfang")
 
         # Quick: 11 bosses
@@ -306,8 +306,8 @@ class TestQuestingSubsystem(unittest.TestCase):
         qm = QuestManager(storyline=story_classic)
         self.assertFalse(qm.is_game_completed)
 
-        # Defeat all 4 bosses in sequence
-        for boss in ["Rattus", "Grumble", "Brigand", "Broodfang"]:
+        # Defeat all 3 bosses in sequence
+        for boss in ["Rattus", "Brigand", "Broodfang"]:
             qm.notify_enemy_defeated(boss)
 
         self.assertTrue(story_classic.is_completed)

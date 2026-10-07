@@ -354,8 +354,8 @@ class WorldMacroMap:
 
         total_sectors = self.macro_width * self.macro_height
         if total_sectors <= 16:
-            n_caves = 4
-            n_towns = max(1, n_caves - 3)  # 1 town
+            n_caves = 3
+            n_towns = max(1, n_caves - 2)  # 1 town
             n_castles = 1
         elif total_sectors <= 36:
             n_caves = 11
@@ -570,7 +570,10 @@ class WorldMacroMap:
 
             # Configure boss bounties tailored to castle tier
             if idx == 0:
-                bounties = ["Rattus", "Grumble", "Brigand"]
+                if self.max_region == 3:
+                    bounties = ["Rattus", "Brigand", "Broodfang"]
+                else:
+                    bounties = ["Rattus", "Grumble", "Brigand"]
             else:
                 bounties = ["Broodfang", "Craghorn", "Tideclaw", "Ironhide"]
 
@@ -597,8 +600,8 @@ class WorldMacroMap:
         # 4. Place Cave POIs for Requisite Bosses in Matching Regions
         # -------------------------------------------------------------
         if self.max_region == 3:
-            # 4x4 (Classic / Prologue): Capped at Region 3 (4 bosses)
-            active_bosses = [b for b in BOSS_CAVE_MAPPING if b[0] in ("Rattus", "Grumble", "Brigand", "Broodfang")]
+            # 4x4 (Classic / Prologue): Capped at Region 3 (3 bosses - 1 per region)
+            active_bosses = [b for b in BOSS_CAVE_MAPPING if b[0] in ("Rattus", "Brigand", "Broodfang")]
         elif self.max_region == 6:
             # 6x6 (Quick Campaign): Capped at Region 6 (11 bosses)
             active_bosses = [b for b in BOSS_CAVE_MAPPING if b[1] <= 6 and b[0] != "Magmadon"]

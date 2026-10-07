@@ -38,8 +38,8 @@ def build_storyline_questline(macro_size: str = "medium") -> StorylineQuestline:
     """
     size_key = macro_size.lower().strip()
     if "4" in size_key or "classic" in size_key:
-        # Classic / Prologue: 4 bosses
-        boss_names = ["Rattus", "Grumble", "Brigand", "Broodfang"]
+        # Classic / Prologue: 3 bosses (1 per region)
+        boss_names = ["Rattus", "Brigand", "Broodfang"]
     elif "quick" in size_key or "small" in size_key or "6" in size_key:
         # Quick Campaign: 11 bosses up to Region 6
         boss_names = [

@@ -235,17 +235,21 @@ class TestTieredWorldMacroBossCaveGeneration(unittest.TestCase):
 
         self.assertEqual(macro.max_region, 3)
         cave_pois = [p for p in macro.all_pois if p.poi_type == POIType.CAVE]
-        # Exactly 4 boss caves in 4x4
-        self.assertEqual(len(cave_pois), 4)
+        # Exactly 3 boss caves in 4x4 (1 per region tier: R1, R2, R3)
+        self.assertEqual(len(cave_pois), 3)
 
         cave_names = {p.name for p in cave_pois}
-        expected_names = {"Shadowfen Cavern", "Duskfall Grotto", "Blackstone Deep", "Whispering Depths"}
+        expected_names = {"Shadowfen Cavern", "Blackstone Deep", "Whispering Depths"}
         self.assertEqual(cave_names, expected_names)
 
-        # All POIs (Town, Castle, 4 Caves) must be in distinct sectors
+        # Each cave must reside in a distinct danger region tier
+        cave_regions = {p.sub_map.tiles[3][p.sub_map.width // 2].region_code for p in cave_pois}
+        self.assertEqual(cave_regions, {1, 2, 3})
+
+        # All POIs (Town, Castle, 3 Caves) must be in distinct sectors
         poi_sectors = [p.sector_coord for p in macro.all_pois]
         self.assertEqual(len(poi_sectors), len(set(poi_sectors)))
-        self.assertEqual(len(poi_sectors), 6)
+        self.assertEqual(len(poi_sectors), 5)
 
     def test_quick_campaign_6x6_scope(self):
         from eldoria_py.procgen.world_macro import WorldMacroMap
