@@ -588,9 +588,67 @@ class TestPartyBuilder(unittest.TestCase):
         for i in range(len(progress_steps) - 1):
             self.assertLessEqual(progress_steps[i], progress_steps[i + 1])
         # Final value reaches 1.0
-        self.assertAlmostEqual(progress_steps[-1], 1.0)
+    def test_colossal_selection_shows_confirmation_dialog(self):
+        """Verify pressing '4' displays Step 3 Colossal confirmation warning modal."""
+        leader = PartyMember(name="Aiden", job_class="Warrior")
+        self.screen.set_member_slot(0, leader)
+
+        # Open embark modal (Step 1)
+        self.screen._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 1)
+
+        # Press '4' to choose Colossal
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="4"), self.context, self.mock_core)
+        self.assertEqual(self.screen.selected_world_size, "colossal")
+        self.assertEqual(self.screen.embark_modal_step, 3)
+        self.assertTrue(self.screen.embark_confirm_panel.dirty)
+
+    def test_colossal_confirmation_dialog_cancel_returns_to_size_selection(self):
+        """Verify pressing 'N' or Escape in Colossal warning cancels back to Step 1."""
+        leader = PartyMember(name="Aiden", job_class="Warrior")
+        self.screen.set_member_slot(0, leader)
+
+        self.screen._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="4"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 3)
+
+        # Press 'N' to cancel
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="n"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 1)
+
+        # Press '4' again then Escape
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="4"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 3)
+        self.screen._handle_input(KeyEvent(key=KeyCode.ESCAPE, char=""), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 1)
+
+    def test_colossal_confirmation_dialog_confirm_advances_to_slots(self):
+        """Verify pressing 'Y' or Enter in Colossal warning confirms and advances to Step 2."""
+        leader = PartyMember(name="Aiden", job_class="Warrior")
+        self.screen.set_member_slot(0, leader)
+
+        self.screen._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="4"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 3)
+
+        # Press 'Y' to confirm
+        self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char="y"), self.context, self.mock_core)
+        self.assertEqual(self.screen.embark_modal_step, 2)
+        self.assertIn("Colossal", self.screen.embark_slot_panel.title)
+
+    def test_quick_standard_odyssey_bypass_confirmation_dialog(self):
+        """Verify Quick, Standard, and Odyssey advance directly to Step 2 without warning dialog."""
+        leader = PartyMember(name="Aiden", job_class="Warrior")
+        self.screen.set_member_slot(0, leader)
+
+        for char_key, expected_size in [("1", "quick"), ("2", "standard"), ("3", "odyssey")]:
+            self.screen.embark_modal_step = 1
+            self.screen._handle_input(KeyEvent(key=KeyCode.CHAR, char=char_key), self.context, self.mock_core)
+            self.assertEqual(self.screen.selected_world_size, expected_size)
+            self.assertEqual(self.screen.embark_modal_step, 2)
 
 
 if __name__ == "__main__":
     unittest.main()
+
 

@@ -10,7 +10,7 @@ from typing import Optional
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
-from ..terminal.color import ColorLibrary, dim_ansi
+from ..terminal.color import ColorLibrary, dim_ansi, dim_buffer
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import clear_buffer_tail
 from ..ui.panel import UIPanel
@@ -24,17 +24,20 @@ class GSSplashScreen(SMState):
         screen_width: int = 80,
         screen_height: int = 24,
         duration: float = 4.8,
+        fade_in_duration: float = 0.45,
         fade_out_duration: float = 0.45,
     ) -> None:
         super().__init__("GSSplashScreen")
         self.screen_width: int = screen_width
         self.screen_height: int = screen_height
         self.duration: float = duration
+        self.fade_in_duration: float = fade_in_duration
         self.fade_out_duration: float = fade_out_duration
         self.elapsed: float = 0.0
         self.pulse_phase: int = 0
-        self.phase: str = "SHOWING"  # "SHOWING", "FADING_OUT", "FINISHED"
+        self.fade_in_elapsed: float = 0.0
         self.fade_elapsed: float = 0.0
+        self.phase: str = "FADING_IN" if self.fade_in_duration > 0 else "SHOWING"  # "FADING_IN", "SHOWING", "FADING_OUT", "FINISHED"
 
         panel_bottom_row = min(self.screen_height - 2, 22)
         self.splash_panel = UIPanel(
@@ -83,12 +86,24 @@ class GSSplashScreen(SMState):
             fg_color=ColorLibrary.DarkGrey,
         )
 
+    @property
+    def is_fading_in(self) -> bool:
+        return self.phase == "FADING_IN"
+
+    @property
+    def is_fading_out(self) -> bool:
+        return self.phase == "FADING_OUT"
+
     def enter(self, context: Context) -> None:
         super().enter(context)
         self.elapsed = 0.0
         self.pulse_phase = 0
-        self.phase = "SHOWING"
+        self.fade_in_elapsed = 0.0
         self.fade_elapsed = 0.0
+        if self.fade_in_duration > 0:
+            self.phase = "FADING_IN"
+        else:
+            self.phase = "SHOWING"
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
@@ -107,7 +122,48 @@ class GSSplashScreen(SMState):
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
 
-        if self.phase == "SHOWING":
+        has_key = isinstance(keys_pressed, list) and len(keys_pressed) > 0
+
+        if self.phase == "FADING_IN":
+            if has_key:
+                if isinstance(keys_pressed, list):
+                    keys_pressed.clear()
+                if self.fade_out_duration > 0:
+                    self.phase = "FADING_OUT"
+                    self.fade_elapsed = 0.0
+                    self.splash_panel.set_all_dirty()
+                else:
+                    self.phase = "FINISHED"
+                    if core and hasattr(core, "game_state"):
+                        core.game_state.trigger("ToTitle", context)
+                    return
+            else:
+                self.elapsed += float(dt)
+                self.fade_in_elapsed += float(dt)
+                self.splash_panel.set_all_dirty()
+
+                new_phase = int(self.elapsed * 4) % 4
+                if new_phase != self.pulse_phase:
+                    self.pulse_phase = new_phase
+                    pulses = ["✧", "✦", "★", "✦"]
+                    star = pulses[self.pulse_phase]
+                    self.stars_label.set_user_data(f"{star}   {star}   {star}")
+
+                if self.elapsed >= self.duration:
+                    if self.fade_out_duration > 0:
+                        self.phase = "FADING_OUT"
+                        self.fade_elapsed = 0.0
+                        self.splash_panel.set_all_dirty()
+                    else:
+                        self.phase = "FINISHED"
+                        if core and hasattr(core, "game_state"):
+                            core.game_state.trigger("ToTitle", context)
+                        return
+                elif self.fade_in_elapsed >= self.fade_in_duration:
+                    self.phase = "SHOWING"
+                    self.splash_panel.set_all_dirty()
+
+        elif self.phase == "SHOWING":
             self.elapsed += float(dt)
             new_phase = int(self.elapsed * 4) % 4
             if new_phase != self.pulse_phase:
@@ -117,7 +173,6 @@ class GSSplashScreen(SMState):
                 self.stars_label.set_user_data(f"{star}   {star}   {star}")
 
             # Trigger fade out transition on keypress or when duration expires
-            has_key = isinstance(keys_pressed, list) and len(keys_pressed) > 0
             if has_key or self.elapsed >= self.duration:
                 if isinstance(keys_pressed, list):
                     keys_pressed.clear()
@@ -133,8 +188,9 @@ class GSSplashScreen(SMState):
 
         elif self.phase == "FADING_OUT":
             # If the player taps any key during fade-out, skip directly to finish
-            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
-                keys_pressed.clear()
+            if has_key:
+                if isinstance(keys_pressed, list):
+                    keys_pressed.clear()
                 self.fade_elapsed = self.fade_out_duration
 
             self.fade_elapsed += float(dt)
@@ -157,12 +213,15 @@ class GSSplashScreen(SMState):
 
     def _render(self) -> None:
         brightness = 1.0
-        if self.phase == "FADING_OUT" and self.fade_out_duration > 0:
-            progress = min(1.0, self.fade_elapsed / self.fade_out_duration)
+        if self.phase == "FADING_IN" and self.fade_in_duration > 0:
+            progress = min(1.0, max(0.0, self.fade_in_elapsed / self.fade_in_duration))
+            brightness = progress
+        elif self.phase == "FADING_OUT" and self.fade_out_duration > 0:
+            progress = min(1.0, max(0.0, self.fade_elapsed / self.fade_out_duration))
             brightness = max(0.0, 1.0 - progress)
 
         if brightness < 0.999:
-            TerminalScreen.set_write_filter(lambda s: dim_ansi(s, brightness))
+            TerminalScreen.set_write_filter(lambda s: dim_buffer(s, brightness))
         else:
             TerminalScreen.set_write_filter(None)
 

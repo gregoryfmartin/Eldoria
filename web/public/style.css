@@ -1,0 +1,797 @@
+/* ── Eldoria Sleek Modern Game Theme ──────────────────────────────────────── */
+
+:root {
+    --bg-dark: #07080c;
+    --bg-surface: #0e111a;
+    --glass-bg: rgba(15, 18, 28, 0.78);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-hover: rgba(255, 255, 255, 0.12);
+    
+    --accent-gold: #e6c66e;
+    --accent-gold-soft: rgba(230, 198, 110, 0.15);
+    --accent-glow: rgba(99, 102, 241, 0.18);
+    
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    
+    --live-emerald: #10b981;
+    --warn-amber: #f59e0b;
+    --danger-rose: #f43f5e;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* ── Ambient Background Lighting ────────────────────────────────────────── */
+.ambient-glow {
+    position: fixed;
+    inset: 0;
+    background: 
+        radial-gradient(circle 800px at 50% 45%, rgba(67, 56, 202, 0.14) 0%, transparent 70%),
+        radial-gradient(circle 600px at 50% 60%, rgba(217, 119, 6, 0.06) 0%, transparent 65%),
+        radial-gradient(ellipse 100% 100% at 50% 50%, #0c0e15 0%, #050608 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── Minimalist Floating Header ─────────────────────────────────────────── */
+.game-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 20;
+    pointer-events: none;
+}
+
+.game-header > * {
+    pointer-events: auto;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+}
+
+.brand-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--accent-gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(230, 198, 110, 0.3);
+}
+
+/* Status Indicator */
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14, 17, 26, 0.65);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--live-emerald);
+    box-shadow: 0 0 8px var(--live-emerald);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+.status-indicator.connecting .status-dot {
+    background: var(--warn-amber);
+    box-shadow: 0 0 8px var(--warn-amber);
+}
+
+.status-indicator.disconnected .status-dot {
+    background: var(--danger-rose);
+    box-shadow: 0 0 8px var(--danger-rose);
+}
+
+.status-text {
+    color: var(--text-secondary);
+}
+
+/* ── Main Game Viewport & Monolith Frame ─────────────────────────────────── */
+.game-viewport {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 24px 60px;
+    z-index: 10;
+}
+
+.terminal-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.terminal-frame {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 14px;
+    background: #08090d;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 
+        0 30px 90px -15px rgba(0, 0, 0, 0.9),
+        0 0 50px -10px rgba(99, 102, 241, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    padding: 4px;
+    transition: box-shadow 0.4s ease;
+}
+
+.frame-gloss {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 12;
+}
+
+#terminal-container {
+    background: #08090d;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+/* xterm internal canvas clean styling */
+.xterm {
+    padding: 4px 6px;
+    font-feature-settings: "liga" 0;
+}
+
+.xterm-viewport {
+    overflow-y: hidden !important;
+}
+
+/* ── Real-Time VFX / Shaders Architecture ────────────────────────────────── */
+.vfx-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.25s ease, background 0.25s ease;
+}
+
+/* 1. CRT Scanlines */
+.vfx-crt .vfx-overlay {
+    opacity: 0.65;
+    background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.28) 50%
+    );
+    background-size: 100% 4px;
+}
+
+/* 2. Curved CRT (Arcade) */
+.terminal-frame.vfx-curved-crt {
+    transform: perspective(850px) rotateX(1.8deg) scale(0.98);
+    box-shadow: 
+        0 30px 100px -10px rgba(0, 0, 0, 0.95),
+        0 0 40px rgba(0, 0, 0, 0.9),
+        inset 0 0 80px rgba(0, 0, 0, 0.7);
+    border-radius: 20px;
+}
+
+.vfx-curved-crt .vfx-overlay {
+    opacity: 0.85;
+    background: 
+        linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.32) 50%),
+        radial-gradient(circle at center, transparent 65%, rgba(0, 0, 0, 0.75) 100%);
+    background-size: 100% 4px, 100% 100%;
+}
+
+/* 3. Amber Phosphor (VT220) */
+.vfx-amber #terminal-container {
+    filter: sepia(1) saturate(5.5) hue-rotate(345deg) brightness(1.1) drop-shadow(0 0 2px rgba(255, 176, 0, 0.4));
+}
+
+.vfx-amber .vfx-overlay {
+    opacity: 0.7;
+    background: linear-gradient(
+        rgba(255, 176, 0, 0.04) 50%, 
+        rgba(0, 0, 0, 0.3) 50%
+    );
+    background-size: 100% 4px;
+}
+
+/* 4. Green Phosphor (VT100 / Apple II) */
+.vfx-green #terminal-container {
+    filter: sepia(1) saturate(6) hue-rotate(85deg) brightness(1.15) drop-shadow(0 0 2px rgba(51, 255, 51, 0.4));
+}
+
+.vfx-green .vfx-overlay {
+    opacity: 0.7;
+    background: linear-gradient(
+        rgba(51, 255, 51, 0.04) 50%, 
+        rgba(0, 0, 0, 0.3) 50%
+    );
+    background-size: 100% 4px;
+}
+
+/* 5. Game Boy LCD (DMG-01) */
+.vfx-gameboy #terminal-container {
+    filter: sepia(1) saturate(2.8) hue-rotate(38deg) contrast(1.25) brightness(0.85);
+}
+
+.vfx-gameboy .vfx-overlay {
+    opacity: 0.8;
+    background: 
+        radial-gradient(circle, transparent 20%, rgba(15, 56, 15, 0.45) 21%),
+        linear-gradient(rgba(155, 188, 15, 0.06), rgba(15, 56, 15, 0.12));
+    background-size: 3px 3px, 100% 100%;
+}
+
+/* 6. Aether Bloom */
+.vfx-bloom #terminal-container {
+    filter: drop-shadow(0 0 3px rgba(129, 140, 248, 0.6)) drop-shadow(0 0 10px rgba(99, 102, 241, 0.35));
+}
+
+/* 7. Grimoire Parchment */
+.vfx-parchment #terminal-container {
+    filter: sepia(0.65) contrast(1.15) brightness(0.95);
+}
+
+.vfx-parchment .vfx-overlay {
+    opacity: 0.75;
+    background: 
+        radial-gradient(circle at center, transparent 55%, rgba(60, 35, 10, 0.45) 100%),
+        linear-gradient(rgba(240, 220, 180, 0.05), rgba(240, 220, 180, 0.05));
+}
+
+/* 8. OLED Obsidian */
+.vfx-oled .terminal-frame,
+.vfx-oled #terminal-container {
+    background: #000000 !important;
+}
+
+.vfx-oled #terminal-container {
+    filter: contrast(1.25) saturate(1.3) brightness(1.05);
+}
+
+/* 9. Dungeon Torchlight */
+.vfx-torchlight .vfx-overlay {
+    opacity: 0.9;
+    background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(20, 12, 5, 0.75) 100%);
+    animation: torchlight-flicker 2.8s infinite alternate ease-in-out;
+}
+
+@keyframes torchlight-flicker {
+    0% {
+        opacity: 0.85;
+        box-shadow: inset 0 0 40px rgba(245, 158, 11, 0.12);
+    }
+    40% {
+        opacity: 0.95;
+        box-shadow: inset 0 0 55px rgba(217, 119, 6, 0.22);
+    }
+    70% {
+        opacity: 0.88;
+        box-shadow: inset 0 0 45px rgba(245, 158, 11, 0.16);
+    }
+    100% {
+        opacity: 0.98;
+        box-shadow: inset 0 0 65px rgba(217, 119, 6, 0.26);
+    }
+}
+
+/* ── Floating Modern Glass Dock (Relocated to Bottom Right) ─────────────── */
+.floating-dock {
+    position: fixed;
+    bottom: 24px;
+    right: 28px;
+    left: auto;
+    transform: none;
+    height: 48px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 
+        0 16px 40px -10px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(0, 0, 0, 0.4);
+    z-index: 30;
+    transition: all 0.25s ease;
+}
+
+.floating-dock:hover {
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 
+        0 20px 50px -10px rgba(0, 0, 0, 0.8),
+        0 0 25px rgba(99, 102, 241, 0.15);
+}
+
+.dock-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.dock-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 19px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.15s ease;
+}
+
+.dock-btn:hover {
+    color: var(--text-primary);
+    background: var(--glass-hover);
+}
+
+.dock-btn.active {
+    color: var(--accent-gold);
+    background: var(--accent-gold-soft);
+}
+
+.dock-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+}
+
+.dock-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 0 2px;
+}
+
+/* ── Volume Interactive Slider Box ──────────────────────────────────────── */
+.volume-control {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.volume-slider-box {
+    width: 0;
+    overflow: hidden;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), margin 0.25s;
+    display: flex;
+    align-items: center;
+}
+
+.volume-control:hover .volume-slider-box,
+.volume-control:focus-within .volume-slider-box {
+    width: 80px;
+    margin-right: 6px;
+}
+
+.volume-slider-box input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider-box input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-gold);
+    box-shadow: 0 0 6px rgba(230, 198, 110, 0.6);
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.volume-slider-box input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* ── Font Selector Dropdown Menu ────────────────────────────────────────── */
+.dock-dropdown {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    right: 0;
+    width: 230px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 50;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.dock-dropdown.hidden {
+    display: none !important;
+}
+
+.vfx-dropdown-menu {
+    width: 250px;
+    max-height: 380px;
+    overflow-y: auto;
+}
+
+.vfx-dropdown-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.vfx-dropdown-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.vfx-dropdown-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.vfx-dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.dropdown-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    padding: 6px 10px 4px;
+}
+
+.dropdown-item {
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: left;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.15s ease;
+}
+
+.dropdown-item:hover {
+    background: var(--glass-hover);
+    color: var(--text-primary);
+}
+
+.dropdown-item.active {
+    background: var(--accent-gold-soft);
+    color: var(--accent-gold);
+    font-weight: 600;
+}
+
+.item-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    background: rgba(230, 198, 110, 0.2);
+    color: var(--accent-gold);
+    padding: 1px 5px;
+    border-radius: 4px;
+    letter-spacing: 0.5px;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 4px 0;
+}
+
+.custom-font-row {
+    display: flex;
+    gap: 6px;
+    padding: 4px 6px;
+}
+
+.custom-font-row input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 5px 8px;
+    color: var(--text-primary);
+    font-size: 0.75rem;
+    outline: none;
+}
+
+.custom-font-row input:focus {
+    border-color: var(--accent-gold);
+}
+
+.custom-font-row button {
+    background: var(--accent-gold);
+    color: #08090d;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ── Sleek Modern Intro / Splash Modal ──────────────────────────────────── */
+.splash-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 7, 10, 0.85);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.splash-backdrop.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.splash-card {
+    background: rgba(14, 17, 26, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 44px 52px;
+    text-align: center;
+    max-width: 460px;
+    width: 90%;
+    box-shadow: 
+        0 25px 80px -10px rgba(0, 0, 0, 0.8),
+        0 0 50px rgba(99, 102, 241, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.splash-crest {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(230, 198, 110, 0.15) 0%, rgba(99, 102, 241, 0.12) 100%);
+    border: 1px solid rgba(230, 198, 110, 0.35);
+    color: var(--accent-gold);
+    margin-bottom: 22px;
+    box-shadow: 0 0 25px rgba(230, 198, 110, 0.25);
+}
+
+.splash-title {
+    font-family: 'Cinzel', serif;
+    font-size: 2.4rem;
+    font-weight: 800;
+    letter-spacing: 5px;
+    color: #ffffff;
+    margin-bottom: 6px;
+    text-shadow: 0 0 25px rgba(230, 198, 110, 0.35);
+}
+
+.splash-subtitle {
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+.splash-divider {
+    width: 48px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+    margin: 24px auto;
+}
+
+.launch-btn {
+    position: relative;
+    width: 100%;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #e6c66e 0%, #ca9e3b 100%);
+    color: #08090d;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(230, 198, 110, 0.35);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.launch-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(230, 198, 110, 0.55);
+}
+
+.launch-btn:active {
+    transform: translateY(0);
+}
+
+.splash-hint {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.splash-hint kbd,
+.key-combo kbd {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+}
+
+/* ── Controls Guide Modal ───────────────────────────────────────────────── */
+.help-modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(6, 7, 10, 0.8);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 105;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.help-modal.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.help-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 30px 36px;
+    width: 90%;
+    max-width: 440px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+}
+
+.help-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.help-header h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    letter-spacing: 1.5px;
+    color: var(--accent-gold);
+}
+
+.icon-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.15s;
+}
+
+.icon-close-btn:hover {
+    color: var(--text-primary);
+}
+
+.help-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.help-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.key-combo {
+    display: flex;
+    gap: 4px;
+}
+
+.key-desc {
+    color: var(--text-secondary);
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+    .floating-dock {
+        right: 50%;
+        transform: translateX(50%);
+        bottom: 14px;
+    }
+}
+
+/* Helper utility */
+.hidden {
+    display: none !important;
+}

@@ -12,7 +12,7 @@ from ..core.context import Context
 from ..core.fsm import SMState
 from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..terminal.ansi import ATCoordinates, ATControlSequences, ATDecoration
-from ..terminal.color import ColorLibrary, dim_ansi
+from ..terminal.color import ColorLibrary, dim_ansi, dim_buffer
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import clear_buffer_tail, truncate_ansi, visible_width
@@ -37,14 +37,19 @@ class GSTitleScreen(SMState):
         screen_height: int = 24,
         dev_mode: bool = True,
         fade_in_duration: float = 0.45,
+        fade_out_duration: float = 0.45,
     ) -> None:
         super().__init__("GSTitleScreen")
         self.screen_width: int = screen_width
         self.screen_height: int = screen_height
         self.dev_mode: bool = dev_mode
         self.fade_in_duration: float = fade_in_duration
+        self.fade_out_duration: float = fade_out_duration
         self.is_fading_in: bool = False
         self.fade_in_elapsed: float = 0.0
+        self.is_fading_out: bool = False
+        self.fade_out_elapsed: float = 0.0
+        self._pending_load_context: Optional[dict] = None
 
         self.active_dialog: Optional[str] = None  # None, "LOAD", "OPTIONS", "CREDITS"
         self.notice_message: str = ""
@@ -264,6 +269,10 @@ class GSTitleScreen(SMState):
         else:
             self.is_fading_in = False
 
+        self.is_fading_out = False
+        self.fade_out_elapsed = 0.0
+        self._pending_load_context = None
+
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
@@ -300,7 +309,22 @@ class GSTitleScreen(SMState):
                 if self.fade_in_elapsed >= self.fade_in_duration:
                     self.is_fading_in = False
 
-        if not self.is_fading_in and isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+        if self.is_fading_out:
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                keys_pressed.clear()
+                self.fade_out_elapsed = self.fade_out_duration
+
+            self.fade_out_elapsed += float(dt)
+            self.title_panel.set_all_dirty()
+            if self.active_dialog == "LOAD":
+                self.load_panel.set_all_dirty()
+
+            if self.fade_out_elapsed >= self.fade_out_duration:
+                self.is_fading_out = False
+                self._complete_load_game(context, core)
+                return
+
+        if not self.is_fading_in and not self.is_fading_out and isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
                 self._handle_input(key_info, context, core)
                 keys_pressed.remove(key_info)
@@ -367,42 +391,20 @@ class GSTitleScreen(SMState):
                         self.audio_engine.stop_bgm()
                         try:
                             loaded_party, loaded_macro, loaded_state = self.save_manager.load_game(slot_num)
-                            context.set("party", loaded_party)
-                            context.set("world_macro", loaded_macro)
-                            context.set("exploration_state", loaded_state)
-                            context.set("active_slot", slot_num)
-
-                            if core and hasattr(core, "game_state"):
-                                map_screen = core.game_state.states.get("GSNoiseMapTestScreen")
-                                if map_screen:
-                                    map_screen.party = loaded_party
-                                    map_screen.world_macro = loaded_macro
-                                    map_screen.active_slot = slot_num
-                                    map_screen.current_sector = tuple(loaded_state.get("current_sector", loaded_macro.starter_sector))
-                                    map_screen.player_x, map_screen.player_y = tuple(loaded_state.get("player_pos", loaded_macro.starter_player_pos))
-                                    if hasattr(map_screen, "_ensure_walkable_player_pos"):
-                                        map_screen._ensure_walkable_player_pos()
-                                    map_screen.playtime_seconds = loaded_state.get("playtime_seconds", 0)
-                                    if "danger_counter" in loaded_state:
-                                        map_screen.danger_counter = float(loaded_state["danger_counter"])
-                                    if "danger_threshold" in loaded_state:
-                                        map_screen.danger_threshold = float(loaded_state["danger_threshold"])
-                                    if "steps_since_battle" in loaded_state:
-                                        map_screen.steps_since_battle = int(loaded_state["steps_since_battle"])
-                                    map_screen.last_status_msg = f"★ Loaded Slot {slot_num}."
-
-                                    submap_name = loaded_state.get("active_submap_poi")
-                                    if submap_name:
-                                        poi = loaded_macro.get_poi(submap_name)
-                                        if poi and poi.sub_map:
-                                            map_screen.active_poi = poi
-                                            map_screen.active_submap = poi.sub_map
-                                    else:
-                                        map_screen.active_submap = None
-                                        map_screen.active_poi = None
-                                self._close_dialog()
-                                core.game_state.trigger("ToNoiseMap", context)
-                                return
+                            self._pending_load_context = {
+                                "party": loaded_party,
+                                "world_macro": loaded_macro,
+                                "exploration_state": loaded_state,
+                                "active_slot": slot_num,
+                            }
+                            if self.fade_out_duration > 0:
+                                self.is_fading_out = True
+                                self.fade_out_elapsed = 0.0
+                                self.title_panel.set_all_dirty()
+                                self.load_panel.set_all_dirty()
+                            else:
+                                self._complete_load_game(context, core)
+                            return
                         except Exception as e:
                             self.notice_message = f"Error loading save: {e}"
                             self._refresh_load_panel()
@@ -505,6 +507,56 @@ class GSTitleScreen(SMState):
             self.credits_panel.activate()
             self.credits_panel.set_all_dirty()
 
+    def _complete_load_game(self, context: Context, core: Any) -> None:
+        """Completes save file load and transitions to GSNoiseMapTestScreen."""
+        if not self._pending_load_context:
+            return
+        loaded_party = self._pending_load_context["party"]
+        loaded_macro = self._pending_load_context["world_macro"]
+        loaded_state = self._pending_load_context["exploration_state"]
+        slot_num = self._pending_load_context["active_slot"]
+
+        context.set("party", loaded_party)
+        context.set("world_macro", loaded_macro)
+        context.set("exploration_state", loaded_state)
+        context.set("active_slot", slot_num)
+        context.set("fade_in_map", True)
+
+        if core and hasattr(core, "game_state"):
+            map_screen = core.game_state.states.get("GSNoiseMapTestScreen")
+            if map_screen:
+                if hasattr(map_screen, "trigger_fade_in"):
+                    map_screen.trigger_fade_in()
+                map_screen.party = loaded_party
+                map_screen.world_macro = loaded_macro
+                map_screen.active_slot = slot_num
+                map_screen.current_sector = tuple(loaded_state.get("current_sector", loaded_macro.starter_sector))
+                map_screen.player_x, map_screen.player_y = tuple(loaded_state.get("player_pos", loaded_macro.starter_player_pos))
+                if hasattr(map_screen, "_ensure_walkable_player_pos"):
+                    map_screen._ensure_walkable_player_pos()
+                map_screen.playtime_seconds = loaded_state.get("playtime_seconds", 0)
+                if "danger_counter" in loaded_state:
+                    map_screen.danger_counter = float(loaded_state["danger_counter"])
+                if "danger_threshold" in loaded_state:
+                    map_screen.danger_threshold = float(loaded_state["danger_threshold"])
+                if "steps_since_battle" in loaded_state:
+                    map_screen.steps_since_battle = int(loaded_state["steps_since_battle"])
+                map_screen.last_status_msg = f"★ Loaded Slot {slot_num}."
+
+                submap_name = loaded_state.get("active_submap_poi")
+                if submap_name:
+                    poi = loaded_macro.get_poi(submap_name)
+                    if poi and poi.sub_map:
+                        map_screen.active_poi = poi
+                        map_screen.active_submap = poi.sub_map
+                else:
+                    map_screen.active_submap = None
+                    map_screen.active_poi = None
+            self._close_dialog()
+            TerminalScreen.clear_screen()
+            TerminalScreen.flush()
+            core.game_state.trigger("ToNoiseMap", context)
+
     def _close_dialog(self) -> None:
         self.active_dialog = None
         self.dialog_dirty = True
@@ -524,10 +576,13 @@ class GSTitleScreen(SMState):
     def _render(self) -> None:
         brightness = 1.0
         if self.is_fading_in and self.fade_in_duration > 0:
-            brightness = min(1.0, self.fade_in_elapsed / self.fade_in_duration)
+            brightness = min(1.0, max(0.0, self.fade_in_elapsed / self.fade_in_duration))
+        elif self.is_fading_out and self.fade_out_duration > 0:
+            progress = min(1.0, max(0.0, self.fade_out_elapsed / self.fade_out_duration))
+            brightness = max(0.0, 1.0 - progress)
 
         if brightness < 0.999:
-            TerminalScreen.set_write_filter(lambda s: dim_ansi(s, brightness))
+            TerminalScreen.set_write_filter(lambda s: dim_buffer(s, brightness))
         else:
             TerminalScreen.set_write_filter(None)
 

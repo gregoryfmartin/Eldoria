@@ -287,6 +287,75 @@ class TestProceduralMapGeneration(unittest.TestCase):
                     diff = abs(optimized_val - base_total)
                     self.assertEqual(diff, 0.0, f"Bit-level drift detected for {ntype} at ({x}, {y}): diff={diff}")
 
+    def test_map_tile_slots_and_memory(self):
+        """MapTile uses __slots__ to eliminate dynamic __dict__ overhead."""
+        tile = MapTile()
+        self.assertFalse(hasattr(tile, "__dict__"), "MapTile should not possess a dynamic __dict__")
+
+    def test_exit_view_proxy_and_bitmask(self):
+        """ExitView allows transparent index-based mutation backed by a 4-bit integer mask."""
+        tile = MapTile()
+        self.assertEqual(tile.exit_mask, 0)
+        self.assertEqual(tile.exits, [False, False, False, False])
+        self.assertFalse(any(tile.exits))
+
+        # Mutate via index
+        tile.exits[MapTile.EXIT_NORTH] = True
+        self.assertEqual(tile.exit_mask, 1)
+        self.assertTrue(tile.exits[MapTile.EXIT_NORTH])
+        self.assertTrue(any(tile.exits))
+
+        tile.exits[MapTile.EXIT_EAST] = True
+        self.assertEqual(tile.exit_mask, 5)  # 1 (North) | 4 (East)
+        self.assertTrue(tile.exits[MapTile.EXIT_EAST])
+        self.assertEqual(tile.exits, [True, False, True, False])
+        self.assertEqual(len(tile.exits), 4)
+
+        # Clear via list assignment
+        tile.exits = [False, False, False, False]
+        self.assertEqual(tile.exit_mask, 0)
+        self.assertFalse(any(tile.exits))
+
+        # Set via integer
+        tile.exit_mask = 0xF
+        self.assertEqual(tile.exits, [True, True, True, True])
+
+    def test_wilderness_mto_removal_and_compact_serialization(self):
+        """Wilderness tiles have empty object_listing, and compact serialization has zero vanity specials."""
+        gen = ProceduralMapGenerator(seed=1337)
+        world_map = gen.generate_map(width=20, height=15, create_road=False)
+
+        # Verify all tiles have no vanity MTOs
+        for row in world_map.tiles:
+            for tile in row:
+                self.assertFalse(tile.has_objects, f"Tile at ({tile.elevation}, {tile.moisture}) has unwanted objects: {tile.object_listing}")
+                self.assertEqual(tile.object_listing, [])
+
+        # Compact serialization: without POIs or roads, specials should be empty
+        compact = world_map.to_compact_dict()
+        self.assertEqual(len(compact["specials"]), 0, f"Expected 0 specials for wilderness map, found {len(compact['specials'])}")
+
+    def test_poi_and_facility_mto_preservation(self):
+        """POI markers and interactive facility MTOs are preserved and serialize correctly."""
+        tile = MapTile(biome=BiomeType.PLAINS)
+        self.assertFalse(tile.has_objects)
+
+        # Append POI tag
+        tile.object_listing.append("POI:Oakhaven Town")
+        self.assertTrue(tile.has_objects)
+        self.assertIn("POI:Oakhaven Town", tile.object_listing)
+
+        # Append facility MTO
+        tile.object_listing.append("MTOInn")
+        self.assertEqual(tile.object_listing, ["POI:Oakhaven Town", "MTOInn"])
+
+        # Serialization preserves objects
+        d = tile.to_dict()
+        self.assertEqual(d["ObjectListing"], ["POI:Oakhaven Town", "MTOInn"])
+        restored = MapTile.from_dict(d)
+        self.assertEqual(restored.object_listing, ["POI:Oakhaven Town", "MTOInn"])
+        self.assertTrue(restored.has_objects)
+
 
 if __name__ == "__main__":
     unittest.main()

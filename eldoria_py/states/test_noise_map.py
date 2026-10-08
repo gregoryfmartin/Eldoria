@@ -24,7 +24,7 @@ from ..procgen.npc import NPC, NPCRole, DialogCategory
 from ..procgen.world_macro import WorldMacroMap
 from ..core.save_manager import SaveManager
 from ..terminal.ansi import ATCoordinates, ATControlSequences
-from ..terminal.color import ColorLibrary, TrueColor
+from ..terminal.color import ColorLibrary, TrueColor, dim_ansi, dim_buffer
 from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import (
@@ -66,10 +66,18 @@ class GSNoiseMapTestScreen(SMState):
         FractalType.None_,
     ]
 
-    def __init__(self, map_width: int = 54, map_height: int = 24) -> None:
+    def __init__(
+        self,
+        map_width: int = 54,
+        map_height: int = 24,
+        fade_in_duration: float = 0.45,
+    ) -> None:
         super().__init__("GSNoiseMapTestScreen")
         self.map_width = map_width
         self.map_height = map_height
+        self.fade_in_duration: float = fade_in_duration
+        self.is_fading_in: bool = False
+        self.fade_in_elapsed: float = 0.0
         self.seed = 1337
         self.frequency = 0.035
         self.noise_type_idx = 0
@@ -192,11 +200,32 @@ class GSNoiseMapTestScreen(SMState):
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
 
+    def trigger_fade_in(self, duration: Optional[float] = None) -> None:
+        """Arms a fade-in transition starting from black when entering the map."""
+        self.is_fading_in = True
+        self.fade_in_elapsed = 0.0
+        if duration is not None and duration > 0:
+            self.fade_in_duration = duration
+
     def enter(self, context: Context) -> None:
         super().enter(context)
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
         TerminalScreen.flush()
+
+        should_fade_in = False
+        if context.get("fade_in_map"):
+            should_fade_in = True
+            context.set("fade_in_map", False)
+        elif self.is_fading_in:
+            should_fade_in = True
+
+        if should_fade_in and self.fade_in_duration > 0:
+            self.is_fading_in = True
+            self.fade_in_elapsed = 0.0
+        else:
+            self.is_fading_in = False
+            self.fade_in_elapsed = 0.0
 
         # Check if context has an active party from Party Builder or Load Game
         ctx_party = context.get("party")
@@ -341,6 +370,16 @@ class GSNoiseMapTestScreen(SMState):
 
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
+
+        if self.is_fading_in:
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                # Keypress during fade-in snaps immediately to 100% full brightness without dropping input action
+                self.is_fading_in = False
+                self.fade_in_elapsed = self.fade_in_duration
+            else:
+                self.fade_in_elapsed += float(delta_time)
+                if self.fade_in_elapsed >= self.fade_in_duration:
+                    self.is_fading_in = False
 
         if getattr(self, "is_quest_modal_active", False):
             if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
@@ -781,7 +820,9 @@ class GSNoiseMapTestScreen(SMState):
             exploration_state=exploration_state,
             playtime_seconds=self.playtime_seconds,
             world_macro=self.world_macro,
+            source_slot_idx=self.active_slot,
         )
+        self.active_slot = slot_idx
 
     def _get_adjacent_npcs(self) -> List[Tuple[NPC, str]]:
         """Returns list of (NPC, direction_label) adjacent to player's current position."""
@@ -1315,5 +1356,19 @@ class GSNoiseMapTestScreen(SMState):
         out.append(clear_buffer_tail(footer_y + 1, 40))
 
         out.append(ATControlSequences.DrawOptimizeOff)
-        TerminalScreen.write("".join(out))
-        TerminalScreen.flush()
+
+        brightness = 1.0
+        if self.is_fading_in and self.fade_in_duration > 0:
+            progress = min(1.0, max(0.0, self.fade_in_elapsed / self.fade_in_duration))
+            brightness = progress
+
+        if brightness < 0.999:
+            TerminalScreen.set_write_filter(lambda s: dim_buffer(s, brightness))
+        else:
+            TerminalScreen.set_write_filter(None)
+
+        try:
+            TerminalScreen.write("".join(out))
+            TerminalScreen.flush()
+        finally:
+            TerminalScreen.set_write_filter(None)

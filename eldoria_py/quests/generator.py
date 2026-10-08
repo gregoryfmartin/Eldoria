@@ -46,7 +46,7 @@ def build_storyline_questline(macro_size: str = "medium") -> StorylineQuestline:
             b[0] for b in BOSS_CAVE_MAPPING if b[1] <= 6 and b[0] != "Magmadon"
         ]
     else:
-        # Standard & Odyssey: All 16 bosses culminating in Malakor
+        # Standard, Odyssey & Colossal: All 16 bosses culminating in Malakor
         boss_names = [b[0] for b in BOSS_CAVE_MAPPING]
 
     # Build sequential QuestSteps in linear order

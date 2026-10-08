@@ -3,7 +3,7 @@ Terminal subsystem: ANSI escape codes, TrueColor, input handling, and graphics p
 """
 
 from .ansi import ATControlSequences
-from .color import TrueColor, ColorChannel, ColorLibrary
+from .color import TrueColor, ColorChannel, ColorLibrary, dim_ansi, dim_buffer
 from .input import InputManager, KeyEvent, KeyCode
 from .screen import TerminalScreen
 from .box import (
@@ -22,6 +22,8 @@ __all__ = [
     "TrueColor",
     "ColorChannel",
     "ColorLibrary",
+    "dim_ansi",
+    "dim_buffer",
     "InputManager",
     "KeyEvent",
     "KeyCode",

@@ -5,7 +5,7 @@ import math
 import random
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 from eldoria_py.procgen.noise import FastNoiseLite, NoiseType, FractalType
 from eldoria_py.terminal.color import TrueColor, ColorLibrary
@@ -152,8 +152,62 @@ BIOME_CONFIGS: Dict[BiomeType, BiomeConfig] = {
 }
 
 
+class ExitView:
+    """Zero-allocation-intent sequence proxy exposing a 4-bit exit mask as a 4-element bool list."""
+    __slots__ = ("_tile",)
+
+    def __init__(self, tile: MapTile) -> None:
+        self._tile = tile
+
+    def __getitem__(self, idx: int) -> bool:
+        if not 0 <= idx < 4:
+            raise IndexError("Exit index out of range (expected 0..3)")
+        return bool(self._tile._exit_mask & (1 << idx))
+
+    def __setitem__(self, idx: int, value: bool) -> None:
+        if not 0 <= idx < 4:
+            raise IndexError("Exit index out of range (expected 0..3)")
+        if value:
+            self._tile._exit_mask |= (1 << idx)
+        else:
+            self._tile._exit_mask &= ~(1 << idx)
+
+    def __len__(self) -> int:
+        return 4
+
+    def __iter__(self):
+        for i in range(4):
+            yield bool(self._tile._exit_mask & (1 << i))
+
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, (list, tuple, ExitView)) and len(other) == 4:
+            return all(self[i] == other[i] for i in range(4))
+        return False
+
+    def __repr__(self) -> str:
+        return f"[{self[0]}, {self[1]}, {self[2]}, {self[3]}]"
+
+
 class MapTile:
     """Represents a single square on an Eldoria map grid."""
+
+    __slots__ = (
+        "background_image",
+        "biome",
+        "_object_listing",
+        "_exit_mask",
+        "battle_allowed",
+        "encounter_rate",
+        "region_code",
+        "elevation",
+        "moisture",
+        "warp_target",
+        "poi",
+        "custom_glyph",
+        "custom_fg",
+        "custom_bg",
+        "npc",
+    )
 
     EXIT_NORTH = 0
     EXIT_SOUTH = 1
@@ -164,8 +218,8 @@ class MapTile:
         self,
         background_image: str = "Plains",
         biome: BiomeType = BiomeType.PLAINS,
-        object_listing: Optional[List[str]] = None,
-        exits: Optional[List[bool]] = None,
+        object_listing: Optional[Sequence[str]] = None,
+        exits: Optional[Union[int, Sequence[bool], ExitView]] = None,
         battle_allowed: bool = False,
         encounter_rate: float = 0.5,
         region_code: int = 0,
@@ -177,11 +231,28 @@ class MapTile:
         custom_fg: Optional[TrueColor] = None,
         custom_bg: Optional[TrueColor] = None,
         npc: Optional[Any] = None,
+        exit_mask: Optional[int] = None,
     ) -> None:
         self.background_image = background_image
         self.biome = biome
-        self.object_listing: List[str] = list(object_listing) if object_listing else []
-        self.exits: List[bool] = list(exits) if exits else [False, False, False, False]
+        self._object_listing: Optional[List[str]] = list(object_listing) if object_listing else None
+
+        if exit_mask is not None:
+            self._exit_mask = exit_mask & 0xF
+        elif exits is not None:
+            if isinstance(exits, int):
+                self._exit_mask = exits & 0xF
+            elif isinstance(exits, ExitView):
+                self._exit_mask = exits._tile._exit_mask
+            else:
+                mask = 0
+                for i, v in enumerate(exits):
+                    if v:
+                        mask |= (1 << i)
+                self._exit_mask = mask
+        else:
+            self._exit_mask = 0
+
         self.battle_allowed = battle_allowed
         self.encounter_rate = encounter_rate
         self.region_code = region_code
@@ -199,12 +270,56 @@ class MapTile:
         config = BIOME_CONFIGS.get(self.biome)
         return config.walkable if config else False
 
+    @property
+    def exit_mask(self) -> int:
+        return self._exit_mask
+
+    @exit_mask.setter
+    def exit_mask(self, mask: int) -> None:
+        self._exit_mask = mask & 0xF
+
+    @property
+    def exits(self) -> ExitView:
+        return ExitView(self)
+
+    @exits.setter
+    def exits(self, value: Union[int, Sequence[bool], ExitView]) -> None:
+        if isinstance(value, int):
+            self._exit_mask = value & 0xF
+        elif isinstance(value, ExitView):
+            self._exit_mask = value._tile._exit_mask
+        else:
+            mask = 0
+            for i, v in enumerate(value):
+                if v:
+                    mask |= (1 << i)
+            self._exit_mask = mask
+
+    @property
+    def object_listing(self) -> List[str]:
+        if self._object_listing is None:
+            self._object_listing = []
+        return self._object_listing
+
+    @object_listing.setter
+    def object_listing(self, value: Optional[Sequence[str]]) -> None:
+        self._object_listing = list(value) if value else None
+
+    @property
+    def has_objects(self) -> bool:
+        return bool(self._object_listing)
+
     def to_dict(self) -> Dict[str, Any]:
         d: Dict[str, Any] = {
             "BackgroundImage": self.background_image,
             "Biome": self.biome.value,
-            "ObjectListing": self.object_listing,
-            "Exits": self.exits,
+            "ObjectListing": list(self.object_listing),
+            "Exits": [
+                bool(self._exit_mask & 1),
+                bool(self._exit_mask & 2),
+                bool(self._exit_mask & 4),
+                bool(self._exit_mask & 8),
+            ],
             "BattleAllowed": self.battle_allowed,
             "EncounterRate": self.encounter_rate,
             "RegionCode": self.region_code,
@@ -267,14 +382,21 @@ class Map:
         width: int = 54,
         height: int = 24,
         boundary_wrap: bool = False,
+        tiles: Optional[List[List[MapTile]]] = None,
+        allocate_tiles: bool = True,
     ) -> None:
         self.name = name
         self.width = width
         self.height = height
         self.boundary_wrap = boundary_wrap
-        self.tiles: List[List[MapTile]] = [
-            [MapTile() for _ in range(width)] for _ in range(height)
-        ]
+        if tiles is not None:
+            self.tiles = tiles
+        elif allocate_tiles:
+            self.tiles = [
+                [MapTile() for _ in range(width)] for _ in range(height)
+            ]
+        else:
+            self.tiles = []
 
     def get_tile(self, x: int, y: int) -> Optional[MapTile]:
         if 0 <= y < self.height and 0 <= x < self.width:
@@ -301,6 +423,7 @@ class Map:
             width=data.get("MapWidth", 0),
             height=data.get("MapHeight", 0),
             boundary_wrap=data.get("BoundaryWrap", data.get("BoundaryWarp", False)),
+            allocate_tiles=False,
         )
         tiles_data = data.get("Tiles", [])
         m.tiles = [
@@ -322,14 +445,8 @@ class Map:
                 token = BIOME_TO_CHAR.get(tile.biome, ".")
                 row_chars.append(token)
 
-                # Encode 4-bit exit mask: N=1, S=2, E=4, W=8 -> hex char 0-f
-                mask = (
-                    (1 if tile.exits[MapTile.EXIT_NORTH] else 0)
-                    | (2 if tile.exits[MapTile.EXIT_SOUTH] else 0)
-                    | (4 if tile.exits[MapTile.EXIT_EAST] else 0)
-                    | (8 if tile.exits[MapTile.EXIT_WEST] else 0)
-                )
-                row_hex.append(f"{mask:x}")
+                # Direct 4-bit exit mask hex char (0-f)
+                row_hex.append(f"{tile.exit_mask:x}")
 
                 # Check if tile has visual, battle, or asset overrides
                 cfg = BIOME_CONFIGS.get(tile.biome)
@@ -337,7 +454,7 @@ class Map:
                     tile.custom_glyph is not None
                     or tile.custom_fg is not None
                     or tile.custom_bg is not None
-                    or bool(tile.object_listing)
+                    or tile.has_objects
                     or tile.warp_target is not None
                     or tile.npc is not None
                 )
@@ -364,7 +481,7 @@ class Map:
                         s_dict["fg"] = [tile.custom_fg.r, tile.custom_fg.g, tile.custom_fg.b]
                     if tile.custom_bg:
                         s_dict["bg"] = [tile.custom_bg.r, tile.custom_bg.g, tile.custom_bg.b]
-                    if tile.object_listing:
+                    if tile.has_objects:
                         s_dict["obj"] = list(tile.object_listing)
                     if tile.warp_target and hasattr(tile.warp_target, "to_dict"):
                         s_dict["warp"] = tile.warp_target.to_dict()
@@ -397,19 +514,25 @@ class Map:
             width=data.get("width", 54),
             height=data.get("height", 24),
             boundary_wrap=data.get("boundary_wrap", False),
+            allocate_tiles=False,
         )
         rows = data.get("rows", [])
+        m.tiles = []
         for y, row_str in enumerate(rows):
+            row_tiles: List[MapTile] = []
             for x, char in enumerate(row_str):
                 biome = CHAR_TO_BIOME.get(char, BiomeType.PLAINS)
                 cfg = BIOME_CONFIGS.get(biome)
-                m.tiles[y][x] = MapTile(
-                    biome=biome,
-                    background_image=cfg.name.replace(" ", "") if cfg else "Plains",
-                    battle_allowed=cfg.battle_allowed if cfg else False,
-                    encounter_rate=cfg.encounter_rate if cfg else 0.0,
-                    region_code=cfg.region_code if cfg else 0,
+                row_tiles.append(
+                    MapTile(
+                        biome=biome,
+                        background_image=cfg.name.replace(" ", "") if cfg else "Plains",
+                        battle_allowed=cfg.battle_allowed if cfg else False,
+                        encounter_rate=cfg.encounter_rate if cfg else 0.0,
+                        region_code=cfg.region_code if cfg else 0,
+                    )
                 )
+            m.tiles.append(row_tiles)
 
         specials = data.get("specials", [])
         for s in specials:
@@ -446,13 +569,7 @@ class Map:
                 if y < m.height:
                     for x, ch in enumerate(row_hex):
                         if x < m.width:
-                            mask = int(ch, 16)
-                            m.tiles[y][x].exits = [
-                                bool(mask & 1),
-                                bool(mask & 2),
-                                bool(mask & 4),
-                                bool(mask & 8),
-                            ]
+                            m.tiles[y][x].exit_mask = int(ch, 16)
         else:
             # Legacy fallback: calculate exits based on walkability
             ProceduralMapGenerator._calculate_exits(m)
@@ -533,8 +650,6 @@ class ProceduralMapGenerator:
         badlands_side: Optional[str] = None,
     ) -> Map:
         """Generates a complete, interconnected Map with biomes, exits, and optional roads."""
-        world_map = Map(name=name, width=width, height=height, boundary_wrap=boundary_wrap)
-
         world_w = total_world_width if total_world_width is not None else width
         world_h = total_world_height if total_world_height is not None else height
         b_side = badlands_side if badlands_side is not None else ("LEFT" if (self.seed % 2 == 0) else "RIGHT")
@@ -544,10 +659,12 @@ class ProceduralMapGenerator:
         inv_h = 1.0 / max(1.0, float(world_h - 1))
         u_table = [float(offset_x + x) * inv_w for x in range(width)]
 
-        # 1. Sample Elevation & Moisture to determine base biomes
+        # 1. Sample Elevation & Moisture to determine base biomes and construct single-pass tile grid
+        tiles: List[List[MapTile]] = []
         for y in range(height):
             gy = float(offset_y + y)
             v = gy * inv_h
+            row: List[MapTile] = []
             for x in range(width):
                 gx = float(offset_x + x)
                 raw_e = self.elev_noise.get_noise_2d(gx, gy)
@@ -572,14 +689,16 @@ class ProceduralMapGenerator:
                 tile = MapTile(
                     background_image=config.name.replace(" ", ""),
                     biome=biome,
-                    object_listing=self._generate_decorations(biome),
                     battle_allowed=config.battle_allowed,
                     encounter_rate=config.encounter_rate,
                     region_code=config.region_code,
                     elevation=elevation,
                     moisture=moisture,
                 )
-                world_map.set_tile(x, y, tile)
+                row.append(tile)
+            tiles.append(row)
+
+        world_map = Map(name=name, width=width, height=height, boundary_wrap=boundary_wrap, tiles=tiles)
 
         # 2. Generate Road connecting West and East edges across walkable terrain
         if create_road:
@@ -636,31 +755,8 @@ class ProceduralMapGenerator:
 
     @staticmethod
     def _generate_decorations(biome: BiomeType) -> List[str]:
-        objs: List[str] = []
-        if biome == BiomeType.FOREST:
-            objs.append("MTOTree")
-            if random.random() < 0.35:
-                objs.append("MTOApple")
-        elif biome == BiomeType.PLAINS:
-            if random.random() < 0.20:
-                objs.append("MTOTree")
-            if random.random() < 0.15:
-                objs.append("MTORock")
-        elif biome == BiomeType.COAST:
-            if random.random() < 0.20:
-                objs.append("MTORock")
-        elif biome == BiomeType.BADLANDS:
-            if random.random() < 0.25:
-                objs.append("MTORock")
-        elif biome == BiomeType.TUNDRA:
-            if random.random() < 0.15:
-                objs.append("MTORock")
-        elif biome == BiomeType.SWAMP:
-            if random.random() < 0.20:
-                objs.append("MTOTree")
-            if random.random() < 0.15:
-                objs.append("MTORock")
-        return objs
+        """Deprecated: Wilderness decor MTOs have been purged for performance. Returns empty list."""
+        return []
 
     def _carve_road(self, world_map: Map) -> None:
         """Finds a walkable path from the left edge to the right edge and carves a cobblestone road."""
@@ -720,7 +816,7 @@ class ProceduralMapGenerator:
             for x in range(w):
                 curr_tile = world_map.tiles[y][x]
                 if not curr_tile.is_walkable:
-                    curr_tile.exits = [False, False, False, False]
+                    curr_tile.exit_mask = 0
                     continue
 
                 # North
@@ -751,7 +847,12 @@ class ProceduralMapGenerator:
                 elif world_map.boundary_wrap and world_map.tiles[y][w - 1].is_walkable:
                     exit_w = True
 
-                curr_tile.exits = [exit_n, exit_s, exit_e, exit_w]
+                curr_tile.exit_mask = (
+                    (1 if exit_n else 0)
+                    | (2 if exit_s else 0)
+                    | (4 if exit_e else 0)
+                    | (8 if exit_w else 0)
+                )
 
     @staticmethod
     def render_ansi(world_map: Map, cursor_pos: Optional[Tuple[int, int]] = None) -> List[str]:

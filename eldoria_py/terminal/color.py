@@ -391,25 +391,202 @@ def scale_color(color: TrueColor, factor: float) -> TrueColor:
     )
 
 
+ANSI_16_COLORS_FG = {
+    # Standard foreground colors (30-37)
+    30: (0, 0, 0),        # Black
+    31: (205, 49, 49),    # Red
+    32: (13, 188, 121),   # Green
+    33: (229, 229, 16),   # Yellow
+    34: (36, 114, 200),   # Blue
+    35: (188, 63, 188),   # Magenta
+    36: (17, 168, 205),   # Cyan
+    37: (229, 229, 229),  # White
+    # High-intensity foreground colors (90-97)
+    90: (102, 102, 102),  # Bright Black / Dark Gray
+    91: (241, 76, 76),    # Bright Red
+    92: (35, 209, 139),   # Bright Green
+    93: (245, 245, 67),   # Bright Yellow
+    94: (59, 142, 234),   # Bright Blue
+    95: (214, 112, 214),  # Bright Magenta
+    96: (41, 184, 219),   # Bright Cyan
+    97: (255, 255, 255),  # Bright White
+}
+
+ANSI_16_COLORS_BG = {
+    # Standard background colors (40-47)
+    40: (0, 0, 0),        # Black
+    41: (205, 49, 49),    # Red
+    42: (13, 188, 121),   # Green
+    43: (229, 229, 16),   # Yellow
+    44: (36, 114, 200),   # Blue
+    45: (188, 63, 188),   # Magenta
+    46: (17, 168, 205),   # Cyan
+    47: (229, 229, 229),  # White
+    # High-intensity background colors (100-107)
+    100: (102, 102, 102), # Bright Black / Dark Gray
+    101: (241, 76, 76),   # Bright Red
+    102: (35, 209, 139),  # Bright Green
+    103: (245, 245, 67),  # Bright Yellow
+    104: (59, 142, 234),  # Bright Blue
+    105: (214, 112, 214), # Bright Magenta
+    106: (41, 184, 219),  # Bright Cyan
+    107: (255, 255, 255), # Bright White
+}
+
+_XTERM_256_PALETTE: list[tuple[int, int, int]] = []
+for _c in range(16):
+    _fg_code = 30 + _c if _c < 8 else 90 + (_c - 8)
+    _XTERM_256_PALETTE.append(ANSI_16_COLORS_FG[_fg_code])
+for _r_step in [0, 95, 135, 175, 215, 255]:
+    for _g_step in [0, 95, 135, 175, 215, 255]:
+        for _b_step in [0, 95, 135, 175, 215, 255]:
+            _XTERM_256_PALETTE.append((_r_step, _g_step, _b_step))
+for _gray_step in range(24):
+    _g_val = 8 + _gray_step * 10
+    _XTERM_256_PALETTE.append((_g_val, _g_val, _g_val))
+
+_SGR_RE = re.compile(r"\033\[([0-9;]*)m")
 _ANSI_24BIT_COLOR_RE = re.compile(r"\033\[(38|48);2;(\d+);(\d+);(\d+)m")
 
 
-def dim_ansi(ansi_str: str, factor: float) -> str:
+def dim_ansi(
+    ansi_str: str,
+    factor: float,
+    *,
+    buffer_wide: bool = False,
+    default_fg: TrueColor | None = None,
+) -> str:
     """
-    Scales all 24-bit TrueColor ANSI escape sequences in the string by factor [0.0, 1.0].
-    Used for smooth terminal fade-out and fade-in transitions.
+    Scales all ANSI color sequences (24-bit TrueColor, 256-color, and 16-color)
+    in the string by factor in [0.0, 1.0]. Used for smooth terminal fade transitions.
+
+    When buffer_wide=True, also enforces dimmed default foreground on unstyled text
+    at the start of the buffer and following SGR resets (\\033[0m / \\033[m), ensuring
+    complete frame-wide dimming to pitch black (factor 0.0) without leaving bright
+    borders, dividers, or unstyled text remnants.
     """
-    factor = max(0.0, min(1.0, factor))
+    if not ansi_str:
+        return ansi_str
+
+    factor = max(0.0, min(1.0, float(factor)))
     if factor >= 0.999:
         return ansi_str
 
-    def repl(m: re.Match) -> str:
-        layer = m.group(1)
-        r = int(int(m.group(2)) * factor)
-        g = int(int(m.group(3)) * factor)
-        b = int(int(m.group(4)) * factor)
-        return f"\033[{layer};2;{r};{g};{b}m"
+    if default_fg is None:
+        default_fg = TrueColor(204, 204, 204)
 
-    return _ANSI_24BIT_COLOR_RE.sub(repl, ansi_str)
+    dim_def_r = int(default_fg.r * factor)
+    dim_def_g = int(default_fg.g * factor)
+    dim_def_b = int(default_fg.b * factor)
+    dim_def_fg_seq = f"\033[38;2;{dim_def_r};{dim_def_g};{dim_def_b}m"
+
+    def repl_sgr(m: re.Match[str]) -> str:
+        param_str = m.group(1)
+        if not param_str:
+            if buffer_wide:
+                return f"\033[0m{dim_def_fg_seq}"
+            return "\033[m"
+
+        tokens = [int(p) if p else 0 for p in param_str.split(";")]
+        new_tokens: list[str] = []
+        i = 0
+        n = len(tokens)
+        has_reset = False
+        has_fg = False
+
+        while i < n:
+            code = tokens[i]
+            if code == 0:
+                has_reset = True
+                has_fg = False
+                new_tokens.append("0")
+                i += 1
+            elif code == 38:
+                if i + 4 < n and tokens[i + 1] == 2:
+                    r = int(tokens[i + 2] * factor)
+                    g = int(tokens[i + 3] * factor)
+                    b = int(tokens[i + 4] * factor)
+                    new_tokens.extend(["38", "2", str(r), str(g), str(b)])
+                    has_fg = True
+                    i += 5
+                elif i + 2 < n and tokens[i + 1] == 5:
+                    idx = max(0, min(255, tokens[i + 2]))
+                    orig_r, orig_g, orig_b = _XTERM_256_PALETTE[idx]
+                    r = int(orig_r * factor)
+                    g = int(orig_g * factor)
+                    b = int(orig_b * factor)
+                    new_tokens.extend(["38", "2", str(r), str(g), str(b)])
+                    has_fg = True
+                    i += 3
+                else:
+                    new_tokens.append(str(code))
+                    i += 1
+            elif code == 48:
+                if i + 4 < n and tokens[i + 1] == 2:
+                    r = int(tokens[i + 2] * factor)
+                    g = int(tokens[i + 3] * factor)
+                    b = int(tokens[i + 4] * factor)
+                    new_tokens.extend(["48", "2", str(r), str(g), str(b)])
+                    i += 5
+                elif i + 2 < n and tokens[i + 1] == 5:
+                    idx = max(0, min(255, tokens[i + 2]))
+                    orig_r, orig_g, orig_b = _XTERM_256_PALETTE[idx]
+                    r = int(orig_r * factor)
+                    g = int(orig_g * factor)
+                    b = int(orig_b * factor)
+                    new_tokens.extend(["48", "2", str(r), str(g), str(b)])
+                    i += 3
+                else:
+                    new_tokens.append(str(code))
+                    i += 1
+            elif code in ANSI_16_COLORS_FG:
+                orig_r, orig_g, orig_b = ANSI_16_COLORS_FG[code]
+                r = int(orig_r * factor)
+                g = int(orig_g * factor)
+                b = int(orig_b * factor)
+                new_tokens.extend(["38", "2", str(r), str(g), str(b)])
+                has_fg = True
+                i += 1
+            elif code in ANSI_16_COLORS_BG:
+                orig_r, orig_g, orig_b = ANSI_16_COLORS_BG[code]
+                r = int(orig_r * factor)
+                g = int(orig_g * factor)
+                b = int(orig_b * factor)
+                new_tokens.extend(["48", "2", str(r), str(g), str(b)])
+                i += 1
+            elif code == 39:
+                if buffer_wide:
+                    new_tokens.extend(["38", "2", str(dim_def_r), str(dim_def_g), str(dim_def_b)])
+                    has_fg = True
+                else:
+                    new_tokens.append("39")
+                i += 1
+            else:
+                new_tokens.append(str(code))
+                i += 1
+
+        result = f"\033[{';'.join(new_tokens)}m"
+        if buffer_wide and has_reset and not has_fg:
+            result = f"{result}{dim_def_fg_seq}"
+        return result
+
+    result = _SGR_RE.sub(repl_sgr, ansi_str)
+    if buffer_wide:
+        result = f"{dim_def_fg_seq}{result}"
+    return result
+
+
+def dim_buffer(
+    ansi_str: str,
+    factor: float,
+    default_fg: TrueColor | None = None,
+) -> str:
+    """
+    Dims an entire terminal screen buffer by scaling all color sequences
+    (24-bit TrueColor, 256-color, and 16-color ANSI) and enforcing dimmed default
+    foreground on unstyled text and after SGR resets.
+    """
+    return dim_ansi(ansi_str, factor, buffer_wide=True, default_fg=default_fg)
+
 
 

@@ -11,7 +11,8 @@ from eldoria_py.core.context import Context
 from eldoria_py.procgen.map_generator import BiomeType, MapTile
 from eldoria_py.procgen.poi import POIType, WarpTarget
 from eldoria_py.procgen.submap_generator import SubMapGenerator
-from eldoria_py.procgen.world_macro import WorldMacroMap
+from eldoria_py.procgen.world_macro import WorldMacroMap, calculate_concentric_region_code
+from eldoria_py.core.save_manager import SaveManager
 from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
 from eldoria_py.terminal.input import KeyEvent, KeyCode
 
@@ -338,6 +339,89 @@ class TestWorldMacroAndSubMaps(unittest.TestCase):
         # Over 12 distinct seeds, there must be multiple different starter sectors chosen
         self.assertGreater(len(starter_sectors), 1, "Different seeds must produce diverse starter sector locations.")
 
+    def test_colossal_macro_grid_attributes_and_concentric_scale(self) -> None:
+        """Verify Colossal 50x50 attributes, max_region, and proportional 2.5x concentric circle expansion."""
+        colossal_macro = WorldMacroMap(
+            seed=9999,
+            macro_width=50,
+            macro_height=50,
+            generate=False,
+        )
+        self.assertEqual(colossal_macro.macro_width, 50)
+        self.assertEqual(colossal_macro.macro_height, 50)
+        self.assertEqual(colossal_macro.max_region, 9)
+
+        # scale = 50 / 4.5 = 11.1111... exactly 2.5x Odyssey (20 / 4.5 = 4.4444...)
+        expected_scale = 50.0 / 4.5
+        self.assertAlmostEqual(colossal_macro.region_scale, expected_scale, places=4)
+
+        # Concentric regions at spawn (0, 0)
+        # R1: d < 18 * scale ≈ 200 tiles
+        r1 = calculate_concentric_region_code(100, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r1, 1)
+
+        # R2: 18 <= d < 32 (200 <= dist < 356)
+        r2 = calculate_concentric_region_code(250, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r2, 2)
+
+        # R3: 32 <= d < 56 (356 <= dist < 622)
+        r3 = calculate_concentric_region_code(500, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r3, 3)
+
+        # R4: 56 <= d < 76 (622 <= dist < 844)
+        r4 = calculate_concentric_region_code(750, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r4, 4)
+
+        # R5: 76 <= d < 94 (844 <= dist < 1044)
+        r5 = calculate_concentric_region_code(950, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r5, 5)
+
+        # R6: 94 <= d < 114 (1044 <= dist < 1267)
+        r6 = calculate_concentric_region_code(1150, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r6, 6)
+
+        # R7: 114 <= d < 138 (1267 <= dist < 1533)
+        r7 = calculate_concentric_region_code(1400, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r7, 7)
+
+        # R8: 138 <= d < 160 (1533 <= dist < 1778)
+        r8 = calculate_concentric_region_code(1650, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r8, 8)
+
+        # R9: d >= 160 (dist >= 1778)
+        r9 = calculate_concentric_region_code(2000, 0, 0, 0, scale=colossal_macro.region_scale)
+        self.assertEqual(r9, 9)
+
+    def test_save_manager_colossal_label_and_dimensions(self) -> None:
+        """Verify SaveManager associates 50x50 dimensions with 'Colossal' label."""
+        import tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from eldoria_py.combat.entities import Party, PartyMember
+
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            mgr = SaveManager(save_dir=Path(tmp_dir))
+            party = Party(members=[PartyMember(name="Aiden", job_class="Warrior")])
+
+            # Mock WorldMacroMap to avoid executing 50x50 generation during quick unit test
+            mock_world = WorldMacroMap(macro_width=50, macro_height=50, generate=False)
+            mock_world.sectors = []
+            mock_world.all_pois = []
+            mock_world.starter_sector = (5, 5)
+            mock_world.starter_player_pos = (27, 12)
+
+            with patch("eldoria_py.core.save_manager.WorldMacroMap", return_value=mock_world):
+                world, exp = mgr.create_new_game(slot_idx=1, party=party, macro_size="colossal")
+                self.assertEqual(world.macro_width, 50)
+                self.assertEqual(world.macro_height, 50)
+
+                headers = mgr.list_save_slots(1)
+                self.assertIsNotNone(headers[0])
+                self.assertEqual(headers[0].world_size_label, "Colossal")
+                self.assertEqual(headers[0].macro_width, 50)
+                self.assertEqual(headers[0].macro_height, 50)
+
 
 if __name__ == "__main__":
     unittest.main()
+

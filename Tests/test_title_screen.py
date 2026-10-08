@@ -92,6 +92,75 @@ class TestSplashScreen(unittest.TestCase):
     def test_splash_default_duration(self):
         default_splash = GSSplashScreen()
         self.assertAlmostEqual(default_splash.duration, 4.8)
+        self.assertAlmostEqual(default_splash.fade_in_duration, 0.45)
+        self.assertAlmostEqual(default_splash.fade_out_duration, 0.45)
+        self.assertEqual(default_splash.phase, "FADING_IN")
+        self.assertTrue(default_splash.is_fading_in)
+        self.assertFalse(default_splash.is_fading_out)
+
+    def test_splash_fade_in_progression_and_transition(self):
+        splash = GSSplashScreen(screen_width=54, screen_height=24, duration=3.0, fade_in_duration=0.5)
+        self.assertEqual(splash.phase, "FADING_IN")
+        self.assertTrue(splash.is_fading_in)
+
+        # First half of fade-in
+        self.context.set(SMState.ContextDeltaTime, 0.25)
+        self.context.set(SMState.ContextKeysPressed, [])
+        splash.update(self.context)
+        self.assertEqual(splash.phase, "FADING_IN")
+        self.assertTrue(splash.is_fading_in)
+        self.assertAlmostEqual(splash.fade_in_elapsed, 0.25)
+
+        # Complete fade-in
+        splash.update(self.context)
+        self.assertEqual(splash.phase, "SHOWING")
+        self.assertFalse(splash.is_fading_in)
+        self.assertFalse(splash.is_fading_out)
+
+    def test_splash_fade_in_zero_duration(self):
+        splash = GSSplashScreen(screen_width=54, screen_height=24, duration=2.0, fade_in_duration=0.0)
+        self.assertEqual(splash.phase, "SHOWING")
+        self.assertFalse(splash.is_fading_in)
+
+        splash.enter(self.context)
+        self.assertEqual(splash.phase, "SHOWING")
+        self.assertFalse(splash.is_fading_in)
+
+    def test_splash_keypress_during_fade_in_skips(self):
+        splash = GSSplashScreen(screen_width=54, screen_height=24, duration=3.0, fade_in_duration=0.5, fade_out_duration=0.45)
+        self.context.set(SMState.ContextDeltaTime, 0.1)
+        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.ENTER)])
+
+        splash.update(self.context)
+        self.assertEqual(splash.phase, "FADING_OUT")
+        self.assertTrue(splash.is_fading_out)
+        self.assertFalse(splash.is_fading_in)
+
+    def test_splash_render_filter_during_fade_in(self):
+        from eldoria_py.terminal.screen import TerminalScreen
+        from unittest.mock import patch
+        self.mock_game_state.current_state = "GSSplashScreen"
+        splash = GSSplashScreen(screen_width=54, screen_height=24, duration=3.0, fade_in_duration=0.5)
+        self.context.set(SMState.ContextDeltaTime, 0.25)
+        self.context.set(SMState.ContextKeysPressed, [])
+
+        recorded_filters = []
+        original_set_filter = TerminalScreen.set_write_filter
+
+        def spy_set_filter(fn):
+            recorded_filters.append(fn)
+            original_set_filter(fn)
+
+        TerminalScreen.set_write_filter = spy_set_filter
+        with patch.object(TerminalScreen, "flush"), patch("sys.stdout.write"):
+            try:
+                splash.update(self.context)
+            finally:
+                TerminalScreen.set_write_filter = original_set_filter
+
+        # Should have set a dimming filter (callable) during draw, then reset to None
+        self.assertTrue(any(callable(f) for f in recorded_filters))
+        self.assertIsNone(TerminalScreen._write_filter)
 
 
 
@@ -268,12 +337,87 @@ class TestTitleScreen(unittest.TestCase):
 
         self.title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
         self.title.audio_engine.stop_bgm.assert_called_once()
+        self.assertTrue(self.title.is_fading_out)
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Advance fade-out duration
+        self.context.set(SMState.ContextDeltaTime, self.title.fade_out_duration)
+        self.title.update(self.context)
+        self.assertFalse(self.title.is_fading_out)
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
 
     def test_title_screen_dev_map_hotkey_stops_bgm(self):
         self.title.audio_engine.stop_bgm = MagicMock()
         self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="m"), self.context, self.mock_core)
         self.title.audio_engine.stop_bgm.assert_called_once()
+        self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
+
+    def test_title_screen_load_game_fade_out_dimming(self):
+        """Verifies that while fading out from Load Game screen, dimming write filter is active."""
+        from eldoria_py.terminal.screen import TerminalScreen
+        from unittest.mock import patch
+        self.mock_game_state.current_state = "GSTitleScreen"
+        self.title.active_dialog = "LOAD"
+        self.title.load_slot_idx = 0
+        self.title.load_headers = [MagicMock()]
+        loaded_state = {"current_sector": (0, 0), "player_pos": (5, 5)}
+        self.title.save_manager.load_game = MagicMock(return_value=(MagicMock(), MagicMock(), loaded_state))
+
+        # Select slot 1 to start fade-out
+        self.title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
+        self.assertTrue(self.title.is_fading_out)
+
+        # Advance partially (50%)
+        self.context.set(SMState.ContextDeltaTime, 0.225)
+        self.context.set(SMState.ContextKeysPressed, [])
+
+        recorded_filters = []
+        original_set_filter = TerminalScreen.set_write_filter
+
+        def spy_set_filter(fn):
+            recorded_filters.append(fn)
+            original_set_filter(fn)
+
+        TerminalScreen.set_write_filter = spy_set_filter
+        with patch.object(TerminalScreen, "flush"), patch("sys.stdout.write"):
+            try:
+                self.title.update(self.context)
+            finally:
+                TerminalScreen.set_write_filter = original_set_filter
+
+        self.assertTrue(any(callable(f) for f in recorded_filters))
+        self.assertIsNone(TerminalScreen._write_filter)
+
+    def test_title_screen_load_game_fade_out_keypress_skips(self):
+        """Verifies pressing a key during Load Game fade-out immediately finishes the transition."""
+        self.title.active_dialog = "LOAD"
+        self.title.load_slot_idx = 0
+        self.title.load_headers = [MagicMock()]
+        loaded_state = {"current_sector": (0, 0), "player_pos": (5, 5)}
+        self.title.save_manager.load_game = MagicMock(return_value=(MagicMock(), MagicMock(), loaded_state))
+
+        self.title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
+        self.assertTrue(self.title.is_fading_out)
+
+        # Keypress during fade-out
+        self.context.set(SMState.ContextDeltaTime, 0.05)
+        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.SPACE)])
+        self.title.update(self.context)
+
+        self.assertFalse(self.title.is_fading_out)
+        self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
+
+    def test_title_screen_load_game_fade_out_zero_duration(self):
+        """Verifies that when fade_out_duration=0, load completes immediately upon slot selection."""
+        title = GSTitleScreen(screen_width=54, screen_height=24, fade_out_duration=0.0)
+        title.active_dialog = "LOAD"
+        title.load_slot_idx = 0
+        title.load_headers = [MagicMock()]
+        loaded_state = {"current_sector": (0, 0), "player_pos": (5, 5)}
+        title.save_manager.load_game = MagicMock(return_value=(MagicMock(), MagicMock(), loaded_state))
+
+        title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
+        self.assertFalse(title.is_fading_out)
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
 
 
@@ -299,6 +443,24 @@ class TestColorDimming(unittest.TestCase):
         # Fast path returns string unchanged
         self.assertEqual(dim_ansi(ansi_text, 1.0), ansi_text)
         self.assertEqual(dim_ansi("Plain text", 0.5), "Plain text")
+
+        # 16-color ANSI code dimming
+        ansi_16 = "\033[1;33mGold\033[0m"
+        dimmed_16 = dim_ansi(ansi_16, 0.5)
+        self.assertIn("\033[1;38;2;114;114;8mGold\033[0m", dimmed_16)
+
+        # 256-color ANSI code dimming
+        ansi_256 = "\033[38;5;196mRed\033[0m"
+        dimmed_256 = dim_ansi(ansi_256, 0.5)
+        self.assertIn("\033[38;2;127;0;0mRed\033[0m", dimmed_256)
+
+        # Buffer-wide dimming includes unstyled text and resets
+        from eldoria_py.terminal.color import dim_buffer
+        frame = "┌─┐\033[1;33mGold\033[0m Border\033[?2026h"
+        dimmed_bw = dim_buffer(frame, 0.0)
+        self.assertTrue(dimmed_bw.startswith("\033[38;2;0;0;0m┌─┐"))
+        self.assertIn("\033[1;38;2;0;0;0mGold\033[0m\033[38;2;0;0;0m Border", dimmed_bw)
+        self.assertIn("\033[?2026h", dimmed_bw)
 
 
 if __name__ == "__main__":

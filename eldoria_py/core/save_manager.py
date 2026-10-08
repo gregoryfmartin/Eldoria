@@ -75,10 +75,10 @@ class SaveSlotHeader:
         )
 
 
-def _write_gzip_json(path: Path, data: Any) -> None:
+def _write_gzip_json(path: Path, data: Any, compresslevel: int = 1) -> None:
     """Atomically writes data to a gzip-compressed JSON file."""
     tmp_path = path.with_suffix(path.suffix + ".tmp")
-    with gzip.open(tmp_path, "wt", encoding="utf-8") as f:
+    with gzip.open(tmp_path, "wt", encoding="utf-8", compresslevel=compresslevel) as f:
         json.dump(data, f)
     os.replace(tmp_path, path)
 
@@ -154,6 +154,8 @@ class SaveManager:
         size_key = macro_size.lower().strip()
         if "quick" in size_key or "small" in size_key or "6" in size_key:
             mw, mh, label = 6, 6, "Quick"
+        elif "colossal" in size_key or "50" in size_key:
+            mw, mh, label = 50, 50, "Colossal"
         elif "odyssey" in size_key or "large" in size_key or "20" in size_key:
             mw, mh, label = 20, 20, "Odyssey"
         elif "4" in size_key or "classic" in size_key:
@@ -241,10 +243,11 @@ class SaveManager:
         exploration_state: Dict[str, Any],
         playtime_seconds: int = 0,
         world_macro: Optional[WorldMacroMap] = None,
+        source_slot_idx: Optional[int] = None,
     ) -> None:
         """
         Saves ongoing game state to slot_idx atomically.
-        Only touches state.sav and header.json; world.map is never rewritten.
+        Only touches state.sav and header.json; world.map is copied or created if missing/mismatched.
         """
         slot_dir = self.get_slot_dir(slot_idx)
         slot_dir.mkdir(parents=True, exist_ok=True)
@@ -257,10 +260,51 @@ class SaveManager:
             except Exception:
                 pass
 
-        # If world.map doesn't exist yet and world_macro is provided, write it
+        # Check if world.map needs to be created or overwritten due to dimension mismatch
         world_map_path = slot_dir / "world.map"
-        if world_macro is not None and not world_map_path.is_file():
-            _write_gzip_json(world_map_path, world_macro.to_dict())
+        needs_world_map = False
+        if world_macro is not None:
+            if not world_map_path.is_file():
+                needs_world_map = True
+            elif existing_header is not None:
+                if (existing_header.macro_width != world_macro.macro_width or
+                    existing_header.macro_height != world_macro.macro_height):
+                    needs_world_map = True
+
+        if needs_world_map and world_macro is not None:
+            # 1. Attempt ultra-fast file copy from source_slot_idx
+            copied = False
+            if source_slot_idx is not None and source_slot_idx != slot_idx:
+                src_map = self.get_slot_dir(source_slot_idx) / "world.map"
+                if src_map.is_file():
+                    tmp_map = world_map_path.with_suffix(".map.tmp")
+                    shutil.copy2(src_map, tmp_map)
+                    os.replace(tmp_map, world_map_path)
+                    copied = True
+
+            # 2. If not copied, check if any other slot has a matching baked world.map
+            if not copied:
+                for other_slot in range(1, 4):
+                    if other_slot == slot_idx:
+                        continue
+                    other_hdr_path = self.get_slot_dir(other_slot) / "header.json"
+                    other_map_path = self.get_slot_dir(other_slot) / "world.map"
+                    if other_hdr_path.is_file() and other_map_path.is_file():
+                        try:
+                            o_hdr = SaveSlotHeader.from_dict(_read_json(other_hdr_path))
+                            if (o_hdr.macro_width == world_macro.macro_width and
+                                o_hdr.macro_height == world_macro.macro_height):
+                                tmp_map = world_map_path.with_suffix(".map.tmp")
+                                shutil.copy2(other_map_path, tmp_map)
+                                os.replace(tmp_map, world_map_path)
+                                copied = True
+                                break
+                        except Exception:
+                            pass
+
+            # 3. Fallback: serialize with fast gzip compresslevel=1
+            if not copied:
+                _write_gzip_json(world_map_path, world_macro.to_dict(), compresslevel=1)
 
         now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
 
@@ -283,10 +327,10 @@ class SaveManager:
 
         leader = party.members[0] if party.members else None
         leader_class = (leader.job_class.value if hasattr(leader.job_class, "value") else str(leader.job_class)) if leader else "Warrior"
-        mw = existing_header.macro_width if existing_header else (world_macro.macro_width if world_macro else 12)
-        mh = existing_header.macro_height if existing_header else (world_macro.macro_height if world_macro else 12)
-        default_size_label = "Quick" if mw == 6 else ("Odyssey" if mw == 20 else ("Classic" if mw == 4 else "Standard"))
-        size_label = existing_header.world_size_label if existing_header else default_size_label
+        mw = world_macro.macro_width if world_macro else (existing_header.macro_width if existing_header else 12)
+        mh = world_macro.macro_height if world_macro else (existing_header.macro_height if existing_header else 12)
+        default_size_label = "Colossal" if mw == 50 else ("Quick" if mw == 6 else ("Odyssey" if mw == 20 else ("Classic" if mw == 4 else "Standard")))
+        size_label = default_size_label
 
         header = SaveSlotHeader(
             slot_index=slot_idx,

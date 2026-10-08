@@ -7,8 +7,10 @@ volume hierarchy control, and seamless headless fallback via miniaudio.
 from __future__ import annotations
 
 import atexit
+import json
 import logging
 import os
+import sys
 import threading
 from pathlib import Path
 from typing import List, Optional, Union
@@ -19,6 +21,18 @@ from eldoria_py.audio.stream import AudioStream
 from eldoria_py.audio.types import AudioChannel, AudioTrackInfo, PlaybackState
 
 logger = logging.getLogger("eldoria.audio")
+
+
+def _emit_web_audio_event(action: str, **kwargs) -> None:
+    """Emits an in-band OSC 777 sequence consumed by web terminal audio managers."""
+    if os.environ.get("ELDORIA_WEB_AUDIO") == "1":
+        payload = json.dumps({"action": action, **kwargs})
+        try:
+            sys.stdout.write(f"\033]777;eldoria-audio;{payload}\007")
+            sys.stdout.flush()
+        except Exception:
+            pass
+
 
 try:
     import miniaudio
@@ -51,6 +65,11 @@ class AudioEngine:
 
     def _start_device(self, buffersize_msec: Optional[int] = None) -> bool:
         """Initializes and starts the miniaudio PlaybackDevice with the master mixer callback."""
+        if os.environ.get("ELDORIA_WEB_AUDIO") == "1":
+            logger.info("ELDORIA_WEB_AUDIO active; routing audio through web terminal OSC events.")
+            self.is_available = True
+            return True
+
         if not MINIAUDIO_AVAILABLE:
             logger.info("miniaudio library not available; running in headless audio mode.")
             self.is_available = False
@@ -102,6 +121,9 @@ class AudioEngine:
             True if track resolved and started, False otherwise.
         """
         resolved = resolve_audio_path("BGM", name_or_path)
+        track_asset = resolved.stem if resolved else Path(name_or_path).stem
+        _emit_web_audio_event("play_bgm", track=track_asset, loop=loop, volume=volume)
+
         if resolved is None:
             logger.warning("BGM asset not found: '%s'", name_or_path)
             return False
@@ -118,14 +140,17 @@ class AudioEngine:
 
     def stop_bgm(self) -> None:
         """Stops the current background music immediately."""
+        _emit_web_audio_event("stop_bgm")
         self.mixer.stop_bgm()
 
     def pause_bgm(self) -> None:
         """Pauses the current background music."""
+        _emit_web_audio_event("pause_bgm")
         self.mixer.pause_bgm()
 
     def resume_bgm(self) -> None:
         """Resumes paused background music."""
+        _emit_web_audio_event("resume_bgm")
         self.mixer.resume_bgm()
 
     def fade_to_bgm(
@@ -149,6 +174,15 @@ class AudioEngine:
             True if resolved and fading initiated, False otherwise.
         """
         resolved = resolve_audio_path("BGM", name_or_path)
+        track_asset = resolved.stem if resolved else Path(name_or_path).stem
+        _emit_web_audio_event(
+            "fade_to_bgm",
+            track=track_asset,
+            duration=duration_seconds,
+            loop=loop,
+            volume=volume,
+        )
+
         if resolved is None:
             logger.warning("BGM asset not found for crossfade: '%s'", name_or_path)
             return False
@@ -160,12 +194,24 @@ class AudioEngine:
             volume=volume,
             name=Path(name_or_path).stem,
         )
-        self.mixer.start_crossfade(stream, duration_seconds=duration_seconds)
+        if os.environ.get("ELDORIA_WEB_AUDIO") == "1":
+            # In web mode, the browser Web Audio API handles crossfading over duration_seconds.
+            # Immediately update the mixer's current_bgm so that state tracking
+            # (such as get_current_bgm() and pre_battle_bgm_track) remains 100% accurate.
+            self.mixer.play_bgm(stream)
+        else:
+            self.mixer.start_crossfade(stream, duration_seconds=duration_seconds)
         return True
 
     def fade_out_bgm(self, duration_seconds: float = 1.5) -> None:
         """Smoothly fades out current BGM to silence over duration_seconds."""
-        self.mixer.start_fade_out(duration_seconds=duration_seconds)
+        _emit_web_audio_event("fade_out_bgm", duration=duration_seconds)
+        if os.environ.get("ELDORIA_WEB_AUDIO") == "1":
+            # In web mode, the browser Web Audio API handles the fade-out.
+            # Mark the mixer BGM as stopped so get_current_bgm() reflects silence.
+            self.mixer.stop_bgm()
+        else:
+            self.mixer.start_fade_out(duration_seconds=duration_seconds)
 
     def get_current_bgm(self) -> Optional[AudioTrackInfo]:
         """Returns metadata and playback state of current BGM track, or None if idle."""
@@ -191,6 +237,9 @@ class AudioEngine:
             Handle ID integer if resolved and started, None if asset could not be found.
         """
         resolved = resolve_audio_path("SFX", name_or_path)
+        sound_asset = resolved.stem if resolved else Path(name_or_path).stem
+        _emit_web_audio_event("play_sfx", sound=sound_asset, loop=loop, volume=volume)
+
         if resolved is None:
             logger.warning("SFX asset not found: '%s'", name_or_path)
             return None
@@ -206,14 +255,17 @@ class AudioEngine:
 
     def stop_sfx(self, handle_id: Optional[int] = None) -> None:
         """Stops a specific SFX handle, or all sound effects if handle_id is None."""
+        _emit_web_audio_event("stop_sfx", handle_id=handle_id)
         self.mixer.stop_sfx(handle_id)
 
     def pause_sfx(self, handle_id: Optional[int] = None) -> None:
         """Pauses a specific SFX handle, or all sound effects if handle_id is None."""
+        _emit_web_audio_event("pause_sfx", handle_id=handle_id)
         self.mixer.pause_sfx(handle_id)
 
     def resume_sfx(self, handle_id: Optional[int] = None) -> None:
         """Resumes a specific SFX handle, or all sound effects if handle_id is None."""
+        _emit_web_audio_event("resume_sfx", handle_id=handle_id)
         self.mixer.resume_sfx(handle_id)
 
     def is_sfx_playing(self, handle_id: int) -> bool:
@@ -228,14 +280,17 @@ class AudioEngine:
 
     def set_master_volume(self, volume: float) -> None:
         """Sets master volume (0.0 to 1.0)."""
+        _emit_web_audio_event("set_master_volume", volume=volume)
         self.mixer.set_master_volume(volume)
 
     def set_music_volume(self, volume: float) -> None:
         """Sets music volume (0.0 to 1.0)."""
+        _emit_web_audio_event("set_music_volume", volume=volume)
         self.mixer.set_music_volume(volume)
 
     def set_sfx_volume(self, volume: float) -> None:
         """Sets SFX volume (0.0 to 1.0)."""
+        _emit_web_audio_event("set_sfx_volume", volume=volume)
         self.mixer.set_sfx_volume(volume)
 
     def get_master_volume(self) -> float:
@@ -254,11 +309,14 @@ class AudioEngine:
         """Adjusts master volume by delta and returns the new value clamped to 0.0 - 1.0."""
         new_vol = max(0.0, min(1.0, self.mixer.master_volume + delta))
         self.mixer.set_master_volume(new_vol)
+        _emit_web_audio_event("set_master_volume", volume=new_vol)
         return new_vol
 
     def toggle_mute(self) -> bool:
         """Toggles audio mute and returns new muted state."""
-        return self.mixer.toggle_mute()
+        muted = self.mixer.toggle_mute()
+        _emit_web_audio_event("set_mute", muted=muted)
+        return muted
 
     @property
     def is_muted(self) -> bool:
@@ -270,6 +328,8 @@ class AudioEngine:
     def cleanup(self) -> None:
         """Stops all playback and releases native audio device resources."""
         with self._lock:
+            _emit_web_audio_event("stop_bgm")
+            _emit_web_audio_event("stop_sfx")
             self.mixer.stop_bgm()
             self.mixer.stop_sfx()
             if self._device is not None:

@@ -12,11 +12,12 @@ Verifies:
 9. Quit modal transitions.
 """
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
 from eldoria_py.terminal.input import KeyCode, KeyEvent
+from eldoria_py.terminal.screen import TerminalScreen
 from eldoria_py.terminal.box import visible_width, strip_ansi
 from eldoria_py.combat.stats import StatId, EquipmentSlot, TargetScope
 from eldoria_py.combat.actions import BattleAction, ActionCategory, ACTIONS
@@ -428,6 +429,18 @@ class TestMainMenuScreen(unittest.TestCase):
         self.mock_noise_map._save_to_slot.assert_called_once_with(1)
         self.assertIn("Progress saved to Slot 1", self.screen.banner_message)
 
+    def test_save_slot_cursor_defaults_to_active_slot(self):
+        """Tests that opening Save category sets save_slot_cursor to noise_map_screen.active_slot - 1."""
+        self.mock_noise_map.active_slot = 3
+        self.screen.category_idx = self.screen.CATEGORIES.index("Save")
+        self.screen._enter_submenu()
+        self.assertEqual(self.screen.save_slot_cursor, 2)
+
+        # And after saving to slot 2, cursor updates to 1
+        self.screen.save_slot_cursor = 1
+        self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
+        self.assertEqual(self.screen.save_slot_cursor, 1)
+
     def test_quit_modal_options(self):
         """Tests quit modal choices: Return to Title and Quit Desktop."""
         self.screen.category_idx = self.screen.CATEGORIES.index("Quit")
@@ -442,12 +455,116 @@ class TestMainMenuScreen(unittest.TestCase):
         self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
         self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
 
-        # Option 1: Quit Desktop sets is_running = False
+        # Option 1: Quit Desktop initiates fade-out then sets is_running = False
+        self.screen._is_active = True
         self.mock_core.is_running = True
         self.screen.focus_mode = "MODAL"
         self.screen.quit_option_cursor = 1
         self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
+        self.assertTrue(self.screen.is_fading_out)
+        self.assertTrue(self.mock_core.is_running)
+
+        # Advance fade-out duration to trigger shutdown
+        self.context.set(SMState.ContextDeltaTime, self.screen.fade_out_duration)
+        self.screen.update(self.context)
+        self.assertFalse(self.screen.is_fading_out)
         self.assertFalse(self.mock_core.is_running)
+
+    def test_quit_desktop_fade_out_progression_and_shutdown(self):
+        """Verifies smooth fade-out progression and eventual shutdown on Quit to Desktop."""
+        self.screen.category_idx = self.screen.CATEGORIES.index("Quit")
+        self.screen.focus_mode = "MODAL"
+        self.screen.quit_option_cursor = 1
+        self.mock_core.is_running = True
+
+        self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
+        self.assertTrue(self.screen.is_fading_out)
+        self.assertEqual(self.screen.fade_out_elapsed, 0.0)
+        self.assertTrue(self.mock_core.is_running)
+
+        # Partial progression: elapsed advances, still fading out, game still running
+        self.context.set(SMState.ContextDeltaTime, 0.2)
+        self.screen.update(self.context)
+        self.assertTrue(self.screen.is_fading_out)
+        self.assertAlmostEqual(self.screen.fade_out_elapsed, 0.2)
+        self.assertTrue(self.mock_core.is_running)
+
+        # Remaining duration: completes fade-out and triggers shutdown procedure
+        self.context.set(SMState.ContextDeltaTime, 0.3)
+        self.screen.update(self.context)
+        self.assertFalse(self.screen.is_fading_out)
+        self.assertFalse(self.mock_core.is_running)
+
+    def test_quit_desktop_fade_out_key_skips_to_shutdown(self):
+        """Verifies pressing any key during fade-out immediately triggers shutdown."""
+        self.screen.category_idx = self.screen.CATEGORIES.index("Quit")
+        self.screen.focus_mode = "MODAL"
+        self.screen.quit_option_cursor = 1
+        self.mock_core.is_running = True
+
+        self.screen._handle_input(KeyEvent(key=KeyCode.ENTER), self.context, self.mock_core)
+        self.assertTrue(self.screen.is_fading_out)
+
+        # Player taps Escape or Space during fade-out
+        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.ESCAPE)])
+        self.context.set(SMState.ContextDeltaTime, 0.05)
+        self.screen.update(self.context)
+
+        self.assertFalse(self.screen.is_fading_out)
+        self.assertFalse(self.mock_core.is_running)
+
+    def test_quit_desktop_render_write_filter(self):
+        """Verifies _render applies dim_ansi write filter during fade-out and clears it in finally."""
+        self.screen.trigger_fade_out(0.45)
+        self.screen.fade_out_elapsed = 0.225
+
+        filter_applied = []
+
+        def mock_set_filter(fn):
+            filter_applied.append(fn)
+
+        with patch.object(TerminalScreen, "set_write_filter", side_effect=mock_set_filter):
+            with patch.object(TerminalScreen, "write"):
+                with patch.object(TerminalScreen, "flush"):
+                    self.screen._render()
+
+        self.assertGreaterEqual(len(filter_applied), 2)
+        self.assertTrue(callable(filter_applied[0]))
+        self.assertIsNone(filter_applied[-1])
+
+    def test_quit_desktop_render_buffer_wide_fade_out(self):
+        """Verifies buffer-wide fade-out dims all borders, labels, and text to pitch black at factor 0.0."""
+        self.screen.trigger_fade_out(0.45)
+        self.screen.fade_out_elapsed = 0.45  # 100% progress -> brightness = 0.0
+
+        written_chunks = []
+
+        def mock_write(text):
+            if TerminalScreen._write_filter is not None:
+                text = TerminalScreen._write_filter(text)
+            written_chunks.append(text)
+
+        with patch.object(TerminalScreen, "write", side_effect=mock_write):
+            with patch.object(TerminalScreen, "flush"):
+                self.screen._render()
+
+        full_frame = "".join(written_chunks)
+        # Buffer must begin with default foreground dimmed to RGB 0,0,0
+        self.assertTrue(full_frame.startswith("\033[38;2;0;0;0m"))
+        # Resets must be followed by RGB 0,0,0
+        self.assertIn("\033[0m\033[38;2;0;0;0m", full_frame)
+        # Borders and categories must exist but dimmed
+        self.assertIn("┌", full_frame)
+        self.assertIn("└", full_frame)
+        self.assertIn("Quit", full_frame)
+        # Control sequences must be preserved
+        self.assertIn("\033[?2026h", full_frame)
+        self.assertIn("\033[?2026l", full_frame)
+        # Verify no un-dimmed 16-color foregrounds remain
+        self.assertNotIn("\033[1;33m", full_frame)
+        self.assertNotIn("\033[36m", full_frame)
+        self.assertNotIn("\033[90m", full_frame)
+        self.assertNotIn("\033[1;37m", full_frame)
 
     def test_quit_modal_line_highlighting(self):
         """Verifies full-width blue line highlighting on active choice in Quit modal."""

@@ -11,7 +11,7 @@ import os
 import shutil
 import tempfile
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from eldoria_py.combat.entities import Party, PartyMember, create_default_party
 from eldoria_py.combat.portrait import Gender
@@ -19,11 +19,13 @@ from eldoria_py.combat.stats import BattleActionType, StatId
 from eldoria_py.core.context import Context
 from eldoria_py.core.fsm import SMState
 from eldoria_py.core.save_manager import SaveManager
-from eldoria_py.procgen.map_generator import MapTile
+from eldoria_py.procgen.map_generator import MapTile, BiomeType
+from eldoria_py.states.main_menu_screen import GSMainMenuScreen
 from eldoria_py.states.party_builder import GSPartyBuilderScreen
 from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
 from eldoria_py.states.title_screen import GSTitleScreen
 from eldoria_py.terminal.input import KeyCode, KeyEvent
+from eldoria_py.terminal.screen import TerminalScreen
 
 
 class TestSaveLoadUI(unittest.TestCase):
@@ -87,6 +89,13 @@ class TestSaveLoadUI(unittest.TestCase):
 
         # Press Enter to load Slot 1
         title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
+        self.assertTrue(title.is_fading_out)
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Advance fade-out duration
+        self.context.set(SMState.ContextDeltaTime, title.fade_out_duration)
+        title.update(self.context)
+        self.assertFalse(title.is_fading_out)
         self.assertIsNone(title.active_dialog)
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
         self.assertEqual(self.context.get("active_slot"), 1)
@@ -286,6 +295,181 @@ class TestSaveLoadUI(unittest.TestCase):
         self.assertIsNone(map_screen.active_poi)
         self.assertEqual(map_screen.current_sector, town_poi.sector_coord)
         self.assertEqual((map_screen.player_x, map_screen.player_y), town_poi.local_pos)
+
+    def test_menu_save_to_new_slot_copies_and_updates_active_slot(self) -> None:
+        """Verify Main Menu save to another slot copies world.map and updates active_slot."""
+        loaded_party, loaded_macro, loaded_state = self.save_manager.load_game(1)
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24)
+
+        ctx = Context()
+        ctx.set("party", loaded_party)
+        ctx.set("world_macro", loaded_macro)
+        ctx.set("exploration_state", loaded_state)
+        ctx.set("active_slot", 1)
+        ctx.set(SMState.ContextEldoriaCore, self.mock_core)
+
+        map_screen.save_manager = self.save_manager
+        map_screen.enter(ctx)
+        self.assertEqual(map_screen.active_slot, 1)
+
+        menu = GSMainMenuScreen(party=loaded_party)
+        menu.save_manager = self.save_manager
+        menu.configure_menu(
+            party=loaded_party,
+            noise_map_screen=map_screen,
+            sector_coords=map_screen.current_sector,
+            playtime_seconds=120,
+        )
+
+        # Open Save category - cursor should default to active_slot - 1 = 0
+        menu.category_idx = menu.CATEGORIES.index("Save")
+        menu._enter_submenu()
+        self.assertEqual(menu.save_slot_cursor, 0)
+
+        # Move cursor to Slot 2
+        menu._handle_input(KeyEvent(key=KeyCode.DOWN), ctx, self.mock_core)
+        self.assertEqual(menu.save_slot_cursor, 1)
+
+        # Save to Slot 2
+        menu._handle_input(KeyEvent(key=KeyCode.ENTER), ctx, self.mock_core)
+
+        # Slot 2 should exist and map bytes match Slot 1
+        slot1_map = self.save_manager.get_slot_dir(1) / "world.map"
+        slot2_map = self.save_manager.get_slot_dir(2) / "world.map"
+        self.assertTrue(slot2_map.is_file())
+        self.assertEqual(slot1_map.read_bytes(), slot2_map.read_bytes())
+
+        # active_slot on map_screen must be updated to 2
+        self.assertEqual(map_screen.active_slot, 2)
+        # save_slot_cursor remains on 1
+        self.assertEqual(menu.save_slot_cursor, 1)
+        self.assertIn("Progress saved to Slot 2", menu.banner_message)
+
+    def test_map_screen_fade_in_on_load_game(self) -> None:
+        """Verify GSNoiseMapTestScreen activates fade-in when loaded from GSTitleScreen."""
+        title = GSTitleScreen(screen_width=80, screen_height=24)
+        title.save_manager = self.save_manager
+        title._execute_menu_action("Load Game")
+
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24, fade_in_duration=0.45)
+        self.mock_game_state.states = {"GSNoiseMapTestScreen": map_screen}
+
+        # Press Enter to load Slot 1
+        title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
+        self.assertTrue(title.is_fading_out)
+
+        # Complete fade-out in title screen
+        self.context.set(SMState.ContextDeltaTime, title.fade_out_duration)
+        title.update(self.context)
+
+        # Map screen should now be armed for fade-in
+        self.assertTrue(map_screen.is_fading_in)
+        self.assertEqual(map_screen.fade_in_elapsed, 0.0)
+
+        # Enter map screen with the context
+        map_screen.enter(self.context)
+        self.assertTrue(map_screen.is_fading_in)
+        self.assertFalse(self.context.get("fade_in_map"))  # consumed
+
+        # Partial progression during update
+        self.context.set(SMState.ContextDeltaTime, 0.2)
+        self.context.set(SMState.ContextKeysPressed, [])
+        self.mock_game_state.current_state = map_screen.name
+        map_screen.update(self.context)
+        self.assertTrue(map_screen.is_fading_in)
+        self.assertAlmostEqual(map_screen.fade_in_elapsed, 0.2)
+
+        # Complete fade-in duration
+        self.context.set(SMState.ContextDeltaTime, 0.3)
+        map_screen.update(self.context)
+        self.assertFalse(map_screen.is_fading_in)
+
+    def test_map_screen_fade_in_on_party_builder_embark(self) -> None:
+        """Verify GSNoiseMapTestScreen activates fade-in when embarking from GSPartyBuilderScreen."""
+        builder = GSPartyBuilderScreen(screen_width=80, screen_height=24)
+        builder.save_manager = self.save_manager
+        builder.auto_fill_templates()
+
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24, fade_in_duration=0.45)
+        self.mock_game_state.states = {"GSNoiseMapTestScreen": map_screen}
+
+        # Open embark modal
+        builder._handle_input(KeyEvent(key=KeyCode.SPACE, char=" "), self.context, self.mock_core)
+        # Select standard size
+        builder._handle_input(KeyEvent(key=KeyCode.CHAR, char="2"), self.context, self.mock_core)
+        # Select slot 2
+        builder._handle_input(KeyEvent(key=KeyCode.CHAR, char="2"), self.context, self.mock_core)
+
+        # Map screen armed and context flagged
+        self.assertTrue(map_screen.is_fading_in)
+        self.assertTrue(self.context.get("fade_in_map"))
+
+        # Enter map screen
+        map_screen.enter(self.context)
+        self.assertTrue(map_screen.is_fading_in)
+        self.assertFalse(self.context.get("fade_in_map"))
+
+    def test_map_screen_no_fade_in_when_not_requested(self) -> None:
+        """Verify map screen does not fade in during normal exploration or returning from menu/combat."""
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24)
+        ctx = Context()
+        ctx.set(SMState.ContextEldoriaCore, self.mock_core)
+
+        map_screen.enter(ctx)
+        self.assertFalse(map_screen.is_fading_in)
+
+    def test_map_screen_fade_in_snaps_on_keypress_without_dropping_input(self) -> None:
+        """Verify pressing a key during map fade-in snaps to full brightness and executes action."""
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24, fade_in_duration=0.45)
+        map_screen.trigger_fade_in()
+        self.assertTrue(map_screen.is_fading_in)
+
+        # Set up walkable tile so player can move
+        map_screen.world_macro = self.world_macro
+        map_screen.player_x = 10
+        map_screen.player_y = 10
+        curr_map = map_screen._current_map()
+        curr_map.tiles[10][10].biome = BiomeType.PLAINS
+        curr_map.tiles[10][10].exits = [True, True, True, True]
+        curr_map.tiles[11][10].biome = BiomeType.PLAINS
+        curr_map.tiles[11][10].exits = [True, True, True, True]
+
+        ctx = Context()
+        ctx.set(SMState.ContextEldoriaCore, self.mock_core)
+        ctx.set(SMState.ContextDeltaTime, 0.05)
+        self.mock_game_state.current_state = map_screen.name
+
+        # Player presses DOWN arrow during fade-in
+        move_key = KeyEvent(key=KeyCode.DOWN)
+        ctx.set(SMState.ContextKeysPressed, [move_key])
+
+        map_screen.update(ctx)
+
+        # Fade-in should immediately snap to finished
+        self.assertFalse(map_screen.is_fading_in)
+        # Player should have actually moved down (input was not dropped!)
+        self.assertEqual(map_screen.player_y, 11)
+
+    def test_map_screen_render_write_filter(self) -> None:
+        """Verify _render applies dim_ansi write filter during fade-in and clears it in finally block."""
+        map_screen = GSNoiseMapTestScreen(map_width=54, map_height=24, fade_in_duration=0.45)
+        map_screen.trigger_fade_in()
+        map_screen.fade_in_elapsed = 0.225  # ~50% brightness
+
+        filter_applied = []
+
+        def mock_set_filter(fn):
+            filter_applied.append(fn)
+
+        with patch.object(TerminalScreen, "set_write_filter", side_effect=mock_set_filter):
+            with patch.object(TerminalScreen, "write"):
+                with patch.object(TerminalScreen, "flush"):
+                    map_screen._render()
+
+        # Should have set a callable filter, then reset to None in finally
+        self.assertGreaterEqual(len(filter_applied), 2)
+        self.assertTrue(callable(filter_applied[0]))
+        self.assertIsNone(filter_applied[-1])
 
 
 if __name__ == "__main__":

@@ -54,6 +54,10 @@ SNARKY_WORLD_GEN_MESSAGES: List[str] = [
 class GSPartyBuilderScreen(SMState):
     """Player Party Builder managing 5 fixed character positions with component UI controls."""
 
+    MODAL_STEP_SIZE: int = 1
+    MODAL_STEP_SLOTS: int = 2
+    MODAL_STEP_CONFIRM_COLOSSAL: int = 3
+
     def __init__(self, screen_width: int = 80, screen_height: int = 24) -> None:
         super().__init__("GSPartyBuilderScreen")
         self.screen_width: int = screen_width
@@ -112,7 +116,7 @@ class GSPartyBuilderScreen(SMState):
         # Step 1: World Size Panel
         self.embark_size_panel = UIPanel(
             left_top=ATCoordinates(6, left_c),
-            right_bottom=ATCoordinates(12, right_c),
+            right_bottom=ATCoordinates(13, right_c),
             has_border=True,
             title="Choose World Size",
         )
@@ -129,9 +133,13 @@ class GSPartyBuilderScreen(SMState):
             "[3] Odyssey", row=9, align="center",
             fg_color=ColorLibrary.ApplePurpleLight, decorations=ATDecoration(bold=True)
         )
-        self.size_divider = self.embark_size_panel.add_divider(row=10)
+        self.opt4_label = self.embark_size_panel.add_label(
+            "[4] Colossal", row=10, align="center",
+            fg_color=ColorLibrary.ApplePinkLight, decorations=ATDecoration(bold=True)
+        )
+        self.size_divider = self.embark_size_panel.add_divider(row=11)
         self.size_hint_label = self.embark_size_panel.add_label(
-            "[1-3] Choose Size   [Esc] Cancel", row=11, align="center",
+            "[1-4] Choose Size   [Esc] Cancel", row=12, align="center",
             fg_color=ColorLibrary.DarkGrey
         )
         self.embark_size_panel.activate()
@@ -139,7 +147,7 @@ class GSPartyBuilderScreen(SMState):
         # Step 2: Save Slot Panel
         self.embark_slot_panel = UIPanel(
             left_top=ATCoordinates(6, left_c),
-            right_bottom=ATCoordinates(12, right_c),
+            right_bottom=ATCoordinates(13, right_c),
             has_border=True,
             title="Select Save Slot",
         )
@@ -153,12 +161,43 @@ class GSPartyBuilderScreen(SMState):
         self.slot3_label = self.embark_slot_panel.add_label(
             "[3] Slot 3: ··· Empty ···", row=9, align="center", fg_color=ColorLibrary.DarkGrey
         )
-        self.slot_divider = self.embark_slot_panel.add_divider(row=10)
+        self.slot_divider = self.embark_slot_panel.add_divider(row=11)
         self.slot_hint_label = self.embark_slot_panel.add_label(
-            "[1-3] Select Slot & Embark   [Esc] Back", row=11, align="center",
+            "[1-3] Select Slot & Embark   [Esc] Back", row=12, align="center",
             fg_color=ColorLibrary.DarkGrey
         )
         self.embark_slot_panel.activate()
+
+        # Step 3: Colossal Confirmation Panel
+        self.embark_confirm_panel = UIPanel(
+            left_top=ATCoordinates(6, left_c),
+            right_bottom=ATCoordinates(13, right_c),
+            has_border=True,
+            title="⚠ Colossal World Warning ⚠",
+        )
+        self.embark_confirm_panel.title_color = ColorLibrary.AppleYellowLight
+        self.confirm_lbl1 = self.embark_confirm_panel.add_label(
+            "Colossal worlds span 50x50 sectors", row=7, align="center",
+            fg_color=ColorLibrary.White, decorations=ATDecoration(bold=True)
+        )
+        self.confirm_lbl2 = self.embark_confirm_panel.add_label(
+            "(2,500 sectors / 3,240,000 tiles).", row=8, align="center",
+            fg_color=ColorLibrary.AppleCyanLight
+        )
+        self.confirm_lbl3 = self.embark_confirm_panel.add_label(
+            "Distances between towns are immense", row=9, align="center",
+            fg_color=ColorLibrary.DarkGrey
+        )
+        self.confirm_lbl4 = self.embark_confirm_panel.add_label(
+            "and world generation takes ~45-60s.", row=10, align="center",
+            fg_color=ColorLibrary.DarkGrey
+        )
+        self.confirm_divider = self.embark_confirm_panel.add_divider(row=11)
+        self.confirm_action_label = self.embark_confirm_panel.add_label(
+            "[Y] Proceed    [N / Esc] Go Back", row=12, align="center",
+            fg_color=ColorLibrary.AppleGreenLight, decorations=ATDecoration(bold=True)
+        )
+        self.embark_confirm_panel.activate()
 
     @property
     def selected_slot_idx(self) -> int:
@@ -453,10 +492,24 @@ class GSPartyBuilderScreen(SMState):
                     self.selected_world_size = "odyssey"
                     self.embark_modal_step = 2
                     self._refresh_slot_panel()
+                elif key_info.char in ("4", "c", "C"):
+                    self.selected_world_size = "colossal"
+                    self.embark_modal_step = 3
+                    self.embark_confirm_panel.set_all_dirty()
                 elif key_info.key == KeyCode.ESCAPE:
                     self.embark_modal_step = None
                     self.modal_just_closed = True
                     self._update_header_and_status()
+                return
+
+            elif self.embark_modal_step == 3:
+                # Step 3: Colossal Confirmation Warning
+                if key_info.char in ("y", "Y", "1") or key_info.key == KeyCode.ENTER:
+                    self.embark_modal_step = 2
+                    self._refresh_slot_panel()
+                elif key_info.char in ("n", "N", "2") or key_info.key == KeyCode.ESCAPE:
+                    self.embark_modal_step = 1
+                    self.embark_size_panel.set_all_dirty()
                 return
 
             elif self.embark_modal_step == 2:
@@ -558,10 +611,13 @@ class GSPartyBuilderScreen(SMState):
                     context.set("world_macro", world_macro)
                     context.set("exploration_state", exp_state)
                     context.set("active_slot", slot_idx)
+                    context.set("fade_in_map", True)
 
                     if core and hasattr(core, "game_state"):
                         map_screen = core.game_state.states.get("GSNoiseMapTestScreen")
                         if map_screen:
+                            if hasattr(map_screen, "trigger_fade_in"):
+                                map_screen.trigger_fade_in()
                             map_screen.party = party
                             map_screen.world_macro = world_macro
                             map_screen.active_slot = slot_idx
@@ -740,11 +796,13 @@ class GSPartyBuilderScreen(SMState):
         TerminalScreen.flush()
 
     def _render_embark_modal(self) -> None:
-        """Renders the active modal panel (Step 1 or Step 2) with clean background clearing."""
+        """Renders the active modal panel (Step 1, Step 2, or Step 3) with clean background clearing."""
         if self.embark_modal_step == 1:
             panel = self.embark_size_panel
         elif self.embark_modal_step == 2:
             panel = self.embark_slot_panel
+        elif self.embark_modal_step == 3:
+            panel = self.embark_confirm_panel
         else:
             return
 

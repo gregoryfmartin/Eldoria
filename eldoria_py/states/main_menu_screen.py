@@ -14,7 +14,7 @@ from typing import List, Optional, Tuple, Any
 from ..core.context import Context
 from ..core.fsm import SMState
 from ..terminal.ansi import ATCoordinates, ATControlSequences
-from ..terminal.color import TrueColor, ColorLibrary
+from ..terminal.color import TrueColor, ColorLibrary, dim_ansi, dim_buffer
 from ..terminal.input import KeyCode, KeyEvent
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import clear_buffer_tail, strip_ansi, truncate_ansi, visible_width, wrap_text
@@ -110,11 +110,19 @@ class GSMainMenuScreen(SMState):
         EquipmentSlot.CAPE: "Cape",
     }
 
-    def __init__(self, party: Optional[Party] = None) -> None:
+    def __init__(
+        self,
+        party: Optional[Party] = None,
+        fade_out_duration: float = 0.45,
+    ) -> None:
         super().__init__("GSMainMenuScreen")
         self.party: Party = party if party is not None else create_default_party()
         self.noise_map_screen: Any = None
         self.save_manager: SaveManager = SaveManager()
+        self.fade_out_duration: float = fade_out_duration
+        self.is_fading_out: bool = False
+        self.fade_out_elapsed: float = 0.0
+        self._pending_quit_desktop: bool = False
 
         # Telemetry
         self.sector_coords: Tuple[int, int] = (0, 0)
@@ -254,8 +262,19 @@ class GSMainMenuScreen(SMState):
         except Exception:
             self.slot_headers = [None, None, None]
 
+    def trigger_fade_out(self, duration: Optional[float] = None) -> None:
+        """Arms a fade-out transition toward pitch black."""
+        self.is_fading_out = True
+        self.fade_out_elapsed = 0.0
+        self._pending_quit_desktop = True
+        if duration is not None and duration > 0:
+            self.fade_out_duration = duration
+
     def enter(self, context: Context) -> None:
         self._is_active = True
+        self.is_fading_out = False
+        self.fade_out_elapsed = 0.0
+        self._pending_quit_desktop = False
         super().enter(context)
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
@@ -301,6 +320,29 @@ class GSMainMenuScreen(SMState):
             self.banner_timer -= delta_time
             if self.banner_timer <= 0:
                 self.banner_message = ""
+
+        # Fade-out progression
+        if self.is_fading_out:
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                keys_pressed.clear()
+                self.fade_out_elapsed = self.fade_out_duration
+
+            self.fade_out_elapsed += float(delta_time)
+
+            if self.fade_out_elapsed >= self.fade_out_duration:
+                self.is_fading_out = False
+                if self._pending_quit_desktop:
+                    self._pending_quit_desktop = False
+                    self._is_active = False
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.write(ATControlSequences.CursorShow)
+                    TerminalScreen.flush()
+                    if core:
+                        core.is_running = False
+                return
+
+            self._render()
+            return
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
@@ -414,7 +456,10 @@ class GSMainMenuScreen(SMState):
                     self.quest_expanded_nodes.add(act_q.quest_id)
         elif cat == "Save":
             self.focus_mode = "SUBMENU"
-            self.save_slot_cursor = 0
+            if self.noise_map_screen and self.noise_map_screen.active_slot:
+                self.save_slot_cursor = max(0, min(2, self.noise_map_screen.active_slot - 1))
+            else:
+                self.save_slot_cursor = 0
             self._refresh_save_headers()
         else:
             self.focus_mode = "SUBMENU"
@@ -508,9 +553,22 @@ class GSMainMenuScreen(SMState):
                     if core and hasattr(core, "game_state"):
                         core.game_state.trigger("ToTitle", context)
                 elif self.quit_option_cursor == 1:
-                    self._is_active = False
-                    if core:
-                        core.is_running = False
+                    if self.fade_out_duration > 0:
+                        self.is_fading_out = True
+                        self.fade_out_elapsed = 0.0
+                        self._pending_quit_desktop = True
+                        try:
+                            from ..audio.sound_engine import get_audio_engine
+                            get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=self.fade_out_duration)
+                        except Exception:
+                            pass
+                    else:
+                        self._is_active = False
+                        TerminalScreen.clear_screen()
+                        TerminalScreen.write(ATControlSequences.CursorShow)
+                        TerminalScreen.flush()
+                        if core:
+                            core.is_running = False
                 else:
                     self.focus_mode = "CATEGORIES"
             return
@@ -777,6 +835,7 @@ class GSMainMenuScreen(SMState):
                     exploration_state={"current_sector": list(self.sector_coords), "player_pos": [0, 0]},
                     playtime_seconds=self.playtime_seconds,
                 )
+            self.save_slot_cursor = slot_num - 1
             self._refresh_save_headers()
             self._set_banner(f"★ Progress saved to Slot {slot_num}!")
 
@@ -826,8 +885,21 @@ class GSMainMenuScreen(SMState):
         out.append(clear_buffer_tail(41, 45))
         out.append(ATControlSequences.DrawOptimizeOff)
 
-        TerminalScreen.write("".join(out))
-        TerminalScreen.flush()
+        brightness = 1.0
+        if self.is_fading_out and self.fade_out_duration > 0:
+            progress = min(1.0, max(0.0, self.fade_out_elapsed / self.fade_out_duration))
+            brightness = max(0.0, 1.0 - progress)
+
+        if brightness < 0.999:
+            TerminalScreen.set_write_filter(lambda s: dim_buffer(s, brightness))
+        else:
+            TerminalScreen.set_write_filter(None)
+
+        try:
+            TerminalScreen.write("".join(out))
+            TerminalScreen.flush()
+        finally:
+            TerminalScreen.set_write_filter(None)
 
     def _render_left_rail(self) -> list[str]:
         lines: list[str] = []

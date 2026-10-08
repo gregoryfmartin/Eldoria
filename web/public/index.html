@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eldoria — Chronicles of the Broken Rune</title>
+    <!-- Fonts: IBM Plex Mono, JetBrains Mono, Fira Code, Cinzel, Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Fira+Code:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- xterm.js 5.3.0 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css">
+    <!-- Sleek Eldoria Modern Theme -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <!-- Ambient Stage Glow -->
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <!-- Minimalist Floating Header -->
+    <header class="game-header">
+        <div class="brand">
+            <span class="brand-name">ELDORIA</span>
+        </div>
+
+        <div class="header-right">
+            <div id="connection-status" class="status-indicator" title="Connected to server">
+                <span class="status-dot"></span>
+                <span id="status-label" class="status-text">LIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Game Canvas Area -->
+    <main class="game-viewport">
+        <!-- Floating Terminal Monolith -->
+        <div class="terminal-wrapper">
+            <div class="terminal-frame">
+                <!-- Gloss Highlight Effect -->
+                <div class="frame-gloss"></div>
+                <!-- Real-time VFX Shader Layer -->
+                <div id="vfx-overlay" class="vfx-overlay"></div>
+                <!-- xterm.js DOM Mount -->
+                <div id="terminal-container"></div>
+            </div>
+        </div>
+
+        <!-- Sleek Modern Intro / Audio Unlock Modal -->
+        <div id="splash-overlay" class="splash-backdrop">
+            <div class="splash-card">
+                <div class="splash-crest">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <h1 class="splash-title">ELDORIA</h1>
+                <p class="splash-subtitle">Chronicles of the Broken Rune</p>
+                <div class="splash-divider"></div>
+
+                <button id="start-btn" class="launch-btn">
+                    <span class="btn-text">Enter Realm</span>
+                    <span class="btn-shimmer"></span>
+                </button>
+
+                <p class="splash-hint">Press <kbd>Space</kbd> or <kbd>Enter</kbd> to begin &bull; Stereo Audio Enabled</p>
+            </div>
+        </div>
+
+        <!-- Controls Guide Modal -->
+        <div id="help-modal" class="help-modal hidden">
+            <div class="help-card">
+                <div class="help-header">
+                    <h3>Realm Controls</h3>
+                    <button id="help-close" class="icon-close-btn" aria-label="Close">✕</button>
+                </div>
+                <div class="help-grid">
+                    <div class="help-row">
+                        <span class="key-combo"><kbd>↑</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd> / <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></span>
+                        <span class="key-desc">Explore & Navigate Menus</span>
+                    </div>
+                    <div class="help-row">
+                        <span class="key-combo"><kbd>Enter</kbd> / <kbd>Space</kbd></span>
+                        <span class="key-desc">Confirm & Interact</span>
+                    </div>
+                    <div class="help-row">
+                        <span class="key-combo"><kbd>Esc</kbd> / <kbd>Backspace</kbd></span>
+                        <span class="key-desc">Back & Close Dialogue</span>
+                    </div>
+                    <div class="help-row">
+                        <span class="key-combo"><kbd>I</kbd></span>
+                        <span class="key-desc">Inventory & Character</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Sleek Glass HUD Dock (Anchored Bottom-Right) -->
+    <nav class="floating-dock">
+        <!-- Audio Volume Control -->
+        <div class="dock-item volume-control">
+            <button id="mute-btn" class="dock-btn" title="Mute / Unmute Audio" aria-label="Mute toggle">
+                <svg id="volume-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                </svg>
+                <svg id="volume-icon-off" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                    <line x1="23" y1="9" x2="17" y2="15"></line>
+                    <line x1="17" y1="9" x2="23" y2="15"></line>
+                </svg>
+            </button>
+            <div class="volume-slider-box">
+                <input id="volume-slider" type="range" min="0" max="1" step="0.05" value="1.0" aria-label="Volume Slider">
+            </div>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- Font Selector Dropdown -->
+        <div class="dock-item font-control">
+            <button id="font-btn" class="dock-btn" title="Dictate Terminal Font" aria-label="Font Settings">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 7 4 4 20 4 20 7"></polyline>
+                    <line x1="9" y1="20" x2="15" y2="20"></line>
+                    <line x1="12" y1="4" x2="12" y2="20"></line>
+                </svg>
+                <span id="current-font-label" class="dock-label">FONT</span>
+            </button>
+            <div id="font-dropdown" class="dock-dropdown hidden">
+                <div class="dropdown-header">Choose Terminal Font</div>
+                <button class="dropdown-item active" data-font="'IBM Plex Mono', monospace" data-name="IBM Plex">
+                    <span class="item-name">IBM Plex Mono</span>
+                    <span class="item-badge">Ideal</span>
+                </button>
+                <button class="dropdown-item" data-font="'Menlo', monospace" data-name="Menlo">
+                    <span class="item-name">Menlo</span>
+                    <span class="item-badge">macOS</span>
+                </button>
+                <button class="dropdown-item" data-font="'JetBrains Mono', monospace" data-name="JetBrains">
+                    <span class="item-name">JetBrains Mono</span>
+                </button>
+                <button class="dropdown-item" data-font="'Fira Code', monospace" data-name="Fira Code">
+                    <span class="item-name">Fira Code</span>
+                </button>
+                <button class="dropdown-item" data-font="'Courier New', monospace" data-name="Courier">
+                    <span class="item-name">Courier New</span>
+                </button>
+                <div class="dropdown-divider"></div>
+                <div class="custom-font-row">
+                    <input id="custom-font-input" type="text" placeholder="Custom font (e.g. Monaco)..." aria-label="Custom font name">
+                    <button id="custom-font-apply">Set</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- VFX Shaders Dropdown -->
+        <div class="dock-item vfx-control">
+            <button id="vfx-btn" class="dock-btn" title="Visual Shaders & Display Filters" aria-label="Visual Effects">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="2" x2="12" y2="6"></line>
+                    <line x1="12" y1="18" x2="12" y2="22"></line>
+                    <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line>
+                    <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line>
+                    <line x1="2" y1="12" x2="6" y2="12"></line>
+                    <line x1="18" y1="12" x2="22" y2="12"></line>
+                    <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line>
+                    <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line>
+                </svg>
+                <span id="current-vfx-label" class="dock-label">VFX</span>
+            </button>
+            <div id="vfx-dropdown" class="dock-dropdown hidden vfx-dropdown-menu">
+                <div class="dropdown-header">Visual Shaders</div>
+                <button class="dropdown-item active" data-vfx="none" data-name="Pure">
+                    <span class="item-name">Pure (Default)</span>
+                    <span class="item-badge">Clean</span>
+                </button>
+                <button class="dropdown-item" data-vfx="crt" data-name="Scanlines">
+                    <span class="item-name">CRT Scanlines</span>
+                </button>
+                <button class="dropdown-item" data-vfx="curved-crt" data-name="Arcade CRT">
+                    <span class="item-name">Curved Arcade CRT</span>
+                    <span class="item-badge">3D</span>
+                </button>
+                <button class="dropdown-item" data-vfx="amber" data-name="Amber">
+                    <span class="item-name">Amber Phosphor</span>
+                    <span class="item-badge">VT220</span>
+                </button>
+                <button class="dropdown-item" data-vfx="green" data-name="Green">
+                    <span class="item-name">Green Phosphor</span>
+                    <span class="item-badge">VT100</span>
+                </button>
+                <button class="dropdown-item" data-vfx="gameboy" data-name="Game Boy">
+                    <span class="item-name">Game Boy LCD</span>
+                    <span class="item-badge">DMG</span>
+                </button>
+                <button class="dropdown-item" data-vfx="bloom" data-name="Bloom">
+                    <span class="item-name">Aether Bloom</span>
+                    <span class="item-badge">Glow</span>
+                </button>
+                <button class="dropdown-item" data-vfx="parchment" data-name="Grimoire">
+                    <span class="item-name">Grimoire Parchment</span>
+                </button>
+                <button class="dropdown-item" data-vfx="oled" data-name="OLED">
+                    <span class="item-name">OLED Obsidian</span>
+                </button>
+                <button class="dropdown-item" data-vfx="torchlight" data-name="Torch">
+                    <span class="item-name">Dungeon Torchlight</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Keybindings Guide -->
+        <button id="help-btn" class="dock-btn" title="View Key Controls" aria-label="Controls guide">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                <path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"></path>
+            </svg>
+            <span class="dock-label">KEYS</span>
+        </button>
+
+        <div class="dock-divider"></div>
+
+        <!-- Fullscreen Toggle -->
+        <button id="fullscreen-btn" class="dock-btn" title="Toggle Fullscreen" aria-label="Fullscreen">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+            </svg>
+        </button>
+    </nav>
+
+    <!-- xterm.js 5.3.0 -->
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+    <!-- Web Audio Engine -->
+    <script src="/audio.js"></script>
+    <!-- Client Application Controller -->
+    <script src="/app.js"></script>
+</body>
+</html>

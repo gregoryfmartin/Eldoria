@@ -262,14 +262,14 @@ class WorldMacroMap:
             self.sectors.append(row)
 
         # 2. Algorithmic POI Selection & Placement
-        self._place_pois()
+        self._place_pois(progress_callback=progress_callback)
         if progress_callback:
-            progress_callback(0.88)
+            progress_callback(0.90)
 
         # 3. Carve Overworld Road through Town Sector
         self._carve_town_road()
         if progress_callback:
-            progress_callback(0.91)
+            progress_callback(0.92)
 
         # 4. Re-calculate internal exits for any modified sectors
         for sy in range(self.macro_height):
@@ -279,12 +279,12 @@ class WorldMacroMap:
         # 5. Link Inter-Sector Exits across boundaries with strict reciprocity
         self._link_sector_exits()
         if progress_callback:
-            progress_callback(0.93)
+            progress_callback(0.94)
 
         # 6. Assign non-equidistant concentric danger regions (1-9) radiating from starter town
         self._assign_concentric_regions()
         if progress_callback:
-            progress_callback(0.95)
+            progress_callback(0.96)
 
     def _assign_concentric_regions(self) -> None:
         """Assigns non-equidistant concentric danger regions (1-max_region) radiating from starter town."""
@@ -316,11 +316,12 @@ class WorldMacroMap:
                                 gx, gy, spawn_gx, spawn_gy, max_region=self.max_region, scale=self.region_scale
                             )
 
-    def _place_pois(self) -> None:
+    def _place_pois(self, progress_callback: Optional[Callable[[float], None]] = None) -> None:
         """Selects distinct sectors and places Town, Castle, and Cave POIs based on map size and regional tiers."""
         self.pois.clear()
         self.all_pois.clear()
         sector_stats = []
+        stats_by_coord: Dict[Tuple[int, int], Dict[str, Any]] = {}
 
         # Analyze each sector's biome distribution
         for sy in range(self.macro_height):
@@ -340,7 +341,7 @@ class WorldMacroMap:
                     + counts[BiomeType.TUNDRA]
                     + counts[BiomeType.SWAMP]
                 )
-                sector_stats.append({
+                stat_entry = {
                     "coord": (sx, sy),
                     "walkable": walkable_count,
                     "plains": counts[BiomeType.PLAINS],
@@ -348,7 +349,9 @@ class WorldMacroMap:
                     "mountain": counts[BiomeType.MOUNTAIN],
                     "snow": counts[BiomeType.SNOW],
                     "water": counts[BiomeType.WATER] + counts[BiomeType.DEEP_WATER],
-                })
+                }
+                sector_stats.append(stat_entry)
+                stats_by_coord[(sx, sy)] = stat_entry
 
         used_sectors = set()
 
@@ -427,6 +430,8 @@ class WorldMacroMap:
         self.all_pois.append(starter_poi)
         self.pois[starter_name] = starter_poi
         self.pois[POIType.TOWN] = starter_poi
+        if progress_callback:
+            progress_callback(0.855)
 
         # -------------------------------------------------------------
         # 2. Place Remaining Towns (Strictly Region <= 7, Varied Layouts)
@@ -523,6 +528,8 @@ class WorldMacroMap:
                 self._stamp_poi_on_tile(town_map, town_pos, town_poi)
                 self.all_pois.append(town_poi)
                 self.pois[name] = town_poi
+        if progress_callback:
+            progress_callback(0.865)
 
         # -------------------------------------------------------------
         # 3. Place Castles (1 for <=16 sectors, 2 for other sizes; Region <= 7)
@@ -595,6 +602,8 @@ class WorldMacroMap:
             self.pois[name] = castle_poi
             if POIType.CASTLE not in self.pois:
                 self.pois[POIType.CASTLE] = castle_poi
+        if progress_callback:
+            progress_callback(0.87)
 
         # -------------------------------------------------------------
         # 4. Place Cave POIs for Requisite Bosses in Matching Regions
@@ -606,13 +615,16 @@ class WorldMacroMap:
             # 6x6 (Quick Campaign): Capped at Region 6 (11 bosses)
             active_bosses = [b for b in BOSS_CAVE_MAPPING if b[1] <= 6 and b[0] != "Magmadon"]
         else:
-            # 12x12 & 20x20 (Standard & Odyssey): Full campaign (all 16 bosses culminating in Malakor)
+            # 12x12, 20x20 & 50x50 (Standard, Odyssey & Colossal): Full campaign (all 16 bosses culminating in Malakor)
             active_bosses = BOSS_CAVE_MAPPING
 
         mountain_biomes = (BiomeType.MOUNTAIN, BiomeType.SNOW)
         water_biomes = (BiomeType.WATER, BiomeType.DEEP_WATER)
 
         for idx, (boss_name, boss_reg, cave_name, preferred_biomes) in enumerate(active_bosses):
+            if progress_callback:
+                progress_callback(0.87 + 0.03 * ((idx + 1) / max(1, len(active_bosses))))
+
             candidates = []
             avail_sectors = [
                 (sx, sy)
@@ -632,6 +644,28 @@ class WorldMacroMap:
                 for sy in range(self.macro_height)
                 for sx in range(self.macro_width)
             ]
+
+            def sector_suitability(coord: Tuple[int, int]) -> float:
+                st = stats_by_coord.get(coord)
+                if not st:
+                    return 0.0
+                sc = float(st.get("walkable", 0))
+                if "Mountain" in preferred_biomes or "Cave" in preferred_biomes:
+                    sc += st.get("mountain", 0) * 5.0
+                if "Snow" in preferred_biomes or "Tundra" in preferred_biomes:
+                    sc += st.get("snow", 0) * 5.0
+                if "Coast" in preferred_biomes:
+                    sc += st.get("water", 0) * 5.0
+                if "Forest" in preferred_biomes:
+                    sc += st.get("forest", 0) * 3.0
+                if "Plains" in preferred_biomes:
+                    sc += st.get("plains", 0) * 3.0
+                reg_diff = abs(get_sector_region(coord) - boss_reg)
+                sc -= reg_diff * 200.0
+                return sc
+
+            if len(target_sectors) > 40:
+                target_sectors = sorted(target_sectors, key=sector_suitability, reverse=True)[:40]
 
             # Item 2: Pre-extract POI world coordinates once per boss placement
             poi_coords = [
@@ -725,6 +759,8 @@ class WorldMacroMap:
                     for sy in range(self.macro_height)
                     for sx in range(self.macro_width)
                 ]
+                if len(target_sectors) > 40:
+                    target_sectors = sorted(target_sectors, key=sector_suitability, reverse=True)[:40]
 
 
             if candidates:
