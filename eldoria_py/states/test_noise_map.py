@@ -20,7 +20,7 @@ from ..procgen.map_generator import (
     BIOME_CONFIGS,
 )
 from ..procgen.poi import POIDescriptor, POIType, WarpTarget
-from ..procgen.npc import NPC, NPCRole, DialogCategory
+from ..procgen.npc import NPC, NPCRole, DialogCategory, calculate_inn_fee
 from ..procgen.world_macro import WorldMacroMap
 from ..core.save_manager import SaveManager
 from ..terminal.ansi import ATCoordinates, ATControlSequences
@@ -144,6 +144,14 @@ class GSNoiseMapTestScreen(SMState):
 
         # Boss encounter persistence
         self.pending_boss_fight: Optional[str] = None
+
+        # Inn Rest Sequence State Machine
+        self.inn_rest_phase: Optional[str] = None
+        self.inn_rest_elapsed: float = 0.0
+        self.inn_fade_duration: float = 0.6
+        self.inn_sleep_duration: float = 1.85
+        self.inn_sleep_wait_duration: float = 1.5
+        self.inn_target_npc: Optional[NPC] = None
 
     @property
     def playtime_seconds(self) -> int:
@@ -370,6 +378,8 @@ class GSNoiseMapTestScreen(SMState):
 
         keys_pressed = context.get(SMState.ContextKeysPressed)
         core = context.get(SMState.ContextEldoriaCore)
+        self._last_context = context
+        self._last_core = core
 
         if self.is_fading_in:
             if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
@@ -380,6 +390,14 @@ class GSNoiseMapTestScreen(SMState):
                 self.fade_in_elapsed += float(delta_time)
                 if self.fade_in_elapsed >= self.fade_in_duration:
                     self.is_fading_in = False
+
+        # Inn Rest Sequence processing (swallows keys and advances fade/music/rest state machine)
+        if getattr(self, "inn_rest_phase", None) is not None:
+            if isinstance(keys_pressed, list):
+                keys_pressed.clear()
+            self._update_inn_rest(delta_time)
+            self._render()
+            return
 
         if getattr(self, "is_quest_modal_active", False):
             if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
@@ -415,8 +433,11 @@ class GSNoiseMapTestScreen(SMState):
                 for key_info in list(keys_pressed):
                     handled = self.npc_dialog.handle_key(key_info)
                     if handled:
-                        keys_pressed.remove(key_info)
+                        if key_info in keys_pressed:
+                            keys_pressed.remove(key_info)
                         break
+            if core and hasattr(core, "game_state") and core.game_state.current_state != self.name:
+                return
             self._render()
             return
 
@@ -901,17 +922,55 @@ class GSNoiseMapTestScreen(SMState):
                 npc.category = DialogCategory.STANDARD
                 choices = None
 
-        elif npc.category == DialogCategory.CHOICE:
+        elif npc.category == DialogCategory.CHOICE or npc.role in (
+            NPCRole.INNKEEPER, NPCRole.EQUIP_SHOPKEEPER, NPCRole.ITEM_SHOPKEEPER
+        ):
             if npc.role == NPCRole.INNKEEPER:
-                fee = getattr(npc, "inn_fee", 20)
+                curr_map = self._current_map()
+                curr_tile = (
+                    curr_map.tiles[self.player_y][self.player_x]
+                    if (0 <= self.player_y < curr_map.height and 0 <= self.player_x < curr_map.width)
+                    else None
+                )
+                tile_region = curr_tile.region_code if curr_tile and curr_tile.region_code > 0 else 1
+                default_fee = calculate_inn_fee(tile_region)
+                fee = getattr(npc, "inn_fee", default_fee) or default_fee
+
+                # Ensure dialogue and choices reflect regional fee
+                npc.dialogue = f"Welcome! It costs {fee} gold to stay for the night. Do you want a room?"
+                npc.choice_options = ["Yes", "No"]
+                npc.category = DialogCategory.CHOICE
 
                 def on_inn_yes():
-                    for m in self.party.members:
-                        m.stats[StatId.HIT_POINTS].current = m.max_hp
-                        m.stats[StatId.MAGIC_POINTS].current = m.max_mp
-                    slot = self.active_slot or 1
-                    self._save_to_slot(slot)
-                    self.last_status_msg = f"★ Stayed at the Inn! Party fully restored & saved to Slot {slot}."
+                    if self.party is not None and self.party.gold < fee:
+                        refusal_text = (
+                            f"You don't have enough gold! A room costs {fee} G, "
+                            f"but you only have {self.party.gold} G."
+                        )
+                        self.npc_dialog.start_dialog(
+                            npc=npc,
+                            custom_text=refusal_text,
+                            choices=[],
+                            category=DialogCategory.STANDARD,
+                        )
+                        self.last_status_msg = f"Not enough gold for the Inn ({self.party.gold}/{fee} G)."
+                        return
+
+                    # Sufficient gold:
+                    if self.party is not None:
+                        self.party.spend_gold(fee)
+
+                    audio_engine = get_audio_engine(autostart_device=False)
+                    audio_engine.play_sfx("Inn Coin")
+
+                    # Inn Keeper responds
+                    self.npc_dialog.start_dialog(
+                        npc=npc,
+                        custom_text="Thanks! Enjoy your stay with us!",
+                        choices=[],
+                        category=DialogCategory.STANDARD,
+                        on_close=lambda: self._start_inn_rest_sequence(npc),
+                    )
 
                 def on_inn_no():
                     self.last_status_msg = "Decided not to take a room."
@@ -920,7 +979,52 @@ class GSNoiseMapTestScreen(SMState):
                     DialogChoice(label="Yes", action=on_inn_yes),
                     DialogChoice(label="No", action=on_inn_no),
                 ]
-            elif npc.role in (NPCRole.ITEM_SHOPKEEPER, NPCRole.EQUIP_SHOPKEEPER):
+            elif npc.role == NPCRole.EQUIP_SHOPKEEPER:
+                prompt = getattr(npc, "dialogue", None) or "Welcome to my forge! Care to examine my wares?"
+                npc.dialogue = prompt
+                npc.category = DialogCategory.CHOICE
+                npc.choice_options = ["Yes", "No"]
+
+                def on_equip_shop_yes():
+                    if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
+                        self.npc_dialog.close()
+                    core = getattr(self, "_last_core", None)
+                    context = getattr(self, "_last_context", None)
+                    if context:
+                        keys = context.get(SMState.ContextKeysPressed)
+                        if isinstance(keys, list):
+                            keys.clear()
+                    if core and hasattr(core, "game_state"):
+                        shop_state = core.game_state.states.get("GSEquipShopScreen")
+                        if shop_state:
+                            region = getattr(npc, "region", 1)
+                            shop_state.configure_shop(
+                                party=self.party,
+                                armorer_npc=npc,
+                                noise_map_screen=self,
+                                region_code=region,
+                            )
+                        core.game_state.trigger("ToEquipShop", context)
+
+                def on_equip_shop_no():
+                    self.last_status_msg = "Decided not to browse forge wares."
+                    self.npc_dialog.start_dialog(
+                        npc=npc,
+                        custom_text="Some other time then! Safe travels.",
+                        choices=[],
+                        category=DialogCategory.STANDARD,
+                    )
+
+                choices = [
+                    DialogChoice(label="Yes", action=on_equip_shop_yes),
+                    DialogChoice(label="No", action=on_equip_shop_no),
+                ]
+            elif npc.role == NPCRole.ITEM_SHOPKEEPER:
+                prompt = getattr(npc, "dialogue", None) or "Welcome! Would you like to buy something today?"
+                npc.dialogue = prompt
+                npc.category = DialogCategory.CHOICE
+                npc.choice_options = ["Yes", "No"]
+
                 def on_shop_yes():
                     self.last_status_msg = f"★ {npc.name}'s shop will open in a future update! (Wares preview available in inventory)."
 
@@ -936,6 +1040,87 @@ class GSNoiseMapTestScreen(SMState):
             npc=npc,
             choices=choices,
         )
+
+    def handle_shop_exit(self, npc: Optional[NPC], result: str) -> None:
+        """Called when returning from the shop screen (GSEquipShopScreen). Displays contextual dialogue."""
+        if npc is None:
+            return
+        if result == "PURCHASED":
+            text = "Thank you for your patronage! May that steel keep you safe out there."
+        else:
+            text = "Didn't find what you were looking for? Stop by anytime!"
+
+        self.npc_dialog.screen_width = self.map_width
+        self.npc_dialog.screen_height = self.map_height + 3
+        self.npc_dialog.start_dialog(
+            npc=npc,
+            custom_text=text,
+            choices=[],
+            category=DialogCategory.STANDARD,
+        )
+
+    def _start_inn_rest_sequence(self, npc: Optional[NPC] = None) -> None:
+        """Initiates the multi-phase Inn rest sequence (SFX, fade-out, Inn Theme, party restore, fade-in)."""
+        self.inn_rest_phase = "FADE_OUT"
+        self.inn_rest_elapsed = 0.0
+        self.inn_target_npc = npc
+        if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
+            self.npc_dialog.flush_page()
+        audio_engine = get_audio_engine(autostart_device=False)
+        audio_engine.fade_out_bgm(duration_seconds=self.inn_fade_duration)
+
+    def _update_inn_rest(self, delta_time: float) -> None:
+        """Advances the Inn rest sequence state machine across its distinct lifecycle phases."""
+        if self.inn_rest_phase is None:
+            return
+
+        dt = float(delta_time)
+        self.inn_rest_elapsed += dt
+        audio_engine = get_audio_engine(autostart_device=False)
+
+        if self.inn_rest_phase == "FADE_OUT":
+            if self.inn_rest_elapsed >= self.inn_fade_duration:
+                self.inn_rest_phase = "SLEEP_BGM"
+                self.inn_rest_elapsed = 0.0
+
+                if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
+                    self.npc_dialog.close()
+
+                # Play brief BGM once indicating passage of time
+                audio_engine.play_bgm("Inn Theme", loop=False)
+
+                # Restore all party members' HP/MP to full and remove all status effects
+                if self.party is not None:
+                    self.party.restore_full()
+
+                # Reset battle counters
+                self.steps_since_battle = 0
+                self.danger_counter = 0.0
+                self.danger_threshold = self._roll_danger_threshold()
+
+                # Auto-save progress to active slot
+                slot = self.active_slot or 1
+                self._save_to_slot(slot)
+
+        elif self.inn_rest_phase == "SLEEP_BGM":
+            if self.inn_rest_elapsed >= self.inn_sleep_duration:
+                self.inn_rest_phase = "SLEEP_WAIT"
+                self.inn_rest_elapsed = 0.0
+
+        elif self.inn_rest_phase == "SLEEP_WAIT":
+            if self.inn_rest_elapsed >= self.inn_sleep_wait_duration:
+                self.inn_rest_phase = "FADE_IN"
+                self.inn_rest_elapsed = 0.0
+
+                # Town BGM resumes playing from the start at normal volume
+                audio_engine.play_bgm("Town Theme", loop=True)
+
+        elif self.inn_rest_phase == "FADE_IN":
+            if self.inn_rest_elapsed >= self.inn_fade_duration:
+                self.inn_rest_phase = None
+                self.inn_rest_elapsed = 0.0
+                slot = self.active_slot or 1
+                self.last_status_msg = f"★ Rested at the Inn! HP/MP fully restored & saved to Slot {slot}."
 
     def _handle_interact(self) -> None:
         """Handles Enter key interaction: adjacent NPCs, POI entry, resting, or egress."""
@@ -958,20 +1143,48 @@ class GSNoiseMapTestScreen(SMState):
         curr_tile = curr_map.tiles[self.player_y][self.player_x]
 
         # Check for healing interactables (Inn or Well)
-        if any(obj in curr_tile.object_listing for obj in ("MTOInn", "MTOWell")):
+        if "MTOInn" in curr_tile.object_listing:
+            innkeeper_npc = next(
+                (tile.npc for row in curr_map.tiles for tile in row if tile.npc and tile.npc.role == NPCRole.INNKEEPER),
+                None,
+            )
+            if innkeeper_npc is not None:
+                self._start_npc_dialog(innkeeper_npc)
+                return
             for m in self.party.members:
                 m.stats[StatId.HIT_POINTS].current = m.max_hp
                 m.stats[StatId.MAGIC_POINTS].current = m.max_mp
             self.steps_since_battle = 0
             self.danger_counter = 0.0
             self.danger_threshold = self._roll_danger_threshold()
-            place_name = "Oakhaven Inn" if "MTOInn" in curr_tile.object_listing else "Town Well"
-            if "MTOInn" in curr_tile.object_listing:
-                slot = self.active_slot or 1
-                self._save_to_slot(slot)
-                self.last_status_msg = f"★ Rested at {place_name}! Fully restored & saved to Slot {slot}."
-            else:
-                self.last_status_msg = f"★ Rested at {place_name}! Party fully restored."
+            slot = self.active_slot or 1
+            self._save_to_slot(slot)
+            self.last_status_msg = f"★ Rested at Oakhaven Inn! Fully restored & saved to Slot {slot}."
+            return
+        if "MTOEquipShop" in curr_tile.object_listing:
+            equip_npc = next(
+                (tile.npc for row in curr_map.tiles for tile in row if tile.npc and tile.npc.role == NPCRole.EQUIP_SHOPKEEPER),
+                None,
+            )
+            if equip_npc is not None:
+                self._start_npc_dialog(equip_npc)
+                return
+        if "MTOItemShop" in curr_tile.object_listing:
+            item_npc = next(
+                (tile.npc for row in curr_map.tiles for tile in row if tile.npc and tile.npc.role == NPCRole.ITEM_SHOPKEEPER),
+                None,
+            )
+            if item_npc is not None:
+                self._start_npc_dialog(item_npc)
+                return
+        if "MTOWell" in curr_tile.object_listing:
+            for m in self.party.members:
+                m.stats[StatId.HIT_POINTS].current = m.max_hp
+                m.stats[StatId.MAGIC_POINTS].current = m.max_mp
+            self.steps_since_battle = 0
+            self.danger_counter = 0.0
+            self.danger_threshold = self._roll_danger_threshold()
+            self.last_status_msg = "★ Rested at Town Well! Party fully restored."
             return
 
         if self.active_submap is None:
@@ -1242,59 +1455,61 @@ class GSNoiseMapTestScreen(SMState):
             "W" if curr_tile.exits[MapTile.EXIT_WEST] else "·",
         ])
 
-        # Party telemetry badge
-        alive_count = sum(1 for m in self.party.members if m.is_alive)
-        total_hp = sum(m.hp for m in self.party.members)
-        total_max_hp = sum(m.max_hp for m in self.party.members)
-        hp_pct = int((total_hp / total_max_hp) * 100) if total_max_hp > 0 else 0
-        hp_color = "\033[1;32m" if hp_pct > 60 else ("\033[1;33m" if hp_pct > 25 else "\033[1;31m")
-        party_badge = f"Party:{alive_count}/{len(self.party.members)} [{hp_color}{hp_pct}%\033[0m]"
-
         danger_str = f"R{curr_tile.region_code}" if curr_tile.battle_allowed else "Safe"
 
         adjacent_npcs = self._get_adjacent_npcs()
 
         if self.last_status_msg:
-            t_text = f" {party_badge} \033[1;36m{self.last_status_msg}\033[0m"
+            t_text = f" ({self.player_x:02d},{self.player_y:02d}) \033[1;36m{self.last_status_msg}\033[0m"
         elif adjacent_npcs:
             if len(adjacent_npcs) == 1:
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[1;32m★ Talk to {adjacent_npcs[0][0].name}\033[0m \033[1;33m[Enter]\033[0m"
                 )
             else:
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[1;32m★ Talk to NPCs ({len(adjacent_npcs)})\033[0m \033[1;33m[Enter]\033[0m"
                 )
         elif self.active_submap is None:
             if curr_tile.warp_target and not curr_tile.warp_target.is_egress:
                 lock_badge = " \033[1;31m[Locked]\033[0m" if (curr_tile.poi and curr_tile.poi.is_locked) else ""
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[1;32m★ {curr_tile.warp_target.prompt_label}\033[0m{lock_badge} "
                     f"\033[1;33m[Enter]\033[0m"
                 )
             else:
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
                 )
         else:
             if curr_tile.warp_target and curr_tile.warp_target.is_egress:
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[1;33m[Egress]\033[0m \033[1;32m[Enter] Leave\033[0m"
                 )
             elif any(obj in curr_tile.object_listing for obj in ("MTOInn", "MTOWell")):
                 obj_label = "Inn" if "MTOInn" in curr_tile.object_listing else "Well"
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[1;32m★ {obj_label}\033[0m \033[1;33m[Enter] Rest\033[0m"
+                )
+            elif "MTOEquipShop" in curr_tile.object_listing:
+                t_text = (
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
+                    f"\033[1;32m★ Armorer / Forge\033[0m \033[1;33m[Enter] Shop\033[0m"
+                )
+            elif "MTOItemShop" in curr_tile.object_listing:
+                t_text = (
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
+                    f"\033[1;32m★ Item Shop\033[0m \033[1;33m[Enter] Shop\033[0m"
                 )
             else:
                 t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) {party_badge} "
+                    f" ({self.player_x:02d},{self.player_y:02d}) "
                     f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
                 )
 
@@ -1358,7 +1573,16 @@ class GSNoiseMapTestScreen(SMState):
         out.append(ATControlSequences.DrawOptimizeOff)
 
         brightness = 1.0
-        if self.is_fading_in and self.fade_in_duration > 0:
+        if getattr(self, "inn_rest_phase", None) is not None:
+            if self.inn_rest_phase == "FADE_OUT":
+                progress = min(1.0, max(0.0, self.inn_rest_elapsed / max(0.01, self.inn_fade_duration)))
+                brightness = max(0.0, 1.0 - progress)
+            elif self.inn_rest_phase in ("SLEEP_BGM", "SLEEP_WAIT"):
+                brightness = 0.0
+            elif self.inn_rest_phase == "FADE_IN":
+                progress = min(1.0, max(0.0, self.inn_rest_elapsed / max(0.01, self.inn_fade_duration)))
+                brightness = progress
+        elif self.is_fading_in and self.fade_in_duration > 0:
             progress = min(1.0, max(0.0, self.fade_in_elapsed / self.fade_in_duration))
             brightness = progress
 

@@ -168,6 +168,7 @@ class NPC:
         choice_options: Optional[List[str]] = None,
         inn_fee: int = 20,
         side_quest_template_idx: Optional[int] = None,
+        region: int = 1,
     ) -> None:
         self.npc_id = npc_id
         self.name = name
@@ -188,6 +189,7 @@ class NPC:
             self.choice_options = []
         self.inn_fee = inn_fee
         self.side_quest_template_idx: Optional[int] = side_quest_template_idx
+        self.region: int = region
 
     def to_dict(self) -> Dict[str, Any]:
         """Serializes NPC to JSON dictionary."""
@@ -212,6 +214,8 @@ class NPC:
             d["shop_inventory"] = self.shop_inventory
         if self.side_quest_template_idx is not None:
             d["side_quest_template_idx"] = self.side_quest_template_idx
+        if self.region != 1:
+            d["region"] = self.region
         return d
 
     @classmethod
@@ -233,6 +237,7 @@ class NPC:
         choice_opts = data.get("choice_options")
         inn_fee = data.get("inn_fee", 20)
         sq_idx = data.get("side_quest_template_idx")
+        region = data.get("region", 1)
 
         return cls(
             npc_id=data.get("npc_id", "npc_unknown"),
@@ -249,6 +254,7 @@ class NPC:
             choice_options=choice_opts,
             inn_fee=inn_fee,
             side_quest_template_idx=sq_idx,
+            region=region,
         )
 
 
@@ -287,12 +293,105 @@ def create_king(
     )
 
 
+REGION_INN_FEES: Dict[int, int] = {
+    1: 20,   # Starter buffer (Region 1)
+    2: 40,   # Outskirts (Region 2)
+    3: 70,   # Midlands (Region 3)
+    4: 110,  # Frontier (Region 4)
+    5: 160,  # Wilds (Region 5)
+    6: 220,  # Highlands (Region 6)
+    7: 300,  # Hazard Wastes (Region 7)
+    8: 400,  # Shadow Lands (Region 8)
+    9: 500,  # Periphery Citadel (Region 9)
+}
+
+
+def calculate_inn_fee(region_code: int) -> int:
+    """Calculates the overnight stay fee in gold based on the region tier (1 to 9)."""
+    reg = max(1, min(9, int(region_code)))
+    return REGION_INN_FEES.get(reg, 20)
+
+
+def generate_armorer_inventory(region_tier: int = 1, seed: Optional[int] = None) -> List[Dict[str, Any]]:
+    """
+    Generates a shop inventory of equipment scaled to the specified region (1 to 9).
+    Only equipment is stocked; endgame relics are strictly excluded.
+    Lower regions stock Tier 1 items with a smattering of Tier 2 items.
+    Higher regions stock Tier 2 and Tier 3 items.
+    """
+    from ..combat.equipment import EQUIPMENT_CATALOG
+    reg = max(1, min(9, int(region_tier)))
+    rng = random.Random(seed) if seed is not None else random
+
+    t1_items = [name for name, eq in EQUIPMENT_CATALOG.items() if eq.tier == 1 and not eq.is_relic]
+    t2_items = [name for name, eq in EQUIPMENT_CATALOG.items() if eq.tier == 2 and not eq.is_relic]
+    t3_items = [name for name, eq in EQUIPMENT_CATALOG.items() if eq.tier == 3 and not eq.is_relic]
+
+    selected_names: List[str] = []
+
+    if reg == 1:
+        # All Tier 1 equipment
+        selected_names.extend(t1_items)
+        # Smattering of 3 Tier 2 items (cost prohibitive early goals)
+        starter_smattering = ["Iron Greathelm", "Steel Pauldrons", "Plated Sabatons"]
+        if seed is not None:
+            chosen_t2 = rng.sample(t2_items, min(3, len(t2_items)))
+        else:
+            chosen_t2 = [n for n in starter_smattering if n in t2_items]
+        selected_names.extend(chosen_t2)
+    elif reg in (2, 3):
+        # All Tier 1 and all Tier 2
+        selected_names.extend(t1_items)
+        selected_names.extend(t2_items)
+        # Smattering of 2 Tier 3 items
+        if seed is not None:
+            chosen_t3 = rng.sample(t3_items, min(2, len(t3_items)))
+        else:
+            chosen_t3 = [n for n in ["Steel Broadsword", "Plate Cuirass"] if n in t3_items]
+        selected_names.extend(chosen_t3)
+    elif reg in (4, 5, 6):
+        # All Tier 2 and all Tier 3
+        selected_names.extend(t2_items)
+        selected_names.extend(t3_items)
+    else:  # reg in (7, 8, 9)
+        # Complete commercial catalog (Tier 2 and Tier 3, no relics)
+        selected_names.extend(t2_items)
+        selected_names.extend(t3_items)
+
+    # Sort items consistently: by slot order then price
+    slot_order = [
+        "Weapon", "Helmet", "Armor", "Pauldron", "Gauntlets",
+        "Greaves", "Boots", "JewelryA", "JewelryB", "Cape"
+    ]
+    def item_sort_key(name: str):
+        eq = EQUIPMENT_CATALOG[name]
+        slot_idx = slot_order.index(eq.slot.value) if eq.slot.value in slot_order else 99
+        return (slot_idx, eq.price, name)
+
+    unique_names = list(dict.fromkeys(selected_names))
+    unique_names.sort(key=item_sort_key)
+
+    inventory: List[Dict[str, Any]] = []
+    for name in unique_names:
+        eq = EQUIPMENT_CATALOG[name]
+        inventory.append({
+            "item_id": name,
+            "name": name,
+            "price": eq.price,
+            "sell_price": eq.sell_price,
+            "type": "equipment",
+            "qty": 99,
+        })
+    return inventory
+
+
 def create_service_owner(
     role: NPCRole,
     name: str,
     pos: Tuple[int, int],
     is_endgame: bool = False,
     inn_fee: int = 20,
+    region: int = 1,
 ) -> NPC:
     """Creates a reserved town service owner (Innkeeper, Item Shop, Equip Shop, Pub)."""
     category = DialogCategory.STANDARD
@@ -332,23 +431,18 @@ def create_service_owner(
         fg = TrueColor(0xED, 0x89, 0x36)  # Forge Amber
         bg = TrueColor(0x3B, 0x27, 0x1A)  # Dark Forge Brown
         category = DialogCategory.CHOICE
-        dialogue = "Welcome! Would you like to buy something today?"
+        dialogue = "Welcome to my forge! Care to examine my wares?"
         choice_options = ["Yes", "No"]
         if is_endgame:
             inv = [
-                {"item_id": "Excalibur", "price": 4500, "type": "equipment"},
-                {"item_id": "Dragon Shield", "price": 3200, "type": "equipment"},
-                {"item_id": "Mythril Plate", "price": 3800, "type": "equipment"},
-                {"item_id": "Titan Helm", "price": 2400, "type": "equipment"},
-                {"item_id": "Aegis Cloak", "price": 2800, "type": "equipment"},
+                {"item_id": "Excalibur", "name": "Excalibur", "price": 4500, "sell_price": 900, "type": "equipment", "qty": 99},
+                {"item_id": "Dragon Shield", "name": "Dragon Shield", "price": 3200, "sell_price": 640, "type": "equipment", "qty": 99},
+                {"item_id": "Mythril Plate", "name": "Mythril Plate", "price": 3800, "sell_price": 760, "type": "equipment", "qty": 99},
+                {"item_id": "Titan Helm", "name": "Titan Helm", "price": 2400, "sell_price": 480, "type": "equipment", "qty": 99},
+                {"item_id": "Aegis Cloak", "name": "Aegis Cloak", "price": 2800, "sell_price": 560, "type": "equipment", "qty": 99},
             ]
         else:
-            inv = [
-                {"item_id": "Iron Longsword", "price": 250, "type": "equipment"},
-                {"item_id": "Steel Broadsword", "price": 600, "type": "equipment"},
-                {"item_id": "Bronze Armor", "price": 350, "type": "equipment"},
-                {"item_id": "Iron Buckler", "price": 200, "type": "equipment"},
-            ]
+            inv = generate_armorer_inventory(region_tier=region)
     elif role == NPCRole.PUB_BARTENDER:
         glyph = "P"
         fg = TrueColor(0xF6, 0xE0, 0x5E)  # Ale Gold
@@ -375,6 +469,7 @@ def create_service_owner(
         category=category,
         choice_options=choice_options,
         inn_fee=inn_fee,
+        region=region,
     )
 
 

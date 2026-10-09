@@ -121,6 +121,7 @@ class EldoriaCore(GameCore):
         from ..states.character_builder import GSCharacterBuilderScreen
         from ..states.main_menu_screen import GSMainMenuScreen
         from ..states.matrix_transition import GSMatrixTransitionScreen
+        from ..states.equip_shop import GSEquipShopScreen
         from .fsm import SMTransition
 
         self.game_state = SMStateMachine("GSInit")
@@ -135,6 +136,7 @@ class EldoriaCore(GameCore):
         self.game_state.add_state(GSCharacterBuilderScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSMainMenuScreen())
         self.game_state.add_state(GSMatrixTransitionScreen(screen_width=80, screen_height=40))
+        self.game_state.add_state(GSEquipShopScreen())
 
         # Match New New Engine: Boot straight from GSInit -> initial_target_state
         self.game_state.add_transition(
@@ -176,3 +178,7 @@ class EldoriaCore(GameCore):
         self.game_state.add_transition(SMTransition("GSNvNCombatScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
         self.game_state.add_transition(SMTransition("GSAnimatedSodaCanTestScreen", "ToUiTest", "GSUiTestScreen"))
         self.game_state.add_transition(SMTransition("GSAnimatedSodaCanTestScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
+
+        # Equipment Shop transitions
+        self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToEquipShop", "GSEquipShopScreen"))
+        self.game_state.add_transition(SMTransition("GSEquipShopScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))

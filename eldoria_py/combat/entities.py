@@ -29,6 +29,7 @@ class Combatant:
         self.explicit_absorbs: set[BattleActionType] = set()
         self.explicit_immunes: set[BattleActionType] = set()
         self.is_defending: bool = False
+        self.status_effects: list[str] = []
 
         # Initialize stats
         self.stats: dict[StatId, BattleEntityProperty] = {}
@@ -414,6 +415,17 @@ class PartyMember(Combatant):
                 names.add(act.name)
         self.actions = combined
 
+    def restore_full(self) -> None:
+        """Restores HP and MP to maximum, clears defending state, and removes all status ailments and augments."""
+        self.stats[StatId.HIT_POINTS].current = self.max_hp
+        self.stats[StatId.MAGIC_POINTS].current = self.max_mp
+        self.is_defending = False
+        for prop in self.stats.values():
+            prop.augment_value = 0
+            prop.augment_turns = 0
+        if hasattr(self, "status_effects") and isinstance(self.status_effects, (list, set, dict)):
+            self.status_effects.clear()
+
     def to_dict(self) -> dict:
         return {
             "name": self.name,
@@ -640,6 +652,11 @@ class Party:
                 )
             return True
         return False
+
+    def restore_full(self) -> None:
+        """Restores all party members' HP/MP to full and removes all status effects and augments."""
+        for m in self.members:
+            m.restore_full()
 
     @property
     def formatted_playtime(self) -> str:

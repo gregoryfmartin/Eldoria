@@ -98,11 +98,20 @@ class NPCDialogModal:
         custom_text: Optional[str] = None,
         choices: Optional[List[DialogChoice]] = None,
         on_close: Optional[Callable[[], None]] = None,
+        category: Optional[DialogCategory] = None,
     ) -> None:
         """Initializes and opens a conversation with the specified NPC."""
         self.npc = npc
         self.title = npc.name
-        self.category = npc.category
+        if category is not None:
+            self.category = category
+        elif choices is not None:
+            self.category = DialogCategory.CHOICE if len(choices) > 0 else DialogCategory.STANDARD
+        elif custom_text is not None:
+            self.category = DialogCategory.STANDARD
+        else:
+            self.category = npc.category
+
         self.is_target_selection = False
         self.target_npcs = []
         self.on_close_callback = on_close
@@ -119,7 +128,7 @@ class NPCDialogModal:
         # Configure choices if category is CHOICE
         self.choices = []
         self.choice_cursor = 0
-        if choices:
+        if choices is not None:
             self.choices = list(choices)
         elif self.category == DialogCategory.CHOICE:
             opts = npc.choice_options if npc.choice_options else ["Yes", "No"]
@@ -237,7 +246,10 @@ class NPCDialogModal:
                     self.on_target_selected(selected_npc)
                     return
                 if choice.action:
+                    prev_state = self.state
                     choice.action()
+                    if self.state != prev_state and self.state != DialogState.CLOSED:
+                        return
             self.close()
             return
 
@@ -258,8 +270,10 @@ class NPCDialogModal:
     def close(self) -> None:
         """Closes the dialogue modal and invokes close callback."""
         self.state = DialogState.CLOSED
-        if self.on_close_callback:
-            self.on_close_callback()
+        cb = self.on_close_callback
+        self.on_close_callback = None
+        if cb:
+            cb()
 
     def handle_key(self, key_info: KeyEvent) -> bool:
         """

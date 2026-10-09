@@ -11,6 +11,7 @@ from .splash_screen import GSSplashScreen
 from .title_screen import GSTitleScreen
 from .party_builder import GSPartyBuilderScreen
 from .character_builder import GSCharacterBuilderScreen
+from .equip_shop import GSEquipShopScreen
 
 __all__ = [
     "GSInit",
@@ -22,4 +23,5 @@ __all__ = [
     "GSTitleScreen",
     "GSPartyBuilderScreen",
     "GSCharacterBuilderScreen",
+    "GSEquipShopScreen",
 ]

@@ -10,6 +10,7 @@ from .noise import FastNoiseLite, NoiseType, FractalType
 from .npc import (
     NPCRole,
     NPC,
+    calculate_inn_fee,
     create_king,
     create_service_owner,
     create_castle_npc,
@@ -47,6 +48,7 @@ class SubMapGenerator:
         w, h = 54, 24
         town_map = Map(name=name, width=w, height=h)
         rng = random.Random(seed + 101)
+        town_inn_fee = calculate_inn_fee(region)
 
         # 1. Fill base terrain with peaceful grass/plains
         for y in range(h):
@@ -124,6 +126,8 @@ class SubMapGenerator:
             door_on_bottom: bool,
             role: NPCRole,
             owner_name: str,
+            inn_fee: int = 20,
+            region: int = 1,
         ) -> None:
             building_rects.append((left, top, bw, bh))
             for hy in range(top, top + bh):
@@ -172,6 +176,8 @@ class SubMapGenerator:
                 name=owner_name,
                 pos=(ox, oy),
                 is_endgame=is_endgame,
+                inn_fee=inn_fee,
+                region=region,
             )
             town_map.tiles[oy][ox].npc = owner
 
@@ -188,6 +194,7 @@ class SubMapGenerator:
             door_on_bottom=True,
             role=NPCRole.INNKEEPER,
             owner_name=rng.choice(INNKEEPER_NAMES),
+            inn_fee=town_inn_fee,
         )
 
         # NE Quadrant: Item Shop
@@ -218,6 +225,7 @@ class SubMapGenerator:
             door_on_bottom=False,
             role=NPCRole.EQUIP_SHOPKEEPER,
             owner_name=rng.choice(EQUIP_SHOP_NAMES),
+            region=region,
         )
 
         # SE Quadrant: Pub
