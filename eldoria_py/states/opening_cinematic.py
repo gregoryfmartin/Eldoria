@@ -18,8 +18,8 @@ from ..terminal.screen import TerminalScreen
 
 class GSOpeningCinematicScreen(SMState):
     """
-    Four-scene opening story pseudo-cinematic with looping BGM, thunder flash + SFX,
-    TrueColor text fades, and instant skip-to-title on any keypress.
+    Five-scene opening story pseudo-cinematic with looping BGM, thunder flash + SFX,
+    TrueColor teletype apparition, and instant skip-to-title on any keypress.
     """
 
     BGM_TRACK = "Opening Cinematic Theme"
@@ -53,6 +53,15 @@ class GSOpeningCinematicScreen(SMState):
                 "Together, with strongeth welling, the party sets forth.",
                 "Such friendship.",
                 "Much Courag-e-ur.",
+            ],
+        ),
+        (
+            True,
+            [
+                "Teh Rune has been borked.",
+                "Malakor is free.",
+                "U ded.",
+                "Ouchie.",
             ],
         ),
     ]

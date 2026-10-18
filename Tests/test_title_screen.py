@@ -553,7 +553,7 @@ class TestOpeningCinematicScreen(unittest.TestCase):
         self._step(3.0)
         self._step(0.75)
 
-        # Scene 4: THUNDER -> WAIT -> FADE_IN -> HOLD (3 lines) -> FADE_OUT (with BGM fade-out) -> OUTRO_WAIT (1.0s) -> ToTitle
+        # Scene 4: THUNDER -> WAIT -> FADE_IN -> HOLD (3 lines) -> FADE_OUT
         self.assertEqual(self.cinematic.scene_idx, 3)
         self.assertEqual(self.cinematic.phase, "THUNDER")
         self.assertEqual(self.cinematic.audio_engine.play_sfx.call_count, 3)
@@ -564,6 +564,23 @@ class TestOpeningCinematicScreen(unittest.TestCase):
         self.assertIn("Together, with strongeth welling, the party sets forth.", frame_s4)
         self.assertIn("Such friendship.", frame_s4)
         self.assertIn("Much Courag-e-ur.", frame_s4)
+        self._step(3.0)
+        self.assertEqual(self.cinematic.phase, "FADE_OUT")
+        self.cinematic.audio_engine.fade_out_bgm.assert_not_called()
+        self._step(0.75)
+
+        # Scene 5: THUNDER -> WAIT -> FADE_IN -> HOLD (4 lines) -> FADE_OUT (with BGM fade-out) -> OUTRO_WAIT (1.0s) -> ToTitle
+        self.assertEqual(self.cinematic.scene_idx, 4)
+        self.assertEqual(self.cinematic.phase, "THUNDER")
+        self.assertEqual(self.cinematic.audio_engine.play_sfx.call_count, 4)
+        self._step(0.4)
+        self._step(1.0)
+        self._step(1.5)
+        frame_s5 = self.cinematic._build_frame()
+        self.assertIn("Teh Rune has been borked.", frame_s5)
+        self.assertIn("Malakor is free.", frame_s5)
+        self.assertIn("U ded.", frame_s5)
+        self.assertIn("Ouchie.", frame_s5)
 
         # Hold 3.0s -> enters FADE_OUT and fades out BGM
         self._step(3.0)
