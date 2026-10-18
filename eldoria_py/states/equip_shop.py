@@ -24,7 +24,9 @@ from ..terminal.screen import TerminalScreen
 from ..combat.stats import StatId, EquipmentSlot
 from ..combat.equipment import BattleEquipment, EQUIPMENT_CATALOG, get_equipment
 from ..combat.entities import PartyMember, Party
+from ..combat.portrait import Gender
 from ..procgen.npc import NPC, DialogCategory, generate_armorer_inventory
+from ..audio.sound_engine import get_audio_engine
 
 
 def _pad_cell(text: str, width: int, align: str = "left", fill_char: str = " ") -> str:
@@ -313,7 +315,7 @@ class GSEquipShopScreen(SMState):
 
         total_cost = eq.price * qty
         if self.party.gold < total_cost:
-            self.feedback_msg = f"Not enough gold! Needs {total_cost} G (You have {self.party.gold} G)."
+            self.feedback_msg = f"Not enough gold! Needs {total_cost} G."
             self.feedback_color = "\033[1;31m"
             return
 
@@ -332,6 +334,10 @@ class GSEquipShopScreen(SMState):
             self.items_bought_count += added
             self.feedback_msg = f"Purchased {added}x {eq.name} for {total_cost} G."
             self.feedback_color = "\033[1;32m"
+            try:
+                get_audio_engine(autostart_device=False).play_sfx("Resources/SFX/Inn Coin.mp3")
+            except Exception:
+                pass
         else:
             self.feedback_msg = "Transaction failed."
             self.feedback_color = "\033[1;31m"
@@ -395,9 +401,8 @@ class GSEquipShopScreen(SMState):
         # Row 2: Mode Tabs & Controls
         buy_tag = "\033[1;30;48;2;237;137;54m [BUY WARES] \033[0m" if self.mode == "BUY" else " \033[90m[BUY WARES]\033[0m "
         sell_tag = "\033[1;30;48;2;237;137;54m [SELL EQUIPMENT] \033[0m" if self.mode == "SELL" else " \033[90m[SELL EQUIPMENT]\033[0m "
-        leave_tag = "\033[90m[ESC] Leave\033[0m"
         tab_row = f"  {buy_tag}  {sell_tag}"
-        tab_row_full = _pad_cell(tab_row, self.TOTAL_WIDTH - 2 - visible_width(leave_tag)) + leave_tag
+        tab_row_full = _pad_cell(tab_row, self.TOTAL_WIDTH - 2)
         lines.append(f"\033[38;2;160;174;192m║\033[0m{tab_row_full}\033[38;2;160;174;192m║\033[0m")
 
         # Row 3: Horizontal Splitter between Tabs and Panes
@@ -443,7 +448,7 @@ class GSEquipShopScreen(SMState):
         items = self.current_items
 
         # Sub-header
-        title = " SHOP INVENTORY" if self.mode == "BUY" else " PARTY EQUIPMENT (20% RESALE)"
+        title = " SHOP INVENTORY" if self.mode == "BUY" else " PARTY EQUIPMENT"
         lines.append(_pad_cell(f"\033[1;36m{title}\033[0m", pane_w))
 
         col_header = "  Item Name                Price " if self.mode == "BUY" else "  Item Name (Qty)          Resale"
@@ -497,7 +502,13 @@ class GSEquipShopScreen(SMState):
         # --- Top Section: Item Details (Rows 0..6) ---
         if eq is not None:
             slot_badge = f"\033[1;36m[{eq.slot.value}]\033[0m"
-            lines.append(_pad_cell(f" {slot_badge} \033[1;37m{eq.name}\033[0m", pane_w))
+            if eq.target_gender == Gender.MALE:
+                gender_badge = "\033[1;36m[♂ Male Only]\033[0m"
+            elif eq.target_gender == Gender.FEMALE:
+                gender_badge = "\033[1;35m[♀ Female Only]\033[0m"
+            else:
+                gender_badge = "\033[90m[Unisex]\033[0m"
+            lines.append(_pad_cell(f" {slot_badge} \033[1;37m{eq.name}\033[0m {gender_badge}", pane_w))
             # Description
             wrapped_desc = wrap_text(eq.description, pane_w - 4)
             desc_line1 = wrapped_desc[0] if len(wrapped_desc) > 0 else ""
@@ -531,59 +542,74 @@ class GSEquipShopScreen(SMState):
             for m in self.party.members[:5]:
                 cur_eq = m.equipment.get(eq.slot) if eq is not None else None
                 cur_eq_name = cur_eq.name if cur_eq else "None"
+                can_equip_item = m.can_equip(eq) if eq is not None else True
 
                 # Row 1: Member Name & Current Equipment in Slot
                 name_tag = f"\033[1;37m{m.name}\033[0m"
-                eq_tag = f"\033[90m[Cur: {truncate_ansi(cur_eq_name, 16)}]\033[0m"
-                lines.append(_pad_cell(f"  {name_tag}  {eq_tag}", pane_w))
 
-                # Row 2: Summarized Stats with Dynamic +/- Diffs
-                stat_parts: List[str] = []
-                key_stats = [
-                    (StatId.ATTACK, "ATK"),
-                    (StatId.DEFENSE, "DEF"),
-                    (StatId.MAGIC_ATTACK, "MATK"),
-                    (StatId.MAGIC_DEFENSE, "MDEF"),
-                    (StatId.SPEED, "SPD"),
-                ]
+                if not can_equip_item and eq is not None:
+                    eq_tag = f"\033[90m[Cur: {truncate_ansi(cur_eq_name, 12)}]\033[0m"
+                    incompat_badge = "\033[1;31m[Incompat]\033[0m"
+                    lines.append(_pad_cell(f"  {name_tag}  {eq_tag} {incompat_badge}", pane_w))
 
-                for stat_id, abbr in key_stats:
-                    prop = m.stats.get(stat_id)
-                    cur_val = prop.total if prop else 0
-                    if eq is not None:
-                        cur_b = cur_eq.get_bonus(stat_id) if cur_eq else 0
-                        new_b = eq.get_bonus(stat_id)
-                        delta = new_b - cur_b
-                        if delta > 0:
-                            stat_parts.append(f"{abbr}:\033[1;32m+{delta}\033[0m")
-                        elif delta < 0:
-                            stat_parts.append(f"{abbr}:\033[1;31m{delta}\033[0m")
-                    # If stat didn't change and we don't have too many, show cur_val
-                    # Only highlight stats that actually have changes or relevance
-
-                # Also check HP / MP bonuses
-                if eq is not None:
-                    hp_cur_b = cur_eq.get_bonus(StatId.HIT_POINTS) if cur_eq else 0
-                    hp_new_b = eq.get_bonus(StatId.HIT_POINTS)
-                    hp_delta = hp_new_b - hp_cur_b
-                    if hp_delta > 0:
-                        stat_parts.insert(0, f"HP:\033[1;32m+{hp_delta}\033[0m")
-                    elif hp_delta < 0:
-                        stat_parts.insert(0, f"HP:\033[1;31m{hp_delta}\033[0m")
-
-                    luk_cur_b = cur_eq.get_bonus(StatId.LUCK) if cur_eq else 0
-                    luk_new_b = eq.get_bonus(StatId.LUCK)
-                    luk_delta = luk_new_b - luk_cur_b
-                    if luk_delta > 0:
-                        stat_parts.append(f"LUK:\033[1;32m+{luk_delta}\033[0m")
-                    elif luk_delta < 0:
-                        stat_parts.append(f"LUK:\033[1;31m{luk_delta}\033[0m")
-
-                if stat_parts:
-                    diff_row = "   " + "  ".join(stat_parts)
+                    if eq.target_gender == Gender.FEMALE:
+                        req_str = "[Incompatible: ♀ Only]"
+                    elif eq.target_gender == Gender.MALE:
+                        req_str = "[Incompatible: ♂ Only]"
+                    else:
+                        req_str = "[Incompatible]"
+                    lines.append(_pad_cell(f"   \033[1;31m{req_str}\033[0m", pane_w))
                 else:
-                    diff_row = "   \033[90m(No stat changes)\033[0m"
-                lines.append(_pad_cell(diff_row, pane_w))
+                    eq_tag = f"\033[90m[Cur: {truncate_ansi(cur_eq_name, 16)}]\033[0m"
+                    lines.append(_pad_cell(f"  {name_tag}  {eq_tag}", pane_w))
+
+                    # Row 2: Summarized Stats with Dynamic +/- Diffs
+                    stat_parts: List[str] = []
+                    key_stats = [
+                        (StatId.ATTACK, "ATK"),
+                        (StatId.DEFENSE, "DEF"),
+                        (StatId.MAGIC_ATTACK, "MATK"),
+                        (StatId.MAGIC_DEFENSE, "MDEF"),
+                        (StatId.SPEED, "SPD"),
+                    ]
+
+                    for stat_id, abbr in key_stats:
+                        prop = m.stats.get(stat_id)
+                        cur_val = prop.total if prop else 0
+                        if eq is not None:
+                            cur_b = cur_eq.get_bonus(stat_id) if cur_eq else 0
+                            new_b = eq.get_bonus(stat_id)
+                            delta = new_b - cur_b
+                            if delta > 0:
+                                stat_parts.append(f"{abbr}:\033[1;32m+{delta}\033[0m")
+                            elif delta < 0:
+                                stat_parts.append(f"{abbr}:\033[1;31m{delta}\033[0m")
+                        # If stat didn't change and we don't have too many, show cur_val
+                        # Only highlight stats that actually have changes or relevance
+
+                    # Also check HP / MP bonuses
+                    if eq is not None:
+                        hp_cur_b = cur_eq.get_bonus(StatId.HIT_POINTS) if cur_eq else 0
+                        hp_new_b = eq.get_bonus(StatId.HIT_POINTS)
+                        hp_delta = hp_new_b - hp_cur_b
+                        if hp_delta > 0:
+                            stat_parts.insert(0, f"HP:\033[1;32m+{hp_delta}\033[0m")
+                        elif hp_delta < 0:
+                            stat_parts.insert(0, f"HP:\033[1;31m{hp_delta}\033[0m")
+
+                        luk_cur_b = cur_eq.get_bonus(StatId.LUCK) if cur_eq else 0
+                        luk_new_b = eq.get_bonus(StatId.LUCK)
+                        luk_delta = luk_new_b - luk_cur_b
+                        if luk_delta > 0:
+                            stat_parts.append(f"LUK:\033[1;32m+{luk_delta}\033[0m")
+                        elif luk_delta < 0:
+                            stat_parts.append(f"LUK:\033[1;31m{luk_delta}\033[0m")
+
+                    if stat_parts:
+                        diff_row = "   " + "  ".join(stat_parts)
+                    else:
+                        diff_row = "   \033[90m(No stat changes)\033[0m"
+                    lines.append(_pad_cell(diff_row, pane_w))
 
                 # Separator between members
                 if len(self.party.members) <= 4:

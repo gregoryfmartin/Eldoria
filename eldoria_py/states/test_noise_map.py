@@ -19,7 +19,7 @@ from ..procgen.map_generator import (
     BiomeType,
     BIOME_CONFIGS,
 )
-from ..procgen.poi import POIDescriptor, POIType, WarpTarget
+from ..procgen.poi import POIDescriptor, POIType, WarpTarget, find_nearest_cave_direction
 from ..procgen.npc import NPC, NPCRole, DialogCategory, calculate_inn_fee
 from ..procgen.world_macro import WorldMacroMap
 from ..core.save_manager import SaveManager
@@ -141,6 +141,15 @@ class GSNoiseMapTestScreen(SMState):
 
         # Tracked Quest quick modal overlay state
         self.is_quest_modal_active: bool = False
+
+        # Compass Conch state tracking
+        self.is_conch_modal_active: bool = False
+        self.conch_dialog_text: List[str] = []
+        self.conch_is_restricted: bool = False
+        self.conch_jingle_active: bool = False
+        self.conch_jingle_handle: Optional[int] = None
+        self.conch_jingle_elapsed: float = 0.0
+        self.conch_jingle_duration: float = 1.70
 
         # Boss encounter persistence
         self.pending_boss_fight: Optional[str] = None
@@ -264,15 +273,25 @@ class GSNoiseMapTestScreen(SMState):
             submap_name = ctx_exp.get("active_submap_poi")
             if submap_name:
                 poi = self.world_macro.get_poi(submap_name)
-                if poi and poi.sub_map:
-                    self.active_poi = poi
-                    self.active_submap = poi.sub_map
+                if poi:
+                    floor_idx = ctx_exp.get("active_submap_floor", getattr(poi, "current_floor", 0))
+                    if getattr(poi, "floors", None) and len(poi.floors) > 0:
+                        poi.set_current_floor(floor_idx)
+                        self.active_poi = poi
+                        self.active_submap = poi.sub_map
+                    elif poi.sub_map:
+                        self.active_poi = poi
+                        self.active_submap = poi.sub_map
             else:
                 self.active_submap = None
                 self.active_poi = None
 
             if "flags" in ctx_exp and isinstance(ctx_exp["flags"], dict):
                 self.exploration_flags = dict(ctx_exp["flags"])
+                if self.party:
+                    for k, v in self.exploration_flags.items():
+                        if k.startswith("boss_defeated_") and v:
+                            self.party.record_boss_defeat(k.replace("boss_defeated_", ""))
 
             if "danger_counter" in ctx_exp:
                 self.danger_counter = float(ctx_exp["danger_counter"])
@@ -289,9 +308,12 @@ class GSNoiseMapTestScreen(SMState):
 
         if self.active_submap is not None:
             self._cleanse_defeated_boss_tiles(self.active_submap)
+            self._ensure_bottom_floor_rope_poi(self.active_poi)
 
         # Check if returning from a boss encounter
         self.is_quest_modal_active = False
+        self.is_conch_modal_active = False
+        self.conch_jingle_active = False
         boss_name = self.pending_boss_fight or context.get("active_boss_fight")
         if boss_name:
             core = context.get(SMState.ContextEldoriaCore)
@@ -308,11 +330,14 @@ class GSNoiseMapTestScreen(SMState):
 
             if is_victory and not self.party.is_wiped:
                 self.exploration_flags[f"boss_defeated_{boss_name}"] = True
-                self.last_status_msg = f"★ VICTORY! {boss_name} has been defeated!"
+                if self.party:
+                    self.party.record_boss_defeat(boss_name)
+                self.last_status_msg = f"★ VICTORY! {boss_name} has been defeated! Escape Rope unfurled nearby."
                 qm = getattr(self.party, "quest_manager", None)
                 if qm:
                     qm.notify_enemy_defeated(boss_name, count=1, party=self.party)
                 self._cleanse_defeated_boss_tiles(self._current_map())
+                self._ensure_bottom_floor_rope_poi(self.active_poi)
             self.pending_boss_fight = None
             context.set("active_boss_fight", None)
 
@@ -364,7 +389,6 @@ class GSNoiseMapTestScreen(SMState):
         super().exit(context)
         self.is_quest_modal_active = False
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     def update(self, context: Context) -> None:
@@ -396,6 +420,23 @@ class GSNoiseMapTestScreen(SMState):
             if isinstance(keys_pressed, list):
                 keys_pressed.clear()
             self._update_inn_rest(delta_time)
+            self._render()
+            return
+
+        # Compass Conch Jingle processing (advances timer, resumes BGM on finish)
+        if getattr(self, "conch_jingle_active", False):
+            self.conch_jingle_elapsed += float(delta_time)
+            audio_engine = get_audio_engine(autostart_device=False)
+            is_playing = audio_engine.is_sfx_playing(self.conch_jingle_handle) if self.conch_jingle_handle is not None else False
+            if (not is_playing and self.conch_jingle_elapsed > 0.1) or self.conch_jingle_elapsed >= self.conch_jingle_duration:
+                audio_engine.resume_bgm()
+                self.conch_jingle_active = False
+
+        # Compass Conch modal overlay handling
+        if getattr(self, "is_conch_modal_active", False):
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                keys_pressed.clear()
+                self._dismiss_conch_modal()
             self._render()
             return
 
@@ -541,10 +582,16 @@ class GSNoiseMapTestScreen(SMState):
                         core.game_state.trigger("ToUiTest", context)
                     return
                 elif key_info.char in ("c", "C"):
-                    keys_pressed.clear()
-                    if core and hasattr(core, "game_state"):
-                        core.game_state.trigger("ToSodaCan", context)
-                    return
+                    if self.party and self.party.get_item_count("Compass Conch") > 0:
+                        keys_pressed.remove(key_info)
+                        self.use_compass_conch()
+                        self._render()
+                        return
+                    else:
+                        keys_pressed.clear()
+                        if core and hasattr(core, "game_state"):
+                            core.game_state.trigger("ToSodaCan", context)
+                        return
 
         self._render()
 
@@ -686,6 +733,83 @@ class GSNoiseMapTestScreen(SMState):
                             tile.custom_glyph = None
                             tile.custom_fg = None
                             tile.custom_bg = None
+        if self.active_poi:
+            self._ensure_bottom_floor_rope_poi(self.active_poi)
+
+    def _ensure_bottom_floor_rope_poi(self, poi: Optional[POIDescriptor]) -> None:
+        """If the boss for this cave has been defeated, ensures the escape rope is spawned on the bottom floor."""
+        if not poi or poi.poi_type != POIType.CAVE:
+            return
+        boss_name = getattr(poi, "boss_name", None)
+        if not boss_name:
+            if getattr(poi, "floors", None) and len(poi.floors) > 0:
+                bottom = poi.floors[-1]
+                boss_name = getattr(bottom, "boss_name", None)
+                if not boss_name:
+                    for row in bottom.tiles:
+                        for tile in row:
+                            for obj in tile.object_listing:
+                                if obj.startswith("Boss:"):
+                                    boss_name = obj.split(":", 1)[1]
+                                    break
+            elif poi.sub_map:
+                for row in poi.sub_map.tiles:
+                    for tile in row:
+                        for obj in tile.object_listing:
+                            if obj.startswith("Boss:"):
+                                boss_name = obj.split(":", 1)[1]
+                                break
+
+        if not boss_name or not self.exploration_flags.get(f"boss_defeated_{boss_name}", False):
+            return
+
+        bottom_map = poi.floors[-1] if (getattr(poi, "floors", None) and len(poi.floors) > 0) else poi.sub_map
+        if bottom_map:
+            center_x = bottom_map.width // 2
+            rope_pos = getattr(bottom_map, "designated_rope_pos", (center_x, 5))
+            rx, ry = rope_pos
+            r_tile = bottom_map.tiles[ry][rx]
+            r_tile.biome = BiomeType.ROAD
+            r_tile.battle_allowed = False
+            r_tile.encounter_rate = 0.0
+            r_tile.custom_glyph = "§"
+            r_tile.custom_fg = TrueColor(0xD6, 0x9E, 0x2E)  # Golden Hemp
+            r_tile.custom_bg = TrueColor(0x1A, 0x20, 0x2C)
+            if "MTORope" not in r_tile.object_listing:
+                r_tile.object_listing.append("MTORope")
+            r_tile.warp_target = WarpTarget(
+                target_map_name="OVERWORLD",
+                is_egress=True,
+                prompt_label="Escape Rope to Surface",
+            )
+
+    def _find_passable_overworld_pos(self, sector_coord: Tuple[int, int], cave_pos: Tuple[int, int]) -> Tuple[int, int]:
+        """Finds a walkable, passable tile on the overworld sector adjacent to or near the cave mouth."""
+        sec_map = self.world_macro.get_sector(sector_coord[0], sector_coord[1])
+        if sec_map is None:
+            return cave_pos
+        cx, cy = cave_pos
+        w, h = sec_map.width, sec_map.height
+
+        # 1. Try immediate adjacent neighbors
+        for dx, dy in ((0, 1), (1, 0), (-1, 0), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)):
+            nx, ny = cx + dx, cy + dy
+            if 0 <= nx < w and 0 <= ny < h:
+                tile = sec_map.tiles[ny][nx]
+                if tile.is_walkable and tile.npc is None and (tile.poi is None or tile.poi.poi_type != POIType.CAVE):
+                    return (nx, ny)
+
+        # 2. Spiral search outwards if immediate neighbors blocked
+        for r in range(2, max(w, h)):
+            for dy in range(-r, r + 1):
+                for dx in range(-r, r + 1):
+                    nx, ny = cx + dx, cy + dy
+                    if 0 <= nx < w and 0 <= ny < h:
+                        tile = sec_map.tiles[ny][nx]
+                        if tile.is_walkable and tile.npc is None:
+                            return (nx, ny)
+
+        return cave_pos
 
     def _check_step_encounter(self, context: Context) -> bool:
         """Evaluates step-based random encounter rolls using danger accumulator. Returns True if encounter triggered."""
@@ -827,6 +951,7 @@ class GSNoiseMapTestScreen(SMState):
             "player_pos": [self.player_x, self.player_y],
             "current_map_name": self.active_poi.name if self.active_poi else "Overworld",
             "active_submap_poi": self.active_poi.name if self.active_poi else None,
+            "active_submap_floor": getattr(self.active_poi, "current_floor", 0) if self.active_poi else 0,
             "visited_sectors": [list(self.current_sector)],
             "flags": dict(self.exploration_flags),
             "danger_counter": round(self.danger_counter, 2),
@@ -1026,10 +1151,34 @@ class GSNoiseMapTestScreen(SMState):
                 npc.choice_options = ["Yes", "No"]
 
                 def on_shop_yes():
-                    self.last_status_msg = f"★ {npc.name}'s shop will open in a future update! (Wares preview available in inventory)."
+                    if hasattr(self, "npc_dialog") and self.npc_dialog.is_active:
+                        self.npc_dialog.close()
+                    core = getattr(self, "_last_core", None)
+                    context = getattr(self, "_last_context", None)
+                    if context:
+                        keys = context.get(SMState.ContextKeysPressed)
+                        if isinstance(keys, list):
+                            keys.clear()
+                    if core and hasattr(core, "game_state"):
+                        shop_state = core.game_state.states.get("GSItemShopScreen")
+                        if shop_state:
+                            region = getattr(npc, "region", 1)
+                            shop_state.configure_shop(
+                                party=self.party,
+                                shopkeeper_npc=npc,
+                                noise_map_screen=self,
+                                region_code=region,
+                            )
+                        core.game_state.trigger("ToItemShop", context)
 
                 def on_shop_no():
-                    self.last_status_msg = "Decided not to browse wares."
+                    self.last_status_msg = "Decided not to browse herbalist remedies."
+                    self.npc_dialog.start_dialog(
+                        npc=npc,
+                        custom_text="Some other time then! Stay healthy out there.",
+                        choices=[],
+                        category=DialogCategory.STANDARD,
+                    )
 
                 choices = [
                     DialogChoice(label="Yes", action=on_shop_yes),
@@ -1042,13 +1191,24 @@ class GSNoiseMapTestScreen(SMState):
         )
 
     def handle_shop_exit(self, npc: Optional[NPC], result: str) -> None:
-        """Called when returning from the shop screen (GSEquipShopScreen). Displays contextual dialogue."""
+        """Called when returning from a shop screen (GSEquipShopScreen or GSItemShopScreen). Displays contextual dialogue."""
         if npc is None:
             return
-        if result == "PURCHASED":
-            text = "Thank you for your patronage! May that steel keep you safe out there."
+        if npc.role == NPCRole.EQUIP_SHOPKEEPER:
+            if result == "PURCHASED":
+                text = "Thank you for your patronage! May that steel keep you safe out there."
+            else:
+                text = "Didn't find what you were looking for? Stop by anytime!"
+        elif npc.role == NPCRole.ITEM_SHOPKEEPER:
+            if result == "PURCHASED":
+                text = "Thank you for your patronage! May these remedies keep you in good health."
+            else:
+                text = "Didn't find the remedies you need? Stop by anytime!"
         else:
-            text = "Didn't find what you were looking for? Stop by anytime!"
+            if result == "PURCHASED":
+                text = "Thank you for your patronage! Safe travels."
+            else:
+                text = "Stop by anytime!"
 
         self.npc_dialog.screen_width = self.map_width
         self.npc_dialog.screen_height = self.map_height + 3
@@ -1122,6 +1282,54 @@ class GSNoiseMapTestScreen(SMState):
                 slot = self.active_slot or 1
                 self.last_status_msg = f"★ Rested at the Inn! HP/MP fully restored & saved to Slot {slot}."
 
+    def _check_cave_unlock_prereqs(self, poi: POIDescriptor) -> Tuple[bool, str]:
+        """
+        Evaluates whether the party has met the prerequisite boss defeats
+        required to dispel the regional ward on this cave entrance.
+        - Tier 2 (required_tier == 1): Requires defeating outer region terrors (Tier 1).
+        - Tier 3 (required_tier == 2): Requires defeating midland perils (Tier 2).
+        Returns (is_unlocked: bool, feedback_message: str).
+        """
+        req_tier = getattr(poi, "required_tier", 0)
+        if req_tier <= 0:
+            return True, ""
+
+        defeated = set(self.party.defeated_bosses) if self.party else set()
+        if self.exploration_flags:
+            for k, v in self.exploration_flags.items():
+                if k.startswith("boss_defeated_") and v:
+                    defeated.add(k.split("boss_defeated_", 1)[1])
+
+        tier_boss_map = {
+            1: {"Rattus", "Grumble", "Brigand", "Fangclaw"},
+            2: {"Broodfang", "Craghorn", "Tideclaw", "Ironhide", "Venomtail", "Gargoyle"},
+            3: {"Frostfang", "Magmadon", "Stormlord", "Deathclaw", "Archdemon", "Malakor"},
+        }
+
+        world_tier_bosses = set()
+        if hasattr(self, "world_macro") and self.world_macro:
+            pois = getattr(self.world_macro, "all_pois", getattr(self.world_macro, "pois", []))
+            if isinstance(pois, dict):
+                pois = list(pois.values())
+            for p in pois:
+                if getattr(p, "poi_type", None) == POIType.CAVE and getattr(p, "cave_tier", 1) == req_tier and p.boss_name:
+                    world_tier_bosses.add(p.boss_name)
+
+        target_set = world_tier_bosses if world_tier_bosses else tier_boss_map.get(req_tier, set())
+        default_threshold = 2 if req_tier == 1 else 3
+        required_count = min(default_threshold, len(target_set)) if target_set else default_threshold
+
+        defeated_count = len(defeated.intersection(target_set))
+        if defeated_count >= required_count:
+            return True, ""
+
+        msg = poi.unlock_msg or (
+            "An ancient runic seal bars the entrance. Defeat the outer province terrors to dispel it."
+            if req_tier == 1
+            else "A pulsing abyssal void ward seals this entrance. It only yields to one who has conquered the midland perils."
+        )
+        return False, msg
+
     def _handle_interact(self) -> None:
         """Handles Enter key interaction: adjacent NPCs, POI entry, resting, or egress."""
         # 1. Adjacent NPC detection & interaction
@@ -1193,23 +1401,35 @@ class GSNoiseMapTestScreen(SMState):
                 poi = curr_tile.poi
                 if poi:
                     if poi.is_locked:
-                        picker_items = self._get_picker_items()
-                        if not picker_items:
-                            req = poi.required_key or "a Key"
-                            self.last_status_msg = f"Locked! Entrance requires {req}, but party has no keys."
+                        if poi.poi_type == POIType.CAVE and getattr(poi, "required_tier", 0) > 0:
+                            can_unlock, msg = self._check_cave_unlock_prereqs(poi)
+                            if can_unlock:
+                                poi.is_locked = False
+                                self.last_status_msg = f"★ The ancient ward shatters into ethereal sparks! Entrance to {poi.name} is now unsealed."
+                            else:
+                                self.last_status_msg = msg
+                                return
+                        else:
+                            picker_items = self._get_picker_items()
+                            if not picker_items:
+                                req = poi.required_key or "a Key"
+                                self.last_status_msg = f"Locked! Entrance requires {req}, but party has no keys."
+                                return
+                            self.is_item_picker_active = True
+                            self.item_picker_cursor = 0
+                            self.locked_poi_target = poi
                             return
-                        self.is_item_picker_active = True
-                        self.item_picker_cursor = 0
-                        self.locked_poi_target = poi
-                        return
 
                     if poi.sub_map:
                         # Push return sector and position to warp stack
                         self.warp_stack.append((self.current_sector, (self.player_x, self.player_y)))
+                        if getattr(poi, "floors", None) and len(poi.floors) > 0:
+                            poi.set_current_floor(0)
                         self.active_submap = poi.sub_map
                         self.active_poi = poi
                         self.player_x, self.player_y = poi.spawn_pos
                         self._cleanse_defeated_boss_tiles(self.active_submap)
+                        self._ensure_bottom_floor_rope_poi(self.active_poi)
                         TerminalScreen.clear_screen()
                         TerminalScreen.flush()
 
@@ -1230,39 +1450,97 @@ class GSNoiseMapTestScreen(SMState):
                             except Exception:
                                 pass
         else:
-            # Inside Sub-Map: Check for Egress WarpTarget
-            if curr_tile.warp_target and curr_tile.warp_target.is_egress:
-                was_cave = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) == POIType.CAVE)
-                was_settlement = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) in (POIType.TOWN, POIType.CASTLE))
-                if self.warp_stack:
-                    ret_sector, (ret_x, ret_y) = self.warp_stack.pop()
-                    self.current_sector = ret_sector
-                    self.player_x = ret_x
-                    self.player_y = ret_y
-                elif self.active_poi:
-                    self.current_sector = self.active_poi.sector_coord
-                    self.player_x, self.player_y = self.active_poi.local_pos
-                self.active_submap = None
-                self.active_poi = None
-                TerminalScreen.clear_screen()
-                TerminalScreen.flush()
+            # Inside Sub-Map: Check for Ladder transitions, Escape Rope, or Egress
+            if curr_tile.warp_target:
+                # 1. Ladder Down
+                if "MTOLadderDown" in curr_tile.object_listing:
+                    poi = self.active_poi
+                    if poi and getattr(poi, "floors", None) and len(poi.floors) > 0:
+                        next_floor = poi.current_floor + 1
+                        if next_floor < len(poi.floors):
+                            poi.set_current_floor(next_floor)
+                            self.active_submap = poi.sub_map
+                            if curr_tile.warp_target.target_pos:
+                                self.player_x, self.player_y = curr_tile.warp_target.target_pos
+                            self.last_status_msg = f"★ Descended to {poi.name} (B{poi.current_floor + 1}F)."
+                            self._cleanse_defeated_boss_tiles(self.active_submap)
+                            self._ensure_bottom_floor_rope_poi(poi)
+                            TerminalScreen.clear_screen()
+                            TerminalScreen.flush()
+                            return
 
-                if was_cave:
-                    try:
-                        audio_engine = get_audio_engine(autostart_device=False)
-                        resume_track = self.pre_cave_bgm_track or "World Map Smol"
-                        audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
-                        self.pre_cave_bgm_track = None
-                    except Exception:
-                        pass
-                elif was_settlement:
-                    try:
-                        audio_engine = get_audio_engine(autostart_device=False)
-                        resume_track = self.pre_town_bgm_track or "World Map Smol"
-                        audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
-                        self.pre_town_bgm_track = None
-                    except Exception:
-                        pass
+                # 2. Ladder Up
+                elif "MTOLadderUp" in curr_tile.object_listing:
+                    poi = self.active_poi
+                    if poi and getattr(poi, "floors", None) and len(poi.floors) > 0:
+                        prev_floor = poi.current_floor - 1
+                        if prev_floor >= 0:
+                            poi.set_current_floor(prev_floor)
+                            self.active_submap = poi.sub_map
+                            if curr_tile.warp_target.target_pos:
+                                self.player_x, self.player_y = curr_tile.warp_target.target_pos
+                            self.last_status_msg = f"★ Ascended to {poi.name} (B{poi.current_floor + 1}F)."
+                            self._cleanse_defeated_boss_tiles(self.active_submap)
+                            self._ensure_bottom_floor_rope_poi(poi)
+                            TerminalScreen.clear_screen()
+                            TerminalScreen.flush()
+                            return
+
+                # 3. Escape Rope
+                elif "MTORope" in curr_tile.object_listing or curr_tile.custom_glyph == "§":
+                    poi = self.active_poi
+                    if poi:
+                        passable_pos = self._find_passable_overworld_pos(poi.sector_coord, poi.local_pos)
+                        self.current_sector = poi.sector_coord
+                        self.player_x, self.player_y = passable_pos
+                        self.active_submap = None
+                        self.active_poi = None
+                        self.warp_stack.clear()
+                        TerminalScreen.clear_screen()
+                        TerminalScreen.flush()
+                        try:
+                            audio_engine = get_audio_engine(autostart_device=False)
+                            resume_track = self.pre_cave_bgm_track or "World Map Smol"
+                            audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
+                            self.pre_cave_bgm_track = None
+                        except Exception:
+                            pass
+                        self.last_status_msg = "★ Scaled the escape rope and returned to the surface!"
+                        return
+
+                # 4. Standard Egress (Cave mouth exit or town/castle gate)
+                elif curr_tile.warp_target.is_egress:
+                    was_cave = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) == POIType.CAVE)
+                    was_settlement = (self.active_poi is not None and getattr(self.active_poi, "poi_type", None) in (POIType.TOWN, POIType.CASTLE))
+                    if self.warp_stack:
+                        ret_sector, (ret_x, ret_y) = self.warp_stack.pop()
+                        self.current_sector = ret_sector
+                        self.player_x = ret_x
+                        self.player_y = ret_y
+                    elif self.active_poi:
+                        self.current_sector = self.active_poi.sector_coord
+                        self.player_x, self.player_y = self.active_poi.local_pos
+                    self.active_submap = None
+                    self.active_poi = None
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+
+                    if was_cave:
+                        try:
+                            audio_engine = get_audio_engine(autostart_device=False)
+                            resume_track = self.pre_cave_bgm_track or "World Map Smol"
+                            audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
+                            self.pre_cave_bgm_track = None
+                        except Exception:
+                            pass
+                    elif was_settlement:
+                        try:
+                            audio_engine = get_audio_engine(autostart_device=False)
+                            resume_track = self.pre_town_bgm_track or "World Map Smol"
+                            audio_engine.fade_to_bgm(resume_track, duration_seconds=0.5, loop=True)
+                            self.pre_town_bgm_track = None
+                        except Exception:
+                            pass
 
     def _get_picker_items(self) -> List[Tuple[str, int]]:
         """Returns list of usable keys/items from party inventory for the item picker."""
@@ -1418,6 +1696,138 @@ class GSNoiseMapTestScreen(SMState):
 
         return commands
 
+    def use_compass_conch(self) -> bool:
+        """
+        Uses the Compass Conch item.
+        If inside a town, castle, or cave, displays restriction dialog and does not consume item.
+        If on world map, consumes 1x item, pauses overworld BGM, plays jingle,
+        computes nearest cave direction, and displays modal dialog.
+        """
+        is_submap = (self.active_poi is not None)
+        if is_submap:
+            self.conch_dialog_text = [
+                "The winds are silent here.",
+                "You cannot use that item here.",
+            ]
+            self.conch_is_restricted = True
+            self.is_conch_modal_active = True
+            return False
+
+        if self.party:
+            self.party.remove_item("Compass Conch", 1)
+
+        defeated = set(self.party.defeated_bosses) if self.party else set()
+        if self.exploration_flags:
+            for k, v in self.exploration_flags.items():
+                if k.startswith("boss_defeated_") and v:
+                    defeated.add(k.split("boss_defeated_", 1)[1])
+
+        direction = find_nearest_cave_direction(
+            origin_sector=self.current_sector,
+            world_macro=self.world_macro,
+            origin_local=(self.player_x, self.player_y),
+            defeated_bosses=defeated,
+            allow_cleared=False,
+        )
+
+        if direction is None:
+            self.conch_dialog_text = [
+                "The winds whisper of peace…",
+                "No malevolent presence stirs in the realm.",
+            ]
+        else:
+            self.conch_dialog_text = [
+                "The winds have whispered…",
+                f"Danger lies due {direction}",
+            ]
+        self.conch_is_restricted = False
+        self.is_conch_modal_active = True
+
+        audio_engine = get_audio_engine(autostart_device=False)
+        self.conch_jingle_handle = audio_engine.play_jingle("Resources/BGM/Compass Conch.mp3")
+        self.conch_jingle_active = True
+        self.conch_jingle_elapsed = 0.0
+        self.conch_jingle_duration = 1.70
+        return True
+
+    def _dismiss_conch_modal(self) -> None:
+        """Closes the Compass Conch dialog and resumes BGM if jingle was active."""
+        if getattr(self, "conch_jingle_active", False):
+            audio_engine = get_audio_engine(autostart_device=False)
+            if self.conch_jingle_handle is not None:
+                audio_engine.stop_sfx(self.conch_jingle_handle)
+            audio_engine.resume_bgm()
+            self.conch_jingle_active = False
+        self.is_conch_modal_active = False
+
+    def _render_conch_modal(self) -> List[Tuple[int, int, str]]:
+        """Renders the Compass Conch divination modal overlay centered on the screen."""
+        modal_w = 48
+        modal_h = 7
+        left_c = max(2, (self.map_width - modal_w) // 2 + 1)
+        total_rows = self.map_height + 3
+        top_r = max(2, (total_rows - modal_h) // 2 + 1)
+
+        border_col = "\033[1;36m"
+        bg = "\033[48;2;16;22;34m"
+
+        def _make_border(title: str, left: str, fill: str, right: str) -> str:
+            inner_w = modal_w - 2
+            if title:
+                t_vis = visible_width(title)
+                rem = max(0, inner_w - t_vis - 2)
+                lp = rem // 2
+                rp = rem - lp
+                safe_title = title.replace("\033[0m", f"\033[0m{bg}{border_col}")
+                return f"{border_col}{left}{bg}{fill * lp} {safe_title}\033[0m{bg}{border_col} {fill * rp}{right}\033[0m"
+            return f"{border_col}{left}{bg}{fill * inner_w}{right}\033[0m"
+
+        def _make_row(text: str, align: str = "center") -> str:
+            inner_w = modal_w - 4
+            t_vis = visible_width(text)
+            if t_vis > inner_w:
+                text = truncate_ansi(text, inner_w)
+                t_vis = visible_width(text)
+            rem = max(0, inner_w - t_vis)
+            if align == "center":
+                lp = rem // 2
+                rp = rem - lp
+                pad_l = " " * lp
+                pad_r = " " * rp
+            elif align == "right":
+                pad_l = " " * rem
+                pad_r = ""
+            else:
+                pad_l = ""
+                pad_r = " " * rem
+            safe_text = text.replace("\033[0m", f"\033[0m{bg}")
+            return f"{border_col}│{bg} {pad_l}{safe_text}\033[0m{bg}{pad_r} {border_col}│\033[0m"
+
+        title = " \033[1;36m🐚 Compass Conch\033[0m "
+        text1 = self.conch_dialog_text[0] if len(self.conch_dialog_text) > 0 else ""
+        text2 = self.conch_dialog_text[1] if len(self.conch_dialog_text) > 1 else ""
+        if self.conch_is_restricted:
+            text2_col = "\033[1;31m"
+        elif "peace" in text1.lower() or "peace" in text2.lower():
+            text2_col = "\033[1;32m"
+        else:
+            text2_col = "\033[1;33m"
+
+        rows: List[str] = [
+            _make_border(title, "╭", "─", "╮"),
+            _make_row(""),
+            _make_row(f"\033[1;37m{text1}\033[0m"),
+            _make_row(f"{text2_col}{text2}\033[0m"),
+            _make_row(""),
+            _make_row("\033[90m[Press any key to close]\033[0m"),
+            _make_border("", "╰", "─", "╯"),
+        ]
+
+        commands: List[Tuple[int, int, str]] = []
+        for idx, row_str in enumerate(rows):
+            commands.append((top_r + idx, left_c, row_str))
+        return commands
+
     @staticmethod
     def _make_border_line(left_char: str, text: str, right_char: str, width: int, fill_char: str = "─") -> str:
         vlen = visible_width(text)
@@ -1442,7 +1852,12 @@ class GSNoiseMapTestScreen(SMState):
             h_text = f"── \033[1;37mWorld Map\033[0m ── Sector: \033[36m({sx},{sy})\033[0m/{mw}x{mh} ──"
         else:
             poi_name = self.active_poi.name if self.active_poi else "Interior"
-            h_text = f"── \033[1;37mSub-Map: {poi_name}\033[0m ──"
+            if self.active_poi and getattr(self.active_poi, "floors", None) and len(self.active_poi.floors) > 0:
+                cur_f = self.active_poi.current_floor + 1
+                tot_f = len(self.active_poi.floors)
+                h_text = f"── \033[1;37mSub-Map: {poi_name} (B{cur_f}F/{tot_f}F)\033[0m ──"
+            else:
+                h_text = f"── \033[1;37mSub-Map: {poi_name}\033[0m ──"
 
         lines.append(self._make_border_line("╭", h_text, "╮", self.map_width, fill_char="─"))
 
@@ -1486,11 +1901,32 @@ class GSNoiseMapTestScreen(SMState):
                     f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
                 )
         else:
-            if curr_tile.warp_target and curr_tile.warp_target.is_egress:
-                t_text = (
-                    f" ({self.player_x:02d},{self.player_y:02d}) "
-                    f"\033[1;33m[Egress]\033[0m \033[1;32m[Enter] Leave\033[0m"
-                )
+            if curr_tile.warp_target:
+                if "MTOLadderDown" in curr_tile.object_listing:
+                    t_text = (
+                        f" ({self.player_x:02d},{self.player_y:02d}) "
+                        f"\033[1;33m★ {curr_tile.warp_target.prompt_label}\033[0m \033[1;32m[Enter] Descend\033[0m"
+                    )
+                elif "MTOLadderUp" in curr_tile.object_listing:
+                    t_text = (
+                        f" ({self.player_x:02d},{self.player_y:02d}) "
+                        f"\033[1;37m★ {curr_tile.warp_target.prompt_label}\033[0m \033[1;32m[Enter] Ascend\033[0m"
+                    )
+                elif "MTORope" in curr_tile.object_listing or curr_tile.custom_glyph == "§":
+                    t_text = (
+                        f" ({self.player_x:02d},{self.player_y:02d}) "
+                        f"\033[1;33m★ Escape Rope\033[0m \033[1;32m[Enter] Climb to Surface\033[0m"
+                    )
+                elif curr_tile.warp_target.is_egress:
+                    t_text = (
+                        f" ({self.player_x:02d},{self.player_y:02d}) "
+                        f"\033[1;33m[Egress]\033[0m \033[1;32m[Enter] Leave\033[0m"
+                    )
+                else:
+                    t_text = (
+                        f" ({self.player_x:02d},{self.player_y:02d}) "
+                        f"\033[33m{curr_tile.biome.value:<6}\033[0m[{ex_str}] \033[35m{danger_str}\033[0m"
+                    )
             elif any(obj in curr_tile.object_listing for obj in ("MTOInn", "MTOWell")):
                 obj_label = "Inn" if "MTOInn" in curr_tile.object_listing else "Well"
                 t_text = (
@@ -1527,9 +1963,18 @@ class GSNoiseMapTestScreen(SMState):
         if adjacent_npcs:
             f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mTalk  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
         elif self.active_submap is None:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
+            conch_hint = "  \033[33m[C]\033[0mConch" if (self.party and self.party.get_item_count("Compass Conch") > 0) else ""
+            f_text = f" \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mEnter  \033[33m[M]\033[0mMenu{conch_hint}  \033[33m[Q]\033[0mQuest "
         else:
-            f_text = " \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0mLeave  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
+            if curr_tile.warp_target and "MTOLadderDown" in curr_tile.object_listing:
+                act = "Descend"
+            elif curr_tile.warp_target and "MTOLadderUp" in curr_tile.object_listing:
+                act = "Ascend"
+            elif curr_tile.warp_target and ("MTORope" in curr_tile.object_listing or curr_tile.custom_glyph == "§"):
+                act = "Climb"
+            else:
+                act = "Leave"
+            f_text = f" \033[33m[↑↓←→]\033[0mMove  \033[33m[Enter]\033[0m{act}  \033[33m[M]\033[0mMenu  \033[33m[Q]\033[0mQuest "
 
         lines.append(self._make_border_line("╰", f_text, "╯", self.map_width, fill_char="─"))
         return lines
@@ -1562,6 +2007,13 @@ class GSNoiseMapTestScreen(SMState):
         # Overlay Tracked Quest modal if active
         if getattr(self, "is_quest_modal_active", False):
             modal_cmds = self._render_quest_modal()
+            for m_row, m_col, m_text in modal_cmds:
+                out.append(ATCoordinates(m_row, m_col).to_ansi())
+                out.append(m_text)
+
+        # Overlay Compass Conch modal if active
+        if getattr(self, "is_conch_modal_active", False):
+            modal_cmds = self._render_conch_modal()
             for m_row, m_col, m_text in modal_cmds:
                 out.append(ATCoordinates(m_row, m_col).to_ansi())
                 out.append(m_text)

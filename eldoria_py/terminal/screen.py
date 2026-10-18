@@ -35,6 +35,8 @@ class TerminalScreen:
     def exit(cls) -> None:
         """Restores main screen buffer and makes cursor visible."""
         if not cls._initialized:
+            sys.stdout.write(ATControlSequences.CursorShow)
+            sys.stdout.flush()
             return
         cls._initialized = False
         sys.stdout.write(
@@ -43,6 +45,18 @@ class TerminalScreen:
             + ATControlSequences.AlternateScreenDisable
             + ATControlSequences.ModifierReset
         )
+        sys.stdout.flush()
+
+    @classmethod
+    def hide_cursor(cls) -> None:
+        """Hides the terminal cursor via ANSI escape sequence."""
+        sys.stdout.write(ATControlSequences.CursorHide)
+        sys.stdout.flush()
+
+    @classmethod
+    def show_cursor(cls) -> None:
+        """Restores terminal cursor visibility via ANSI escape sequence."""
+        sys.stdout.write(ATControlSequences.CursorShow)
         sys.stdout.flush()
 
     @staticmethod

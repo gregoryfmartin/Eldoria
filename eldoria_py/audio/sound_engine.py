@@ -236,9 +236,8 @@ class AudioEngine:
         Returns:
             Handle ID integer if resolved and started, None if asset could not be found.
         """
-        resolved = resolve_audio_path("SFX", name_or_path)
+        resolved = resolve_audio_path("SFX", name_or_path) or resolve_audio_path("BGM", name_or_path)
         sound_asset = resolved.stem if resolved else Path(name_or_path).stem
-        _emit_web_audio_event("play_sfx", sound=sound_asset, loop=loop, volume=volume)
 
         if resolved is None:
             logger.warning("SFX asset not found: '%s'", name_or_path)
@@ -248,6 +247,36 @@ class AudioEngine:
             resolved,
             channel=AudioChannel.SFX,
             loop=loop,
+            volume=volume,
+            name=Path(name_or_path).stem,
+        )
+        handle_id = self.mixer.play_sfx(stream)
+        _emit_web_audio_event("play_sfx", sound=sound_asset, loop=loop, volume=volume, handle_id=handle_id)
+        return handle_id
+
+    def play_jingle(
+        self,
+        name_or_path: Union[str, Path] = "Resources/BGM/Compass Conch.mp3",
+        volume: float = 1.0,
+    ) -> Optional[int]:
+        """
+        Pauses active BGM (retaining its playback position) and plays a non-looping jingle.
+        When jingle playback completes, call resume_bgm() to seamlessly resume BGM.
+        """
+        self.pause_bgm()
+        resolved = resolve_audio_path("BGM", name_or_path) or resolve_audio_path("SFX", name_or_path)
+        if resolved is None:
+            logger.warning("Jingle asset not found: '%s'", name_or_path)
+            self.resume_bgm()
+            return None
+
+        rel_url = f"/Resources/BGM/{resolved.name}" if "BGM" in str(resolved) else resolved.stem
+        _emit_web_audio_event("play_sfx", sound=rel_url, loop=False, volume=volume)
+
+        stream = AudioStream(
+            resolved,
+            channel=AudioChannel.SFX,
+            loop=False,
             volume=volume,
             name=Path(name_or_path).stem,
         )

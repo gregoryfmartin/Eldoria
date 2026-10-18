@@ -38,6 +38,7 @@ class GSTitleScreen(SMState):
         dev_mode: bool = True,
         fade_in_duration: float = 0.45,
         fade_out_duration: float = 0.45,
+        idle_timeout: float = 30.0,
     ) -> None:
         super().__init__("GSTitleScreen")
         self.screen_width: int = screen_width
@@ -45,11 +46,14 @@ class GSTitleScreen(SMState):
         self.dev_mode: bool = dev_mode
         self.fade_in_duration: float = fade_in_duration
         self.fade_out_duration: float = fade_out_duration
+        self.idle_timeout: float = idle_timeout
+        self.idle_elapsed: float = 0.0
         self.is_fading_in: bool = False
         self.fade_in_elapsed: float = 0.0
         self.is_fading_out: bool = False
         self.fade_out_elapsed: float = 0.0
         self._pending_load_context: Optional[dict] = None
+        self._pending_cinematic_transition: bool = False
 
         self.active_dialog: Optional[str] = None  # None, "LOAD", "OPTIONS", "CREDITS"
         self.notice_message: str = ""
@@ -96,22 +100,8 @@ class GSTitleScreen(SMState):
             fg_color=ColorLibrary.DarkGrey,
         )
 
-        # Dividers at row 6 and row 20
+        # Top divider at row 6
         self.divider_top = self.title_panel.add_divider(row=6)
-        self.divider_bottom = self.title_panel.add_divider(row=20)
-
-        # Hint Label at row 21
-        hint_text = (
-            "Dev Hotkeys: [M]Map  [B]Combat  [U]UI  [C]Cans"
-            if self.dev_mode
-            else "Use [↑/↓] or [1-5] to choose, [Enter] to select"
-        )
-        self.hint_label = self.title_panel.add_label(
-            hint_text,
-            row=21,
-            align="center",
-            fg_color=ColorLibrary.DarkGrey,
-        )
 
         self.title_panel.activate()
 
@@ -271,7 +261,9 @@ class GSTitleScreen(SMState):
 
         self.is_fading_out = False
         self.fade_out_elapsed = 0.0
+        self.idle_elapsed = 0.0
         self._pending_load_context = None
+        self._pending_cinematic_transition = False
 
         TerminalScreen.write(ATControlSequences.CursorHide)
         TerminalScreen.clear_screen()
@@ -300,6 +292,7 @@ class GSTitleScreen(SMState):
                 keys_pressed.clear()
                 self.is_fading_in = False
                 self.fade_in_elapsed = self.fade_in_duration
+                self.idle_elapsed = 0.0
                 self.title_panel.set_all_dirty()
                 self.menu.set_all_dirty()
             else:
@@ -316,19 +309,48 @@ class GSTitleScreen(SMState):
 
             self.fade_out_elapsed += float(dt)
             self.title_panel.set_all_dirty()
+            self.menu.set_all_dirty()
             if self.active_dialog == "LOAD":
                 self.load_panel.set_all_dirty()
 
             if self.fade_out_elapsed >= self.fade_out_duration:
                 self.is_fading_out = False
+                if self._pending_cinematic_transition:
+                    self._pending_cinematic_transition = False
+                    self.audio_engine.stop_bgm()
+                    TerminalScreen.clear_screen()
+                    TerminalScreen.flush()
+                    if core and hasattr(core, "game_state"):
+                        core.game_state.trigger("ToCinematic", context)
+                    return
                 self._complete_load_game(context, core)
                 return
 
-        if not self.is_fading_in and not self.is_fading_out and isinstance(keys_pressed, list) and len(keys_pressed) > 0:
-            for key_info in list(keys_pressed):
-                self._handle_input(key_info, context, core)
-                keys_pressed.remove(key_info)
-                break
+        if not self.is_fading_in and not self.is_fading_out:
+            if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
+                self.idle_elapsed = 0.0
+                for key_info in list(keys_pressed):
+                    self._handle_input(key_info, context, core)
+                    keys_pressed.remove(key_info)
+                    break
+            elif self.active_dialog is None and self.idle_timeout > 0:
+                self.idle_elapsed += float(dt)
+                if self.idle_elapsed >= self.idle_timeout:
+                    self.idle_elapsed = 0.0
+                    if self.fade_out_duration > 0:
+                        self.is_fading_out = True
+                        self.fade_out_elapsed = 0.0
+                        self._pending_cinematic_transition = True
+                        self.audio_engine.fade_out_bgm(duration_seconds=self.fade_out_duration)
+                        self.title_panel.set_all_dirty()
+                        self.menu.set_all_dirty()
+                    else:
+                        self.audio_engine.stop_bgm()
+                        TerminalScreen.clear_screen()
+                        TerminalScreen.flush()
+                        if core and hasattr(core, "game_state"):
+                            core.game_state.trigger("ToCinematic", context)
+                        return
 
         # Transition guard: do not render if transitioned away
         if core and hasattr(core, "game_state") and core.game_state.current_state != self.name:
@@ -446,22 +468,7 @@ class GSTitleScreen(SMState):
             self.notice_message = ""
             return
 
-        # Developer hotkeys
-        if self.dev_mode and key_info.char in ("m", "M"):
-            if core and hasattr(core, "game_state"):
-                self.audio_engine.stop_bgm()
-                core.game_state.trigger("ToNoiseMap", context)
-        elif self.dev_mode and key_info.char in ("b", "B"):
-            if core and hasattr(core, "game_state"):
-                self.audio_engine.stop_bgm()
-                core.game_state.trigger("ToCombat", context)
-        elif self.dev_mode and key_info.char in ("u", "U"):
-            if core and hasattr(core, "game_state"):
-                core.game_state.trigger("ToUiTest", context)
-        elif self.dev_mode and key_info.char in ("c", "C"):
-            if core and hasattr(core, "game_state"):
-                core.game_state.trigger("ToSodaCan", context)
-        elif key_info.char in ("q", "Q"):
+        if key_info.char in ("q", "Q"):
             if core and hasattr(core, "is_running"):
                 core.is_running = False
             self.audio_engine.cleanup()
@@ -567,11 +574,11 @@ class GSTitleScreen(SMState):
         self.menu.set_all_dirty()
 
     def _clear_content_rect_ansi(self) -> str:
-        """Clears rows 7..19 between left and right borders."""
+        """Clears content rows below top divider between left and right borders."""
         left = self.title_panel.inner_left
         width = self.title_panel.inner_width
         blank = " " * width
-        return "".join(f"\033[{r};{left}H{blank}" for r in range(7, 20))
+        return "".join(f"\033[{r};{left}H{blank}" for r in range(7, self.title_panel.inner_bottom + 1))
 
     def _render(self) -> None:
         brightness = 1.0

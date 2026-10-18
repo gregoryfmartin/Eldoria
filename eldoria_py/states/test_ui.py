@@ -31,7 +31,6 @@ class GSUiTestScreen(SMState):
     def exit(self, context: Context) -> None:
         super().exit(context)
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     def update(self, context: Context) -> None:

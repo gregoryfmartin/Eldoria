@@ -611,7 +611,7 @@ class GSCharacterBuilderScreen(SMState):
         mat_val = self.base_stats.get(StatId.MAGIC_ATTACK, 10) + self.mod_stats.get(StatId.MAGIC_ATTACK, 0)
         mdf_val = self.base_stats.get(StatId.MAGIC_DEFENSE, 10) + self.mod_stats.get(StatId.MAGIC_DEFENSE, 0)
 
-        max_hp = 160 + (def_val * 8) + (atk_val * 2)
+        max_hp = 20 + int(def_val * 1.5) + int(atk_val * 0.5)
         max_mp = 16 + (mat_val * 2) + int(mdf_val * 0.75)
         return max_hp, max_mp
 
@@ -694,7 +694,6 @@ class GSCharacterBuilderScreen(SMState):
         if hasattr(self, "portrait_card") and self.portrait_card.is_active():
             self.portrait_card.deactivate()
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     def update(self, context: Context) -> None:

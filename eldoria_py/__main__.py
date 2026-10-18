@@ -5,13 +5,14 @@ Main CLI entrypoint for Eldoria.
 import argparse
 import sys
 from .core.engine import EldoriaCore
+from .terminal.screen import TerminalScreen
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Eldoria Python Virtual Terminal Game Engine")
     parser.add_argument(
         "--screen",
-        choices=["splash", "title", "party", "builder", "map", "combat", "ui", "soda"],
+        choices=["splash", "cinematic", "title", "party", "builder", "map", "combat", "ui", "soda"],
         default="splash",
         help="Initial screen to boot into (default: splash for production boot flow)",
     )
@@ -31,6 +32,7 @@ def main() -> None:
 
     screen_map = {
         "splash": "GSSplashScreen",
+        "cinematic": "GSOpeningCinematicScreen",
         "title": "GSTitleScreen",
         "party": "GSPartyBuilderScreen",
         "builder": "GSCharacterBuilderScreen",
@@ -52,6 +54,7 @@ def main() -> None:
         pass
     finally:
         engine.cleanup()
+        TerminalScreen.show_cursor()
     sys.exit(0)
 
 

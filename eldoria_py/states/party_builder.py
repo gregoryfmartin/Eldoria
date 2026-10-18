@@ -300,7 +300,7 @@ class GSPartyBuilderScreen(SMState):
                 "affinity": BattleActionType.ELEMENTAL_EARTH,
                 "profile": 1,
                 "stats": {
-                    StatId.HIT_POINTS: 290,
+                    StatId.HIT_POINTS: 58,
                     StatId.MAGIC_POINTS: 30,
                     StatId.ATTACK: 18,
                     StatId.DEFENSE: 18,
@@ -320,7 +320,7 @@ class GSPartyBuilderScreen(SMState):
                 "affinity": BattleActionType.ELEMENTAL_WATER,
                 "profile": 2,
                 "stats": {
-                    StatId.HIT_POINTS: 220,
+                    StatId.HIT_POINTS: 32,
                     StatId.MAGIC_POINTS: 60,
                     StatId.ATTACK: 8,
                     StatId.DEFENSE: 8,
@@ -340,7 +340,7 @@ class GSPartyBuilderScreen(SMState):
                 "affinity": BattleActionType.ELEMENTAL_WIND,
                 "profile": 3,
                 "stats": {
-                    StatId.HIT_POINTS: 240,
+                    StatId.HIT_POINTS: 42,
                     StatId.MAGIC_POINTS: 34,
                     StatId.ATTACK: 19,
                     StatId.DEFENSE: 10,
@@ -360,7 +360,7 @@ class GSPartyBuilderScreen(SMState):
                 "affinity": BattleActionType.ELEMENTAL_LIGHT,
                 "profile": 1,
                 "stats": {
-                    StatId.HIT_POINTS: 230,
+                    StatId.HIT_POINTS: 36,
                     StatId.MAGIC_POINTS: 52,
                     StatId.ATTACK: 10,
                     StatId.DEFENSE: 10,
@@ -380,7 +380,7 @@ class GSPartyBuilderScreen(SMState):
                 "affinity": BattleActionType.ELEMENTAL_FIRE,
                 "profile": 0,
                 "stats": {
-                    StatId.HIT_POINTS: 310,
+                    StatId.HIT_POINTS: 60,
                     StatId.MAGIC_POINTS: 22,
                     StatId.ATTACK: 24,
                     StatId.DEFENSE: 14,
@@ -456,7 +456,6 @@ class GSPartyBuilderScreen(SMState):
     def exit(self, context: Context) -> None:
         super().exit(context)
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     def update(self, context: Context) -> None:

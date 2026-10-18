@@ -84,6 +84,13 @@ class UIMenu(UIBase):
         )
 
         self.items.append(item)
+        if self.parent and al == "center" and self.align == "center":
+            max_vlen = max(visible_width(it.text) for it in self.items)
+            shared_col = self.parent.inner_left + (self.parent.inner_width - max_vlen) // 2
+            for it in self.items:
+                it.coordinates = ATCoordinates(it.coordinates.row, shared_col)
+                it.validate_bounds()
+                it.dirty = True
         if self.is_active():
             item.activate()
 

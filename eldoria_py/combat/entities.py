@@ -34,7 +34,7 @@ class Combatant:
         # Initialize stats
         self.stats: dict[StatId, BattleEntityProperty] = {}
         defaults: dict[StatId, int] = {
-            StatId.HIT_POINTS: 100,
+            StatId.HIT_POINTS: 50,
             StatId.MAGIC_POINTS: 50,
             StatId.ATTACK: 15,
             StatId.DEFENSE: 10,
@@ -190,7 +190,7 @@ def calculate_required_xp(level: int, job_class: str = "Knight", gender: Gender 
 # Archetype growth curves ensuring base attributes alone never hit 99 by Level 99
 CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
     "Knight": {
-        StatId.HIT_POINTS: 75.0,
+        StatId.HIT_POINTS: 20.0,
         StatId.MAGIC_POINTS: 3.0,
         StatId.ATTACK: 0.38,
         StatId.DEFENSE: 0.45,
@@ -201,7 +201,7 @@ CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
         StatId.ACCURACY: 0.08,
     },
     "Mage": {
-        StatId.HIT_POINTS: 38.0,
+        StatId.HIT_POINTS: 11.0,
         StatId.MAGIC_POINTS: 7.5,
         StatId.ATTACK: 0.15,
         StatId.DEFENSE: 0.20,
@@ -212,7 +212,7 @@ CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
         StatId.ACCURACY: 0.06,
     },
     "Rogue": {
-        StatId.HIT_POINTS: 45.0,
+        StatId.HIT_POINTS: 15.0,
         StatId.MAGIC_POINTS: 3.5,
         StatId.ATTACK: 0.36,
         StatId.DEFENSE: 0.24,
@@ -223,7 +223,7 @@ CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
         StatId.ACCURACY: 0.05,
     },
     "Cleric": {
-        StatId.HIT_POINTS: 50.0,
+        StatId.HIT_POINTS: 14.0,
         StatId.MAGIC_POINTS: 6.8,
         StatId.ATTACK: 0.20,
         StatId.DEFENSE: 0.28,
@@ -234,7 +234,7 @@ CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
         StatId.ACCURACY: 0.06,
     },
     "Berserker": {
-        StatId.HIT_POINTS: 80.0,
+        StatId.HIT_POINTS: 22.0,
         StatId.MAGIC_POINTS: 2.2,
         StatId.ATTACK: 0.40,
         StatId.DEFENSE: 0.30,
@@ -247,7 +247,7 @@ CLASS_GROWTH_RATES: dict[str, dict[StatId, float]] = {
 }
 
 DEFAULT_GROWTH_RATES: dict[StatId, float] = {
-    StatId.HIT_POINTS: 50.0,
+    StatId.HIT_POINTS: 16.0,
     StatId.MAGIC_POINTS: 4.0,
     StatId.ATTACK: 0.30,
     StatId.DEFENSE: 0.30,
@@ -277,6 +277,63 @@ def resolve_class_growth_rates(job_class: str) -> dict[StatId, float]:
     if any(k in jb for k in ("berserk", "warrior", "barbarian")):
         return CLASS_GROWTH_RATES["Berserker"]
     return DEFAULT_GROWTH_RATES
+
+
+def resolve_class_archetype(job_class: str) -> str:
+    """Maps job class string to primary archetype for level-up unlocks."""
+    if not job_class:
+        return "Knight"
+    jb = job_class.lower()
+    if any(k in jb for k in ("mage", "sorcer", "wizard", "scholar")):
+        return "Mage"
+    if any(k in jb for k in ("cleric", "priest", "healer")):
+        return "Cleric"
+    if any(k in jb for k in ("rogue", "thief", "shadow", "assassin", "infiltrator", "ranger", "huntress")):
+        return "Rogue"
+    if any(k in jb for k in ("berserk", "warrior", "barbarian", "brawler")):
+        return "Berserker"
+    if any(k in jb for k in ("knight", "guardian", "paladin", "tank", "spellblade", "valkyrie")):
+        return "Knight"
+    return "Knight"
+
+
+CLASS_LEVEL_UNLOCKS: dict[str, list[tuple[int, str]]] = {
+    "Knight": [
+        (4, "Shield Bash"),
+        (8, "Axe Cleave"),
+        (12, "Holy Blade"),
+        (18, "Grand Guard"),
+        (26, "Paladin Wrath"),
+    ],
+    "Mage": [
+        (3, "Ice Bolt"),
+        (6, "Fireball"),
+        (11, "Galeflash"),
+        (18, "Arctic Blast"),
+        (28, "Cataclysm"),
+    ],
+    "Rogue": [
+        (3, "Double Scratch"),
+        (7, "Drop Kick"),
+        (12, "Shadow Strike"),
+        (18, "Poison Flurry"),
+        (26, "Assassinate"),
+    ],
+    "Cleric": [
+        (2, "Heal"),
+        (6, "Radiance"),
+        (12, "Group Heal"),
+        (18, "Divine Smite"),
+        (26, "Sanctuary"),
+    ],
+    "Berserker": [
+        (3, "Axe Cleave"),
+        (7, "Flame Punch"),
+        (13, "Drop Kick"),
+        (18, "Whirlwind"),
+        (26, "Frenzy Storm"),
+    ],
+}
 
 
 class PartyMember(Combatant):
@@ -362,12 +419,24 @@ class PartyMember(Combatant):
                         elif stat_id == StatId.MAGIC_POINTS:
                             prop.current = min(prop.total, prop.current + actual_gain)
 
-            summaries.append({
+            archetype = resolve_class_archetype(self.job_class)
+            unlocked_actions: list[str] = []
+            for req_lvl, act_name in CLASS_LEVEL_UNLOCKS.get(archetype, []):
+                if req_lvl == self.level and act_name in ACTIONS:
+                    if not any(a.name == act_name for a in self.base_actions):
+                        self.base_actions.append(ACTIONS[act_name].copy())
+                        unlocked_actions.append(act_name)
+
+            summary_item: dict = {
                 "level": self.level,
                 "gains": gains,
-            })
+            }
+            if unlocked_actions:
+                summary_item["unlocked_actions"] = unlocked_actions
 
-            # Re-recalculate equipment to maintain proper derived total
+            summaries.append(summary_item)
+
+            # Re-recalculate equipment to maintain proper derived total and unlocked actions
             self.recalculate_equipment()
 
         if self.level >= 99:
@@ -375,8 +444,18 @@ class PartyMember(Combatant):
 
         return summaries
 
+    def can_equip(self, item: Optional[BattleEquipment]) -> bool:
+        """Validates whether this party member satisfies item requirements (including gender)."""
+        if item is None:
+            return True
+        return item.can_equip_by(self.gender)
+
     def equip(self, item: BattleEquipment) -> Optional[BattleEquipment]:
         """Equip an item into its designated slot and recalculate stat bonuses."""
+        if not self.can_equip(item):
+            raise ValueError(
+                f"{self.name} ({self.gender.value}) cannot equip {item.name} ({item.target_gender.value} only)."
+            )
         old = self.equipment[item.slot]
         self.equipment[item.slot] = item
         self.recalculate_equipment()
@@ -612,6 +691,7 @@ class Party:
         quest_items: Optional[list[str]] = None,
         playtime_seconds: int = 0,
         quest_manager: Optional[Any] = None,
+        defeated_bosses: Optional[set[str] | list[str]] = None,
     ):
         self.members: list[PartyMember] = members if members is not None else []
         self.gold: int = gold
@@ -620,6 +700,16 @@ class Party:
         self.playtime_seconds: int = playtime_seconds
         self._playtime_accumulator: float = 0.0
         self.quest_manager: Optional[Any] = quest_manager
+        self.defeated_bosses: set[str] = set(defeated_bosses) if defeated_bosses is not None else set()
+
+    def record_boss_defeat(self, boss_name: str) -> None:
+        """Records a defeated boss in the party's permanent campaign registry."""
+        if boss_name:
+            self.defeated_bosses.add(boss_name)
+
+    def has_defeated_boss(self, boss_name: str) -> bool:
+        """Returns True if the specified boss has been defeated in this campaign."""
+        return bool(boss_name and boss_name in self.defeated_bosses)
 
     def add_playtime(self, delta_time: float) -> None:
         """Accumulates delta_time into playtime_seconds with sub-second precision and safety clamping."""
@@ -673,6 +763,7 @@ class Party:
             "inventory": list(self.inventory),
             "quest_items": list(self.quest_items),
             "playtime_seconds": self.playtime_seconds,
+            "defeated_bosses": list(self.defeated_bosses),
         }
         if self.quest_manager is not None:
             d["quest_manager"] = self.quest_manager.to_dict()
@@ -688,14 +779,17 @@ class Party:
                 qm = QuestManager.from_dict(data["quest_manager"])
             except Exception:
                 qm = None
-        return cls(
+        party = cls(
             members=members,
             gold=data.get("gold", 0),
             inventory=data.get("inventory", []),
             quest_items=data.get("quest_items", []),
             playtime_seconds=data.get("playtime_seconds", 0),
             quest_manager=qm,
+            defeated_bosses=data.get("defeated_bosses", []),
         )
+        party.assign_inventory_equipment_genders()
+        return party
 
     def add_member(self, member: PartyMember) -> bool:
         if len(self.members) >= 5:
@@ -720,11 +814,32 @@ class Party:
         for m in self.members:
             m.update_turn()
 
+    def assign_inventory_equipment_genders(self) -> dict[str, Gender]:
+        """
+        Loops through all inventory items that are equipment and assigns appropriate genders to them based off their names.
+        Unisex is used for equipment that is eligible for both males and females.
+        """
+        from eldoria_py.combat.equipment import EQUIPMENT_CATALOG, get_equipment, infer_equipment_gender_by_name
+        assignments: dict[str, Gender] = {}
+        for entry in self.inventory:
+            item_id = entry.get("item_id", entry.get("name", ""))
+            is_equip = (entry.get("type") == "equipment") or (item_id in EQUIPMENT_CATALOG)
+            if is_equip:
+                gender = infer_equipment_gender_by_name(item_id)
+                entry["type"] = "equipment"
+                entry["target_gender"] = gender.value
+                eq = get_equipment(item_id)
+                if eq is not None:
+                    eq.target_gender = gender
+                assignments[item_id] = gender
+        return assignments
+
     def add_item(self, item_id: str, qty: int = 1, item_type: str = "consumable") -> int:
         """Adds quantity of an item to inventory, capping at 99 per item. Returns actual added count."""
         if qty <= 0:
             return 0
         from eldoria_py.combat.items import get_item, ItemType
+        from eldoria_py.combat.equipment import EQUIPMENT_CATALOG, infer_equipment_gender_by_name
         c_item = get_item(item_id)
         if c_item is not None:
             if c_item.item_type == ItemType.KEY_ITEM:
@@ -733,6 +848,8 @@ class Party:
                 item_type = "equipment"
             else:
                 item_type = "consumable"
+        elif item_id in EQUIPMENT_CATALOG:
+            item_type = "equipment"
 
         for entry in self.inventory:
             if entry.get("item_id") == item_id or entry.get("name") == item_id:
@@ -740,12 +857,17 @@ class Party:
                 can_add = max(0, 99 - cur_qty)
                 added = min(qty, can_add)
                 entry["qty"] = cur_qty + added
+                if item_type == "equipment" and "target_gender" not in entry:
+                    entry["target_gender"] = infer_equipment_gender_by_name(item_id).value
                 if added > 0 and self.quest_manager is not None:
                     self.quest_manager.notify_inventory_changed(party=self)
                 return added
 
         actual_qty = min(99, qty)
-        self.inventory.append({"item_id": item_id, "qty": actual_qty, "type": item_type})
+        new_entry: dict = {"item_id": item_id, "qty": actual_qty, "type": item_type}
+        if item_type == "equipment":
+            new_entry["target_gender"] = infer_equipment_gender_by_name(item_id).value
+        self.inventory.append(new_entry)
         if self.quest_manager is not None:
             self.quest_manager.notify_inventory_changed(party=self)
         return actual_qty
@@ -867,7 +989,7 @@ def create_default_party() -> Party:
         level=3,
         affinity=BattleActionType.PHYSICAL,
         base_stats={
-            StatId.HIT_POINTS: 420,
+            StatId.HIT_POINTS: 98,
             StatId.MAGIC_POINTS: 36,
             StatId.ATTACK: 28,
             StatId.DEFENSE: 26,
@@ -897,8 +1019,9 @@ def create_default_party() -> Party:
         job_class="Mage",
         level=3,
         affinity=BattleActionType.ELEMENTAL_FIRE,
+        gender=Gender.FEMALE,
         base_stats={
-            StatId.HIT_POINTS: 260,
+            StatId.HIT_POINTS: 54,
             StatId.MAGIC_POINTS: 75,
             StatId.ATTACK: 12,
             StatId.DEFENSE: 14,
@@ -935,7 +1058,7 @@ def create_default_party() -> Party:
         level=3,
         affinity=BattleActionType.ELEMENTAL_WIND,
         base_stats={
-            StatId.HIT_POINTS: 310,
+            StatId.HIT_POINTS: 72,
             StatId.MAGIC_POINTS: 41,
             StatId.ATTACK: 25,
             StatId.DEFENSE: 18,
@@ -962,8 +1085,9 @@ def create_default_party() -> Party:
         job_class="Cleric",
         level=3,
         affinity=BattleActionType.ELEMENTAL_LIGHT,
+        gender=Gender.FEMALE,
         base_stats={
-            StatId.HIT_POINTS: 330,
+            StatId.HIT_POINTS: 64,
             StatId.MAGIC_POINTS: 66,
             StatId.ATTACK: 18,
             StatId.DEFENSE: 20,
@@ -996,7 +1120,7 @@ def create_default_party() -> Party:
         level=3,
         affinity=BattleActionType.ELEMENTAL_EARTH,
         base_stats={
-            StatId.HIT_POINTS: 490,
+            StatId.HIT_POINTS: 104,
             StatId.MAGIC_POINTS: 27,
             StatId.ATTACK: 34,
             StatId.DEFENSE: 22,
@@ -1032,6 +1156,7 @@ def create_default_party() -> Party:
     party.add_item("Steel Broadsword", 1, item_type="equipment")
     party.add_item("Traveler Cloak", 1, item_type="equipment")
 
+    party.assign_inventory_equipment_genders()
     return party
 
 

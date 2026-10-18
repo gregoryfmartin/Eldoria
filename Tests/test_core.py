@@ -95,12 +95,32 @@ class TestTerminalScreen(unittest.TestCase):
             enter_output = "".join(call.args[0] for call in mock_write.call_args_list)
             self.assertIn("\033[?1049h", enter_output)
             self.assertIn("\033[?1007l", enter_output)
+            self.assertIn(ATControlSequences.CursorHide, enter_output)
 
         with patch("sys.stdout.write") as mock_write, patch("sys.stdout.flush"):
             TerminalScreen.exit()
             exit_output = "".join(call.args[0] for call in mock_write.call_args_list)
             self.assertIn("\033[?1007h", exit_output)
             self.assertIn("\033[?1049l", exit_output)
+            self.assertIn(ATControlSequences.CursorShow, exit_output)
+
+    def test_terminal_screen_hide_and_show_cursor_methods(self):
+        with patch("sys.stdout.write") as mock_write, patch("sys.stdout.flush") as mock_flush:
+            TerminalScreen.hide_cursor()
+            mock_write.assert_called_with(ATControlSequences.CursorHide)
+            mock_flush.assert_called()
+
+        with patch("sys.stdout.write") as mock_write, patch("sys.stdout.flush") as mock_flush:
+            TerminalScreen.show_cursor()
+            mock_write.assert_called_with(ATControlSequences.CursorShow)
+            mock_flush.assert_called()
+
+    def test_terminal_screen_exit_when_uninitialized_still_shows_cursor(self):
+        TerminalScreen._initialized = False
+        with patch("sys.stdout.write") as mock_write, patch("sys.stdout.flush") as mock_flush:
+            TerminalScreen.exit()
+            mock_write.assert_called_with(ATControlSequences.CursorShow)
+            mock_flush.assert_called()
 
 
 if __name__ == "__main__":

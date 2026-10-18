@@ -82,7 +82,7 @@ BOSS_CATALOG: Dict[str, BestiaryTemplate] = {
         max_region=1,
         threat_rank="S",
         actions=["Attack", "Boulder Bash", "Defend"],
-        drop_table=[LootDrop("Antidote", 1.0), LootDrop("Oak Staff", 1.0)],
+        drop_table=[LootDrop("Antidote", 1.0), LootDrop("Oak Staff", 1.0), LootDrop("T: Boulder Bash", 0.5)],
         default_level=4,
     ),
 
@@ -98,7 +98,7 @@ BOSS_CATALOG: Dict[str, BestiaryTemplate] = {
         max_region=2,
         threat_rank="S",
         actions=["Attack", "Drop Kick", "Double Scratch", "Defend"],
-        drop_table=[LootDrop("Hi-Potion", 1.0), LootDrop("Leather Hood", 1.0)],
+        drop_table=[LootDrop("Hi-Potion", 1.0), LootDrop("Leather Hood", 1.0), LootDrop("ST: Drop Kick", 0.5)],
         default_level=10,
     ),
     "Fangclaw": BestiaryTemplate(
@@ -218,7 +218,7 @@ BOSS_CATALOG: Dict[str, BestiaryTemplate] = {
         max_region=6,
         threat_rank="S",
         actions=["Attack", "Ice Bolt", "Arctic Blast", "Defend"],
-        drop_table=[LootDrop("Fire Flask", 1.0), LootDrop("Mage Circlet", 1.0)],
+        drop_table=[LootDrop("Fire Flask", 1.0), LootDrop("Mage Circlet", 1.0), LootDrop("T: Arctic Blast", 0.5)],
         default_level=54,
     ),
     "Magmadon": BestiaryTemplate(
@@ -295,7 +295,7 @@ BOSS_CATALOG: Dict[str, BestiaryTemplate] = {
         max_region=9,
         threat_rank="S",
         actions=["Attack", "Dark Surge", "Cataclysm", "Blood Drain", "Axe Cleave", "Defend"],
-        drop_table=[LootDrop("Elixir", 1.0), LootDrop("Shadow Cape", 1.0)],
+        drop_table=[LootDrop("Elixir", 1.0), LootDrop("Shadow Cape", 1.0), LootDrop("T: Cataclysm", 1.0)],
         defend_chance=0.20,
         defend_multiplier=0.25,  # 75% damage mitigation
         negate_crits_when_defending=True,  # Completely immune to crits while in defensive posture

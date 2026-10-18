@@ -135,7 +135,7 @@ class GSSplashScreen(SMState):
                 else:
                     self.phase = "FINISHED"
                     if core and hasattr(core, "game_state"):
-                        core.game_state.trigger("ToTitle", context)
+                        core.game_state.trigger("ToCinematic", context)
                     return
             else:
                 self.elapsed += float(dt)
@@ -157,7 +157,7 @@ class GSSplashScreen(SMState):
                     else:
                         self.phase = "FINISHED"
                         if core and hasattr(core, "game_state"):
-                            core.game_state.trigger("ToTitle", context)
+                            core.game_state.trigger("ToCinematic", context)
                         return
                 elif self.fade_in_elapsed >= self.fade_in_duration:
                     self.phase = "SHOWING"
@@ -183,7 +183,7 @@ class GSSplashScreen(SMState):
                 else:
                     self.phase = "FINISHED"
                     if core and hasattr(core, "game_state"):
-                        core.game_state.trigger("ToTitle", context)
+                        core.game_state.trigger("ToCinematic", context)
                     return
 
         elif self.phase == "FADING_OUT":
@@ -201,7 +201,7 @@ class GSSplashScreen(SMState):
                 TerminalScreen.clear_screen()
                 TerminalScreen.flush()
                 if core and hasattr(core, "game_state"):
-                    core.game_state.trigger("ToTitle", context)
+                    core.game_state.trigger("ToCinematic", context)
                 return
 
         # Transition guard: do not render if transitioned away

@@ -89,6 +89,7 @@ class TestEarlyGameCombatPacing(unittest.TestCase):
 
     def test_starter_combat_resolution_pacing(self):
         """Simulates a 2-person starter party against 4 beginner enemies resolving in <= 4 rounds."""
+        random.seed(42)
         builder = GSCharacterBuilderScreen()
 
         # Hero 1: Aide (Fire Warrior)
@@ -120,7 +121,6 @@ class TestEarlyGameCombatPacing(unittest.TestCase):
 
         engine = NvNCombatEngine(party=party, squad=squad, rng=random.Random(42))
 
-        random.seed(42)
         rounds = 0
         max_rounds = 4
 

@@ -385,34 +385,45 @@ class TestCombatScreenState(unittest.TestCase):
         self.screen.start_encounter(create_default_party(), create_bat_squad(size=6))
 
     def test_target_detail_has_zero_ascii_art(self):
-        """Verifies that all rows in TARGET DETAIL are clean text stats with no ASCII art."""
+        """Verifies TARGET DETAIL rows use clean H <hp> and consolidated single-line A/W/R glyphs with no Type/Threat/ASCII art."""
         for row_idx in range(5):
             cell = self.screen._format_target_detail_row(row_idx)
-            # Must not contain ascii art characters or slashes from the old wireframe
-            self.assertNotIn("/---\\", cell)
-            self.assertNotIn("| o.o |", cell)
-            self.assertNotIn("\\===/", cell)
-            self.assertNotIn("/|   |\\", cell)
+            stripped = self._strip_color(cell)
+            # Must not contain ascii art characters, slashes, Type, or Threat
+            self.assertNotIn("/---\\", stripped)
+            self.assertNotIn("| o.o |", stripped)
+            self.assertNotIn("\\===/", stripped)
+            self.assertNotIn("/|   |\\", stripped)
+            self.assertNotIn("Type:", stripped)
+            self.assertNotIn("Threat:", stripped)
 
         # Row 0: Name without position brackets
-        row0 = self.screen._format_target_detail_row(0)
+        row0 = self._strip_color(self.screen._format_target_detail_row(0))
         self.assertIn("Name: Bat A", row0)
         self.assertNotIn("[1]", row0)
 
-        # Row 1: Type without experience level
-        row1 = self.screen._format_target_detail_row(1)
-        self.assertIn("Type: Beast", row1)
-        self.assertNotIn("Lv.", row1)
+        # Row 1: Current HP using 'H <value>' (no colon, no max HP, no bar)
+        target = self.screen.squad.get_enemy(self.screen.inspected_enemy_idx)
+        row1 = self._strip_color(self.screen._format_target_detail_row(1))
+        self.assertIn(f"H {target.hp}", row1)
+        self.assertNotIn("H:", row1)
+        self.assertNotIn("HP:", row1)
+        self.assertNotIn("/", row1)
+        self.assertNotIn("[", row1)
 
-        # Row 2: HP Bar without numeric values
-        row2 = self.screen._format_target_detail_row(2)
-        self.assertIn("HP:", row2)
-        self.assertIn("[", row2)
-        self.assertIn("]", row2)
-        self.assertNotIn("/", row2)
+        # Row 2: Consolidated A / W / R glyph line (no full element names, no colons)
+        row2 = self._strip_color(self.screen._format_target_detail_row(2))
+        self.assertRegex(row2, r"A\s+\S+\s+W\s+\S+\s+R\s+\S+")
+        self.assertNotIn(":", row2)
+        for full_name in ("Fire", "Water", "Earth", "Wind", "Light", "Dark", "Ice", "Physical"):
+            self.assertNotIn(full_name, row2)
+
+        # Rows 3 and 4: Blank padding
+        self.assertEqual(self.screen._format_target_detail_row(3).strip(), "")
+        self.assertEqual(self.screen._format_target_detail_row(4).strip(), "")
 
     def test_player_party_member_row_formatting(self):
-        """Verifies party row omits parenthetical class, displays only current HP/MP, and maintains 78 chars."""
+        """Verifies party row omits ordering numbers, class, and HP bar, displays H <hp> and M <mp>, and maintains 78 chars."""
         for m_idx in range(len(self.screen.party.members)):
             m = self.screen.party.members[m_idx]
             row = self.screen._format_party_member_row(m_idx)
@@ -421,17 +432,19 @@ class TestCombatScreenState(unittest.TestCase):
             # 78 character width
             self.assertEqual(len(stripped), 78)
 
-            # Name displayed without parenthetical class
+            # Name displayed without ordering number or parenthetical class
             self.assertIn(m.name, stripped)
+            self.assertNotIn(f"{m_idx + 1}.", stripped)
             self.assertNotIn(f"({m.job_class})", stripped)
 
-            # Only current HP, no max HP
-            self.assertIn(f"HP:{m.hp}", stripped)
-            self.assertNotIn(f"HP:{m.hp}/{m.max_hp}", stripped)
-
-            # Only current MP, no max MP
-            self.assertIn(f"MP:{m.mp}", stripped)
-            self.assertNotIn(f"MP:{m.mp}/{m.max_mp}", stripped)
+            # Only current H <hp> and M <mp>, no colons, no max values, no HP stat bar
+            self.assertIn(f"H {m.hp}", stripped)
+            self.assertIn(f"M {m.mp}", stripped)
+            self.assertNotIn("HP:", stripped)
+            self.assertNotIn("MP:", stripped)
+            self.assertNotIn(f"/{m.max_hp}", stripped)
+            self.assertNotIn(f"/{m.max_mp}", stripped)
+            self.assertNotIn("█", stripped)
 
     def test_level_disparity_penalty_not_logged(self):
         """Verifies that level disparity penalty is not logged in the combat log."""
@@ -465,11 +478,13 @@ class TestCombatScreenState(unittest.TestCase):
             self.assertEqual(vlen, self.screen.TOTAL_WIDTH)
 
     def test_enemy_squad_omits_hp_and_affinity(self):
-        """Verifies ENEMY SQUAD window displays only enemy names without HP numbers or affinity codes."""
+        """Verifies ENEMY SQUAD window displays only enemy names without ordering numbers, HP numbers, or affinity codes."""
         for row_idx in range(5):
             left_str = self.screen._format_enemy_row(row_idx)
             plain = self._strip_color(left_str)
-            # Should not contain HP slashes or affinity labels like Dar/Fir/Wat
+            # Should not contain ordering numbers [1]..[10], HP slashes, or affinity labels
+            for idx in range(1, 11):
+                self.assertNotIn(f"[{idx}]", plain)
             self.assertNotIn("/", plain)
             for aff in ("Dar", "Fir", "Wat", "Ear", "Win", "Lig", "Neu"):
                 self.assertNotIn(f" {aff}", plain)
@@ -654,7 +669,7 @@ class TestCombatScreenState(unittest.TestCase):
         self.assertTrue(self.screen.squad.is_wiped)
 
     def test_combat_log_word_wrapping(self):
-        """Verifies that long combat log messages wrap across lines at nearest whole words instead of truncating."""
+        """Verifies that long combat log messages wrap across lines and start at row 0 without a COMBAT LOG header."""
         long_msg = "⚔ Archer B uses Attack on Aiden [★ CRIT]: 28 dmg (10/262)"
         self.screen.engine.combat_log = [long_msg]
 
@@ -663,15 +678,16 @@ class TestCombatScreenState(unittest.TestCase):
         self.assertEqual(wrapped_lines[0], "⚔ Archer B uses Attack on Aiden [★ CRIT]: 28 dmg")
         self.assertEqual(wrapped_lines[1], "  (10/262)")
 
-        # Render rows 1 and 2
+        # Render rows 0 and 1 (no COMBAT LOG header)
+        row0 = self.screen._format_log_cell(0)
         row1 = self.screen._format_log_cell(1)
-        row2 = self.screen._format_log_cell(2)
 
-        self.assertIn("28 dmg", row1)
-        self.assertIn("(10/262)", row2)
+        self.assertNotIn("COMBAT LOG", row0)
+        self.assertIn("28 dmg", row0)
+        self.assertIn("(10/262)", row1)
         from eldoria_py.terminal.box import visible_width
+        self.assertEqual(visible_width(row0), 53)
         self.assertEqual(visible_width(row1), 53)
-        self.assertEqual(visible_width(row2), 53)
 
     def test_combat_log_no_hp_numbers_on_damage_or_heal(self):
         """Verifies that damage and healing log messages state the damage or HP change without appending target HP numbers."""

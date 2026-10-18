@@ -17,7 +17,7 @@ from ..terminal.input import KeyCode
 from ..terminal.screen import TerminalScreen
 from ..terminal.box import clear_buffer_tail, strip_ansi, truncate_ansi, visible_width, wrap_text
 from ..ui.elements.stat_bar import UIStatBar, StatBarType, StatNumberState
-from ..combat.stats import StatId, BattleActionType, TargetScope, AffinityEffect, format_element_badge
+from ..combat.stats import StatId, BattleActionType, TargetScope, AffinityEffect, format_element_badge, get_element_info
 from ..combat.actions import BattleAction, ActionCategory, ACTIONS
 from ..combat.items import ConsumableItem, ItemType, ItemEffectType, get_item
 from ..combat.entities import (
@@ -168,7 +168,6 @@ class GSNvNCombatScreen(SMState):
     def exit(self, context: Context) -> None:
         super().exit(context)
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     # -------------------------------------------------------------------------
@@ -674,21 +673,45 @@ class GSNvNCombatScreen(SMState):
             if idx >= len(self.squad.enemies):
                 return " " * 25
             e = self.squad.enemies[idx]
-            tag = f"[{idx + 1}]"
             is_targeted = (self.menu_mode == "TARGET_SELECT" and self.target_cursor == idx) or (self.inspected_enemy_idx == idx)
             prefix = "\033[1;33m❱\033[0m" if is_targeted else " "
 
             if not e.is_alive:
-                text = f"{prefix}{tag:<4} {e.name[:12]} \033[31m[DEAD]\033[0m"
+                text = f"{prefix} {e.name[:16]} \033[31m[DEAD]\033[0m"
                 return _pad_cell(text, 25)
 
-            text = f"{prefix}{tag:<4} {e.name[:19]}"
+            text = f"{prefix} {e.name[:23]}"
             return _pad_cell(text, 25)
 
         col1 = format_enemy_slot(idx1)
         col2 = format_enemy_slot(idx2)
         combined = f" {col1} {col2} "
         return _pad_cell(combined, self.LEFT_COL_WIDTH)
+
+    @staticmethod
+    def _format_colored_glyph(affinity: BattleActionType) -> str:
+        info = get_element_info(affinity)
+        if info:
+            return f"{info.color.to_ansi_fg()}{info.glyph}\033[0m"
+        return "\033[90m·\033[0m"
+
+    def _get_target_awr_glyphs(self, affinity: BattleActionType) -> tuple[str, str, str]:
+        """Returns colored (Affinity, Weakness, Resistance) single-character glyphs."""
+        matchups: dict[BattleActionType, tuple[BattleActionType, BattleActionType]] = {
+            BattleActionType.ELEMENTAL_FIRE: (BattleActionType.ELEMENTAL_WATER, BattleActionType.ELEMENTAL_ICE),
+            BattleActionType.ELEMENTAL_WATER: (BattleActionType.ELEMENTAL_ICE, BattleActionType.ELEMENTAL_FIRE),
+            BattleActionType.ELEMENTAL_EARTH: (BattleActionType.ELEMENTAL_WIND, BattleActionType.ELEMENTAL_FIRE),
+            BattleActionType.ELEMENTAL_WIND: (BattleActionType.ELEMENTAL_EARTH, BattleActionType.ELEMENTAL_WATER),
+            BattleActionType.ELEMENTAL_ICE: (BattleActionType.ELEMENTAL_FIRE, BattleActionType.ELEMENTAL_WATER),
+            BattleActionType.ELEMENTAL_LIGHT: (BattleActionType.ELEMENTAL_DARK, BattleActionType.ELEMENTAL_LIGHT),
+            BattleActionType.ELEMENTAL_DARK: (BattleActionType.ELEMENTAL_LIGHT, BattleActionType.ELEMENTAL_DARK),
+        }
+        weak_aff, res_aff = matchups.get(affinity, (BattleActionType.NONE, BattleActionType.NONE))
+        return (
+            self._format_colored_glyph(affinity),
+            self._format_colored_glyph(weak_aff),
+            self._format_colored_glyph(res_aff),
+        )
 
     def _format_target_detail_row(self, row_idx: int) -> str:
         """Right side: Purely textual tactical inspector without ASCII art (24 characters)."""
@@ -700,32 +723,17 @@ class GSNvNCombatScreen(SMState):
             name_txt = f" Name: {target.name}"
             return _pad_cell(name_txt[:24], self.RIGHT_COL_WIDTH)
         elif row_idx == 1:
-            fam_txt = f" Type: {target.family}"
-            return _pad_cell(fam_txt[:24], self.RIGHT_COL_WIDTH)
+            hp_txt = f" H {target.hp}"
+            return _pad_cell(hp_txt[:24], self.RIGHT_COL_WIDTH)
         elif row_idx == 2:
-            bar = _make_bar(target.hp, target.max_hp, length=12, bar_type=StatBarType.HEALTH)
-            hp_txt = f" HP: {bar}"
-            return _pad_cell(hp_txt, self.RIGHT_COL_WIDTH)
-        elif row_idx == 3:
-            badge = format_element_badge(target.affinity)
-            aff_txt = f" Affinity: {badge}"
-            return _pad_cell(aff_txt, self.RIGHT_COL_WIDTH)
-        elif row_idx == 4:
-            # Show element weakness/threat
-            if target.affinity == BattleActionType.ELEMENTAL_ICE:
-                info_txt = " Weak: Fire | Res: Water"
-            elif target.affinity == BattleActionType.ELEMENTAL_FIRE:
-                info_txt = " Weak: Water | Res: Ice"
-            elif target.affinity == BattleActionType.ELEMENTAL_WATER:
-                info_txt = " Weak: Wind  | Res: Fire"
-            else:
-                info_txt = f" Threat: Rank {target.threat_rank}"
-            return _pad_cell(info_txt[:24], self.RIGHT_COL_WIDTH)
+            a_glyph, w_glyph, r_glyph = self._get_target_awr_glyphs(target.affinity)
+            awr_txt = f" A {a_glyph}   W {w_glyph}   R {r_glyph}"
+            return _pad_cell(awr_txt, self.RIGHT_COL_WIDTH)
 
         return " " * self.RIGHT_COL_WIDTH
 
     def _format_party_member_row(self, member_idx: int) -> str:
-        """Middle rack: Hero summary with HP, MP, equipment readiness, and planned intent (78 chars)."""
+        """Middle rack: Hero summary with H, M, readiness, and planned intent (78 chars)."""
         if member_idx >= len(self.party.members):
             return " " * 78
         m = self.party.members[member_idx]
@@ -738,12 +746,11 @@ class GSNvNCombatScreen(SMState):
 
         name_str = m.name
         if not m.is_alive:
-            txt = f"{prefix} {member_idx + 1}. {name_str[:12]:<12} \033[31m[FALLEN IN COMBAT]\033[0m"
+            txt = f"{prefix} {name_str[:12]:<12} \033[31m[FALLEN IN COMBAT]\033[0m"
             return _pad_cell(txt, 78)
 
-        hp_str = f"HP:{m.hp}"
-        mp_str = f"MP:{m.mp}"
-        hp_bar = _make_bar(m.hp, m.max_hp, length=6, bar_type=StatBarType.HEALTH)
+        hp_str = f"H {m.hp}"
+        mp_str = f"M {m.mp}"
 
         # Planned intent preview
         plan = self.engine.get_planned_action(member_idx)
@@ -759,7 +766,7 @@ class GSNvNCombatScreen(SMState):
             intent_str = "Intent: [Planning...]" if is_active else "Intent: [Waiting]"
             status_tag = "\033[33m[Ready]\033[0m"
 
-        line = f"{prefix} {member_idx + 1}. {name_str[:12]:<12} {hp_str[:7]:<7} {hp_bar} {mp_str[:6]:<6} {status_tag} {intent_str[:22]:<22}"
+        line = f"{prefix} {name_str[:12]:<12} {hp_str[:7]:<7} {mp_str[:7]:<7} {status_tag} {intent_str[:38]:<38}"
         return _pad_cell(line, 78)
 
     def _format_command_cell(self, row_idx: int) -> str:
@@ -931,17 +938,13 @@ class GSNvNCombatScreen(SMState):
 
     def _format_log_cell(self, row_idx: int, wrapped_logs: Optional[list[str]] = None) -> str:
         """Bottom Right: Scrolling battle log (53 chars)."""
-        if row_idx == 0:
-            return _pad_cell(" COMBAT LOG", 53)
-
         if wrapped_logs is None:
             wrapped_logs = self._get_wrapped_log_lines(max_width=52)
 
-        # Show last 7 combat log messages
-        log_slice = wrapped_logs[-7:]
-        log_offset = row_idx - 1
-        if 0 <= log_offset < len(log_slice):
-            msg = log_slice[log_offset]
+        # Show last 8 combat log messages
+        log_slice = wrapped_logs[-8:]
+        if 0 <= row_idx < len(log_slice):
+            msg = log_slice[row_idx]
             return _pad_cell(f" {msg}", 53)
         return " " * 53
 

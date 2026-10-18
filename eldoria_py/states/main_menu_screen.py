@@ -38,6 +38,8 @@ from ..combat.items import (
 )
 from ..core.save_manager import SaveManager, SaveSlotHeader
 from ..quests import LinearQuest, NonlinearQuest, Questline, StorylineQuestline, SideQuestline, QuestStep
+from ..procgen.poi import find_nearest_cave_direction
+from ..audio.sound_engine import get_audio_engine
 
 
 def _pad_cell(text: str, width: int, align: str = "left", fill_char: str = " ") -> str:
@@ -147,6 +149,12 @@ class GSMainMenuScreen(SMState):
         self.item_target_cursor: int = 0
         self.discard_choice_cursor: int = 0  # 0: Discard 1, 1: Discard Many, 2: Discard All, 3: Cancel
         self.discard_amount: int = 1
+        self.conch_dialog_text: list[str] = []
+        self.conch_is_restricted: bool = False
+        self.conch_jingle_active: bool = False
+        self.conch_jingle_handle: Optional[int] = None
+        self.conch_jingle_elapsed: float = 0.0
+        self.conch_jingle_duration: float = 1.70
 
         # Submenu State: EQUIPMENT
         self.equip_slot_cursor: int = 0
@@ -295,7 +303,6 @@ class GSMainMenuScreen(SMState):
         self._is_active = False
         super().exit(context)
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     # -------------------------------------------------------------------------
@@ -343,6 +350,16 @@ class GSMainMenuScreen(SMState):
 
             self._render()
             return
+
+        # Update conch jingle playback
+        if getattr(self, "conch_jingle_active", False):
+            delta_time = context.get(SMState.ContextDeltaTime, 0.0) if context else 0.0
+            self.conch_jingle_elapsed += float(delta_time)
+            audio_engine = get_audio_engine(autostart_device=False)
+            is_playing = audio_engine.is_sfx_playing(self.conch_jingle_handle) if self.conch_jingle_handle is not None else False
+            if (not is_playing and self.conch_jingle_elapsed > 0.1) or self.conch_jingle_elapsed >= getattr(self, "conch_jingle_duration", 1.70):
+                audio_engine.resume_bgm()
+                self.conch_jingle_active = False
 
         if isinstance(keys_pressed, list) and len(keys_pressed) > 0:
             for key_info in list(keys_pressed):
@@ -558,7 +575,6 @@ class GSMainMenuScreen(SMState):
                         self.fade_out_elapsed = 0.0
                         self._pending_quit_desktop = True
                         try:
-                            from ..audio.sound_engine import get_audio_engine
                             get_audio_engine(autostart_device=False).fade_out_bgm(duration_seconds=self.fade_out_duration)
                         except Exception:
                             pass
@@ -574,6 +590,19 @@ class GSMainMenuScreen(SMState):
             return
 
         if cat == "Items":
+            if self.item_modal_mode == "CONCH_MODAL":
+                if getattr(self, "conch_jingle_active", False):
+                    audio_engine = get_audio_engine(autostart_device=False)
+                    if self.conch_jingle_handle is not None:
+                        audio_engine.stop_sfx(self.conch_jingle_handle)
+                    audio_engine.resume_bgm()
+                    self.conch_jingle_active = False
+                self.item_modal_mode = "NONE"
+                self.focus_mode = "SUBMENU"
+                new_items = self._get_filtered_items()
+                self.item_cursor = min(self.item_cursor, max(0, len(new_items) - 1))
+                return
+
             items = self._get_filtered_items()
             if not items or self.item_cursor >= len(items):
                 self.focus_mode = "SUBMENU"
@@ -606,6 +635,8 @@ class GSMainMenuScreen(SMState):
                             self._set_banner(f"{name} cannot be used outside of battle!")
                             self.focus_mode = "SUBMENU"
                             self.item_modal_mode = "NONE"
+                        elif item_obj.effect_type == ItemEffectType.LOCATE_CAVE:
+                            self._use_compass_conch(item_obj)
                         elif item_obj.target_scope == TargetScope.ALL_ALLIES:
                             success, msg = apply_item_effect(item_obj, None, self.party)
                             self._set_banner(msg)
@@ -650,6 +681,10 @@ class GSMainMenuScreen(SMState):
                         elif item_obj.effect_type == ItemEffectType.RESTORE_MP and target_member.mp >= target_member.max_mp:
                             self._set_banner(f"{target_member.name} is already at full MP!")
                             return
+                        elif item_obj.effect_type == ItemEffectType.TEACH_ACTION and item_obj.teaches_action_name:
+                            if any(a.name == item_obj.teaches_action_name for a in target_member.base_actions):
+                                self._set_banner(f"{target_member.name} already knows {item_obj.teaches_action_name}!")
+                                return
 
                         success, msg = apply_item_effect(item_obj, target_member, self.party)
                         self._set_banner(msg)
@@ -740,6 +775,52 @@ class GSMainMenuScreen(SMState):
         healed = target.hp - old_hp
         self._set_banner(f"{caster.name} cast {spell.name}! {target.name} recovered {healed} HP.")
 
+    def _use_compass_conch(self, item_obj: ConsumableItem) -> bool:
+        """
+        Handles activation of the Compass Conch item within the main menu.
+        If inside a town, castle, or cave, displays restriction modal without consuming the item.
+        If on world map, consumes 1x item, pauses overworld BGM, starts jingle,
+        computes the nearest cave direction, and displays the divination modal.
+        """
+        noise_map = self.noise_map_screen
+        is_submap = (noise_map is not None and getattr(noise_map, "active_poi", None) is not None)
+        if is_submap:
+            self.conch_dialog_text = [
+                "The winds are silent here.",
+                "You cannot use that item here.",
+            ]
+            self.conch_is_restricted = True
+            self.item_modal_mode = "CONCH_MODAL"
+            self.focus_mode = "MODAL"
+            return False
+
+        self.party.remove_item(item_obj.item_id, 1)
+        direction = "north"
+        if noise_map and hasattr(noise_map, "world_macro"):
+            origin_loc = (noise_map.player_x, noise_map.player_y) if hasattr(noise_map, "player_x") else None
+            dir_found = find_nearest_cave_direction(
+                origin_sector=self.sector_coords,
+                world_macro=noise_map.world_macro,
+                origin_local=origin_loc,
+            )
+            if dir_found:
+                direction = dir_found
+
+        self.conch_dialog_text = [
+            "The winds have whispered…",
+            f"Danger lies due {direction}",
+        ]
+        self.conch_is_restricted = False
+        self.item_modal_mode = "CONCH_MODAL"
+        self.focus_mode = "MODAL"
+
+        audio_engine = get_audio_engine(autostart_device=False)
+        self.conch_jingle_handle = audio_engine.play_jingle("Resources/BGM/Compass Conch.mp3")
+        self.conch_jingle_active = True
+        self.conch_jingle_elapsed = 0.0
+        self.conch_jingle_duration = 1.70
+        return True
+
     # -------------------------------------------------------------------------
     # Equipment Input & Swapping Logic
     # -------------------------------------------------------------------------
@@ -787,6 +868,9 @@ class GSMainMenuScreen(SMState):
                         self._set_banner("Slot is already empty.")
                 else:
                     # Equip new
+                    if not member.can_equip(selected_gear):
+                        self._set_banner(f"Cannot equip {selected_gear.name}! ({selected_gear.target_gender.value} only)")
+                        return
                     old_gear = member.equip(selected_gear)
                     self.party.remove_item(selected_gear.name, 1)
                     if old_gear:
@@ -1260,6 +1344,23 @@ class GSMainMenuScreen(SMState):
                 align="center",
             )
 
+        elif self.item_modal_mode == "CONCH_MODAL":
+            if getattr(self, "conch_is_restricted", False):
+                panel.setup_title("Compass Conch", color=ColorLibrary.AppleRedLight, align="left")
+                panel.border_draw_colors = [ColorLibrary.AppleRedLight for _ in range(8)]
+                line1 = self.conch_dialog_text[0] if len(self.conch_dialog_text) > 0 else "The winds are silent here."
+                line2 = self.conch_dialog_text[1] if len(self.conch_dialog_text) > 1 else "You cannot use that item here."
+                panel.add_label(f"\033[1;31m{line1}\033[0m", row=29, align="center")
+                panel.add_label(f"\033[1;33m{line2}\033[0m", row=31, align="center")
+            else:
+                panel.setup_title("Compass Conch", color=ColorLibrary.AppleCyanLight, align="left")
+                panel.border_draw_colors = [ColorLibrary.AppleCyanLight for _ in range(8)]
+                line1 = self.conch_dialog_text[0] if len(self.conch_dialog_text) > 0 else "The winds have whispered…"
+                line2 = self.conch_dialog_text[1] if len(self.conch_dialog_text) > 1 else ""
+                panel.add_label(f"\033[3;36m{line1}\033[0m", row=29, align="center")
+                panel.add_label(f"\033[1;33m{line2}\033[0m", row=31, align="center")
+            panel.add_label("\033[90m[Press any key to close]\033[0m", row=33, align="center")
+
         panel.set_all_dirty()
         return [f"  {pl}" for pl in panel.render_lines()]
 
@@ -1308,6 +1409,7 @@ class GSMainMenuScreen(SMState):
         if self.equip_drawer_open:
             for idx, item in enumerate(self.equip_drawer_items[:7]):
                 is_cur = (idx == self.equip_drawer_cursor)
+                can_eq = member.can_equip(item) if item is not None else True
                 if is_cur:
                     bg = "\033[48;2;25;55;85m"
                     if item is None:
@@ -1317,16 +1419,20 @@ class GSMainMenuScreen(SMState):
                     else:
                         bonus_parts = [f"+{v}{k.name[:2]}" for k, v in item.stat_bonuses.items()]
                         b_str = f"({', '.join(bonus_parts[:2])})" if bonus_parts else ""
-                        base_content = f" ❱ {item.name[:20]:<20} {b_str}"
+                        tag_str = "" if can_eq else f"\033[1;31m[{item.target_gender.value} Only]\033[0m"
+                        base_content = f" ❱ {item.name[:18]:<18} {b_str} {strip_ansi(tag_str)}"
                         pad_len = max(0, self.RIGHT_WIDTH - visible_width(base_content))
-                        lines.append(f"{bg} \033[1;36m❱ \033[1;37m{item.name[:20]:<20}\033[0m{bg} \033[1;36m{b_str}\033[0m{bg}{' ' * pad_len}\033[0m")
+                        name_color = "\033[1;37m" if can_eq else "\033[90m"
+                        lines.append(f"{bg} \033[1;36m❱ {name_color}{item.name[:18]:<18}\033[0m{bg} \033[1;36m{b_str}\033[0m{bg} {tag_str}{bg}{' ' * pad_len}\033[0m")
                 else:
                     if item is None:
                         lines.append("   \033[31m(Unequip Current Gear)\033[0m")
                     else:
                         bonus_parts = [f"+{v}{k.name[:2]}" for k, v in item.stat_bonuses.items()]
                         b_str = f"({', '.join(bonus_parts[:2])})" if bonus_parts else ""
-                        lines.append(f"   \033[1;37m{item.name[:20]:<20}\033[0m \033[36m{b_str}\033[0m")
+                        tag_str = "" if can_eq else f" \033[1;31m[{item.target_gender.value} Only]\033[0m"
+                        name_color = "\033[1;37m" if can_eq else "\033[90m"
+                        lines.append(f"   {name_color}{item.name[:18]:<18}\033[0m \033[36m{b_str}\033[0m{tag_str}")
             for _ in range(7 - len(self.equip_drawer_items[:7])):
                 lines.append("")
         else:
@@ -1354,8 +1460,13 @@ class GSMainMenuScreen(SMState):
         panel.border_draw_colors = [ColorLibrary.AppleCyanLight for _ in range(8)]
         panel.setup_title("Stat Delta", color=ColorLibrary.AppleCyanLight, align="left")
 
-        header_text = f"{cur_name} -> {new_name}"
-        panel.add_label(header_text, row=32, align="center", fg_color=ColorLibrary.White)
+        if new_eq and not member.can_equip(new_eq):
+            header_text = f"{cur_name} -> {new_name} ({new_eq.target_gender.value} Only)"
+            fg = ColorLibrary.AppleRedLight
+        else:
+            header_text = f"{cur_name} -> {new_name}"
+            fg = ColorLibrary.White
+        panel.add_label(header_text, row=32, align="center", fg_color=fg)
 
         # Deltas
         atk_diff = (new_eq.get_bonus(StatId.ATTACK) if new_eq else 0) - (cur_eq.get_bonus(StatId.ATTACK) if cur_eq else 0)

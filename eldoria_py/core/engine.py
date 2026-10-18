@@ -116,12 +116,14 @@ class EldoriaCore(GameCore):
         from ..states.test_noise_map import GSNoiseMapTestScreen
         from ..states.combat_screen import GSNvNCombatScreen
         from ..states.splash_screen import GSSplashScreen
+        from ..states.opening_cinematic import GSOpeningCinematicScreen
         from ..states.title_screen import GSTitleScreen
         from ..states.party_builder import GSPartyBuilderScreen
         from ..states.character_builder import GSCharacterBuilderScreen
         from ..states.main_menu_screen import GSMainMenuScreen
         from ..states.matrix_transition import GSMatrixTransitionScreen
         from ..states.equip_shop import GSEquipShopScreen
+        from ..states.item_shop import GSItemShopScreen
         from .fsm import SMTransition
 
         self.game_state = SMStateMachine("GSInit")
@@ -131,12 +133,14 @@ class EldoriaCore(GameCore):
         self.game_state.add_state(GSNoiseMapTestScreen(map_width=self.map_width, map_height=self.map_height))
         self.game_state.add_state(GSNvNCombatScreen())
         self.game_state.add_state(GSSplashScreen(screen_width=self.map_width, screen_height=self.map_height))
+        self.game_state.add_state(GSOpeningCinematicScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSTitleScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSPartyBuilderScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSCharacterBuilderScreen(screen_width=self.map_width, screen_height=self.map_height))
         self.game_state.add_state(GSMainMenuScreen())
         self.game_state.add_state(GSMatrixTransitionScreen(screen_width=80, screen_height=40))
         self.game_state.add_state(GSEquipShopScreen())
+        self.game_state.add_state(GSItemShopScreen())
 
         # Match New New Engine: Boot straight from GSInit -> initial_target_state
         self.game_state.add_transition(
@@ -147,8 +151,11 @@ class EldoriaCore(GameCore):
             )
         )
 
-        # Boot & Title flow
+        # Boot, Opening Cinematic & Title flow
+        self.game_state.add_transition(SMTransition("GSSplashScreen", "ToCinematic", "GSOpeningCinematicScreen"))
         self.game_state.add_transition(SMTransition("GSSplashScreen", "ToTitle", "GSTitleScreen"))
+        self.game_state.add_transition(SMTransition("GSOpeningCinematicScreen", "ToTitle", "GSTitleScreen"))
+        self.game_state.add_transition(SMTransition("GSTitleScreen", "ToCinematic", "GSOpeningCinematicScreen"))
         self.game_state.add_transition(SMTransition("GSTitleScreen", "ToPartyBuilder", "GSPartyBuilderScreen"))
         self.game_state.add_transition(SMTransition("GSTitleScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
         self.game_state.add_transition(SMTransition("GSTitleScreen", "ToCombat", "GSNvNCombatScreen"))
@@ -182,3 +189,7 @@ class EldoriaCore(GameCore):
         # Equipment Shop transitions
         self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToEquipShop", "GSEquipShopScreen"))
         self.game_state.add_transition(SMTransition("GSEquipShopScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))
+
+        # Item / Herbalist Shop transitions
+        self.game_state.add_transition(SMTransition("GSNoiseMapTestScreen", "ToItemShop", "GSItemShopScreen"))
+        self.game_state.add_transition(SMTransition("GSItemShopScreen", "ToNoiseMap", "GSNoiseMapTestScreen"))

@@ -77,6 +77,13 @@ class QuestStep:
         if party is not None and self.step_type in (QuestStepType.OBTAIN_ITEM, QuestStepType.OBTAIN_ITEMS):
             self.check_inventory(party)
 
+        # Immediate verification for defeated enemy steps if already vanquished
+        if party is not None and self.step_type == QuestStepType.DEFEAT_ENEMY:
+            defeated = getattr(party, "defeated_bosses", set())
+            if self.target_name in defeated:
+                self.current_progress = self.target_count
+                self.is_completed = True
+
     def check_inventory(self, party: Any) -> bool:
         """Evaluates inventory items at any time against target requirements."""
         if self.is_completed or not self.is_active:

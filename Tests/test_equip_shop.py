@@ -32,7 +32,7 @@ from eldoria_py.procgen.npc import (
 from eldoria_py.procgen.map_generator import Map, MapTile, BiomeType
 from eldoria_py.states.test_noise_map import GSNoiseMapTestScreen
 from eldoria_py.states.equip_shop import GSEquipShopScreen
-from eldoria_py.terminal.box import strip_ansi
+from eldoria_py.terminal.box import strip_ansi, visible_width
 from eldoria_py.terminal.input import KeyCode, KeyEvent
 from eldoria_py.ui.npc_dialog import DialogState
 
@@ -191,7 +191,12 @@ class TestEquipShopSubsystem(unittest.TestCase):
         shop.configure_shop(party=self.party, armorer_npc=self.armorer_npc, region_code=1)
 
         lines = shop.generate_frame_lines()
-        self.assertGreaterEqual(len(lines), 28)
+        self.assertEqual(len(lines), 28)
+        self.assertNotIn("[ESC] Leave", strip_ansi(lines[1]))
+        for idx, line in enumerate(lines):
+            v_width = visible_width(line)
+            self.assertEqual(v_width, 80, f"Row {idx} visible width is {v_width}, expected 80")
+
         # Check title row
         self.assertIn("Torvald's Forge & Armory", strip_ansi(lines[0]))
         self.assertIn("Gold:", strip_ansi(lines[0]))
@@ -287,7 +292,8 @@ class TestEquipShopSubsystem(unittest.TestCase):
         self.assertEqual(self.party.gold, 100)
         self.assertEqual(self.party.get_item_count("Iron Longsword"), 0)
         self.assertEqual(shop.items_bought_count, 0)
-        self.assertIn("Not enough gold", shop.feedback_msg)
+        self.assertEqual(shop.feedback_msg, "Not enough gold! Needs 150 G.")
+        self.assertNotIn("You have", shop.feedback_msg)
 
     def test_sell_equipment_at_twenty_percent(self):
         """Verify selling equipment awards exactly 20% resale value and removes item from inventory."""
@@ -298,6 +304,10 @@ class TestEquipShopSubsystem(unittest.TestCase):
         shop.configure_shop(party=self.party, armorer_npc=self.armorer_npc, region_code=1)
 
         shop.mode = "SELL"
+        left_text = "\n".join(strip_ansi(l) for l in shop._render_left_pane())
+        self.assertIn("PARTY EQUIPMENT", left_text)
+        self.assertNotIn("(20% RESALE)", left_text)
+
         items = shop.current_items
         self.assertEqual(len(items), 1)
         self.assertEqual(items[0]["price"], 30)
@@ -436,6 +446,39 @@ class TestEquipShopSubsystem(unittest.TestCase):
             context.set(SMState.ContextKeysPressed, [key_left])
             shop.update(context)
             self.assertEqual(shop.mode, "BUY")
+
+    # -------------------------------------------------------------------------
+    # Audio SFX on Purchase
+    # -------------------------------------------------------------------------
+    def test_equipment_purchase_plays_inn_coin_sfx(self):
+        """Purchasing equipment from the Armorer plays Resources/SFX/Inn Coin.mp3 once."""
+        shop = GSEquipShopScreen()
+        self.party.gold = 500
+        shop.configure_shop(party=self.party, armorer_npc=self.armorer_npc, region_code=1)
+        items = shop.current_items
+        sword_idx = next(i for i, it in enumerate(items) if it["name"] == "Iron Longsword")
+        shop.active_cursor = sword_idx
+
+        with patch("eldoria_py.states.equip_shop.get_audio_engine") as mock_get_audio:
+            mock_audio = MagicMock()
+            mock_get_audio.return_value = mock_audio
+            shop._buy_item(qty=1)
+            mock_audio.play_sfx.assert_called_once_with("Resources/SFX/Inn Coin.mp3")
+
+    def test_equipment_purchase_failure_does_not_play_sfx(self):
+        """Failed equipment purchase due to insufficient gold does not play SFX."""
+        shop = GSEquipShopScreen()
+        self.party.gold = 10
+        shop.configure_shop(party=self.party, armorer_npc=self.armorer_npc, region_code=1)
+        items = shop.current_items
+        sword_idx = next(i for i, it in enumerate(items) if it["name"] == "Iron Longsword")
+        shop.active_cursor = sword_idx
+
+        with patch("eldoria_py.states.equip_shop.get_audio_engine") as mock_get_audio:
+            mock_audio = MagicMock()
+            mock_get_audio.return_value = mock_audio
+            shop._buy_item(qty=1)
+            mock_audio.play_sfx.assert_not_called()
 
 
 if __name__ == "__main__":

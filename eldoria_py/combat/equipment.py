@@ -1,9 +1,116 @@
 """10-slot RPG equipment system and gear definitions."""
 from __future__ import annotations
+import re
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Iterable
 from eldoria_py.combat.stats import StatId, EquipmentSlot
 from eldoria_py.combat.actions import BattleAction, ACTIONS
+from eldoria_py.combat.portrait import Gender
+
+
+# Naming patterns for gender-sensitive equipment
+FEMALE_NAME_PATTERNS = [
+    r"\bvalkyrie\b",
+    r"\bvalkyries\b",
+    r"\bvalkyrie's\b",
+    r"\bmaiden\b",
+    r"\bmaidens\b",
+    r"\bmaiden's\b",
+    r"\bprincess\b",
+    r"\bprincesses\b",
+    r"\bprincess's\b",
+    r"\bqueen\b",
+    r"\bqueens\b",
+    r"\bqueen's\b",
+    r"\bsorceress\b",
+    r"\bsorceresses\b",
+    r"\bsorceress's\b",
+    r"\bpriestess\b",
+    r"\bpriestesses\b",
+    r"\bpriestess's\b",
+    r"\bwitch\b",
+    r"\bwitches\b",
+    r"\bwitch's\b",
+    r"\bgoddess\b",
+    r"\bgoddesses\b",
+    r"\bgoddess's\b",
+    r"\bvixen\b",
+    r"\bvixens\b",
+    r"\bvixen's\b",
+    r"\blady\b",
+    r"\bladies\b",
+    r"\blady's\b",
+    r"\bdame\b",
+    r"\bmatron\b",
+    r"\bmatriarch\b",
+    r"\bamazon\b",
+    r"\bamazonian\b",
+    r"\bgown\b",
+    r"\bdress\b",
+    r"\bcorset\b",
+    r"\bskirt\b",
+    r"\bblouse\b",
+    r"\btiara\b",
+]
+
+MALE_NAME_PATTERNS = [
+    r"\bwarlord\b",
+    r"\bwarlords\b",
+    r"\bwarlord's\b",
+    r"\bchieftain\b",
+    r"\bchieftains\b",
+    r"\bchieftain's\b",
+    r"\bking\b",
+    r"\bkings\b",
+    r"\bking's\b",
+    r"\bprince\b",
+    r"\bprinces\b",
+    r"\bprince's\b",
+    r"\bemperor\b",
+    r"\bemperors\b",
+    r"\bemperor's\b",
+    r"\blord\b",
+    r"\blords\b",
+    r"\blord's\b",
+    r"\bwarlock\b",
+    r"\bwarlocks\b",
+    r"\bwarlock's\b",
+    r"\bpatriarch\b",
+    r"\bpatriarchs\b",
+    r"\bpatriarch's\b",
+    r"\bbarbarian\b",
+    r"\bbarbarians\b",
+    r"\bbarbarian's\b",
+    r"\bgentleman\b",
+    r"\bgentlemen\b",
+    r"\bsir\b",
+    r"\bduke\b",
+    r"\bdukes\b",
+    r"\bbaron\b",
+    r"\bbarons\b",
+    r"\bmonk\b",
+    r"\bmonks\b",
+]
+
+
+def infer_equipment_gender_by_name(name: str) -> Gender:
+    """
+    Evaluates equipment name against semantic gender indicators.
+    Returns Gender.FEMALE or Gender.MALE if gender-specific naming patterns
+    are matched, otherwise returns Gender.UNISEX for all equipment eligible
+    for both males and females.
+    """
+    lower_name = name.lower()
+
+    for pattern in FEMALE_NAME_PATTERNS:
+        if re.search(pattern, lower_name, re.IGNORECASE):
+            return Gender.FEMALE
+
+    for pattern in MALE_NAME_PATTERNS:
+        if re.search(pattern, lower_name, re.IGNORECASE):
+            return Gender.MALE
+
+    return Gender.UNISEX
 
 
 @dataclass
@@ -17,10 +124,23 @@ class BattleEquipment:
     price: int = 100
     tier: int = 1
     is_relic: bool = False
+    target_gender: Gender = Gender.UNISEX
+
+    def __post_init__(self) -> None:
+        if self.target_gender == Gender.UNISEX:
+            inferred = infer_equipment_gender_by_name(self.name)
+            if inferred != Gender.UNISEX:
+                self.target_gender = inferred
 
     def get_bonus(self, stat: StatId) -> int:
         """Returns the bonus granted to the given stat, defaulting to 0."""
         return self.stat_bonuses.get(stat, 0)
+
+    def can_equip_by(self, gender: Gender) -> bool:
+        """Returns True if the item is Unisex or matches the specified character gender."""
+        if self.target_gender == Gender.UNISEX:
+            return True
+        return self.target_gender == gender
 
     @property
     def sell_price(self) -> int:
@@ -37,6 +157,7 @@ class BattleEquipment:
             "price": self.price,
             "tier": self.tier,
             "is_relic": self.is_relic,
+            "target_gender": self.target_gender.value,
         }
 
     @classmethod
@@ -53,8 +174,17 @@ class BattleEquipment:
                     price=item.price,
                     tier=item.tier,
                     is_relic=item.is_relic,
+                    target_gender=item.target_gender,
                 )
             raise ValueError(f"Unknown equipment catalog item: {data}")
+        raw_gender = data.get("target_gender")
+        if raw_gender is not None:
+            try:
+                target_gender = Gender(raw_gender)
+            except (ValueError, KeyError):
+                target_gender = infer_equipment_gender_by_name(data["name"])
+        else:
+            target_gender = infer_equipment_gender_by_name(data["name"])
         return cls(
             name=data["name"],
             slot=EquipmentSlot(data["slot"]),
@@ -64,6 +194,7 @@ class BattleEquipment:
             price=data.get("price", 100),
             tier=data.get("tier", 1),
             is_relic=data.get("is_relic", False),
+            target_gender=target_gender,
         )
 
 
@@ -155,6 +286,30 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         price=220,
         tier=2,
     ),
+    "Maiden Circlet": BattleEquipment(
+        name="Maiden Circlet",
+        slot=EquipmentSlot.HELMET,
+        stat_bonuses={StatId.MAGIC_DEFENSE: 8, StatId.MAGIC_POINTS: 20},
+        description="A delicate silver circlet worn by temple maidens.",
+        price=240,
+        tier=2,
+    ),
+    "King's Greathelm": BattleEquipment(
+        name="King's Greathelm",
+        slot=EquipmentSlot.HELMET,
+        stat_bonuses={StatId.DEFENSE: 12, StatId.ATTACK: 4, StatId.HIT_POINTS: 25},
+        description="A crowned steel helm forged for sovereign rulers.",
+        price=580,
+        tier=3,
+    ),
+    "Queen's Tiara": BattleEquipment(
+        name="Queen's Tiara",
+        slot=EquipmentSlot.HELMET,
+        stat_bonuses={StatId.MAGIC_ATTACK: 10, StatId.MAGIC_DEFENSE: 10, StatId.LUCK: 5},
+        description="A regal jewel-encrusted tiara radiating sovereign grace.",
+        price=620,
+        tier=3,
+    ),
 
     # Armor
     "Brigandine": BattleEquipment(
@@ -181,6 +336,62 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         price=650,
         tier=3,
     ),
+    "Valkyrie Mail": BattleEquipment(
+        name="Valkyrie Mail",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 18, StatId.MAGIC_DEFENSE: 12, StatId.SPEED: 4},
+        description="Ceremonial silver plate enchanted for maiden warriors.",
+        price=480,
+        tier=2,
+    ),
+    "Warlord Cuirass": BattleEquipment(
+        name="Warlord Cuirass",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 22, StatId.ATTACK: 6, StatId.HIT_POINTS: 35},
+        description="Heavy battle plate forged for towering chieftains.",
+        price=520,
+        tier=2,
+    ),
+    "Barbarian Harness": BattleEquipment(
+        name="Barbarian Harness",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 14, StatId.ATTACK: 8, StatId.SPEED: 2},
+        description="Thick leather harness worn by northern warmongers.",
+        price=310,
+        tier=2,
+    ),
+    "Sorceress Gown": BattleEquipment(
+        name="Sorceress Gown",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 8, StatId.MAGIC_DEFENSE: 16, StatId.MAGIC_POINTS: 35},
+        description="An elegant gossamer gown woven for enchantresses.",
+        price=320,
+        tier=2,
+    ),
+    "Lord's Cuirass": BattleEquipment(
+        name="Lord's Cuirass",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 24, StatId.ATTACK: 5, StatId.HIT_POINTS: 40},
+        description="Noble parade plate worn by martial lords.",
+        price=680,
+        tier=3,
+    ),
+    "Princess Dress": BattleEquipment(
+        name="Princess Dress",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 15, StatId.MAGIC_DEFENSE: 20, StatId.LUCK: 8},
+        description="Finely tailored royal vesture imbued with protective wards.",
+        price=700,
+        tier=3,
+    ),
+    "Warlock Robe": BattleEquipment(
+        name="Warlock Robe",
+        slot=EquipmentSlot.ARMOR,
+        stat_bonuses={StatId.DEFENSE: 7, StatId.MAGIC_ATTACK: 16, StatId.MAGIC_POINTS: 30},
+        description="Dark woolen robe embroidered with demonic sigils.",
+        price=290,
+        tier=2,
+    ),
 
     # Pauldrons
     "Steel Pauldrons": BattleEquipment(
@@ -197,6 +408,14 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         stat_bonuses={StatId.MAGIC_DEFENSE: 6, StatId.MAGIC_ATTACK: 3},
         description="Shoulder cloak embroidered with wards.",
         price=180,
+        tier=2,
+    ),
+    "Chieftain Pauldrons": BattleEquipment(
+        name="Chieftain Pauldrons",
+        slot=EquipmentSlot.PAULDRON,
+        stat_bonuses={StatId.DEFENSE: 8, StatId.ATTACK: 4},
+        description="Spiked iron pauldrons signifying clan leadership.",
+        price=230,
         tier=2,
     ),
 
@@ -252,6 +471,14 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         description="Enchanted footwear granting agile footing.",
         price=600,
         tier=3,
+    ),
+    "Vixen Boots": BattleEquipment(
+        name="Vixen Boots",
+        slot=EquipmentSlot.BOOTS,
+        stat_bonuses={StatId.SPEED: 7, StatId.LUCK: 6},
+        description="Sleek velvet boots favoured by cunning rogue maidens.",
+        price=260,
+        tier=2,
     ),
 
     # Jewelry A
@@ -364,3 +591,25 @@ EQUIPMENT_CATALOG: dict[str, BattleEquipment] = {
         is_relic=True,
     ),
 }
+
+
+def assign_genders_to_equipment_catalog(
+    catalog: Optional[dict[str, BattleEquipment]] = None,
+) -> dict[str, Gender]:
+    """
+    Loops through all equipment catalog items and assigns appropriate genders based on their names.
+    Unisex is used for equipment eligible for both males and females.
+    Returns a mapping of item name to assigned Gender.
+    """
+    target = EQUIPMENT_CATALOG if catalog is None else catalog
+    results: dict[str, Gender] = {}
+    for name, eq in target.items():
+        inferred = infer_equipment_gender_by_name(name)
+        eq.target_gender = inferred
+        results[name] = inferred
+    return results
+
+
+# Execute gender assignment across all equipment items in the catalog
+assign_genders_to_equipment_catalog()
+

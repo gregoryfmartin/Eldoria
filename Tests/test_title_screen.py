@@ -12,6 +12,7 @@ from eldoria_py.core.fsm import SMState
 from eldoria_py.terminal.color import ColorLibrary, TrueColor, dim_ansi, scale_color
 from eldoria_py.terminal.input import KeyCode, KeyEvent
 from eldoria_py.states.splash_screen import GSSplashScreen
+from eldoria_py.states.opening_cinematic import GSOpeningCinematicScreen
 from eldoria_py.states.title_screen import GSTitleScreen
 from eldoria_py.ui.panel import UIPanel
 from eldoria_py.ui.elements.label import UILabel
@@ -35,11 +36,11 @@ class TestSplashScreen(unittest.TestCase):
         self.assertEqual(self.splash.phase, "FADING_OUT")
         self.mock_game_state.trigger.assert_not_called()
 
-        # Fade-out duration elapses, triggering ToTitle transition
+        # Fade-out duration elapses, triggering ToCinematic transition
         self.context.set(SMState.ContextDeltaTime, self.splash.fade_out_duration)
         self.splash.update(self.context)
         self.assertEqual(self.splash.phase, "FINISHED")
-        self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
+        self.mock_game_state.trigger.assert_called_once_with("ToCinematic", self.context)
 
     def test_splash_advances_on_keypress(self):
         self.context.set(SMState.ContextDeltaTime, 0.1)
@@ -53,7 +54,7 @@ class TestSplashScreen(unittest.TestCase):
         self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.SPACE)])
         self.splash.update(self.context)
         self.assertEqual(self.splash.phase, "FINISHED")
-        self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
+        self.mock_game_state.trigger.assert_called_once_with("ToCinematic", self.context)
 
     def test_splash_instant_transition_when_fade_zero(self):
         splash = GSSplashScreen(screen_width=54, screen_height=24, duration=1.0, fade_out_duration=0.0)
@@ -62,7 +63,7 @@ class TestSplashScreen(unittest.TestCase):
 
         splash.update(self.context)
         self.assertEqual(splash.phase, "FINISHED")
-        self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
+        self.mock_game_state.trigger.assert_called_once_with("ToCinematic", self.context)
 
     def test_splash_panel_structure(self):
         self.assertIsInstance(self.splash.splash_panel, UIPanel)
@@ -214,14 +215,12 @@ class TestTitleScreen(unittest.TestCase):
         self.title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
         self.assertEqual(self.title.active_dialog, "OPTIONS")
 
-    def test_developer_hotkeys(self):
-        # M jumps to map
-        self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="m"), self.context, self.mock_core)
-        self.mock_game_state.trigger.assert_called_with("ToNoiseMap", self.context)
-
-        # B jumps to combat
-        self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="b"), self.context, self.mock_core)
-        self.mock_game_state.trigger.assert_called_with("ToCombat", self.context)
+    def test_developer_hotkeys_disabled(self):
+        self.title.audio_engine.stop_bgm = MagicMock()
+        for ch in ("m", "M", "b", "B", "u", "U", "c", "C"):
+            self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char=ch), self.context, self.mock_core)
+        self.mock_game_state.trigger.assert_not_called()
+        self.title.audio_engine.stop_bgm.assert_not_called()
 
     def test_title_screen_panel_structure(self):
         from eldoria_py.ui.panel import UIPanel
@@ -234,6 +233,17 @@ class TestTitleScreen(unittest.TestCase):
         self.assertIsInstance(self.title.load_panel, UIPanel)
         self.assertIsInstance(self.title.options_panel, UIPanel)
         self.assertIsInstance(self.title.credits_panel, UIPanel)
+
+        # Verify Dev Hotkeys label and bottom divider are absent
+        self.assertFalse(hasattr(self.title, "hint_label"))
+        self.assertFalse(hasattr(self.title, "divider_bottom"))
+        for elem in self.title.title_panel.ui_element_listing.values():
+            self.assertNotIn("Dev Hotkeys", getattr(elem, "text", ""))
+            self.assertNotEqual(elem.coordinates.row, 20)
+
+        # Verify all menu items are left-aligned relative to each other (same starting column)
+        cols = {item.coordinates.column for item in self.title.menu.items}
+        self.assertEqual(len(cols), 1)
 
     def test_title_screen_options_toggling(self):
         self.title.selected_idx = 2
@@ -346,12 +356,6 @@ class TestTitleScreen(unittest.TestCase):
         self.assertFalse(self.title.is_fading_out)
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
 
-    def test_title_screen_dev_map_hotkey_stops_bgm(self):
-        self.title.audio_engine.stop_bgm = MagicMock()
-        self.title._handle_input(KeyEvent(key=KeyCode.CHAR, char="m"), self.context, self.mock_core)
-        self.title.audio_engine.stop_bgm.assert_called_once()
-        self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
-
     def test_title_screen_load_game_fade_out_dimming(self):
         """Verifies that while fading out from Load Game screen, dimming write filter is active."""
         from eldoria_py.terminal.screen import TerminalScreen
@@ -419,6 +423,229 @@ class TestTitleScreen(unittest.TestCase):
         title._handle_input(KeyEvent(key=KeyCode.ENTER, char="\r"), self.context, self.mock_core)
         self.assertFalse(title.is_fading_out)
         self.mock_game_state.trigger.assert_called_once_with("ToNoiseMap", self.context)
+
+    def test_title_screen_idle_timer_triggers_cinematic(self):
+        """Verifies that 30s of inactivity on the main menu fades out and transitions to ToCinematic."""
+        self.title.is_fading_in = False
+        self.title.audio_engine.fade_out_bgm = MagicMock()
+        self.title.audio_engine.stop_bgm = MagicMock()
+
+        # Advance 29.0s -> not yet triggered
+        self.context.set(SMState.ContextDeltaTime, 29.0)
+        self.context.set(SMState.ContextKeysPressed, [])
+        self.title.update(self.context)
+        self.assertFalse(self.title.is_fading_out)
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Advance 1.5s -> reaches 30.0s threshold, initiates fade-out
+        self.context.set(SMState.ContextDeltaTime, 1.5)
+        self.title.update(self.context)
+        self.assertTrue(self.title.is_fading_out)
+        self.title.audio_engine.fade_out_bgm.assert_called_once_with(duration_seconds=self.title.fade_out_duration)
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Complete fade-out -> triggers ToCinematic
+        self.context.set(SMState.ContextDeltaTime, self.title.fade_out_duration)
+        self.title.update(self.context)
+        self.assertFalse(self.title.is_fading_out)
+        self.title.audio_engine.stop_bgm.assert_called_once()
+        self.mock_game_state.trigger.assert_called_once_with("ToCinematic", self.context)
+
+    def test_title_screen_idle_timer_resets_on_key_and_pauses_in_dialog(self):
+        """Verifies keypresses reset idle_elapsed and modal dialogs pause the attract timer."""
+        self.title.is_fading_in = False
+        self.context.set(SMState.ContextDeltaTime, 20.0)
+        self.context.set(SMState.ContextKeysPressed, [])
+        self.title.update(self.context)
+        self.assertAlmostEqual(self.title.idle_elapsed, 20.0)
+
+        # Pressing Down arrow resets idle_elapsed to 0.0
+        self.context.set(SMState.ContextDeltaTime, 0.1)
+        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.DOWN)])
+        self.title.update(self.context)
+        self.assertAlmostEqual(self.title.idle_elapsed, 0.0)
+
+        # While OPTIONS dialog is open, idle_elapsed does not advance
+        self.title._open_dialog("OPTIONS")
+        self.context.set(SMState.ContextDeltaTime, 50.0)
+        self.context.set(SMState.ContextKeysPressed, [])
+        self.title.update(self.context)
+        self.assertAlmostEqual(self.title.idle_elapsed, 0.0)
+        self.assertFalse(self.title.is_fading_out)
+
+
+class TestOpeningCinematicScreen(unittest.TestCase):
+    """Verifies the 4-scene opening cinematic storyboard, audio hooks, thunder flash, and keypress skip."""
+
+    def setUp(self):
+        self.cinematic = GSOpeningCinematicScreen(screen_width=80, screen_height=24)
+        self.cinematic.audio_engine = MagicMock()
+        self.context = Context()
+        self.mock_core = MagicMock()
+        self.mock_game_state = MagicMock()
+        self.mock_game_state.current_state = "GSOpeningCinematicScreen"
+        self.mock_core.game_state = self.mock_game_state
+        self.context.set(SMState.ContextEldoriaCore, self.mock_core)
+        self.context.set(SMState.ContextKeysPressed, [])
+        self.cinematic.enter(self.context)
+
+    def _step(self, dt: float) -> None:
+        self.context.set(SMState.ContextDeltaTime, dt)
+        self.cinematic.update(self.context)
+
+    def test_full_storyboard_progression(self):
+        from eldoria_py.terminal.box import strip_ansi
+
+        # Scene 1: starts in 1.0s silent black WAIT
+        self.assertEqual(self.cinematic.scene_idx, 0)
+        self.assertEqual(self.cinematic.phase, "WAIT")
+        self.cinematic.audio_engine.play_bgm.assert_not_called()
+
+        # After 1.0s wait -> plays BGM and enters FADE_IN (teletype apparition) for Scene 1
+        self._step(1.0)
+        self.assertEqual(self.cinematic.phase, "FADE_IN")
+        self.cinematic.audio_engine.play_bgm.assert_called_once_with("Opening Cinematic Theme", loop=True)
+
+        # Mid teletype frame contains Scene 1 two-line text with per-character black->white TrueColor
+        self._step(0.75)
+        frame_s1 = self.cinematic._build_frame()
+        plain_s1 = strip_ansi(frame_s1)
+        self.assertIn("In the land,", plain_s1)
+        self.assertIn("there are baddies.", plain_s1)
+
+        # Finish Scene 1 FADE_IN (0.75s remaining of 1.5s) -> HOLD (3.0s) -> FADE_OUT (0.75s)
+        self._step(0.75)
+        self.assertEqual(self.cinematic.phase, "HOLD")
+        self._step(3.0)
+        self.assertEqual(self.cinematic.phase, "FADE_OUT")
+        self._step(0.75)
+
+        # Scene 2: starts with THUNDER flash + Thunder Clap SFX
+        self.assertEqual(self.cinematic.scene_idx, 1)
+        self.assertEqual(self.cinematic.phase, "THUNDER")
+        self.cinematic.audio_engine.play_sfx.assert_called_with("Thunder Clap")
+        self.assertIn("█", self.cinematic._build_frame())
+
+        # Advance through Scene 2: THUNDER (0.4s) -> WAIT (1.0s) -> FADE_IN (1.5s) -> HOLD (3.0s) -> FADE_OUT (0.75s)
+        self._step(0.4)
+        self.assertEqual(self.cinematic.phase, "WAIT")
+        self._step(1.0)
+        self.assertEqual(self.cinematic.phase, "FADE_IN")
+        self._step(1.5)
+        self.assertEqual(self.cinematic.phase, "HOLD")
+        frame_s2 = self.cinematic._build_frame()
+        self.assertIn("The baddies are real bad.", frame_s2)
+        self.assertIn("The goodies aren’t Kenough.", frame_s2)
+        self._step(3.0)
+        self.assertEqual(self.cinematic.phase, "FADE_OUT")
+        self._step(0.75)
+
+        # Scene 3: THUNDER -> WAIT -> FADE_IN -> HOLD -> FADE_OUT
+        self.assertEqual(self.cinematic.scene_idx, 2)
+        self.assertEqual(self.cinematic.phase, "THUNDER")
+        self.assertEqual(self.cinematic.audio_engine.play_sfx.call_count, 2)
+        self._step(0.4)
+        self._step(1.0)
+        self._step(1.5)
+        frame_s3 = self.cinematic._build_frame()
+        self.assertIn("Some goodies, however, got gud.", frame_s3)
+        self.assertIn("They are Kenough.", frame_s3)
+        self._step(3.0)
+        self._step(0.75)
+
+        # Scene 4: THUNDER -> WAIT -> FADE_IN -> HOLD (3 lines) -> FADE_OUT (with BGM fade-out) -> OUTRO_WAIT (1.0s) -> ToTitle
+        self.assertEqual(self.cinematic.scene_idx, 3)
+        self.assertEqual(self.cinematic.phase, "THUNDER")
+        self.assertEqual(self.cinematic.audio_engine.play_sfx.call_count, 3)
+        self._step(0.4)
+        self._step(1.0)
+        self._step(1.5)
+        frame_s4 = self.cinematic._build_frame()
+        self.assertIn("Together, with strongeth welling, the party sets forth.", frame_s4)
+        self.assertIn("Such friendship.", frame_s4)
+        self.assertIn("Much Courag-e-ur.", frame_s4)
+
+        # Hold 3.0s -> enters FADE_OUT and fades out BGM
+        self._step(3.0)
+        self.assertEqual(self.cinematic.phase, "FADE_OUT")
+        self.cinematic.audio_engine.fade_out_bgm.assert_called_once_with(duration_seconds=0.75)
+
+        # Finish FADE_OUT -> enters 1.0s OUTRO_WAIT
+        self._step(0.75)
+        self.assertEqual(self.cinematic.phase, "OUTRO_WAIT")
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Finish 1.0s OUTRO_WAIT -> transitions to ToTitle
+        self._step(1.0)
+        self.assertEqual(self.cinematic.phase, "FINISHED")
+        self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
+
+    def test_teletype_black_to_white_apparition(self):
+        """Verifies characters apparate sequentially from black (0,0,0) through grey to white (255,255,255)."""
+        # Enter Scene 1 FADE_IN
+        self._step(1.0)
+        self.assertEqual(self.cinematic.phase, "FADE_IN")
+
+        # At progress = 0.0: all characters are pure black (0, 0, 0)
+        total_chars = sum(len(line) for line in self.cinematic.SCENES[0][1])
+        self.assertEqual(self.cinematic._char_teletype_brightness(0, total_chars, 0.0), 0.0)
+        self.assertEqual(self.cinematic._char_teletype_brightness(total_chars - 1, total_chars, 0.0), 0.0)
+
+        # At progress = 0.5 (halfway through teletype):
+        # First character is fully white (1.0), middle character is fading in (0 < b < 1), last character is still black (0.0)
+        b_first = self.cinematic._char_teletype_brightness(0, total_chars, 0.5)
+        b_mid = self.cinematic._char_teletype_brightness(total_chars // 2, total_chars, 0.5)
+        b_last = self.cinematic._char_teletype_brightness(total_chars - 1, total_chars, 0.5)
+        self.assertAlmostEqual(b_first, 1.0)
+        self.assertGreater(b_mid, 0.0)
+        self.assertLess(b_mid, 1.0)
+        self.assertAlmostEqual(b_last, 0.0)
+
+        # Verify rendered ANSI line contains white (255;255;255), intermediate grey, and black (0;0;0)
+        self._step(self.cinematic.fade_in_duration * 0.5)
+        frame_mid = self.cinematic._build_frame()
+        self.assertIn("\033[38;2;255;255;255m", frame_mid)
+        self.assertIn("\033[38;2;0;0;0m", frame_mid)
+
+    def test_premature_termination_on_keypress(self):
+        # Advance into Scene 1 HOLD so BGM is playing and text is visible
+        self._step(1.0)
+        self._step(1.5)
+        self.assertEqual(self.cinematic.phase, "HOLD")
+
+        # Press any key -> enters SKIP_FADE_OUT and fades out BGM
+        self.context.set(SMState.ContextKeysPressed, [KeyEvent(key=KeyCode.SPACE)])
+        self._step(0.05)
+        self.assertEqual(self.cinematic.phase, "SKIP_FADE_OUT")
+        self.cinematic.audio_engine.stop_sfx.assert_called_once()
+        self.cinematic.audio_engine.fade_out_bgm.assert_called_once_with(
+            duration_seconds=self.cinematic.skip_fade_out_duration
+        )
+        self.mock_game_state.trigger.assert_not_called()
+
+        # Complete skip fade-out -> transitions to ToTitle
+        self._step(self.cinematic.skip_fade_out_duration)
+        self.assertEqual(self.cinematic.phase, "FINISHED")
+        self.cinematic.audio_engine.stop_bgm.assert_called_once()
+        self.mock_game_state.trigger.assert_called_once_with("ToTitle", self.context)
+
+    def test_engine_boot_and_attract_transitions(self):
+        from eldoria_py.core.engine import EldoriaCore
+        engine = EldoriaCore(initial_state="GSSplashScreen")
+        engine.initialize_states()
+
+        self.assertIn("GSOpeningCinematicScreen", engine.game_state.states)
+        engine.game_state.trigger("Ready", self.context)
+        self.assertEqual(engine.game_state.current_state, "GSSplashScreen")
+
+        engine.game_state.trigger("ToCinematic", self.context)
+        self.assertEqual(engine.game_state.current_state, "GSOpeningCinematicScreen")
+
+        engine.game_state.trigger("ToTitle", self.context)
+        self.assertEqual(engine.game_state.current_state, "GSTitleScreen")
+
+        engine.game_state.trigger("ToCinematic", self.context)
+        self.assertEqual(engine.game_state.current_state, "GSOpeningCinematicScreen")
 
 
 class TestColorDimming(unittest.TestCase):

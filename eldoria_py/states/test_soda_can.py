@@ -830,7 +830,6 @@ class GSAnimatedSodaCanTestScreen(SMState):
 
     def _on_exit(self, context: Context) -> None:
         TerminalScreen.clear_screen()
-        TerminalScreen.write(ATControlSequences.CursorShow)
         TerminalScreen.flush()
 
     def _on_update(self, context: Context) -> None:

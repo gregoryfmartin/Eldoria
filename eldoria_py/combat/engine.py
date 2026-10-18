@@ -435,6 +435,8 @@ class NvNCombatEngine:
                             gain_parts.append(f"{STAT_SHORT_NAMES.get(sid, sid.name)} +{gains_dict[sid]}")
                     gains_str = ", ".join(gain_parts) if gain_parts else "Stats increased"
                     self.log(f"★ {survivor.name} reached Lv. {s['level']}! ({gains_str})")
+                    for act_name in s.get("unlocked_actions", []):
+                        self.log(f"  ✨ {survivor.name} learned {act_name}!")
 
     def _trigger_defeat(self) -> None:
         """Handles party wipeout."""

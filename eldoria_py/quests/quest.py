@@ -116,7 +116,7 @@ class LinearQuest(Quest):
         self._sync_active_step()
 
     def _sync_active_step(self, party: Optional[Any] = None) -> None:
-        """Probes for the first uncompleted step and ensures it is marked active."""
+        """Probes for the first uncompleted step and ensures it is marked active. Cascades past pre-fulfilled objectives."""
         if self.is_completed:
             for s in self.steps:
                 s.is_active = False
@@ -124,12 +124,18 @@ class LinearQuest(Quest):
 
         found_active = False
         for s in self.steps:
-            if not s.is_completed and not found_active:
-                if not s.is_active:
+            if not s.is_completed:
+                if party is not None:
                     s.activate(party=party)
-                found_active = True
-            elif not s.is_completed:
-                s.is_active = False
+                if s.is_completed:
+                    continue
+
+                if not found_active:
+                    if not s.is_active:
+                        s.activate(party=party)
+                    found_active = True
+                else:
+                    s.is_active = False
 
         if not found_active and self.steps:
             self.is_completed = True
@@ -145,24 +151,47 @@ class LinearQuest(Quest):
         return []
 
     def notify(self, event_type: str, payload: Dict[str, Any], party: Optional[Any] = None) -> bool:
-        """Evaluates event strictly against the single currently active QuestStep."""
+        """Evaluates event against the active step, and pre-credits any future objectives matching the event."""
         if self.is_completed:
             return False
 
+        changed = False
+
+        # If enemy defeated and is a recorded boss defeat in party, pre-credit any step in this quest targeting it
+        if event_type == "ENEMY_DEFEATED":
+            enemy_name = payload.get("enemy_name")
+            defeated = getattr(party, "defeated_bosses", set()) if party else set()
+            if enemy_name and enemy_name in defeated:
+                for s in self.steps:
+                    if not s.is_completed and s.target_name == enemy_name:
+                        s.current_progress = s.target_count
+                        s.is_completed = True
+                        changed = True
+
         active_steps = self.get_active_steps()
-        if not active_steps:
-            return False
+        if active_steps:
+            active_step = active_steps[0]
+            if active_step.evaluate_event(event_type, payload, party=party):
+                changed = True
 
-        active_step = active_steps[0]
-        changed = active_step.evaluate_event(event_type, payload, party=party)
-
-        if active_step.is_completed:
-            # Advance to next step in sequence
-            self._sync_active_step(party=party)
-            self.check_completion()
-            changed = True
+        # Synchronize active step (cascades forward if active or current steps were completed)
+        self._sync_active_step(party=party)
+        self.check_completion()
 
         return changed
+
+    @property
+    def active_step(self) -> Optional[QuestStep]:
+        """Returns the current active QuestStep in the sequence, if any."""
+        return self.get_active_step()
+
+    @property
+    def active_step_index(self) -> Optional[int]:
+        """Returns the 0-based index of the currently active QuestStep, or None if completed."""
+        step = self.get_active_step()
+        if step is not None and step in self.steps:
+            return self.steps.index(step)
+        return None
 
     def to_dict(self) -> Dict[str, Any]:
         d = super().to_dict()

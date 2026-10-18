@@ -380,6 +380,134 @@ def generate_armorer_inventory(region_tier: int = 1, seed: Optional[int] = None)
             "price": eq.price,
             "sell_price": eq.sell_price,
             "type": "equipment",
+            "target_gender": eq.target_gender.value,
+            "qty": 99,
+        })
+    return inventory
+
+
+def generate_item_shop_inventory(region_tier: int = 1, seed: Optional[int] = None) -> List[Dict[str, Any]]:
+    """
+    Generates a shop inventory of consumable/remedy items scaled to the specified region (1 to 9).
+    Only non-equipment items can be stocked; key items are strictly excluded.
+    Lower regions stock Tier 1 items with a smattering of mid-tier items.
+    Higher regions stock mid-tier and high-tier items.
+    Sell prices are fixed at 20% of base price in all cases.
+    """
+    from ..combat.items import ITEM_CATALOG, ItemType, ItemEffectType
+    reg = max(1, min(9, int(region_tier)))
+    rng = random.Random(seed) if seed is not None else random
+
+    # Filter out equipment and key items
+    valid_items = {
+        name: item for name, item in ITEM_CATALOG.items()
+        if item.item_type not in (ItemType.EQUIPMENT, ItemType.KEY_ITEM)
+    }
+
+    remedy_items = {
+        name: item for name, item in valid_items.items()
+        if item.effect_type != ItemEffectType.TEACH_ACTION
+    }
+    study_items = {
+        name: item for name, item in valid_items.items()
+        if item.effect_type == ItemEffectType.TEACH_ACTION
+    }
+
+    t1_items = [name for name, item in remedy_items.items() if item.tier == 1]
+    t2_items = [name for name, item in remedy_items.items() if item.tier == 2]
+    t3_items = [name for name, item in remedy_items.items() if item.tier == 3]
+    t4_items = [name for name, item in remedy_items.items() if item.tier >= 4]
+
+    selected_names: List[str] = []
+
+    if reg == 1:
+        # All Tier 1 staples
+        selected_names.extend(t1_items)
+        # Smattering of 2 Tier 2 items (cost prohibitive early goals)
+        starter_smattering = ["Hi-Potion", "Ether"]
+        if seed is not None:
+            chosen_t2 = rng.sample(t2_items, min(2, len(t2_items)))
+        else:
+            chosen_t2 = [n for n in starter_smattering if n in t2_items]
+        selected_names.extend(chosen_t2)
+        # Early-tier high-cost study manuals (5,000G each)
+        for st in ("ST: Axe Cleave", "T: Ice Bolt"):
+            if st in study_items:
+                selected_names.append(st)
+    elif reg in (2, 3):
+        # All Tier 1 and all Tier 2
+        selected_names.extend(t1_items)
+        selected_names.extend(t2_items)
+        # Smattering of 2 Tier 3 items
+        if seed is not None:
+            chosen_t3 = rng.sample(t3_items, min(2, len(t3_items)))
+        else:
+            chosen_t3 = [n for n in ["Hi-Ether", "Revive Herb"] if n in t3_items]
+        selected_names.extend(chosen_t3)
+        # Tier 1-2 study manuals & tomes
+        for st in (
+            "ST: Axe Cleave",
+            "ST: Flame Punch",
+            "ST: Double Scratch",
+            "T: Ice Bolt",
+            "T: Fireball",
+            "T: Heal",
+        ):
+            if st in study_items:
+                selected_names.append(st)
+    elif reg in (4, 5, 6):
+        # All Tier 1, 2, and 3 items
+        selected_names.extend(t1_items)
+        selected_names.extend(t2_items)
+        selected_names.extend(t3_items)
+        # Smattering of 1 Tier 4 item (Elixir)
+        if t4_items:
+            selected_names.append("Elixir" if "Elixir" in t4_items else t4_items[0])
+        # Intermediate to advanced study manuals & tomes
+        for st in (
+            "ST: Axe Cleave",
+            "ST: Flame Punch",
+            "ST: Drop Kick",
+            "ST: Double Scratch",
+            "ST: Shield Bash",
+            "T: Ice Bolt",
+            "T: Fireball",
+            "T: Tidal Crush",
+            "T: Boulder Bash",
+            "T: Galeflash",
+            "T: Radiance",
+            "T: Dark Surge",
+            "T: Heal",
+        ):
+            if st in study_items:
+                selected_names.append(st)
+    else:  # reg in (7, 8, 9)
+        # Full apothecary stock of all commercial tiers
+        selected_names.extend(t1_items)
+        selected_names.extend(t2_items)
+        selected_names.extend(t3_items)
+        selected_names.extend(t4_items)
+        # Full master-tier study manuals & tomes
+        selected_names.extend(list(study_items.keys()))
+
+    # Compass Conch is a staple utility available across all shops
+    if "Compass Conch" in valid_items and "Compass Conch" not in selected_names:
+        selected_names.append("Compass Conch")
+
+    unique_names = list(dict.fromkeys(selected_names))
+    # Sort by tier, price, name
+    unique_names.sort(key=lambda n: (valid_items[n].tier, valid_items[n].price, n))
+
+    inventory: List[Dict[str, Any]] = []
+    for name in unique_names:
+        item = valid_items[name]
+        inventory.append({
+            "item_id": item.item_id,
+            "name": item.name,
+            "price": item.price,
+            "sell_price": item.sell_price,
+            "type": "consumable",
+            "tier": item.tier,
             "qty": 99,
         })
     return inventory
@@ -412,20 +540,9 @@ def create_service_owner(
         dialogue = "Welcome! Would you like to buy something today?"
         choice_options = ["Yes", "No"]
         if is_endgame:
-            inv = [
-                {"item_id": "Elixir", "price": 1200, "qty": 99},
-                {"item_id": "Mega Potion", "price": 450, "qty": 99},
-                {"item_id": "High Ether", "price": 600, "qty": 99},
-                {"item_id": "Revive Herb", "price": 500, "qty": 99},
-                {"item_id": "Panacea", "price": 300, "qty": 99},
-            ]
+            inv = generate_item_shop_inventory(region_tier=9)
         else:
-            inv = [
-                {"item_id": "Potion", "price": 50, "qty": 99},
-                {"item_id": "Ether", "price": 150, "qty": 99},
-                {"item_id": "Antidote", "price": 30, "qty": 99},
-                {"item_id": "Revive Herb", "price": 250, "qty": 99},
-            ]
+            inv = generate_item_shop_inventory(region_tier=region)
     elif role == NPCRole.EQUIP_SHOPKEEPER:
         glyph = "E"
         fg = TrueColor(0xED, 0x89, 0x36)  # Forge Amber

@@ -780,21 +780,43 @@ class WorldMacroMap:
 
             used_sectors.add(best_coord)
 
-            cave_submap, cave_spawn = SubMapGenerator.generate_cave(
+            cave_floors, cave_spawn = SubMapGenerator.generate_cave_complex(
                 name=cave_name,
                 seed=self.seed + idx * 53,
-                floor_level=0,
                 base_region=boss_reg,
                 boss_name=boss_name,
             )
+            if boss_reg <= 2:
+                cave_tier = 1
+                required_tier = 0
+                is_locked = False
+                unlock_msg = ""
+            elif boss_reg <= 5:
+                cave_tier = 2
+                required_tier = 1
+                is_locked = True
+                unlock_msg = "An ancient runic seal bars the entrance. It hums with the dark life-force of the outer region terrors."
+            else:
+                cave_tier = 3
+                required_tier = 2
+                is_locked = True
+                unlock_msg = "A pulsing abyssal void ward seals this entrance. It only yields to one who has conquered the midland perils."
+
             cave_poi = POIDescriptor.create_cave(
                 name=cave_name,
                 sector_coord=best_coord,
                 local_pos=cave_pos,
                 spawn_pos=cave_spawn,
                 description=f"A dark underground cavern harboring the dread threat of {boss_name}.",
+                is_locked=is_locked,
+                unlock_msg=unlock_msg,
+                boss_name=boss_name,
+                cave_tier=cave_tier,
+                required_tier=required_tier,
             )
-            cave_poi.sub_map = cave_submap
+            cave_poi.floors = cave_floors
+            cave_poi.current_floor = 0
+            cave_poi.sub_map = cave_floors[0]
             self._stamp_poi_on_tile(sec_map, cave_pos, cave_poi)
             sec_map.tiles[cave_pos[1]][cave_pos[0]].region_code = boss_reg
 

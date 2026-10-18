@@ -27,6 +27,8 @@ class ItemEffectType(str, Enum):
     DAMAGE_PHYSICAL = "DAMAGE_PHYSICAL"
     DAMAGE_MAGICAL = "DAMAGE_MAGICAL"
     STATUS_EFFECT = "STATUS_EFFECT"
+    LOCATE_CAVE = "LOCATE_CAVE"
+    TEACH_ACTION = "TEACH_ACTION"
 
 
 @dataclass
@@ -44,11 +46,18 @@ class ConsumableItem:
     price: int = 25
     can_discard: bool = True
     consumed_on_use: bool = True
+    tier: int = 1
+    teaches_action_name: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.item_type == ItemType.KEY_ITEM:
             self.can_discard = False
             self.consumed_on_use = False
+
+    @property
+    def sell_price(self) -> int:
+        """Resale price is fixed at 20% of base sale price in all cases."""
+        return max(1, int(self.price * 0.20))
 
     def to_dict(self) -> dict:
         return {
@@ -62,8 +71,11 @@ class ConsumableItem:
             "usable_in_field": self.usable_in_field,
             "usable_in_battle": self.usable_in_battle,
             "price": self.price,
+            "sell_price": self.sell_price,
             "can_discard": self.can_discard,
             "consumed_on_use": self.consumed_on_use,
+            "tier": self.tier,
+            "teaches_action_name": self.teaches_action_name,
         }
 
     def to_battle_action(self) -> BattleAction:
@@ -128,6 +140,8 @@ class ConsumableItem:
             price=data.get("price", 25),
             can_discard=data.get("can_discard", default_can_discard),
             consumed_on_use=data.get("consumed_on_use", default_consumed),
+            tier=data.get("tier", 1),
+            teaches_action_name=data.get("teaches_action_name"),
         )
 
 
@@ -143,6 +157,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=20,
+        tier=1,
     ),
     "Hi-Potion": ConsumableItem(
         item_id="Hi-Potion",
@@ -155,6 +170,20 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=60,
+        tier=2,
+    ),
+    "Mega Potion": ConsumableItem(
+        item_id="Mega Potion",
+        name="Mega Potion",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.RESTORE_HP,
+        power=400,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A potent apothecary elixir that restores 400 HP to one ally.",
+        usable_in_field=True,
+        usable_in_battle=True,
+        price=180,
+        tier=3,
     ),
     "Ether": ConsumableItem(
         item_id="Ether",
@@ -167,6 +196,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=45,
+        tier=2,
     ),
     "Hi-Ether": ConsumableItem(
         item_id="Hi-Ether",
@@ -179,6 +209,20 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=120,
+        tier=3,
+    ),
+    "High Ether": ConsumableItem(
+        item_id="High Ether",
+        name="High Ether",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.RESTORE_MP,
+        power=200,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="Refined luminous ether restoring 200 MP to one ally.",
+        usable_in_field=True,
+        usable_in_battle=True,
+        price=250,
+        tier=3,
     ),
     "Elixir": ConsumableItem(
         item_id="Elixir",
@@ -191,6 +235,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=500,
+        tier=4,
     ),
     "Revive Herb": ConsumableItem(
         item_id="Revive Herb",
@@ -203,6 +248,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=100,
+        tier=2,
     ),
     "Antidote": ConsumableItem(
         item_id="Antidote",
@@ -215,6 +261,46 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=True,
         price=15,
+        tier=1,
+    ),
+    "Eye Drops": ConsumableItem(
+        item_id="Eye Drops",
+        name="Eye Drops",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.CURE_STATUS,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="Clears darkness and blindness, restoring sight to one ally.",
+        usable_in_field=True,
+        usable_in_battle=True,
+        price=15,
+        tier=1,
+    ),
+    "Smelling Salts": ConsumableItem(
+        item_id="Smelling Salts",
+        name="Smelling Salts",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.CURE_STATUS,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="Pungent herbal crystals that immediately awaken an ally from sleep.",
+        usable_in_field=True,
+        usable_in_battle=True,
+        price=20,
+        tier=1,
+    ),
+    "Panacea": ConsumableItem(
+        item_id="Panacea",
+        name="Panacea",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.CURE_STATUS,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A celebrated universal curative that cleanses all status ailments.",
+        usable_in_field=True,
+        usable_in_battle=True,
+        price=150,
+        tier=3,
     ),
     "Tent": ConsumableItem(
         item_id="Tent",
@@ -227,6 +313,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=True,
         usable_in_battle=False,
         price=250,
+        tier=3,
     ),
     # Offensive Combat Items
     "Bomb": ConsumableItem(
@@ -240,6 +327,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=False,
         usable_in_battle=True,
         price=50,
+        tier=1,
     ),
     "Fire Flask": ConsumableItem(
         item_id="Fire Flask",
@@ -252,6 +340,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=False,
         usable_in_battle=True,
         price=80,
+        tier=2,
     ),
     "Sleep Powder": ConsumableItem(
         item_id="Sleep Powder",
@@ -264,6 +353,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         usable_in_field=False,
         usable_in_battle=True,
         price=35,
+        tier=1,
     ),
     "Poison Bottle": ConsumableItem(
         item_id="Poison Bottle",
@@ -278,6 +368,7 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         price=40,
         can_discard=True,
         consumed_on_use=True,
+        tier=2,
     ),
     # Key & Progression Items (Permanent, non-discardable, not consumed on use)
     "Iron Key": ConsumableItem(
@@ -364,18 +455,303 @@ ITEM_CATALOG: dict[str, ConsumableItem] = {
         can_discard=False,
         consumed_on_use=False,
     ),
+    "Compass Conch": ConsumableItem(
+        item_id="Compass Conch",
+        name="Compass Conch",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.LOCATE_CAVE,
+        power=0,
+        target_scope=TargetScope.NONE,
+        description="A spiraled sea shell that divines the direction of the nearest subterranean cave.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=500,
+        can_discard=True,
+        consumed_on_use=True,
+        tier=1,
+    ),
+
+    # Spell Tomes
+    "T: Fireball": ConsumableItem(
+        item_id="T: Fireball",
+        name="T: Fireball",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="An ancient incantation scroll that permanently teaches Fireball to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=7000,
+        tier=2,
+        teaches_action_name="Fireball",
+    ),
+    "T: Ice Bolt": ConsumableItem(
+        item_id="T: Ice Bolt",
+        name="T: Ice Bolt",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A frosted parchment that permanently teaches Ice Bolt to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=5000,
+        tier=1,
+        teaches_action_name="Ice Bolt",
+    ),
+    "T: Arctic Blast": ConsumableItem(
+        item_id="T: Arctic Blast",
+        name="T: Arctic Blast",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A glacial grimoire that permanently teaches Arctic Blast to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=12000,
+        tier=3,
+        teaches_action_name="Arctic Blast",
+    ),
+    "T: Tidal Crush": ConsumableItem(
+        item_id="T: Tidal Crush",
+        name="T: Tidal Crush",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A surging water tome that permanently teaches Tidal Crush to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=6000,
+        tier=2,
+        teaches_action_name="Tidal Crush",
+    ),
+    "T: Boulder Bash": ConsumableItem(
+        item_id="T: Boulder Bash",
+        name="T: Boulder Bash",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A heavy earthen slate that permanently teaches Boulder Bash to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=6400,
+        tier=2,
+        teaches_action_name="Boulder Bash",
+    ),
+    "T: Galeflash": ConsumableItem(
+        item_id="T: Galeflash",
+        name="T: Galeflash",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A tempestuous manuscript that permanently teaches Galeflash to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=5600,
+        tier=1,
+        teaches_action_name="Galeflash",
+    ),
+    "T: Radiance": ConsumableItem(
+        item_id="T: Radiance",
+        name="T: Radiance",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A luminous scripture that permanently teaches Radiance to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=10000,
+        tier=3,
+        teaches_action_name="Radiance",
+    ),
+    "T: Dark Surge": ConsumableItem(
+        item_id="T: Dark Surge",
+        name="T: Dark Surge",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A shadowy grimoire that permanently teaches Dark Surge to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=8000,
+        tier=2,
+        teaches_action_name="Dark Surge",
+    ),
+    "T: Cataclysm": ConsumableItem(
+        item_id="T: Cataclysm",
+        name="T: Cataclysm",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A forbidden apocalyptic codex that permanently teaches Cataclysm to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=18000,
+        tier=4,
+        teaches_action_name="Cataclysm",
+    ),
+    "T: Heal": ConsumableItem(
+        item_id="T: Heal",
+        name="T: Heal",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A restorative prayer folio that permanently teaches Heal to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=6000,
+        tier=1,
+        teaches_action_name="Heal",
+    ),
+    "T: Group Heal": ConsumableItem(
+        item_id="T: Group Heal",
+        name="T: Group Heal",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A sacred hymnal that permanently teaches Group Heal to a party member.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=15000,
+        tier=3,
+        teaches_action_name="Group Heal",
+    ),
+
+    # Skill Trainers
+    "ST: Axe Cleave": ConsumableItem(
+        item_id="ST: Axe Cleave",
+        name="ST: Axe Cleave",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A combat manual detailing master-level overhead axe techniques.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=5000,
+        tier=1,
+        teaches_action_name="Axe Cleave",
+    ),
+    "ST: Flame Punch": ConsumableItem(
+        item_id="ST: Flame Punch",
+        name="ST: Flame Punch",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A martial treatise on channeling raw flame into a devastating punch.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=6000,
+        tier=2,
+        teaches_action_name="Flame Punch",
+    ),
+    "ST: Drop Kick": ConsumableItem(
+        item_id="ST: Drop Kick",
+        name="ST: Drop Kick",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="An acrobatic drill guide for executing high-impact aerial drop kicks.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=7000,
+        tier=2,
+        teaches_action_name="Drop Kick",
+    ),
+    "ST: Double Scratch": ConsumableItem(
+        item_id="ST: Double Scratch",
+        name="ST: Double Scratch",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A rogue's agility guide detailing lightning-fast dual strikes.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=5000,
+        tier=1,
+        teaches_action_name="Double Scratch",
+    ),
+    "ST: Shield Bash": ConsumableItem(
+        item_id="ST: Shield Bash",
+        name="ST: Shield Bash",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A knightly combat manual for stunning foes with heavy shields.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=6000,
+        tier=2,
+        teaches_action_name="Shield Bash",
+    ),
+    "ST: Whirlwind": ConsumableItem(
+        item_id="ST: Whirlwind",
+        name="ST: Whirlwind",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="A warrior's advanced scroll teaching the sweeping 360-degree Whirlwind strike.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=12000,
+        tier=3,
+        teaches_action_name="Whirlwind",
+    ),
+    "ST: Shadow Strike": ConsumableItem(
+        item_id="ST: Shadow Strike",
+        name="ST: Shadow Strike",
+        item_type=ItemType.CONSUMABLE,
+        effect_type=ItemEffectType.TEACH_ACTION,
+        power=0,
+        target_scope=TargetScope.SINGLE_ALLY,
+        description="An assassin's secretive codex teaching lethal strikes from the shadows.",
+        usable_in_field=True,
+        usable_in_battle=False,
+        price=9000,
+        tier=3,
+        teaches_action_name="Shadow Strike",
+    ),
 }
 
 # Compatibility aliases
 ITEM_ALIASES: dict[str, str] = {
+    "compass_conch": "Compass Conch",
+    "compassconch": "Compass Conch",
+    "conch": "Compass Conch",
+    "compass": "Compass Conch",
     "health_potion": "Potion",
     "potion": "Potion",
     "hi_potion": "Hi-Potion",
+    "mega_potion": "Mega Potion",
+    "megapotion": "Mega Potion",
     "ether": "Ether",
     "hi_ether": "Hi-Ether",
+    "high_ether": "High Ether",
+    "highether": "High Ether",
     "elixir": "Elixir",
     "revive_herb": "Revive Herb",
     "antidote": "Antidote",
+    "eye_drops": "Eye Drops",
+    "eyedrops": "Eye Drops",
+    "smelling_salts": "Smelling Salts",
+    "smellingsalts": "Smelling Salts",
+    "panacea": "Panacea",
+    "remedy": "Panacea",
     "tent": "Tent",
     "bomb": "Bomb",
     "fire_flask": "Fire Flask",
@@ -394,6 +770,122 @@ ITEM_ALIASES: dict[str, str] = {
     "gold_key": "Golden Key",
     "ancient_crest": "Ancient Crest",
     "cavern_key": "Cavern Key",
+
+    # Tome & Skill Trainer aliases
+    "tome of fireball": "T: Fireball",
+    "t of fireball": "T: Fireball",
+    "t: fireball": "T: Fireball",
+    "t_fireball": "T: Fireball",
+    "tome_of_fireball": "T: Fireball",
+
+    "tome of ice bolt": "T: Ice Bolt",
+    "t of ice bolt": "T: Ice Bolt",
+    "t: ice bolt": "T: Ice Bolt",
+    "t_ice_bolt": "T: Ice Bolt",
+    "tome_of_ice_bolt": "T: Ice Bolt",
+
+    "tome of arctic blast": "T: Arctic Blast",
+    "t of arctic blast": "T: Arctic Blast",
+    "t: arctic blast": "T: Arctic Blast",
+    "t_arctic_blast": "T: Arctic Blast",
+    "tome_of_arctic_blast": "T: Arctic Blast",
+
+    "tome of tidal crush": "T: Tidal Crush",
+    "t of tidal crush": "T: Tidal Crush",
+    "t: tidal crush": "T: Tidal Crush",
+    "t_tidal_crush": "T: Tidal Crush",
+    "tome_of_tidal_crush": "T: Tidal Crush",
+
+    "tome of boulder bash": "T: Boulder Bash",
+    "t of boulder bash": "T: Boulder Bash",
+    "t: boulder bash": "T: Boulder Bash",
+    "t_boulder_bash": "T: Boulder Bash",
+    "tome_of_boulder_bash": "T: Boulder Bash",
+
+    "tome of galeflash": "T: Galeflash",
+    "t of galeflash": "T: Galeflash",
+    "t: galeflash": "T: Galeflash",
+    "t_galeflash": "T: Galeflash",
+    "tome_of_galeflash": "T: Galeflash",
+
+    "tome of radiance": "T: Radiance",
+    "t of radiance": "T: Radiance",
+    "t: radiance": "T: Radiance",
+    "t_radiance": "T: Radiance",
+    "tome_of_radiance": "T: Radiance",
+
+    "tome of dark surge": "T: Dark Surge",
+    "t of dark surge": "T: Dark Surge",
+    "t: dark surge": "T: Dark Surge",
+    "t_dark_surge": "T: Dark Surge",
+    "tome_of_dark_surge": "T: Dark Surge",
+
+    "tome of cataclysm": "T: Cataclysm",
+    "t of cataclysm": "T: Cataclysm",
+    "t: cataclysm": "T: Cataclysm",
+    "t_cataclysm": "T: Cataclysm",
+    "tome_of_cataclysm": "T: Cataclysm",
+
+    "tome of heal": "T: Heal",
+    "t of heal": "T: Heal",
+    "t: heal": "T: Heal",
+    "t_heal": "T: Heal",
+    "tome_of_heal": "T: Heal",
+
+    "tome of group heal": "T: Group Heal",
+    "t of group heal": "T: Group Heal",
+    "t: group heal": "T: Group Heal",
+    "t_group_heal": "T: Group Heal",
+    "tome_of_group_heal": "T: Group Heal",
+
+    "skill trainer: axe cleave": "ST: Axe Cleave",
+    "skill trainer axe cleave": "ST: Axe Cleave",
+    "st: axe cleave": "ST: Axe Cleave",
+    "st axe cleave": "ST: Axe Cleave",
+    "skill_trainer_axe_cleave": "ST: Axe Cleave",
+    "st_axe_cleave": "ST: Axe Cleave",
+
+    "skill trainer: flame punch": "ST: Flame Punch",
+    "skill trainer flame punch": "ST: Flame Punch",
+    "st: flame punch": "ST: Flame Punch",
+    "st flame punch": "ST: Flame Punch",
+    "skill_trainer_flame_punch": "ST: Flame Punch",
+    "st_flame_punch": "ST: Flame Punch",
+
+    "skill trainer: drop kick": "ST: Drop Kick",
+    "skill trainer drop kick": "ST: Drop Kick",
+    "st: drop kick": "ST: Drop Kick",
+    "st drop kick": "ST: Drop Kick",
+    "skill_trainer_drop_kick": "ST: Drop Kick",
+    "st_drop_kick": "ST: Drop Kick",
+
+    "skill trainer: double scratch": "ST: Double Scratch",
+    "skill trainer double scratch": "ST: Double Scratch",
+    "st: double scratch": "ST: Double Scratch",
+    "st double scratch": "ST: Double Scratch",
+    "skill_trainer_double_scratch": "ST: Double Scratch",
+    "st_double_scratch": "ST: Double Scratch",
+
+    "skill trainer: shield bash": "ST: Shield Bash",
+    "skill trainer shield bash": "ST: Shield Bash",
+    "st: shield bash": "ST: Shield Bash",
+    "st shield bash": "ST: Shield Bash",
+    "skill_trainer_shield_bash": "ST: Shield Bash",
+    "st_shield_bash": "ST: Shield Bash",
+
+    "skill trainer: whirlwind": "ST: Whirlwind",
+    "skill trainer whirlwind": "ST: Whirlwind",
+    "st: whirlwind": "ST: Whirlwind",
+    "st whirlwind": "ST: Whirlwind",
+    "skill_trainer_whirlwind": "ST: Whirlwind",
+    "st_whirlwind": "ST: Whirlwind",
+
+    "skill trainer: shadow strike": "ST: Shadow Strike",
+    "skill trainer shadow strike": "ST: Shadow Strike",
+    "st: shadow strike": "ST: Shadow Strike",
+    "st shadow strike": "ST: Shadow Strike",
+    "skill_trainer_shadow_strike": "ST: Shadow Strike",
+    "st_shadow_strike": "ST: Shadow Strike",
 }
 
 
@@ -418,6 +910,9 @@ def apply_item_effect(
     """
     if not item.usable_in_field:
         return False, f"{item.name} cannot be used outside of battle!"
+
+    if item.effect_type == ItemEffectType.LOCATE_CAVE:
+        return False, f"{item.name} must be used on the world map."
 
     if item.target_scope == TargetScope.ALL_ALLIES:
         # Applies to whole party
@@ -484,6 +979,22 @@ def apply_item_effect(
         if item.consumed_on_use:
             party.remove_item(item.item_id, 1)
         return True, f"{target.name} was cured of all ailments!"
+
+    elif item.effect_type == ItemEffectType.TEACH_ACTION:
+        action_name = item.teaches_action_name
+        if not action_name:
+            return False, f"{item.name} contains no readable technique."
+        from eldoria_py.combat.actions import ACTIONS
+        if action_name not in ACTIONS:
+            return False, f"Unknown technique: {action_name}."
+        if any(a.name == action_name for a in target.base_actions):
+            return False, f"{target.name} already knows {action_name}!"
+
+        target.base_actions.append(ACTIONS[action_name].copy())
+        target.recalculate_equipment()
+        if item.consumed_on_use:
+            party.remove_item(item.item_id, 1)
+        return True, f"{target.name} studied {item.name} and learned {action_name}!"
 
     return False, f"Cannot use {item.name} right now."
 

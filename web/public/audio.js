@@ -116,7 +116,7 @@ class WebAudioManager {
                     this.fadeOutBgm(event.duration ?? 1.5);
                     break;
                 case "play_sfx":
-                    this.playSfx(event.sound, event.loop === true, event.volume ?? 1.0);
+                    this.playSfx(event.sound, event.loop === true, event.volume ?? 1.0, event.handle_id);
                     break;
                 case "stop_sfx":
                     this.stopSfx(event.handle_id);
@@ -229,7 +229,7 @@ class WebAudioManager {
         gain.connect(this.musicGain);
         source.start(0);
 
-        this.currentBgm = { source, gain, track, volume };
+        this.currentBgm = { source, gain, track, volume, buffer, loop, startedAt: now, offset: 0 };
     }
 
     async fadeToBgm(track, duration = 1.5, loop = true, volume = 1.0) {
@@ -281,7 +281,7 @@ class WebAudioManager {
         gain.connect(this.musicGain);
         source.start(0);
 
-        this.currentBgm = { source, gain, track, volume };
+        this.currentBgm = { source, gain, track, volume, buffer, loop, startedAt: now, offset: 0 };
     }
 
     fadeOutBgm(duration = 1.5) {
@@ -309,13 +309,46 @@ class WebAudioManager {
     }
 
     pauseBgm() {
-        if (this.currentBgm) {
-            this.fadeOutBgm(0.2);
+        if (this.currentBgm && this.ctx) {
+            const elapsed = (this.ctx.currentTime - (this.currentBgm.startedAt || this.ctx.currentTime));
+            const duration = this.currentBgm.buffer ? this.currentBgm.buffer.duration : 0;
+            const currentOffset = duration > 0 ? ((this.currentBgm.offset || 0) + elapsed) % duration : 0;
+            this.pausedBgm = {
+                track: this.currentBgm.track,
+                buffer: this.currentBgm.buffer,
+                loop: this.currentBgm.loop,
+                volume: this.currentBgm.volume,
+                offset: currentOffset,
+            };
+            this._stopCurrentBgmImmediate();
         }
     }
 
     resumeBgm() {
-        // Resume handled cleanly via playBgm/fadeToBgm
+        if (this.pausedBgm && this.ctx) {
+            const { track, buffer, loop, volume, offset } = this.pausedBgm;
+            this.pausedBgm = null;
+            if (!buffer) return;
+            this._stopCurrentBgmImmediate();
+
+            const now = this.ctx.currentTime;
+            const source = this.ctx.createBufferSource();
+            source.buffer = buffer;
+            source.loop = loop;
+            if (loop && buffer.duration > 0) {
+                source.loopStart = 0;
+                source.loopEnd = buffer.duration;
+            }
+
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(volume, now);
+
+            source.connect(gain);
+            gain.connect(this.musicGain);
+            source.start(0, offset);
+
+            this.currentBgm = { source, gain, track, volume, buffer, loop, startedAt: now, offset };
+        }
     }
 
     _stopCurrentBgmImmediate() {
@@ -333,6 +366,9 @@ class WebAudioManager {
 
     _resolveSfxUrl(sound) {
         if (!sound) return null;
+        if (sound.startsWith("/Resources/") || sound.startsWith("Resources/")) {
+            return sound.startsWith("/") ? sound : `/${sound}`;
+        }
         if (sound.endsWith(".mp3") || sound.endsWith(".wav") || sound.endsWith(".ogg")) {
             return `/Resources/SFX/${encodeURI(sound)}`;
         }
@@ -361,7 +397,7 @@ class WebAudioManager {
         }
     }
 
-    async playSfx(sound, loop = false, volume = 1.0) {
+    async playSfx(sound, loop = false, volume = 1.0, handleId = null) {
         if (!sound || !this.ctx) return null;
         const url = this._resolveSfxUrl(sound);
         if (!url) return null;
@@ -369,7 +405,7 @@ class WebAudioManager {
         const buffer = await this._loadSfxBuffer(url);
         if (!buffer || !this.ctx) return null;
 
-        const handleId = this._nextHandleId++;
+        const activeHandle = (handleId !== null && handleId !== undefined) ? handleId : this._nextHandleId++;
         const source = this.ctx.createBufferSource();
         source.buffer = buffer;
         source.loop = loop;
@@ -381,7 +417,7 @@ class WebAudioManager {
         gainNode.connect(this.sfxGain);
 
         source.onended = () => {
-            this.activeSfx.delete(handleId);
+            this.activeSfx.delete(activeHandle);
             try {
                 source.disconnect();
                 gainNode.disconnect();
@@ -389,8 +425,8 @@ class WebAudioManager {
         };
 
         source.start(0);
-        this.activeSfx.set(handleId, { source, gainNode, sound });
-        return handleId;
+        this.activeSfx.set(activeHandle, { source, gainNode, sound });
+        return activeHandle;
     }
 
     stopSfx(handleId) {
@@ -407,6 +443,15 @@ class WebAudioManager {
                 sfx.source.stop();
             } catch (e) {}
             this.activeSfx.delete(handleId);
+        } else if (typeof handleId === "string") {
+            for (const [id, sfx] of this.activeSfx.entries()) {
+                if (sfx.sound === handleId) {
+                    try {
+                        sfx.source.stop();
+                    } catch (e) {}
+                    this.activeSfx.delete(id);
+                }
+            }
         }
     }
 

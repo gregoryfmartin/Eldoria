@@ -55,10 +55,17 @@ class NPCDialogModal:
         screen_width: int = 54,
         screen_height: int = 27,
         chars_per_second: float = 35.0,
+        audio_engine: Optional[Any] = None,
+        sfx_asset: str = "Resources/SFX/Tty.mp3",
+        sfx_volume: float = 0.40,
     ) -> None:
         self.screen_width: int = screen_width
         self.screen_height: int = screen_height
         self.chars_per_second: float = chars_per_second
+        self.audio_engine: Optional[Any] = audio_engine
+        self.sfx_asset: str = sfx_asset
+        self.sfx_volume: float = sfx_volume
+        self._tty_handle: Optional[int] = None
 
         # Active conversation data
         self.npc: Optional[NPC] = None
@@ -86,6 +93,42 @@ class NPCDialogModal:
 
         # General close callback
         self.on_close_callback: Optional[Callable[[], None]] = None
+
+    def _get_audio_engine(self) -> Optional[Any]:
+        """Resolves the audio engine instance, defaulting to lazy global retrieval."""
+        if self.audio_engine is not None:
+            return self.audio_engine
+        try:
+            from ..audio.sound_engine import get_audio_engine
+            return get_audio_engine(autostart_device=False)
+        except Exception:
+            return None
+
+    def _start_tty_sfx(self) -> None:
+        """Starts looping the teletype speech SFX if not already playing."""
+        if self._tty_handle is not None:
+            return
+        engine = self._get_audio_engine()
+        if engine and hasattr(engine, "play_sfx"):
+            try:
+                self._tty_handle = engine.play_sfx(
+                    name_or_path=self.sfx_asset,
+                    loop=True,
+                    volume=self.sfx_volume,
+                )
+            except Exception:
+                self._tty_handle = None
+
+    def _stop_tty_sfx(self) -> None:
+        """Stops the active teletype speech SFX loop."""
+        if self._tty_handle is not None:
+            engine = self._get_audio_engine()
+            if engine and hasattr(engine, "stop_sfx"):
+                try:
+                    engine.stop_sfx(self._tty_handle)
+                except Exception:
+                    pass
+            self._tty_handle = None
 
     @property
     def is_active(self) -> bool:
@@ -188,6 +231,8 @@ class NPCDialogModal:
 
         self.chars_revealed = 0
         self.state = DialogState.TELETYPING
+        if self.total_page_chars > 0 and not self.is_flushed:
+            self._start_tty_sfx()
         self._update_teletype()
 
     def _update_teletype(self) -> None:
@@ -205,6 +250,7 @@ class NPCDialogModal:
             )
 
         if self.chars_revealed >= self.total_page_chars:
+            self._stop_tty_sfx()
             is_last_page = self.current_page_idx >= len(self.pages) - 1
             if not is_last_page:
                 self.state = DialogState.PAGE_WAITING
@@ -217,6 +263,7 @@ class NPCDialogModal:
     def flush_page(self) -> None:
         """Immediately reveals all characters on the current page."""
         self.is_flushed = True
+        self._stop_tty_sfx()
         self._update_teletype()
 
     def advance_or_act(self) -> None:
@@ -269,6 +316,7 @@ class NPCDialogModal:
 
     def close(self) -> None:
         """Closes the dialogue modal and invokes close callback."""
+        self._stop_tty_sfx()
         self.state = DialogState.CLOSED
         cb = self.on_close_callback
         self.on_close_callback = None
