@@ -60,41 +60,48 @@ python main.py
 python -m eldoria_py
 ```
 
-# Title Screen
+# Splash/Cinematic
 
 Eldoria has a nice little title sequence and animation:
 
-![Eldoria Title Screen - Made with Clipchamp](https://github.com/user-attachments/assets/e6e65d19-a5fb-4916-8d1e-24be9b984356)
+<img width="480" height="393" alt="EldoriaSplashCinematic" src="https://github.com/user-attachments/assets/d044ecfe-6978-47af-a534-32322dfa97d1" />
 
-# Player Setup Screen
+# Title Screen
 
-Eldoria allows you to customize your player before starting to play.
+Eldoria's title screen allows you to start a new game, load a previously saved game, configure some options, view credits, and quit back to the terminal:
 
-<img width="761" height="373" alt="image" src="https://github.com/user-attachments/assets/93fa867c-6372-4273-8d75-a0ea94fec8e2" />
+<img width="480" height="393" alt="EldoriaTitleScreen" src="https://github.com/user-attachments/assets/e330d366-0fe8-4f2d-8092-c1b339d38bb6" />
 
-The following customizations are available:
+# New Game
 
-* Name - Type in the name of your player.
-* Gender - Select the gender of your player. This has some influence over stat bonuses and what kinds of profile images you can select.
-* Bonus Points - Allocate a fixed number of bonus points for various stats for the player. You have a maximum of 10 bonus points to freely allocate. If you don't like your base stats, you can re-roll using the `R` key.
-* Affinity - This is the elemental affinity you want for your character. This has an influence over your use of magic. Magic use that aligns with the affinity receives a slight bonus, whereas magic use of an opposing or neutral affinity either receives no or a negative bonus.
-* Profile Image - A profile image to use for your player.
+Eldoria now supports a player party of up to five characters. At a minimum, you need at one, and you can certainly attempt to play the game this way, but it's recommended you have a full party.
+
+You can walk through creating a character of your own:
+
+<img width="480" height="393" alt="EldoriaCharWizard" src="https://github.com/user-attachments/assets/2713d9cb-78a1-40ba-b1c0-46c05c12a46b" />
+
+Alternatively, you can use the stock party by pressing the R key:
+
+<img width="480" height="393" alt="EldoriaDefaultParty" src="https://github.com/user-attachments/assets/ad134443-d104-49d5-8cbc-2236e916e391" />
+
+With the default party, you can go back and customize specific properties, or continue onto world creation by pressing the Spacebar.
+
+<img width="954" height="781" alt="Screenshot 2026-10-18 at 18 34 42" src="https://github.com/user-attachments/assets/1688375a-dcff-400c-b136-9cd10b3b4638" />
+
+The world in Eldoria is procedurally generated, and the total map size, along with certain other features, are dictated by it. There are currently four map sizes:
+
+* Quick - The smallest map size possible. A vast portion of quests, towns, castles, and items are unavailable in this size. Use this to get a handle on how to play the game generally or if you just feel like it.
+* Standard - The normal size for Eldoria. All features are available on this map size and within reasonable distances. Some biomes may not be available in this size.
+* Odyssey - A larger than normal map size. Points of Interest are spread further apart from each other, meaning reliance on the Compass Conch is higher. More biomes and enemy diversity.
+* Colossal - A joke size map. Its size could make playing difficult as Points of Interest are spread pretty far apart. Stocking up on Compass Conchs is required. All biome varieties are available here.
+
+Below is an example of creating a new Colossal map.
+
+<img width="480" height="393" alt="EldoriaWorldCreation" src="https://github.com/user-attachments/assets/38feb15d-9396-4f77-b728-4372072d00aa" />
 
 # Navigating the World Map
 
-The map can be navigated using the command "move" followed by a cardinal direction: north, south, east, or west.
-
-<img width="807" height="601" alt="image" src="https://github.com/user-attachments/assets/ee1bec83-349e-4d49-b256-0cad743a7e2d" />
-
-The movement commands can be abbreviated. The word "move" can be shortened to simply "m", and each of the cardinal directions can be abbreviated to "n", "s", "e", and "w" respectively:
-
-<img width="804" height="597" alt="image" src="https://github.com/user-attachments/assets/90960fd4-859d-4737-bb6f-fff34e57f1a8" />
-
-If a door, or some other kind of entrance, is on a tile, you can enter or exit it with either the "enter" or "exit" keywords (abbr. "en" or "ex" respectively):
-
-<img width="806" height="596" alt="image" src="https://github.com/user-attachments/assets/40a59221-566a-4ca9-a38a-46d032b0aafa" />
-
-<img width="802" height="594" alt="image" src="https://github.com/user-attachments/assets/ec1bd9e9-33ed-4c97-9a49-3126593ab104" />
+The player can move around the world map with the arrow keys on the keyboard.
 
 # Interacting with Items on Tiles
 
