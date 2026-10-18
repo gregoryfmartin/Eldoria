@@ -1,4 +1,4 @@
-Welcome to the Eldoria game repository! Please keep in mind that this project is currently under active development and is not in a finished state. You can download and run the game program on your own computer, but be aware that none of the scripts are signed and it's currently not in a ready-to-use state. That said, if you do decide to download and use it, feedback is always welcome!
+Welcome to the Eldoria game repository! Please keep in mind that this project is currently under active development and is not in a finished state. You can download and run the game program on your own computer, but be aware that it's currently not in an entirely ready state. That said, if you do decide to download and use it, feedback is always welcome!
 
 Please read the wiki for more information.
 
@@ -6,70 +6,59 @@ Please read the wiki for more information.
 
 ## Operating System
 
-* Windows 10 (AMD64/ARM64) or greater
-* Windows Server 2019 or greater
+* Windows 10 or greater (currently testing with new codebase)
+* Windows Server 2019 or greater (currently testing with new codebase)
 * MacOS (latest version)
-* Linux
-
-## PowerShell
-
-* PowerShell Core 7.3.0 or greater
+* Linux (currently testing with new codebase)
 
 ## Terminal Emulators
 
-### Windows
-
-* Windows Terminal 1.21.x or greater
-
 ### MacOS
 
-* iTerm2 (latest version)
-
-### Linux
-
-* Alacritty
-* Kitty
-* GNOME Terminal
+* Kitty (latest version)
 
 ## Caveats
 
 ### MacOS
 
-* Your Mac needs to have the latest version of the .NET Framework installed. A complete guide to installing it can be found here: https://learn.microsoft.com/en-us/dotnet/core/install/macos. For Mac testing, .NET has been installed via brew.
-* Your Mac needs to have the latest version of PowerShell installed. A complete guide to installing it can be found here: https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos?view=powershell-7.5. For Mac testing, PowerShell has been installed manually by downloading the binary from the official GitHub repository's Releases.
-* iTerm2 doesn't support DEC Blink SGRs, so text that blinks as a consequence of this sequence will not work. This is not a detriment to the game play experience. Currently, no workaround has been devised.
-
-### Linux
-
-* Your Linux distribution needs to support the latest version of the .NET Framework. A complete guide to installing the .NET Framework on Linux is found here: https://learn.microsoft.com/en-us/dotnet/core/install/linux. Eldoria has been tested on the __dotnet-8*__ and __dotnet-9*__ packages on the following distributions:
-
-  * Red Hat Enterprise Linux 8.x or greater
-  * Oracle Enterprise Linux 8.x or greater
-  * Rocky Linux 8.x or greater
-  * Alma Linux 8.x or greater
-
-* Your Linux distribution needs to support PowerShell Core 7.3.0 or greater. A complete guide to installing PowerShell on Linux is found here: https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-linux?view=powershell-7.5. Eldoria has been tested against PowerShell Core 7.3.0 or greater on the aforementioned Linux distributions.
-* Alacritty and Kitty don't support DEC Blink SGRs, so text that blinks as a consequence of this sequence will not work. This is not a detriment to the game play experience. Currently, no workaround has been devised.
+* Font selection matters for this game. The game has been tested on Kitty with the Monaco font. RMV with other fonts, especially those that support ligatures.
 
 # Setup
 
-Eldoria has migrated to a PowerShell Module layout. This has changed how the game is setup/invoked. When the game is complete, it'll hopefully be uploaded to PSGallery barring content restrictions. Until then, you can perform the following steps to download/bootstrap/run the game:
+Eldoria can be started by cloning the repository and running the following:
 
-* Download this repository in its entirety or clone the master branch into a local directory on your computer.
-* Open your terminal emulator, start PowerShell if it's not your default shell, and navigate to the directory where the repository is located at.
-* Ensure that your terminal window is AT LEAST 90 columns by 40 rows in size.
-* Import the module: `Import-Module .\Eldoria.psm1 -Force`. This will bootstrap the game (could take a minute or two).
-* Once the bootstrap is complete, you'll be told that you can start the game by running the cmdlet `Start-Eldoria`. Run this to start the game.
 
-# Bootstrapping Eldoria
+## MacOS/Linux
 
-Running `Import-Module .\Eldoria.psm1 -Force` will start the game bootstrapping process.
+```bash
+git clone https://github.com/gregoryfmartin/Eldoria.git
+cd Eldoria
+python3 -m venv .venv
+source .venv/bin/activate
+pip install miniaudio
 
-<img width="1210" height="495" alt="image" src="https://github.com/user-attachments/assets/1bf9bf78-ad8e-4295-aa4b-95229e236b18" />
+python3 main.py
 
-This process could take some time since there's quite a bit of code to process. Once the bootstrap process is complete, you'll be prompted that you can start the game using the `Start-Eldoria` cmdlet:
+-- or --
 
-<img width="479" height="92" alt="image" src="https://github.com/user-attachments/assets/a8b6ace7-8c4f-4fb4-885c-1ffc272278b4" />
+python3 -m eldoria_py
+```
+
+## Windows (PowerShell)
+
+```powershell
+git clone https://github.com/gregoryfmartin/Eldoria.git
+cd Eldoria
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install miniaudio
+
+python main.py
+
+-- or --
+
+python -m eldoria_py
+```
 
 # Title Screen
 
