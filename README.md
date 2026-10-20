@@ -103,78 +103,90 @@ Below is an example of creating a new Colossal map.
 
 The player can move around the world map with the arrow keys on the keyboard.
 
-# Interacting with Items on Tiles
+<img width="480" height="393" alt="EldoriaWorldMapNav" src="https://github.com/user-attachments/assets/e990823b-d0d7-4756-950c-94fa2d512b2b" />
 
-Items on a tile can be determined using the "look" keyword (abbr. "l"):
+Various Points of Interest on the world map can be interacted with by pressing the Enter key. In this case, a town is next to the player. You move over top the town icon and press Enter to enter the town.
 
-<img width="803" height="596" alt="image" src="https://github.com/user-attachments/assets/6f074013-8c59-4045-97fc-9742c6fdd97e" />
+<img width="480" height="393" alt="EldoriaEnterTown" src="https://github.com/user-attachments/assets/5ed403ca-4611-4aa7-9a07-e3e8dec47e0a" />
 
-Items on a tile can be examined for further details using the "examine" keyword (abbr. "exa"):
+There are other POI the player can interact with including towns, caves, and castles.
 
-<img width="804" height="602" alt="image" src="https://github.com/user-attachments/assets/a1b698ea-2992-4980-9ba5-75c6cfb5e960" />
+## Towns
 
-Certain items can be picked up and placed into the Player's inventory using either the "take" or "get" keywords (abbr "t" or "g" respectively):
+<img width="954" height="781" alt="Screenshot 2026-10-19 at 09 11 53" src="https://github.com/user-attachments/assets/365ca089-8e92-496c-8dbd-f54988309378" />
 
-<img width="803" height="597" alt="image" src="https://github.com/user-attachments/assets/931b5e77-c624-4ef4-ae79-406d0bf2bbf7" />
+Scattered across the world map are several towns the player can enter. In each town are several NPCs the player can interact with. Some will provide local context, others will provide side quests. There are several shops the player can interact with: inns to entirely heal the party for a fee, herbalists will buy and sell general purpose items and tools, armorers will buy and sell all kinds of equipment, and barkeepers will just yap your ear off.
 
-Items from the Player's inventory can be used on items in the current tile. For example, you can tie a Rope from your inventory to a Tree using the "use" keyword (abbr. "u") followed by "rope" and then "tree". In this example, the player doesn't have a rope in their inventory, so the game informs them:
+<img width="480" height="393" alt="EldoriaTownNav" src="https://github.com/user-attachments/assets/fd508043-4033-4841-a038-166f48ff4c0c" />
 
-<img width="803" height="599" alt="image" src="https://github.com/user-attachments/assets/e86cbb1e-0b4b-4bce-9dfc-a121ce3ae11b" />
+## Caves
 
-# Player's Inventory
+<img width="954" height="781" alt="Screenshot 2026-10-19 at 09 27 04" src="https://github.com/user-attachments/assets/7fb36aa9-5927-4a2f-807c-ebbc15c7b080" />
 
-The Player's inventory can be accessed from the Navigation Screen using the "inventory" keyword (abbr. "i"):
+Caves are variable depth dungeons that contain anywhere from 3 to 9 floors. At the bottom floor of each cave is one of the boss monsters that needs to be defeated to complete the main story quest. Each floor of a cave has a ladder that can be used to traverse between the floors. Once the player defeats the boss character, an escape rope will appear that will teleport the player back to the surface. Note the demonstration below uses developer functionality that isn't available in the final version of the game.
 
-<img width="803" height="600" alt="image" src="https://github.com/user-attachments/assets/e45e54f3-9a7e-459f-8abf-9bb496070858" />
+<img width="480" height="393" alt="EldoriaCave" src="https://github.com/user-attachments/assets/a7fb8dfc-58a0-458a-8ccd-886a6995f91c" />
 
-The Inventory Screen works very much like a book. Each page of the inventory contains at most 10 items. If there are more than 10 items, pages are created to the right of the first one (indicated by the yellow chevron in the top-right corner). Each item has a description which is dynamically updated in the bottom portion of the window.
+# Battle System
 
-<img width="807" height="486" alt="image" src="https://github.com/user-attachments/assets/9bc68c9f-5dea-4d62-8c5b-ac34937ccee9" />
+Eldoria features a classic JRPG random encounter battle system. Some maps are able to feature battle encounters, others aren't. Certain biomes have higher encounter rates than others; encounter rates are always higher in caves than anywhere else.
 
-Subsequent pages can be accessed by turning right (D) or turning left (A):
+Battles are NvN, meaning that the player's party can be anywhere from 1 to 5 members, and the enemy squads can be anywhere from 1 to 10 enemies. Players will first enter all of the desired commands for each member of their party. Once all the commands have been entered, battle execution order is determined between the party members and the enemies in the squad and played out automatically. A battle scenario will end when either the the player party has defeated all the enemies in the squad or the player's party has fallen. If the player's party falls, the party will be revived and replaced near the start town. Note that for the demonstration here, the developer shortcut to instantly kill all enemies in the squad is not in the production version.
 
-<img width="806" height="483" alt="image" src="https://github.com/user-attachments/assets/6fc1fc51-2d51-408c-8807-b1cbc7657ac7" />
+> TODO: Insert GIF of a simple battle here.
 
-Items that can be used on the Player themselves offer more specific information regarding their effects on stats:
+# Menu System
 
-<img width="800" height="478" alt="image" src="https://github.com/user-attachments/assets/a773dafb-c8cb-4544-9378-6382801b9d70" />
+Using the System Menu, players can control every aspect of their parties and inventories.
 
-Item's effects are randomized:
+## Status
 
-<img width="798" height="476" alt="image" src="https://github.com/user-attachments/assets/6660b6e9-f008-4ed7-9be0-ba75451531a0" />
+The first option, Status, shows an overview of your party members, including metadata, HP, MP, XP, attributes, current equipment, and current combat skills/magic. Players can cycle between party members by using the left and right arrow keys.
 
-When the Player issues a "use" command from the Navigation Screen, the very first instance of a matching item is used. Unsafe items can be dropped from the Player's inventory by pressing the S key. A beep will indicate a successful drop. Be aware that some items can't be dropped (these are called Key Items).
+> TODO: Insert GIF of toggling between party members on the Status screen.
 
-<img width="799" height="474" alt="image" src="https://github.com/user-attachments/assets/1d8c9f8f-8830-4ed1-b04c-2d387149dff4" />
+## Items
 
-The Inventory Screen can be exited by pressing the Escape key.
+The Items submenu allows players to manage their general item inventory. Items are distinguished between three categories: Usable, Equip, and Key.
 
-# Player Status/Action Equip Screen
+* Usable - Items that can be used either in the Items submenu or in combat directly by the player, targeting either a party member or an enemy in a squad.
+* Equip - Equipment that can be equipped to a party member.
+* Key - Items that are crucial to a quest. These can't be discarded or sold.
 
-The Player's status and inventory technique selection screen is bundled into one. It can be accessed from the Navigation Screen by using the keyword "status" (abbreviation. "sta"):
+> TODO: Insert GIF of moving between item categories, selecting and using an item within the Item submenu.
 
-<img width="797" height="599" alt="image" src="https://github.com/user-attachments/assets/c0cba08a-6003-4cc0-b567-ef50e5c737e9" />
+## Equipment
 
-<img width="805" height="388" alt="image" src="https://github.com/user-attachments/assets/211fd4a0-2919-4f27-88de-79bc5703b3ce" />
+The third option, Equipment, allows the player to manage equipped items on each party member. You can view, change, and remove equipment from ten different slots.
 
-The box in the bottom-left allows you to move the chevron up/down to select a technique to replace. Position the chevron using the up/down arrow keys and press Enter to access the Battle Action Inventory:
+> TODO: Insert GIF of navigating and using the Equipment submenu.
 
-<img width="806" height="385" alt="image" src="https://github.com/user-attachments/assets/a3adae6f-2d24-41a5-81b8-8f8dc5b4e4e1" />
+## Magic
 
-This inventory window behaves much the same as the Item Inventory window, just smaller and displaying information specific to the Battle Action you have selected. When you find a technique you want to use instead, press the Enter key again to equip the new action. If you don't wish to equip any actions, press the Escape key to return:
+The Magic submenu allows the player to view and manage currently equipped skills and magic for a given party member.
 
-<img width="806" height="382" alt="image" src="https://github.com/user-attachments/assets/e369fa24-46de-4699-8a70-78c6a1c8a238" />
+Skills are differentiated from Magic on a few different dimensions:
 
-To exit the Player's Status Screen, press the Escape key until you're back at the Navigation Screen (at most 2 times).
+* Party members will start with a few innate Skills and Magic.
+* Generally, character class will dictate what gets conferred to them upon certain level ups.
+* Skills and Magic can also be taught to characters via Skill Trainer (Skills) or Tomes (Magic). Only certain classes can learn certain kinds of Skills and Magic.
 
-# Battle
+> TODO: Insert GIF of navigating and using the Magic submenu.
 
-Battle encounters are random and can occur on tile moves. If you do encounter an enemy, a BATTLE COMMENCE message will appear and then the battle will start.
+## Quests
 
-<img width="815" height="570" alt="image" src="https://github.com/user-attachments/assets/5cbfc2af-f785-42a8-bb15-fc28fb599f7b" />
+The Quests submenu shows what quest lines the player has available to them. At the start of the game, you have the main storyline quest to defeat all the boss enemies. Aside from this, as you travel between towns and castles, you can obtain side quests from NPCs. A given quest can be tracked so you can focus on one at a time, and the current quest can be displayed quickly on the world map by pressing the Q key.
 
-Enemies are randomly assigned each time a battle starts. Battles are turn based. Whomever has the current turn will have their window highlighted yellow. When it's the enemy's turn, they will randomly select an attack and use it against the Player. When it's the Player's turn, you can use the up/down arrow keys to select an action and press Enter to use it:
+> TODO: Insert GIF of navigating and using the Quest submenu. Also show the Quest Tracker on the World Map.
 
-<img width="815" height="574" alt="image" src="https://github.com/user-attachments/assets/094c870b-d750-46c4-885d-d58d81f72ca7" />
+## Save
 
-When the Player wins a battle, spoils are given and you're prompted to press the Enter key to return to the Navigation Screen. If the Player loses a battle, the game is over.
+Eldoria tracks three save slots. From the Save menu, you can choose a slot to save your game to.
+
+> TODO: Insert GIF of navigating and using the Save submenu.
+
+## Quit
+
+From the Quit submenu, you can quit to the title, quit to the terminal, or cancel.
+
+> TODO: Insert GIF of navigating and using the Quit submenu.
